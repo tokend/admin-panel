@@ -1,0 +1,35 @@
+@import "../../../assets/scss/colors";
+@import "defaults";
+@import "typography";
+@import "buttons";
+@import "modals";
+@import "forms";
+@import "lists";
+@import "data-representations";
+
+$container-padding: 0 30px;
+
+.app__container {
+  width: 100%;
+  padding: $container-padding;
+  margin: 0 auto;
+}
+
+.app__user-container {
+  width: 100%;
+  padding: $container-padding;
+  margin: 4rem auto;
+  max-width: 106rem;
+}
+
+.app__block {
+  border-radius: .3rem;
+  background-color: $color-content-bg;
+  box-shadow: 0px 1px 5.6px 0.4px rgba(170, 170, 170, 0.72);
+  padding: 4rem;
+}
+
+.app__more-btn-wrp {
+  max-width: 6rem;
+  margin: 2rem auto 0;
+}

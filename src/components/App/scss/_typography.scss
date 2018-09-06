@@ -1,0 +1,57 @@
+@import "../../../assets/scss/colors";
+
+a {
+  text-decoration: underline;
+  color: $color-active;
+}
+
+h1 {
+  font-size: 3.2rem;
+  font-weight: 300;
+}
+
+h2 {
+  font-size: 2.4rem;
+  font-weight: 300;
+  margin-bottom: 4.5rem;
+}
+
+h3 {
+  font-size: 1.6rem;
+  line-height: 1.5;
+  font-weight: bold;
+}
+
+h4 {
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+ul, ol, nav, li {
+  font-size: 1.6rem;
+}
+
+p, span, br, label {
+  font-size: 1.6rem;
+
+  &.small {
+    font-size: 1.2rem;
+  }
+
+  &.secondary {
+    color: $color-text-secondary;
+  }
+
+  &.danger {
+    color: $color-danger;
+  }
+
+  &.text {
+    line-height: 1.5;
+  }
+
+  &.capitalized:first-letter {
+    text-transform: uppercase;
+  }
+}

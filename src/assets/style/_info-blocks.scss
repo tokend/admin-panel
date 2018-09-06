@@ -1,0 +1,78 @@
+$brand-red: #cc6666;
+$brand-eminence: #602a60;
+$brand-violet-lighten: #9e8291;
+
+.info-block {
+  margin-bottom: 25px;
+  &:nth-last-child {
+    margin-bottom: 0;
+  }
+}
+
+.info-block__row, .info-block__image-row {
+  margin: 10px 15px;
+}
+
+.info-block__row-item {
+  margin-right: 35px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.info-block__data {
+  font-size: 20px;
+  width: 55%;
+  &--smaller {
+    font-size: 16px;
+  }
+}
+
+.info-block__input {
+  min-width: 360px;
+  height: 32px;
+  font-size: 21px;
+  border: grey 1px inset;
+  border-radius: 8px;
+  background: #fffaf5;
+  color: #420d42;
+  padding-left: 10px;
+  padding-bottom: 2px;
+  &--short {
+    min-width: 85px !important;
+  }
+
+  &--number {
+    width: 155px;
+    min-width: 120px !important;
+  }
+  &:disabled {
+    background: #fff0eb;
+  }
+}
+
+.reject-reason {
+  visibility: visible;
+  text-align: center;
+  border-radius: 6px;
+  padding: 2px 0;
+  position: absolute;
+  top: 125%;
+  left: 0%;
+  font-size: 13px;
+  &--parent {
+    position: relative;
+    margin-bottom: 40px;
+    margin-top: 3px;
+  }
+
+  .info-block__input {
+    font-size: 16px;
+    height: 24px;
+    border-radius: 5px;
+    border-width: 1px;
+    width: 100%;
+  }
+}

@@ -1,0 +1,29 @@
+// CAUTION: do not use these colors externally
+$black: #3f4244;
+$gray: #e2e3e3;
+$white: #fff;
+$orange: #ffaf03;
+$blue: #578ebd;
+$red: #c2243b;
+$green: #3fa595;
+$deep-blue: #0066cc;
+
+// Use these ones instead
+$color-text: $black;
+$color-text-secondary: rgba($color: $black, $alpha: 0.5);
+$color-text-white: $white;
+$color-bg: $gray;
+$color-nav-bg: $black;
+$color-nav-hover: lighten($black, 8%);
+$color-content-bg: $white;
+$color-sub-nav-bg: $white;
+$color-sub-nav-hover: rgba($color: $black, $alpha: 0.1);
+$color-active: $deep-blue;
+$color-inactive: lighten($deep-blue, 35%);
+$color-info: $blue;
+$color-success: $green;
+$color-danger: $red;
+$color-danger-inactive: lighten($color-danger, 40%);
+$color-unfocused: lighten($black, 35%);
+$color-btn-secondary-hover: $gray;
+$color-table-row-hover: $gray;

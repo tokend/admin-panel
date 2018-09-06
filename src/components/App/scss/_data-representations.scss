@@ -1,0 +1,53 @@
+@import "../../../assets/scss/colors";
+
+label.data-caption {
+  &:not(:first-child) {
+    margin-top: 2rem;
+  }
+  margin-bottom: 0.5rem;
+  display: block;
+  font-size: 1.6rem;
+
+  &:not(.danger) {
+    color: $color-text-secondary;
+  }
+}
+
+ul.key-value-list {
+  overflow: hidden;
+  padding: 0 0.8rem;
+  margin: 0 -0.8rem;
+
+  & > li {
+    padding: 0.3rem 0.8rem;
+    margin: 0 -0.8rem;
+    display: flex;
+    justify-content: space-between;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.08);
+    }
+  }
+
+  & > li > span {
+    flex: 1;
+
+    &:last-of-type {
+      text-align: right;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    &:last-of-type[title] {
+      user-select: all;
+    }
+  }
+
+  & > label.data-caption {
+    margin-bottom: 0;
+
+    &:not(:first-child) {
+      margin-top: 1rem;
+    }
+  }
+}

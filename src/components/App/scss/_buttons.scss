@@ -1,0 +1,141 @@
+@import "../../../assets/scss/colors";
+
+%base {
+  border: none;
+  padding: 1.285rem 0;
+  transition: all .2s;
+  font-size: 1.6rem;
+  width: 100%;
+  flex: 1;
+  min-width: 12rem;
+  text-align: center;
+
+  &:enabled {
+    cursor: pointer;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+%small {
+  padding: 1rem 0;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.app__btn {
+  @extend %base;
+  background-color: $color-active;
+  color: $color-text-white;
+  &:enabled:hover {
+    opacity: .8;
+  }
+
+  &:disabled {
+    background-color: $color-inactive;
+  }
+
+  &--iconed {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    & > svg {
+      fill: $color-text-white;
+    }
+  }
+
+  &--danger {
+    background-color: $color-danger;
+    &:disabled {
+      background-color: $color-danger-inactive;
+    }
+  }
+
+  &--success {
+    background-color: $color-success;
+  }
+
+  &--info {
+    background-color: $color-info;
+  }
+
+  &--color-theme {
+    background-color: $color-active;
+  }
+
+  &--small {
+    @extend %small;
+  }
+}
+
+// TODO: rename to .app__btn--secondary
+.app__btn-secondary {
+  @extend %base;
+  color: $color-text;
+
+  &:disabled {
+    color: $color-unfocused;
+  }
+
+  &:enabled:hover {
+    background-color: $color-btn-secondary-hover;
+  }
+
+  &--danger:enabled:hover {
+    background-color: $color-danger;
+    color: $color-text-white;
+  }
+
+  &--success:enabled:hover {
+    background-color: $color-success;
+    color: $color-text-white;
+  }
+
+  &--iconed {
+    border-radius: 50%;
+    position: relative;
+    padding: 0;
+    min-width: 0;
+    max-width: 3rem;
+    height: 3rem;
+    width: 3rem;
+
+    & > svg {
+      fill: $color-text;
+      left: 50%;
+      position: absolute;
+      transform: translate(-50%, -50%);
+      top: 50%;
+    }
+  }
+
+  &--info:enabled:hover {
+    background-color: $color-info;
+    color: $color-text-white;
+  }
+
+  &--small {
+    @extend %small;
+  }
+}
+
+.app__upload-btn.app__btn {
+  display: block;
+  cursor: pointer;
+  max-width: 10rem;
+  &:hover {
+    opacity: 0.9;
+  }
+}
+
+.app__upload-input {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}

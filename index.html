@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TokenD Admin</title>
+    <script>
+      // Non-blocking style loading
+      function loadStyles (url) {
+        return new Promise(function (resolve, reject) {
+          var xhr = new XMLHttpRequest()
+          xhr.returnType = 'text'
+          xhr.onload = function () {
+            var link = document.createElement('link')
+            link.rel = 'stylesheet'
+            link.href = url
+            document.head.appendChild(link)
+            resolve();
+          }
+          xhr.onerror = reject
+          xhr.open('get', url, true)
+          xhr.send()
+        })
+      }
+
+      // Load fonts
+      loadStyles(window.location.origin + '/static/fonts/fonts.css');
+    </script>
+
+  </head>
+  <body>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+  </body>
+</html>

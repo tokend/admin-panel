@@ -1,0 +1,33 @@
+.app__form-row {
+  display: flex;
+  width: 100%;
+
+  & + & {
+    margin-top: 2.5rem;
+  }
+
+  & > .app__form-field {
+    flex: 1;
+
+    &--halved {
+      flex: 0.5;
+      margin-right: 2rem;
+    }
+  }
+
+  & > .app__form-field + .app__form-field {
+    margin-left: 2rem;
+  }
+
+  & + .app__form-actions {
+    margin-top: 3.5rem;
+  }
+}
+
+.app__form-actions {
+  display: flex;
+
+  & > button + button {
+    margin-left: 1rem
+  }
+}
