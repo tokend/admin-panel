@@ -9,6 +9,8 @@ import { envelopOperations } from './helpers/envelopOperations'
 const ScopedServerCallBuilder = ServerCallBuilder.makeScope()
   .registerResource('accounts')
   .registerResource('transactions')
+  .registerResource('operations')
+  .registerResource('limits')
 
 export default {
   get (address) {
@@ -18,21 +20,35 @@ export default {
       .get()
   },
 
+  operationsOf (id) {
+    return {
+      _owner: id,
+      _blank: new ScopedServerCallBuilder().accounts(id).operations(),
+      /**
+       * Get operations by type
+       * @param {string} type
+       * @returns {Promise} A Promise with the response
+       */
+      getAllByType (type) {
+        return this._blank
+          .sign()
+          .get({
+            order: 'desc',
+            operation_type: type
+          })
+      }
+    }
+  },
+
+  getLimits (address) {
+    return new ScopedServerCallBuilder()
+      .accounts(address)
+      .limits()
+      .sign()
+      .get()
+  },
+
   // legacy
-
-  updateAccountPolicies (destination, accountType, accountPolicies) {
-    const operation = Operation.createAccount({
-      destination,
-      accountType,
-      accountPolicies
-    })
-    return server.submitOperation(operation, true)
-  },
-
-  updateExchangePolicies (opts) {
-    const operation = Operation.createAccount(opts)
-    return server.submitOperation(operation, true)
-  },
 
   loadAccount (accountId) {
     return server.sdkServer.loadAccountWithSign(accountId, store.getters.keypair)

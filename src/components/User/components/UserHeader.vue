@@ -19,7 +19,7 @@ export default {
 @import "../../../assets/scss/colors";
 .user-header {
   height: 5rem;
-  background-color: $deep-blue;
+  background-color: $color-header-bg;
   box-shadow: 0.07rem 0.07rem 0.56rem 0.04rem rgba(170, 170, 170, 0.72);
   display: flex;
   justify-content: space-between;
@@ -33,7 +33,7 @@ export default {
     display: inline-block;
     height: 100%;
     text-decoration: none;
-    color: $white;
+    color: $color-text-inverse;
     border-bottom: 2px solid transparent;
     display: inline-flex;
     align-items: center;
@@ -43,7 +43,7 @@ export default {
     }
 
     &.router-link-exact-active {
-      border-color: $white;
+      border-color: $color-text-inverse;
     }
 
     &:hover {

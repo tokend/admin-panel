@@ -4,7 +4,7 @@
       <template v-if="isTokenLoaded">
         <div class="sale-manager-details-tab__row-item">
           <ul class="key-value-list">
-            <label class="data-caption">Token details</label>
+            <label class="data-caption">Investment token details</label>
             <li>
               <span>Name</span>
               <span>{{token.name || '&mdash;' }}</span>

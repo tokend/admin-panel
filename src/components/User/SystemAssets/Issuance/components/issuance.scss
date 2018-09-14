@@ -1,0 +1,57 @@
+@import "../../../../../assets/scss/colors";
+$paddind-in-tab: 4rem;
+$width-without-indentation:calc(100% + 2 * #{$paddind-in-tab});
+
+.issuance-rl__filters{
+  background-color: $color-content-bg;
+  border-radius: 0.3rem;
+  padding-bottom: 2.5rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.issuance-rl__filter {
+  flex: 0.33;
+}
+
+.issuance-rl__li {
+  width: $width-without-indentation;
+  display: flex;
+  justify-content: space-between;
+  text-decoration: none;
+  color: inherit;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  margin-right: -$paddind-in-tab;
+  margin-left: -$paddind-in-tab;
+  &:nth-child(odd) {
+    background: #f9f9f9;
+  }
+  &:hover {
+    background-color: rgba(123, 110, 255, 0.06);
+  }
+}
+
+.issuance-rl__li-header {
+  width: $width-without-indentation;
+  margin-right: -$paddind-in-tab;
+  margin-left: -$paddind-in-tab;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.issuance-rl__li-a {
+  width: 100%;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  justify-content: space-between;
+}
+
+.issuance-rl__list-wrp {
+  margin-top: 1rem;
+}
+
+.issuance-rl__request-counter-wrapper {
+  margin-bottom: 3rem;
+}

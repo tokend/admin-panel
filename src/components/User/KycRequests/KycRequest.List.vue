@@ -6,7 +6,12 @@
       <div class="request-list__filters-wrp">
         <div class="app-list-filters">
           <input-field class="app-list-filters__field" v-model.trim="filters.email" label="Email" />
-
+          <select-field class="issuance-rl__filter app-list-filters__field"
+                        label="User type" v-model="filters.type">
+            <option :value="''"></option>
+            <option :value="ACCOUNT_TYPES.general">General</option>
+            <option :value="ACCOUNT_TYPES.syndicate">Сorporate</option>
+          </select-field>
           <select-field class="app-list-filters__field" v-model="filters.state" label="State">
             <option v-for="state in Object.keys(KYC_REQUEST_STATES)" :value="state">{{ KYC_REQUEST_STATES[state].label }}</option>
           </select-field>
@@ -25,6 +30,7 @@
               <span class="app-list__cell app-list__cell--right">State</span>
               <span class="app-list__cell app-list__cell--right">Account type</span>
               <span class="app-list__cell app-list__cell--right">Last updated</span>
+              <span class="app-list__cell app-list__cell--right">Type</span>
             </div>
 
             <button class="app-list__li" v-for="item in list.data" :key="item.id" @click="toggleViewMode(item.accountToUpdateKyc)">
@@ -32,8 +38,9 @@
                            :address="item.accountToUpdateKyc"
                             is-titled/>
               <span class="app-list__cell app-list__cell--right">{{item.requestState}}</span>
-              <span class="app-list__cell app-list__cell--right">{{item.accountTypeToSet.string}}</span>
+              <span class="app-list__cell app-list__cell--right">{{ACCOUNT_TYPES_VERBOSE[item.accountTypeToSet.int]}}</span>
               <span class="app-list__cell app-list__cell--right">{{formatDate(item.updatedAt)}}</span>
+              <kyc-type class="app-list__cell app-list__cell--right" :accountId="item.accountToUpdateKyc"/>
             </button>
 
 
@@ -50,16 +57,16 @@
         </template>
 
         <template v-else>
-          <div class="app-list__li-like">
+          <div class="app-list">
             <template v-if="isLoading">
-              <p>
-                Loading...
+              <p class="app-list__li">
+                <span class="app-list__cell app-list__cell--center">Loading...</span>
               </p>
             </template>
 
             <template v-else>
-              <p>
-                Nothing here yet
+              <p class="app-list__li">
+                <span class="app-list__cell app-list__cell--center">Nothing here yet</span>
               </p>
             </template>
           </div>
@@ -83,13 +90,16 @@
   import Vue from 'vue'
   import api from '@/api'
   import UserView from '../Users/Users.Show'
+  import KycType from './components/KycRequests.Type'
 
   import SelectField from '@comcom/fields/SelectField'
   import InputField from '@comcom/fields/InputField'
 
   import {
     REQUEST_STATES,
-    KYC_REQUEST_STATES
+    KYC_REQUEST_STATES,
+    ACCOUNT_TYPES,
+    ACCOUNT_TYPES_VERBOSE
   } from '@/constants'
 
   const VIEW_MODES_VERBOSE = Object.freeze({
@@ -98,9 +108,10 @@
   })
 
   export default {
-    components: { UserView, EmailGetter, SelectField, InputField },
+    components: { UserView, EmailGetter, SelectField, InputField, KycType },
     data () {
       return {
+        ACCOUNT_TYPES,
         isLoading: false,
         isListEnded: false,
         list: {},
@@ -112,11 +123,13 @@
         filters: {
           state: 'pending',
           email: '',
-          address: ''
+          address: '',
+          type: ''
         },
         VIEW_MODES_VERBOSE,
         REQUEST_STATES,
-        KYC_REQUEST_STATES
+        KYC_REQUEST_STATES,
+        ACCOUNT_TYPES_VERBOSE
       }
     },
 
@@ -135,7 +148,7 @@
             address = await this.getAccountIdByEmail()
           }
           this.list = await api.requests.getKycRequests(
-            { state: KYC_REQUEST_STATES[this.filters.state], requestor: address }
+            { state: KYC_REQUEST_STATES[this.filters.state], requestor: address, type: this.filters.type }
           )
           this.isListEnded = !(this.list.data || []).length
         } catch (error) {
@@ -183,6 +196,7 @@
     },
     watch: {
       'filters.state' () { this.getList() },
+      'filters.type' () { this.getList() },
       'filters.address': _.throttle(function () { this.getList() }, 1000),
       'filters.email': _.throttle(function () { this.getList() }, 1000)
     }

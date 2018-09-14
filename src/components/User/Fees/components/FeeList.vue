@@ -309,9 +309,6 @@
         const type = +this.filters.feeType
         const asset = this.filters.assetCode
         const paymentFeeSubtype = +this.filters.paymentFeeSubtype
-
-        console.log(this.fees[asset].filter(item => item.fee_type === type))
-
         return this.fees[asset]
           .filter(item => item.fee_type === type)
           .filter(item => type === FEE_TYPES.paymentFee ? item.subtype === paymentFeeSubtype : true)

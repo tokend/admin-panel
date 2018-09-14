@@ -72,7 +72,8 @@
     <modal v-if="requestToShow && requestToShow.id"
       @close-request="requestToShow = null"
       max-width="60rem">
-      <withdrawal-details :request="requestToShow" />
+      <withdrawal-details :request="requestToShow"
+            @close-request="refreshList"/>
     </modal>
   </div>
 </template>
@@ -156,6 +157,11 @@ export default {
       const oldLength = (this.list.data || []).length
       this.list = await this.list.concatNext()
       this.isNoMoreEntries = oldLength === this.list.data.length
+    },
+
+    refreshList () {
+      this.getList()
+      this.requestToShow = null
     }
   },
 

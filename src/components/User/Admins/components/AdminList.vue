@@ -27,7 +27,7 @@
         <router-link class="admin-list__li-a"
           :to="{ name: 'admins.show', params: { id: item.public_key } }">
           <span class="admin-list__li-name" :title="item.signer_name">
-            {{item.signer_name}}
+            {{ item.signer_name.split(':')[0] }}
             <template v-if="item.public_key === userAddress">
               <span class="secondary">(you)</span>
             </template>
@@ -38,7 +38,7 @@
           </span>
 
           <span class="admin-list__li-rights" :title="item.signer_type_i">
-            {{item.signer_type_i}}
+            {{ item.signer_type_i | getAdminSignerTypeLabel }}
           </span>
 
           <span class="admin-list__li-weight" :title="item.weight">

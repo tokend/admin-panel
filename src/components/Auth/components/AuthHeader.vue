@@ -1,14 +1,14 @@
 <template>
   <header class="auth-header">
     <div class="auth-header__container app__container">
-      <div class="auth-header__header-group">
+      <div class="auth-header__header-group auth-header__header-group--vertical">
         <span class="auth-header__admin-logo">TokenD</span>
         <span class="auth-header__admin-badge">ADMIN PANEL</span>
       </div>
 
       <div class="auth-header__header-group">
         <nav class="auth-header__nav">
-          <li class="auth-header__nav-li auth-header__nav-li--emphasis">
+          <li class="auth-header__nav-li">
             <router-link :to="{name: 'signup' }">Sign Up</router-link>
           </li>
 
@@ -37,7 +37,7 @@ export default {
 @import "../../../assets/scss/colors";
 
 .auth-header {
-  background-color: $deep-blue;
+  background-color: $color-header-bg;
   height: 8rem;
 }
 
@@ -67,36 +67,24 @@ export default {
 
 .auth-header__nav-li {
   & > a {
-    color: $color-text-white;
+    color: $color-text-inverse;
     text-decoration: none;
     font-size: 1.6rem;
     line-height: 3.4rem;
     display: inline-flex;
     align-items: center;
-    padding: 0 2.5rem;
+    padding: 0 1.5rem;
 
     &:hover {
       background-color: rgba(#fff, .2);
     }
 
     & > .mdi-icon {
-      fill: rgba($color: $color-text-white, $alpha: 0.5);
+      fill: rgba($color: $color-text-inverse, $alpha: 0.5);
       width: 1.4rem;
       height: 1.4rem;
       margin-left: .7rem;
       vertical-align: middle;
-    }
-  }
-
-  &--emphasis {
-    margin: 0 2rem;
-
-    & > a {
-      display: inline-block;
-      line-height: 3.4rem;
-      min-width: 11rem;
-      padding: 0 2.5rem;
-      text-align: center;
     }
   }
 }
@@ -109,13 +97,18 @@ export default {
   &:last-of-type {
     justify-content: flex-end;
   }
+
+  &--vertical {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 
 .auth-header__admin-badge {
   display: inline-block;
-  color: $color-text-white;
+  color: $color-text-inverse;
   font-size: 1.2rem;
-  align-self: flex-end;
+  align-self: flex-start;
   opacity: .5;
   letter-spacing: .08rem;
 }

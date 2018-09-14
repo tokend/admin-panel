@@ -9,7 +9,7 @@
 
       <input-field class="arc-list__filter" v-model="filters.requestor" label="Requestor"/>
 
-      <input-field class="arc-list__filter" v-model="filters.asset" label="Asset"/>
+      <input-field class="arc-list__filter" v-model="filters.asset" label="Token code"/>
     </div>
 
     <div class="token-request-list__table-wrp">

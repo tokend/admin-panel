@@ -2,7 +2,7 @@
   <div class="sale-manager-syndicate-tab">
     <template v-if="isLoaded">
       <div class="sale-manager-syndicate-tab__details-wrp">
-        <label class="data-caption">Corporate user details</label>
+        <label class="data-caption">Syndicate user details</label>
         <ul class="key-value-list">
           <li>
             <span>Name</span>
@@ -75,18 +75,13 @@ export default {
       isFailed: false
     }
   },
-
   created () {
-    console.log('created')
-    console.log(this.sale)
-    console.log(_get(this.sale, 'ownerId'))
     this.getSyndicate({
       ownerId: _get(this.sale, 'ownerId') ||
                _get(this.saleRequest, 'requestor') ||
                _get(this.user, 'id'),
       blobId: this.blobId
     })
-    console.log('created exctd')
   },
 
   methods: {
@@ -103,6 +98,7 @@ export default {
         this.syndicate = JSON.parse(response.data.value || response.data[0].value)
         this.isLoaded = true
       } catch (error) {
+        console.error(error)
         this.isFailed = true
       }
     }

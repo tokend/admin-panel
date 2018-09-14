@@ -1,6 +1,14 @@
 <template>
   <div class="user-details-account">
     <h3 class="user-details-account__title">KYC information</h3>
+    <div class="user-details-account__info">
+      <p>Can be uploaded one of the documents:</p>
+      <p> - Valid passport;</p>
+      <p>- Driving license - full, not provisional, with a color photograph;</p>
+      <p> - Valid National ID card;<p/>
+      <p>- In all cases handwritten documents or those in a foreign script that cannot be read, i.e Arabic or Cyrillic
+        will not be accepted unless translated and notarized.</p>
+    </div>
 
     <template v-if="isLoaded">
       <div class="user-details-account__docs">
@@ -100,7 +108,23 @@
           <span>Postal code</span>
           <span :title="kyc.address.postalCode">{{kyc.address.postalCode}}</span>
         </li>
+        <li>
+          <span>Proof of address</span>
+          <span>
+            <user-doc-link-getter :user-id="user.id"
+                                  :file-key="kyc.documents.kycPoa"
+            >Open file</user-doc-link-getter>
+          </span>
+        </li>
       </ul>
+      <div class="user-details-account__info">
+        <p>Can be uploaded one of the documents:</p>
+        <p> - Driving license if not already uploaded on the previous step;</p>
+        <p>- Recent utility bill (not older than 6 months old);</p>
+        <p> - Bank statement or credit card statement (not older than 6 months);<p/>
+        <p> -  Bank reference letter (not older than 6 months);<p/>
+        <p>- Signed Tenancy/Rental Agreement.</p>
+      </div>
     </template>
 
     <template v-else-if="isFailed">
@@ -188,7 +212,7 @@ export default {
   .user-details-account__docs {
     align-items: flex-end;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     margin-bottom: 4rem;
   }
 
@@ -197,6 +221,13 @@ export default {
 
     &:first-child {
       margin-right: 2rem;
+    }
+  }
+
+  .user-details-account__info {
+    margin-bottom: 2rem;
+    p {
+      font-weight: 600;
     }
   }
 

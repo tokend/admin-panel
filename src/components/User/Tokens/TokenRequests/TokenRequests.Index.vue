@@ -1,6 +1,6 @@
 <template>
   <div class="token-requests-index">
-    <h2>Create/update request list</h2>
+    <h2>Manage investment tokens</h2>
 
     <div class="token-requests-index__list-wrp">
       <token-request-list :state="state"/>

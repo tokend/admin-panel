@@ -1,2 +1,2 @@
-export { formatAssetAmount } from './formatAssetAmount'
-export { formatDate } from './formatDate'
+export { formatAssetAmount, formatFiatAmount } from './formatAssetAmount'
+export { formatDate, formatDateWithTime } from './formatDate'

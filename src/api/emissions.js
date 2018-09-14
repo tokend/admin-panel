@@ -69,7 +69,8 @@ export default {
         receiver: data.receiver,
         reference: data.reference,
         source: params.MASTER_ACCOUNT,
-        externalDetails: {}
+        externalDetails: {},
+        allTasks: data.allTasks || 0
       })
     )
     return new ScopedServerCallBuilder()

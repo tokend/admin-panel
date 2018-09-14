@@ -30,6 +30,7 @@ export default {
 </script>
 
 <style lang="scss">
+@import "../../../assets/scss/colors";
 $brand-seashell: #fff7f2;
 $brand-gold: #ff9900;
 $deep-blue: #0066cc;
@@ -56,7 +57,7 @@ $deep-blue: #0066cc;
 .progress {
   border-radius: 50%;
   border: 2px solid $brand-seashell;
-  border-left-color: $deep-blue;
+  border-left-color: $color-loader-fill;
   height: 55px;
   left: 50%;
   position: absolute;

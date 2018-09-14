@@ -11,13 +11,14 @@
 
           <tab name="Full description">
             <description-tab :sale="sale" />
+            <iframe :src="`https://www.youtube.com/embed/${sale.youtubeVideoId}`" allowfullscreen="true"></iframe>
           </tab>
 
           <tab name="Participants">
             <participants-tab :sale="sale" />
           </tab>
 
-          <tab name="Corporate user">
+          <tab name="Syndicate user">
             <syndicate-tab :sale="sale" />
           </tab>
         </tabs>

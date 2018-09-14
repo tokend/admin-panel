@@ -33,6 +33,13 @@
       </li>
 
       <li class="user-sidebar__nav-li">
+        <router-link :to="{ name: 'limits' }">
+          <mdi-chart-bar-icon/>
+          <span>Limits</span>
+        </router-link>
+      </li>
+
+      <li class="user-sidebar__nav-li">
         <router-link :to="{ name: 'trades' }">
           <mdi-chart-line-variant-icon/>
           <span>Trades</span>
@@ -87,6 +94,7 @@ import 'mdi-vue/BookIcon'
 import 'mdi-vue/OpenInNewIcon'
 import 'mdi-vue/ChartLineVariantIcon'
 import 'mdi-vue/AccountPlusIcon'
+import 'mdi-vue/ChartBarIcon'
 
 import '@/assets/mdi/AccountStarIcon'
 import config from '@/config'
@@ -105,8 +113,8 @@ export default {
 .user-sidebar {
   width: 100%;
   height: 100%;
-  background-color: $white;
-  color: $color-text-white;
+  background-color: $color-sidebar-bg;
+  color: $color-text-inverse;
   display: flex;
   flex-direction: column;
   overflow-y: auto;

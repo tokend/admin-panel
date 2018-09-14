@@ -2,7 +2,7 @@
   <div class="user-request">
     <h3>Latest request</h3>
     <p class="user-request__block text">
-      Create a {{ requestToReview.accountTypeToSet.string }} account:
+      Create a {{ (ACCOUNT_TYPES_VERBOSE[requestToReview.accountTypeToSet.int]).toLowerCase() }} account:
       {{ requestToReview.requestState }}
     </p>
 
@@ -130,7 +130,8 @@ import {
   SELECTED_TASKS_TO_ADD,
   SELECTED_TASKS_TO_REMOVE,
   REVIEW_TASKS_VOCABULARY,
-  ACCOUNT_TYPES
+  ACCOUNT_TYPES,
+  ACCOUNT_TYPES_VERBOSE
 } from '@/constants'
 import { TextField, TickField } from '@comcom/fields'
 import Modal from '@comcom/modals/Modal'
@@ -159,6 +160,7 @@ export default {
       SELECTED_TASKS_TO_REMOVE,
       REVIEW_TASKS_VOCABULARY,
       ACCOUNT_TYPES,
+      ACCOUNT_TYPES_VERBOSE,
       rejectForm: {
         reason: '' + EMPTY_REASON,
         isShown: false,
@@ -231,7 +233,6 @@ export default {
       if (!window.confirm('Are you sure? This action cannot be undone')) return
       this.isPending = true
       try {
-        console.log('isReset:' + this.rejectForm.isReset)
         const submitter = this.rejectForm.isReset
           ? api.requests.resetToUnverified({
             accountToUpdateKyc: this.requestToReview.accountToUpdateKyc,

@@ -10,9 +10,16 @@
     </section>
 
     <section class="issuance__list-section">
-      <h2>Issuance request list</h2>
-      <div class="issuance__list-wrp">
-        <issuance-request-list/>
+      <div class="app__block">
+        <tabs>
+          <tab name="History">
+            <issuance-history/>
+          </tab>
+
+          <tab name="Requests">
+            <issuance-request-list/>
+          </tab>
+        </tabs>
       </div>
     </section>
   </div>
@@ -21,11 +28,16 @@
 <script>
 import IssuanceForm from './components/IssuanceForm.vue'
 import IssuanceRequestList from './components/IssuanceRequestList.vue'
+import IssuanceHistory from './components/IssuanceHistory.vue'
+import { Tabs, Tab } from '@comcom/Tabs'
 
 export default {
   components: {
     IssuanceForm,
-    IssuanceRequestList
+    IssuanceRequestList,
+    IssuanceHistory,
+    Tabs,
+    Tab
   }
 }
 </script>

@@ -16,7 +16,7 @@
       </div>
     </template>
     <template v-if="view.mode === VIEW_MODES_VERBOSE.operation">
-      <op-details :id="view.operationId" :user-id="id"/>
+      <op-details :operation="view.operation" :user-id="id"/>
     </template>
   </div>
 </template>
@@ -24,7 +24,7 @@
 <script>
 import UserOpList from './components/UserOpList'
 import UserDetails from './components/UserDetails'
-import OpDetails from '@/components/User/Operations/Operations.Show.vue'
+import OpDetails from '@/components/User/Operations/OperationDetails.vue'
 
 import 'mdi-vue/ChevronLeftIcon'
 
@@ -45,20 +45,20 @@ export default {
   data: _ => ({
     view: {
       mode: VIEW_MODES_VERBOSE.user,
-      operationId: null
+      operation: null
     },
     VIEW_MODES_VERBOSE
   }),
 
   methods: {
-    toggleViewMode (id) {
-      if (id) {
+    toggleViewMode (operation) {
+      if (operation) {
         this.view.mode = VIEW_MODES_VERBOSE.operation
-        this.view.operationId = id
+        this.view.operation = operation
         return
       }
       this.view.mode = VIEW_MODES_VERBOSE.user
-      this.view.operationId = null
+      this.view.operation = null
     },
     back () {
       if (this.view.mode === VIEW_MODES_VERBOSE.user) {

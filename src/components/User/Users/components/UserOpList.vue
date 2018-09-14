@@ -17,27 +17,30 @@
         <span class="app-list__cell">
           Source
         </span>
+
+        <span class="app-list__cell">
+          Counterparty
+        </span>
       </div>
 
-      <button class="app-list__li" v-for="item in records" :key="item.id" @click="$emit('op-select', item.id)">
+      <button class="app-list__li" v-for="item in records" :key="item.id" @click="$emit('op-select', item)">
         <span class="app-list__cell" :title="item.type">
           {{item.type}}
         </span>
-
         <span class="app-list__cell" :title="item.ledger_close_time">
           {{item.ledger_close_time}}
         </span>
-
         <span class="app-list__cell" :title="item.source_account">
           {{item.source_account}}
+        </span>
+        <span class="app-list__cell">
+          <operation-counterparty :operation="item" />
         </span>
       </button>
     </ul>
 
     <div class="app__more-btn-wrp">
-      <button class="app__btn-secondary"
-        v-if="!isListEnded && records"
-        @click="getNextPage" >
+      <button class="app__btn-secondary" v-if="!isListEnded && records" @click="getNextPage">
         More
       </button>
     </div>
@@ -48,10 +51,16 @@
 import Vue from 'vue'
 import api from '@/api'
 import moment from 'moment'
+import { formatAssetAmount } from '@/utils/formatters'
+import { OperationCounterparty } from '@comcom/getters'
 
 export default {
+  components: {
+    OperationCounterparty
+  },
   data () {
     return {
+      formatAssetAmount,
       list: undefined,
       isListEnded: false,
       masterPubKey: Vue.params.MASTER_ACCOUNT
@@ -113,5 +122,4 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
 </style>

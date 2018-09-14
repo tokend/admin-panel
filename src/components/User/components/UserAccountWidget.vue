@@ -63,7 +63,7 @@ export default {
 @import "../../../assets/scss/colors";
 
 .user-account-widget {
-  color: $white;
+  color: $color-text-inverse;
   display: inline-block;
   position: relative;
   height: 100%;
@@ -83,7 +83,7 @@ export default {
 
 .user-account-widget__initials {
   display: inline-block;
-  border: 2px solid $white;
+  border: 2px solid $color-text-inverse;
   border-radius: 50%;
   padding: 0.4rem;
   margin-right: 0.7rem;
@@ -112,7 +112,7 @@ export default {
     bottom: 0;
     right: 0;
     border: 0.5rem solid;
-    border-color: $white transparent transparent transparent;
+    border-color: $color-text-inverse transparent transparent transparent;
   }
 }
 

@@ -36,7 +36,17 @@
                                  :user="user" :blobId="latestRequest.kycData.blobId"/>
 
             <kyc-syndicate-section v-if="latestRequest.accountTypeToSet.string === USER_TYPES_STR.syndicate"
-                                 :user="user" :blobId="latestRequest.kycData.blobId"/>
+                                 :user="user" :blobId="latestRequest.kycData.blobId"
+            :previousBlobId="previousBlobIdForKycRequest"/>
+          </section>
+
+
+          <section v-if="previousBlobIdForKycRequest" class="user-details__section">
+            <h1>Previous KYC Request</h1>
+            <kyc-general-section v-if="latestRequest.accountTypeToSet.string === USER_TYPES_STR.general"
+                                 :user="user" :blobId="previousBlobIdForKycRequest"/>
+            <kyc-syndicate-section v-if="latestRequest.accountTypeToSet.string === USER_TYPES_STR.syndicate"
+                                   :user="user" :blobId="previousBlobIdForKycRequest"/>
           </section>
         </template>
 
@@ -97,6 +107,9 @@ import BlockSection from './UserDetails.Block'
 import { formatDate } from '../../../../../utils/formatters'
 import { unCamelCase } from '../../../../../utils/un-camel-case'
 
+const OPERATION_TYPE = {
+  createKycRequest: '22'
+}
 const VIEW_MODES = Object.freeze({
   user: 'user',
   requests: 'requests'
@@ -115,6 +128,7 @@ export default {
     return {
       USER_TYPES_STR,
       USER_STATES_STR,
+      OPERATION_TYPE,
       isLoaded: false,
       isFailed: false,
       isShownExternal: false,
@@ -127,7 +141,8 @@ export default {
       },
       VIEW_MODES,
       REQUEST_STATES_STR,
-      PENDING_TASKS_VOCABULARY
+      PENDING_TASKS_VOCABULARY,
+      previousBlobIdForKycRequest: null
     }
   },
 
@@ -181,12 +196,28 @@ export default {
         error.showMessage()
         this.isFailed = true
       }
+      if (this.latestRequest) {
+        this.getPreviousKycBlobId()
+      }
+    },
+    async getPreviousKycBlobId () {
+      const operationList = await this.getOperationsList()
+      if (operationList[1]) {
+        this.previousBlobIdForKycRequest = operationList[1].kycData.blobId
+      }
+    },
+    async getOperationsList () {
+      const operationsList = await api.accounts
+        .operationsOf(this.id)
+        .getAllByType(OPERATION_TYPE.createKycRequest)
+      return operationsList.data
     },
     async getRequest () {
       const requests = await api.requests.getKycRequests({
         state: REQUEST_STATES.pending,
         requestor: this.id
       })
+      console.log(JSON.parse(JSON.stringify(requests)))
       return requests.data[0] || null
     },
     async getAllUserRequests () {

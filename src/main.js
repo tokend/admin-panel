@@ -11,6 +11,15 @@ import Raven from 'raven-js'
 import RavenVue from 'raven-js/plugins/vue'
 import ravenConfig from './raven_config'
 
+/* filters */
+import {
+  filterAccountType,
+  filterDateWithTime,
+  localizeIssuanceRequestState,
+  adminSignerType,
+  getAdminSignerTypeLabel
+} from './components/App/filters/filters'
+
 if (process.env.NODE_ENV === 'production') {
   Vue.config.devtools = false
   Vue.config.debug = false
@@ -89,3 +98,11 @@ Vue.use(Auth)
 Vue.use(params)
 Vue.use(VeeValidate)
 Vue.use(api)
+
+/* Vue filters */
+
+Vue.filter('accountType', filterAccountType)
+Vue.filter('dateTime', filterDateWithTime)
+Vue.filter('localizeIssuanceRequestState', localizeIssuanceRequestState)
+Vue.filter('adminSignerType', adminSignerType)
+Vue.filter('getAdminSignerTypeLabel', getAdminSignerTypeLabel)

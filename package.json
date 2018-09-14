@@ -25,6 +25,7 @@
     "blob.js": "^1.0.1",
     "camelcase-keys-deep": "^0.1.0",
     "chart.js": "^2.7.0",
+    "d3": "^4.12.0",
     "jquery": "^3.2.1",
     "jsona": "^1.1.4",
     "mdi-vue": "0.2.7",
@@ -39,14 +40,14 @@
     "v-qrcode": "^1.0.3",
     "vee-validate": "2.0.0-rc.5",
     "vue": "^2.0.1",
+    "vue-flatpickr-component": "^7.0.5",
     "vue-markdown": "^2.2.4",
     "vue-quill-editor": "3.0.4",
     "vue-resource": "^1.0.3",
     "vue-router": "^2.0.1",
     "vue-tabs-component": "^1.4.0",
     "vuex": "^2.0.0",
-    "webcrypto-liner": "0.1.26",
-    "d3": "^4.12.0"
+    "webcrypto-liner": "0.1.26"
   },
   "devDependencies": {
     "autoprefixer": "^6.4.0",

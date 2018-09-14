@@ -13,7 +13,7 @@
             <description-tab :sale-request="request.sale" />
           </tab>
 
-          <tab name="Corporate user">
+          <tab name="Syndicate user">
             <syndicate-tab :sale-request="request.sale" />
           </tab>
         </tabs>
@@ -72,6 +72,7 @@ import Modal from '@comcom/modals/Modal'
 import { REQUEST_STATES } from '@/constants'
 import DetailsTab from './SaleRequestManager.DetailsTab'
 import DescriptionTab from './SaleRequestManager.DescriptionTab'
+import { confirmAction } from '../../../../../../js/modals/confirmation_message'
 import SyndicateTab from '../../../components/SaleManager/SaleManager.SyndicateTab'
 import { Tabs, Tab } from '@comcom/Tabs'
 
@@ -172,13 +173,15 @@ export default {
 
     async approve () {
       this.isSubmitting = true
-      try {
-        await api.requests.approve(this.request.sale)
-        this.$store.dispatch('SET_INFO', 'Fund request approved.')
-        this.$router.push({ name: 'sales.requests' })
-      } catch (error) {
-        console.error(error)
-        error.showMessage()
+      if (await confirmAction()) {
+        try {
+          await api.requests.approve(this.request.sale)
+          this.$store.dispatch('SET_INFO', 'Fund request approved.')
+          this.$router.push({ name: 'sales.requests' })
+        } catch (error) {
+          console.error(error)
+          error.showMessage()
+        }
       }
       this.isSubmitting = false
     },

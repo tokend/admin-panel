@@ -62,7 +62,38 @@ export const UserRoutes = {
         }
       ]
     },
-
+    {
+      path: '/limits',
+      name: 'limits',
+      redirect: { name: 'limits.index' },
+      component: function (resolve) {
+        require(['../../components/User/Limits/Limits.vue'], resolve)
+      },
+      children: [
+        {
+          path: 'index',
+          name: 'limits.index',
+          component: function (resolve) {
+            require(['../../components/User/Limits/Limits.Index.vue'], resolve)
+          }
+        },
+        {
+          path: 'requests',
+          name: 'limits.requests',
+          component: function (resolve) {
+            require(['../../components/User/Limits/Limits.Requests.vue'], resolve)
+          }
+        },
+        {
+          path: 'requests/:id',
+          name: 'limits.reviewer',
+          component: function (resolve) {
+            require(['../../components/User/Limits/Limits.Reviewer.vue'], resolve)
+          },
+          props: true
+        }
+      ]
+    },
     {
       path: '/admins',
       name: 'admins',
@@ -110,6 +141,14 @@ export const UserRoutes = {
           component: function (resolve) {
             require(['../../components/User/SystemAssets/Issuance/Issuance.vue'], resolve)
           }
+        },
+        {
+          path: 'issuance/:id',
+          name: 'systemAssets.issuance.props',
+          component: function (resolve) {
+            require(['../../components/User/SystemAssets/Issuance/IssuanceDetails.vue'], resolve)
+          },
+          props: true
         },
         {
           path: 'preissuance',
@@ -362,31 +401,6 @@ export const UserRoutes = {
         require(['../../components/settings/GAuth.vue'], resolve)
       }
     },
-
-    {
-      path: '/operations',
-      name: 'operations',
-      redirect: { name: 'operations.index' },
-      component: function (resolve) {
-        require(['../../components/User/Operations/Operations.vue'], resolve)
-      },
-      children: [
-        {
-          path: '',
-          name: 'operations.index',
-          redirect: { name: 'operations.show' }
-        },
-        {
-          path: ':id',
-          name: 'operations.show',
-          component: function (resolve) {
-            require(['../../components/User/Operations/Operations.Show.vue'], resolve)
-          },
-          props: true
-        }
-      ]
-    },
-
     {
       path: '/user-requests',
       name: 'user-requests',

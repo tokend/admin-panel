@@ -11,8 +11,16 @@ const ScopedServerCallBuilder = ServerCallBuilder.makeScope()
 .registerResource('holders')
 .registerResource('asset_pairs', 'assetPairs')
 .registerResource('transactions')
+.registerResource('convert')
 
 export default {
+  getAll () {
+    return new ScopedServerCallBuilder()
+      .assets()
+      .sign()
+      .get()
+  },
+
   getAllSystemAssets () {
     return new ScopedServerCallBuilder()
       .assets()
@@ -155,5 +163,12 @@ export default {
 
   getAssetPairs () {
     return server.get('/asset_pairs', false)
+  },
+
+  convertAssetPairs (sourceAsset, destAsset, amount) {
+    return new ScopedServerCallBuilder()
+      .assetPairs()
+      .convert()
+      .get({ 'source_asset': sourceAsset, 'dest_asset': destAsset, 'amount': amount })
   }
 }

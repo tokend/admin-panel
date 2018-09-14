@@ -28,13 +28,13 @@
 .app__btn {
   @extend %base;
   background-color: $color-active;
-  color: $color-text-white;
+  color: $color-text-inverse;
   &:enabled:hover {
     opacity: .8;
   }
 
   &:disabled {
-    background-color: $color-inactive;
+    background-color: rgba($color-active, .40);
   }
 
   &--iconed {
@@ -43,7 +43,7 @@
     justify-content: center;
 
     & > svg {
-      fill: $color-text-white;
+      fill: $color-text-inverse;
     }
   }
 
@@ -86,12 +86,12 @@
 
   &--danger:enabled:hover {
     background-color: $color-danger;
-    color: $color-text-white;
+    color: $color-text-inverse;
   }
 
   &--success:enabled:hover {
     background-color: $color-success;
-    color: $color-text-white;
+    color: $color-text-inverse;
   }
 
   &--iconed {
@@ -114,7 +114,7 @@
 
   &--info:enabled:hover {
     background-color: $color-info;
-    color: $color-text-white;
+    color: $color-text-inverse;
   }
 
   &--small {

@@ -1,7 +1,7 @@
 <template>
   <div class="assets-new">
     <div class="app__block assets-new__block">
-      <h2>Create token</h2>
+      <h2>Create asset</h2>
 
       <div class="assets-new__manager-wrp">
         <asset-manager/>

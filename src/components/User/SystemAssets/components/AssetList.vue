@@ -1,10 +1,13 @@
 <template>
   <div class="asset-list">
     <div class="asset-list__table-header" v-if="parsedAssets">
+      <span class="asset-list__li-name secondary">
+        Name
+      </span>
+
       <span class="asset-list__li-code secondary">
         Code
       </span>
-
       <span class="asset-list__li-policy secondary">
         Policy
       </span>
@@ -14,6 +17,10 @@
       <li class="asset-list__li" v-for="(asset, i) in parsedAssets" :key="i">
         <router-link class="asset-list__li-a"
           :to="{ name: 'systemAssets.show', params: { asset: asset.code }}">
+          <span class="asset-list__li-name" :title="asset.details.name">
+            {{ asset.details.name }}
+          </span>
+
           <span class="asset-list__li-code" :title="asset.code">
             {{ asset.code }}
           </span>
@@ -100,7 +107,6 @@ function convertPolicyToString (policy) {
 .asset-list__table-header {
   width: 100%;
   display: flex;
-  justify-content: space-between;
   padding: 0 2.5rem;
   margin-bottom: 0.5rem;
 }
@@ -118,7 +124,6 @@ function convertPolicyToString (policy) {
 .asset-list__li-a {
   width: 100%;
   display: flex;
-  justify-content: space-between;
   padding: 2rem 2.5rem;
   text-decoration: none;
   color: inherit;
@@ -131,12 +136,21 @@ function convertPolicyToString (policy) {
 }
 
 .asset-list__li-name {
-  @extend %space-right;
-  width: 25%;
+  width: 33%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   font-weight: 600;
+}
+
+.asset-list__li-code {
+  width: 33%;
+  text-align: center;
+}
+
+.asset-list__li-policy{
+  width: 33%;
+  text-align: right;
 }
 
 .asset-list__li-account-id {

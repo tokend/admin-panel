@@ -25,6 +25,6 @@ export default {
 <style scoped>
 
 .preissuance__block.app__block {
-  max-width: 48rem;
+  max-width: 70rem;
 }
 </style>

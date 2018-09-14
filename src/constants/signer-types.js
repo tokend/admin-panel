@@ -26,3 +26,15 @@ export const SIGNER_TYPES = Object.freeze({
   kycAccManager: 16777216,
   kycSuperAdmin: 33554432
 })
+
+export const SIGNER_TYPES_SECONDARY = Object.freeze({
+  viewUserList: 1,
+  searchUserAccount: 2,
+  viewSpecificUserOperations: 4,
+  viewPendingIssuanceRequests: 8,
+  viewIssuanceHistory: 16,
+  viewPendingKycRequests: 32,
+  viewHistoryKycRequests: 64,
+  viewCrowdfundingCampaignRequests: 128,
+  viewTransactionHistory: 256
+})

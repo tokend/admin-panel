@@ -136,7 +136,8 @@ export default {
         receiver: receiver,
         asset: this.form.asset,
         amount: this.form.amount,
-        reference: this.form.reference
+        reference: this.form.reference,
+        allTasks: 0
       }
       opts.preEmissions = []
 

@@ -69,7 +69,7 @@
                       class="token-requests-show__value"
                       :address="tokenRequest.signer" is-titled />
         <span v-else
-              class="token-requests-show__value" 
+              class="token-requests-show__value"
               :title="tokenRequest.signer">
           —
         </span>
@@ -82,7 +82,7 @@
           </span>
           <div class="token-requests-show__policies-wrapper">
           <template v-for="policy in tokenRequest.operationDetails.policies">
-            <span :key='policy.value' 
+            <span :key='policy.value'
                   class="token-requests-show__key token-requests-show__key--informative">
             {{ ASSET_POLICIES_VERBOSE[policy.value] }}
             </span>
@@ -145,6 +145,7 @@
 <script>
 import Vue from 'vue'
 import { ASSET_POLICIES_VERBOSE } from '@/constants'
+import { confirmAction } from '../../../../js/modals/confirmation_message'
 import TokenRequestRejectForm from './components/TokenRequestRejectForm'
 import localize from '@/utils/localize'
 import TextField from '@comcom/fields/TextField'
@@ -196,24 +197,28 @@ export default {
 
     async fulfill () {
       this.isPending = true
-      try {
-        await this.tokenRequest.fulfill()
-        this.$store.dispatch('SET_INFO', 'Token successfully created')
-        this.$router.push({ name: 'tokens' })
-      } catch (err) {
-        this.$store.dispatch('SET_ERROR', 'Failed to fulfill request')
+      if (await confirmAction()) {
+        try {
+          await this.tokenRequest.fulfill()
+          this.$store.dispatch('SET_INFO', 'Token successfully created')
+          this.$router.push({ name: 'tokens' })
+        } catch (err) {
+          this.$store.dispatch('SET_ERROR', 'Failed to fulfill request')
+        }
       }
       this.isPending = false
     },
     async cancel () {
       this.isPending = true
-      try {
-        await this.tokenRequest.cancel()
-        this.$store.dispatch('SET_INFO', 'Request cancelled')
-        this.$router.push({ name: 'tokens' })
-      } catch (error) {
-        console.error(error)
-        this.$store.dispatch('SET_ERROR', 'Failed to cancel request')
+      if (await confirmAction()) {
+        try {
+          await this.tokenRequest.cancel()
+          this.$store.dispatch('SET_INFO', 'Request cancelled')
+          this.$router.push({ name: 'tokens' })
+        } catch (error) {
+          console.error(error)
+          this.$store.dispatch('SET_ERROR', 'Failed to cancel request')
+        }
       }
       this.isPending = false
     },

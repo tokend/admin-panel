@@ -59,6 +59,18 @@ export default {
       .then((response) => ((response || {}).body || {}).users)
   },
 
+  getAccountIdByEmail (email) {
+    return new ScopedServerCallBuilder()
+      .users()
+      .sign()
+      .get({ email: email })
+      .then((response) => {
+        const resultArray = response.data.filter(item => item.email === email)
+        return resultArray[0].id
+      })
+      .catch(e => '')
+  },
+
   getEmailByAddress (address) {
     return this.getEmailsByAddresses([address])
       .then((response) => response[address].email)

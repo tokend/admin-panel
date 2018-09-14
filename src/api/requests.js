@@ -2,7 +2,7 @@ import config from '@/config'
 import { KYC_TASKS_TO_REMOVE_ON_REJECT } from '../constants'
 import server from '../utils/server'
 import store from '../store'
-import { xdr, ReviewRequestBuilder, CreateUpdateKYCRequestBuilder } from 'tokend-js-sdk'
+import { xdr, ReviewRequestBuilder, CreateUpdateKYCRequestBuilder, ManageLimitsBuilder } from 'tokend-js-sdk'
 import { deriveRequestIdFromCreateKycRequestResult } from '../utils/parseXdrTxResponse'
 
 import {
@@ -29,6 +29,7 @@ const ScopedServerCallBuilder = ServerCallBuilder.makeScope()
   .registerResource('issuances')
   .registerResource('sales')
   .registerResource('update_kyc')
+  .registerResource('limits_updates')
 
 export const requests = {
   _review ({ action, reason = '' }, ...requests) {
@@ -41,6 +42,27 @@ export const requests = {
           source: config.MASTER_ACCOUNT,
           action,
           reason
+        })
+      })
+    )
+
+    return new ScopedServerCallBuilder()
+      .transactions()
+      .sign()
+      .post({ tx })
+  },
+
+  _reviewWithdraw ({ action, reason = '' }, ...requests) {
+    const tx = envelopOperations(
+      ...requests.map(function (item) {
+        return ReviewRequestBuilder.reviewTwoStepWithdrawRequest({
+          requestID: item.id,
+          requestHash: item.hash,
+          requestType: item.request_type_i || item.requestTypeI,
+          source: config.MASTER_ACCOUNT,
+          action,
+          reason,
+          externalDetails: {}
         })
       })
     )
@@ -76,6 +98,11 @@ export const requests = {
     return this._review({ action }, ...requests)
   },
 
+  approveWithdraw (...requests) {
+    const action = xdr.ReviewRequestOpAction.approve().value
+    return this._reviewWithdraw({ action }, ...requests)
+  },
+
   approveKyc (request, opts = {}) {
     const action = xdr.ReviewRequestOpAction.approve().value
 
@@ -85,6 +112,67 @@ export const requests = {
     })
   },
 
+  /**
+   * Approves limit request without changes, then submits ManageLimits op to all limit changes
+   * @param {Object} params.request
+   * @param {Object} params.oldLimits
+   * @param {Array} params.newLimits
+   * @returns {*}
+   */
+  approveLimitsUpdate (params) {
+    const newLimits = params.newLimits
+      .map(limits => ({
+        ...limits,
+        id: '' + limits.id,
+        accountID: params.accountId,
+        accountType: undefined
+      }))
+    const tx = envelopOperations(
+      ReviewRequestBuilder.reviewLimitsUpdateRequest({
+        requestHash: params.request.hash,
+        requestType: params.request.request_type_i || params.request.requestTypeI,
+        source: config.MASTER_ACCOUNT,
+        action: xdr.ReviewRequestOpAction.approve().value,
+        reason: '',
+        requestID: params.request.id,
+        newLimits: newLimits[0]
+      }),
+      ...newLimits
+        .map(limits => ManageLimitsBuilder.createLimits(limits))
+    )
+
+    return new ScopedServerCallBuilder()
+      .transactions()
+      .post({ tx })
+  },
+
+  rejectLimitsUpdate (params) {
+    const newLimits = params.newLimits
+      .map(limits => ({
+        ...limits,
+        id: '' + limits.id,
+        accountID: params.accountId,
+        accountType: undefined
+      }))
+    const tx = envelopOperations(
+      ReviewRequestBuilder.reviewLimitsUpdateRequest({
+        requestHash: params.request.hash,
+        requestType: params.request.request_type_i || params.request.requestTypeI,
+        source: config.MASTER_ACCOUNT,
+        action: params.isPermanent
+        ? xdr.ReviewRequestOpAction.permanentReject().value
+        : xdr.ReviewRequestOpAction.reject().value,
+        reason: params.reason,
+        requestID: params.request.id,
+        newLimits: newLimits[0]
+      })
+    )
+
+    return new ScopedServerCallBuilder()
+      .transactions()
+      .post({ tx })
+  },
+
   reject ({ reason, isPermanent = false }, ...requests) {
     const action = isPermanent
       ? xdr.ReviewRequestOpAction.permanentReject().value
@@ -92,9 +180,14 @@ export const requests = {
     return this._review({ action, reason }, ...requests)
   },
 
-  rejectKyc (request, reason) {
-    console.log('rejectKyc')
+  rejectWithdraw ({ reason, isPermanent = false }, ...requests) {
+    const action = isPermanent
+      ? xdr.ReviewRequestOpAction.permanentReject().value
+      : xdr.ReviewRequestOpAction.reject().value
+    return this._reviewWithdraw({ action, reason }, ...requests)
+  },
 
+  rejectKyc (request, reason) {
     const action = xdr.ReviewRequestOpAction.reject().value
 
     return this._reviewKyc({ action, reason },
@@ -256,9 +349,10 @@ export const requests = {
       })
   },
 
-  getKycRequests ({ state, requestor }) {
+  getKycRequests ({ state, requestor, type }) {
     const filters = {}
     if (requestor) filters.requestor = requestor
+    if (type) filters.account_type_to_set = type
     if (state && state.state) {
       filters.state = state.state
       state.tasksToProcess ? filters.mask_set = state.tasksToProcess : null
@@ -289,6 +383,23 @@ export const requests = {
       .assets()
       .sign()
       .get(params)
+  },
+
+  getLimitsUpdateRequests ({ asset, state, requestor }) {
+    const filters = {}
+    if (asset) filters.dest_asset_code = asset
+    if (state) filters.state = state
+    if (requestor) filters.requestor = requestor
+
+    return new ScopedServerCallBuilder()
+      .request()
+      .limits_updates()
+      .sign()
+      .get({
+        order: 'desc',
+        limit: store.getters.pageLimit,
+        ...filters
+      })
   },
 
   // legacy

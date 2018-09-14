@@ -15,6 +15,10 @@
         <span :title="ACCOUNT_TYPES_VERBOSE[account.accountType]">{{ACCOUNT_TYPES_VERBOSE[account.accountType]}}</span>
       </li>
 
+      <li>
+        <span>Account state</span>
+        <account-state-getter class="app-list__cell" :accountId="user.id" />
+      </li>
 
       <template v-if="user.state === USER_STATES_STR.rejected">
         <label class="data-caption">Reject reason</label>
@@ -29,14 +33,17 @@
 
 <script>
 import { USER_STATES_STR } from '@/constants'
-
+import { AccountStateGetter } from '@comcom/getters'
 const ACCOUNT_TYPES_VERBOSE = {
   AccountTypeNotVerified: 'Not verified',
   AccountTypeGeneral: 'General',
-  AccountTypeSyndicate: 'Corporate'
+  AccountTypeSyndicate: 'Syndicate'
 }
 
 export default {
+  components: {
+    AccountStateGetter
+  },
   data () {
     return {
       USER_STATES_STR,

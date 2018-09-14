@@ -65,12 +65,13 @@ export default {
     return server.sdkServer.rejectPendingTransaction(txHash, store.getters.keypair)
   },
 
-  getOperationsByAccountId (accountId) {
-    return server.sdkServer.operations()
+  getOperationsByAccountId (accountId, completedOnly = false) {
+    const request = server.sdkServer.operations()
       .forAccount(accountId)
       .order('desc')
       .limit(store.getters.pageLimit)
-      .callWithSignature(store.getters.keypair)
+    request.url.addQuery('completed_only', completedOnly)
+    return request.callWithSignature(store.getters.keypair)
   },
 
   getOperationById (id) {

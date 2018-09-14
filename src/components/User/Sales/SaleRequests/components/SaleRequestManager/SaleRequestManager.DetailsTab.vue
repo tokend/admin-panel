@@ -32,7 +32,7 @@
 
     <div class="sale-rm-details-tab__row">
       <div class="sale-rm-details-tab__row-item">
-        <label class="data-caption">Token details</label>
+        <label class="data-caption">Investment token details</label>
         <ul class="key-value-list">
           <li>
             <span>Name</span>
