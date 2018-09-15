@@ -57,7 +57,7 @@
         />
       </li>
     </ul>
-    <div class="withdrawal-details__action-btns">
+    <div class="withdrawal-details__action-btns" v-if="reviewAllowed">
       <button class="app__btn withdrawal-details__action-btn"
               @click="fulfill(request)"
               :disabled="isSubmitting">
@@ -106,6 +106,7 @@ import api from '@/api'
 import { confirmAction } from '@/js/modals/confirmation_message'
 import Modal from '@comcom/modals/Modal'
 import TextField from '@comcom/fields/TextField'
+import { ASSET_POLICIES } from '@/constants'
 
 export default {
   components: {
@@ -122,12 +123,21 @@ export default {
       itemToReject: null,
       rejectForm: {
         reason: ''
-      }
+      },
+      ASSET_POLICIES
     }
   },
-  props: ['request'],
+  props: ['request', 'assets'],
+  computed: {
+    reviewAllowed () {
+      return !this.assets
+        .find(item => item.destAssetCode === this.request.code)
+        .policy & ASSET_POLICIES.twoStepWithdrawal
+    }
+  },
   methods: {
     async fulfill (request) {
+      if (!this.reviewAllowed) return
       if (!await confirmAction()) return
       this.isSubmitting = true
       try {
@@ -141,6 +151,7 @@ export default {
       this.isSubmitting = false
     },
     async reject (request) {
+      if (!this.reviewAllowed) return
       this.isSubmitting = true
       try {
         await api.requests.rejectWithdraw({

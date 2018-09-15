@@ -73,6 +73,7 @@
       @close-request="requestToShow = null"
       max-width="60rem">
       <withdrawal-details :request="requestToShow"
+            :assets="assets"
             @close-request="refreshList"/>
     </modal>
   </div>
