@@ -108,6 +108,16 @@ export default {
       .patch(payload)
   },
 
+  createBalance (accountId, code) {
+    const operation = Operation.manageBalance({
+      asset: code,
+      action: xdr.ManageBalanceAction.createUnique(),
+      destination: accountId
+    })
+
+    return server.submitOperation(operation)
+  },
+
   /**
    * Operate over user blobs
    * @param {string} userId id of the owner

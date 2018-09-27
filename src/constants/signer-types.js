@@ -24,7 +24,10 @@ export const SIGNER_TYPES = Object.freeze({
   amlAlertManager: 4194304,
   amlAlertReviewer: 8388608,
   kycAccManager: 16777216,
-  kycSuperAdmin: 33554432
+  kycSuperAdmin: 33554432,
+  externalSystemAccountIdPoolManager: 67108864,
+  keyValueManager: 134217728,
+  superIssuanceManager: 268435456
 })
 
 export const SIGNER_TYPES_SECONDARY = Object.freeze({

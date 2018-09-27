@@ -1,3 +1,88 @@
+const features = {
+  PHOTO_VERIFICATION: true,
+  KYC_REVIEW_MANAGER: false,
+  KYC_REQUEST_STATES: ['approved', 'rejected', 'pending'],
+  KYC_TASKS: {
+    superAdmin: {
+      exist: true,
+      render: {
+        add: true,
+        remove: true
+      },
+      selected: {
+        add: false,
+        remove: true
+      }
+    },
+    photoMatch: {
+      exist: true,
+      render: {
+        add: true,
+        remove: true
+      },
+      selected: {
+        add: false,
+        remove: true
+      }
+    },
+    validPoa: {
+      exist: true,
+      render: {
+        add: true,
+        remove: true
+      },
+      selected: {
+        add: false,
+        remove: true
+      }
+    },
+    requestForAutoReviewSent: {
+      exist: true,
+      render: {
+        add: true,
+        remove: true
+      },
+      selected: {
+        add: false,
+        remove: true
+      }
+    },
+    requestForAutoReviewApproved: {
+      exist: true,
+      render: {
+        add: true,
+        remove: true
+      },
+      selected: {
+        add: false,
+        remove: true
+      }
+    },
+    accreditedInvestor: {
+      exist: true,
+      render: {
+        add: true,
+        remove: true
+      },
+      selected: {
+        add: false,
+        remove: false
+      }
+    },
+    nonLatinDocs: {
+      exist: true,
+      render: {
+        add: true,
+        remove: true
+      },
+      selected: {
+        add: false,
+        remove: false
+      }
+    }
+  }
+}
+
 export default {
   install (Vue, options) {
     Vue.params = this
@@ -7,7 +92,7 @@ export default {
   KEY_SERVER_ADMIN: process.env.KEY_SERVER_ADMIN,
   HORIZON_SERVER: process.env.HORIZON_SERVER,
   STORAGE_SERVER: process.env.STORAGE_SERVER,
-  FEATURES: process.env.FEATURES,
+  FEATURES: features,
   MASTER_ACCOUNT: '',
   COMMISSION_ACCOUNT: 'GAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHV4',
   OPERATIONAL_ACCOUNT: 'GABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABVCX',

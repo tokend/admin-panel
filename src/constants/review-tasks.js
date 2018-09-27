@@ -49,8 +49,8 @@ export const REVIEW_TASKS_VOCABULARY = Object.freeze({
   1: 'Super admin',
   2: 'Photo match',
   4: 'Valid POA',
-  8: 'Request sent to IDMind',
-  16: 'Request processed by IDMind',
+  8: 'Request sent to external service',
+  16: 'Request processed by external service',
   32: 'Accredited investor',
   64: 'Non-latin docs'
 })
@@ -64,10 +64,10 @@ export const PENDING_TASKS_VOCABULARY = Object.freeze({
   [
     REVIEW_TASKS_INDEX.requestForAutoReviewApproved |
     REVIEW_TASKS_INDEX.requestForAutoReviewSent
-  ]: 'Sending data to IDMind',
+  ]: 'Sending data to external service',
   [
     REVIEW_TASKS_INDEX.requestForAutoReviewApproved
-  ]: 'Waiting for request to be processed by IDMind',
+  ]: 'Waiting for request to be processed by external service',
   [
     REVIEW_TASKS_INDEX.accreditedInvestor
   ]: 'Require manual review (accredited investor)'

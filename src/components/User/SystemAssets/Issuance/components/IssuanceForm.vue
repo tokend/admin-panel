@@ -120,11 +120,21 @@ export default {
 
     async getBalanceId () {
       const address = await api.users.getUserIdByEmail(this.form.receiver)
-      const account = await api.accounts.getAccountById(address)
+      let account = await api.accounts.getAccountById(address)
+      const balance = account.balances.find(item => item.asset === this.form.asset)
 
-      return account.balances
-        .find(item => item.asset === this.form.asset)
-        .balance_id
+      if (!balance) {
+        try {
+          await api.users.createBalance(address, this.form.asset)
+        } catch (error) {
+          console.error(error)
+          this.$store.dispatch('SET_ERROR', 'Unexpected error')
+        }
+        account = await api.accounts.getAccountById(address)
+        return account.balances.find(item => item.asset === this.form.asset).balance_id
+      } else {
+        return balance.balance_id
+      }
     },
 
     async sendManualIssuance (receiver) {

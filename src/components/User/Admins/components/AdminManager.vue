@@ -124,6 +124,12 @@
             title="Allowed to review withdraw requests"
             :cb-value="SIGNER_TYPES.withdrawManager"
           />
+
+          <tick-field class="admins-edit__checkbox" v-model="signerTypes.primary" :disabled="isMaster || isPending" :required="false"
+            label="Super issuance manager"
+            title="Super issuance manager"
+            :cb-value="SIGNER_TYPES.superIssuanceManager"
+          />
         </div>
 
         <h3 class="admins-edit__rights-group-title">
@@ -165,6 +171,90 @@
             label="Search for the user's account"
             title="Search for the user's account"
             :cb-value="SIGNER_TYPES_SECONDARY.searchUserAccount"
+          />
+
+          <tick-field class="admins-edit__checkbox" v-model="signerTypes.primary" :disabled="isMaster || isPending" :required="false"
+            label="External system account id pool manager"
+            title="External system account id pool manager"
+            :cb-value="SIGNER_TYPES.externalSystemAccountIdPoolManager"
+          />
+
+          <tick-field class="admins-edit__checkbox" v-model="signerTypes.primary" :disabled="isMaster || isPending" :required="false"
+            label="Key value manager"
+            title="Can edit key-value set"
+            :cb-value="SIGNER_TYPES.keyValueManager"
+          />
+
+          <tick-field class="admins-edit__checkbox" v-model="signerTypes.primary" :disabled="isMaster || isPending" :required="false"
+            label="Events checker"
+            title="Events checker"
+            :cb-value="SIGNER_TYPES.eventsChecker"
+          />
+        </div>
+
+        <h3 class="admins-edit__rights-group-title">
+          <span>Operation management</span>
+          <button type="button" @click="toggleSelection(TOGGLE_SELECTIONS_BY_TYPE.operationManager)">Select group</button>
+        </h3>
+        <div class="admins-edit__rights-group">
+          <tick-field class="admins-edit__checkbox" v-model="signerTypes.primary" :disabled="isMaster || isPending" :required="false"
+            label="Direct debit operator"
+            title="Direct debit operator"
+            :cb-value="SIGNER_TYPES.directDebitOperator"
+          />
+
+          <tick-field class="admins-edit__checkbox" v-model="signerTypes.primary" :disabled="isMaster || isPending" :required="false"
+            label="Invoice manager"
+            title="Invoice manager"
+            :cb-value="SIGNER_TYPES.invoiceManager"
+          />
+
+          <tick-field class="admins-edit__checkbox" v-model="signerTypes.primary" :disabled="isMaster || isPending" :required="false"
+            label="Payment operator"
+            title="Payment operator"
+            :cb-value="SIGNER_TYPES.paymentOperator"
+          />
+
+          <tick-field class="admins-edit__checkbox" v-model="signerTypes.primary" :disabled="isMaster || isPending" :required="false"
+            label="Send transactions"
+            title="Allowed to send transactions"
+            :cb-value="SIGNER_TYPES.txSender"
+          />
+
+          <tick-field class="admins-edit__checkbox" v-model="signerTypes.primary" :disabled="isMaster || isPending" :required="false"
+            label="AML alert manager"
+            title="Allowed to manage AML alert"
+            :cb-value="SIGNER_TYPES.amlAlertManager"
+          />
+
+          <tick-field class="admins-edit__checkbox" v-model="signerTypes.primary" :disabled="isMaster || isPending" :required="false"
+            label="AML alert reviewer"
+            title="Allowed to review AML alert"
+            :cb-value="SIGNER_TYPES.amlAlertReviewer"
+          />
+        </div>
+
+        <h3 class="admins-edit__rights-group-title">
+          <span>Balance management</span>
+          <button type="button" @click="toggleSelection(TOGGLE_SELECTIONS_BY_TYPE.balanceManager)">Select group</button>
+        </h3>
+        <div class="admins-edit__rights-group">
+          <tick-field class="admins-edit__checkbox" v-model="signerTypes.primary" :disabled="isMaster || isPending" :required="false"
+            label="Balance manager"
+            title="Balance manager"
+            :cb-value="SIGNER_TYPES.balanceManager"
+          />
+
+          <tick-field class="admins-edit__checkbox" v-model="signerTypes.primary" :disabled="isMaster || isPending" :required="false"
+            label="Commission balance manager"
+            title="Commission balance manager"
+            :cb-value="SIGNER_TYPES.commissionBalanceManager"
+          />
+
+          <tick-field class="admins-edit__checkbox" v-model="signerTypes.primary" :disabled="isMaster || isPending" :required="false"
+            label="Operational balance manager"
+            title="Operational balance manager"
+            :cb-value="SIGNER_TYPES.operationalBalanceManager"
           />
         </div>
 
@@ -256,12 +346,7 @@ import difference from 'lodash/difference'
 import accounts from '@/api/accounts'
 import InputField from '@comcom/fields/InputField'
 import TickField from '@comcom/fields/TickField'
-import {
-  SIGNER_TYPES,
-  SIGNER_TYPES_SECONDARY,
-  ADMIN_SIGNER_SET,
-  ADMIN_SIGNER_SET_INCLUDED_RIGHTS
-} from '@/constants'
+import { SIGNER_TYPES, SIGNER_TYPES_SECONDARY } from '@/constants'
 
 import { confirmAction } from '@/js/modals/confirmation_message'
 
@@ -279,7 +364,8 @@ const TOGGLE_SELECTIONS_BY_TYPE = {
     primary: [
       SIGNER_TYPES.issuanceManager,
       SIGNER_TYPES.userIssuanceManager,
-      SIGNER_TYPES.withdrawManager
+      SIGNER_TYPES.withdrawManager,
+      SIGNER_TYPES.superIssuanceManager
     ],
     secondary: SIGNER_TYPES_SECONDARY.viewIssuanceHistory +
                SIGNER_TYPES_SECONDARY.viewPendingIssuanceRequests
@@ -289,10 +375,30 @@ const TOGGLE_SELECTIONS_BY_TYPE = {
       SIGNER_TYPES.syndicateAccManager,
       SIGNER_TYPES.exchangeAccManager,
       SIGNER_TYPES.notVerifiedAccManager,
-      SIGNER_TYPES.generalAccManager
+      SIGNER_TYPES.generalAccManager,
+      SIGNER_TYPES.externalSystemAccountIdPoolManager,
+      SIGNER_TYPES.keyValueManager,
+      SIGNER_TYPES.eventsChecker
     ],
     secondary: SIGNER_TYPES_SECONDARY.viewTransactionHistory +
                SIGNER_TYPES_SECONDARY.searchUserAccount
+  },
+  operationManager: {
+    primary: [
+      SIGNER_TYPES.directDebitOperator,
+      SIGNER_TYPES.invoiceManager,
+      SIGNER_TYPES.paymentOperator,
+      SIGNER_TYPES.txSender,
+      SIGNER_TYPES.amlAlertManager,
+      SIGNER_TYPES.amlAlertReviewer
+    ]
+  },
+  balanceManager: {
+    primary: [
+      SIGNER_TYPES.balanceManager,
+      SIGNER_TYPES.commissionBalanceManager,
+      SIGNER_TYPES.operationalBalanceManager
+    ]
   },
   fees: {
     primary: [SIGNER_TYPES.feesManager]
@@ -324,8 +430,6 @@ export default {
     return {
       SIGNER_TYPES,
       SIGNER_TYPES_SECONDARY,
-      ADMIN_SIGNER_SET,
-      ADMIN_SIGNER_SET_INCLUDED_RIGHTS,
       TOGGLE_SELECTIONS_BY_TYPE,
 
       params: {
