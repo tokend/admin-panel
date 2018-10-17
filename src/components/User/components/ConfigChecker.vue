@@ -27,7 +27,7 @@ const CHECK_LIST = [
     async check ({ store, api }) {
       return ((await api.assets.getAllSystemAssets()).data || [])
         .filter(item => item && item.policy & ASSET_POLICIES.statsQuoteAsset)
-        .length !== 1
+        .length >= 1
     }
   }
 ]
