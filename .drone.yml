@@ -1,0 +1,19 @@
+pipeline:
+  docker:
+    image: docker:latest
+    secrets: [ dockerhub_user, dockerhub_pwd, rsa_key ]
+    commands:
+      - docker login -u $DOCKERHUB_USER -p $DOCKERHUB_PWD
+      - docker build --build-arg RSA_KEY="$RSA_KEY" --build-arg BUILD_ENV=config/default.env.js --pull -t tokend/admin-client:${DRONE_COMMIT_SHA} .
+      - docker push tokend/admin-client:${DRONE_COMMIT_SHA}
+      - docker tag tokend/admin-client:${DRONE_COMMIT_SHA} tokend/admin-client:latest
+      - docker push tokend/admin-client:latest
+    environment:
+      - DOCKERHUB_USER=$$DOCKERHUN_USER
+      - DOCKERHUB_PWD=$$DOCKERHUB_PWD
+      - RSA_KEY=$$RSA_KEY
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    when:
+      branch: master
+      event: push
