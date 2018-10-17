@@ -37,7 +37,7 @@
 
   .detail-row__value-text {
     display: block;
-    // max-width: 30rem;
+    // max-width: 30rem; 
     overflow: hidden;
     text-overflow: ellipsis;
   }

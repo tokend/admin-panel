@@ -3,15 +3,16 @@
     <nav class="user-header__nav">
       <slot name="nav"/>
     </nav>
-
+    <config-checker/>
     <user-account-widget/>
   </header>
 </template>
 
 <script>
 import UserAccountWidget from './UserAccountWidget'
+import ConfigChecker from './ConfigChecker'
 export default {
-  components: { UserAccountWidget }
+  components: { UserAccountWidget, ConfigChecker }
 }
 </script>
 

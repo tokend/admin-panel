@@ -87,8 +87,7 @@ export default {
 
     formatMoney (amount) {
       const symbol = ({
-        'USD': '$',
-        'SUN': 'SUN'
+        'USD': '$'
       })[this.assetCode]
 
       const moneyFormats = {

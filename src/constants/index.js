@@ -9,7 +9,7 @@ export { REQUEST_STATES, REQUEST_STATES_STR, KYC_REQUEST_STATES } from './reques
 export { SALE_STATES } from './sale-states'
 export { SIGNER_TYPES, SIGNER_TYPES_SECONDARY } from './signer-types'
 export { ADMIN_SIGNER_SET, ADMIN_SIGNER_SET_INCLUDED_RIGHTS } from './admin-signer-types'
-export { BLOB_TYPES, BLOB_TYPES_STR } from './blob-types'
+export { BLOB_TYPES } from './blob-types'
 export { ACCOUNT_TYPES, ACCOUNT_TYPES_VERBOSE } from './account-types'
 export { FEE_TYPES, PAYMENT_FEE_TYPES } from './fee-types'
 export { DOCUMENT_TYPES, DOCUMENT_TYPES_STR } from './document-types'

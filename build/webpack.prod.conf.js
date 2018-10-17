@@ -7,8 +7,9 @@ var baseWebpackConfig = require('./webpack.base.conf')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
 
-var env
-env = require(path.resolve(process.env.CONFIG_PATH))
+var env = process.env.CONFIG_PATH
+  ? require(path.resolve(process.env.CONFIG_PATH))
+  : {}
 
 console.info('Current ENV CONFIG', env)
 

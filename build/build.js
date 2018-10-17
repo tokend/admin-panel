@@ -2,7 +2,7 @@
 require('shelljs/global')
 var envArg = process.argv[2]
 
-process.env.CONFIG_PATH = envArg
+if (envArg) process.env.CONFIG_PATH = envArg
 
 var path = require('path')
 var config = require('../config')

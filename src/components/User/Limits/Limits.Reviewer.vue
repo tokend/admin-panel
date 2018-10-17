@@ -245,7 +245,7 @@
         this.assetCode = requestDetails.asset
         this.account = account.data
         this.user = user.data
-        this.limits = get(limits, 'data.limits', []).map(limit => limit.limit)
+        this.limits = (get(limits, 'data.limits') || []).map(limit => limit.limit)
         this.isLoaded = true
         this.$store.commit('CLOSE_LOADER')
       },

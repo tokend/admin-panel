@@ -15,8 +15,11 @@ RUN true \
  && git config --global url.ssh://git@gitlab.com/.insteadOf https://gitlab.com/ \
  && npm install --progress=false --loglevel=warn \
  && npm run build $BUILD_ENV \
+ && rm ~/.ssh/id_rsa \
  && true
 
-FROM shebgregor/nginx4spa:latest
+
+FROM nginx:latest
+COPY default.conf /etc/nginx/conf.d/
 COPY --from=0 /build/dist /usr/share/nginx/html
 CMD ["nginx", "-g", "daemon off;"]

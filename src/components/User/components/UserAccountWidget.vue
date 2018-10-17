@@ -14,7 +14,7 @@
       </span>
     </button>
 
-    <div class="user-account-widget__pane" v-if="isPaneShown">
+    <div class="user-account-widget__pane" v-if="isPaneActive">
       <ul class="user-account-widget__action-list">
         <li class="user-account-widget__action-list-item">
           <button class="user-account-widget__action-btn" @click="signOut()">
@@ -33,7 +33,7 @@ import { getters } from '@store/types'
 export default {
   data () {
     return {
-      isPaneShown: false
+      isPaneActive: false
     }
   },
   computed: {
@@ -49,11 +49,20 @@ export default {
   },
   methods: {
     togglePane () {
-      this.isPaneShown = !this.isPaneShown
+      this.isPaneActive = !this.isPaneActive
+      this.detectOpenedModals()
     },
     signOut () {
       this.$store.dispatch('LOG_OUT')
       this.$router.push({ name: 'login' })
+    },
+    detectOpenedModals () {
+      const listener = (e) => {
+        if (e.target.closest('.user-account-widget')) return
+        this.isPaneActive = false
+        document.removeEventListener('click', listener)
+      }
+      document.addEventListener('click', listener)
     }
   }
 }

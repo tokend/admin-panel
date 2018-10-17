@@ -82,7 +82,6 @@
 <script>
 import api from '@/api'
 import {
-  DEFAULT_BASE_ASSET,
   DEFAULT_QUOTE_ASSET,
   REQUEST_STATES,
   ASSET_POLICIES
@@ -105,7 +104,6 @@ export default {
 
   data () {
     return {
-      DEFAULT_BASE_ASSET,
       REQUEST_STATES,
 
       assets: [{ code: DEFAULT_QUOTE_ASSET }],

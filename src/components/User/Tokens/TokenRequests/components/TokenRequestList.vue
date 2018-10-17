@@ -109,7 +109,9 @@ export default {
       this.isPending = true
       try {
         this.list = await api.requests.getAssetRequests({
-          state: REQUEST_STATES[this.filters.state], code: this.filters.asset
+          state: REQUEST_STATES[this.filters.state],
+          requestor: this.filters.requestor,
+          code: this.filters.asset
         })
         this.isListEnded = !(this.list.data || []).length
       } catch (error) {

@@ -93,9 +93,13 @@ export default {
             .get(blobId, true)
           : await api.users
             .blobsOf(owner)
-            .getAll({ type: BLOB_TYPES.kycForm }, true)
+            .getAll({
+              type: BLOB_TYPES.syndicateKyc | BLOB_TYPES.kycForm
+            }, true)
 
-        this.syndicate = JSON.parse(response.data.value || response.data[0].value)
+        this.syndicate = JSON.parse(
+          response.data.value || response.data[0].value
+        )
         this.isLoaded = true
       } catch (error) {
         console.error(error)
