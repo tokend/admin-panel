@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import store from './store'
 import router from './router'
-import StellarSdk from 'tokend-js-sdk'
+import Sdk from 'tokend-js-sdk'
 import StellarWallet from 'tokend-wallet-js-sdk'
 import accounts from './api/accounts'
 
@@ -23,7 +23,7 @@ export default {
   },
 
   createWallet (credentials, redirect) {
-    const signingKeys = StellarSdk.Keypair.fromSecret(credentials.seed)
+    const signingKeys = Sdk.Keypair.fromSecret(credentials.seed)
     const keychainData = { seed: signingKeys.seed(), accountId: signingKeys.accountId() }
     const mainData = { username: credentials.username.toLowerCase(), server: server }
 
@@ -95,7 +95,24 @@ export default {
       })
   },
 
-  _storeToken (credentials, username) {
+  async seedLogin (seed) {
+    const auth = store.state.auth || {}
+    const user = store.state.user || {}
+    const keypair = Sdk.Keypair.fromSecret(seed)
+
+    user.name = 'admin_demo'
+    user.keys = user.keys || {}
+    user.keys.accountId = keypair.accountId()
+    user.keys.seed = keypair.secret()
+
+    const signerTypes = await this._getSignerTypes(user.keys.accountId)
+
+    Object.assign(user, signerTypes)
+    store.commit('UPDATE_USER', user)
+    store.commit('UPDATE_AUTH', auth)
+  },
+
+  async _storeToken (credentials, username) {
     const auth = store.state.auth
     const user = store.state.user
     user.name = username
@@ -104,23 +121,32 @@ export default {
       id: credentials.getWalletId()
     }
 
-    return accounts.getSignerById(user.keys.accountId).then((res) => {
-      user.signerTypes = res.signer.signer_types
-      user.signerTypes.forEach((val) => {
-        if (val.value === 2) {
-          user.admin = true
-        }
-        if (val.value === 4) {
-          user.accountCreator = true
-        }
-        if (val.value === 32) {
-          user.forfeitProvider = true
-        }
-      })
-      store.commit('UPDATE_USER', user)
-      store.commit('UPDATE_AUTH', auth)
-    }).catch((err) => {
-      console.error(err)
+    const signerTypes = await this._getSignerTypes(user.keys.accountId)
+
+    Object.assign(user, signerTypes)
+    store.commit('UPDATE_USER', user)
+    store.commit('UPDATE_AUTH', auth)
+  },
+
+  async _getSignerTypes (accountId) {
+    const result = {}
+    let response = {}
+
+    try {
+      response = await accounts.getSignerById(accountId)
+    } catch (error) {
+      console.error(error)
+      error.message = 'Cannot get signer types'
+      throw error
+    }
+
+    result.signerTypes = response.signer.signer_types
+    result.signerTypes.forEach((val) => {
+      if (val.value === 2) result.admin = true
+      if (val.value === 4) result.accountCreator = true
+      if (val.value === 32) result.forfeitProvider = true
     })
+
+    return result
   }
 }
