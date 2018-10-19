@@ -1,13 +1,20 @@
 <template>
   <div class="login">
-    <div class="login__block app__block" v-if="state === 'login'">
+    <div
+      class="login__block app__block"
+      v-if="state === 'login'"
+    >
       <h2 class="login__heading">
         Sign In
       </h2>
 
-      <form @submit.prevent="login">
+      <form
+        @submit.prevent="login"
+        :id="`${_uid}-login-form`"
+      >
         <div class="app__form-row">
-          <input-field class="app__form-field"
+          <input-field
+            class="app__form-field"
             id="login-field"
             v-model.trim="credentials.username"
             label="Username"
@@ -16,7 +23,8 @@
         </div>
 
         <div class="app__form-row">
-          <input-field class="app__form-field"
+          <input-field
+            class="app__form-field"
             type="password"
             v-model.trim="credentials.password"
             label="Password"
@@ -25,14 +33,29 @@
         </div>
 
         <div class="app__form-actions">
-          <button class="app__btn" :disabled="buttonsDisabled">
+          <button
+            class="app__btn"
+            :disabled="buttonsDisabled"
+          >
             Sign in
           </button>
         </div>
       </form>
+
+      <template v-if="seedLoginEnabled">
+        <p class="login__alt-action">
+          <span> Also you can </span>
+          <router-link :to="{ name: 'seed-login' }">
+            sign in with seed
+          </router-link>
+        </p>
+      </template>
     </div>
 
-    <div class="login__block app__block" v-else-if="state === 'tfa'">
+    <div
+      class="login__block app__block"
+      v-else-if="state === 'tfa'"
+    >
       <g-auth @tfa-done="redirect"></g-auth>
     </div>
   </div>
@@ -40,10 +63,12 @@
 
 <script>
 import Vue from 'vue'
+
 import store from '@/store/index'
 import GAuth from '../../settings/GAuth.vue'
 
 import InputField from '@comcom/fields/InputField'
+import config from '@/config'
 
 export default {
   name: 'login',
@@ -68,6 +93,9 @@ export default {
   computed: {
     buttonsDisabled () {
       return this.$store.getters.showLoader
+    },
+    seedLoginEnabled () {
+      return config.FEATURES.SEED_AUTH
     }
   },
 
@@ -209,4 +237,8 @@ export default {
   margin-bottom: 5rem;
 }
 
+.login__alt-action {
+  margin-top: 1.2rem;
+  font-size: 1.6rem;
+}
 </style>

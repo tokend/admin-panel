@@ -1,4 +1,9 @@
-const features = {
+const defaultFeatures = {
+  /* Enable authentication using seed. Such auth has no 2FA.
+   * WARN: for demo purposes only, could be very dangerous on prod
+   */
+  SEED_AUTH: true,
+
   PHOTO_VERIFICATION: true,
   KYC_REVIEW_MANAGER: false,
   KYC_REQUEST_STATES: ['approved', 'rejected', 'pending'],
@@ -93,7 +98,7 @@ export default Object.assign(
     KEY_SERVER_ADMIN: process.env.KEY_SERVER_ADMIN,
     HORIZON_SERVER: process.env.HORIZON_SERVER,
     STORAGE_SERVER: process.env.STORAGE_SERVER,
-    FEATURES: features,
+    FEATURES: defaultFeatures,
     MASTER_ACCOUNT: '',
     COMMISSION_ACCOUNT: 'GAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHV4',
     OPERATIONAL_ACCOUNT: 'GABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABVCX',

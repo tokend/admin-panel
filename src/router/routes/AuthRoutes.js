@@ -1,4 +1,5 @@
 // TODO refactor, extract require
+import config from '@/config'
 
 import { unauthorizedGuard } from '../helpers/navigationGuards'
 
@@ -26,6 +27,13 @@ export const AuthRoutes = {
       component: function (resolve) {
         require(['../../components/Auth/Signup/Signup.vue'], resolve)
       }
-    }
+    },
+    ...(config.FEATURES.SEED_AUTH ? [{
+      path: '/seed-login',
+      name: 'seed-login',
+      component: function (resolve) {
+        require(['../../components/Auth/Login/SeedLogin.vue'], resolve)
+      }
+    }] : [])
   ]
 }
