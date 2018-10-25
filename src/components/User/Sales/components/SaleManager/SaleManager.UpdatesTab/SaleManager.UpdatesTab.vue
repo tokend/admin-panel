@@ -1,14 +1,21 @@
 <template>
   <div class="sale-manager-syndicate-tab">
     <template v-if="isLoaded">
-      <timeline-item
-        class="timeline__timeline-item"
-        v-for="(item, i) in updates"
-        :key="i"
-        :title="item.title"
-        :date="item.date"
-        :message="item.message"
-      />
+      <template v-if="updates.length">
+        <timeline-item
+          class="timeline__timeline-item"
+          v-for="(item, i) in updates"
+          :key="i"
+          :title="item.title"
+          :date="item.date"
+          :message="item.message"
+        />
+      </template>
+      <template v-else> 
+        <div class="no-data-msg__wrapper">
+          <h2>No updates yet...</h2>
+        </div>
+      </template>
     </template>
 
     <template v-else-if="isFailed">
@@ -30,7 +37,6 @@ import api from '@/api'
 import { BLOB_TYPES } from '@/constants'
 import _get from 'lodash/get'
 import TimelineItem from './TimelineItem'
-
 export default {
   components: {
     TimelineItem
