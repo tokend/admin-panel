@@ -61,6 +61,15 @@
         </span>
       </div>
 
+      <div class="token-requests-show__row" v-if="tokenRequest.type !== 'asset_update'">
+        <span class="token-requests-show__key">
+          Issued amount
+        </span>
+        <span class="token-requests-show__value">
+          {{ tokenRequest.issuedAmount }}
+        </span>
+      </div>
+
       <div class="token-requests-show__row">
         <span class="token-requests-show__key">
           Preissuance signer
@@ -90,6 +99,24 @@
           </div>
         </div>
       </template>
+
+      <div class="token-requests-show__row">
+        <span class="token-requests-show__key">
+          Creation date
+        </span>
+        <date-formatter :date="tokenRequest.creationDate"
+            format="DD MMM YYYY HH:mm:ss"
+            class="token-requests-show__value" />
+      </div>
+
+      <div class="token-requests-show__row">
+        <span class="token-requests-show__key">
+          Update date
+        </span>
+        <date-formatter :date="tokenRequest.updateDate"
+            format="DD MMM YYYY HH:mm:ss"
+            class="token-requests-show__value" />
+      </div>
 
       <template v-if="tokenRequest.state !== 'pending'">
         <div class="token-requests-show__row">
@@ -150,6 +177,7 @@ import TokenRequestRejectForm from './components/TokenRequestRejectForm'
 import localize from '@/utils/localize'
 import TextField from '@comcom/fields/TextField'
 import { ImgGetter, EmailGetter } from '@comcom/getters'
+import { DateFormatter } from '@comcom/formatters'
 import { verbozify } from '@/utils/verbozify'
 import get from 'lodash/get'
 // TODO: extract to TokenRequestForm
@@ -159,7 +187,8 @@ export default {
     TokenRequestRejectForm,
     TextField,
     ImgGetter,
-    EmailGetter
+    EmailGetter,
+    DateFormatter
   },
 
   props: ['id'],

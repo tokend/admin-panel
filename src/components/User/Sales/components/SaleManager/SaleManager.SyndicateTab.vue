@@ -2,7 +2,7 @@
   <div class="sale-manager-syndicate-tab">
     <template v-if="isLoaded">
       <div class="sale-manager-syndicate-tab__details-wrp">
-        <label class="data-caption">Corporate user details</label>
+        <label class="data-caption">Syndicate user details</label>
         <ul class="key-value-list">
           <li>
             <span>Name</span>

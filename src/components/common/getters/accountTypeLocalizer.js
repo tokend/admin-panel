@@ -19,8 +19,8 @@ export const ACCOUNT_TYPES_VERBOSE = Object.freeze({
   notVerified: 'Not verified',
   [ACCOUNT_TYPES.notVerified]: 'Not verified',
 
-  syndycate: 'Corporate user',
-  [ACCOUNT_TYPES.syndicate]: 'Corporate user',
+  syndycate: 'Syndicate user',
+  [ACCOUNT_TYPES.syndicate]: 'Syndicate user',
 
   exchange: 'Exchange',
   [ACCOUNT_TYPES.exchange]: 'Exchange',

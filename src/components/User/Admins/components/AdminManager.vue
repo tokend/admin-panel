@@ -144,7 +144,7 @@
           />
 
           <tick-field class="admins-edit__checkbox" v-model="signerTypes.primary" :disabled="isMaster || isPending" :required="false"
-            label="Corporate account manager"
+            label="Syndicate account manager"
             title="Allowed to manage syndicate account"
             :cb-value="SIGNER_TYPES.syndicateAccManager"
           />

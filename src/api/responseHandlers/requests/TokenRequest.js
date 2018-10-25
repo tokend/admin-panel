@@ -41,4 +41,16 @@ export class TokenRequest extends ReviewableRequest {
   get rejectReason () {
     return this.record.reject_reason
   }
+
+  get issuedAmount () {
+    return this.operationDetails.initial_preissued_amount
+  }
+
+  get creationDate () {
+    return this.record.created_at
+  }
+
+  get updateDate () {
+    return this.record.updated_at
+  }
 }

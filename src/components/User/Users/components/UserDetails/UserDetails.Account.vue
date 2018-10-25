@@ -37,7 +37,7 @@ import { AccountStateGetter } from '@comcom/getters'
 const ACCOUNT_TYPES_VERBOSE = {
   AccountTypeNotVerified: 'Not verified',
   AccountTypeGeneral: 'General',
-  AccountTypeSyndicate: 'Corporate'
+  AccountTypeSyndicate: 'Syndicate'
 }
 
 export default {
