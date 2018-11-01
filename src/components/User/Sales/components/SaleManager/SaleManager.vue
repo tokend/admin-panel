@@ -21,6 +21,10 @@
           <tab name="Syndicate user">
             <syndicate-tab :sale="sale" />
           </tab>
+
+          <tab name="Updates">
+            <updates-tab :sale="sale" />
+          </tab>
         </tabs>
       </template>
 
@@ -46,6 +50,7 @@ import DetailsTab from './SaleManager.DetailsTab'
 import DescriptionTab from './SaleManager.DescriptionTab'
 import ParticipantsTab from './SaleManager.ParticipantsTab'
 import SyndicateTab from './SaleManager.SyndicateTab'
+import UpdatesTab from './SaleManager.UpdatesTab'
 
 export default {
   components: {
@@ -54,7 +59,8 @@ export default {
     DetailsTab,
     DescriptionTab,
     ParticipantsTab,
-    SyndicateTab
+    SyndicateTab,
+    UpdatesTab
   },
 
   data () {
