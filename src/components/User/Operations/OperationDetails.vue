@@ -3,18 +3,18 @@
     <div class="app__block">
       <h2>Operation details</h2>
       <div class="operation-details__op-details-wrp">
-        <detail-reader :details="operation" />
+        <details-reader :details="operation" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-  import DetailReader from '../../common/details/DetailReader'
+  import DetailsReader from '../../common/details/DetailsReader'
 
   export default {
     components: {
-      DetailReader
+      DetailsReader
     },
     props: ['operation', 'user-id']
   }
