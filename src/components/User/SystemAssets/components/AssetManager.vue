@@ -196,6 +196,7 @@
 import api from '@/api'
 import safeGet from 'lodash/get'
 import config from '../../../../config'
+import Bus from '@/utils/EventBus'
 
 import { ImageField, TickField, InputField } from '@comcom/fields'
 import { ASSET_POLICIES, DEFAULT_INPUT_STEP, DOCUMENT_TYPES, ASSET_POLICIES_VERBOSE } from '@/constants'
@@ -288,6 +289,7 @@ export default {
         } else {
           await api.assetCreation.createAsset(this.asset)
         }
+        Bus.$emit('recheckConfig')
         this.$store.dispatch('SET_INFO', 'Submitted successfully.')
         this.$router.push({ name: 'systemAssets.index' })
       } catch (error) {

@@ -1,13 +1,21 @@
 <template>
   <div class="config-checker">
-    <button class="config-checker__icon"
-            v-if="foundIssues.length"
-            @click="togglePane">
-      <mdi-alert-outline-icon/>
+    <button
+      class="config-checker__icon"
+      v-if="foundIssues.length"
+      @click="togglePane"
+    >
+      <mdi-alert-outline-icon />
     </button>
-    <div class="config-checker__pane" v-if="isPaneActive">
+    <div
+      class="config-checker__pane"
+      v-if="isPaneActive"
+    >
       <ul>
-        <li v-for="(item, i) in foundIssues" :key="i">
+        <li
+          v-for="(item, i) in foundIssues"
+          :key="i"
+        >
           {{ item.message }}
         </li>
       </ul>
@@ -16,6 +24,7 @@
 </template>
 
 <script>
+import Bus from '@/utils/EventBus'
 import { ASSET_POLICIES } from '@/constants'
 import api from '@/api'
 import 'mdi-vue/AlertOutlineIcon'
@@ -41,18 +50,25 @@ export default {
   },
 
   async created () {
-    for (const item of CHECK_LIST) {
-      const isValid = await item.check({ store, api })
-      if (!isValid) {
-        this.foundIssues.push(item)
-      }
-    }
+    this.checkConfig()
+    Bus.$on('recheckConfig', () => this.checkConfig())
   },
 
   methods: {
     togglePane () {
       this.isPaneActive = !this.isPaneActive
       this.closeOnOutsideClick()
+    },
+
+    async checkConfig () {
+      for (const item of CHECK_LIST) {
+        if (await item.check({ store, api })) {
+          (this.foundIssues || (this.foundIssues = [])).push(item)
+        } else {
+          this.foundIssues = (this.foundIssues || [])
+            .filter(issue => issue.message !== item.message)
+        }
+      }
     },
 
     closeOnOutsideClick () {
@@ -97,5 +113,4 @@ export default {
   box-shadow: 0.07rem 0.07rem 0.56rem 0.04rem rgba(170, 170, 170, 0.72);
   color: $color-danger;
 }
-
 </style>
