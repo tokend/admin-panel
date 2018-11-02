@@ -1,37 +1,62 @@
 <template>
-  <div class="details-reader">
-    <template v-if="isObject(details)">
-      <div
-        class="details-reader__row"
-        v-for="(detail, key) in details"
-        :key="`${_uid}-${key}`"
-      >
-        <template v-if="isPrintablePair(key, detail)">
-          <template v-if="isArray(detail)">
-            <p class="details-reader__label">{{ verbozify(key) }}:</p>
-            <details-reader
-              v-for="(item, id) in detail"
-              :key="`${_uid}-${id}-${key}`"
-              :details="item"
-            />
-          </template>
+  <table class="details-reader" v-if="isObject(details)">
+    <template v-for="(value, key) in details">
+      <template v-if="isPrintablePair(key, value)">
+        <template v-if="isArray(value)">
+          <tr class="details-reader__row" :key="`${_uid}-${key}`">
+            <td class="details-reader__cell">
+              <span class="details-reader__label">
+                {{ key | humanize }}:
+              </span>
+            </td>
+          </tr>
 
-          <template v-else-if="isObject(detail)">
-            <p class="details-reader__label">{{ verbozify(key) }}:</p>
-            <details-reader :details="detail" />
-          </template>
-
-          <template v-else>
-            <p class="details-reader__label">{{ verbozify(key) }}</p>
-            <p class="details-reader__value" :title="detail">{{ detail }}</p>
-          </template>
+          <tr
+            class="details-reader__row"
+            v-for="(item, id) in value"
+            :key="`${_uid}-${id}-${key}`"
+          >
+            <td class="details-reader__cell" colspan="2">
+              <details-reader class="details-reader__nested" :details="item" />
+            </td>
+          </tr>
         </template>
-      </div>
+
+        <template v-else-if="isObject(value)">
+          <tr class="details-reader__row" :key="`${_uid}-${key}`">
+            <td class="details-reader__cell">
+              <span class="details-reader__label">
+                {{ key | humanize }}:
+              </span>
+            </td>
+          </tr>
+
+          <tr class="details-reader__row" :key="`${_uid}-${key}-nested`">
+            <td class="details-reader__cell" colspan="2">
+              <details-reader class="details-reader__nested" :details="value" />
+            </td>
+          </tr>
+        </template>
+
+        <template v-else>
+          <tr class="details-reader__row" :key="`${_uid}-${key}`">
+            <td class="details-reader__cell">
+              <span class="details-reader__label">
+                {{ key | humanize }}
+              </span>
+            </td>
+
+            <td class="details-reader__cell">
+              <span class="details-reader__value" :title="value">
+                {{ value }}
+              </span>
+            </td>
+          </tr>
+        </template>
+      </template>
     </template>
-    <template v-else>
-      <p class="details-reader__value" :title="details">{{ details }}</p>
-    </template>
-  </div>
+  </table>
+  <p :title="details" v-else>{{ details }}</p>
 </template>
 
 <script>
@@ -51,9 +76,12 @@ export default {
       dictionary: {}
     }
   },
+  filters: {
+    humanize (value) {
+      return verbozify(value)
+    }
+  },
   methods: {
-    verbozify,
-
     isPrivate (value) {
       if (typeof value === 'string' || value instanceof String) {
         return value.charAt(0) === '_'
@@ -79,43 +107,29 @@ export default {
 <style lang="scss">
 @import "~@/assets/scss/colors";
 
-.details-reader {
-  width: 100%;
-}
+.details-reader__cell {
+  vertical-align: top;
+  padding: 0.1rem 0;
 
-.details-reader .details-reader {
-  padding-left: 2rem;
-  position: relative;
+  & > .details-reader {
+    padding-left: 2rem;
+    position: relative;
 
-  &:after {
-    content: "";
-    display: block;
-    border-left: 1px solid rgba(0, 0, 0, 0.2);
-    position: absolute;
-    left: 0;
-    top: 0.45rem;
-    bottom: 0.35rem;
-  }
-}
-
-.details-reader__row {
-  display: flex;
-  flex-wrap: wrap;
-
-  & + & {
-    margin-top: 0.25rem;
+    &:after {
+      content: "";
+      display: block;
+      border-left: 1px solid rgba(0, 0, 0, 0.2);
+      position: absolute;
+      left: 0;
+      top: 0.45rem;
+      bottom: 0.35rem;
+    }
   }
 }
 
 .details-reader__label {
-  padding-right: 2rem;
-  width: 20rem;
-  min-width: 20rem;
+  padding-right: 2.4rem;
   color: $color-text-secondary;
-}
-
-.details-reader__value {
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>
