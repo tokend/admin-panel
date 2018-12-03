@@ -4,6 +4,7 @@ import server from '../utils/server'
 import store from '../store'
 import { xdr, ReviewRequestBuilder, CreateUpdateKYCRequestBuilder, ManageLimitsBuilder } from 'tokend-js-sdk'
 import { deriveRequestIdFromCreateKycRequestResult } from '../utils/parseXdrTxResponse'
+import { Sdk } from '@/sdk'
 
 import {
   REQUEST_TYPES,
@@ -33,64 +34,46 @@ const ScopedServerCallBuilder = ServerCallBuilder.makeScope()
 
 export const requests = {
   _review ({ action, reason = '' }, ...requests) {
-    const tx = envelopOperations(
-      ...requests.map(function (item) {
-        return ReviewRequestBuilder.reviewRequest({
-          requestID: item.id,
-          requestHash: item.hash,
-          requestType: typeof item.request_type_i === 'undefined' ? item.requestTypeI : item.request_type_i,
-          source: config.MASTER_ACCOUNT,
-          action,
-          reason
-        })
+    const operations = requests.map(function (item) {
+      return Sdk.base.reviewRequestBuilder.reviewRequest({
+        requestID: item.id,
+        requestHash: item.hash,
+        requestType: typeof item.request_type_i === 'undefined' ? item.requestTypeI : item.request_type_i,
+        source: config.MASTER_ACCOUNT,
+        action,
+        reason
       })
-    )
-
-    return new ScopedServerCallBuilder()
-      .transactions()
-      .sign()
-      .post({ tx })
+    })
+    return Sdk.horizon.transactions.submitOperations(...operations)
   },
 
   _reviewWithdraw ({ action, reason = '' }, ...requests) {
-    const tx = envelopOperations(
-      ...requests.map(function (item) {
-        return ReviewRequestBuilder.reviewTwoStepWithdrawRequest({
-          requestID: item.id,
-          requestHash: item.hash,
-          requestType: item.request_type_i || item.requestTypeI,
-          source: config.MASTER_ACCOUNT,
-          action,
-          reason,
-          externalDetails: {}
-        })
+    const operations = requests.map(function (item) {
+      return Sdk.base.reviewRequestBuilder.reviewTwoStepWithdrawRequest({
+        requestID: item.id,
+        requestHash: item.hash,
+        requestType: item.request_type_i || item.requestTypeI,
+        source: config.MASTER_ACCOUNT,
+        action,
+        reason,
+        externalDetails: {}
       })
-    )
-
-    return new ScopedServerCallBuilder()
-      .transactions()
-      .sign()
-      .post({ tx })
+    })
+    return Sdk.horizon.transactions.submitOperations(...operations)
   },
 
   _reviewKyc ({ action, reason }, request, tasks) {
-    const tx = envelopOperations(
-      ReviewRequestBuilder.reviewUpdateKYCRequest({
-        requestID: request.id,
-        requestHash: request.hash,
-        requestType: request.request_type_i || request.requestTypeI,
-        action,
-        reason,
-        tasksToAdd: tasks.add,
-        tasksToRemove: tasks.remove,
-        externalDetails: {}
-      })
-    )
-
-    return new ScopedServerCallBuilder()
-      .transactions()
-      .sign()
-      .post({ tx })
+    const operation = Sdk.base.reviewRequestBuilder.reviewUpdateKYCRequest({
+      requestID: request.id,
+      requestHash: request.hash,
+      requestType: request.request_type_i || request.requestTypeI,
+      action,
+      reason,
+      tasksToAdd: tasks.add,
+      tasksToRemove: tasks.remove,
+      externalDetails: {}
+    })
+    return Sdk.horizon.transactions.submitOperations(operation)
   },
 
   approve (...requests) {
@@ -154,23 +137,18 @@ export const requests = {
         accountID: params.accountId,
         accountType: undefined
       }))
-    const tx = envelopOperations(
-      ReviewRequestBuilder.reviewLimitsUpdateRequest({
-        requestHash: params.request.hash,
-        requestType: params.request.request_type_i || params.request.requestTypeI,
-        source: config.MASTER_ACCOUNT,
-        action: params.isPermanent
+    const operation = Sdk.base.reviewRequestBuilder.reviewLimitsUpdateRequest({
+      requestHash: params.request.hash,
+      requestType: params.request.request_type_i || params.request.requestTypeI,
+      source: config.MASTER_ACCOUNT,
+      action: params.isPermanent
         ? xdr.ReviewRequestOpAction.permanentReject().value
         : xdr.ReviewRequestOpAction.reject().value,
-        reason: params.reason,
-        requestID: params.request.id,
-        newLimits: newLimits[0]
-      })
-    )
-
-    return new ScopedServerCallBuilder()
-      .transactions()
-      .post({ tx })
+      reason: params.reason,
+      requestID: params.request.id,
+      newLimits: newLimits[0]
+    })
+    return Sdk.horizon.transactions.submitOperations(operation)
   },
 
   reject ({ reason, isPermanent = false }, ...requests) {
@@ -237,12 +215,7 @@ export const requests = {
         })
       )
     }
-
-    const tx = envelopOperations(...operations)
-    const txResponse = await new ScopedServerCallBuilder()
-      .transactions()
-      .sign()
-      .post({ tx })
+    const txResponse = await Sdk.horizon.transactions.submitOperations(...operations)
 
     const requestId = deriveRequestIdFromCreateKycRequestResult(txResponse, operations.length - 1)
     await this.rejectKyc(await this.get(requestId), opts.rejectReason)
@@ -252,9 +225,8 @@ export const requests = {
     const rejectAction = xdr.ReviewRequestOpAction.reject().value
     const approveAction = xdr.ReviewRequestOpAction.approve().value
 
-    const tx = envelopOperations(
-      ...requestsDetails.map(detail =>
-        ReviewRequestBuilder.reviewUpdateKYCRequest({
+    const operations = requestsDetails.map(detail =>
+        Sdk.base.reviewRequestBuilder.reviewUpdateKYCRequest({
           requestID: detail.request.id,
           requestHash: detail.request.hash,
           requestType: detail.request.request_type_i || detail.request.requestTypeI,
@@ -265,20 +237,12 @@ export const requests = {
           externalDetails: {}
         }
       ))
-    )
 
-    return new ScopedServerCallBuilder()
-      .transactions()
-      .sign()
-      .post({ tx })
+    return Sdk.horizon.transactions.submitOperations(...operations)
   },
 
   get (id) {
-    return new ScopedServerCallBuilder()
-      .requests()
-      .id(id)
-      .sign()
-      .get()
+    return Sdk.horizon.request.get(id)
       .then(({ data }) => data)
   },
 
@@ -290,12 +254,7 @@ export const requests = {
       reviewer: filters.reviewer,
       order: 'desc'
     })
-
-    return new ScopedServerCallBuilder()
-      .request()
-      .assets()
-      .sign()
-      .get(params)
+    return Sdk.horizon.request.getAllForAssets(params)
       .then(({ data }) => data[0] || null)
   },
 
@@ -304,16 +263,12 @@ export const requests = {
     if (state) filters.state = state
     if (asset) filters.asset = asset
 
-    return new ScopedServerCallBuilder()
-      .request()
-      .issuances()
-      .sign()
-      .get({
-        order: 'desc',
-        reviewer: config.MASTER_ACCOUNT,
-        limit: store.getters.pageLimit,
-        ...filters
-      })
+    return Sdk.horizon.request.getAllForIssuances({
+      order: 'desc',
+      reviewer: config.MASTER_ACCOUNT,
+      limit: store.getters.pageLimit,
+      ...filters
+    })
   },
 
   getWithdrawalRequests ({ asset, state, requestor }) {
@@ -321,32 +276,22 @@ export const requests = {
     if (asset) filters.dest_asset_code = asset
     if (state) filters.state = state
     if (requestor) filters.requestor = requestor
-
-    return new ScopedServerCallBuilder()
-      .request()
-      .withdrawals()
-      .sign()
-      .get({
-        order: 'desc',
-        limit: store.getters.pageLimit,
-        ...filters
-      })
+    return Sdk.horizon.request.getAllForWithdrawals({
+      order: 'desc',
+      limit: store.getters.pageLimit,
+      ...filters
+    })
   },
 
   getSaleRequests ({ state, requestor }) {
     const filters = {}
     if (state) filters.state = state
     if (requestor) filters.requestor = requestor
-
-    return new ScopedServerCallBuilder()
-      .request()
-      .sales()
-      .sign()
-      .get({
-        order: 'desc',
-        limit: store.getters.pageLimit,
-        ...filters
-      })
+    return Sdk.horizon.request.getAllForSales({
+      order: 'desc',
+      limit: store.getters.pageLimit,
+      ...filters
+    })
   },
 
   getKycRequests ({ state, requestor, type }) {
@@ -358,15 +303,11 @@ export const requests = {
       state.tasksToProcess ? filters.mask_set = state.tasksToProcess : null
       state.tasksProcessed ? filters.mask_not_set = state.tasksProcessed : null
     }
-    return new ScopedServerCallBuilder()
-      .request()
-      .update_kyc()
-      .sign()
-      .get({
-        ...filters,
-        order: 'desc',
-        limit: store.getters.pageLimit
-      })
+    return Sdk.horizon.request.getAllForUpdateKyc({
+      ...filters,
+      order: 'desc',
+      limit: store.getters.pageLimit
+    })
   },
 
   getAssetRequests (filters) {
@@ -377,12 +318,7 @@ export const requests = {
       reviewer: filters.reviewer,
       order: 'desc'
     })
-
-    return new ScopedServerCallBuilder()
-      .request()
-      .assets()
-      .sign()
-      .get(params)
+    return Sdk.horizon.request.getAllForAssets(params)
   },
 
   getLimitsUpdateRequests ({ asset, state, requestor }) {
@@ -390,16 +326,11 @@ export const requests = {
     if (asset) filters.dest_asset_code = asset
     if (state) filters.state = state
     if (requestor) filters.requestor = requestor
-
-    return new ScopedServerCallBuilder()
-      .request()
-      .limits_updates()
-      .sign()
-      .get({
-        order: 'desc',
-        limit: store.getters.pageLimit,
-        ...filters
-      })
+    return Sdk.horizon.request.getAllForLimitsUpdates({
+      order: 'desc',
+      limit: store.getters.pageLimit,
+      ...filters
+    })
   },
 
   // legacy
