@@ -1,8 +1,4 @@
-import { ServerCallBuilder } from './ServerCallBuilder'
-
-const ScopedServerCallBuilder = ServerCallBuilder.makeScope()
-  .registerResource('trades')
-  .registerResource('order_book', 'orderBook')
+import { Sdk } from '@/sdk'
 
 export const orderBooks = {
   /**
@@ -24,11 +20,7 @@ export const orderBooks = {
       quote_asset: quoteAsset,
       is_buy: true
     }
-
-    return new ScopedServerCallBuilder()
-      .orderBook()
-      .sign()
-      .get(params)
+    return Sdk.horizon.orderBook.getAll(params)
   },
 
   /**
@@ -50,11 +42,7 @@ export const orderBooks = {
       quote_asset: quoteAsset,
       is_buy: false
     }
-
-    return new ScopedServerCallBuilder()
-      .orderBook()
-      .sign()
-      .get(params)
+    return Sdk.horizon.orderBook.getAll(params)
   },
 
   /**
@@ -75,10 +63,6 @@ export const orderBooks = {
       base_asset: baseAsset,
       quote_asset: quoteAsset
     }
-
-    return new ScopedServerCallBuilder()
-      .trades()
-      .sign()
-      .get(params)
+    return Sdk.horizon.trades.getPage(params)
   }
 }
