@@ -1,10 +1,6 @@
-import { ServerCallBuilder } from './ServerCallBuilder'
 import config from '@/config'
 import { clearObject } from '@/utils/clearObject'
-
-const ScopedServerCallBuilder = ServerCallBuilder.makeScope()
-  .registerResource('sales')
-  .registerResource('order_book', 'orderBook')
+import { Sdk } from '@/sdk'
 
 export const sales = {
   /**
@@ -27,11 +23,7 @@ export const sales = {
       order: filters.order || 'desc',
       limit: filters.limit || config.PAGE_LIMIT
     })
-
-    return new ScopedServerCallBuilder()
-      .sales()
-      .get(params)
-      .then()
+    return Sdk.horizon.sales.getPage(params)
   },
 
   /**
@@ -39,9 +31,7 @@ export const sales = {
    * @param {string|number} id
    */
   get (id) {
-    return new ScopedServerCallBuilder()
-      .sales(id)
-      .get()
+    return Sdk.horizon.sales.get(id)
   },
 
   /**
@@ -63,10 +53,6 @@ export const sales = {
       quote_asset: quoteAsset,
       is_buy: true
     }
-
-    return new ScopedServerCallBuilder()
-      .orderBook()
-      .sign()
-      .get(params)
+    return Sdk.horizon.orderBook.getAll(params)
   }
 }
