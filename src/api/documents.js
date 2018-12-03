@@ -1,22 +1,9 @@
 import Vue from 'vue'
-import { ServerCallBuilder } from './ServerCallBuilder'
-
-const ScopedServerCallBuilder = ServerCallBuilder.makeScope()
-  .registerResource('documents')
+import { Sdk } from '@/sdk'
 
 export default {
   getUploadConfig (type, contentType) {
-    return new ScopedServerCallBuilder()
-      .documents()
-      .sign()
-      .post({
-        data: {
-          type,
-          attributes: {
-            content_type: contentType
-          }
-        }
-      })
+    return Sdk.api.documents.create(type, contentType)
   },
 
   uploadFile (file, config, mimeString) {
