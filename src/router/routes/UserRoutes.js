@@ -344,6 +344,24 @@ export const UserRoutes = {
     },
 
     {
+      path: '/key-value',
+      name: 'keyValue',
+      redirect: { name: 'keyValue.index' },
+      component: function (resolve) {
+        require(['../../components/User/KeyValue/KeyValue.vue'], resolve)
+      },
+      children: [
+        {
+          path: '',
+          name: 'keyValue.index',
+          component: function (resolve) {
+            require(['../../components/User/KeyValue/KeyValue.Index.vue'], resolve)
+          }
+        }
+      ]
+    },
+
+    {
       path: '/fees',
       name: 'fees',
       redirect: { name: 'fees.index' },
