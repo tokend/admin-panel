@@ -1,71 +1,44 @@
+import { Sdk } from '@/sdk'
+
 import { Operation, xdr } from 'tokend-js-sdk'
 
 import config from '../config'
 import server from '../utils/server'
 import store from '../store'
-import { ServerCallBuilder } from './ServerCallBuilder'
-import { envelopOperations } from './helpers/envelopOperations'
-
-const ScopedServerCallBuilder = ServerCallBuilder.makeScope()
-.registerResource('assets')
-.registerResource('holders')
-.registerResource('asset_pairs', 'assetPairs')
-.registerResource('transactions')
-.registerResource('convert')
 
 export default {
   getAll () {
-    return new ScopedServerCallBuilder()
-      .assets()
-      .sign()
-      .get()
+    Sdk.horizon.assets.getAll()
   },
 
   getAllSystemAssets () {
-    return new ScopedServerCallBuilder()
-      .assets()
-      .sign()
-      .get({ owner: config.MASTER_ACCOUNT })
+    return Sdk.horizon.assets.getAll({ owner: config.MASTER_ACCOUNT })
   },
 
   get (code) {
-    return new ScopedServerCallBuilder()
-      .assets(code)
-      .sign()
-      .get()
+    return Sdk.horizon.assets.get(code)
   },
 
   getPairs () {
-    return new ScopedServerCallBuilder()
-      .assetPairs()
-      .get()
+    return Sdk.horizon.assetPairs.getAll()
   },
 
   getHolders (code) {
-    return new ScopedServerCallBuilder()
-      .assets(code)
-      .holders()
-      .sign()
-      .get()
+    return Sdk.horizon.assets.getHolders(code)
   },
 
   createPair (params) {
-    const tx = envelopOperations(
-      Operation.manageAssetPair({
-        base: params.base,
-        quote: params.quote,
-        action: xdr.ManageAssetPairAction.create(),
-        policies: +params.policies,
-        physicalPrice: '' + params.physicalPrice,
-        physicalPriceCorrection: '' + params.physicalPriceCorrection,
-        maxPriceStep: '' + params.maxPriceStep,
-        source: config.MASTER_ACCOUNT
-      })
-    )
-    return new ScopedServerCallBuilder()
-      .transactions()
-      .sign()
-      .post({ tx })
+    const operation = Sdk.base.Operation.manageAssetPair({
+      base: params.base,
+      quote: params.quote,
+      action: xdr.ManageAssetPairAction.create(),
+      policies: +params.policies,
+      physicalPrice: '' + params.physicalPrice,
+      physicalPriceCorrection: '' + params.physicalPriceCorrection,
+      maxPriceStep: '' + params.maxPriceStep,
+      source: config.MASTER_ACCOUNT
+    })
+    return Sdk.horizon.transactions.submitOperations(operation)
   },
 
   updatePair (params) {
@@ -80,23 +53,18 @@ export default {
       throw new TypeError('manageAssetPair: Action is required')
     }
 
-    const tx = envelopOperations(
-      Operation.manageAssetPair({
-        base: params.base,
-        quote: params.quote,
-        action: action,
-        policies: +params.policies,
-        physicalPrice: '' + params.physicalPrice,
-        physicalPriceCorrection: '' + params.physicalPriceCorrection,
-        maxPriceStep: '' + params.maxPriceStep,
-        source: config.MASTER_ACCOUNT
-      })
-    )
+    const operation = Sdk.base.Operation.manageAssetPair({
+      base: params.base,
+      quote: params.quote,
+      action: action,
+      policies: +params.policies,
+      physicalPrice: '' + params.physicalPrice,
+      physicalPriceCorrection: '' + params.physicalPriceCorrection,
+      maxPriceStep: '' + params.maxPriceStep,
+      source: config.MASTER_ACCOUNT
+    })
 
-    return new ScopedServerCallBuilder()
-      .transactions()
-      .sign()
-      .post({ tx })
+    return Sdk.horizon.transactions.submitOperations(operation)
   },
 
   // legacy
@@ -166,9 +134,6 @@ export default {
   },
 
   convertAssetPairs (sourceAsset, destAsset, amount) {
-    return new ScopedServerCallBuilder()
-      .assetPairs()
-      .convert()
-      .get({ 'source_asset': sourceAsset, 'dest_asset': destAsset, 'amount': amount })
+    return Sdk.horizon.assetPairs.convert({ 'source_asset': sourceAsset, 'dest_asset': destAsset, 'amount': amount })
   }
 }
