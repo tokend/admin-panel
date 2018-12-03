@@ -1,51 +1,27 @@
-import { SetOptionsBuilder, Operation } from 'tokend-js-sdk'
-
 import config from '../config'
 import server from '../utils/server'
 import store from '../store'
-import { ServerCallBuilder } from './ServerCallBuilder'
-import { envelopOperations } from './helpers/envelopOperations'
 
-const ScopedServerCallBuilder = ServerCallBuilder.makeScope()
-  .registerResource('accounts')
-  .registerResource('transactions')
-  .registerResource('operations')
-  .registerResource('limits')
+import { Sdk } from '@/sdk'
 
 export default {
   get (address) {
-    return new ScopedServerCallBuilder()
-      .accounts(address)
-      .sign()
-      .get()
+    return Sdk.horizon.account.get(address)
   },
 
   operationsOf (id) {
     return {
-      _owner: id,
-      _blank: new ScopedServerCallBuilder().accounts(id).operations(),
-      /**
-       * Get operations by type
-       * @param {string} type
-       * @returns {Promise} A Promise with the response
-       */
       getAllByType (type) {
-        return this._blank
-          .sign()
-          .get({
-            order: 'desc',
-            operation_type: type
-          })
+        return Sdk.horizon.account.getOperations(id, {
+          order: 'desc',
+          operation_type: type
+        })
       }
     }
   },
 
   getLimits (address) {
-    return new ScopedServerCallBuilder()
-      .accounts(address)
-      .limits()
-      .sign()
-      .get()
+    return Sdk.horizon.account.getLimits(address)
   },
 
   // legacy
@@ -78,19 +54,14 @@ export default {
   },
 
   manageAccount (params) {
-    const tx = envelopOperations(
-      Operation.manageAccount({
-        block: params.isBlock,
-        accountType: params.accountType,
-        account: params.account,
-        source: config.MASTER_ACCOUNT,
-        [params.isBlock ? 'blockReasonsToAdd' : 'blockReasonsToRemove']: params.blockReasons
-      })
-    )
-    return new ScopedServerCallBuilder()
-      .transactions()
-      .sign()
-      .post({ tx })
+    const operation = Sdk.base.Operation.manageAccount({
+      block: params.isBlock,
+      accountType: params.accountType,
+      account: params.account,
+      source: config.MASTER_ACCOUNT,
+      [params.isBlock ? 'blockReasonsToAdd' : 'blockReasonsToRemove']: params.blockReasons
+    })
+    return Sdk.horizon.transactions.submitOperations(operation)
   },
 
   manageSigner (params) {
@@ -102,46 +73,31 @@ export default {
     }
     if (params.name) signer.name = params.name
 
-    const tx = envelopOperations(
-      SetOptionsBuilder.setOptions({
-        signer,
-        source: config.MASTER_ACCOUNT
-      })
-    )
+    const operation = Sdk.base.SetOptionsBuilder.setOptions({
+      signer,
+      source: config.MASTER_ACCOUNT
+    })
 
-    return new ScopedServerCallBuilder()
-      .transactions()
-      .sign()
-      .post({ tx })
+    return Sdk.horizon.transactions.submitOperations(operation)
   },
 
   manageMaster (weight) {
-    const tx = envelopOperations(
-      SetOptionsBuilder.setOptions({
-        source: config.MASTER_ACCOUNT,
-        masterWeight: Number(weight)
-      })
-    )
+    const operation = Sdk.base.SetOptionsBuilder.setOptions({
+      source: config.MASTER_ACCOUNT,
+      masterWeight: Number(weight)
+    })
 
-    return new ScopedServerCallBuilder()
-      .transactions()
-      .sign()
-      .post({ tx })
+    return Sdk.horizon.transactions.submitOperations(operation)
   },
 
   setThresholds (opts) {
-    const tx = envelopOperations(
-      SetOptionsBuilder.setOptions({
-        lowThreshold: opts.lowThreshold,
-        medThreshold: opts.medThreshold,
-        highThreshold: opts.highThreshold
-      })
-    )
+    const operation = Sdk.base.SetOptionsBuilder.setOptions({
+      lowThreshold: opts.lowThreshold,
+      medThreshold: opts.medThreshold,
+      highThreshold: opts.highThreshold
+    })
 
-    return new ScopedServerCallBuilder()
-      .transactions()
-      .sign()
-      .post({ tx })
+    return Sdk.horizon.transactions.submitOperations(operation)
   },
 
   getReferrals (accountId) {

@@ -1,10 +1,10 @@
-import { TokenD } from '@tokend/js-sdk'
+import { TokenD, base } from '@tokend/js-sdk'
 
 let _sdkInstance = null
 
 export class Sdk {
   static async init (serverUrl) {
-    _sdkInstance = await TokenD.create(serverUrl, { allowHttp: true })
+    _sdkInstance = await TokenD.create(serverUrl, { allowHttp: true }) // true for use http, only localhost
     return _sdkInstance
   }
 
@@ -19,6 +19,10 @@ export class Sdk {
 
   static get sdk () {
     return _sdkInstance
+  }
+
+  static get base () {
+    return base
   }
 
   static get horizon () {
