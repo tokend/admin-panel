@@ -5,6 +5,7 @@ import { ServerCallBuilder } from './ServerCallBuilder'
 import { USER_TYPES } from '@/constants'
 import { clearObject } from '@/utils/clearObject'
 import { jsonApiPayloadCombiner } from './helpers/jsonApiPayloadCombiner'
+import { Sdk } from '@/sdk'
 
 const ScopedServerCallBuilder = ServerCallBuilder.makeScope()
   .registerResource('users')
@@ -24,10 +25,7 @@ export default {
   // ---------- User state ----------
 
   getUnverified () {
-    return new ScopedServerCallBuilder()
-      .users()
-      .sign()
-      .get({ type: USER_TYPES.notVerified })
+    return Sdk.api.users.getPage({ type: USER_TYPES.notVerified })
   },
 
   /**
@@ -38,18 +36,11 @@ export default {
    * @return {Promise}
    */
   getAll (filters) {
-    return new ScopedServerCallBuilder()
-      .users()
-      .sign()
-      .get(clearObject(filters))
+    return Sdk.api.users.getPage(clearObject(filters))
   },
 
   get (id) {
-    return new ScopedServerCallBuilder()
-      .users()
-      .id(id)
-      .sign()
-      .get()
+    return Sdk.api.users.get(id)
   },
 
   getEmailsByAddresses (addresses) {
@@ -60,10 +51,7 @@ export default {
   },
 
   getAccountIdByEmail (email) {
-    return new ScopedServerCallBuilder()
-      .users()
-      .sign()
-      .get({ email: email })
+    return Sdk.api.users.getPage({ email: email })
       .then((response) => {
         const resultArray = response.data.filter(item => item.email === email)
         return resultArray[0].id
@@ -83,7 +71,6 @@ export default {
         reject_reason: reason || ''
       }
     })
-
     return new ScopedServerCallBuilder()
       .users(userId)
       .sign()
@@ -134,12 +121,8 @@ export default {
        * @param {boolean} isSigned
        * @returns {Promise} A Promise with the response
        */
-      get (blobId, isSigned = false) {
-        if (isSigned) {
-          return this._blank.id(blobId).sign().get()
-        } else {
-          return this._blank.id(blobId).get()
-        }
+      get (blobId) {
+        return Sdk.api.blobs.get(blobId, userId)
       },
 
       /**
@@ -161,12 +144,7 @@ export default {
           token_code: filters.token,
           kyc_sequence: filters.kycSequence
         })
-
-        if (isSigned) {
-          return this._blank.sign().get(params)
-        } else {
-          return this._blank.get(params)
-        }
+        return Sdk.api.blobs.getAll(params, userId)
       },
 
       /**
