@@ -1,9 +1,11 @@
 import Vue from 'vue'
 import store from './store'
 import router from './router'
-import Sdk from 'tokend-js-sdk'
+import StellarSdk from 'tokend-js-sdk'
 import StellarWallet from 'tokend-wallet-js-sdk'
 import accounts from './api/accounts'
+import { Sdk } from '@/sdk'
+import { Wallet } from '@tokend/js-sdk'
 
 const server = {
   'trusted': true,
@@ -23,7 +25,7 @@ export default {
   },
 
   createWallet (credentials, redirect) {
-    const signingKeys = Sdk.Keypair.fromSecret(credentials.seed)
+    const signingKeys = StellarSdk.Keypair.fromSecret(credentials.seed)
     const keychainData = { seed: signingKeys.seed(), accountId: signingKeys.accountId() }
     const mainData = { username: credentials.username.toLowerCase(), server: server }
 
@@ -98,7 +100,7 @@ export default {
   async seedLogin (seed) {
     const auth = store.state.auth || {}
     const user = store.state.user || {}
-    const keypair = Sdk.Keypair.fromSecret(seed)
+    const keypair = StellarSdk.Keypair.fromSecret(seed)
 
     user.name = 'admin_demo'
     user.keys = user.keys || {}
@@ -117,6 +119,7 @@ export default {
     const user = store.state.user
     user.name = username
     user.keys = JSON.parse(credentials.getKeychainData())
+    Sdk.sdk.useWallet(new Wallet('', user.keys.seed, user.keys.accountId, credentials.getWalletId()))
     user.wallet = {
       id: credentials.getWalletId()
     }

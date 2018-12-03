@@ -1,5 +1,5 @@
 const merge = require('webpack-merge')
-const env = require('./alice.env')
+const env = require('./local.env')
 
 module.exports = merge(env, {
   NODE_ENV: "'development'"

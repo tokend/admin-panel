@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" v-if="isAppInitialized">
     <template v-if="!isGoodBrowser">
       <no-support-message/>
     </template>
@@ -34,6 +34,8 @@ import LoadingScreen from './components/Loader'
 import StellarSdk from 'tokend-js-sdk'
 import UAParser from 'ua-parser-js'
 import NoSupportMessage from './components/IERestrictionMessage.vue'
+import { Sdk } from '@/sdk'
+import { Wallet } from '@tokend/js-sdk'
 
 import './scss/app.scss'
 
@@ -77,11 +79,22 @@ export default {
 
       timeoutDelay: 15 * 60 * 1000,
       isGoodBrowser: true,
-      isHorizonInfoLoaded: false
+      isHorizonInfoLoaded: false,
+      isAppInitialized: false
     }
   },
 
-  created () {
+  async created () {
+    await this.initApp()
+    if (this.$store.getters.GET_USER.keys.seed) {
+      Sdk.sdk
+        .useWallet(new Wallet(
+          '',
+          this.$store.getters.GET_USER.keys.seed,
+          this.$store.getters.GET_USER.keys.accountId,
+          this.$store.getters.GET_USER.wallet.id
+        ))
+    }
     this.isGoodBrowser = !isIE()
     if (!this.isGoodBrowser) return
     this.checkConnection()
@@ -123,6 +136,10 @@ export default {
   },
 
   methods: {
+    async initApp () {
+      await Sdk.init(config.HORIZON_SERVER)
+      this.isAppInitialized = true
+    },
     checkConnection () {
       return (() => {
         return this.$http.get(config.HORIZON_SERVER)
