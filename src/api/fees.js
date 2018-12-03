@@ -2,12 +2,8 @@ import { Operation } from 'tokend-js-sdk'
 import server from '../utils/server'
 import store from '../store'
 import { xdrTypeFromValue } from '@/utils/xdrTypeFromValue'
-import { envelopOperations } from './helpers/envelopOperations'
-import { ServerCallBuilder } from './ServerCallBuilder'
 import { FEE_TYPES } from '@/constants'
-
-const ScopedServerCallBuilder = ServerCallBuilder.makeScope()
-  .registerResource('transactions')
+import { Sdk } from '@/sdk'
 
 export default {
   getFees (filter = {}) {
@@ -42,19 +38,13 @@ export default {
       isDelete: fees.isDelete
     }
 
-    console.log('if condition:')
-    console.log(+fees.fee_type === FEE_TYPES.paymentFee)
     if (+fees.fee_type === FEE_TYPES.paymentFee) {
-      console.log('inside if')
       opts.fee.feeAsset = fees.feeAsset || fees.fee_asset
     }
 
-    const tx = envelopOperations(Operation.setFees(opts))
+    const operation = Sdk.base.Operation.setFees(opts)
 
-    return new ScopedServerCallBuilder()
-      .transactions()
-      .sign()
-      .post({ tx })
+    return Sdk.horizon.transactions.submitOperations(operation)
   },
 
   updatePeriods (params) {
