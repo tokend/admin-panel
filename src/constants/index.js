@@ -43,3 +43,4 @@ export {
   DEFAULT_INPUT_STEP,
   DEFAULT_INPUT_MIN
 } from './defaults'
+export { KEY_VALUE_ENTRY_TYPE } from './key-value'

@@ -1,13 +1,11 @@
 <template>
   <div class="key-value-manager">
-    <div class="key-value-manager__card">
-
-      <template v-if="list.length">
+    <template v-if="list.length">
+      <div class="key-value-manager__card">
         <div class="key-value-manager__form">
-          <select-field class="key-value-manager__filter"
-                        v-model="key"
+          <select-field class="key-value-manager__input"
+                        v-model="updateForm.key"
                         label="Key"
-                        @input="selectKey"
           >
             <option
               v-for="item in list"
@@ -18,22 +16,60 @@
             </option>
           </select-field>
 
-          <input-field v-model="value"
-                       class="fee-list__filter key-value-manager__input"
+          <input-field v-model="updateForm.value"
+                       class="key-value-manager__input"
                        label="Value"
                        placeholder="Enter new value"
           />
+
           <button
             class="app__btn
                  app__btn--small
                  key-value-manager__btn"
             :disabled="isPending"
-            @click="setNewValue()"
+            @click="setKeyValue(updateForm.key, updateForm.value)"
           >
-            Save
+            Update
           </button>
         </div>
-      </template>
+      </div>
+    </template>
+
+    <div class="key-value-manager__card">
+      <div class="key-value-manager__form">
+        <input-field v-model="createForm.key"
+                     class="key-value-manager__input"
+                     label="Key"
+                     placeholder="Enter new key"
+        />
+        <input-field v-model="createForm.value"
+                     class="key-value-manager__input"
+                     label="Value"
+                     placeholder="Enter new value"
+        />
+
+        <select-field v-model.number="createForm.entryType"
+                      class="key-value-manager__input"
+                      label="Entry type"
+        >
+          <option
+            v-for="(value, lbl) in KEY_VALUE_ENTRY_TYPE"
+            :value="value"
+            :key="value"
+          >
+            {{ lbl }}
+          </option>
+        </select-field>
+
+        <button class="app__btn
+                      app__btn--small
+                      key-value-manager__btn"
+                :disabled="isPending"
+                @click="setKeyValue(createForm.key, createForm.value, createForm.entryType)"
+        >
+          Add
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -43,6 +79,7 @@ import {
   SelectField,
   InputField
 } from '@comcom/fields'
+import { KEY_VALUE_ENTRY_TYPE } from '../../../constants'
 
 export default {
   components: {
@@ -50,46 +87,61 @@ export default {
     InputField
   },
   data: _ => ({
-    key: null,
-    value: null,
-    list: null,
+    createForm: {
+      key: '',
+      value: '',
+      entryType: KEY_VALUE_ENTRY_TYPE.uint32
+    },
+    updateForm: {
+      key: '',
+      value: ''
+    },
 
-    isPending: false
+    list: [],
+    isPending: false,
+    KEY_VALUE_ENTRY_TYPE
   }),
   created () {
     this.getList()
   },
   methods: {
-    selectKey () {
-      const item = this.list
-        .find(elem => elem.key === this.key)
-
-      this.value = item[`${item.type.name}Value`]
-    },
-    async setNewValue () {
+    async setKeyValue (key, value, entryType) {
       this.isPending = true
       try {
-        await api.keyValue.setNew({
-          key: this.key,
-          value: this.value
-        })
+        await api.keyValue.setNew({ key, value, entryType })
         await this.getList()
+
         this.$store.dispatch('SET_INFO', 'Submitted successfully')
       } catch (error) {
         console.error(error)
-        error.showMessage()
+        if (error.showMessage) {
+          error.showMessage()
+        } else {
+          this.$store.dispatch('SET_ERROR', 'Failed to submit operation')
+        }
       }
       this.isPending = false
     },
     async getList () {
       const { data: list } = await api.keyValue.getList()
       this.list = list
+
       if (!list.length) {
         return
       }
-      if (!this.key) {
-        this.key = list[0].key
+
+      if (!this.updateForm.key) {
+        const item = list[0]
+
+        this.updateForm.key = item.key
+        this.updateForm.value = item[`${item.type.name}Value`]
       }
+    }
+  },
+  watch: {
+    'updateForm.key' (key) {
+      const item = this.list.find(elem => elem.key === key)
+      this.updateForm.value = item[`${item.type.name}Value`]
     }
   }
 }
@@ -105,6 +157,7 @@ export default {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
+    margin-bottom: 2rem;
   }
 
   .key-value-manager__input {
@@ -121,5 +174,6 @@ export default {
     width: 100%;
     display: flex;
     padding: 30px 10px;
+    flex-wrap: nowrap;
   }
 </style>
