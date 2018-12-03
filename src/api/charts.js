@@ -1,7 +1,4 @@
-import { ServerCallBuilder } from './ServerCallBuilder'
-
-const ScopedServerCallBuilder = ServerCallBuilder.makeScope()
-  .registerResource('charts')
+import { Sdk } from '@/sdk'
 
 export const charts = {
   /**
@@ -17,9 +14,6 @@ export const charts = {
     }
 
     const id = `${baseAsset}-${quoteAsset}`
-
-    return new ScopedServerCallBuilder()
-      .charts(id)
-      .get()
+    return Sdk.horizon.charts.get(id)
   }
 }
