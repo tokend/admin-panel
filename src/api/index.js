@@ -6,12 +6,12 @@ import emissions from './emissions'
 import exchanges from './exchanges'
 import fees from './fees'
 import forfeits from './forfeits'
+import keyValue from './key-value'
 import limits from './limits'
 import operations from './operations'
 import tfa from './tfa'
 import transactions from './transactions'
 import users from './users'
-
 // new
 import { assetCreation } from './asset-creation'
 import { requests } from './requests'
@@ -32,6 +32,7 @@ export default {
   exchanges: exchanges,
   fees: fees,
   forfeits: forfeits,
+  keyValue: keyValue,
   limits: limits,
   operations: operations,
   tfa: tfa,
