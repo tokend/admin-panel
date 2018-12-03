@@ -169,6 +169,15 @@
 
       <template v-if="isShownAdvanced">
         <div class="app__form-row">
+          <tick-field class="app__form-field"
+                      label="Available for coinpayments deposit"
+                      v-model="asset.details.is_coinpayments"
+                      :disabled="isPending"
+          />
+        </div>
+
+
+        <div class="app__form-row">
           <input-field class="app__form-field app__form-field--halved"
                        type="number"
                        label="External system type"
