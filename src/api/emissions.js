@@ -1,13 +1,9 @@
-import { CreateIssuanceRequestBuilder, PreIssuanceRequestOpBuilder, ReviewRequestBuilder } from 'tokend-js-sdk'
-import { envelopOperations } from './helpers/envelopOperations'
-import { ServerCallBuilder } from './ServerCallBuilder'
+import { PreIssuanceRequestOpBuilder, ReviewRequestBuilder } from 'tokend-js-sdk'
+import { Sdk } from '@/sdk'
 
 import params from '../config'
 import store from '../store'
 import server from '../utils/server'
-
-const ScopedServerCallBuilder = ServerCallBuilder.makeScope()
-  .registerResource('transactions')
 
 export default {
   getAvailableEmissions () {
@@ -62,20 +58,15 @@ export default {
   },
 
   manualEmission (data) {
-    const tx = envelopOperations(
-      CreateIssuanceRequestBuilder.createIssuanceRequest({
-        asset: data.asset,
-        amount: data.amount,
-        receiver: data.receiver,
-        reference: data.reference,
-        source: params.MASTER_ACCOUNT,
-        externalDetails: {},
-        allTasks: data.allTasks || 0
-      })
-    )
-    return new ScopedServerCallBuilder()
-      .transactions()
-      .sign()
-      .post({ tx })
+    const operation = Sdk.base.CreateIssuanceRequestBuilder.createIssuanceRequest({
+      asset: data.asset,
+      amount: data.amount,
+      receiver: data.receiver,
+      reference: data.reference,
+      source: params.MASTER_ACCOUNT,
+      externalDetails: {},
+      allTasks: data.allTasks || 0
+    })
+    return Sdk.horizon.transactions.submitOperations(operation)
   }
 }
