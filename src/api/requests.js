@@ -359,22 +359,6 @@ export const requests = {
       })
   },
 
-  getAssetCreationRequests ({ state, requestor, asset }) {
-    return server.sdkServer.reviewableRequestsHelper()
-      .assets()
-      .order('desc')
-      .forReviewer(config.MASTER_ACCOUNT)
-      .limit(store.getters.pageLimit)
-      .forState(state)
-      .forRequestor(requestor)
-      .forAssetCode(asset)
-      .callWithSignature(store.getters.keypair)
-      .then(response => {
-        response.records = mapRequests(response.records)
-        return Promise.resolve(response)
-      })
-  },
-
   getTokenRequestById (id) {
     return server.sdkServer.reviewableRequestsHelper()
       .assets()

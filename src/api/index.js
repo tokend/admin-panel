@@ -3,12 +3,10 @@ import assets from './assets'
 import balances from './balances'
 import documents from './documents'
 import emissions from './emissions'
-import exchanges from './exchanges'
 import fees from './fees'
 import forfeits from './forfeits'
 import keyValue from './key-value'
 import limits from './limits'
-import operations from './operations'
 import tfa from './tfa'
 import transactions from './transactions'
 import users from './users'
@@ -29,12 +27,10 @@ export default {
   balances: balances,
   documents: documents,
   emissions: emissions,
-  exchanges: exchanges,
   fees: fees,
   forfeits: forfeits,
   keyValue: keyValue,
   limits: limits,
-  operations: operations,
   tfa: tfa,
   transactions: transactions,
   users: users,

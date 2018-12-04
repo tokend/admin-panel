@@ -1,6 +1,6 @@
 import { Sdk } from '@/sdk'
 
-import { Operation, xdr } from 'tokend-js-sdk'
+import { xdr } from 'tokend-js-sdk'
 
 import config from '../config'
 import server from '../utils/server'
@@ -84,49 +84,6 @@ export default {
     return server.sdkServer.assets()
       .byCode(code)
       .callWithSignature(store.getters.keypair)
-  },
-
-  addAsset (code, policies) {
-    const opts = {
-      action: xdr.ManageAssetAction.manageAssetCreate(),
-      code: code,
-      physicalPrice: '1',
-      policies: policies,
-      assetForms: [{ unit: '1', name: '' }],
-      source: config.MASTER_ACCOUNT
-    }
-
-    const op = Operation.manageAsset(opts)
-    return server.submitOperation(op, true)
-  },
-
-  manageAsset (code, policies, token, assetForms) {
-    const forms = []
-    assetForms.forEach(form => {
-      forms.push({
-        unit: form.unit_size,
-        name: form.name
-      })
-    })
-    const opts = {
-      code: code,
-      policies: policies,
-      assetForms: forms,
-      source: config.MASTER_ACCOUNT
-    }
-
-    if (token) {
-      opts.action = xdr.ManageAssetAction.manageAssetAddToken()
-      opts.token = token
-      opts.assetForms = [{ unit: '1', name: '' }]
-      opts.policies = 0
-    } else {
-      opts.action = xdr.ManageAssetAction.manageAssetUpdatePolicy()
-    }
-
-    const op = Operation.manageAsset(opts)
-
-    return server.submitOperation(op, true)
   },
 
   getAssetPairs () {

@@ -98,12 +98,5 @@ export default {
     })
 
     return Sdk.horizon.transactions.submitOperations(operation)
-  },
-
-  getReferrals (accountId) {
-    return server.sdkServer.accounts()
-      .referrals(accountId)
-      .limit(2)
-      .callWithSignature(store.getters.keypair)
   }
 }

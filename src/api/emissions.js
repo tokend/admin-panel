@@ -2,46 +2,9 @@ import { PreIssuanceRequestOpBuilder, ReviewRequestBuilder } from 'tokend-js-sdk
 import { Sdk } from '@/sdk'
 
 import params from '../config'
-import store from '../store'
 import server from '../utils/server'
 
 export default {
-  getAvailableEmissions () {
-    const prefix = '/coins_amount_info'
-
-    return server.get(prefix, true)
-      .then(response => {
-        return { ok: true, coinsAmountInfo: response }
-      }).catch(errResp => {
-        return { ok: false, coinsAmountInfo: {}}
-      })
-  },
-
-  getEmissionRequests (asset = '') {
-    if (asset === 'All') {
-      asset = ''
-    }
-
-    return server.sdkServer.reviewableRequests()
-      .forAsset(asset)
-      .order('desc')
-      .forReviewer(params.MASTER_ACCOUNT)
-      .limit(store.getters.pageLimit)
-      .callWithSignature(store.getters.keypair)
-      .then(response => Promise.resolve(response.records))
-  },
-
-  checkPreEmission (serialNumber) {
-    const prefix = `/check_pre_emission/${serialNumber}`
-
-    return server.get(prefix, true)
-      .then(response => {
-        return true
-      }).catch(errResp => {
-        return false
-      })
-  },
-
   uploadPreEmissions (preIssuances) {
     return Promise.all(preIssuances.map(function (item) {
       const op = PreIssuanceRequestOpBuilder.createPreIssuanceRequestOp({

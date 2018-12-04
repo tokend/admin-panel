@@ -1,6 +1,4 @@
-import { Operation } from 'tokend-js-sdk'
 import server from '../utils/server'
-import store from '../store'
 import { xdrTypeFromValue } from '@/utils/xdrTypeFromValue'
 import { FEE_TYPES } from '@/constants'
 import { Sdk } from '@/sdk'
@@ -15,11 +13,6 @@ export default {
       path = '/fees?account_type=' + filter.accountType
     }
     return server.get(path, true)
-  },
-
-  getFeesOverview () {
-    return server.sdkServer.feesOverview()
-      .callWithSignature(store.getters.keypair)
   },
 
   updateFees (fees, params = {}) {
@@ -45,10 +38,5 @@ export default {
     const operation = Sdk.base.Operation.setFees(opts)
 
     return Sdk.horizon.transactions.submitOperations(operation)
-  },
-
-  updatePeriods (params) {
-    const operation = Operation.setFees({}, params.storageFeePeriod, params.payoutsPeriod)
-    return server.submitOperation(operation, true)
   }
 }

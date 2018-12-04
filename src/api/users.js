@@ -2,9 +2,7 @@ import store from '../store'
 import { Operation, xdr } from 'tokend-js-sdk'
 import server from '../utils/server'
 import { ServerCallBuilder } from './ServerCallBuilder'
-import { USER_TYPES } from '@/constants'
 import { clearObject } from '@/utils/clearObject'
-import { jsonApiPayloadCombiner } from './helpers/jsonApiPayloadCombiner'
 import { Sdk } from '@/sdk'
 
 const ScopedServerCallBuilder = ServerCallBuilder.makeScope()
@@ -14,20 +12,7 @@ const ScopedServerCallBuilder = ServerCallBuilder.makeScope()
   .registerResource('documents')
 
 export default {
-  deleteUnconfirmedWallet (username) {
-    return server.sdkServer.deleteWallet(username, store.getters.keypair)
-  },
-
-  resendVerificationToken (username) {
-    return server.sdkServer.resendToken(username, store.getters.keypair)
-  },
-
   // ---------- User state ----------
-
-  getUnverified () {
-    return Sdk.api.users.getPage({ type: USER_TYPES.notVerified })
-  },
-
   /**
    * Fetch user list
    * @param {Object} filters
@@ -62,37 +47,6 @@ export default {
   getEmailByAddress (address) {
     return this.getEmailsByAddresses([address])
       .then((response) => response[address].email)
-  },
-
-  rejectUserRequest ({ userId, reason }) {
-    const payload = jsonApiPayloadCombiner({
-      attributes: {
-        state: 'rejected',
-        reject_reason: reason || ''
-      }
-    })
-    return new ScopedServerCallBuilder()
-      .users(userId)
-      .sign()
-      .patch(payload)
-  },
-
-  createAccount ({ id, type, recoveryAddress }) {
-    const payload = jsonApiPayloadCombiner({
-      attributes: { state: 'approved' },
-      operations: [
-        Operation.createAccount({
-          destination: id,
-          accountType: xdr.AccountType[type]().value,
-          recoveryKey: recoveryAddress
-        })
-      ]
-    })
-
-    return new ScopedServerCallBuilder()
-      .users(id)
-      .sign()
-      .patch(payload)
   },
 
   createBalance (accountId, code) {
@@ -202,55 +156,11 @@ export default {
       .get()
   },
 
-  getApproved () {
-    return server.sdkServer.users().approved().limit(store.getters.pageLimit).callWithSignature(store.getters.keypair)
-  },
-
-  getDisabled () {
-    return server.sdkServer.users().disabled().limit(store.getters.pageLimit).callWithSignature(store.getters.keypair)
-  },
-
   getBalanceByAccountId (accountId, asset) {
     return server.sdkServer.users()
       .balance(accountId, asset).callWithSignature(store.getters.keypair)
       .then(response => {
         return response.records[0].balance_id
-      })
-  },
-
-  getUnapproved () {
-    return server.sdkServer.users().regRequests().limit(store.getters.pageLimit).callWithSignature(store.getters.keypair)
-  },
-
-  getUserById (accountId) {
-    return server.sdkServer.users().accountId(accountId).callWithSignature(store.getters.keypair)
-  },
-
-  getUsersByStatus (status) {
-    return server.sdkServer.users().status(status).limit(store.getters.pageLimit).callWithSignature(store.getters.keypair)
-  },
-
-  getUserInfoById (accountId) {
-    return server.sdkServer.users().accountId(accountId).callWithSignature(store.getters.keypair)
-      .then(u => {
-        const email = u.email
-        const userType = u.user_type
-        let username = ''
-
-        switch (u.user_type) {
-          case 'individual': {
-            username = u.details.personal_details.first_name + ' ' + u.details.personal_details.last_name
-            break
-          }
-          case 'business': {
-            username = u.details.corporation_details.entity_name
-            break
-          }
-        }
-
-        if (username.length < 2) username = u.email
-
-        return { email, username, userType }
       })
   },
 
@@ -261,21 +171,7 @@ export default {
       })
   },
 
-  approveUser (accountId, details) {
-    return server.post(`/users/${accountId}/approve`, details, true)
-  },
-
-  rejectUser (accountId, details) {
-    return server.post(`/users/${accountId}/approve`, details, true)
-  },
-
   // ---------- Verification documents ----------
-
-  getDocumentList (accountId) {
-    return server.sdkServer.documents()
-      .all(accountId)
-      .callWithSignature(store.getters.keypair)
-  },
 
   getDocumentUrl (accountId, type) {
     return server.get(`/users/${accountId}/documents/${type}`, true)
@@ -284,57 +180,5 @@ export default {
       }, err => {
         console.error(err)
       })
-  },
-
-  // ---------- Recovery ----------
-
-  getRecoveryRequests () {
-    return server.sdkServer.recoveryRequests()
-      .callWithSignature(store.getters.keypair)
-  },
-
-  getRecoveryById (id) {
-    const prefix = `/recoveries/${id}`
-    return server.get(prefix, true)
-  },
-
-  resolveRecoveryReq (accountId, reqData) {
-    const prefix = `/users/${accountId}/recovery`
-
-    if (reqData.approved) {
-      const op = Operation.recover({
-        account: reqData.recover_op.account,
-        oldSigner: reqData.recover_op.old_signer,
-        newSigner: reqData.recover_op.new_signer
-      })
-      reqData.tx = server.createTx(op)
-    }
-
-    delete reqData.recover_op
-
-    return server.post(prefix, reqData, true)
-  },
-
-  getUserType (accountId) {
-    return server.sdkServer.users()
-      .accountId(accountId)
-      .callWithSignature(store.getters.keypair)
-      .then(kyc => {
-        return kyc.user_type
-      })
-  },
-
-  // ---------- Recovery ----------
-
-  getNotificationsEmail (accountId) {
-    return server.sdkServer
-      .notifications()
-      .accountId(accountId)
-      .callWithSignature(store.getters.keypair)
-  },
-
-  setNotificationEmail (accountId, details) {
-    const prefix = `/notifications/${accountId}`
-    return server.patch(prefix, details, true)
   }
 }
