@@ -76,6 +76,7 @@
 </template>
 
 <script>
+  import { Sdk } from '@/sdk'
   import api from '@/api'
   import { REQUEST_STATES } from '@/constants'
   import Modal from '@comcom/modals/Modal'
@@ -108,8 +109,7 @@
       localize,
       async getAccount (id) {
         try {
-          const response = await api.accounts.get(id)
-          this.requestorAccount = response.data
+          this.requestorAccount = (await await Sdk.horizon.account.get(id)).data
         } catch (error) {
           error.showMessage('Cannot load initiator account')
         }

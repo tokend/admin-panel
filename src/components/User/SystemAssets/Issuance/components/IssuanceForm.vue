@@ -121,6 +121,7 @@ export default {
     async getBalanceId () {
       const address = await api.users.getUserIdByEmail(this.form.receiver)
       let account = await api.accounts.getAccountById(address)
+      console.log(account)
       const balance = account.balances.find(item => item.asset === this.form.asset)
 
       if (!balance) {

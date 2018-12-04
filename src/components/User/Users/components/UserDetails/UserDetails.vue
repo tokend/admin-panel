@@ -90,6 +90,7 @@
 
 <script>
 import api from '@/api'
+import { Sdk } from '@/sdk'
 import {
   USER_TYPES_STR,
   USER_STATES_STR,
@@ -182,7 +183,7 @@ export default {
       try {
         const [user, account, request, requests] = await Promise.all([
           api.users.get(this.id),
-          api.accounts.get(this.id),
+          Sdk.horizon.account.get(this.id),
           this.getRequest(),
           this.getAllUserRequests()
         ])

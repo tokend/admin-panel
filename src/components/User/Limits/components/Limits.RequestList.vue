@@ -44,8 +44,6 @@
 <script>
   import { EmailGetter, AccountTypeGetter, LIMITS_REQUEST_STATES_STR } from '@comcom/getters'
   import { formatDate } from '@/utils/formatters'
-  import api from '@/api'
-  import _get from 'lodash/get'
 
   import {
     ACCOUNT_TYPES,
@@ -72,13 +70,6 @@
     computed: {
       requestType () {
         return this.details.map(item => LIMITS_REQUEST_STATES[item.stage])
-      }
-    },
-
-    methods: {
-      async getAccountType (id) {
-        const account = await api.accounts.get(id)
-        return _get(account, 'data.accountType').replace('AccountType', '')
       }
     }
   }

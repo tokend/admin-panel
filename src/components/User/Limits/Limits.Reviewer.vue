@@ -130,6 +130,7 @@
   import { DateFormatter } from '@comcom/formatters'
   import { InputField, TextField } from '@comcom/fields'
   import Modal from '@comcom/modals/Modal'
+  import { Sdk } from '@/sdk'
 
   import { ACCOUNT_TYPES_VERBOSE,
     REQUEST_STATES,
@@ -235,7 +236,7 @@
         const request = await api.requests.get(this.id)
         const requestDetails = get(request, 'details', {})
         const [account, user, limits] = await Promise.all([
-          api.accounts.get(request.requestor),
+          Sdk.horizon.account.get(request.requestor),
           api.users.get(request.requestor),
           api.accounts.getLimits(request.requestor)
         ])

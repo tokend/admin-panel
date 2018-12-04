@@ -6,7 +6,7 @@
   </span>
 </template>
 <script>
-  import accounts from '@/api/accounts'
+  import { Sdk } from '@/sdk'
   import { ACCOUNT_TYPES } from '@/constants'
 
   const KYC_TYPE = {
@@ -22,7 +22,7 @@
     }),
     methods: {
       async getAccount () {
-        const account = await accounts.get(this.accountId)
+        const account = await Sdk.horizon.account.get(this.accountId)
         return account.data
       }
     },
