@@ -25,6 +25,10 @@ export class Sdk {
     return base
   }
 
+  static get xdr () {
+    return base.xdr
+  }
+
   static get horizon () {
     return _sdkInstance.horizon
   }

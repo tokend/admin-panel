@@ -1,7 +1,5 @@
 import { Sdk } from '@/sdk'
 
-import { xdr } from 'tokend-js-sdk'
-
 import config from '../config'
 import server from '../utils/server'
 import store from '../store'
@@ -31,7 +29,7 @@ export default {
     const operation = Sdk.base.Operation.manageAssetPair({
       base: params.base,
       quote: params.quote,
-      action: xdr.ManageAssetPairAction.create(),
+      action: Sdk.xdr.ManageAssetPairAction.create(),
       policies: +params.policies,
       physicalPrice: '' + params.physicalPrice,
       physicalPriceCorrection: '' + params.physicalPriceCorrection,
@@ -44,11 +42,11 @@ export default {
   updatePair (params) {
     let action
     if (params.create) {
-      action = xdr.ManageAssetPairAction.create()
+      action = Sdk.xdr.ManageAssetPairAction.create()
     } else if (params.updatePrice) {
-      action = xdr.ManageAssetPairAction.updatePrice()
+      action = Sdk.xdr.ManageAssetPairAction.updatePrice()
     } else if (params.updatePolicy) {
-      action = xdr.ManageAssetPairAction.updatePolicy()
+      action = Sdk.xdr.ManageAssetPairAction.updatePolicy()
     } else {
       throw new TypeError('manageAssetPair: Action is required')
     }

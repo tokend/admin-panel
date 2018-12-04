@@ -2,7 +2,7 @@ import config from '@/config'
 import { KYC_TASKS_TO_REMOVE_ON_REJECT } from '../constants'
 import server from '../utils/server'
 import store from '../store'
-import { xdr, ReviewRequestBuilder, CreateUpdateKYCRequestBuilder, ManageLimitsBuilder } from 'tokend-js-sdk'
+import { ReviewRequestBuilder, CreateUpdateKYCRequestBuilder, ManageLimitsBuilder } from 'tokend-js-sdk'
 import { deriveRequestIdFromCreateKycRequestResult } from '../utils/parseXdrTxResponse'
 import { Sdk } from '@/sdk'
 
@@ -77,17 +77,17 @@ export const requests = {
   },
 
   approve (...requests) {
-    const action = xdr.ReviewRequestOpAction.approve().value
+    const action = Sdk.xdr.ReviewRequestOpAction.approve().value
     return this._review({ action }, ...requests)
   },
 
   approveWithdraw (...requests) {
-    const action = xdr.ReviewRequestOpAction.approve().value
+    const action = Sdk.xdr.ReviewRequestOpAction.approve().value
     return this._reviewWithdraw({ action }, ...requests)
   },
 
   approveKyc (request, opts = {}) {
-    const action = xdr.ReviewRequestOpAction.approve().value
+    const action = Sdk.xdr.ReviewRequestOpAction.approve().value
 
     return this._reviewKyc({ action, reason: '' }, request, {
       remove: opts.tasksToRemove || KYC_TASKS_TO_REMOVE_ON_APPROVE,
@@ -115,7 +115,7 @@ export const requests = {
         requestHash: params.request.hash,
         requestType: params.request.request_type_i || params.request.requestTypeI,
         source: config.MASTER_ACCOUNT,
-        action: xdr.ReviewRequestOpAction.approve().value,
+        action: Sdk.xdr.ReviewRequestOpAction.approve().value,
         reason: '',
         requestID: params.request.id,
         newLimits: newLimits[0]
@@ -142,8 +142,8 @@ export const requests = {
       requestType: params.request.request_type_i || params.request.requestTypeI,
       source: config.MASTER_ACCOUNT,
       action: params.isPermanent
-        ? xdr.ReviewRequestOpAction.permanentReject().value
-        : xdr.ReviewRequestOpAction.reject().value,
+        ? Sdk.xdr.ReviewRequestOpAction.permanentReject().value
+        : Sdk.xdr.ReviewRequestOpAction.reject().value,
       reason: params.reason,
       requestID: params.request.id,
       newLimits: newLimits[0]
@@ -153,20 +153,20 @@ export const requests = {
 
   reject ({ reason, isPermanent = false }, ...requests) {
     const action = isPermanent
-      ? xdr.ReviewRequestOpAction.permanentReject().value
-      : xdr.ReviewRequestOpAction.reject().value
+      ? Sdk.xdr.ReviewRequestOpAction.permanentReject().value
+      : Sdk.xdr.ReviewRequestOpAction.reject().value
     return this._review({ action, reason }, ...requests)
   },
 
   rejectWithdraw ({ reason, isPermanent = false }, ...requests) {
     const action = isPermanent
-      ? xdr.ReviewRequestOpAction.permanentReject().value
-      : xdr.ReviewRequestOpAction.reject().value
+      ? Sdk.xdr.ReviewRequestOpAction.permanentReject().value
+      : Sdk.xdr.ReviewRequestOpAction.reject().value
     return this._reviewWithdraw({ action, reason }, ...requests)
   },
 
   rejectKyc (request, reason) {
-    const action = xdr.ReviewRequestOpAction.reject().value
+    const action = Sdk.xdr.ReviewRequestOpAction.reject().value
 
     return this._reviewKyc({ action, reason },
       request, {
@@ -188,7 +188,7 @@ export const requests = {
       CreateUpdateKYCRequestBuilder.createUpdateKYCRequest({
         requestID: '0',
         accountToUpdateKYC: opts.accountToUpdateKyc,
-        accountTypeToSet: xdr.AccountType.notVerified().value,
+        accountTypeToSet: Sdk.xdr.AccountType.notVerified().value,
         kycLevelToSet: 0,
         kycData: { blob_id: opts.blobId },
         allTasks: 0
@@ -207,7 +207,7 @@ export const requests = {
           requestID: opts.requestToApprove.id,
           requestHash: opts.requestToApprove.hash,
           requestType: opts.requestToApprove.request_type_i || opts.requestToApprove.requestTypeI,
-          action: xdr.ReviewRequestOpAction.approve().value,
+          action: Sdk.xdr.ReviewRequestOpAction.approve().value,
           reason: '',
           tasksToAdd: KYC_TASKS_TO_ADD_ON_APPROVE,
           tasksToRemove: opts.requestToApprove.pendingTasks,
@@ -222,8 +222,8 @@ export const requests = {
   },
 
   reviewMultipleKycRequests (requestsDetails) {
-    const rejectAction = xdr.ReviewRequestOpAction.reject().value
-    const approveAction = xdr.ReviewRequestOpAction.approve().value
+    const rejectAction = Sdk.xdr.ReviewRequestOpAction.reject().value
+    const approveAction = Sdk.xdr.ReviewRequestOpAction.approve().value
 
     const operations = requestsDetails.map(detail =>
         Sdk.base.reviewRequestBuilder.reviewUpdateKYCRequest({

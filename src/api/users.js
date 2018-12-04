@@ -1,5 +1,5 @@
 import store from '../store'
-import { Operation, xdr } from 'tokend-js-sdk'
+import { Operation } from 'tokend-js-sdk'
 import server from '../utils/server'
 import { ServerCallBuilder } from './ServerCallBuilder'
 import { clearObject } from '@/utils/clearObject'
@@ -52,7 +52,7 @@ export default {
   createBalance (accountId, code) {
     const operation = Operation.manageBalance({
       asset: code,
-      action: xdr.ManageBalanceAction.createUnique(),
+      action: Sdk.xdr.ManageBalanceAction.createUnique(),
       destination: accountId
     })
 
