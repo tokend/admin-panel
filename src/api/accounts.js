@@ -5,17 +5,6 @@ import store from '../store'
 import { Sdk } from '@/sdk'
 
 export default {
-  operationsOf (id) {
-    return {
-      getAllByType (type) {
-        return Sdk.horizon.account.getOperations(id, {
-          order: 'desc',
-          operation_type: type
-        })
-      }
-    }
-  },
-
   getLimits (address) {
     return Sdk.horizon.account.getLimits(address)
   },

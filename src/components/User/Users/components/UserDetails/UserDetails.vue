@@ -208,9 +208,10 @@ export default {
       }
     },
     async getOperationsList () {
-      const operationsList = await api.accounts
-        .operationsOf(this.id)
-        .getAllByType(OPERATION_TYPE.createKycRequest)
+      const operationsList = await Sdk.horizon.account.getOperations(this.id, {
+        order: 'desc',
+        operation_type: OPERATION_TYPE.createKycRequest
+      })
       return operationsList.data
     },
     async getRequest () {
