@@ -130,6 +130,15 @@
       <div class="app__form-row">
         <tick-field class="app__form-field"
           v-model="asset.policy"
+          :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.withdrawableV2]"
+          :cb-value="ASSET_POLICIES.withdrawableV2"
+          :disabled="isPending"
+        />
+      </div>
+
+      <div class="app__form-row">
+        <tick-field class="app__form-field"
+          v-model="asset.policy"
           :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.twoStepWithdrawal]"
           title="Withdraw operations are done in two steps"
           :cb-value="ASSET_POLICIES.twoStepWithdrawal"
