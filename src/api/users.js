@@ -24,8 +24,8 @@ export default {
     return Sdk.api.users.getPage(clearObject(filters))
   },
 
-  get (id) {
-    return Sdk.api.users.get(id)
+  async get (id) {
+    return (await Sdk.api.users.get(id)).data
   },
 
   getEmailsByAddresses (addresses) {

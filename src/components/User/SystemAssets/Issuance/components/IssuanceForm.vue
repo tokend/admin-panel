@@ -64,6 +64,7 @@
 
 <script>
 import api from '@/api'
+import { Sdk } from '@/sdk'
 import { InputField, SelectField } from '@comcom/fields'
 import Bus from '@/utils/EventBus'
 import { AssetAmountFormatter } from '@comcom/formatters'
@@ -89,7 +90,7 @@ export default {
       DEFAULT_INPUT_MIN,
       form: {
         amount: '',
-        receiver: '',
+        receiver: 'GBTRYNKYER5QMJ7LMVI2I5PIZWDLXVUCNZZKQSWPOOQCUUCCYX3X7532',
         reference: '',
         asset: ''
       },
@@ -104,7 +105,6 @@ export default {
       return asset.availableForIssuance
     }
   },
-
   methods: {
     async getAssets () {
       try {
@@ -119,22 +119,20 @@ export default {
     },
 
     async getBalanceId () {
-      const address = await api.users.getUserIdByEmail(this.form.receiver)
-      let account = await api.accounts.getAccountById(address)
-      console.log(account)
+      let account = (await Sdk.horizon.account.get(this.form.receiver)).data
       const balance = account.balances.find(item => item.asset === this.form.asset)
 
       if (!balance) {
         try {
-          await api.users.createBalance(address, this.form.asset)
+          await api.users.createBalance(this.form.receiver, this.form.asset)
         } catch (error) {
           console.error(error)
           this.$store.dispatch('SET_ERROR', 'Unexpected error')
         }
-        account = await api.accounts.getAccountById(address)
-        return account.balances.find(item => item.asset === this.form.asset).balance_id
+        account = (await Sdk.horizon.account.get(this.form.receiver)).data
+        return account.balances.find(item => item.asset === this.form.asset).balanceId
       } else {
-        return balance.balance_id
+        return balance.balanceId
       }
     },
 

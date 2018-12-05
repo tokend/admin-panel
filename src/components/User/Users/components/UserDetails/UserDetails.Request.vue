@@ -2,7 +2,7 @@
   <div class="user-request">
     <h3>Latest request</h3>
     <p class="user-request__block text">
-      Create a {{ (ACCOUNT_TYPES_VERBOSE[requestToReview.accountTypeToSet.int]).toLowerCase() }} account:
+      Create a {{ (ACCOUNT_TYPES_VERBOSE[requestToReview.details.updateKyc.accountTypeToSet.int]).toLowerCase() }} account:
       {{ requestToReview.requestState }}
     </p>
 
@@ -179,11 +179,11 @@ export default {
 
   computed: {
     hasManualTasks () {
-      return !((this.requestToReview.pendingTasks & KYC_TASKS_TO_REMOVE_ON_APPROVE) === 0) &&
+      return !((this.requestToReview.details.updateKyc.pendingTasks & KYC_TASKS_TO_REMOVE_ON_APPROVE) === 0) &&
         this.requestToReview.requestState === REQUEST_STATES_STR.pending
     },
     isAccreditedInvestor () {
-      return this.requestToReview.pendingTasks === REVIEW_TASKS.accreditedInvestor
+      return this.requestToReview.details.updateKyc.pendingTasks === REVIEW_TASKS.accreditedInvestor
     },
     isRequestPending () {
       return this.requestToReview.requestState === REQUEST_STATES_STR.pending
@@ -235,9 +235,9 @@ export default {
       try {
         const submitter = this.rejectForm.isReset
           ? api.requests.resetToUnverified({
-            accountToUpdateKyc: this.requestToReview.accountToUpdateKyc,
-            accountTypeToSet: this.requestToReview.accountTypeToSet.int,
-            blobId: this.requestToReview.kycData.blobId,
+            accountToUpdateKyc: this.requestToReview.details.updateKyc.accountToUpdateKyc,
+            accountTypeToSet: this.requestToReview.details.updateKyc.accountTypeToSet.int,
+            blobId: this.requestToReview.details.updateKyc.kycData.blobId,
             rejectReason: this.rejectForm.reason,
             requestToApprove: this.requestToReview.requestState !== REQUEST_STATES_STR.approved
               ? this.requestToReview : null

@@ -35,7 +35,7 @@ const ScopedServerCallBuilder = ServerCallBuilder.makeScope()
 export const requests = {
   _review ({ action, reason = '' }, ...requests) {
     const operations = requests.map(function (item) {
-      return Sdk.base.reviewRequestBuilder.reviewRequest({
+      return Sdk.base.ReviewRequestBuilder.reviewRequest({
         requestID: item.id,
         requestHash: item.hash,
         requestType: typeof item.request_type_i === 'undefined' ? item.requestTypeI : item.request_type_i,
@@ -49,7 +49,7 @@ export const requests = {
 
   _reviewWithdraw ({ action, reason = '' }, ...requests) {
     const operations = requests.map(function (item) {
-      return Sdk.base.reviewRequestBuilder.reviewTwoStepWithdrawRequest({
+      return Sdk.base.ReviewRequestBuilder.reviewTwoStepWithdrawRequest({
         requestID: item.id,
         requestHash: item.hash,
         requestType: item.request_type_i || item.requestTypeI,
@@ -63,7 +63,7 @@ export const requests = {
   },
 
   _reviewKyc ({ action, reason }, request, tasks) {
-    const operation = Sdk.base.reviewRequestBuilder.reviewUpdateKYCRequest({
+    const operation = Sdk.base.ReviewRequestBuilder.reviewUpdateKYCRequest({
       requestID: request.id,
       requestHash: request.hash,
       requestType: request.request_type_i || request.requestTypeI,
@@ -137,7 +137,7 @@ export const requests = {
         accountID: params.accountId,
         accountType: undefined
       }))
-    const operation = Sdk.base.reviewRequestBuilder.reviewLimitsUpdateRequest({
+    const operation = Sdk.base.ReviewRequestBuilder.reviewLimitsUpdateRequest({
       requestHash: params.request.hash,
       requestType: params.request.request_type_i || params.request.requestTypeI,
       source: config.MASTER_ACCOUNT,
@@ -226,7 +226,7 @@ export const requests = {
     const approveAction = Sdk.xdr.ReviewRequestOpAction.approve().value
 
     const operations = requestsDetails.map(detail =>
-        Sdk.base.reviewRequestBuilder.reviewUpdateKYCRequest({
+        Sdk.base.ReviewRequestBuilder.reviewUpdateKYCRequest({
           requestID: detail.request.id,
           requestHash: detail.request.hash,
           requestType: detail.request.request_type_i || detail.request.requestTypeI,
@@ -258,17 +258,17 @@ export const requests = {
       .then(({ data }) => data[0] || null)
   },
 
-  getIssuanceRequests ({ asset, state }) {
+  async getIssuanceRequests ({ asset, state }) {
     const filters = {}
     if (state) filters.state = state
     if (asset) filters.asset = asset
-
-    return Sdk.horizon.request.getAllForIssuances({
+    const respons = await Sdk.horizon.request.getAllForIssuances({
       order: 'desc',
       reviewer: config.MASTER_ACCOUNT,
       limit: store.getters.pageLimit,
       ...filters
     })
+    return respons
   },
 
   getWithdrawalRequests ({ asset, state, requestor }) {
@@ -294,7 +294,7 @@ export const requests = {
     })
   },
 
-  getKycRequests ({ state, requestor, type }) {
+  async getKycRequests ({ state, requestor, type }) {
     const filters = {}
     if (requestor) filters.requestor = requestor
     if (type) filters.account_type_to_set = type
@@ -303,11 +303,12 @@ export const requests = {
       state.tasksToProcess ? filters.mask_set = state.tasksToProcess : null
       state.tasksProcessed ? filters.mask_not_set = state.tasksProcessed : null
     }
-    return Sdk.horizon.request.getAllForUpdateKyc({
+    const respons = await Sdk.horizon.request.getAllForUpdateKyc({
       ...filters,
       order: 'desc',
       limit: store.getters.pageLimit
     })
+    return respons.data
   },
 
   getAssetRequests (filters) {

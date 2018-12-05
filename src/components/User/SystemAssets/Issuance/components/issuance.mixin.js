@@ -61,6 +61,7 @@ export default {
         this.getListCounter()
         this.isNoMoreEntries = false
       } catch (error) {
+        console.error(error)
         this.$store.dispatch('SET_ERROR', 'Cannot load issuance request list.')
       }
       this.isLoaded = true
@@ -68,8 +69,9 @@ export default {
 
     getListCounter () {
       if (this.list) {
-        this.listCounter.pending = this.list.body._embedded.meta.count.pending
-        this.listCounter.approved = this.list.body._embedded.meta.count.approved
+        console.log(this.list)
+        this.listCounter.pending = this.list._rawResponse.data._embedded.meta.count.pending
+        this.listCounter.approved = this.list._rawResponse.data._embedded.meta.count.approved
       }
     },
     async onMoreButtonClick () {

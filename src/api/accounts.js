@@ -1,16 +1,9 @@
 import config from '../config'
 import server from '../utils/server'
-import store from '../store'
 
 import { Sdk } from '@/sdk'
 
 export default {
-
-  getAccountById (accountId) {
-    return server.sdkServer.accounts()
-      .accountId(accountId)
-      .callWithSignature(store.getters.keypair)
-  },
 
   getSignerById (id) {
     return server.sdkServer.accounts()

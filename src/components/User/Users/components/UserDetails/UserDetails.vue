@@ -32,20 +32,20 @@
 
         <template v-if="latestRequest">
           <section class="user-details__section">
-            <kyc-general-section v-if="latestRequest.accountTypeToSet.string === USER_TYPES_STR.general"
-                                 :user="user" :blobId="latestRequest.kycData.blobId"/>
+            <kyc-general-section v-if="latestRequest.details.updateKyc.accountTypeToSet.string === USER_TYPES_STR.general"
+                                 :user="user" :blobId="latestRequest.details.updateKyc.kycData.blobId"/>
 
-            <kyc-syndicate-section v-if="latestRequest.accountTypeToSet.string === USER_TYPES_STR.syndicate"
-                                 :user="user" :blobId="latestRequest.kycData.blobId"
+            <kyc-syndicate-section v-if="latestRequest.details.updateKyc.accountTypeToSet.string === USER_TYPES_STR.syndicate"
+                                 :user="user" :blobId="latestRequest.details.updateKyc.kycData.blobId"
             :previousBlobId="previousBlobIdForKycRequest"/>
           </section>
 
 
           <section v-if="previousBlobIdForKycRequest" class="user-details__section">
             <h1>Previous KYC Request</h1>
-            <kyc-general-section v-if="latestRequest.accountTypeToSet.string === USER_TYPES_STR.general"
+            <kyc-general-section v-if="latestRequest.details.updateKyc.accountTypeToSet.string === USER_TYPES_STR.general"
                                  :user="user" :blobId="previousBlobIdForKycRequest"/>
-            <kyc-syndicate-section v-if="latestRequest.accountTypeToSet.string === USER_TYPES_STR.syndicate"
+            <kyc-syndicate-section v-if="latestRequest.details.updateKyc.accountTypeToSet.string === USER_TYPES_STR.syndicate"
                                    :user="user" :blobId="previousBlobIdForKycRequest"/>
           </section>
         </template>
@@ -172,7 +172,7 @@ export default {
       if (this.latestRequest.requestState !== REQUEST_STATES_STR.pending) {
         return this.latestRequest.requestState
       }
-      return PENDING_TASKS_VOCABULARY[this.latestRequest.pendingTasks] || REQUEST_STATES_STR.pending
+      return PENDING_TASKS_VOCABULARY[this.latestRequest.details.updateKyc.pendingTasks] || REQUEST_STATES_STR.pending
     }
   },
 
@@ -187,7 +187,7 @@ export default {
           this.getRequest(),
           this.getAllUserRequests()
         ])
-        this.user = user.data
+        this.user = user
         this.account = account.data
         this.requestToReview = request
         this.requests = requests
@@ -219,14 +219,13 @@ export default {
         state: REQUEST_STATES.pending,
         requestor: this.id
       })
-      console.log(JSON.parse(JSON.stringify(requests)))
-      return requests.data[0] || null
+      return requests[0] || null
     },
     async getAllUserRequests () {
       const requests = await api.requests.getKycRequests({
         requestor: this.id
       })
-      return requests.data
+      return requests
     },
     formatDate
   }
