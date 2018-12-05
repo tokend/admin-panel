@@ -6,12 +6,6 @@ import { Sdk } from '@/sdk'
 
 export default {
 
-  // legacy
-
-  loadAccount (accountId) {
-    return server.sdkServer.loadAccountWithSign(accountId, store.getters.keypair)
-  },
-
   getAccountById (accountId) {
     return server.sdkServer.accounts()
       .accountId(accountId)
