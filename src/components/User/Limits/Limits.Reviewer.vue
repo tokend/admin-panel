@@ -238,7 +238,7 @@
         const [account, user, limits] = await Promise.all([
           Sdk.horizon.account.get(request.requestor),
           api.users.get(request.requestor),
-          api.accounts.getLimits(request.requestor)
+          Sdk.horizon.account.getLimits(request.requestor)
         ])
         this.request = request
         this.request.document = requestDetails.document

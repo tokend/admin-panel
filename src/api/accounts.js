@@ -5,9 +5,6 @@ import store from '../store'
 import { Sdk } from '@/sdk'
 
 export default {
-  getLimits (address) {
-    return Sdk.horizon.account.getLimits(address)
-  },
 
   // legacy
 
