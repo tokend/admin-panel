@@ -349,6 +349,7 @@ import TickField from '@comcom/fields/TickField'
 import { SIGNER_TYPES, SIGNER_TYPES_SECONDARY } from '@/constants'
 
 import { confirmAction } from '@/js/modals/confirmation_message'
+import { Sdk } from '@/sdk'
 
 const TOGGLE_SELECTIONS_BY_TYPE = {
   super: {
@@ -494,32 +495,31 @@ export default {
         : this.updateAdmin()
     },
 
-    loadSigner () {
+    async loadSigner () {
       this.$store.commit('OPEN_LOADER')
+      try {
+        const signer = (await Sdk.horizon.account.getSigner(this.id)).data
+        this.params = {
+          accountId: signer.publicKey,
+          weight: signer.weight,
+          signerIdentity: signer.signerIdentity,
+          signerType: signer.signerTypeI,
+          name: signer.publicKey === this.masterPubKey ? 'Master' : signer.signerName
+        }
 
-      return accounts.getSignerById(this.id)
-        .then(({ signer }) => {
-          this.params = {
-            accountId: signer.public_key,
-            weight: signer.weight,
-            signerIdentity: signer.signer_identity,
-            signerType: signer.signer_type_i,
-            name: signer.public_key === this.masterPubKey ? 'Master' : signer.signer_name
-          }
-
-          signer.signer_types.forEach((item) => {
-            this.signerTypes.primary.push(item.value)
-          })
-
-          this.params.name = signer.signer_name.split(':')[0]
-          this.signerTypes.secondary = Number(signer.signer_name.split(':')[1])
-          if (!this.signerTypes.secondary) this.signerTypes.secondary = 0
-
-          this.$store.commit('CLOSE_LOADER')
-        }).catch((err) => {
-          console.error(err)
-          this.$store.commit('CLOSE_LOADER')
+        signer.signerTypes.forEach((item) => {
+          this.signerTypes.primary.push(item.value)
         })
+
+        this.params.name = signer.signerName.split(':')[0]
+        this.signerTypes.secondary = Number(signer.signerName.split(':')[1])
+        if (!this.signerTypes.secondary) this.signerTypes.secondary = 0
+
+        this.$store.commit('CLOSE_LOADER')
+      } catch (e) {
+        console.error(e)
+        this.$store.commit('CLOSE_LOADER')
+      }
     },
 
     async addAdmin () {

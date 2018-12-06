@@ -3,7 +3,6 @@ import store from './store'
 import router from './router'
 import StellarSdk from 'tokend-js-sdk'
 import StellarWallet from 'tokend-wallet-js-sdk'
-import accounts from './api/accounts'
 import { Sdk } from '@/sdk'
 import { Wallet } from '@tokend/js-sdk'
 
@@ -106,7 +105,8 @@ export default {
     user.keys = user.keys || {}
     user.keys.accountId = keypair.accountId()
     user.keys.seed = keypair.secret()
-
+    console.log(user.keys.seed)
+    Sdk.sdk.useWallet(new Wallet('', user.keys.seed, user.keys.accountId))
     const signerTypes = await this._getSignerTypes(user.keys.accountId)
 
     Object.assign(user, signerTypes)
@@ -133,17 +133,17 @@ export default {
 
   async _getSignerTypes (accountId) {
     const result = {}
-    let response = {}
-
+    let signer = {}
+    console.log(accountId)
     try {
-      response = await accounts.getSignerById(accountId)
+      signer = (await Sdk.horizon.account.getSigner(accountId)).data
     } catch (error) {
       console.error(error)
       error.message = 'Cannot get signer types'
       throw error
     }
 
-    result.signerTypes = response.signer.signer_types
+    result.signerTypes = signer.signerTypes
     result.signerTypes.forEach((val) => {
       if (val.value === 2) result.admin = true
       if (val.value === 4) result.accountCreator = true

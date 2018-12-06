@@ -1,26 +1,25 @@
 import config from '../config'
-import server from '../utils/server'
 
 import { Sdk } from '@/sdk'
 
 export default {
 
-  getSignerById (id) {
-    return server.sdkServer.accounts()
-      .signer(config.MASTER_ACCOUNT, id)
-      .call()
-      .then((result) => {
-        return {
-          signer: result,
-          isSigner: true
-        }
-      }).catch((err) => {
-        console.error(err)
-        return {
-          isSigner: false
-        }
-      })
-  },
+  // getSignerById (id) {
+  //   return server.sdkServer.accounts()
+  //     .signer(config.MASTER_ACCOUNT, id)
+  //     .call()
+  //     .then((result) => {
+  //       return {
+  //         signer: result,
+  //         isSigner: true
+  //       }
+  //     }).catch((err) => {
+  //       console.error(err)
+  //       return {
+  //         isSigner: false
+  //       }
+  //     })
+  // },
 
   manageAccount (params) {
     const operation = Sdk.base.Operation.manageAccount({
