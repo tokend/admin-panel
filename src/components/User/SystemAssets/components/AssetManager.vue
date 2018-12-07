@@ -130,6 +130,15 @@
       <div class="app__form-row">
         <tick-field class="app__form-field"
           v-model="asset.policy"
+          :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.withdrawableV2]"
+          :cb-value="ASSET_POLICIES.withdrawableV2"
+          :disabled="isPending"
+        />
+      </div>
+
+      <div class="app__form-row">
+        <tick-field class="app__form-field"
+          v-model="asset.policy"
           :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.twoStepWithdrawal]"
           title="Withdraw operations are done in two steps"
           :cb-value="ASSET_POLICIES.twoStepWithdrawal"
@@ -168,6 +177,15 @@
       </div>
 
       <template v-if="isShownAdvanced">
+        <div class="app__form-row">
+          <tick-field class="app__form-field"
+                      label="Available for coinpayments deposit"
+                      v-model="asset.details.is_coinpayments"
+                      :disabled="isPending"
+          />
+        </div>
+
+
         <div class="app__form-row">
           <input-field class="app__form-field app__form-field--halved"
                        type="number"
@@ -308,8 +326,7 @@ export default {
 
     async uploadFile (type) {
       if (!this[type].file) return
-      const config = (await api.users
-        .docsOf(this.$store.getters.masterId)
+      const config = (await api.documents
         .getUploadConfig(type, this[type].mime))
         .data
       await api.documents.uploadFile(this[type].file, config, this[type].mime)
