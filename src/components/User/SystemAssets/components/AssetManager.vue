@@ -326,8 +326,7 @@ export default {
 
     async uploadFile (type) {
       if (!this[type].file) return
-      const config = (await api.users
-        .docsOf(this.$store.getters.masterId)
+      const config = (await api.documents
         .getUploadConfig(type, this[type].mime))
         .data
       await api.documents.uploadFile(this[type].file, config, this[type].mime)
