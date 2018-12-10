@@ -4,34 +4,6 @@ import { Sdk } from '@/sdk'
 
 export default {
 
-  // getSignerById (id) {
-  //   return server.sdkServer.accounts()
-  //     .signer(config.MASTER_ACCOUNT, id)
-  //     .call()
-  //     .then((result) => {
-  //       return {
-  //         signer: result,
-  //         isSigner: true
-  //       }
-  //     }).catch((err) => {
-  //       console.error(err)
-  //       return {
-  //         isSigner: false
-  //       }
-  //     })
-  // },
-
-  manageAccount (params) {
-    const operation = Sdk.base.Operation.manageAccount({
-      block: params.isBlock,
-      accountType: params.accountType,
-      account: params.account,
-      source: config.MASTER_ACCOUNT,
-      [params.isBlock ? 'blockReasonsToAdd' : 'blockReasonsToRemove']: params.blockReasons
-    })
-    return Sdk.horizon.transactions.submitOperations(operation)
-  },
-
   manageSigner (params) {
     const signer = {
       pubKey: params.accountId.trim(),

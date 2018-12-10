@@ -53,7 +53,8 @@
   import { BLOCK_REASONS } from '@/constants'
   import TickField from '@comcom/fields/TickField'
   import Modal from '@comcom/modals/Modal'
-  import api from '@/api'
+  import config from '@/config'
+  import { Sdk } from '@/sdk'
 
   export default {
     props: ['user', 'account', 'updateRequestEvent'],
@@ -92,12 +93,14 @@
         const account = this.account
         this.isPending = true
         try {
-          await api.accounts.manageAccount({
+          const operation = Sdk.base.Operation.manageAccount({
+            block: isBlock,
             accountType: account.accountTypeI,
             account: account.accountId,
-            blockReasons,
-            isBlock
+            source: config.MASTER_ACCOUNT,
+            blockReasonsToAdd: blockReasons
           })
+          await Sdk.horizon.transactions.submitOperations(operation)
         } catch (error) {
           console.error(error)
           error.showMessage()

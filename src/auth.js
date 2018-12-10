@@ -134,7 +134,6 @@ export default {
   async _getSignerTypes (accountId) {
     const result = {}
     let signer = {}
-    console.log(accountId)
     try {
       signer = (await Sdk.horizon.account.getSigner(accountId)).data
     } catch (error) {
