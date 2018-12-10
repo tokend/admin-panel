@@ -532,12 +532,14 @@ export default {
 
       this.params.name = `${this.params.name}:${signerTypesSecondary}`
 
-      const request = this.params.accountId === this.masterPubKey ? accounts.manageMaster(this.params.weight) : accounts.manageSigner(this.params)
-
       this.$store.commit('OPEN_LOADER')
       this.isPending = true
       try {
-        await request
+        if (this.params.accountId === this.masterPubKey) {
+          await accounts.manageMaster(this.params.weight)
+        } else {
+          await accounts.manageSigner(this.params)
+        }
         this.$store.commit('CLOSE_LOADER')
         this.$store.dispatch('SET_INFO', 'Pending transaction for create administrator submitted')
         this.$router.push({ name: 'admins' })
@@ -558,13 +560,15 @@ export default {
         signerType: 0
       }
 
-      // for master account we can change only weight
-      const request = this.isMaster ? accounts.manageMaster(0) : accounts.manageSigner(data)
-
       this.isPending = true
       this.$store.commit('OPEN_LOADER')
       try {
-        await request
+        // for master account we can change only weight
+        if (this.isMaster) {
+          await accounts.manageMaster(0)
+        } else {
+          await accounts.manageSigner(data)
+        }
         this.$store.dispatch('SET_INFO', 'Pending transaction for delete administrator submitted')
         this.$store.commit('CLOSE_LOADER')
         this.$router.push({ name: 'admins' })
@@ -586,13 +590,15 @@ export default {
 
       this.params.name = `${this.params.name}:${signerTypesSecondary}`
 
-      // for master account we can change only weight
-      const request = this.isMaster ? accounts.manageMaster(this.params.weight) : accounts.manageSigner(this.params)
-
       this.$store.commit('OPEN_LOADER')
       this.isPending = true
       try {
-        await request
+        // for master account we can change only weight
+        if (this.isMaster) {
+          await accounts.manageMaster(this.params.weight)
+        } else {
+          await accounts.manageSigner(this.params)
+        }
         this.$store.commit('CLOSE_LOADER')
         this.$store.dispatch('SET_INFO', 'Pending transaction for update administrator submitted')
         this.$router.push({ name: 'admins' })

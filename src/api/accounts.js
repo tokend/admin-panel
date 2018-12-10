@@ -4,7 +4,7 @@ import { Sdk } from '@/sdk'
 
 export default {
 
-  manageSigner (params) {
+  async manageSigner (params) {
     const signer = {
       pubKey: params.accountId.trim(),
       weight: +params.weight,
@@ -18,16 +18,16 @@ export default {
       source: config.MASTER_ACCOUNT
     })
 
-    return Sdk.horizon.transactions.submitOperations(operation)
+    return (await Sdk.horizon.transactions.submitOperations(operation)).data
   },
 
-  manageMaster (weight) {
+  async manageMaster (weight) {
     const operation = Sdk.base.SetOptionsBuilder.setOptions({
       source: config.MASTER_ACCOUNT,
       masterWeight: Number(weight)
     })
 
-    return Sdk.horizon.transactions.submitOperations(operation)
+    return (await Sdk.horizon.transactions.submitOperations(operation)).data
   },
 
   setThresholds (opts) {
