@@ -194,6 +194,7 @@
 
 <script>
 import api from '@/api'
+import { Sdk } from '@/sdk'
 import safeGet from 'lodash/get'
 import config from '../../../../config'
 import Bus from '@/utils/EventBus'
@@ -284,11 +285,27 @@ export default {
           this.uploadFile(DOCUMENT_TYPES.tokenTerms),
           this.uploadFile(DOCUMENT_TYPES.tokenLogo)
         ])
+        let operation
         if (this.isExistingAsset) {
-          await api.assetCreation.updateAsset(this.asset)
+          operation = Sdk.base.ManageAssetBuilder.assetUpdateRequest({
+            requestID: '0',
+            code: String(this.asset.code),
+            policies: Number(this.asset.policy),
+            logoId: String(this.asset.logo_id || this.asset.logoId),
+            details: this.asset.details
+          })
         } else {
-          await api.assetCreation.createAsset(this.asset)
+          operation = Sdk.base.ManageAssetBuilder.assetCreationRequest({
+            requestID: '0',
+            code: String(this.asset.code),
+            preissuedAssetSigner: String(this.asset.preissued_asset_signer || this.asset.preissuedAssetSigner),
+            maxIssuanceAmount: String(this.asset.max_issuance_amount || this.asset.maxIssuanceAmount),
+            policies: Number(this.asset.policy),
+            initialPreissuedAmount: this.asset.initialPreissuedAmount,
+            details: this.asset.details
+          })
         }
+        await Sdk.horizon.transactions.submitOperations(operation)
         Bus.$emit('recheckConfig')
         this.$store.dispatch('SET_INFO', 'Submitted successfully.')
         this.$router.push({ name: 'systemAssets.index' })
