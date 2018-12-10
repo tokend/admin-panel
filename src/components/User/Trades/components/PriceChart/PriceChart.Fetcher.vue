@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import api from '@/api'
+import { Sdk } from '@/sdk'
 import { AssetPair } from '../../models/AssetPair'
 import PriceChart from './PriceChart.Renderer'
 import ScalePicker from './PriceChart.ScalePicker'
@@ -63,9 +63,8 @@ export default {
         this.isFailed = false
         this.priceHistory = {}
         const pair = new AssetPair(this.filters.pair)
-        const params = { baseAsset: pair.base, quoteAsset: pair.quote }
-        const response = await api.charts.getPriceHistory(params)
-        this.priceHistory = response.data
+        Sdk.horizon.charts.get(`${pair.base}-${pair.quote}`)
+        this.priceHistory = (await Sdk.horizon.charts.get(`${pair.base}-${pair.quote}`)).data
         this.isLoaded = true
       } catch (error) {
         console.error(error)
