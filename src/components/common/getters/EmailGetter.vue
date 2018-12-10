@@ -7,7 +7,7 @@
 <script>
 import { actions, getters, mutations } from '@/store/types'
 import { mapActions, mapGetters } from 'vuex'
-import api from '../../../api'
+import { Sdk } from '@/sdk'
 import get from 'lodash/get'
 
 export default {
@@ -89,7 +89,7 @@ export default {
       }
       if (balanceId) {
         this.balanceId = balanceId
-        this.accountId = await api.balances.getAccountIdByBalanceId(balanceId)
+        this.accountId = (await Sdk.horizon.balances.getAccount(balanceId)).data.accountId
         return
       }
       throw new Error('You should provide either account or balance id')

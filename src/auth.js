@@ -105,7 +105,6 @@ export default {
     user.keys = user.keys || {}
     user.keys.accountId = keypair.accountId()
     user.keys.seed = keypair.secret()
-    console.log(user.keys.seed)
     Sdk.sdk.useWallet(new Wallet('', user.keys.seed, user.keys.accountId))
     const signerTypes = await this._getSignerTypes(user.keys.accountId)
 

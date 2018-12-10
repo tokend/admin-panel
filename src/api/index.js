@@ -1,6 +1,5 @@
 import accounts from './accounts'
 import assets from './assets'
-import balances from './balances'
 import documents from './documents'
 import emissions from './emissions'
 import fees from './fees'
@@ -11,7 +10,6 @@ import tfa from './tfa'
 import transactions from './transactions'
 import users from './users'
 // new
-import { assetCreation } from './asset-creation'
 import { requests } from './requests'
 import { sales } from './sales'
 import { orderBooks } from './order-books'
@@ -24,7 +22,6 @@ export default {
 
   assets: assets,
   accounts: accounts,
-  balances: balances,
   documents: documents,
   emissions: emissions,
   fees: fees,
@@ -36,7 +33,6 @@ export default {
   users: users,
 
   // new:
-  assetCreation,
   requests,
   sales,
   orderBooks,
