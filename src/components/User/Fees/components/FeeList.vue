@@ -122,7 +122,7 @@
                            :step="DEFAULT_INPUT_STEP"
                            :form="`fee-list-form-${id}`"
                            :disabled="isSubmitting || item.exists"
-                           v-model="item.lower_bound"
+                           v-model="item.lowerBound"
               />
             </span>
 
@@ -168,11 +168,11 @@
                   v-if="+filters.feeType === FEE_TYPES.paymentFee &&
                          filters.paymentFeeSubtype === PAYMENT_FEE_TYPES.outgoing"
             >
-              <select-field v-model="item.fee_asset">
+              <select-field v-model="item.feeAsset">
                 <template v-if="assets.length">
                   <option v-for="asset in assets" :key="asset.code"
                           :value="asset.code"
-                          :selected="asset.code === item.fee_asset"
+                          :selected="asset.code === item.feeAsset"
                   >
                         {{asset.code}}
                    </option>
@@ -214,6 +214,8 @@
 
 <script>
   import api from '@/api'
+  import { Sdk } from '@/sdk'
+  import { xdrTypeFromValue } from '@/utils/xdrTypeFromValue'
   import { SelectField, InputField } from '@comcom/fields'
   import { Keypair } from 'tokend-js-sdk'
   import {
@@ -287,7 +289,7 @@
             break
 
           case FEE_TYPES.issuanceFee:
-            result = this.assets.filter(item => +item.max_issuance_amount)
+            result = this.assets.filter(item => +item.maxIssuanceAmount)
             break
 
           case FEE_TYPES.withdrawalFee:
@@ -309,8 +311,8 @@
         const type = +this.filters.feeType
         const asset = this.filters.assetCode
         const paymentFeeSubtype = +this.filters.paymentFeeSubtype
-        return this.fees[asset]
-          .filter(item => item.fee_type === type)
+        return this.fees[asset.toLowerCase()]
+          .filter(item => item.feeType === type)
           .filter(item => type === FEE_TYPES.paymentFee ? item.subtype === paymentFeeSubtype : true)
       }
     },
@@ -380,7 +382,7 @@
         for (const key in res) {
           if (res.hasOwnProperty(key)) {
             res[key].sort((a, b) => a.exists === b.exists
-              ? a.lower_bound - b.lower_bound
+              ? a.lowerBound - b.lowerBound
               : a.exists ? 1 : -1
             )
           }
@@ -416,24 +418,42 @@
       async getFees () {
         try {
           const filters = this.composeRequestFilters(this.filters)
-          const response = await api.fees.getFees(filters)
-          let fees = response.fees
-          fees = this.sortFees(fees)
-          this.fees = fees
+          this.fees = (await Sdk.horizon.fees.getAll(filters)).data.fees
         } catch (error) {
           console.error(error)
           this.$store.dispatch('SET_ERROR', 'Cannot load fee list. Please try again later')
         }
       },
 
-      async updateFee (fee) {
+      async updateFee (fees) {
         if (!await confirmAction()) return
 
         const additionalParams = this.composeRequestFilters(this.filters)
 
         this.isSubmitting = true
         try {
-          await api.fees.updateFees(fee, additionalParams)
+          const opts = {
+            fee: {
+              feeType: xdrTypeFromValue('FeeType', +fees.feeType),
+              subtype: '' + fees.subtype || '0',
+              asset: String(fees.asset),
+              fixedFee: String(fees.fixed),
+              percentFee: String(fees.percent),
+              accountId: additionalParams.accountId || additionalParams.address,
+              accountType: Number(additionalParams.accountType),
+              lowerBound: String(fees.lowerBound),
+              upperBound: String(fees.upperBound)
+            },
+            isDelete: fees.isDelete
+          }
+
+          if (+fees.feeType === FEE_TYPES.paymentFee) {
+            opts.fee.feeAsset = fees.feeAsset || fees.feeAsset
+          }
+
+          const operation = Sdk.base.Operation.setFees(opts)
+
+          await Sdk.horizon.transactions.submitOperations(operation)
           await this.getFees()
           this.$store.dispatch('SET_INFO', 'Submitted successfully')
         } catch (error) {
