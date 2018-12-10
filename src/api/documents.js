@@ -1,11 +1,6 @@
 import Vue from 'vue'
-import { Sdk } from '@/sdk'
 
 export default {
-  getUploadConfig (type, contentType) {
-    return Sdk.api.documents.create(type, contentType)
-  },
-
   uploadFile (file, config, mimeString) {
     const formData = new FormData()
     const url = config.url
