@@ -63,7 +63,6 @@
 </template>
 
 <script>
-import accounts from '@/api/accounts'
 import { Sdk } from '@/sdk'
 
 import 'mdi-vue/PlusIcon'
@@ -120,11 +119,12 @@ export default {
       this.isThresholdPending = true
 
       try {
-        await accounts.setThresholds({
+        const operation = Sdk.base.SetOptionsBuilder.setOptions({
           lowThreshold: this.thresholds.lowThreshold,
           medThreshold: this.thresholds.medThreshold,
           highThreshold: this.thresholds.highThreshold
         })
+        await Sdk.horizon.transactions.submitOperations(operation)
         this.isThresholdPending = false
         this.$store.dispatch('SET_INFO', 'Pending transaction for updating thresholds submitted')
       } catch (error) {

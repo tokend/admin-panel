@@ -28,15 +28,5 @@ export default {
     })
 
     return (await Sdk.horizon.transactions.submitOperations(operation)).data
-  },
-
-  setThresholds (opts) {
-    const operation = Sdk.base.SetOptionsBuilder.setOptions({
-      lowThreshold: opts.lowThreshold,
-      medThreshold: opts.medThreshold,
-      highThreshold: opts.highThreshold
-    })
-
-    return Sdk.horizon.transactions.submitOperations(operation)
   }
 }
