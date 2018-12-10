@@ -1,7 +1,6 @@
 import accounts from './accounts'
 import assets from './assets'
 import documents from './documents'
-import emissions from './emissions'
 import fees from './fees'
 import forfeits from './forfeits'
 import keyValue from './key-value'
@@ -22,7 +21,6 @@ export default {
   assets: assets,
   accounts: accounts,
   documents: documents,
-  emissions: emissions,
   fees: fees,
   forfeits: forfeits,
   keyValue: keyValue,

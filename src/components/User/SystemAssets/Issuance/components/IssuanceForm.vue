@@ -65,6 +65,7 @@
 <script>
 import api from '@/api'
 import { Sdk } from '@/sdk'
+import config from '@/config'
 import { InputField, SelectField } from '@comcom/fields'
 import Bus from '@/utils/EventBus'
 import { AssetAmountFormatter } from '@comcom/formatters'
@@ -90,7 +91,7 @@ export default {
       DEFAULT_INPUT_MIN,
       form: {
         amount: '',
-        receiver: 'GBTRYNKYER5QMJ7LMVI2I5PIZWDLXVUCNZZKQSWPOOQCUUCCYX3X7532',
+        receiver: '',
         reference: '',
         asset: ''
       },
@@ -140,17 +141,16 @@ export default {
       if (receiver === '') {
         return Promise.reject(`The receiver has no ${this.form.asset} balance.`)
       }
-
-      const opts = {
-        receiver: receiver,
+      const operation = Sdk.base.CreateIssuanceRequestBuilder.createIssuanceRequest({
         asset: this.form.asset,
         amount: this.form.amount,
+        receiver: receiver,
         reference: this.form.reference,
+        source: config.MASTER_ACCOUNT,
+        externalDetails: {},
         allTasks: 0
-      }
-      opts.preEmissions = []
-
-      await api.emissions.manualEmission(opts)
+      })
+      await Sdk.horizon.transactions.submitOperations(operation)
       this.form.amount = null
       this.form.receiver = null
       this.form.reference = null

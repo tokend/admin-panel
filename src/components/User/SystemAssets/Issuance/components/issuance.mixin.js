@@ -69,7 +69,6 @@ export default {
 
     getListCounter () {
       if (this.list) {
-        console.log(this.list)
         this.listCounter.pending = this.list._rawResponse.data._embedded.meta.count.pending
         this.listCounter.approved = this.list._rawResponse.data._embedded.meta.count.approved
       }

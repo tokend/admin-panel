@@ -69,6 +69,7 @@
 
 <script>
   import api from '@/api'
+  import { Sdk } from '@/sdk'
   import { PreIssuanceRequest, xdr } from 'tokend-js-sdk'
   import errors from '@/errors'
 
@@ -166,22 +167,27 @@
         }
       },
 
-      upload () {
+      async upload () {
         this.uploadBtnDisable = true
         this.$store.commit('OPEN_LOADER')
-
-        return api.emissions.uploadPreEmissions(this.fileInfo.map(item => item.issuance.xdr))
-          .then(() => {
-            this.$store.commit('CLOSE_LOADER')
-            this.$store.dispatch('SET_INFO', 'Pending transaction submitted')
-            this.uploadBtnDisable = false
-          }).catch(err => {
-            const message = errors.tryParseError(err) || 'Something went wrong. Transaction failed'
-            this.$store.dispatch('SET_ERROR', message)
-            this.$store.commit('CLOSE_LOADER')
-            console.error('not uploaded', err)
-            this.uploadBtnDisable = false
+        try {
+          const preIssuances = this.fileInfo.map(item => item.issuance.xdr)
+          const operations = preIssuances.map(item => {
+            Sdk.base.PreIssuanceRequestOpBuilder.createPreIssuanceRequestOp({
+              request: item
+            })
           })
+          await Sdk.horizon.transactions.submitOperations(...operations)
+          this.$store.commit('CLOSE_LOADER')
+          this.$store.dispatch('SET_INFO', 'Pending transaction submitted')
+          this.uploadBtnDisable = false
+        } catch (err) {
+          const message = errors.tryParseError(err) || 'Something went wrong. Transaction failed'
+          this.$store.dispatch('SET_ERROR', message)
+          this.$store.commit('CLOSE_LOADER')
+          console.error('not uploaded', err)
+          this.uploadBtnDisable = false
+        }
       }
     }
   }
