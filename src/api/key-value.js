@@ -7,13 +7,6 @@ const ScopedServerCallBuilder = ServerCallBuilder.makeScope()
   .registerResource('transactions')
 
 export default {
-  getList () {
-    return new ScopedServerCallBuilder()
-      .key_value()
-      .sign()
-      .get()
-  },
-
   /**
    * @param opts
    * @param opts.key

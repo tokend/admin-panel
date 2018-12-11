@@ -75,6 +75,7 @@
 </template>
 <script>
 import api from '@/api'
+import { Sdk } from '@/sdk'
 import {
   SelectField,
   InputField
@@ -123,15 +124,14 @@ export default {
       this.isPending = false
     },
     async getList () {
-      const { data: list } = await api.keyValue.getList()
-      this.list = list
+      this.list = (await Sdk.horizon.keyValue.getAll()).data
 
-      if (!list.length) {
+      if (!this.list.length) {
         return
       }
 
       if (!this.updateForm.key) {
-        const item = list[0]
+        const item = this.list[0]
 
         this.updateForm.key = item.key
         this.updateForm.value = item[`${item.type.name}Value`]
