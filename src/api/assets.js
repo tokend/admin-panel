@@ -5,8 +5,8 @@ import server from '../utils/server'
 import store from '../store'
 
 export default {
-  getAll () {
-    Sdk.horizon.assets.getAll()
+  async getAll () {
+    return (await Sdk.horizon.assets.getAll())
   },
 
   getAllSystemAssets () {

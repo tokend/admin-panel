@@ -156,6 +156,7 @@
 
 <script>
   import api from '@/api'
+  import { Sdk } from '@/sdk'
   import get from 'lodash/get'
   import throttle from 'lodash/throttle'
   import pick from 'lodash/pick'
@@ -284,9 +285,12 @@
         }, {})
 
         async function getLimit (statsOpType) {
-          return (await api.limits.getAll({
-            ...this.filters,
-            statsOpType
+          return (await Sdk.horizon.limits.get({
+            account_id: this.filters.address,
+            account_type: this.filters.accountType,
+            stats_op_type: statsOpType,
+            asset: this.filters.asset,
+            email: this.filters.email
           })).data
         }
       },
