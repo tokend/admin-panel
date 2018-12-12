@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import api from '@/api'
+import { Sdk } from '@/sdk'
 import { Tabs, Tab } from '@comcom/Tabs'
 import DetailsTab from './SaleManager.DetailsTab'
 import DescriptionTab from './SaleManager.DescriptionTab'
@@ -80,7 +80,7 @@ export default {
   methods: {
     async getSale (id) {
       try {
-        this.sale = (await api.sales.get(id)).data
+        this.sale = (await Sdk.horizon.sales.get(id)).data
         this.isLoaded = true
       } catch (error) {
         error.showMessage('Cannot get fund details. Please try again later')

@@ -90,6 +90,8 @@
   import { InputField, TickField, InputDateField } from '@comcom/fields'
   import { EmailGetter } from '@comcom/getters'
   import _ from 'lodash'
+  import { Sdk } from '@/sdk'
+  import config from '@/config'
   import { Keypair } from 'tokend-js-sdk'
 
   export default {
@@ -142,7 +144,14 @@
         this.isLoaded = false
         this.isNoMoreEntries = false
         try {
-          const response = await api.sales.getAll(this.filters)
+          const response = await Sdk.horizon.sales.getPage({
+            base_asset: this.filters.baseAsset,
+            owner: this.filters.owner,
+            open_only: this.filters.openOnly,
+            name: this.filters.name,
+            order: this.filters.order || 'desc',
+            limit: this.filters.limit || config.PAGE_LIMIT
+          })
           this.list = response.data
           this.rawList = response.data
           this.filterByDate()

@@ -8,7 +8,6 @@ import transactions from './transactions'
 import users from './users'
 // new
 import { requests } from './requests'
-import { sales } from './sales'
 
 export default {
   install (Vue, options) {
@@ -25,6 +24,5 @@ export default {
   users: users,
 
   // new:
-  requests,
-  sales
+  requests
 }

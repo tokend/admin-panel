@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import api from '@/api'
+import { Sdk } from '@/sdk'
 import { DateFormatter } from '@comcom/formatters'
 import { EmailGetter } from '@comcom/getters'
 import { SelectField } from '@comcom/fields'
@@ -106,9 +106,12 @@ export default {
       const quoteAsset = this.filters.quoteAsset
 
       try {
-        const params = { saleId: id, baseAsset, quoteAsset }
-        const response = await api.sales.getParticipants(params)
-        this.participants = response.data
+        this.participants = (await Sdk.horizon.orderBook.getAll({
+          order_book_id: id,
+          base_asset: baseAsset,
+          quote_asset: quoteAsset,
+          is_buy: true
+        })).data
         this.isLoaded = true
       } catch (error) {
         this.isFailed = true
