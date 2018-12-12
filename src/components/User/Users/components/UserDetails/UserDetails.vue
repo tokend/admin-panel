@@ -154,6 +154,7 @@ export default {
   },
 
   computed: {
+
     latestRequest () {
       return this.requestToReview || this.requests[0] || null
     },
@@ -189,7 +190,7 @@ export default {
         ])
         this.user = user
         this.account = account.data
-        this.requestToReview = request
+        this.requestToReview = request[0]
         this.requests = requests
         this.isLoaded = true
       } catch (error) {

@@ -4,7 +4,6 @@ import documents from './documents'
 import keyValue from './key-value'
 import limits from './limits'
 import tfa from './tfa'
-import transactions from './transactions'
 import users from './users'
 // new
 import { requests } from './requests'
@@ -20,7 +19,6 @@ export default {
   keyValue: keyValue,
   limits: limits,
   tfa: tfa,
-  transactions: transactions,
   users: users,
 
   // new:

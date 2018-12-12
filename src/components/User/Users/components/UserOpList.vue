@@ -28,10 +28,10 @@
           {{item.type}}
         </span>
         <span class="app-list__cell" :title="item.ledger_close_time">
-          {{item.ledger_close_time}}
+          {{item.ledgerCloseTime}}
         </span>
         <span class="app-list__cell" :title="item.source_account">
-          {{item.source_account}}
+          {{item.sourceAccount}}
         </span>
         <span class="app-list__cell">
           <operation-counterparty :operation="item" />
@@ -49,7 +49,7 @@
 
 <script>
 import Vue from 'vue'
-import api from '@/api'
+import { Sdk } from '@/sdk'
 import moment from 'moment'
 import { formatAssetAmount } from '@/utils/formatters'
 import { OperationCounterparty } from '@comcom/getters'
@@ -72,7 +72,7 @@ export default {
   computed: {
     records () {
       if (!this.list) return undefined
-      return this.normalizeRecords(this.list.records)
+      return this.normalizeRecords(this.list.data)
     }
   },
 
@@ -83,7 +83,7 @@ export default {
   methods: {
     async getList () {
       try {
-        this.list = await api.transactions.getOperationsByAccountId(this.id)
+        this.list = (await Sdk.horizon.account.getOperations(this.id))
       } catch (error) {
         this.$store.dispatch('SET_ERROR', 'Cannot load transaction list')
       }
@@ -112,8 +112,8 @@ export default {
           // Capitalize and remove underscores
           type: item.type.charAt(0).toUpperCase() + item.type.split('_').join(' ').slice(1),
 
-          ledger_close_time: moment(item.ledger_close_time).format('DD MMM YYYY [at] hh:mm:ss'),
-          source_account: item.source_account === this.masterPubKey ? 'Master' : item.source_account
+          ledgerCloseTime: moment(item.ledgerCloseTime).format('DD MMM YYYY [at] hh:mm:ss'),
+          sourceAccount: item.sourceAccount === this.masterPubKey ? 'Master' : item.sourceAccount
         })
       })
     }

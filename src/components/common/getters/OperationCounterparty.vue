@@ -16,35 +16,35 @@
     }),
     methods: {
       getCounterparty (operation) {
-        switch (operation.type_i) {
+        switch (operation.typeI) {
           case OP_TYPES.createIssuanceRequest:
-            return operation.participants.find(p => !p.balance_id).account_id
+            return operation.participants.find(p => !p.balanceId).accountId
           case OP_TYPES.manageOffer:
             if (operation.orderBookId && operation.orderBookId !== '0') {
               return this.noCounterpartyStr
             }
             const counterparties = operation.participants
-            .filter(p => p.account_id !== operation.source_account)
+            .filter(p => p.accountId !== operation.sourceAccount)
             if (counterparties.length > 1) {
               return this.manyCounterpartyStr
             } else {
-              return get(counterparties[0], 'account_id')
+              return get(counterparties[0], 'accountId')
             }
           case OP_TYPES.checkSaleState:
-            return operation.base_asset
+            return operation.baseAsset
           case OP_TYPES.payment:
             return operation.from
           case OP_TYPES.paymentV2:
             return operation.from
           case OP_TYPES.createWithdrawalRequest:
-            return operation.external_details.address
+            return operation.externalDetails.address
           case OP_TYPES.reviewRequest:
-            if (operation.source_account === 'Master') {
+            if (operation.sourceAccount === 'Master') {
               return this.noCounterpartyStr
             }
             return operation.participants.find(p => {
-              return p.account_id !== operation.source_account
-            }).account_id
+              return p.accountId !== operation.sourceAccount
+            }).accountId
           default:
             return this.noCounterpartyStr
         }
