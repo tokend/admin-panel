@@ -125,7 +125,12 @@ export default {
 
       if (!balance) {
         try {
-          await api.users.createBalance(this.form.receiver, this.form.asset)
+          const operation = Sdk.base.Operation.manageBalance({
+            asset: this.form.asset,
+            action: Sdk.xdr.ManageBalanceAction.createUnique(),
+            destination: this.form.receiver
+          })
+          await Sdk.horizon.transactions.submitOperations(operation)
         } catch (error) {
           console.error(error)
           this.$store.dispatch('SET_ERROR', 'Unexpected error')

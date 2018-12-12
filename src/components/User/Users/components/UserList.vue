@@ -80,7 +80,8 @@
 
 <script>
   import Vue from 'vue'
-  import api from '@/api'
+  import { Sdk } from '@/sdk'
+  import { clearObject } from '@/utils/clearObject'
   import SelectField from '@comcom/fields/SelectField'
   import InputField from '@comcom/fields/InputField'
   import { AccountStateGetter } from '@comcom/getters'
@@ -155,8 +156,7 @@
         this.txtURL = ''
         this.isLoading = true
         try {
-          const filters = this.collectFilters()
-          this.list = await api.users.getAll(filters)
+          this.list = await Sdk.api.users.getPage(clearObject(this.collectFilters()))
           this.isListEnded = !(this.list.data || []).length
         } catch (error) {
           error.showMessage('Cannot load user list')
@@ -202,8 +202,7 @@
       },
 
       async getFullList () {
-        const filters = this.collectFilters()
-        let list = await api.users.getAll(filters)
+        let list = await Sdk.api.users.getPage(clearObject(this.collectFilters()))
         let length = list.data.length
         while (1) {
           list = await list.concatNext()

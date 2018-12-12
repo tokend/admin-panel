@@ -11,7 +11,7 @@
           :message="item.message"
         />
       </template>
-      <template v-else> 
+      <template v-else>
         <div class="no-data-msg__wrapper">
           <h2>No updates yet...</h2>
         </div>
@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import api from '@/api'
+import { Sdk } from '@/sdk'
 import { BLOB_TYPES } from '@/constants'
 import _get from 'lodash/get'
 import TimelineItem from './TimelineItem'
@@ -60,12 +60,10 @@ export default {
   methods: {
     async getUpdates ({ ownerId: owner }) {
       try {
-        this.updates = (await api.users
-          .blobsOf(owner)
-          .getAll({
-            saleId: this.sale.id,
-            type: BLOB_TYPES.saleUpdate
-          })).data.map(attr => JSON.parse(attr.value))
+        this.updates = (await Sdk.api.blobs.getAll({
+          fund_id: this.sale.id,
+          type: BLOB_TYPES.saleUpdate
+        }, owner)).data.map(attr => JSON.parse(attr.value))
         this.isLoaded = true
       } catch (e) {
         console.error(e)

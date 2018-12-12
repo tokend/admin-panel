@@ -183,12 +183,12 @@ export default {
       this.isFailed = false
       try {
         const [user, account, request, requests] = await Promise.all([
-          api.users.get(this.id),
+          Sdk.api.users.get(this.id),
           Sdk.horizon.account.get(this.id),
           this.getRequest(),
           this.getAllUserRequests()
         ])
-        this.user = user
+        this.user = user.data
         this.account = account.data
         this.requestToReview = request[0]
         this.requests = requests

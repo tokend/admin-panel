@@ -22,7 +22,7 @@
 
 <script>
 import { MarkdownFormatter } from '@comcom/formatters'
-import api from '@/api'
+import { Sdk } from '@/sdk'
 export default {
   components: {
     MarkdownFormatter
@@ -45,7 +45,7 @@ export default {
   methods: {
     async getDescription ({ ownerId: userId, description: blobId }) {
       try {
-        const blob = (await api.users.blobsOf(userId).get(blobId)).data
+        const blob = (await Sdk.api.blobs.get(blobId, userId)).data
         this.description = blob.value
         this.isLoaded = true
       } catch (error) {
