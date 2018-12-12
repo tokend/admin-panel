@@ -65,6 +65,7 @@
 </template>
 
 <script>
+import { Sdk } from '@/sdk'
 import api from '@/api'
 import TextField from '@comcom/fields/TextField'
 import TickField from '@comcom/fields/TickField'
@@ -123,7 +124,14 @@ export default {
     async assignRequest (request) {
       try {
         this.request.sale = request
-        this.request.token = await this.getTokenRequest(this.request.sale.baseAsset)
+        this.request.token = await Sdk.horizon.request.getAllForAssets({
+          asset: this.request.sale.baseAsset.code,
+          requestor: this.request.sale.baseAsset.requestor,
+          state: this.request.sale.baseAsset.state,
+          reviewer: this.request.sale.baseAsset.reviewer,
+          order: 'desc'
+        }).data[0]
+        console.log(this.request.token)
         this.request.isReady = true
       } catch (error) {
         error.showMessage('Cannot get fund request. Pleazse try again later')
@@ -144,14 +152,6 @@ export default {
 
     getSaleRequest (id) {
       return api.requests.get(id)
-    },
-
-    getTokenRequest (sale) {
-      return api.requests.getAssetRequest({
-        code: sale.baseAsset,
-        requestor: sale.requestor,
-        state: sale.requestStateI
-      })
     },
 
     async getToken (sale) {

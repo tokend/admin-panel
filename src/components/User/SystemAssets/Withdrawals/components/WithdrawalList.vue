@@ -37,11 +37,11 @@
 
           <button class="app-list__li" v-for="item in list.data" :key="item.id"
             @click="requestToShow = item">
-            <span class="app-list__cell" :title="`${localize(item.amount)} ${item.destAssetCode}`">
-              {{localize(item.amount)}}&nbsp;{{ item.destAssetCode }}
+            <span class="app-list__cell" :title="`${localize(item.details.withdraw.amount)} ${item.details.withdraw.destAssetCode}`">
+              {{localize(item.details.withdraw.amount)}}&nbsp;{{ item.details.withdraw.destAssetCode }}
             </span>
             <span class="app-list__cell" :title="`${localize(item.destAssetAmount)} ${item.destAssetCode}`">
-              {{localize(item.destAssetAmount)}}&nbsp;{{item.destAssetCode}}
+              {{localize(item.details.withdraw.destAssetAmount)}}&nbsp;{{item.details.withdraw.destAssetCode}}
             </span>
             <span class="app-list__cell" :title="verbozify(item.requestState)">
               {{verbozify(item.requestState)}}

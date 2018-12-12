@@ -45,7 +45,7 @@
                          :to="{ name: 'systemAssets.issuance.props', params: { id: item.id } }">
             <span class="app-list__cell app-list__cell--important"
                   :title="`${localize(item.amount)} ${item.asset}`">
-              {{localize(item.amount)}} {{item.asset}}
+              {{localize(item.details.issuanceCreate.amount)}} {{item.details.issuanceCreate.asset}}
             </span>
 
               <span class="app-list__cell app-list__cell--wrap"

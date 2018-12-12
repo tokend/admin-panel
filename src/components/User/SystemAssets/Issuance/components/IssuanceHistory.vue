@@ -38,7 +38,7 @@
 
             <span class="app-list__cell app-list__cell--important"
                   :title="`${localize(item.amount)} ${item.asset}`">
-              {{localize(item.amount)}} {{item.asset}}
+              {{localize(item.details.issuanceCreate.amount)}} {{item.details.issuanceCreate.asset}}
             </span>
 
             <span class="app-list__cell"
@@ -48,7 +48,7 @@
 
             <span class="app-list__cell"
                   :title="item.receiver">
-              {{item.receiver}}
+              {{item.details.issuanceCreate.receiver}}
             </span>
 
             <span class="app-list__cell app-list__cell--wrap"

@@ -219,13 +219,13 @@ export default {
         state: REQUEST_STATES.pending,
         requestor: this.id
       })
-      return requests[0] || null
+      return requests.data || null
     },
     async getAllUserRequests () {
       const requests = await api.requests.getKycRequests({
         requestor: this.id
       })
-      return requests
+      return requests.data
     },
     formatDate
   }

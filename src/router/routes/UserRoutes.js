@@ -418,31 +418,6 @@ export const UserRoutes = {
       component: function (resolve) {
         require(['../../components/settings/GAuth.vue'], resolve)
       }
-    },
-    {
-      path: '/user-requests',
-      name: 'user-requests',
-      redirect: { name: 'user.requests' },
-      component: function (resolve) {
-        require(['../../components/User/Requests/Requests.vue'], resolve)
-      },
-      children: [
-        {
-          path: '/user-requests/index',
-          name: 'user.requests',
-          component: function (resolve) {
-            require(['../../components/User/Requests/Requests.Index.vue'], resolve)
-          }
-        },
-        {
-          path: '/user-requests/index/:id',
-          name: 'user.requests.manager',
-          component: function (resolve) {
-            require(['../../components/User/Requests/components/RequestsReviewManager/RequestsReviewManager.Index.vue'], resolve)
-          },
-          props: true
-        }
-      ]
     }
   ]
 }
