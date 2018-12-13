@@ -325,10 +325,7 @@ export default {
 
     async uploadFile (type) {
       if (!this[type].file) return
-      const config = (await api.users
-        .docsOf(this.$store.getters.masterId)
-        .getUploadConfig(type, this[type].mime))
-        .data
+      const config = (await Sdk.api.documents.create(type, this[type].mime)).data
       await api.documents.uploadFile(this[type].file, config, this[type].mime)
       this.asset.details[type === DOCUMENT_TYPES.tokenTerms ? 'terms' : 'logo'] = {
         key: config.key,

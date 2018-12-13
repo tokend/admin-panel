@@ -159,10 +159,6 @@ export default {
       return response
     },
 
-    async getSaleDescription (userId, blobId) {
-      return (await api.users.getBlob({ userId, blobId })).data.value
-    },
-
     showRejectForm () {
       this.rejectForm.isShown = true
     },
