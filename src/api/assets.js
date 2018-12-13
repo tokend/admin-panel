@@ -9,23 +9,23 @@ export default {
     return (await Sdk.horizon.assets.getAll())
   },
 
-  getAllSystemAssets () {
-    return Sdk.horizon.assets.getAll({ owner: config.MASTER_ACCOUNT })
+  async getAllSystemAssets () {
+    return (await Sdk.horizon.assets.getAll({ owner: config.MASTER_ACCOUNT }))
   },
 
-  get (code) {
-    return Sdk.horizon.assets.get(code)
+  async get (code) {
+    return (await Sdk.horizon.assets.get(code))
   },
 
-  getPairs () {
-    return Sdk.horizon.assetPairs.getAll()
+  async getPairs () {
+    return (await Sdk.horizon.assetPairs.getAll())
   },
 
-  getHolders (code) {
-    return Sdk.horizon.assets.getHolders(code)
+  async getHolders (code) {
+    return (await Sdk.horizon.assets.getHolders(code))
   },
 
-  createPair (params) {
+  async createPair (params) {
     const operation = Sdk.base.Operation.manageAssetPair({
       base: params.base,
       quote: params.quote,
@@ -36,10 +36,10 @@ export default {
       maxPriceStep: '' + params.maxPriceStep,
       source: config.MASTER_ACCOUNT
     })
-    return Sdk.horizon.transactions.submitOperations(operation)
+    return (await Sdk.horizon.transactions.submitOperations(operation))
   },
 
-  updatePair (params) {
+  async updatePair (params) {
     let action
     if (params.create) {
       action = Sdk.xdr.ManageAssetPairAction.create()
@@ -62,7 +62,7 @@ export default {
       source: config.MASTER_ACCOUNT
     })
 
-    return Sdk.horizon.transactions.submitOperations(operation)
+    return (await Sdk.horizon.transactions.submitOperations(operation))
   },
 
   // legacy
@@ -88,7 +88,7 @@ export default {
     return server.get('/asset_pairs', false)
   },
 
-  convertAssetPairs (sourceAsset, destAsset, amount) {
-    return Sdk.horizon.assetPairs.convert({ 'source_asset': sourceAsset, 'dest_asset': destAsset, 'amount': amount })
+  async convertAssetPairs (sourceAsset, destAsset, amount) {
+    return (await Sdk.horizon.assetPairs.convert({ 'source_asset': sourceAsset, 'dest_asset': destAsset, 'amount': amount }))
   }
 }
