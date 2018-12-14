@@ -74,7 +74,6 @@
   </div>
 </template>
 <script>
-import api from '@/api'
 import { Sdk } from '@/sdk'
 import {
   SelectField,
@@ -109,7 +108,8 @@ export default {
     async setKeyValue (key, value, entryType) {
       this.isPending = true
       try {
-        await api.keyValue.setNew({ key, value, entryType })
+        const operation = Sdk.base.ManageKeyValueBuilder.putKeyValue({ key, value, entryType })
+        await Sdk.horizon.transactions.submitOperations(operation)
         await this.getList()
 
         this.$store.dispatch('SET_INFO', 'Submitted successfully')
