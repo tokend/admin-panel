@@ -18,7 +18,10 @@ export default {
 
   getEmailByAddress (address) {
     return this.getEmailsByAddresses([address])
-      .then((response) => response[address].email)
+      .then((response) => {
+        console.log(response)
+        return response[address].email
+      })
   },
 
   async getAccountIdByEmail (email) {

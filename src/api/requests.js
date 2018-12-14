@@ -1,8 +1,6 @@
 import config from '@/config'
 import { KYC_TASKS_TO_REMOVE_ON_REJECT } from '../constants'
-import server from '../utils/server'
 import store from '../store'
-import { ReviewRequestBuilder, ManageLimitsBuilder } from 'tokend-js-sdk'
 import { deriveRequestIdFromCreateKycRequestResult } from '../utils/parseXdrTxResponse'
 import { Sdk } from '@/sdk'
 
@@ -17,20 +15,7 @@ import {
 import { CreatePreIssuanceRequest } from './responseHandlers/requests/CreatePreIssuanceRequest'
 import { TokenRequest } from './responseHandlers/requests/TokenRequest'
 import { IssuanceCreateRequest } from './responseHandlers/requests/IssuanceCreateRequest'
-import { ServerCallBuilder } from './ServerCallBuilder'
-import { envelopOperations } from './helpers/envelopOperations'
 import { clearObject } from '@/utils/clearObject'
-
-const ScopedServerCallBuilder = ServerCallBuilder.makeScope()
-  .registerResource('requests')
-  .registerResource('request')
-  .registerResource('transactions')
-  .registerResource('withdrawals')
-  .registerResource('assets')
-  .registerResource('issuances')
-  .registerResource('sales')
-  .registerResource('update_kyc')
-  .registerResource('limits_updates')
 
 export const requests = {
   _review ({ action, reason = '' }, ...requests) {
@@ -102,7 +87,7 @@ export const requests = {
    * @param {Array} params.newLimits
    * @returns {*}
    */
-  approveLimitsUpdate (params) {
+  async approveLimitsUpdate (params) {
     const newLimits = params.newLimits
       .map(limits => ({
         ...limits,
@@ -110,38 +95,23 @@ export const requests = {
         accountID: params.accountId,
         accountType: undefined
       }))
-    // const operations = []
-    // operations.push(Sdk.base.ReviewRequestBuilder.reviewLimitsUpdateRequest({
-    //   requestHash: params.request.hash,
-    //   requestType: params.request.request_type_i || params.request.requestTypeI,
-    //   source: config.MASTER_ACCOUNT,
-    //   action: Sdk.xdr.ReviewRequestOpAction.approve().value,
-    //   reason: '',
-    //   requestID: params.request.id,
-    //   newLimits: newLimits[0]
-    // }))
-    // newLimits
-    //   .forEach(limits => {
-    //     operations.push()
-    //     ManageLimitsBuilder.createLimits(limits)
-    //   })
-    const tx = envelopOperations(
-      ReviewRequestBuilder.reviewLimitsUpdateRequest({
-        requestHash: params.request.hash,
-        requestType: params.request.request_type_i || params.request.requestTypeI,
-        source: config.MASTER_ACCOUNT,
-        action: Sdk.xdr.ReviewRequestOpAction.approve().value,
-        reason: '',
-        requestID: params.request.id,
-        newLimits: newLimits[0]
-      }),
-      ...newLimits
-        .map(limits => ManageLimitsBuilder.createLimits(limits))
-    )
-
-    return new ScopedServerCallBuilder()
-      .transactions()
-      .post({ tx })
+    const operations = []
+    operations.push(Sdk.base.ReviewRequestBuilder.reviewLimitsUpdateRequest({
+      requestHash: params.request.hash,
+      requestType: params.request.request_type_i || params.request.requestTypeI,
+      source: config.MASTER_ACCOUNT,
+      action: Sdk.xdr.ReviewRequestOpAction.approve().value,
+      reason: '',
+      requestID: params.request.id,
+      newLimits: newLimits[0]
+    }))
+    newLimits
+      .forEach(limits => {
+        operations.push(
+          Sdk.base.ManageLimitsBuilder.createLimits(limits)
+        )
+      })
+    return (await Sdk.horizon.transactions.submitOperations(...operations)).data
   },
 
   async rejectLimitsUpdate (params) {
@@ -337,32 +307,17 @@ export const requests = {
 
   // legacy
 
-  getPreissuanceRequests (asset) {
+  async getPreissuanceRequests (asset) {
     if (asset.toLowerCase() === 'all') {
       asset = ''
     }
-
-    return server.sdkServer.reviewableRequestsHelper()
-      .preissuances()
-      .forAssetCode(asset)
-      .order('desc')
-      .forReviewer(config.MASTER_ACCOUNT)
-      .limit(store.getters.pageLimit)
-      .callWithSignature(store.getters.keypair)
-      .then(response => {
-        response.records = mapRequests(response.records)
-        return response
-      })
-  },
-
-  getTokenRequestById (id) {
-    return server.sdkServer.reviewableRequestsHelper()
-      .assets()
-      .reviewableRequest(id)
-      .callWithSignature(store.getters.keypair)
-      .then(response => {
-        return Promise.resolve(new TokenRequest(response))
-      })
+    const response = await Sdk.horizon.request.getAllForPreissuances({
+      asset: asset,
+      order: 'desc',
+      reviewer: config.MASTER_ACCOUNT
+    })
+    response.records = mapRequests(response.records)
+    return response
   },
 
   mapRequests

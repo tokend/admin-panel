@@ -32,7 +32,7 @@
           <router-link class="app-list__li" v-for="(asset, i) in records" :key="i"
             :to="{ name: 'tokens.requests.show', params: { id: asset.id }}">
             <span class="app-list__cell app-list__cell--important" :title="asset.code">
-              {{asset.code}}
+              {{asset.details[getRequestType(asset)].code}}
             </span>
 
             <span class="app-list__cell" :title="normalizeType(asset)">
@@ -67,6 +67,7 @@
 
 <script>
 import api from '@/api'
+import { snakeToCamekCase } from '@/utils/un-camel-case'
 import InputField from '@comcom/fields/InputField'
 import SelectField from '@comcom/fields/SelectField'
 import { CREATE_TOKEN_REQUEST_STATES, REQUEST_STATES_STR, REQUEST_STATES } from '@/constants'
@@ -105,6 +106,9 @@ export default {
   },
 
   methods: {
+    getRequestType (request) {
+      return snakeToCamekCase(request.details.requestType)
+    },
     async getList () {
       this.isPending = true
       try {

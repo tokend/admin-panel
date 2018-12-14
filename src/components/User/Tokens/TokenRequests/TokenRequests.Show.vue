@@ -170,7 +170,7 @@
 </template>
 
 <script>
-import Vue from 'vue'
+import { Sdk } from '@/sdk'
 import { ASSET_POLICIES_VERBOSE } from '@/constants'
 import { confirmAction } from '../../../../js/modals/confirmation_message'
 import TokenRequestRejectForm from './components/TokenRequestRejectForm'
@@ -179,6 +179,7 @@ import TextField from '@comcom/fields/TextField'
 import { ImgGetter, EmailGetter } from '@comcom/getters'
 import { DateFormatter } from '@comcom/formatters'
 import { verbozify } from '@/utils/verbozify'
+import { TokenRequest } from '@/api/responseHandlers/requests/TokenRequest'
 import get from 'lodash/get'
 // TODO: extract to TokenRequestForm
 
@@ -203,8 +204,8 @@ export default {
   },
 
   async created () {
-    const requestId = this.id
-    this.tokenRequest = await this.getRequest(requestId)
+    const response = await Sdk.horizon.request.get(this.id)
+    this.tokenRequest = new TokenRequest(response.data)
   },
 
   computed: {
@@ -220,10 +221,6 @@ export default {
   methods: {
     verbozify,
     safeGet: get,
-    getRequest (id) {
-      return Vue.api.requests.getTokenRequestById(id)
-    },
-
     async fulfill () {
       this.isPending = true
       if (await confirmAction()) {
@@ -232,6 +229,7 @@ export default {
           this.$store.dispatch('SET_INFO', 'Token successfully created')
           this.$router.push({ name: 'tokens' })
         } catch (err) {
+          console.error(err)
           this.$store.dispatch('SET_ERROR', 'Failed to fulfill request')
         }
       }
