@@ -1,7 +1,6 @@
 import accounts from './accounts'
 import assets from './assets'
 import documents from './documents'
-import limits from './limits'
 import tfa from './tfa'
 import users from './users'
 // new
@@ -15,7 +14,6 @@ export default {
   assets: assets,
   accounts: accounts,
   documents: documents,
-  limits: limits,
   tfa: tfa,
   users: users,
 

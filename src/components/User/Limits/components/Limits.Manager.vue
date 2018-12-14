@@ -315,11 +315,12 @@
           if (limits.accountId) { // managelimitbuilder somehow doesnt accept opts.accountId NULL value
             accountID = limits.accountId
           }
-          await api.limits.update({
+          const operation = Sdk.base.ManageLimitsBuilder.createLimits({
             ...limits,
             ...disabledLimits,
             accountID
           })
+          await Sdk.horizon.transactions.submitOperations(operation)
           await this.getAssets()
           this.$store.dispatch('SET_INFO', 'Limits update saved')
         } catch (e) {
