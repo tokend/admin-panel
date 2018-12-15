@@ -316,7 +316,7 @@ export const requests = {
       order: 'desc',
       reviewer: config.MASTER_ACCOUNT
     })
-    response.records = mapRequests(response.records)
+    response.records = mapRequests(response.data.records)
     return response
   },
 
