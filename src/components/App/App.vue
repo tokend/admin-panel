@@ -31,7 +31,6 @@ import StatusMessage from './components/StatusMessage'
 import IdleLogout from './components/IdleLogout.vue'
 import VerifyTfa from './components/VerifyTfa'
 import LoadingScreen from './components/Loader'
-import StellarSdk from 'tokend-js-sdk'
 import UAParser from 'ua-parser-js'
 import NoSupportMessage from './components/IERestrictionMessage.vue'
 import { Sdk } from '@/sdk'
@@ -150,7 +149,6 @@ export default {
             config.COMMISSION_ACCOUNT = info.commission_account_id
             config.OPERATIONAL_ACCOUNT = info.operational_account_id
             config.STORAGE_FEE_ACCOUNT = info.storage_fee_account_id
-            StellarSdk.Network.use(new StellarSdk.Network(config.NETWORK_PASSPHRASE))
             this.isHorizonInfoLoaded = true
             this.connectionError = false
             this.error = []

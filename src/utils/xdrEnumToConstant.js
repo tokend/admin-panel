@@ -1,8 +1,8 @@
-import { xdr } from 'tokend-js-sdk'
+import { Sdk } from '@/sdk'
 
 export function xdrEnumToConstant (xdrEnum) {
   xdrEnum = typeof xdrEnum === 'string'
-    ? xdr[xdrEnum]
+    ? Sdk.xdr[xdrEnum]
     : xdrEnum
 
   try {

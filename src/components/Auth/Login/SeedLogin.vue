@@ -38,7 +38,7 @@
 <script>
 import Vue from 'vue'
 import { InputField } from '@comcom/fields'
-import Sdk from 'tokend-js-sdk'
+import { Sdk } from '@/sdk'
 
 export default {
   name: 'seed-login',
@@ -56,7 +56,7 @@ export default {
 
   methods: {
     async seedLogin () {
-      if (!Sdk.Keypair.isValidSecretKey(this.form.seed)) {
+      if (!Sdk.base.Keypair.isValidSecretKey(this.form.seed)) {
         this.$store.dispatch('SET_ERROR', 'Invalid seed')
         return
       }

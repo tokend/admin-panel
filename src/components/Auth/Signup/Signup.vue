@@ -103,7 +103,6 @@
 import Vue from 'vue'
 import Qrcode from 'v-qrcode'
 import StellarWallet from 'tokend-wallet-js-sdk'
-import { Keypair } from 'tokend-js-sdk'
 import { Sdk } from '@/sdk'
 var config = require('@/config')
 import GAuth from '../../settings/GAuth.vue'
@@ -135,7 +134,7 @@ export default {
   },
 
   created () {
-    this.credentials.seed = Keypair.random().secret()
+    this.credentials.seed = Sdk.base.Keypair.random().secret()
   },
 
   methods: {
@@ -198,7 +197,7 @@ export default {
     },
 
     async submit () {
-      this.credentials.keypair = Keypair.fromSecret(this.credentials.seed)
+      this.credentials.keypair = Sdk.base.Keypair.fromSecret(this.credentials.seed)
       this.credentials.publicKey = this.credentials.keypair.accountId()
       this.$store.commit('OPEN_LOADER')
       this.validate().then((data) => {

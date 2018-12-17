@@ -70,7 +70,6 @@
 <script>
   import api from '@/api'
   import { Sdk } from '@/sdk'
-  import { PreIssuanceRequest, xdr } from 'tokend-js-sdk'
   import errors from '@/errors'
 
   import localize from '@/utils/localize'
@@ -137,8 +136,8 @@
       parsePreIssuances (issuances) {
         const items = issuances
           .map(function (item) {
-            const _xdr = xdr.PreIssuanceRequest.fromXDR(item.preEmission, 'hex')
-            const result = PreIssuanceRequest.dataFromXdr(_xdr)
+            const _xdr = Sdk.xdr.PreIssuanceRequest.fromXDR(item.preEmission, 'hex')
+            const result = Sdk.base.PreIssuanceRequest.dataFromXdr(_xdr)
 
             result.xdr = _xdr
             result.isUsed = item.used

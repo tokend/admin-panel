@@ -36,7 +36,7 @@
 
 <script>
 import Vue from 'vue'
-import { xdr } from 'tokend-js-sdk'
+import { Sdk } from '@/sdk'
 import trim from 'lodash/trim'
 
 export default {
@@ -87,7 +87,7 @@ function decamelize (str, prefixForRemove = '') {
 }
 
 function convertPolicyToString (policy) {
-  const xdrEnumValues = xdr.AssetPolicy.values()
+  const xdrEnumValues = Sdk.xdr.AssetPolicy.values()
   return trim(xdrEnumValues
     .filter(pol => (pol.value & policy) !== 0)
     .map(pol => decamelize(pol.name, 'asset'))

@@ -217,7 +217,6 @@
   import { Sdk } from '@/sdk'
   import { xdrTypeFromValue } from '@/utils/xdrTypeFromValue'
   import { SelectField, InputField } from '@comcom/fields'
-  import { Keypair } from 'tokend-js-sdk'
   import {
     ASSET_POLICIES,
     DEFAULT_MAX_AMOUNT,
@@ -356,7 +355,7 @@
         if (!alias) return
 
         let address = ''
-        if (Keypair.isValidPublicKey(alias)) {
+        if (Sdk.base.Keypair.isValidPublicKey(alias)) {
           address = alias
         } else {
           try {

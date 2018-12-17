@@ -341,7 +341,6 @@
 
 <script>
 import Vue from 'vue'
-import { Keypair } from 'tokend-js-sdk'
 import difference from 'lodash/difference'
 import accounts from '@/api/accounts'
 import InputField from '@comcom/fields/InputField'
@@ -615,7 +614,7 @@ export default {
       this.formErrors.accountId.message = ''
       this.formErrors.weight.message = ''
 
-      if (!Keypair.isValidPublicKey(this.params.accountId)) {
+      if (!Sdk.base.Keypair.isValidPublicKey(this.params.accountId)) {
         this.formErrors.accountId.message = 'Enter a valid account address'
         valid = false
       }

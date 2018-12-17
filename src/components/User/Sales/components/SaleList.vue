@@ -92,7 +92,6 @@
   import _ from 'lodash'
   import { Sdk } from '@/sdk'
   import config from '@/config'
-  import { Keypair } from 'tokend-js-sdk'
 
   export default {
     components: {
@@ -132,7 +131,7 @@
     methods: {
       async getOwner () {
         const emailRegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-        if (Keypair.isValidPublicKey(this.owner)) {
+        if (Sdk.base.Keypair.isValidPublicKey(this.owner)) {
           this.filters.owner = this.owner
         } else if (emailRegExp.test(this.owner)) {
           this.filters.owner = await api.users.getAccountIdByEmail(this.owner)

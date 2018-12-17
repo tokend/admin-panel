@@ -1,12 +1,11 @@
-const Operation = require('tokend-js-sdk').Operation
-const xdr = require('tokend-js-sdk').xdr
+import { Sdk } from '@/sdk'
 
 function parseEnvelope (envelope) {
   const buffer = new Buffer(envelope, 'base64')
-  const transaction = xdr.TransactionEnvelope.fromXDR(buffer)
+  const transaction = Sdk.xdr.TransactionEnvelope.fromXDR(buffer)
   const operations = transaction.tx().operations()
-  if (operations.length === 1) return Operation.operationToObject(operations[0])
-  return operations.map(operation => Operation.operationToObject(operation)) // .operationToObject(operations)
+  if (operations.length === 1) return Sdk.base.Operation.operationToObject(operations[0])
+  return operations.map(operation => Sdk.base.Operation.operationToObject(operation)) // .operationToObject(operations)
 }
 
 console.log(parseEnvelope(global.process.argv[2]))
