@@ -33,8 +33,7 @@ export default {
       policies: +params.policies,
       physicalPrice: '' + params.physicalPrice,
       physicalPriceCorrection: '' + params.physicalPriceCorrection,
-      maxPriceStep: '' + params.maxPriceStep,
-      source: config.MASTER_ACCOUNT
+      maxPriceStep: '' + params.maxPriceStep
     })
     return (await Sdk.horizon.transactions.submitOperations(operation))
   },
@@ -58,8 +57,7 @@ export default {
       policies: +params.policies,
       physicalPrice: '' + params.physicalPrice,
       physicalPriceCorrection: '' + params.physicalPriceCorrection,
-      maxPriceStep: '' + params.maxPriceStep,
-      source: config.MASTER_ACCOUNT
+      maxPriceStep: '' + params.maxPriceStep
     })
 
     return (await Sdk.horizon.transactions.submitOperations(operation))

@@ -24,7 +24,6 @@ export const requests = {
         requestID: item.id,
         requestHash: item.hash,
         requestType: typeof item.request_type_i === 'undefined' ? item.requestTypeI : item.request_type_i,
-        source: config.MASTER_ACCOUNT,
         action,
         reason
       })
@@ -38,7 +37,6 @@ export const requests = {
         requestID: item.id,
         requestHash: item.hash,
         requestType: item.request_type_i || item.requestTypeI,
-        source: config.MASTER_ACCOUNT,
         action,
         reason,
         externalDetails: {}
@@ -99,7 +97,6 @@ export const requests = {
     operations.push(Sdk.base.ReviewRequestBuilder.reviewLimitsUpdateRequest({
       requestHash: params.request.hash,
       requestType: params.request.request_type_i || params.request.requestTypeI,
-      source: config.MASTER_ACCOUNT,
       action: Sdk.xdr.ReviewRequestOpAction.approve().value,
       reason: '',
       requestID: params.request.id,
@@ -125,7 +122,6 @@ export const requests = {
     const operation = Sdk.base.ReviewRequestBuilder.reviewLimitsUpdateRequest({
       requestHash: params.request.hash,
       requestType: params.request.request_type_i || params.request.requestTypeI,
-      source: config.MASTER_ACCOUNT,
       action: params.isPermanent
         ? Sdk.xdr.ReviewRequestOpAction.permanentReject().value
         : Sdk.xdr.ReviewRequestOpAction.reject().value,
