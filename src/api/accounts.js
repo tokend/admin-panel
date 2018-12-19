@@ -14,15 +14,15 @@ export default {
     const operation = Sdk.base.SetOptionsBuilder.setOptions({
       signer
     })
-
-    return (await Sdk.horizon.transactions.submitOperations(operation)).data
+    const response = await Sdk.horizon.transactions.submitOperations(operation)
+    return response.data
   },
 
   async manageMaster (weight) {
     const operation = Sdk.base.SetOptionsBuilder.setOptions({
       masterWeight: Number(weight)
     })
-
-    return (await Sdk.horizon.transactions.submitOperations(operation)).data
+    const response = await Sdk.horizon.transactions.submitOperations(operation)
+    return response.data
   }
 }
