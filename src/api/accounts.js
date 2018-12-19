@@ -1,5 +1,3 @@
-import config from '../config'
-
 import { Sdk } from '@/sdk'
 
 export default {
@@ -14,8 +12,7 @@ export default {
     if (params.name) signer.name = params.name
 
     const operation = Sdk.base.SetOptionsBuilder.setOptions({
-      signer,
-      source: config.MASTER_ACCOUNT
+      signer
     })
 
     return (await Sdk.horizon.transactions.submitOperations(operation)).data
@@ -23,7 +20,6 @@ export default {
 
   async manageMaster (weight) {
     const operation = Sdk.base.SetOptionsBuilder.setOptions({
-      source: config.MASTER_ACCOUNT,
       masterWeight: Number(weight)
     })
 
