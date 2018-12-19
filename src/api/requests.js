@@ -305,8 +305,6 @@ export const requests = {
     }))
   },
 
-  // legacy
-
   async getPreissuanceRequests (asset) {
     if (asset.toLowerCase() === 'all') {
       asset = ''
