@@ -5,7 +5,7 @@ export class TokenRequest extends ReviewableRequest {
   constructor (record) {
     console.log(record)
     super(record)
-    this.operationDetails = this.record[this._requestType()]
+    this.operationDetails = this.record[snakeToCamekCase(this.record.requestType)]
   }
 
   get code () {
@@ -54,9 +54,5 @@ export class TokenRequest extends ReviewableRequest {
 
   get updateDate () {
     return this.record.updatedAt
-  }
-
-  _requestType () {
-    return snakeToCamekCase(this.record.requestType)
   }
 }
