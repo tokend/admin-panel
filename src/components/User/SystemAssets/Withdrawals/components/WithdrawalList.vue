@@ -81,6 +81,7 @@
 
 <script>
 import api from '@/api'
+import { Sdk } from '@/sdk'
 import {
   DEFAULT_QUOTE_ASSET,
   REQUEST_STATES,
@@ -130,7 +131,7 @@ export default {
 
     async getAssets () {
       try {
-        this.assets = (await api.assets.getAssets())
+        this.assets = (await Sdk.horizon.assets.getAll()).data
           .filter(item => (item.policy & ASSET_POLICIES.baseAsset))
           .sort((assetA, assetB) => assetA.code > assetB.code ? 1 : -1)
       } catch (error) {

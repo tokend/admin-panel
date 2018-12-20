@@ -63,7 +63,6 @@
 </template>
 
 <script>
-import api from '@/api'
 import { Sdk } from '@/sdk'
 import config from '@/config'
 import { InputField, SelectField } from '@comcom/fields'
@@ -109,7 +108,8 @@ export default {
   methods: {
     async getAssets () {
       try {
-        const list = (await api.assets.getAllSystemAssets()).data || []
+        const list = (await Sdk.horizon.assets
+          .getAll({ owner: config.MASTER_ACCOUNT })).data || []
         const issuableAssets = list.filter(item => item.maxIssuanceAmount > 0)
         this.assets = issuableAssets
         this.form.asset = (issuableAssets[0] || {}).code

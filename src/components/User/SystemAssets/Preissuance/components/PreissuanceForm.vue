@@ -68,8 +68,8 @@
 </template>
 
 <script>
-  import api from '@/api'
   import { Sdk } from '@/sdk'
+  import config from '@/config'
   import errors from '@/errors'
 
   import localize from '@/utils/localize'
@@ -97,7 +97,9 @@
         this.$store.commit('OPEN_LOADER')
 
         try {
-          this.assets = await api.assets.getSystemAssets()
+          this.assets = (await Sdk.horizon.assets.getAll({
+            owner: config.MASTER_ACCOUNT
+          })).data
         } catch (error) {
           this.$store.dispatch('SET_ERROR', 'Cannot load asset list. Please reload the page')
         }
@@ -159,7 +161,7 @@
           } else {
             this.fileInfo.push({
               fileName: this.temporaryFileName,
-              preissuedAssetSigner: asset.preissued_asset_signer,
+              preissuedAssetSigner: asset.preissuedAssetSigner,
               issuance: items[i]
             })
           }

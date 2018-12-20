@@ -374,22 +374,6 @@
     },
 
     methods: {
-      sortFees (fees) {
-        if (!Object.keys(fees).length) return fees
-
-        const res = Object.assign({}, fees)
-        for (const key in res) {
-          if (res.hasOwnProperty(key)) {
-            res[key].sort((a, b) => a.exists === b.exists
-              ? a.lowerBound - b.lowerBound
-              : a.exists ? 1 : -1
-            )
-          }
-        }
-
-        return res
-      },
-
       composeRequestFilters (filters) {
         if (!Object.keys(filters).length) return filters
 
@@ -406,8 +390,8 @@
 
       async getAssetsAndPairs () {
         try {
-          this.assets = await api.assets.getAssets()
-          this.assetPairs = await api.assets.getAssetPairs()
+          this.assets = (await Sdk.horizon.assets.getAll()).data
+          this.assetPairs = (await Sdk.horizon.assetPairs.getAll()).data
         } catch (error) {
           console.error(error)
           this.$store.dispatch('SET_ERROR', 'Cannot load asset list. Please try again later')

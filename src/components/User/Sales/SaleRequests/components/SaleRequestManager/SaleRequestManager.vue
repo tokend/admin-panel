@@ -142,7 +142,8 @@ export default {
     async getRequest (id) {
       try {
         this.request.sale = await this.getSaleRequest(id)
-        this.request.token = await this.getToken(this.request.sale.baseAsset)
+        this.request.token = (await await Sdk.horizon.assets
+          .get(this.request.sale.baseAsset)).data
         this.request.isReady = true
       } catch (error) {
         error.showMessage('Cannot get fund request. Please try again later')
@@ -152,11 +153,6 @@ export default {
 
     getSaleRequest (id) {
       return api.requests.get(id)
-    },
-
-    async getToken (sale) {
-      const response = (await api.assets.get(sale)).data
-      return response
     },
 
     showRejectForm () {

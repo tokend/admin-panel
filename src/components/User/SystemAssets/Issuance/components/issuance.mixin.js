@@ -1,4 +1,5 @@
 import api from '@/api'
+import { Sdk } from '@/sdk'
 import localize from '@/utils/localize'
 import SelectField from '@comcom/fields/SelectField'
 import Bus from '@/utils/EventBus'
@@ -43,7 +44,7 @@ export default {
     async getAssets () {
       try {
         this.assets = this.assets.concat(
-          (await api.assets.getAssets())
+          (await Sdk.horizon.assets.getAll()).data
             .filter(item => (item.policy & ASSET_POLICIES.baseAsset))
             .sort((assetA, assetB) => assetA.code > assetB.code ? 1 : -1)
             .map(asset => asset.code)

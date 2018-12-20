@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import api from '@/api'
+import { Sdk } from '@/sdk'
 import { DateFormatter } from '@comcom/formatters'
 import { EmailGetter } from '@comcom/getters'
 export default {
@@ -66,7 +66,7 @@ export default {
   methods: {
     async getList ({ baseAsset }) {
       try {
-        const response = await api.assets.getHolders(baseAsset)
+        const response = await Sdk.horizon.assets.getHolders(baseAsset)
         this.list = response.data
         this.isLoaded = true
       } catch (error) {

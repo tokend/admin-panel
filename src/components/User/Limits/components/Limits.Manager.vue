@@ -331,7 +331,7 @@
       },
 
       async getAssets () {
-        this.assets = (await api.assets.getAll()).data
+        this.assets = (await Sdk.horizon.assets.getAll()).data
       },
       async getAccountIdByEmail (email) {
         this.filters.address = await api.users.getAccountIdByEmail(email)

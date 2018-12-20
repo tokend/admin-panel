@@ -75,7 +75,7 @@
 </template>
 
 <script>
-import api from '@/api'
+import { Sdk } from '@/sdk'
 import { AssetAmountFormatter } from '@comcom/formatters'
 import { ASSET_PAIR_POLICIES_VERBOSE } from '@/constants'
 import 'mdi-vue/HelpCircleIcon'
@@ -104,7 +104,7 @@ export default {
       this.isLoaded = false
       this.isFailed = false
       try {
-        const response = await api.assets.getPairs()
+        const response = await Sdk.horizon.assetPairs.getAll()
         this.list = response.data
         this.isLoaded = true
       } catch (error) {
