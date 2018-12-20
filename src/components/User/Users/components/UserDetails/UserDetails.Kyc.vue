@@ -180,7 +180,8 @@ export default {
       this.isFailed = false
 
       try {
-        const kycFormResponse = (await Sdk.api.blobs.get(this.blobId, this.user.id)).data
+        const response = await Sdk.api.blobs.get(this.blobId, this.user.id)
+        const kycFormResponse = response.data
         this.kyc = deepCamelCase(fromKycTemplate(JSON.parse(kycFormResponse.value)))
         this.isLoaded = true
       } catch (error) {

@@ -109,7 +109,8 @@
       localize,
       async getAccount (id) {
         try {
-          this.requestorAccount = (await await Sdk.horizon.account.get(id)).data
+          const response = await await Sdk.horizon.account.get(id)
+          this.requestorAccount = response.data
         } catch (error) {
           error.showMessage('Cannot load initiator account')
         }

@@ -131,7 +131,8 @@ export default {
 
     async getAssets () {
       try {
-        this.assets = (await Sdk.horizon.assets.getAll()).data
+        const response = await Sdk.horizon.assets.getAll()
+        this.assets = response.data
           .filter(item => (item.policy & ASSET_POLICIES.baseAsset))
           .sort((assetA, assetB) => assetA.code > assetB.code ? 1 : -1)
       } catch (error) {

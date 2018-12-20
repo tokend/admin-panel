@@ -60,10 +60,11 @@ export default {
   methods: {
     async getUpdates ({ ownerId: owner }) {
       try {
-        this.updates = (await Sdk.api.blobs.getAll({
+        const response = await Sdk.api.blobs.getAll({
           fund_id: this.sale.id,
           type: BLOB_TYPES.saleUpdate
-        }, owner)).data.map(attr => JSON.parse(attr.value))
+        }, owner)
+        this.updates = response.data.map(attr => JSON.parse(attr.value))
         this.isLoaded = true
       } catch (e) {
         console.error(e)

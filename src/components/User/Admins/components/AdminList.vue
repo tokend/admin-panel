@@ -77,7 +77,8 @@ export default {
     async getAdminList () {
       this.$store.commit('OPEN_LOADER')
       try {
-        const { signers } = (await Sdk.horizon.account.get(this.masterPubKey)).data
+        const response = await Sdk.horizon.account.get(this.masterPubKey)
+        const { signers } = response.data
         this.list = signers
           .map(signer =>
             signer.publicKey === this.masterPubKey

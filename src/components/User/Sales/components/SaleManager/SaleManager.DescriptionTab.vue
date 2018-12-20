@@ -45,7 +45,8 @@ export default {
   methods: {
     async getDescription ({ ownerId: userId, description: blobId }) {
       try {
-        const blob = (await Sdk.api.blobs.get(blobId, userId)).data
+        const response = await Sdk.api.blobs.get(blobId, userId)
+        const blob = response.data
         this.description = blob.value
         this.isLoaded = true
       } catch (error) {

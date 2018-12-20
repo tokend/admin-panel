@@ -390,8 +390,10 @@
 
       async getAssetsAndPairs () {
         try {
-          this.assets = (await Sdk.horizon.assets.getAll()).data
-          this.assetPairs = (await Sdk.horizon.assetPairs.getAll()).data
+          const response = await Sdk.horizon.assets.getAll()
+          this.assets = response.data
+          const assetsResponse = await Sdk.horizon.assetPairs.getAll()
+          this.assetPairs = assetsResponse.data
         } catch (error) {
           console.error(error)
           this.$store.dispatch('SET_ERROR', 'Cannot load asset list. Please try again later')
@@ -401,7 +403,8 @@
       async getFees () {
         try {
           const filters = this.composeRequestFilters(this.filters)
-          this.fees = (await Sdk.horizon.fees.getAll(filters)).data.fees
+          const response = await Sdk.horizon.fees.getAll(filters)
+          this.fees = response.data.fees
         } catch (error) {
           console.error(error)
           this.$store.dispatch('SET_ERROR', 'Cannot load fee list. Please try again later')

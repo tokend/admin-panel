@@ -269,7 +269,8 @@ export default {
     safeGet,
     async getAsset () {
       try {
-        this.asset = (await Sdk.horizon.assets.get(this.assetCode)).data
+        const response = await Sdk.horizon.assets.get(this.assetCode)
+        this.asset = response.data
       } catch (error) {
         console.error(error)
         this.$store.dispatch('SET_ERROR', 'Receiving asset failed. Please try again later')
@@ -324,7 +325,8 @@ export default {
 
     async uploadFile (type) {
       if (!this[type].file) return
-      const config = (await Sdk.api.documents.create(type, this[type].mime)).data
+      const response = await Sdk.api.documents.create(type, this[type].mime)
+      const config = response.data
       await api.documents.uploadFile(this[type].file, config, this[type].mime)
       this.asset.details[type === DOCUMENT_TYPES.tokenTerms ? 'terms' : 'logo'] = {
         key: config.key,

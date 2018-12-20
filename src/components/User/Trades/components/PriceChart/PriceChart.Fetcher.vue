@@ -64,7 +64,8 @@ export default {
         this.priceHistory = {}
         const pair = new AssetPair(this.filters.pair)
         Sdk.horizon.charts.get(`${pair.base}-${pair.quote}`)
-        this.priceHistory = (await Sdk.horizon.charts.get(`${pair.base}-${pair.quote}`)).data
+        const response = await Sdk.horizon.charts.get(`${pair.base}-${pair.quote}`)
+        this.priceHistory = response.data
         this.isLoaded = true
       } catch (error) {
         console.error(error)

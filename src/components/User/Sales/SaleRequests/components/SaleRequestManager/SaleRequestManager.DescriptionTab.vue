@@ -70,8 +70,8 @@ export default {
       const userId = saleRequest.requestor
       const blobId = (saleRequest.details || {}).description
       try {
-        const blob = (await Sdk.api.blobs.get(blobId, userId)).data
-        this.description = blob.value
+        const response = await Sdk.api.blobs.get(blobId, userId)
+        this.description = response.data.value
         this.isLoaded = true
       } catch (error) {
         if (error.status === 404) {

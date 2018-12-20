@@ -108,7 +108,8 @@ export const requests = {
           Sdk.base.ManageLimitsBuilder.createLimits(limits)
         )
       })
-    return (await Sdk.horizon.transactions.submitOperations(...operations)).data
+    const response = await Sdk.horizon.transactions.submitOperations(...operations)
+    return response.data
   },
 
   async rejectLimitsUpdate (params) {
@@ -129,7 +130,8 @@ export const requests = {
       requestID: params.request.id,
       newLimits: newLimits[0]
     })
-    return (await Sdk.horizon.transactions.submitOperations(operation)).data
+    const response = await Sdk.horizon.transactions.submitOperations(operation)
+    return response.data
   },
 
   async reject ({ reason, isPermanent = false }, ...requests) {
@@ -218,12 +220,13 @@ export const requests = {
           externalDetails: {}
         }
       ))
-
-    return (await Sdk.horizon.transactions.submitOperations(...operations)).data
+    const response = await Sdk.horizon.transactions.submitOperations(...operations)
+    return response.data
   },
 
   async get (id) {
-    return (await Sdk.horizon.request.get(id)).data
+    const response = await Sdk.horizon.request.get(id)
+    return response.data
   },
 
   async getIssuanceRequests ({ asset, state }) {

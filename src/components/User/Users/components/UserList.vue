@@ -215,7 +215,8 @@
       },
 
       async generateFile () {
-        const list = (await this.getFullList()).data
+        const response = await this.getFullList()
+        const list = response.data
         this.txtURL = createTxtFile(this.usersListToCSV(list), 'text/csv;encoding:utf-8')
       },
 

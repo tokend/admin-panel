@@ -80,7 +80,8 @@ export default {
   methods: {
     async getSale (id) {
       try {
-        this.sale = (await Sdk.horizon.sales.get(id)).data
+        const response = await Sdk.horizon.sales.get(id)
+        this.sale = response.data
         this.isLoaded = true
       } catch (error) {
         error.showMessage('Cannot get fund details. Please try again later')

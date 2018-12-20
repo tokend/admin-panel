@@ -124,13 +124,14 @@ export default {
     async assignRequest (request) {
       try {
         this.request.sale = request
-        this.request.token = await Sdk.horizon.request.getAllForAssets({
+        const response = await Sdk.horizon.request.getAllForAssets({
           asset: this.request.sale.baseAsset.code,
           requestor: this.request.sale.baseAsset.requestor,
           state: this.request.sale.baseAsset.state,
           reviewer: this.request.sale.baseAsset.reviewer,
           order: 'desc'
-        }).data[0]
+        })
+        this.request.token = response.data[0]
         console.log(this.request.token)
         this.request.isReady = true
       } catch (error) {
@@ -142,8 +143,9 @@ export default {
     async getRequest (id) {
       try {
         this.request.sale = await this.getSaleRequest(id)
-        this.request.token = (await await Sdk.horizon.assets
-          .get(this.request.sale.baseAsset)).data
+        const response = await await Sdk.horizon.assets
+          .get(this.request.sale.baseAsset)
+        this.request.token = response.data
         this.request.isReady = true
       } catch (error) {
         error.showMessage('Cannot get fund request. Please try again later')

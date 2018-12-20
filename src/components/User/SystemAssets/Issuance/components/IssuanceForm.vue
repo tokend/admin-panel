@@ -108,8 +108,9 @@ export default {
   methods: {
     async getAssets () {
       try {
-        const list = (await Sdk.horizon.assets
-          .getAll({ owner: config.MASTER_ACCOUNT })).data || []
+        const response = await Sdk.horizon.assets
+          .getAll({ owner: config.MASTER_ACCOUNT })
+        const list = response.data || []
         const issuableAssets = list.filter(item => item.maxIssuanceAmount > 0)
         this.assets = issuableAssets
         this.form.asset = (issuableAssets[0] || {}).code
@@ -120,7 +121,8 @@ export default {
     },
 
     async getBalanceId () {
-      let account = (await Sdk.horizon.account.get(this.form.receiver)).data
+      const response = await Sdk.horizon.account.get(this.form.receiver)
+      let account = response.data
       const balance = account.balances.find(item => item.asset === this.form.asset)
 
       if (!balance) {
@@ -135,7 +137,8 @@ export default {
           console.error(error)
           this.$store.dispatch('SET_ERROR', 'Unexpected error')
         }
-        account = (await Sdk.horizon.account.get(this.form.receiver)).data
+        const response = await Sdk.horizon.account.get(this.form.receiver)
+        account = response.data
         return account.balances.find(item => item.asset === this.form.asset).balanceId
       } else {
         return balance.balanceId

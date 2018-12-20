@@ -64,15 +64,18 @@ export default {
         quote_asset: pair.quote
       }
       try {
-        this.book.bids = (await Sdk.horizon.orderBook.getAll({
+        const response = await Sdk.horizon.orderBook.getAll({
           ...params,
           is_buy: true
-        })).data
-        this.book.asks = (await Sdk.horizon.orderBook.getAll({
+        })
+        this.book.bids = response.data
+        const orderBookResponse = await Sdk.horizon.orderBook.getAll({
           ...params,
           is_buy: false
-        })).data
-        this.book.history = (await Sdk.horizon.trades.getPage(params)).data
+        })
+        this.book.asks = orderBookResponse.data
+        const tradesResponse = await Sdk.horizon.trades.getPage(params)
+        this.book.history = tradesResponse.data
         this.isLoaded = true
       } catch (error) {
         error.showMessage('Failed to get order book. Please try again later')

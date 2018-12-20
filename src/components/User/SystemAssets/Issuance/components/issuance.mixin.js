@@ -43,8 +43,9 @@ export default {
     localize,
     async getAssets () {
       try {
+        const response = await Sdk.horizon.assets.getAll()
         this.assets = this.assets.concat(
-          (await Sdk.horizon.assets.getAll()).data
+          response.data
             .filter(item => (item.policy & ASSET_POLICIES.baseAsset))
             .sort((assetA, assetB) => assetA.code > assetB.code ? 1 : -1)
             .map(asset => asset.code)

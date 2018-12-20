@@ -106,7 +106,8 @@ export default {
   methods: {
     async getThresholds () {
       try {
-        const { thresholds } = (await Sdk.horizon.account.get(config.MASTER_ACCOUNT)).data
+        const response = await Sdk.horizon.account.get(config.MASTER_ACCOUNT)
+        const { thresholds } = response.data
         this.thresholds = thresholds
       } catch (error) {
         console.error(error)

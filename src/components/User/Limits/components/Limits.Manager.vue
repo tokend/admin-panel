@@ -285,13 +285,14 @@
         }, {})
 
         async function getLimit (statsOpType) {
-          return (await Sdk.horizon.limits.get({
+          const response = await Sdk.horizon.limits.get({
             account_id: this.filters.address,
             account_type: this.filters.accountType,
             stats_op_type: statsOpType,
             asset: this.filters.asset,
             email: this.filters.email
-          })).data
+          })
+          return response.data
         }
       },
 
@@ -331,7 +332,8 @@
       },
 
       async getAssets () {
-        this.assets = (await Sdk.horizon.assets.getAll()).data
+        const response = await Sdk.horizon.assets.getAll()
+        this.assets = response.data
       },
       async getAccountIdByEmail (email) {
         this.filters.address = await api.users.getAccountIdByEmail(email)

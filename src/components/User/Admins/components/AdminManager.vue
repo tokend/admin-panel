@@ -497,7 +497,8 @@ export default {
     async loadSigner () {
       this.$store.commit('OPEN_LOADER')
       try {
-        const signer = (await Sdk.horizon.account.getSigner(this.id)).data
+        const response = await Sdk.horizon.account.getSigner(this.id)
+        const signer = response.data
         this.params = {
           accountId: signer.publicKey,
           weight: signer.weight,

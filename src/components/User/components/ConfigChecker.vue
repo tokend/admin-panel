@@ -36,8 +36,9 @@ const CHECK_LIST = [
   {
     message: 'Please set exactly 1 quote asset',
     async check ({ store, api }) {
-      return ((await Sdk.horizon.assets
-        .getAll({ owner: config.MASTER_ACCOUNT })).data || [])
+      const response = (await Sdk.horizon.assets
+        .getAll({ owner: config.MASTER_ACCOUNT }))
+      return (response.data || [])
         .filter(item => item && item.policy & ASSET_POLICIES.statsQuoteAsset)
         .length !== 1
     }

@@ -124,7 +124,8 @@ export default {
       this.isPending = false
     },
     async getList () {
-      this.list = (await Sdk.horizon.keyValue.getAll()).data
+      const response = await Sdk.horizon.keyValue.getAll()
+      this.list = response.data
 
       if (!this.list.length) {
         return

@@ -89,7 +89,8 @@ export default {
       }
       if (balanceId) {
         this.balanceId = balanceId
-        this.accountId = (await Sdk.horizon.balances.getAccount(balanceId)).data.accountId
+        const response = await Sdk.horizon.balances.getAccount(balanceId)
+        this.accountId = response.data.accountId
         return
       }
       throw new Error('You should provide either account or balance id')

@@ -106,12 +106,13 @@ export default {
       const quoteAsset = this.filters.quoteAsset
 
       try {
-        this.participants = (await Sdk.horizon.orderBook.getAll({
+        const response = await Sdk.horizon.orderBook.getAll({
           order_book_id: id,
           base_asset: baseAsset,
           quote_asset: quoteAsset,
           is_buy: true
-        })).data
+        })
+        this.participants = response.data
         this.isLoaded = true
       } catch (error) {
         this.isFailed = true

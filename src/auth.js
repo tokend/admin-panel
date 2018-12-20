@@ -133,7 +133,8 @@ export default {
     const result = {}
     let signer = {}
     try {
-      signer = (await Sdk.horizon.account.getSigner(accountId)).data
+      const response = await Sdk.horizon.account.getSigner(accountId)
+      signer = response.data
     } catch (error) {
       console.error(error)
       error.message = 'Cannot get signer types'

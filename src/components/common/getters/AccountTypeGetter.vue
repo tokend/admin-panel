@@ -22,7 +22,8 @@
     },
     methods: {
       async getAccount () {
-        this.account = (await Sdk.horizon.account.get(this.accountId)).data
+        const response = await Sdk.horizon.account.get(this.accountId)
+        this.account = response.dFata
       }
     }
   }

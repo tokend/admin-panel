@@ -97,9 +97,10 @@
         this.$store.commit('OPEN_LOADER')
 
         try {
-          this.assets = (await Sdk.horizon.assets.getAll({
+          const response = await Sdk.horizon.assets.getAll({
             owner: config.MASTER_ACCOUNT
-          })).data
+          })
+          this.assets = response.data
         } catch (error) {
           this.$store.dispatch('SET_ERROR', 'Cannot load asset list. Please reload the page')
         }
