@@ -196,7 +196,7 @@ export default {
       })
     },
 
-    async submit () {
+    submit () {
       this.credentials.keypair = Sdk.base.Keypair.fromSecret(this.credentials.seed)
       this.credentials.publicKey = this.credentials.keypair.accountId()
       this.$store.commit('OPEN_LOADER')
