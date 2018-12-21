@@ -34,16 +34,16 @@
             </div>
             <button class="app-list__li" v-for="item in list.data"
                     :key="item.id"
-                    @click="toggleViewMode(item.details[snakeToCamekCase(item.details.requestType)].accountToUpdateKyc)">
+                    @click="toggleViewMode(item.details[snakeToCamelCase(item.details.requestType)].accountToUpdateKyc)">
               <email-getter class="app-list__cell app-list__cell--important"
-                           :address="item.details[snakeToCamekCase(item.details.requestType)].accountToUpdateKyc"
+                           :address="item.details[snakeToCamelCase(item.details.requestType)].accountToUpdateKyc"
                             is-titled/>
               <span class="app-list__cell app-list__cell--right">{{item.requestState}}</span>
               <span class="app-list__cell app-list__cell--right">
-                {{ACCOUNT_TYPES_VERBOSE[item.details[snakeToCamekCase(item.details.requestType)].accountTypeToSet.int]}}
+                {{ACCOUNT_TYPES_VERBOSE[item.details[snakeToCamelCase(item.details.requestType)].accountTypeToSet.int]}}
               </span>
               <span class="app-list__cell app-list__cell--right">{{formatDate(item.updatedAt)}}</span>
-              <kyc-type class="app-list__cell app-list__cell--right" :accountId="item.details[snakeToCamekCase(item.details.requestType)].accountToUpdateKyc"/>
+              <kyc-type class="app-list__cell app-list__cell--right" :accountId="item.details[snakeToCamelCase(item.details.requestType)].accountToUpdateKyc"/>
             </button>
           </div>
 
@@ -95,7 +95,7 @@
 
   import SelectField from '@comcom/fields/SelectField'
   import InputField from '@comcom/fields/InputField'
-  import { snakeToCamekCase } from '@/utils/un-camel-case'
+  import { snakeToCamelCase } from '@/utils/un-camel-case'
 
   import {
     REQUEST_STATES,
@@ -140,7 +140,7 @@
     },
 
     methods: {
-      snakeToCamekCase,
+      snakeToCamelCase,
       async getList () {
         this.isLoading = true
         try {

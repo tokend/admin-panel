@@ -67,7 +67,7 @@
 
 <script>
 import api from '@/api'
-import { snakeToCamekCase } from '@/utils/un-camel-case'
+import { snakeToCamelCase } from '@/utils/un-camel-case'
 import InputField from '@comcom/fields/InputField'
 import SelectField from '@comcom/fields/SelectField'
 import { CREATE_TOKEN_REQUEST_STATES, REQUEST_STATES_STR, REQUEST_STATES } from '@/constants'
@@ -107,7 +107,7 @@ export default {
 
   methods: {
     getRequestType (request) {
-      return snakeToCamekCase(request.details.requestType)
+      return snakeToCamelCase(request.details.requestType)
     },
     async getList () {
       this.isPending = true

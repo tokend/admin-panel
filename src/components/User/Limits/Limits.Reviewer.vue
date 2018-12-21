@@ -131,7 +131,7 @@
   import { InputField, TextField } from '@comcom/fields'
   import Modal from '@comcom/modals/Modal'
   import { Sdk } from '@/sdk'
-  import { snakeToCamekCase } from '@/utils/un-camel-case'
+  import { snakeToCamelCase } from '@/utils/un-camel-case'
 
   import { ACCOUNT_TYPES_VERBOSE,
     REQUEST_STATES,
@@ -201,7 +201,7 @@
     async created () {
       await this.getRequest()
       const limitRequest = await api.requests.get(this.id)
-      this.desiredLimitDetails = limitRequest.details[snakeToCamekCase(limitRequest.details.requestType)].details || '{}'
+      this.desiredLimitDetails = limitRequest.details[snakeToCamelCase(limitRequest.details.requestType)].details || '{}'
     },
     computed: {
       currentLimits () {

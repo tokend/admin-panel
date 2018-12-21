@@ -1,7 +1,7 @@
 import { Sdk } from '@/sdk'
 
 export default {
-  createPair (params) {
+  async createPair (params) {
     const operation = Sdk.base.Operation.manageAssetPair({
       base: params.base,
       quote: params.quote,
@@ -11,10 +11,11 @@ export default {
       physicalPriceCorrection: '' + params.physicalPriceCorrection,
       maxPriceStep: '' + params.maxPriceStep
     })
-    return Sdk.horizon.transactions.submitOperations(operation)
+    const response = await Sdk.horizon.transactions.submitOperations(operation)
+    return response.data
   },
 
-  updatePair (params) {
+  async updatePair (params) {
     let action
     if (params.create) {
       action = Sdk.xdr.ManageAssetPairAction.create()
@@ -35,6 +36,7 @@ export default {
       physicalPriceCorrection: '' + params.physicalPriceCorrection,
       maxPriceStep: '' + params.maxPriceStep
     })
-    return Sdk.horizon.transactions.submitOperations(operation)
+    const response = await Sdk.horizon.transactions.submitOperations(operation)
+    return response.data
   }
 }
