@@ -1,4 +1,3 @@
-import server from '../utils/server'
 import { ServerCallBuilder } from './ServerCallBuilder'
 import { Sdk } from '@/sdk'
 
@@ -24,12 +23,5 @@ export default {
     const response = await Sdk.api.users.getPage({ email: email })
     const resultArray = response.data.filter(item => item.email === email)
     return resultArray[0].id
-  },
-
-  getUserIdByEmail (email) {
-    return server.get('/user_id', false, { email: email })
-      .then(r => {
-        return r.account_id
-      })
   }
 }

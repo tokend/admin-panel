@@ -359,7 +359,7 @@
           address = alias
         } else {
           try {
-            address = await api.users.getUserIdByEmail(alias)
+            address = await api.users.getAccountIdByEmail(alias)
           } catch (error) {
             address = ''
           }

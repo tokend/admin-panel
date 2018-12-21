@@ -164,7 +164,7 @@
       async getAccountIdByEmail () {
         let address
         try {
-          address = (await api.users.getUserIdByEmail(this.filters.email))
+          address = (api.users.getAccountIdByEmail(this.filters.email))
         } catch (e) {
           address = ''
         }
