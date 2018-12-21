@@ -5,9 +5,6 @@ import { Sdk } from '@/sdk'
 const ScopedServerCallBuilder = ServerCallBuilder.makeScope()
   .registerResource('details')
 
-// user_id
-// details
-
 export default {
   getEmailsByAddresses (addresses) {
     return new ScopedServerCallBuilder()
