@@ -132,7 +132,6 @@ export default {
           order: 'desc'
         })
         this.request.token = response.data[0]
-        console.log(this.request.token)
         this.request.isReady = true
       } catch (error) {
         error.showMessage('Cannot get fund request. Pleazse try again later')

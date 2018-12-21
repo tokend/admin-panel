@@ -28,7 +28,6 @@ export default {
     const resultArray = response.data.filter(item => item.email === email)
     return resultArray[0].id
   },
-  // legacy
 
   getUserIdByEmail (email) {
     return server.get('/user_id', false, { email: email })

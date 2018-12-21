@@ -39,15 +39,15 @@ export class ReviewableRequest {
     return Sdk.horizon.transactions.submitOperations(operation)
   }
 
-  async _review (action, reason = '') {
+  _review (action, reason = '') {
     const operation = Sdk.base.ReviewRequestBuilder.reviewRequest({
       requestID: this.record.id,
       requestHash: this.record.hash,
-      requestType: this.record.requestTypeI, // Sdk.xdr.ReviewableRequestType.fromName('preIssuanceCreate').value,
+      requestType: this.record.requestTypeI,
       action,
       reason,
       source: config.MASTER_ACCOUNT
     })
-    return await Sdk.horizon.transactions.submitOperations(operation)
+    return Sdk.horizon.transactions.submitOperations(operation)
   }
 }
