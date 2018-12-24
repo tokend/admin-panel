@@ -4,7 +4,6 @@ import { Sdk } from '@/sdk'
 export const ASSET_POLICIES = Object.freeze(
   xdrEnumToConstant('AssetPolicy')
 )
-console.log(Sdk.xdr)
 export const ASSET_POLICIES_VERBOSE = {
   [ Sdk.xdr.AssetPolicy.transferable().value ]: 'Transferable',
   [ Sdk.xdr.AssetPolicy.baseAsset().value ]: 'Base asset',
