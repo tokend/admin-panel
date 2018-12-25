@@ -104,7 +104,7 @@ import Vue from 'vue'
 import Qrcode from 'v-qrcode'
 import StellarWallet from 'tokend-wallet-js-sdk'
 import { Sdk } from '@/sdk'
-var config = require('@/config')
+import config from '@/config'
 import GAuth from '../../settings/GAuth.vue'
 
 import InputField from '@comcom/fields/InputField'
@@ -139,15 +139,13 @@ export default {
 
   methods: {
     async isSigner () {
-      let timeout
       try {
         await Sdk.horizon.account.getSigner(this.credentials.publicKey, config.default.MASTER_ACCOUNT)
       } catch (e) {
         console.error(e)
-        timeout = setTimeout(this.isSigner, 5000)
+        setTimeout(this.isSigner, 5000)
         return
       }
-      clearTimeout(timeout)
       return this.createWallet()
     },
 
