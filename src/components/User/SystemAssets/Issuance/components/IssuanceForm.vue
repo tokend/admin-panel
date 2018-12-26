@@ -63,7 +63,8 @@
 </template>
 
 <script>
-import api from '@/api'
+import { Sdk } from '@/sdk'
+import config from '@/config'
 import { InputField, SelectField } from '@comcom/fields'
 import Bus from '@/utils/EventBus'
 import { AssetAmountFormatter } from '@comcom/formatters'
@@ -104,11 +105,12 @@ export default {
       return asset.availableForIssuance
     }
   },
-
   methods: {
     async getAssets () {
       try {
-        const list = (await api.assets.getAllSystemAssets()).data || []
+        const response = await Sdk.horizon.assets
+          .getAll({ owner: config.MASTER_ACCOUNT })
+        const list = response.data || []
         const issuableAssets = list.filter(item => item.maxIssuanceAmount > 0)
         this.assets = issuableAssets
         this.form.asset = (issuableAssets[0] || {}).code
@@ -119,21 +121,27 @@ export default {
     },
 
     async getBalanceId () {
-      const address = await api.users.getUserIdByEmail(this.form.receiver)
-      let account = await api.accounts.getAccountById(address)
+      const response = await Sdk.horizon.account.get(this.form.receiver)
+      let account = response.data
       const balance = account.balances.find(item => item.asset === this.form.asset)
 
       if (!balance) {
         try {
-          await api.users.createBalance(address, this.form.asset)
+          const operation = Sdk.base.Operation.manageBalance({
+            asset: this.form.asset,
+            action: Sdk.xdr.ManageBalanceAction.createUnique(),
+            destination: this.form.receiver
+          })
+          await Sdk.horizon.transactions.submitOperations(operation)
         } catch (error) {
           console.error(error)
           this.$store.dispatch('SET_ERROR', 'Unexpected error')
         }
-        account = await api.accounts.getAccountById(address)
-        return account.balances.find(item => item.asset === this.form.asset).balance_id
+        const response = await Sdk.horizon.account.get(this.form.receiver)
+        account = response.data
+        return account.balances.find(item => item.asset === this.form.asset).balanceId
       } else {
-        return balance.balance_id
+        return balance.balanceId
       }
     },
 
@@ -141,17 +149,16 @@ export default {
       if (receiver === '') {
         return Promise.reject(`The receiver has no ${this.form.asset} balance.`)
       }
-
-      const opts = {
-        receiver: receiver,
+      const operation = Sdk.base.CreateIssuanceRequestBuilder.createIssuanceRequest({
         asset: this.form.asset,
         amount: this.form.amount,
+        receiver: receiver,
         reference: this.form.reference,
+        source: config.MASTER_ACCOUNT,
+        externalDetails: {},
         allTasks: 0
-      }
-      opts.preEmissions = []
-
-      await api.emissions.manualEmission(opts)
+      })
+      await Sdk.horizon.transactions.submitOperations(operation)
       this.form.amount = null
       this.form.receiver = null
       this.form.reference = null

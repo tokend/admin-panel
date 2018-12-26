@@ -72,6 +72,7 @@
 
 <script>
 import api from '@/api'
+import { Sdk } from '@/sdk'
 import InputField from '@comcom/fields/InputField'
 import TickField from '@comcom/fields/TickField'
 import { DEFAULT_INPUT_STEP } from '@/constants'
@@ -111,7 +112,7 @@ export default {
     async getPair () {
       this.isLoaded = false
       try {
-        const response = await api.assets.getPairs()
+        const response = await Sdk.horizon.assetPairs.getAll()
         this.pair = response.data
           .find(({ base, quote }) => base === this.base && quote === this.quote)
         this.isLoaded = true

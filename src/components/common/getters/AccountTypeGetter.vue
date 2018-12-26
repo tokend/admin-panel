@@ -4,7 +4,7 @@
 
 <script>
   import { ACCOUNT_TYPES_VERBOSE } from '@/constants'
-  import api from '@/api'
+  import { Sdk } from '@/sdk'
 
   export default {
     props: ['accountId'],
@@ -22,7 +22,8 @@
     },
     methods: {
       async getAccount () {
-        this.account = (await api.accounts.get(this.accountId)).data
+        const response = await Sdk.horizon.account.get(this.accountId)
+        this.account = response.data
       }
     }
   }

@@ -79,13 +79,13 @@ new Vue({
 }).$mount('#app')
 
 import moment from 'moment'
-import StellarBase from 'tokend-js-sdk'
+import { Sdk } from '@/sdk'
 import { Validator } from 'vee-validate'
 
 Validator.installDateTimeValidators(moment)
 Validator.extend('accountId', {
   getMessage: field => 'The ' + field + ' invalid.',
-  validate: value => StellarBase.Keypair.isValidPublicKey(value)
+  validate: value => Sdk.base.Keypair.isValidPublicKey(value)
 })
 
 /* Vue plugins */

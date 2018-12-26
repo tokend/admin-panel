@@ -341,7 +341,6 @@
 
 <script>
 import Vue from 'vue'
-import { Keypair } from 'tokend-js-sdk'
 import difference from 'lodash/difference'
 import accounts from '@/api/accounts'
 import InputField from '@comcom/fields/InputField'
@@ -349,6 +348,7 @@ import TickField from '@comcom/fields/TickField'
 import { SIGNER_TYPES, SIGNER_TYPES_SECONDARY } from '@/constants'
 
 import { confirmAction } from '@/js/modals/confirmation_message'
+import { Sdk } from '@/sdk'
 
 const TOGGLE_SELECTIONS_BY_TYPE = {
   super: {
@@ -494,32 +494,32 @@ export default {
         : this.updateAdmin()
     },
 
-    loadSigner () {
+    async loadSigner () {
       this.$store.commit('OPEN_LOADER')
+      try {
+        const response = await Sdk.horizon.account.getSigner(this.id)
+        const signer = response.data
+        this.params = {
+          accountId: signer.publicKey,
+          weight: signer.weight,
+          signerIdentity: signer.signerIdentity,
+          signerType: signer.signerTypeI,
+          name: signer.publicKey === this.masterPubKey ? 'Master' : signer.signerName
+        }
 
-      return accounts.getSignerById(this.id)
-        .then(({ signer }) => {
-          this.params = {
-            accountId: signer.public_key,
-            weight: signer.weight,
-            signerIdentity: signer.signer_identity,
-            signerType: signer.signer_type_i,
-            name: signer.public_key === this.masterPubKey ? 'Master' : signer.signer_name
-          }
-
-          signer.signer_types.forEach((item) => {
-            this.signerTypes.primary.push(item.value)
-          })
-
-          this.params.name = signer.signer_name.split(':')[0]
-          this.signerTypes.secondary = Number(signer.signer_name.split(':')[1])
-          if (!this.signerTypes.secondary) this.signerTypes.secondary = 0
-
-          this.$store.commit('CLOSE_LOADER')
-        }).catch((err) => {
-          console.error(err)
-          this.$store.commit('CLOSE_LOADER')
+        signer.signerTypes.forEach((item) => {
+          this.signerTypes.primary.push(item.value)
         })
+
+        this.params.name = signer.signerName.split(':')[0]
+        this.signerTypes.secondary = Number(signer.signerName.split(':')[1])
+        if (!this.signerTypes.secondary) this.signerTypes.secondary = 0
+
+        this.$store.commit('CLOSE_LOADER')
+      } catch (e) {
+        console.error(e)
+        this.$store.commit('CLOSE_LOADER')
+      }
     },
 
     async addAdmin () {
@@ -532,12 +532,14 @@ export default {
 
       this.params.name = `${this.params.name}:${signerTypesSecondary}`
 
-      const request = this.params.accountId === this.masterPubKey ? accounts.manageMaster(this.params.weight) : accounts.manageSigner(this.params)
-
       this.$store.commit('OPEN_LOADER')
       this.isPending = true
       try {
-        await request
+        if (this.params.accountId === this.masterPubKey) {
+          await accounts.manageMaster(this.params.weight)
+        } else {
+          await accounts.manageSigner(this.params)
+        }
         this.$store.commit('CLOSE_LOADER')
         this.$store.dispatch('SET_INFO', 'Pending transaction for create administrator submitted')
         this.$router.push({ name: 'admins' })
@@ -558,13 +560,15 @@ export default {
         signerType: 0
       }
 
-      // for master account we can change only weight
-      const request = this.isMaster ? accounts.manageMaster(0) : accounts.manageSigner(data)
-
       this.isPending = true
       this.$store.commit('OPEN_LOADER')
       try {
-        await request
+        // for master account we can change only weight
+        if (this.isMaster) {
+          await accounts.manageMaster(0)
+        } else {
+          await accounts.manageSigner(data)
+        }
         this.$store.dispatch('SET_INFO', 'Pending transaction for delete administrator submitted')
         this.$store.commit('CLOSE_LOADER')
         this.$router.push({ name: 'admins' })
@@ -586,13 +590,15 @@ export default {
 
       this.params.name = `${this.params.name}:${signerTypesSecondary}`
 
-      // for master account we can change only weight
-      const request = this.isMaster ? accounts.manageMaster(this.params.weight) : accounts.manageSigner(this.params)
-
       this.$store.commit('OPEN_LOADER')
       this.isPending = true
       try {
-        await request
+        // for master account we can change only weight
+        if (this.isMaster) {
+          await accounts.manageMaster(this.params.weight)
+        } else {
+          await accounts.manageSigner(this.params)
+        }
         this.$store.commit('CLOSE_LOADER')
         this.$store.dispatch('SET_INFO', 'Pending transaction for update administrator submitted')
         this.$router.push({ name: 'admins' })
@@ -609,7 +615,7 @@ export default {
       this.formErrors.accountId.message = ''
       this.formErrors.weight.message = ''
 
-      if (!Keypair.isValidPublicKey(this.params.accountId)) {
+      if (!Sdk.base.Keypair.isValidPublicKey(this.params.accountId)) {
         this.formErrors.accountId.message = 'Enter a valid account address'
         valid = false
       }

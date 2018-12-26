@@ -21,39 +21,39 @@
       </li>
       <li>
         <span>Receiver address</span>
-        <span :title="request.externalDetails.address">{{request.externalDetails.address}}</span>
+        <span :title="request.details.withdraw.externalDetails.address">{{request.details.withdraw.externalDetails.address}}</span>
       </li>
-      <template v-if="request.reviewerDetails">
+      <template v-if="request.details.withdraw.reviewerDetails">
         <li>
           <span>Hash</span>
-          <span :title="request.reviewerDetails.hash">{{request.reviewerDetails.hash}}</span>
+          <span :title="request.details.withdraw.reviewerDetails.hash">{{request.details.withdraw.reviewerDetails.hash}}</span>
         </li>
         <li>
           <span>Transaction</span>
-          <span :title="request.reviewerDetails.tx">{{request.reviewerDetails.tx}}</span>
+          <span :title="request.details.withdraw.reviewerDetails.tx">{{request.details.withdraw.reviewerDetails.tx}}</span>
         </li>
       </template>
       <li>
         <span>Source amount</span>
-        <asset-amount-formatter :amount="request.amount" :asset="request.destAssetCode" />
+        <asset-amount-formatter :amount="request.details.withdraw.amount" :asset="request.details.withdraw.destAssetCode" />
       </li>
       <li>
         <span>Destination amount</span>
-        <asset-amount-formatter :amount="request.destAssetAmount" :asset="request.destAssetCode" />
+        <asset-amount-formatter :amount="request.details.withdraw.destAssetAmount" :asset="request.details.withdraw.destAssetCode" />
       </li>
       <li>
         <span>Fixed fee</span>
-        <asset-amount-formatter :amount="request.fixedFee" :asset="request.destAssetCode" />
+        <asset-amount-formatter :amount="request.details.withdraw.fixedFee" :asset="request.details.withdraw.destAssetCode" />
       </li>
       <li>
         <span>Percent fee</span>
-        <asset-amount-formatter :amount="request.percentFee" :asset="request.destAssetCode" />
+        <asset-amount-formatter :amount="request.details.withdraw.percentFee" :asset="request.details.withdraw.destAssetCode" />
       </li>
       <li>
         <span>Total fee</span>
         <asset-amount-formatter
-          :amount="Number(request.fixedFee) + Number(request.percentFee)"
-          :asset="request.destAssetCode"
+          :amount="Number(request.details.withdraw.fixedFee) + Number(request.details.withdraw.percentFee)"
+          :asset="request.details.withdraw.destAssetCode"
         />
       </li>
     </ul>
@@ -130,8 +130,8 @@ export default {
   props: ['request', 'assets'],
   computed: {
     reviewAllowed () {
-      return !this.assets
-        .find(item => item.destAssetCode === this.request.code)
+      return this.assets
+        .find(item => item.code === this.request.details.withdraw.destAssetCode)
         .policy & ASSET_POLICIES.twoStepWithdrawal
     }
   },

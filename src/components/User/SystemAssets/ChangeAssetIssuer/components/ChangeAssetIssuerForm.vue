@@ -42,8 +42,7 @@
 </template>
 
 <script>
-  import { ServerCallBuilder } from '../../../../../api/ServerCallBuilder'
-  import { Transaction } from 'tokend-js-sdk'
+  import { Sdk } from '@/sdk'
 
   export default {
     data () {
@@ -101,20 +100,10 @@
         }
         this.uploadBtnDisable = false
       },
-      sendTx () {
-        const transaction = new Transaction(this.transaction)
+      async sendTx () {
+        const transaction = new Sdk.base.Transaction(this.transaction)
         transaction.sign(this.$store.getters.keypair)
-        const envelope = transaction.toEnvelope().toXDR().toString('base64')
-
-        const ScopedServerCallBuilder =
-          ServerCallBuilder
-            .makeScope()
-            .registerResource('transactions')
-
-        return new ScopedServerCallBuilder()
-          .transactions()
-          .sign()
-          .post({ tx: envelope })
+        return await Sdk.horizon.transactions.submit(transaction)
       }
     }
   }

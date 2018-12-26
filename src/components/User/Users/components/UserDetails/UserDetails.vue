@@ -32,20 +32,20 @@
 
         <template v-if="latestRequest">
           <section class="user-details__section">
-            <kyc-general-section v-if="latestRequest.accountTypeToSet.string === USER_TYPES_STR.general"
-                                 :user="user" :blobId="latestRequest.kycData.blobId"/>
+            <kyc-general-section v-if="latestRequest.details.updateKyc.accountTypeToSet.string === USER_TYPES_STR.general"
+                                 :user="user" :blobId="latestRequest.details.updateKyc.kycData.blobId"/>
 
-            <kyc-syndicate-section v-if="latestRequest.accountTypeToSet.string === USER_TYPES_STR.syndicate"
-                                 :user="user" :blobId="latestRequest.kycData.blobId"
+            <kyc-syndicate-section v-if="latestRequest.details.updateKyc.accountTypeToSet.string === USER_TYPES_STR.syndicate"
+                                 :user="user" :blobId="latestRequest.details.updateKyc.kycData.blobId"
             :previousBlobId="previousBlobIdForKycRequest"/>
           </section>
 
 
           <section v-if="previousBlobIdForKycRequest" class="user-details__section">
             <h1>Previous KYC Request</h1>
-            <kyc-general-section v-if="latestRequest.accountTypeToSet.string === USER_TYPES_STR.general"
+            <kyc-general-section v-if="latestRequest.details.updateKyc.accountTypeToSet.string === USER_TYPES_STR.general"
                                  :user="user" :blobId="previousBlobIdForKycRequest"/>
-            <kyc-syndicate-section v-if="latestRequest.accountTypeToSet.string === USER_TYPES_STR.syndicate"
+            <kyc-syndicate-section v-if="latestRequest.details.updateKyc.accountTypeToSet.string === USER_TYPES_STR.syndicate"
                                    :user="user" :blobId="previousBlobIdForKycRequest"/>
           </section>
         </template>
@@ -90,6 +90,7 @@
 
 <script>
 import api from '@/api'
+import { Sdk } from '@/sdk'
 import {
   USER_TYPES_STR,
   USER_STATES_STR,
@@ -153,6 +154,7 @@ export default {
   },
 
   computed: {
+
     latestRequest () {
       return this.requestToReview || this.requests[0] || null
     },
@@ -171,7 +173,7 @@ export default {
       if (this.latestRequest.requestState !== REQUEST_STATES_STR.pending) {
         return this.latestRequest.requestState
       }
-      return PENDING_TASKS_VOCABULARY[this.latestRequest.pendingTasks] || REQUEST_STATES_STR.pending
+      return PENDING_TASKS_VOCABULARY[this.latestRequest.details.updateKyc.pendingTasks] || REQUEST_STATES_STR.pending
     }
   },
 
@@ -181,14 +183,14 @@ export default {
       this.isFailed = false
       try {
         const [user, account, request, requests] = await Promise.all([
-          api.users.get(this.id),
-          api.accounts.get(this.id),
+          Sdk.api.users.get(this.id),
+          Sdk.horizon.account.get(this.id),
           this.getRequest(),
           this.getAllUserRequests()
         ])
         this.user = user.data
         this.account = account.data
-        this.requestToReview = request
+        this.requestToReview = request[0]
         this.requests = requests
         this.isLoaded = true
       } catch (error) {
@@ -207,9 +209,10 @@ export default {
       }
     },
     async getOperationsList () {
-      const operationsList = await api.accounts
-        .operationsOf(this.id)
-        .getAllByType(OPERATION_TYPE.createKycRequest)
+      const operationsList = await Sdk.horizon.account.getOperations(this.id, {
+        order: 'desc',
+        operation_type: OPERATION_TYPE.createKycRequest
+      })
       return operationsList.data
     },
     async getRequest () {
@@ -217,8 +220,7 @@ export default {
         state: REQUEST_STATES.pending,
         requestor: this.id
       })
-      console.log(JSON.parse(JSON.stringify(requests)))
-      return requests.data[0] || null
+      return requests.data || null
     },
     async getAllUserRequests () {
       const requests = await api.requests.getKycRequests({

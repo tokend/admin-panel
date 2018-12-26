@@ -21,9 +21,9 @@
 </template>
 
 <script>
-import api from '@/api'
 import PreissuanceRequestList from './components/PreissuanceRequestList.vue'
 import SelectField from '@comcom/fields/SelectField'
+import { Sdk } from '@/sdk'
 
 export default {
   components: {
@@ -58,20 +58,22 @@ export default {
   },
 
   methods: {
-    getAssets () {
+    async getAssets () {
       this.$store.commit('OPEN_LOADER')
-      return api.assets.getAssets()
-        .then(response => {
-          this.assets = [{ code: 'All' }].concat(response)
-          this.asset = this.assets[0].code
-          this.assetsLoaded = true
+      try {
+        const response = await Sdk.horizon.assets.getAll()
+        this.assets = [{
+          code: 'All'
+        }].concat(response.data)
+        this.asset = this.assets[0].code
+        this.assetsLoaded = true
 
-          this.$store.commit('CLOSE_LOADER')
-        }).catch(err => {
-          console.error('caught error', err)
-          this.$store.commit('CLOSE_LOADER')
-          this.$store.dispatch('SET_ERROR', 'Can not to load assets list')
-        })
+        this.$store.commit('CLOSE_LOADER')
+      } catch (err) {
+        console.error('caught error', err)
+        this.$store.commit('CLOSE_LOADER')
+        this.$store.dispatch('SET_ERROR', 'Can not to load assets list')
+      }
     }
   }
 }

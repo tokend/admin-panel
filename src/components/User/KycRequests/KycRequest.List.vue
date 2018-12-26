@@ -32,18 +32,19 @@
               <span class="app-list__cell app-list__cell--right">Last updated</span>
               <span class="app-list__cell app-list__cell--right">Type</span>
             </div>
-
-            <button class="app-list__li" v-for="item in list.data" :key="item.id" @click="toggleViewMode(item.accountToUpdateKyc)">
+            <button class="app-list__li" v-for="item in list.data"
+                    :key="item.id"
+                    @click="toggleViewMode(item.details[snakeToCamelCase(item.details.requestType)].accountToUpdateKyc)">
               <email-getter class="app-list__cell app-list__cell--important"
-                           :address="item.accountToUpdateKyc"
+                           :address="item.details[snakeToCamelCase(item.details.requestType)].accountToUpdateKyc"
                             is-titled/>
               <span class="app-list__cell app-list__cell--right">{{item.requestState}}</span>
-              <span class="app-list__cell app-list__cell--right">{{ACCOUNT_TYPES_VERBOSE[item.accountTypeToSet.int]}}</span>
+              <span class="app-list__cell app-list__cell--right">
+                {{ACCOUNT_TYPES_VERBOSE[item.details[snakeToCamelCase(item.details.requestType)].accountTypeToSet.int]}}
+              </span>
               <span class="app-list__cell app-list__cell--right">{{formatDate(item.updatedAt)}}</span>
-              <kyc-type class="app-list__cell app-list__cell--right" :accountId="item.accountToUpdateKyc"/>
+              <kyc-type class="app-list__cell app-list__cell--right" :accountId="item.details[snakeToCamelCase(item.details.requestType)].accountToUpdateKyc"/>
             </button>
-
-
           </div>
 
           <div class="app__more-btn-wrp">
@@ -94,6 +95,7 @@
 
   import SelectField from '@comcom/fields/SelectField'
   import InputField from '@comcom/fields/InputField'
+  import { snakeToCamelCase } from '@/utils/un-camel-case'
 
   import {
     REQUEST_STATES,
@@ -138,6 +140,7 @@
     },
 
     methods: {
+      snakeToCamelCase,
       async getList () {
         this.isLoading = true
         try {
@@ -161,7 +164,7 @@
       async getAccountIdByEmail () {
         let address
         try {
-          address = (await api.users.getUserIdByEmail(this.filters.email))
+          address = (api.users.getAccountIdByEmail(this.filters.email))
         } catch (e) {
           address = ''
         }

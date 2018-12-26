@@ -1,9 +1,9 @@
 <template>
   <div class="asset-manager">
-    <div class="asset-manager__current-wrp" v-if="asset.available_for_issuance && asset.issued">
+    <div class="asset-manager__current-wrp" v-if="asset.availableForIssuance && asset.issued">
       <div class="asset-manager__current-issuance-details">
         <span class="available">
-          <span class="highlight amount text">{{ asset.available_for_issuance }}&nbsp;•&nbsp;</span>
+          <span class="highlight amount text">{{ asset.availableForIssuance }}&nbsp;•&nbsp;</span>
           <label class="label">available for issuance</label>
         </span>
         <span class="issued">
@@ -40,7 +40,7 @@
       <div class="app__form-row">
         <input-field class="app__form-field"
           label="Issuer public key"
-          v-model="asset.preissued_asset_signer"
+          v-model="asset.preissuedAssetSigner"
           :disabled="isExistingAsset || isPending"
         />
 
@@ -51,7 +51,7 @@
         />
 
         <input-field v-else
-                     v-model="asset.available_for_issuance"
+                     v-model="asset.availableForIssuance"
                      class="app__form-field"
                      label="Available for issuance"
                      :disabled="true"
@@ -62,7 +62,7 @@
         <input-field class="app__form-field app__form-field--halved"
           type="number" :min="0" :step="DEFAULT_INPUT_STEP"
           label="Maximum tokens"
-          v-model="asset.max_issuance_amount"
+          v-model="asset.maxIssuanceAmount"
           :disabled="isExistingAsset || isPending"
         />
       </div>
@@ -80,9 +80,9 @@
                  accept="application/pdf, image/*"
                  @change="onFileChange($event, DOCUMENT_TYPES.tokenTerms)"
           />
-          <span v-if="safeGet(asset, 'terms.name') || token_terms.name" class="asset-manager__file-name">
+          <span v-if="safeGet(asset, 'terms.name')" class="asset-manager__file-name">
 
-            {{ safeGet(asset, 'terms.name') || token_terms.name }}
+            {{ safeGet(asset, 'terms.name') }}
           </span>
           <span v-else-if="termsUrl" class="asset-manager__file-name">
             <a :href="termsUrl" target="_blank" rel="noopener">{{ safeGet(asset, 'details.terms.name') }}</a>
@@ -191,7 +191,7 @@
                        type="number"
                        label="External system type"
                        name="External system type"
-                       v-model="asset.details.external_system_type"
+                       v-model="asset.details.externalSystemType"
                        :required="false"
                        :disabled="isPending"
                        v-validate="{max_value: int32}"
@@ -212,6 +212,7 @@
 
 <script>
 import api from '@/api'
+import { Sdk } from '@/sdk'
 import safeGet from 'lodash/get'
 import config from '../../../../config'
 import Bus from '@/utils/EventBus'
@@ -286,7 +287,8 @@ export default {
     safeGet,
     async getAsset () {
       try {
-        this.asset = await api.assets.getAssetByCode(this.assetCode)
+        const response = await Sdk.horizon.assets.get(this.assetCode)
+        this.asset = response.data
       } catch (error) {
         console.error(error)
         this.$store.dispatch('SET_ERROR', 'Receiving asset failed. Please try again later')
@@ -302,11 +304,27 @@ export default {
           this.uploadFile(DOCUMENT_TYPES.tokenTerms),
           this.uploadFile(DOCUMENT_TYPES.tokenLogo)
         ])
+        let operation
         if (this.isExistingAsset) {
-          await api.assetCreation.updateAsset(this.asset)
+          operation = Sdk.base.ManageAssetBuilder.assetUpdateRequest({
+            requestID: '0',
+            code: String(this.asset.code),
+            policies: Number(this.asset.policy),
+            logoId: String(this.asset.logoId || this.asset.logoId),
+            details: this.asset.details
+          })
         } else {
-          await api.assetCreation.createAsset(this.asset)
+          operation = Sdk.base.ManageAssetBuilder.assetCreationRequest({
+            requestID: '0',
+            code: String(this.asset.code),
+            preissuedAssetSigner: String(this.asset.preissuedAssetSigner || this.asset.preissuedAssetSigner),
+            maxIssuanceAmount: String(this.asset.maxIssuanceAmount || this.asset.maxIssuanceAmount),
+            policies: Number(this.asset.policy),
+            initialPreissuedAmount: this.asset.initialPreissuedAmount,
+            details: this.asset.details
+          })
         }
+        await Sdk.horizon.transactions.submitOperations(operation)
         Bus.$emit('recheckConfig')
         this.$store.dispatch('SET_INFO', 'Submitted successfully.')
         this.$router.push({ name: 'systemAssets.index' })
@@ -317,7 +335,6 @@ export default {
     },
 
     async onFileChange (event, type) {
-      console.log(type)
       const file = fileReader.deriveFileFromChangeEvent(event)
       this[type].file = file
       this[type].mime = file.type
@@ -326,17 +343,14 @@ export default {
 
     async uploadFile (type) {
       if (!this[type].file) return
-      const config = (await api.documents
-        .getUploadConfig(type, this[type].mime))
-        .data
+      const response = await Sdk.api.documents.create(type, this[type].mime)
+      const config = response.data
       await api.documents.uploadFile(this[type].file, config, this[type].mime)
       this.asset.details[type === DOCUMENT_TYPES.tokenTerms ? 'terms' : 'logo'] = {
         key: config.key,
         name: this[type].name,
         type: this[type].mime
       }
-      console.log('this.asset:')
-      console.log(this.asset)
     }
   }
 }

@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import api from '@/api'
+import { Sdk } from '@/sdk'
 import { SelectField } from '@comcom/fields'
 import { AssetPair } from '../models/AssetPair.js'
 export default {
@@ -58,7 +58,8 @@ export default {
 
     async getPairs () {
       try {
-        const pairs = (await api.assets.getAssetPairs())
+        const response = await Sdk.horizon.assetPairs.getAll()
+        const pairs = response.data
           .map(item => new AssetPair(item).toString())
 
         this.filters.pair = this.filters.pair || pairs[0]

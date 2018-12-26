@@ -1,7 +1,7 @@
-import { xdr } from 'tokend-js-sdk'
+import { Sdk } from '@/sdk'
 export function parseXdrTxResponse (txResponse) {
   const buffer = new Buffer(txResponse.data.resultXdr, 'base64')
-  const transaction = xdr.TransactionResult.fromXDR(buffer)
+  const transaction = Sdk.xdr.TransactionResult.fromXDR(buffer)
   return transaction.result().results()
 }
 

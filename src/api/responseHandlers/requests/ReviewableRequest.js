@@ -1,8 +1,5 @@
-import { requests } from '../../requests'
-import { ManageAssetBuilder } from 'tokend-js-sdk'
-import server from '@/utils/server'
-
-import { xdr } from 'tokend-js-sdk'
+import config from '@/config'
+import { Sdk } from '@/sdk'
 
 export class ReviewableRequest {
   constructor (record) {
@@ -15,41 +12,42 @@ export class ReviewableRequest {
   }
 
   get state () {
-    return this.record.request_state
+    return this.record.requestState
   }
 
   get rejectReason () {
-    return this.record.reject_reason
+    return this.record.rejectReason
   }
 
   // actions:
 
   fulfill () {
-    const approveAction = xdr.ReviewRequestOpAction.fromName('approve').value
+    const approveAction = Sdk.xdr.ReviewRequestOpAction.fromName('approve').value
     return this._review(approveAction)
   }
 
   reject (reason = '', isPermanent = false) {
     const action = isPermanent
-      ? xdr.ReviewRequestOpAction.permanentReject().value
-      : xdr.ReviewRequestOpAction.reject().value
+      ? Sdk.xdr.ReviewRequestOpAction.permanentReject().value
+      : Sdk.xdr.ReviewRequestOpAction.reject().value
     return this._review(action, reason)
   }
 
   cancel () {
     const opts = { requestID: this.record.id }
-    const op = ManageAssetBuilder.cancelAssetRequest(opts)
-    return server.submitOperation(op, true)
+    const operation = Sdk.base.ManageAssetBuilder.cancelAssetRequest(opts)
+    return Sdk.horizon.transactions.submitOperations(operation)
   }
 
   _review (action, reason = '') {
-    const opts = {
+    const operation = Sdk.base.ReviewRequestBuilder.reviewRequest({
       requestID: this.record.id,
       requestHash: this.record.hash,
-      requestType: this.record.request_type_i, // xdr.ReviewableRequestType.fromName('preIssuanceCreate').value,
+      requestType: this.record.requestTypeI,
       action,
-      reason
-    }
-    return requests.reviewRequest(opts)
+      reason,
+      source: config.MASTER_ACCOUNT
+    })
+    return Sdk.horizon.transactions.submitOperations(operation)
   }
 }

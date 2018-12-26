@@ -74,7 +74,7 @@
   </div>
 </template>
 <script>
-import api from '@/api'
+import { Sdk } from '@/sdk'
 import {
   SelectField,
   InputField
@@ -108,7 +108,8 @@ export default {
     async setKeyValue (key, value, entryType) {
       this.isPending = true
       try {
-        await api.keyValue.setNew({ key, value, entryType })
+        const operation = Sdk.base.ManageKeyValueBuilder.putKeyValue({ key, value, entryType })
+        await Sdk.horizon.transactions.submitOperations(operation)
         await this.getList()
 
         this.$store.dispatch('SET_INFO', 'Submitted successfully')
@@ -123,15 +124,15 @@ export default {
       this.isPending = false
     },
     async getList () {
-      const { data: list } = await api.keyValue.getList()
-      this.list = list
+      const response = await Sdk.horizon.keyValue.getAll()
+      this.list = response.data
 
-      if (!list.length) {
+      if (!this.list.length) {
         return
       }
 
       if (!this.updateForm.key) {
-        const item = list[0]
+        const item = this.list[0]
 
         this.updateForm.key = item.key
         this.updateForm.value = item[`${item.type.name}Value`]

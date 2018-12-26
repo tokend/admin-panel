@@ -6,15 +6,6 @@ export default {
     return server.post('/tfa', { username: store.state.user.name }, true, true)
   },
 
-  deleteUsersTfa (username) {
-    return server.post('/tfa/delete', { username: username }, true)
-  },
-
-  getUserTfaBackends (username) {
-    const usernameSafe = encodeURIComponent(username)
-    return server.get(`/tfa?username=${usernameSafe}`, true)
-  },
-
   getTfaBackends () {
     const wId = encodeURIComponent(store.state.user.wallet.id)
     return server.get(`/tfa?wallet_id=${wId}`, true, null, true)

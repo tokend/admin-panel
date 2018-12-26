@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import store from './store'
 import router from './router'
-import Sdk from 'tokend-js-sdk'
 import StellarWallet from 'tokend-wallet-js-sdk'
-import accounts from './api/accounts'
+import { Sdk } from '@/sdk'
+import { Wallet } from '@tokend/js-sdk'
 
 const server = {
   'trusted': true,
@@ -23,7 +23,7 @@ export default {
   },
 
   createWallet (credentials, redirect) {
-    const signingKeys = Sdk.Keypair.fromSecret(credentials.seed)
+    const signingKeys = Sdk.base.Keypair.fromSecret(credentials.seed)
     const keychainData = { seed: signingKeys.seed(), accountId: signingKeys.accountId() }
     const mainData = { username: credentials.username.toLowerCase(), server: server }
 
@@ -98,13 +98,13 @@ export default {
   async seedLogin (seed) {
     const auth = store.state.auth || {}
     const user = store.state.user || {}
-    const keypair = Sdk.Keypair.fromSecret(seed)
+    const keypair = Sdk.base.Keypair.fromSecret(seed)
 
     user.name = 'admin_demo'
     user.keys = user.keys || {}
     user.keys.accountId = keypair.accountId()
     user.keys.seed = keypair.secret()
-
+    Sdk.sdk.useWallet(new Wallet('', user.keys.seed, user.keys.accountId))
     const signerTypes = await this._getSignerTypes(user.keys.accountId)
 
     Object.assign(user, signerTypes)
@@ -117,6 +117,7 @@ export default {
     const user = store.state.user
     user.name = username
     user.keys = JSON.parse(credentials.getKeychainData())
+    Sdk.sdk.useWallet(new Wallet('', user.keys.seed, user.keys.accountId, credentials.getWalletId()))
     user.wallet = {
       id: credentials.getWalletId()
     }
@@ -130,17 +131,17 @@ export default {
 
   async _getSignerTypes (accountId) {
     const result = {}
-    let response = {}
-
+    let signer = {}
     try {
-      response = await accounts.getSignerById(accountId)
+      const response = await Sdk.horizon.account.getSigner(accountId)
+      signer = response.data
     } catch (error) {
       console.error(error)
       error.message = 'Cannot get signer types'
       throw error
     }
 
-    result.signerTypes = response.signer.signer_types
+    result.signerTypes = signer.signerTypes
     result.signerTypes.forEach((val) => {
       if (val.value === 2) result.admin = true
       if (val.value === 4) result.accountCreator = true

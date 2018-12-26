@@ -37,11 +37,11 @@
 
           <button class="app-list__li" v-for="item in list.data" :key="item.id"
             @click="requestToShow = item">
-            <span class="app-list__cell" :title="`${localize(item.amount)} ${item.destAssetCode}`">
-              {{localize(item.amount)}}&nbsp;{{ item.destAssetCode }}
+            <span class="app-list__cell" :title="`${localize(item.details.withdraw.amount)} ${item.details.withdraw.destAssetCode}`">
+              {{localize(item.details.withdraw.amount)}}&nbsp;{{ item.details.withdraw.destAssetCode }}
             </span>
             <span class="app-list__cell" :title="`${localize(item.destAssetAmount)} ${item.destAssetCode}`">
-              {{localize(item.destAssetAmount)}}&nbsp;{{item.destAssetCode}}
+              {{localize(item.details.withdraw.destAssetAmount)}}&nbsp;{{item.details.withdraw.destAssetCode}}
             </span>
             <span class="app-list__cell" :title="verbozify(item.requestState)">
               {{verbozify(item.requestState)}}
@@ -81,6 +81,7 @@
 
 <script>
 import api from '@/api'
+import { Sdk } from '@/sdk'
 import {
   DEFAULT_QUOTE_ASSET,
   REQUEST_STATES,
@@ -130,7 +131,8 @@ export default {
 
     async getAssets () {
       try {
-        this.assets = (await api.assets.getAssets())
+        const response = await Sdk.horizon.assets.getAll()
+        this.assets = response.data
           .filter(item => (item.policy & ASSET_POLICIES.baseAsset))
           .sort((assetA, assetB) => assetA.code > assetB.code ? 1 : -1)
       } catch (error) {

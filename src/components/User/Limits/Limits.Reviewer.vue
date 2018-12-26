@@ -12,7 +12,7 @@
         <div class="limits-reviewer__content-section">
           <detail label="Request date & time" :value="formatDateWithTime(request.createdAt)"/>
           <detail label="Account type" :value="ACCOUNT_TYPES_VERBOSE[account.accountTypeI]"/>
-          <detail label="Request type" :value="LIMITS_REQUEST_STATES[get(desiredLimitDetails, 'requestType')]"/>
+          <detail label="Request type" :value="LIMITS_REQUEST_STATES_STR[get(request, 'details.requestType')]"/>
           <detail label="Account email" :value="user.email"/>
           <detail label="Account ID" :value="request.requestor"/>
           <detail label="Note" :value="get(desiredLimitDetails, 'note')"/>
@@ -130,11 +130,13 @@
   import { DateFormatter } from '@comcom/formatters'
   import { InputField, TextField } from '@comcom/fields'
   import Modal from '@comcom/modals/Modal'
+  import { Sdk } from '@/sdk'
+  import { snakeToCamelCase } from '@/utils/un-camel-case'
 
   import { ACCOUNT_TYPES_VERBOSE,
     REQUEST_STATES,
     DOCUMENT_TYPES_STR,
-    LIMITS_REQUEST_STATES
+    LIMITS_REQUEST_STATES_STR
   } from '@/constants'
   import { formatDateWithTime } from '../../../utils/formatters'
   import api from '@/api'
@@ -183,7 +185,7 @@
       REQUEST_STATES,
       ACCOUNT_TYPES_VERBOSE,
       DOCUMENT_TYPES_STR,
-      LIMITS_REQUEST_STATES,
+      LIMITS_REQUEST_STATES_STR,
       uploadDocs: [
         {
           label: '',
@@ -199,7 +201,7 @@
     async created () {
       await this.getRequest()
       const limitRequest = await api.requests.get(this.id)
-      this.desiredLimitDetails = limitRequest.details || '{}'
+      this.desiredLimitDetails = limitRequest.details[snakeToCamelCase(limitRequest.details.requestType)].details || '{}'
     },
     computed: {
       currentLimits () {
@@ -235,9 +237,9 @@
         const request = await api.requests.get(this.id)
         const requestDetails = get(request, 'details', {})
         const [account, user, limits] = await Promise.all([
-          api.accounts.get(request.requestor),
-          api.users.get(request.requestor),
-          api.accounts.getLimits(request.requestor)
+          Sdk.horizon.account.get(request.requestor),
+          Sdk.api.users.get(request.requestor),
+          Sdk.horizon.account.getLimits(request.requestor)
         ])
         this.request = request
         this.request.document = requestDetails.document

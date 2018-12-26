@@ -1,9 +1,11 @@
 import { ReviewableRequest } from './ReviewableRequest'
+import { snakeToCamelCase } from '@/utils/un-camel-case'
 
 export class TokenRequest extends ReviewableRequest {
   constructor (record) {
+    console.log(record)
     super(record)
-    this.operationDetails = this.record[this.record.request_type]
+    this.operationDetails = this.record[snakeToCamelCase(this.record.requestType)]
   }
 
   get code () {
@@ -11,7 +13,7 @@ export class TokenRequest extends ReviewableRequest {
   }
 
   get externalLink () {
-    return this.operationDetails.external_resource_link
+    return this.operationDetails.externalResourceLink
   }
 
   get policies () {
@@ -23,11 +25,11 @@ export class TokenRequest extends ReviewableRequest {
   }
 
   get signer () {
-    return this.operationDetails.pre_issued_asset_signer
+    return this.operationDetails.preIssuedAssetSigner
   }
 
   get maxAmount () {
-    return this.operationDetails.max_issuance_amount
+    return this.operationDetails.maxIssuanceAmount
   }
 
   get requestor () {
@@ -35,22 +37,22 @@ export class TokenRequest extends ReviewableRequest {
   }
 
   get type () {
-    return this.record.request_type
+    return this.record.requesType
   }
 
   get rejectReason () {
-    return this.record.reject_reason
+    return this.record.rejectReason
   }
 
   get issuedAmount () {
-    return this.operationDetails.initial_preissued_amount
+    return this.operationDetails.initialPreissuedAmount
   }
 
   get creationDate () {
-    return this.record.created_at
+    return this.record.createdAt
   }
 
   get updateDate () {
-    return this.record.updated_at
+    return this.record.updatedAt
   }
 }

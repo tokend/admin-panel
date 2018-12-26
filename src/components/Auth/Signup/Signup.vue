@@ -103,8 +103,8 @@
 import Vue from 'vue'
 import Qrcode from 'v-qrcode'
 import StellarWallet from 'tokend-wallet-js-sdk'
-import { Keypair } from 'tokend-js-sdk'
-import accounts from '@/api/accounts'
+import { Sdk } from '@/sdk'
+import config from '@/config'
 import GAuth from '../../settings/GAuth.vue'
 
 import InputField from '@comcom/fields/InputField'
@@ -134,22 +134,19 @@ export default {
   },
 
   created () {
-    this.credentials.seed = Keypair.random().secret()
+    this.credentials.seed = Sdk.base.Keypair.random().secret()
   },
 
   methods: {
-    isSigner () {
-      let timeout
-      return accounts.getSignerById(this.credentials.publicKey)
-        .then((singer) => {
-          if (!singer.isSigner) {
-            timeout = setTimeout(this.isSigner, 5000)
-            return
-          }
-
-          clearTimeout(timeout)
-          return this.createWallet()
-        })
+    async isSigner () {
+      try {
+        await Sdk.horizon.account.getSigner(this.credentials.publicKey, config.default.MASTER_ACCOUNT)
+      } catch (e) {
+        console.error(e)
+        setTimeout(this.isSigner, 5000)
+        return
+      }
+      return this.createWallet()
     },
 
     createWallet () {
@@ -198,9 +195,8 @@ export default {
     },
 
     submit () {
-      this.credentials.keypair = Keypair.fromSecret(this.credentials.seed)
+      this.credentials.keypair = Sdk.base.Keypair.fromSecret(this.credentials.seed)
       this.credentials.publicKey = this.credentials.keypair.accountId()
-
       this.$store.commit('OPEN_LOADER')
       this.validate().then((data) => {
         this.$store.commit('CLOSE_LOADER')

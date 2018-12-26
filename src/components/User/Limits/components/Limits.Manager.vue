@@ -156,6 +156,7 @@
 
 <script>
   import api from '@/api'
+  import { Sdk } from '@/sdk'
   import get from 'lodash/get'
   import throttle from 'lodash/throttle'
   import pick from 'lodash/pick'
@@ -284,10 +285,14 @@
         }, {})
 
         async function getLimit (statsOpType) {
-          return (await api.limits.getAll({
-            ...this.filters,
-            statsOpType
-          })).data
+          const response = await Sdk.horizon.limits.get({
+            account_id: this.filters.address,
+            account_type: this.filters.accountType,
+            stats_op_type: statsOpType,
+            asset: this.filters.asset,
+            email: this.filters.email
+          })
+          return response.data
         }
       },
 
@@ -311,11 +316,12 @@
           if (limits.accountId) { // managelimitbuilder somehow doesnt accept opts.accountId NULL value
             accountID = limits.accountId
           }
-          await api.limits.update({
+          const operation = Sdk.base.ManageLimitsBuilder.createLimits({
             ...limits,
             ...disabledLimits,
             accountID
           })
+          await Sdk.horizon.transactions.submitOperations(operation)
           await this.getAssets()
           this.$store.dispatch('SET_INFO', 'Limits update saved')
         } catch (e) {
@@ -326,7 +332,8 @@
       },
 
       async getAssets () {
-        this.assets = (await api.assets.getAll()).data
+        const response = await Sdk.horizon.assets.getAll()
+        this.assets = response.data
       },
       async getAccountIdByEmail (email) {
         this.filters.address = await api.users.getAccountIdByEmail(email)

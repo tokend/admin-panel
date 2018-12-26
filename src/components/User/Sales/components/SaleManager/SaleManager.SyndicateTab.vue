@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import api from '@/api'
+import { Sdk } from '@/sdk'
 import { DateFormatter } from '@comcom/formatters'
 import SyndicateMember from '@comcom/SyndicateMember'
 import SocialLinks from '@comcom/SocialLinks'
@@ -88,15 +88,10 @@ export default {
     async getSyndicate ({ ownerId: owner, blobId }) {
       try {
         const response = blobId
-          ? await api.users
-            .blobsOf(owner)
-            .get(blobId, true)
-          : await api.users
-            .blobsOf(owner)
-            .getAll({
-              type: BLOB_TYPES.syndicateKyc | BLOB_TYPES.kycForm
-            }, true)
-
+          ? await Sdk.api.blobs.get(blobId, owner)
+          : await Sdk.api.blobs.getAll({
+            type: BLOB_TYPES.syndicateKyc | BLOB_TYPES.kycForm
+          }, owner)
         this.syndicate = JSON.parse(
           response.data.value || response.data[0].value
         )

@@ -68,8 +68,8 @@
 </template>
 
 <script>
-  import api from '@/api'
-  import { PreIssuanceRequest, xdr } from 'tokend-js-sdk'
+  import { Sdk } from '@/sdk'
+  import config from '@/config'
   import errors from '@/errors'
 
   import localize from '@/utils/localize'
@@ -97,7 +97,10 @@
         this.$store.commit('OPEN_LOADER')
 
         try {
-          this.assets = await api.assets.getSystemAssets()
+          const response = await Sdk.horizon.assets.getAll({
+            owner: config.MASTER_ACCOUNT
+          })
+          this.assets = response.data
         } catch (error) {
           this.$store.dispatch('SET_ERROR', 'Cannot load asset list. Please reload the page')
         }
@@ -136,8 +139,8 @@
       parsePreIssuances (issuances) {
         const items = issuances
           .map(function (item) {
-            const _xdr = xdr.PreIssuanceRequest.fromXDR(item.preEmission, 'hex')
-            const result = PreIssuanceRequest.dataFromXdr(_xdr)
+            const _xdr = Sdk.xdr.PreIssuanceRequest.fromXDR(item.preEmission, 'hex')
+            const result = Sdk.base.PreIssuanceRequest.dataFromXdr(_xdr)
 
             result.xdr = _xdr
             result.isUsed = item.used
@@ -159,29 +162,34 @@
           } else {
             this.fileInfo.push({
               fileName: this.temporaryFileName,
-              preissuedAssetSigner: asset.preissued_asset_signer,
+              preissuedAssetSigner: asset.preissuedAssetSigner,
               issuance: items[i]
             })
           }
         }
       },
 
-      upload () {
+      async upload () {
         this.uploadBtnDisable = true
         this.$store.commit('OPEN_LOADER')
-
-        return api.emissions.uploadPreEmissions(this.fileInfo.map(item => item.issuance.xdr))
-          .then(() => {
-            this.$store.commit('CLOSE_LOADER')
-            this.$store.dispatch('SET_INFO', 'Pending transaction submitted')
-            this.uploadBtnDisable = false
-          }).catch(err => {
-            const message = errors.tryParseError(err) || 'Something went wrong. Transaction failed'
-            this.$store.dispatch('SET_ERROR', message)
-            this.$store.commit('CLOSE_LOADER')
-            console.error('not uploaded', err)
-            this.uploadBtnDisable = false
+        try {
+          const preIssuances = this.fileInfo.map(item => item.issuance.xdr)
+          const operations = preIssuances.map(item => {
+            Sdk.base.PreIssuanceRequestOpBuilder.createPreIssuanceRequestOp({
+              request: item
+            })
           })
+          await Sdk.horizon.transactions.submitOperations(...operations)
+          this.$store.commit('CLOSE_LOADER')
+          this.$store.dispatch('SET_INFO', 'Pending transaction submitted')
+          this.uploadBtnDisable = false
+        } catch (err) {
+          const message = errors.tryParseError(err) || 'Something went wrong. Transaction failed'
+          this.$store.dispatch('SET_ERROR', message)
+          this.$store.commit('CLOSE_LOADER')
+          console.error('not uploaded', err)
+          this.uploadBtnDisable = false
+        }
       }
     }
   }

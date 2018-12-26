@@ -23,30 +23,30 @@
     </div>
 
     <ul class="admin-list__ul">
-      <li class="admin-list__li" v-for="item in list" :key="item.public_key">
+      <li class="admin-list__li" v-for="item in list" :key="item.publicKey">
         <router-link class="admin-list__li-a"
-          :to="{ name: 'admins.show', params: { id: item.public_key } }">
-          <span class="admin-list__li-name" :title="item.signer_name">
-            {{ item.signer_name.split(':')[0] }}
-            <template v-if="item.public_key === userAddress">
+          :to="{ name: 'admins.show', params: { id: item.publicKey } }">
+          <span class="admin-list__li-name" :title="item.signerName">
+            {{ item.signerName.split(':')[0] }}
+            <template v-if="item.publicKey === userAddress">
               <span class="secondary">(you)</span>
             </template>
           </span>
 
-          <span class="admin-list__li-account-id" :title="item.public_key">
-            {{item.public_key}}
+          <span class="admin-list__li-account-id" :title="item.publicKey">
+            {{item.publicKey}}
           </span>
 
-          <span class="admin-list__li-rights" :title="item.signer_type_i">
-            {{ item.signer_type_i | getAdminSignerTypeLabel }}
+          <span class="admin-list__li-rights" :title="item.signerTypeI">
+            {{ item.signerTypeI | getAdminSignerTypeLabel }}
           </span>
 
           <span class="admin-list__li-weight" :title="item.weight">
             {{item.weight}}
           </span>
 
-          <span class="admin-list__li-identity" :title="item.signer_identity">
-            {{item.signer_identity}}
+          <span class="admin-list__li-identity" :title="item.signerIdentity">
+            {{item.signerIdentity}}
           </span>
         </router-link>
       </li>
@@ -56,9 +56,9 @@
 
 <script>
 import Vue from 'vue'
-import accounts from '@/api/accounts'
 import { mapGetters } from 'vuex'
 import { getters } from '@/store/types'
+import { Sdk } from '@/sdk'
 
 export default {
   data () {
@@ -77,20 +77,22 @@ export default {
     async getAdminList () {
       this.$store.commit('OPEN_LOADER')
       try {
-        const { signers } = await accounts.loadAccount(this.masterPubKey)
+        const response = await Sdk.horizon.account.get(this.masterPubKey)
+        const { signers } = response.data
         this.list = signers
           .map(signer =>
-            signer.public_key === this.masterPubKey
-              ? Object.assign(signer, { signer_name: 'Master' })
+            signer.publicKey === this.masterPubKey
+              ? Object.assign(signer, { signerName: 'Master' })
               : signer
           )
           .sort((signerA, signerB) => {
-            if (signerA.signer_name === '') return 1
-            if (signerB.signer_name === '') return -1
-            if (signerA.signer_name === signerB.signer_name) return 0
-            return signerA.signer_name > signerB.signer_name ? 1 : -1
+            if (signerA.signerName === '') return 1
+            if (signerB.signerName === '') return -1
+            if (signerA.signerName === signerB.signerName) return 0
+            return signerA.signerName > signerB.signerName ? 1 : -1
           })
       } catch (err) {
+        console.error(err)
         this.$store.dispatch('SET_ERROR', 'Can’t load administrators list')
       }
       this.$store.commit('CLOSE_LOADER')

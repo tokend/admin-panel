@@ -174,7 +174,7 @@
 </template>
 
 <script>
-import api from '@/api'
+import { Sdk } from '@/sdk'
 import { EmailGetter, ImgGetter, DocLinkGetter } from '@comcom/getters'
 import {
   AssetAmountFormatter,
@@ -211,7 +211,7 @@ export default {
   methods: {
     async getToken ({ baseAsset }) {
       try {
-        const response = await api.assets.get(baseAsset)
+        const response = await Sdk.horizon.assets.get(baseAsset)
         this.token = response.data
         this.isTokenLoaded = true
       } catch (error) {

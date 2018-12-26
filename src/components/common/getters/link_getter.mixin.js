@@ -1,4 +1,4 @@
-import api from '@/api'
+import { Sdk } from '@/sdk'
 
 export default {
   data () {
@@ -31,8 +31,8 @@ export default {
           this.isFailed = true
           return
         }
-        const response = await api.users.docsOf(this.userId).get(this.fileKey)
-        this.href = response.data.url
+        const response = await Sdk.api.documents.get(this.fileKey)
+        this.href = response.url
         this.isLoaded = true
       } catch (error) {
         this.isFailed = true

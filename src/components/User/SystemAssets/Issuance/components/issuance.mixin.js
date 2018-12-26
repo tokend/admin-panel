@@ -1,4 +1,5 @@
 import api from '@/api'
+import { Sdk } from '@/sdk'
 import localize from '@/utils/localize'
 import SelectField from '@comcom/fields/SelectField'
 import Bus from '@/utils/EventBus'
@@ -42,8 +43,9 @@ export default {
     localize,
     async getAssets () {
       try {
+        const response = await Sdk.horizon.assets.getAll()
         this.assets = this.assets.concat(
-          (await api.assets.getAssets())
+          response.data
             .filter(item => (item.policy & ASSET_POLICIES.baseAsset))
             .sort((assetA, assetB) => assetA.code > assetB.code ? 1 : -1)
             .map(asset => asset.code)
@@ -61,6 +63,7 @@ export default {
         this.getListCounter()
         this.isNoMoreEntries = false
       } catch (error) {
+        console.error(error)
         this.$store.dispatch('SET_ERROR', 'Cannot load issuance request list.')
       }
       this.isLoaded = true
@@ -68,8 +71,8 @@ export default {
 
     getListCounter () {
       if (this.list) {
-        this.listCounter.pending = this.list.body._embedded.meta.count.pending
-        this.listCounter.approved = this.list.body._embedded.meta.count.approved
+        this.listCounter.pending = this.list._rawResponse.data._embedded.meta.count.pending
+        this.listCounter.approved = this.list._rawResponse.data._embedded.meta.count.approved
       }
     },
     async onMoreButtonClick () {

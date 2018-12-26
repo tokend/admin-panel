@@ -4,7 +4,7 @@
   </div>
 </template>
 <script>
-  import api from '@/api'
+  import { Sdk } from '@/sdk'
   import { formatFiatAmount } from '@/utils/formatters'
 
   export default {
@@ -17,7 +17,11 @@
       async convertAssetPairs () {
         if (this.amount && this.sourceAsset) {
           try {
-            const convertedAmount = await api.assets.convertAssetPairs(this.sourceAsset, this.destAsset, this.amount)
+            const convertedAmount = await Sdk.horizon.assetPairs.convert({
+              'source_asset': this.sourceAsset,
+              'dest_asset': this.destAsset,
+              'amount': this.amount
+            })
             this.convertedAmount = formatFiatAmount(+convertedAmount.data.amount, this.destAsset)
           } catch (error) {
             console.error(error)

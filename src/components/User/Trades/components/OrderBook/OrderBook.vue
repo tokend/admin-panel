@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import api from '@/api'
+import { Sdk } from '@/sdk'
 import OrderTable from './OrderBook.Table'
 import HistoryTable from './OrderBook.History'
 import { AssetPair } from '../../models/AssetPair'
@@ -58,11 +58,24 @@ export default {
     async getBook () {
       this.isLoaded = false
       const pair = new AssetPair(this.filters.pair)
-      const params = { baseAsset: pair.base, quoteAsset: pair.quote }
+      const params = {
+        order_book_id: 0,
+        base_asset: pair.base,
+        quote_asset: pair.quote
+      }
       try {
-        this.book.bids = (await api.orderBooks.getBids(params)).data
-        this.book.asks = (await api.orderBooks.getAsks(params)).data
-        this.book.history = (await api.orderBooks.getHistory(params)).data
+        const response = await Sdk.horizon.orderBook.getAll({
+          ...params,
+          is_buy: true
+        })
+        this.book.bids = response.data
+        const orderBookResponse = await Sdk.horizon.orderBook.getAll({
+          ...params,
+          is_buy: false
+        })
+        this.book.asks = orderBookResponse.data
+        const tradesResponse = await Sdk.horizon.trades.getPage(params)
+        this.book.history = tradesResponse.data
         this.isLoaded = true
       } catch (error) {
         error.showMessage('Failed to get order book. Please try again later')

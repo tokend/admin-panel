@@ -37,7 +37,7 @@
 
 <script>
 import { MarkdownFormatter } from '@comcom/formatters'
-import api from '@/api'
+import { Sdk } from '@/sdk'
 import safeGet from 'lodash/get'
 
 export default {
@@ -70,8 +70,8 @@ export default {
       const userId = saleRequest.requestor
       const blobId = (saleRequest.details || {}).description
       try {
-        const blob = (await api.users.blobsOf(userId).get(blobId)).data
-        this.description = blob.value
+        const response = await Sdk.api.blobs.get(blobId, userId)
+        this.description = response.data.value
         this.isLoaded = true
       } catch (error) {
         if (error.status === 404) {

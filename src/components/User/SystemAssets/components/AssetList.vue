@@ -35,8 +35,8 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import { xdr } from 'tokend-js-sdk'
+import config from '@/config'
+import { Sdk } from '@/sdk'
 import trim from 'lodash/trim'
 
 export default {
@@ -65,19 +65,20 @@ export default {
   },
 
   methods: {
-    getAssets () {
+    async getAssets () {
       this.assets = []
       this.$store.commit('OPEN_LOADER')
-
-      return Vue.api.assets.getSystemAssets().then(response => {
-        this.assets = response
+      try {
+        const response = await Sdk.horizon.assets.getAll({
+          owner: config.MASTER_ACCOUNT
+        })
+        this.assets = response.data
         this.$store.commit('CLOSE_LOADER')
-      }).catch(err => {
+      } catch (err) {
         console.error('caught error', err)
-
         this.$store.commit('CLOSE_LOADER')
         this.$store.dispatch('SET_ERROR', 'Something went wrong. Can\'t to load assets list')
-      })
+      }
     }
   }
 }
@@ -87,7 +88,7 @@ function decamelize (str, prefixForRemove = '') {
 }
 
 function convertPolicyToString (policy) {
-  const xdrEnumValues = xdr.AssetPolicy.values()
+  const xdrEnumValues = Sdk.xdr.AssetPolicy.values()
   return trim(xdrEnumValues
     .filter(pol => (pol.value & policy) !== 0)
     .map(pol => decamelize(pol.name, 'asset'))

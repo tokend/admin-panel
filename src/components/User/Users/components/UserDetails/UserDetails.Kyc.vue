@@ -142,7 +142,7 @@ import { UserDocGetter, UserDocLinkGetter, ImgGetter } from '@comcom/getters'
 import { fromKycTemplate } from '../../../../../utils/kyc-tempater'
 import deepCamelCase from 'camelcase-keys-deep'
 import config from '@/config'
-import api from '@/api'
+import { Sdk } from '@/sdk'
 
 const ID_DOCUMENTS_VERBOSE = {
   passport: 'Passport',
@@ -180,9 +180,8 @@ export default {
       this.isFailed = false
 
       try {
-        const kycFormResponse = (await api.users
-          .blobsOf(this.user.id)
-          .get(this.blobId, true)).data
+        const response = await Sdk.api.blobs.get(this.blobId, this.user.id)
+        const kycFormResponse = response.data
         this.kyc = deepCamelCase(fromKycTemplate(JSON.parse(kycFormResponse.value)))
         this.isLoaded = true
       } catch (error) {

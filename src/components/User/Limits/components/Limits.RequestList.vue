@@ -18,7 +18,7 @@
             <account-type-getter :accountId="item.requestor"/>
           </span>
           <span class="app-list__cell" :title="item.details.requestType">
-            {{LIMITS_REQUEST_STATES[item.details.requestType]}}
+            {{LIMITS_REQUEST_STATES_STR[item.details.requestType]}}
           </span>
           <span class="app-list__cell">
             {{ item.requestor }}
@@ -42,16 +42,13 @@
 </template>
 
 <script>
-  import { EmailGetter, AccountTypeGetter, LIMITS_REQUEST_STATES_STR } from '@comcom/getters'
+  import { EmailGetter, AccountTypeGetter } from '@comcom/getters'
   import { formatDate } from '@/utils/formatters'
-  import api from '@/api'
-  import _get from 'lodash/get'
 
   import {
     ACCOUNT_TYPES,
     REQUEST_STATES,
-    LIMITS_REQUEST_STATES
-
+    LIMITS_REQUEST_STATES_STR
   } from '@/constants'
 
   export default {
@@ -63,23 +60,11 @@
         isNoMoreEntries: false,
         REQUEST_STATES,
         ACCOUNT_TYPES,
-        LIMITS_REQUEST_STATES,
         LIMITS_REQUEST_STATES_STR,
         formatDate
       }
     },
-
-    computed: {
-      requestType () {
-        return this.details.map(item => LIMITS_REQUEST_STATES[item.stage])
-      }
-    },
-
-    methods: {
-      async getAccountType (id) {
-        const account = await api.accounts.get(id)
-        return _get(account, 'data.accountType').replace('AccountType', '')
-      }
+    created () {
     }
   }
 </script>
