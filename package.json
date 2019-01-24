@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@babel/runtime-corejs2": "^7.1.5",
-    "@tokend/js-sdk": "https://github.com/tokend/new-js-sdk.git",
+    "@tokend/js-sdk": "0.3.11",
     "ag-grid": "^13.1.2",
     "ag-grid-vue": "^13.1.0",
     "asmcrypto.js": "0.0.11",
