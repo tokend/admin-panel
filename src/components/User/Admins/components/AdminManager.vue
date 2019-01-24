@@ -349,6 +349,7 @@ import { SIGNER_TYPES, SIGNER_TYPES_SECONDARY } from '@/constants'
 
 import { confirmAction } from '@/js/modals/confirmation_message'
 import { Sdk } from '@/sdk'
+import config from '@/config'
 
 const TOGGLE_SELECTIONS_BY_TYPE = {
   super: {
@@ -497,7 +498,7 @@ export default {
     async loadSigner () {
       this.$store.commit('OPEN_LOADER')
       try {
-        const response = await Sdk.horizon.account.getSigner(this.id)
+        const response = await Sdk.horizon.account.getSigner(this.id, config.MASTER_ACCOUNT)
         const signer = response.data
         this.params = {
           accountId: signer.publicKey,

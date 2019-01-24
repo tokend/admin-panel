@@ -140,7 +140,7 @@ export default {
   methods: {
     async isSigner () {
       try {
-        await Sdk.horizon.account.getSigner(this.credentials.publicKey, config.default.MASTER_ACCOUNT)
+        await Sdk.horizon.account.getSigner(this.credentials.publicKey, config.MASTER_ACCOUNT)
       } catch (e) {
         console.error(e)
         setTimeout(this.isSigner, 5000)
