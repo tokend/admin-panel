@@ -3,7 +3,6 @@ import { snakeToCamelCase } from '@/utils/un-camel-case'
 
 export class TokenRequest extends ReviewableRequest {
   constructor (record) {
-    console.log(record)
     super(record)
     this.operationDetails = this.record[snakeToCamelCase(this.record.requestType)]
   }

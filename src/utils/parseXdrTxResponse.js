@@ -7,7 +7,6 @@ export function parseXdrTxResponse (txResponse) {
 
 export function deriveRequestIdFromCreateKycRequestResult (txResponse, opIndex = 0) {
   const response = parseXdrTxResponse(txResponse)
-  console.log(response)
   return response[opIndex]
     .tr()
     .createUpdateKycRequestResult()
