@@ -4,6 +4,7 @@ import router from './router'
 import StellarWallet from 'tokend-wallet-js-sdk'
 import { Sdk } from '@/sdk'
 import { Wallet } from '@tokend/js-sdk'
+import config from '@/config'
 
 const server = {
   'trusted': true,
@@ -104,7 +105,12 @@ export default {
     user.keys = user.keys || {}
     user.keys.accountId = keypair.accountId()
     user.keys.seed = keypair.secret()
-    Sdk.sdk.useWallet(new Wallet('', user.keys.seed, user.keys.accountId))
+    const wallet = new Wallet(
+      '',
+      user.keys.seed,
+      config.MASTER_ACCOUNT
+    )
+    Sdk.sdk.useWallet(wallet)
     const signerTypes = await this._getSignerTypes(user.keys.accountId)
 
     Object.assign(user, signerTypes)
@@ -117,7 +123,13 @@ export default {
     const user = store.state.user
     user.name = username
     user.keys = JSON.parse(credentials.getKeychainData())
-    Sdk.sdk.useWallet(new Wallet('', user.keys.seed, user.keys.accountId, credentials.getWalletId()))
+    const wallet = new Wallet(
+      '',
+      user.keys.seed,
+      config.MASTER_ACCOUNT,
+      credentials.getWalletId()
+    )
+    Sdk.sdk.useWallet(wallet)
     user.wallet = {
       id: credentials.getWalletId()
     }
