@@ -139,16 +139,6 @@
       <div class="app__form-row">
         <tick-field class="app__form-field"
           v-model="asset.policy"
-          :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.twoStepWithdrawal]"
-          title="Withdraw operations are done in two steps"
-          :cb-value="ASSET_POLICIES.twoStepWithdrawal"
-          :disabled="isPending"
-        />
-      </div>
-
-      <div class="app__form-row">
-        <tick-field class="app__form-field"
-          v-model="asset.policy"
           :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.requiresKyc]"
           title="Only users with KYC can submit/receive the asset"
           :cb-value="ASSET_POLICIES.requiresKyc"

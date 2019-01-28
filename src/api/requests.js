@@ -55,7 +55,7 @@ export const requests = {
   _reviewWithdraw ({ action, reason = '' }, ...requests) {
     const tx = envelopOperations(
       ...requests.map(function (item) {
-        return ReviewRequestBuilder.reviewTwoStepWithdrawRequest({
+        return ReviewRequestBuilder.reviewWithdrawRequest({
           requestID: item.id,
           requestHash: item.hash,
           requestType: item.request_type_i || item.requestTypeI,
