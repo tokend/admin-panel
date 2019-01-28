@@ -79,22 +79,24 @@
         <div class="app__form-row">
           <text-field label="Enter reject reason" v-model="rejectForm.reason"/>
         </div>
-      </form>
 
         <div class="app__form-actions">
           <button
+            type="submit"
             class="app__btn app__btn--danger"
             form="withdrawal-details-reject-form"
             :disabled="isSubmitting">
             Reject
           </button>
           <button
+            type="button"
             class="app__btn-secondary"
             @click="clearRejectionSelection"
             :disabled="isSubmitting">
             Cancel
           </button>
         </div>
+      </form>
     </modal>
   </div>
 </template>
