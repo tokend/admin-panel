@@ -103,12 +103,12 @@ export default {
 
     user.name = 'admin_demo'
     user.keys = user.keys || {}
-    user.keys.accountId = keypair.accountId()
+    user.keys.accountId = config.MASTER_ACCOUNT
     user.keys.seed = keypair.secret()
     const wallet = new Wallet(
       '',
       user.keys.seed,
-      config.MASTER_ACCOUNT
+      user.keys.accountId
     )
     Sdk.sdk.useWallet(wallet)
     const signerTypes = await this._getSignerTypes(user.keys.accountId)
@@ -122,11 +122,13 @@ export default {
     const auth = store.state.auth
     const user = store.state.user
     user.name = username
-    user.keys = JSON.parse(credentials.getKeychainData())
+    user.keys = user.keys || {}
+    user.keys.accountId = config.MASTER_ACCOUNT
+    user.keys.seed = JSON.parse(credentials.getKeychainData()).seed
     const wallet = new Wallet(
       '',
       user.keys.seed,
-      config.MASTER_ACCOUNT,
+      user.keys.accountId,
       credentials.getWalletId()
     )
     Sdk.sdk.useWallet(wallet)
