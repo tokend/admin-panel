@@ -32,16 +32,25 @@
             <span class="app-list__cell">Requestor</span>
           </div>
 
-          <router-link class="app-list__li" v-for="item in list.data" :key="item.id"
-            :to="{ name: 'sales.requests.show', params: { id: item.id }}">
-            <span class="app-list__cell app-list__cell--important" :title="item.baseAsset">
-              {{item.baseAsset}}
+          <router-link class="app-list__li" v-for="item in list.data"
+                       :key="item.id"
+            :to="{ name: 'sales.requests.show', params: { id: item.id }}"
+          >
+            <span class="app-list__cell app-list__cell--important"
+                  :title="item.baseAsset"
+            >
+              {{item.details[item.details.requestType].baseAsset}}
             </span>
-            <span class="app-list__cell" :title="item.details.name">
-              {{item.details.name}}
+            <span class="app-list__cell"
+                  :title="item.details[item.details.requestType].details.name"
+            >
+              {{item.details[item.details.requestType].details.name}}
             </span>
             <span class="app-list__cell">
-              <asset-amount-formatter :amount="item.hardCap" :asset="item.defaultQuoteAsset" />
+              <asset-amount-formatter
+                :amount="item.details[item.details.requestType].hardCap"
+                :asset="item.details[item.details.requestType].defaultQuoteAsset"
+              />
             </span>
             <span class="app-list__cell">
               <email-getter :address="item.requestor" is-titled />

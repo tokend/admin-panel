@@ -37,8 +37,8 @@
           <li>
             <span>Name</span>
             <span>
-              <template v-if="safeGet(request, 'token.name')">
-                {{request.token.name}}
+              <template v-if="safeGet(request, 'token.details.name')">
+                {{request.token.details.name}}
               </template>
               <template v-else>
                 &mdash;
@@ -68,8 +68,8 @@
           <li>
             <span>Terms</span>
             <span>
-              <template v-if="safeGet(request, 'token.terms.key')">
-                <doc-link-getter :file-key="request.token.terms.key">Open file</doc-link-getter>
+              <template v-if="safeGet(request, 'token.details.terms.key')">
+                <doc-link-getter :file-key="request.token.details.terms.key">Open file</doc-link-getter>
               </template>
 
               <template v-else>
@@ -82,9 +82,9 @@
 
       <div class="sale-rm-details-tab__row-item">
         <label class="data-caption">Token logo</label>
-        <template v-if="safeGet(request, 'token.logo.key')">
+        <template v-if="safeGet(request, 'token.details.logo.key')">
           <img-getter class="sale-rm-details-tab__token-logo"
-            :file-key="request.token.logo.key"
+            :file-key="request.token.details.logo.key"
             alt="Token logo"
           />
         </template>
@@ -101,8 +101,8 @@
           <li>
             <span>Name</span>
             <span>
-              <template v-if="safeGet(request, 'sale.details.name')">
-                {{request.sale.details.name}}
+              <template v-if="safeGet(getSaleDetails, 'details.name')">
+                {{getSaleDetails.details.name}}
               </template>
               <template v-else>
                 (Not provided yet)
@@ -111,23 +111,23 @@
           </li>
           <li>
             <span>Start time</span>
-            <date-formatter :date="request.sale.startTime" format="DD MMM YYYY HH:mm:ss" />
+            <date-formatter :date="getSaleDetails.startTime" format="DD MMM YYYY HH:mm:ss" />
           </li>
           <li>
             <span>End time</span>
-            <date-formatter :date="request.sale.endTime" format="DD MMM YYYY HH:mm:ss" />
+            <date-formatter :date="getSaleDetails.endTime" format="DD MMM YYYY HH:mm:ss" />
           </li>
           <li>
             <span>Soft cap</span>
-            <asset-amount-formatter :amount="request.sale.softCap" :asset="request.sale.defaultQuoteAsset" />
+            <asset-amount-formatter :amount="getSaleDetails.softCap" :asset="getSaleDetails.defaultQuoteAsset" />
           </li>
           <li>
             <span>Hard cap</span>
-            <asset-amount-formatter :amount="request.sale.hardCap" :asset="request.sale.defaultQuoteAsset" />
+            <asset-amount-formatter :amount="getSaleDetails.hardCap" :asset="getSaleDetails.defaultQuoteAsset" />
           </li>
 
           <label class="data-caption">Prices (per token) </label>
-          <li v-for="(item, index) in request.sale.quoteAssets" :key="index">
+          <li v-for="(item, index) in getSaleDetails.quoteAssets" :key="index">
             <span>{{item.quoteAsset}}</span>
             <span>{{item.price}}</span>
           </li>
@@ -135,8 +135,8 @@
 
         <label class="data-caption">Short description</label>
         <p class="text">
-          <template v-if="safeGet(request, 'sale.details.shortDescription')">
-            {{request.sale.details.shortDescription}}
+          <template v-if="safeGet(getSaleDetails, 'details.shortDescription')">
+            {{getSaleDetails.details.shortDescription}}
           </template>
           <template v-else>
             (Not provided yet)
@@ -146,9 +146,9 @@
 
       <div class="sale-rm-details-tab__row-item">
         <label class="data-caption">Fund logo</label>
-        <template v-if="safeGet(request, 'sale.details.logo.key')">
+        <template v-if="safeGet(getSaleDetails, 'details.logo.key')">
           <img-getter class="sale-rm-details-tab__sale-logo"
-            :file-key="request.sale.details.logo.key"
+            :file-key="getSaleDetails.details.logo.key"
             alt="Fund logo"
           />
         </template>
@@ -182,7 +182,11 @@ export default {
     AssetPoliciesFormatter,
     RequestStateFormatter
   },
-
+  computed: {
+    getSaleDetails () {
+      return this.request.sale.details[this.request.sale.details.requestType]
+    }
+  },
   methods: {
     safeGet: get
   }
