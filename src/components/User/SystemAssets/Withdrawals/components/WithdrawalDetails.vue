@@ -57,7 +57,7 @@
         />
       </li>
     </ul>
-    <div class="withdrawal-details__action-btns" v-if="reviewAllowed">
+    <div class="withdrawal-details__action-btns">
       <button class="app__btn withdrawal-details__action-btn"
               @click="fulfill(request)"
               :disabled="isSubmitting">
@@ -79,22 +79,24 @@
         <div class="app__form-row">
           <text-field label="Enter reject reason" v-model="rejectForm.reason"/>
         </div>
-      </form>
 
-      <div class="app__form-actions">
-        <button
-          class="app__btn app__btn--danger"
-          form="withdrawal-details-reject-form"
-          :disabled="isSubmitting">
-          Reject
-        </button>
-        <button
-          class="app__btn-secondary"
-          @click="clearRejectionSelection"
-          :disabled="isSubmitting">
-          Cancel
-        </button>
-      </div>
+        <div class="app__form-actions">
+          <button
+            type="submit"
+            class="app__btn app__btn--danger"
+            form="withdrawal-details-reject-form"
+            :disabled="isSubmitting">
+            Reject
+          </button>
+          <button
+            type="button"
+            class="app__btn-secondary"
+            @click="clearRejectionSelection"
+            :disabled="isSubmitting">
+            Cancel
+          </button>
+        </div>
+      </form>
     </modal>
   </div>
 </template>
@@ -128,16 +130,8 @@ export default {
     }
   },
   props: ['request', 'assets'],
-  computed: {
-    reviewAllowed () {
-      return !this.assets
-        .find(item => item.destAssetCode === this.request.code)
-        .policy & ASSET_POLICIES.twoStepWithdrawal
-    }
-  },
   methods: {
     async fulfill (request) {
-      if (!this.reviewAllowed) return
       if (!await confirmAction()) return
       this.isSubmitting = true
       try {

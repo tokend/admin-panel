@@ -4,10 +4,9 @@
       <form @submit.prevent="submit">
         <div class="app__form-row">
           <input-field class="app__form-field"
-            type="email"
             placeholder="email@example.com"
             v-model="form.receiver"
-            label="Receiver"
+            label="Receiver (email or address)"
             :disabled="isSubmitting"
           />
         </div>
@@ -70,6 +69,7 @@ import { AssetAmountFormatter } from '@comcom/formatters'
 import { DEFAULT_INPUT_STEP, DEFAULT_INPUT_MIN } from '@/constants'
 
 import { confirmAction } from '../../../../../js/modals/confirmation_message'
+import { Keypair } from 'tokend-js-sdk'
 
 export default {
   components: {
@@ -119,7 +119,9 @@ export default {
     },
 
     async getBalanceId () {
-      const address = await api.users.getUserIdByEmail(this.form.receiver)
+      const address = Keypair.isValidPublicKey(this.form.receiver)
+        ? this.form.receiver
+        : await api.users.getUserIdByEmail(this.form.receiver)
       let account = await api.accounts.getAccountById(address)
       const balance = account.balances.find(item => item.asset === this.form.asset)
 
