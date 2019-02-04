@@ -108,7 +108,11 @@ export default {
   },
 
   props: ['id', 'sale'],
-
+  computed: {
+    getSaleDetails () {
+      return this.request.sale.details[this.request.sale.details.requestType]
+    }
+  },
   created () {
     if (this.sale) {
       // TODO: check source/purpose of this code, delete if sure it wont break app
@@ -125,10 +129,10 @@ export default {
       try {
         this.request.sale = request
         const response = await Sdk.horizon.request.getAllForAssets({
-          asset: this.request.sale.baseAsset.code,
-          requestor: this.request.sale.baseAsset.requestor,
-          state: this.request.sale.baseAsset.state,
-          reviewer: this.request.sale.baseAsset.reviewer,
+          asset: this.getSaleDetails.baseAsset,
+          requestor: this.request.sale.requestor,
+          state: this.request.sale.requestState,
+          reviewer: this.request.sale.reviewer,
           order: 'desc'
         })
         this.request.token = response.data[0]
@@ -143,10 +147,11 @@ export default {
       try {
         this.request.sale = await this.getSaleRequest(id)
         const response = await await Sdk.horizon.assets
-          .get(this.request.sale.baseAsset)
+          .get(this.getSaleDetails.baseAsset)
         this.request.token = response.data
         this.request.isReady = true
       } catch (error) {
+        console.error(error)
         error.showMessage('Cannot get fund request. Please try again later')
         this.request.isFailed = true
       }

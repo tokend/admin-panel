@@ -68,7 +68,8 @@ export default {
   methods: {
     async getDescription (saleRequest) {
       const userId = saleRequest.requestor
-      const blobId = (saleRequest.details || {}).description
+      const blobId = (saleRequest.details[saleRequest.details.requestType] ||
+        {}).details.description
       try {
         const response = await Sdk.api.blobs.get(blobId, userId)
         this.description = response.data.value

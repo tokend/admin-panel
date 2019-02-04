@@ -23,7 +23,7 @@ export const requests = {
       return Sdk.base.ReviewRequestBuilder.reviewRequest({
         requestID: item.id,
         requestHash: item.hash,
-        requestType: typeof item.request_type_i === 'undefined' ? item.requestTypeI : item.request_type_i,
+        requestType: item.details.requestTypeI,
         action,
         reason
       })

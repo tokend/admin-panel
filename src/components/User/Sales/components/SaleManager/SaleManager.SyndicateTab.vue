@@ -10,7 +10,7 @@
           </li>
           <li>
             <span>Founded</span>
-            <date-formatter :date="syndicate.founded" format="DD MMM YYYY" />
+            <date-formatter :date="syndicate.found_date" format="DD MMM YYYY" />
           </li>
           <li>
             <span>Headquarters</span>
@@ -26,7 +26,7 @@
           </li>
           <li>
             <span>Team size</span>
-            <span>{{syndicate.teamSize}}</span>
+            <span>{{syndicate.team_size}}</span>
           </li>
           <li>
             <span>Company</span>
