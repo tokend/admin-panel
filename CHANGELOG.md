@@ -9,7 +9,9 @@ for further information about branching and tagging conventions.
 
 ## [Unreleased](https://github.com/tokend/admin-panel/compare/a9daacc...HEAD)
 ### Added
-- jsconfig.json for Visual Studio Code webpack alias support
+- `jsconfig.json` for Visual Studio Code webpack alias support
+- `cropAddress` filter
 
 ### Changed
 - Update @tokend/js-sdk version to 0.3.20
+- `email-getter` shows cropped address instead of full ont if the email fetching failed

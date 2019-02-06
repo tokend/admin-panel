@@ -17,7 +17,8 @@ import {
   filterDateWithTime,
   localizeIssuanceRequestState,
   adminSignerType,
-  getAdminSignerTypeLabel
+  getAdminSignerTypeLabel,
+  cropAddress
 } from './components/App/filters/filters'
 
 if (process.env.NODE_ENV === 'production') {
@@ -106,3 +107,4 @@ Vue.filter('dateTime', filterDateWithTime)
 Vue.filter('localizeIssuanceRequestState', localizeIssuanceRequestState)
 Vue.filter('adminSignerType', adminSignerType)
 Vue.filter('getAdminSignerTypeLabel', getAdminSignerTypeLabel)
+Vue.filter('cropAddress', cropAddress)

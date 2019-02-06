@@ -20,3 +20,7 @@ export function filterDateWithTime (date, format = 'DD MMM YYYY [at] hh:mm:ss') 
 export function localizeIssuanceRequestState (type) {
   return KYC_REQUEST_STATES[type].label
 }
+
+export function cropAddress (value) {
+  return `${value.slice(0, 4)}…${value.slice(-4)}`
+}

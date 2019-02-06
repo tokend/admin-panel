@@ -1,6 +1,14 @@
 <template>
-  <span class="email-getter" :title="isTitled && (email || id)">
-    {{email || id}}
+  <span
+    class="email-getter"
+    :title="isTitled && (email || accountId || balanceId)"
+  >
+    <template v-if="email">
+      {{ email }}
+    </template>
+    <template v-else>
+      {{ accountId || balanceId | cropAddress }}
+    </template>
   </span>
 </template>
 
@@ -36,11 +44,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters({ emailAddressBook: getters.GET_EMAIL_ADDRESS_BOOK }),
-
-    id () {
-      return this.accountId || this.balanceId
-    }
+    ...mapGetters({ emailAddressBook: getters.GET_EMAIL_ADDRESS_BOOK })
   },
 
   async created () {
@@ -106,5 +110,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>
