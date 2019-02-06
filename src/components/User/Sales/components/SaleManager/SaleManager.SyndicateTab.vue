@@ -109,15 +109,4 @@ export default {
 .sale-manager-syndicate-tab__details-wrp {
   max-width: 48rem;
 }
-
-.sale-manager-syndicate-tab__member-wrp {
-  & + & {
-    margin-top: 6rem;
-  }
-}
-
-.sale-manager-syndicate-tab__team-h3 {
-  margin-left: 20rem;
-  margin: 4rem 0 4rem 0rem; // WARN: left - magic number
-}
 </style>

@@ -16,6 +16,9 @@ for further information about branching and tagging conventions.
 - Update @tokend/js-sdk version to 0.3.20
 - `email-getter` shows cropped address instead of full ont if the email fetching failed
 
+### Removed
+- Redundant classes from SaleManager.SyndicateTab.vue
+
 ### Fixed
 - Displaying of the Details tab of a fund
 - Displaying of the Full Description tab of a fund
