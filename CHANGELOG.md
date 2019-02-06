@@ -15,3 +15,6 @@ for further information about branching and tagging conventions.
 ### Changed
 - Update @tokend/js-sdk version to 0.3.20
 - `email-getter` shows cropped address instead of full ont if the email fetching failed
+
+### Fixed
+- Displaying of the Details tab of a fund
