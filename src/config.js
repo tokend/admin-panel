@@ -102,7 +102,13 @@ export default Object.assign(
     COMMISSION_ACCOUNT: 'GAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHV4',
     OPERATIONAL_ACCOUNT: 'GABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABVCX',
     STORAGE_FEE_ACCOUNT: 'GABQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABEQO',
-    NETWORK_PASSPHRASE: 'Test SDF Network ; September 2015'
+    NETWORK_PASSPHRASE: 'Test SDF Network ; September 2015',
+
+    /**
+     * Sets the logging level, for more options visit
+     * https://www.npmjs.com/package/loglevel#documentation
+     */
+    LOG_LEVEL: 'trace'
   },
   process.env,
   document.ENV

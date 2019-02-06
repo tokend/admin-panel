@@ -11,6 +11,8 @@ for further information about branching and tagging conventions.
 ### Added
 - `jsconfig.json` for Visual Studio Code webpack alias support
 - `cropAddress` filter
+- `ErrorHandler` class that shows feedback and logs the error
+- `loglevel` package integrated
 
 ### Changed
 - Update @tokend/js-sdk version to 0.3.20
@@ -18,6 +20,8 @@ for further information about branching and tagging conventions.
 - Refactor to description tab markup of fund and fund request
 - Refactor to admin manager markup
 - `localize()` of `localize.js` has 6 digits of default zero count now
+- Issuance form now accepts both email and addresses
+- Minor refactor to main.js (moved import of filters)
 
 ### Removed
 - Redundant classes from SaleManager.SyndicateTab.vue
@@ -31,3 +35,5 @@ for further information about branching and tagging conventions.
 - Fix some terminology: remove the "investment portfolio" and "investment token" terms
 - `getAccountIdByEmail()` of `users.js` not longer throws an invalid signature exception
 - Titles of issuance history’s cells now show correct values
+- Issuance again possible on the issuance page
+- Issuance form now shows correct error message for every issue occured during the issuance

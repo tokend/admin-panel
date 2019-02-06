@@ -4,10 +4,10 @@
       <form @submit.prevent="submit">
         <div class="app__form-row">
           <input-field class="app__form-field"
-            type="email"
-            placeholder="email@example.com"
+            type="text"
+            placeholder="email@example.com or GAAQ..."
             v-model="form.receiver"
-            label="Receiver"
+            label="Receiver (email or address)"
             :disabled="isSubmitting"
           />
         </div>
@@ -63,6 +63,7 @@
 </template>
 
 <script>
+import api from '@/api'
 import { Sdk } from '@/sdk'
 import config from '@/config'
 import { InputField, SelectField } from '@comcom/fields'
@@ -71,6 +72,7 @@ import { AssetAmountFormatter } from '@comcom/formatters'
 import { DEFAULT_INPUT_STEP, DEFAULT_INPUT_MIN } from '@/constants'
 
 import { confirmAction } from '../../../../../js/modals/confirmation_message'
+import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   components: {
@@ -113,7 +115,7 @@ export default {
         const list = response.data || []
         const issuableAssets = list.filter(item => item.maxIssuanceAmount > 0)
         this.assets = issuableAssets
-        this.form.asset = (issuableAssets[0] || {}).code
+        this.form.asset = this.form.asset || (issuableAssets[0] || {}).code
       } catch (error) {
         console.error(error)
         this.$store.dispatch('SET_ERROR', 'Cannot load asset list')
@@ -121,7 +123,13 @@ export default {
     },
 
     async getBalanceId () {
-      const response = await Sdk.horizon.account.get(this.form.receiver)
+      let address
+      if (Sdk.base.Keypair.isValidPublicKey(this.form.receiver)) {
+        address = this.form.receiver
+      } else {
+        address = await api.users.getAccountIdByEmail(this.form.receiver)
+      }
+      const response = await Sdk.horizon.account.get(address)
       let account = response.data
       const balance = account.balances.find(item => item.asset === this.form.asset)
 
@@ -130,14 +138,14 @@ export default {
           const operation = Sdk.base.Operation.manageBalance({
             asset: this.form.asset,
             action: Sdk.xdr.ManageBalanceAction.createUnique(),
-            destination: this.form.receiver
+            destination: address
           })
           await Sdk.horizon.transactions.submitOperations(operation)
         } catch (error) {
           console.error(error)
           this.$store.dispatch('SET_ERROR', 'Unexpected error')
         }
-        const response = await Sdk.horizon.account.get(this.form.receiver)
+        const response = await Sdk.horizon.account.get(address)
         account = response.data
         return account.balances.find(item => item.asset === this.form.asset).balanceId
       } else {
@@ -175,28 +183,14 @@ export default {
         .then(this.getBalanceId)
         .then(this.sendManualIssuance)
         .then(_ => {
-          this.isSubmitting = false
           Bus.$emit('issuance:updateRequestList')
           return this.getAssets()
         })
-        .catch(err => {
-          console.error(err)
+        .catch((error) => {
+          ErrorHandler.process(error)
+        })
+        .finally(() => {
           this.isSubmitting = false
-          if (err.showMessage) {
-            err.showMessage()
-            return
-          }
-
-          if (typeof err === 'string') {
-            this.$store.dispatch('SET_ERROR', err)
-            return
-          }
-
-          if (err.status === 404) {
-            this.$store.dispatch('SET_ERROR', 'User not found')
-          } else {
-            this.$store.dispatch('SET_ERROR', 'Something went wrong. Unable to get user details')
-          }
         })
     }
   }
