@@ -21,6 +21,7 @@ for further information about branching and tagging conventions.
 
 ### Removed
 - Redundant classes from SaleManager.SyndicateTab.vue
+- Cleaned up config.js
 
 ### Fixed
 - Displaying of the Details tab of a fund and fund request
