@@ -1,5 +1,5 @@
 
-export default function localize (value, digits = 4, deleteZeros = false, needConvert = false) {
+export default function localize (value, digits = 6, deleteZeros = false, needConvert = false) {
   if (value === '') return ''
   if (typeof value !== 'string' && typeof value !== 'number') {
     return ''
@@ -25,7 +25,7 @@ function beautifyDecimal (value, digits) {
   const splittedValue = value.split('.')
   const beforePoint = splittedValue[0]
   let afterPoint = splittedValue[1] || ''
-  afterPoint += '0000'
+  afterPoint += '0'.repeat(digits)
   afterPoint = afterPoint.substr(0, digits)
   if (digits !== 0) {
     return [beforePoint, afterPoint].join('.')

@@ -17,6 +17,7 @@ for further information about branching and tagging conventions.
 - `email-getter` shows cropped address instead of full ont if the email fetching failed
 - Refactor to description tab markup of fund and fund request
 - Refactor to admin manager markup
+- `localize()` of `localize.js` has 6 digits of default zero count now
 
 ### Removed
 - Redundant classes from SaleManager.SyndicateTab.vue
