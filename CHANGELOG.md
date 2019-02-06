@@ -8,5 +8,8 @@ Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
 ## [Unreleased](https://github.com/tokend/admin-panel/compare/a9daacc...HEAD)
+### Added
+- jsconfig.json for Visual Studio Code webpack alias support
+
 ### Changed
 - Update @tokend/js-sdk version to 0.3.20
