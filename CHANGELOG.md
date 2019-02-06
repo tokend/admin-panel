@@ -27,3 +27,4 @@ for further information about branching and tagging conventions.
 - Video size on Description tab of fund and fund request
 - `getEmailByAddress()` of `users.js` no longer throws exceptions when failed fetching of email
 - Fix some terminology: remove the "investment portfolio" and "investment token" terms
+- `getAccountIdByEmail()` of `users.js` not longer throws an invalid signature exception

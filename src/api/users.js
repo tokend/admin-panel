@@ -20,8 +20,15 @@ export default {
   },
 
   async getAccountIdByEmail (email) {
-    const response = await Sdk.api.users.getPage({ email: email })
-    const resultArray = response.data.filter(item => item.email === email)
-    return resultArray[0].id
+    try {
+      const { data } = await Sdk.horizon.public.getAccountIdByEmail(email)
+      return data.accountId
+    } catch (error) {
+      if (error.httpStatus === 404) {
+        return ''
+      } else {
+        throw error
+      }
+    }
   }
 }
