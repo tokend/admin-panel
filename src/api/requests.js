@@ -313,7 +313,7 @@ export const requests = {
       order: 'desc',
       reviewer: config.MASTER_ACCOUNT
     })
-    response.records = mapRequests(response.data.records)
+    response.records = mapRequests(response.data)
     return response
   },
 
@@ -322,7 +322,7 @@ export const requests = {
 
 function mapRequests (records) {
   return records.map(record => {
-    const type = record.details.request_type_i
+    const type = record.details.requestTypeI
     switch (type) {
       case REQUEST_TYPES.assetCreate:
       case REQUEST_TYPES.assetUpdate:

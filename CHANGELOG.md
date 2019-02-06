@@ -37,3 +37,4 @@ for further information about branching and tagging conventions.
 - Titles of issuance history’s cells now show correct values
 - Issuance again possible on the issuance page
 - Issuance form now shows correct error message for every issue occured during the issuance
+- Pre-issuance request list now fetches correctly the list
