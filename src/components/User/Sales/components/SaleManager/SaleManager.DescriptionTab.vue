@@ -1,5 +1,11 @@
 <template>
   <div class="sale-manager-description-tab">
+    <iframe
+      class="sale-manager-description-tab__video"
+      :src="`https://www.youtube.com/embed/${sale.details.youtubeVideoId}`"
+      allowfullscreen="true"
+    ></iframe>
+
     <template v-if="isLoaded">
       <div class="sale-manager-description-tab__description-wrp">
         <markdown-formatter :source="description" />
@@ -39,12 +45,13 @@ export default {
   },
 
   created () {
-    this.getDescription(this.sale)
+    this.loadDescription()
   },
 
   methods: {
-    async getDescription ({ ownerId: userId, description: blobId }) {
+    async loadDescription () {
       try {
+        const { ownerId: userId, description: blobId } = this.sale.details
         const response = await Sdk.api.blobs.get(blobId, userId)
         const blob = response.data
         this.description = blob.value
@@ -57,8 +64,15 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss">
+@import "~@/assets/scss/colors";
+
 .sale-manager-description-tab__description-wrp {
   max-width: 56rem;
+}
+
+.sale-manager-description-tab__video {
+  width: 100%;
+  height: 430px;
 }
 </style>

@@ -18,4 +18,5 @@ for further information about branching and tagging conventions.
 
 ### Fixed
 - Displaying of the Details tab of a fund
+- Displaying of the Full Description tab of a fund
 - `getEmailByAddress()` of `users.js` no longer throws exceptions when failed fetching of email

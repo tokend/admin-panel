@@ -11,7 +11,6 @@
 
           <tab name="Full description">
             <description-tab :sale="sale" />
-            <iframe :src="`https://www.youtube.com/embed/${sale.youtubeVideoId}`" allowfullscreen="true"></iframe>
           </tab>
 
           <tab name="Participants">
@@ -93,7 +92,4 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.sale-manager__description-wrp {
-  max-width: 56rem;
-}
 </style>
