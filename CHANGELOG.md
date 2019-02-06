@@ -15,11 +15,13 @@ for further information about branching and tagging conventions.
 ### Changed
 - Update @tokend/js-sdk version to 0.3.20
 - `email-getter` shows cropped address instead of full ont if the email fetching failed
+- Refactor to description tab markup of fund and fund request
 
 ### Removed
 - Redundant classes from SaleManager.SyndicateTab.vue
 
 ### Fixed
-- Displaying of the Details tab of a fund
-- Displaying of the Full Description tab of a fund
+- Displaying of the Details tab of a fund and fund request
+- Displaying of the Full Description tab of a fund and fund request
+- Video size on Description tab of fund and fund request
 - `getEmailByAddress()` of `users.js` no longer throws exceptions when failed fetching of email

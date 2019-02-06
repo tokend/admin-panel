@@ -1,5 +1,6 @@
 <template>
   <div class="sale-manager-description-tab">
+    <label class="data-caption">Fund video</label>
     <iframe
       class="sale-manager-description-tab__video"
       :src="`https://www.youtube.com/embed/${sale.details.youtubeVideoId}`"
@@ -7,6 +8,7 @@
     ></iframe>
 
     <template v-if="isLoaded">
+      <label class="data-caption">Fund description</label>
       <div class="sale-manager-description-tab__description-wrp">
         <markdown-formatter :source="description" />
       </div>
