@@ -263,7 +263,6 @@ export default {
     async getToken ({ baseAsset }) {
       try {
         const { data } = await Sdk.horizon.assets.get(baseAsset)
-        console.log(data)
         this.token = data
         this.isTokenLoaded = true
       } catch (error) {
