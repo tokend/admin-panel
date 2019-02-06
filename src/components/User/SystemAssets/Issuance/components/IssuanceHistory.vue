@@ -3,7 +3,9 @@
     <div class="issuance-rl__filters-wrp">
       <div class="issuance-rl__filters">
         <select-field class="issuance-rl__filter app-list-filters__field"
-                      label="Asset" v-model="filters.asset">
+                      label="Asset"
+                      v-model="filters.asset"
+        >
           <option v-for="asset in assets" :value="asset">{{ asset }}</option>
         </select-field>
       </div>
@@ -23,7 +25,7 @@
               Requestor
             </span>
             <span class="app-list__cell">
-             Receiver
+              Receiver
             </span>
             <span class="app-list__cell">
               Date
@@ -37,7 +39,7 @@
             </span>
 
             <span class="app-list__cell app-list__cell--important"
-                  :title="`${localize(item.amount)} ${item.asset}`">
+                  :title="`${localize(item.details.issuanceCreate.amount)} ${item.details.issuanceCreate.asset}`">
               {{localize(item.details.issuanceCreate.amount)}} {{item.details.issuanceCreate.asset}}
             </span>
 
@@ -47,7 +49,7 @@
             </span>
 
             <span class="app-list__cell"
-                  :title="item.receiver">
+                  :title="item.details.issuanceCreate.receiver">
               {{item.details.issuanceCreate.receiver}}
             </span>
 

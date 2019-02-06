@@ -29,3 +29,4 @@ for further information about branching and tagging conventions.
 - `getEmailByAddress()` of `users.js` no longer throws exceptions when failed fetching of email
 - Fix some terminology: remove the "investment portfolio" and "investment token" terms
 - `getAccountIdByEmail()` of `users.js` not longer throws an invalid signature exception
+- Titles of issuance history’s cells now show correct values
