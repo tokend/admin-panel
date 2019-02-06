@@ -14,8 +14,8 @@ export default {
 
   getEmailByAddress (address) {
     return this.getEmailsByAddresses([address])
-      .then((response) => {
-        return response[address].email
+      .then(({ [address]: result }) => {
+        return result ? result.email : ''
       })
   },
 
