@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
-## [Unreleased](https://github.com/tokend/admin-panel/compare/a9daacc...HEAD)
+## [1.1.0](https://github.com/tokend/admin-panel/releases/tag/1.1.0)
 ### Added
 - `jsconfig.json` for Visual Studio Code webpack alias support
 - `cropAddress` filter
