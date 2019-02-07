@@ -1,0 +1,34 @@
+services:
+  - docker:dind
+
+variables:
+  GITHUB_REF: $CI_COMMIT_SHA
+  DH_IMAGE: tokend/admin-client
+
+stages:
+  - build
+  - publish
+
+build:
+  image: registry.gitlab.com/tokend/deployment/docker-build:latest
+  stage: build
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  tags:
+    - tokend
+  script:
+    - ci-little-helper set-pending build
+    - .ci/build.sh && STATE=0 || STATE=1
+    - ci-little-helper set-state $STATE build && exit $STATE
+
+publish dockerhub:
+  image: registry.gitlab.com/tokend/deployment/docker-build:latest
+  stage: publish
+  tags:
+    - tokend
+  only:
+    - /^.+\..+\..+$/
+  script:
+    - ci-little-helper set-pending publish
+    - .ci/publish.sh && STATE=0 || STATE=1
+    - ci-little-helper set-state $STATE publish && exit $STATE
