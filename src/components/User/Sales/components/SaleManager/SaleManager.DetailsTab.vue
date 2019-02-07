@@ -4,22 +4,28 @@
       <template v-if="isTokenLoaded">
         <div class="sale-manager-details-tab__row-item">
           <ul class="key-value-list">
-            <label class="data-caption">Investment token details</label>
+            <label class="data-caption">Token details</label>
             <li>
               <span>Name</span>
-              <span>{{token.name || '&mdash;' }}</span>
+              <span>{{ token.details.name || '&mdash;' }}</span>
             </li>
             <li>
               <span>Code</span>
-              <span>{{token.code}}</span>
+              <span>{{ token.code }}</span>
             </li>
             <li>
               <span>Owner</span>
-              <email-getter :address="token.owner" is-titled />
+              <email-getter
+                :address="token.owner"
+                is-titled
+              />
             </li>
             <li>
               <span>Preissued asset signer</span>
-              <email-getter :address="token.preissuedAssetSigner" is-titled />
+              <email-getter
+                :address="token.preissuedAssetSigner"
+                is-titled
+              />
             </li>
             <li>
               <span>Max issuance amount</span>
@@ -44,12 +50,10 @@
             <li>
               <span>Terms</span>
               <span>
-                <template v-if="token.terms && token.terms.key">
-                  <doc-link-getter :file-key="token.terms.key">Open file</doc-link-getter>
-                </template>
-
-                <template v-else-if="token.details && token.details.terms && token.details.terms.key">
-                  <doc-link-getter :file-key="token.details.terms.key">Open file</doc-link-getter>
+                <template v-if="token.details.terms && token.details.terms.key">
+                  <doc-link-getter :file-key="token.details.terms.key">
+                    Open file
+                  </doc-link-getter>
                 </template>
 
                 <template v-else>
@@ -62,10 +66,16 @@
 
         <div class="sale-manager-details-tab__row-item">
           <label class="data-caption">Token logo</label>
-          <img-getter class="sale-manager-details-tab__token-logo"
-            :file-key="token.logo.key"
-            alt="Token logo"
-          />
+          <template v-if="token.details.logo && token.details.logo.key">
+            <img-getter
+              class="sale-manager-details-tab__token-logo"
+              :file-key="token.details.logo.key"
+              alt="Token logo"
+            />
+          </template>
+          <template v-else>
+            (No logo)
+          </template>
         </div>
       </template>
 
@@ -88,37 +98,56 @@
           <label class="data-caption">Fund details</label>
           <li>
             <span>Name</span>
-            <span>{{sale.name || '&mdash;' }}</span>
+            <span>{{ sale.details.name || '&mdash;' }}</span>
           </li>
           <li>
             <span>State</span>
             <span>
-              <template v-if="sale.state.value === SALE_STATES.open">Open</template>
-              <template v-else-if="sale.state.value === SALE_STATES.closed">Closed</template>
-              <template v-else-if="sale.state.value === SALE_STATES.cancelled">Cancelled</template>
+              <template v-if="sale.state.value === SALE_STATES.open">
+                Open
+              </template>
+              <template v-else-if="sale.state.value === SALE_STATES.closed">
+                Closed
+              </template>
+              <template v-else-if="sale.state.value === SALE_STATES.cancelled">
+                Cancelled
+              </template>
             </span>
           </li>
           <li>
             <span>Owner</span>
-            <email-getter :address="sale.ownerId" is-titled />
+            <email-getter
+              :address="sale.ownerId"
+              is-titled
+            />
           </li>
           <li>
             <span>Start time</span>
-            <date-formatter :date="sale.startTime" format="DD MMM YYYY HH:mm:ss" />
+            <date-formatter
+              :date="sale.startTime"
+              format="DD MMM YYYY HH:mm:ss"
+            />
           </li>
           <li>
             <span>End time</span>
-            <date-formatter :date="sale.endTime" format="DD MMM YYYY HH:mm:ss" />
+            <date-formatter
+              :date="sale.endTime"
+              format="DD MMM YYYY HH:mm:ss"
+            />
           </li>
         </ul>
 
-        <ul class="key-value-list"
+        <ul
+          class="key-value-list"
           v-for="(item, index) in sale.quoteAssets.quoteAssets"
-          :key="index">
-          <span><!-- HACK: to make padding of label.data-caption --></span>
-          <label class="data-caption">{{item.asset}} progress</label>
+          :key="index"
+        >
+          <span>
+            <!-- to padding of label.data-caption -->
+          </span>
+          <label class="data-caption">{{ item.asset }} progress</label>
           <li>
-            <span>Price (per {{sale.baseAsset}})</span>
+            <span>Price (per {{ sale.baseAsset }})</span>
             <asset-amount-formatter :amount="item.price" />
           </li>
           <li>
@@ -126,48 +155,68 @@
             <asset-amount-formatter :amount="item.currentCap" />
           </li>
           <li>
-            <span :title="`Current cap + current caps of the other acceptable assets in the ${item.asset} equivalent`"
-            >Total current cap</span>
+            <!-- eslint-disable-next-line max-len -->
+            <span :title="`Current cap + current caps of the other acceptable assets in the ${item.asset} equivalent`">Total current cap</span>
             <asset-amount-formatter :amount="item.totalCurrentCap" />
           </li>
           <li>
-            <span :title="`Hard cap of the fund in the ${item.asset} equivalent`"
-            >Hard cap</span>
+            <!-- eslint-disable-next-line max-len -->
+            <span :title="`Hard cap of the fund in the ${item.asset} equivalent`">Hard cap</span>
             <asset-amount-formatter :amount="item.hardCap" />
           </li>
         </ul>
 
         <ul class="key-value-list">
-          <span><!-- HACK: to make padding of label.data-caption --></span>
+          <span>
+            <!-- to padding of label.data-caption -->
+          </span>
           <label class="data-caption">Total progress</label>
           <li>
             <span>Tokens sold</span>
-            <asset-amount-formatter :amount="sale.baseCurrentCap" :asset="sale.baseAsset" />
+            <asset-amount-formatter
+              :amount="sale.baseCurrentCap"
+              :asset="sale.baseAsset"
+            />
           </li>
           <li>
             <span>Current cap</span>
-            <asset-amount-formatter :amount="sale.currentCap" :asset="sale.defaultQuoteAsset" />
+            <asset-amount-formatter
+              :amount="sale.currentCap"
+              :asset="sale.defaultQuoteAsset"
+            />
           </li>
           <li>
             <span>Soft cap</span>
-            <asset-amount-formatter :amount="sale.softCap" :asset="sale.defaultQuoteAsset" />
+            <asset-amount-formatter
+              :amount="sale.softCap"
+              :asset="sale.defaultQuoteAsset"
+            />
           </li>
           <li>
             <span>Hard cap</span>
-            <asset-amount-formatter :amount="sale.hardCap" :asset="sale.defaultQuoteAsset" />
+            <asset-amount-formatter
+              :amount="sale.hardCap"
+              :asset="sale.defaultQuoteAsset"
+            />
           </li>
         </ul>
 
         <label class="data-caption">Short description</label>
-        <p class="text">{{sale.shortDescription}}</p>
+        <p class="text">{{ sale.details.shortDescription }}</p>
       </div>
 
       <div class="sale-manager-details-tab__row-item">
         <label class="data-caption">Fund logo</label>
-        <img-getter class="sale-manager-details-tab__sale-logo"
-          :file-key="sale.logo.key"
-          alt="Fund logo"
-        />
+        <template v-if="sale.details.logo && sale.details.logo.key">
+          <img-getter
+            class="sale-manager-details-tab__sale-logo"
+            :file-key="sale.details.logo.key"
+            alt="Fund logo"
+          />
+        </template>
+        <template v-else>
+          (No logo)
+        </template>
       </div>
     </div>
   </div>
@@ -193,7 +242,9 @@ export default {
     DocLinkGetter
   },
 
-  props: ['sale'],
+  props: {
+    sale: { type: Object, required: true }
+  },
 
   data () {
     return {
@@ -211,8 +262,8 @@ export default {
   methods: {
     async getToken ({ baseAsset }) {
       try {
-        const response = await Sdk.horizon.assets.get(baseAsset)
-        this.token = response.data
+        const { data } = await Sdk.horizon.assets.get(baseAsset)
+        this.token = data
         this.isTokenLoaded = true
       } catch (error) {
         this.isTokenFailed = true
@@ -253,5 +304,4 @@ export default {
   max-width: 20rem;
   max-height: 20rem;
 }
-
 </style>

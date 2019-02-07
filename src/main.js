@@ -11,15 +11,6 @@ import Raven from 'raven-js'
 import RavenVue from 'raven-js/plugins/vue'
 import ravenConfig from './raven_config'
 
-/* filters */
-import {
-  filterAccountType,
-  filterDateWithTime,
-  localizeIssuanceRequestState,
-  adminSignerType,
-  getAdminSignerTypeLabel
-} from './components/App/filters/filters'
-
 if (process.env.NODE_ENV === 'production') {
   Vue.config.devtools = false
   Vue.config.debug = false
@@ -101,8 +92,23 @@ Vue.use(api)
 
 /* Vue filters */
 
+import {
+  filterAccountType,
+  filterDateWithTime,
+  localizeIssuanceRequestState,
+  adminSignerType,
+  getAdminSignerTypeLabel,
+  cropAddress
+} from './components/App/filters/filters'
+
 Vue.filter('accountType', filterAccountType)
 Vue.filter('dateTime', filterDateWithTime)
 Vue.filter('localizeIssuanceRequestState', localizeIssuanceRequestState)
 Vue.filter('adminSignerType', adminSignerType)
 Vue.filter('getAdminSignerTypeLabel', getAdminSignerTypeLabel)
+Vue.filter('cropAddress', cropAddress)
+
+/* Logger module */
+
+import log from 'loglevel'
+log.setDefaultLevel(params.LOG_LEVEL)

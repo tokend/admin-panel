@@ -1,11 +1,6 @@
 import { ReviewableRequest } from './ReviewableRequest'
 
 export class IssuanceCreateRequest extends ReviewableRequest {
-  constructor (record) {
-    super(record)
-    this.operationDetails = this.record[this.record.request_type]
-  }
-
   get amount () {
     return this.operationDetails.amount
   }

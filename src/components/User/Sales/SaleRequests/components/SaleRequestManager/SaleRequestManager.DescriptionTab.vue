@@ -1,12 +1,11 @@
 <template>
   <div class="sale-rm-description-tab">
-
-    <template v-if="videoId">
-      <label class="data-caption">Fund video</label>
-      <div class="sale-rm-description-tab__video-wrp">
-        <iframe :src="`https://www.youtube.com/embed/${videoId}`" allowfullscreen="true"></iframe>
-      </div>
-    </template>
+    <label class="data-caption">Fund video</label>
+    <iframe
+      class="sale-rm-description-tab__video"
+      :src="`https://www.youtube.com/embed/${videoId}`"
+      allowfullscreen="true"
+    ></iframe>
 
     <template v-if="description">
       <label class="data-caption">Fund description</label>
@@ -38,7 +37,7 @@
 <script>
 import { MarkdownFormatter } from '@comcom/formatters'
 import { Sdk } from '@/sdk'
-import safeGet from 'lodash/get'
+import _get from 'lodash/get'
 
 export default {
   components: {
@@ -56,20 +55,29 @@ export default {
   },
 
   created () {
-    this.getDescription(this.saleRequest)
+    this.loadDescription()
   },
 
   computed: {
     videoId () {
-      return safeGet(this.saleRequest, 'details.youtubeVideoId')
+      const requestType = this.saleRequest.details.requestType
+      return _get(
+        this.saleRequest,
+        `details.${requestType}.details.youtubeVideoId`
+      )
     }
   },
 
   methods: {
-    async getDescription (saleRequest) {
-      const userId = saleRequest.requestor
-      const blobId = (saleRequest.details[saleRequest.details.requestType] ||
-        {}).details.description
+    async loadDescription () {
+      const userId = this.saleRequest.requestor
+
+      const requestType = this.saleRequest.details.requestType
+      const blobId = _get(
+        this.saleRequest,
+        `details.${requestType}.details.description`
+      )
+
       try {
         const response = await Sdk.api.blobs.get(blobId, userId)
         this.description = response.data.value
@@ -89,5 +97,10 @@ export default {
 <style scoped>
 .sale-rm-description-tab__description-wrp {
   max-width: 56rem;
+}
+
+.sale-rm-description-tab__video {
+  width: 100%;
+  height: 430px;
 }
 </style>

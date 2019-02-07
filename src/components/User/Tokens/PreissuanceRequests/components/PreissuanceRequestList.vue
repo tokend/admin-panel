@@ -140,7 +140,9 @@ export default {
     },
 
     filteredRequests () {
-      const filteredByType = this.requests.filter(request => request instanceof CreatePreIssuanceRequest)
+      const filteredByType = this.requests
+        .filter(request => request instanceof CreatePreIssuanceRequest)
+
       return this.asset === 'All'
         ? filteredByType
         : filteredByType.filter(request => request.asset() === this.asset)
@@ -163,21 +165,26 @@ export default {
 
     nextPageLoader () {
       this.loadNewPage = true
-      return this.pages.next(this.$store.getters.keypair).then((response) => {
-        if (response.records.length > 0) {
-          this.requests = this.requests.concat(response.records)
-          this.pages = response
-          return
-        }
-        if (response.records.length < this.$store.getters.pageLimit) {
+      return this.pages
+        .fetchNext(this.$store.getters.keypair)
+        .then((response) => {
+          if (response.data.length > 0) {
+            const mappedRequests = api.requests.mapRequests(response.data)
+            this.requests = this.requests.concat(mappedRequests)
+            this.pages = response
+            return
+          }
+
+          if (response.data.length < this.$store.getters.pageLimit) {
+            this.pageableLoadCompleted = true
+          }
+
+          this.loadNewPage = false
+        }).catch((err) => {
+          console.error(err)
+          this.loadNewPage = false
           this.pageableLoadCompleted = true
-        }
-        this.loadNewPage = false
-      }).catch((err) => {
-        console.error(err)
-        this.loadNewPage = false
-        this.pageableLoadCompleted = true
-      })
+        })
     },
 
     formatDate (date) {
@@ -234,12 +241,6 @@ export default {
     },
 
     fulfill (request) {
-      // TODO: resolve why do we need this and what the fuck is availalble amount
-      // if (parseInt(request.amount) > this.availableAmount) {
-      //   this.$store.dispatch('SET_ERROR', 'Not enough pre-issued coins for fulfill this request')
-      //   return
-      // }
-
       this.$store.commit('OPEN_LOADER')
       return request.fulfill()
         .then(() => {

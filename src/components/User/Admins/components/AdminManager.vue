@@ -1,12 +1,18 @@
 <template>
   <div class="admins-edit">
     <div class="admins-edit__block app__block">
-      <h2>{{addNew ? 'Add new administrator' :  'Manage administrator'}}</h2>
+      <h2>
+        {{ addNew ? 'Add new administrator' : 'Manage administrator' }}
+      </h2>
 
-      <form @submit.prevent="submit" id="admins-edit-form">
+      <form
+        @submit.prevent="submit"
+        id="admins-edit-form"
+      >
         <div class="admins-edit__short-section">
           <div class="app__form-row">
-            <input-field class="app__form-field"
+            <input-field
+              class="app__form-field"
               label="Account ID"
               v-model="params.accountId"
               :error-message="formErrors.accountId.message"
@@ -15,7 +21,8 @@
           </div>
 
           <div class="app__form-row">
-            <input-field class="app__form-field"
+            <input-field
+              class="app__form-field"
               label="Name"
               v-model="params.name"
               :error-message="formErrors.name.message"
@@ -24,16 +31,22 @@
           </div>
 
           <div class="app__form-row">
-            <input-field class="app__form-field"
+            <input-field
+              class="app__form-field"
               label="Identity"
-              type="number" min="0" max="255"
+              type="number"
+              min="0"
+              max="255"
               v-model="params.signerIdentity"
               :disabled="isMaster || isPending"
             />
 
-            <input-field class="app__form-field"
+            <input-field
+              class="app__form-field"
               label="Weight"
-              type="number" min="1" max="255"
+              type="number"
+              min="1"
+              max="255"
               v-model="params.weight"
               :disabled="isPending"
             />
@@ -44,34 +57,59 @@
 
         <h3 class="admins-edit__rights-group-title">
           <span>Super administrator</span>
-          <button type="button" @click="toggleSelection(TOGGLE_SELECTIONS_BY_TYPE.super)">Select group</button>
+          <button
+            type="button"
+            @click="toggleSelection(TOGGLE_SELECTIONS_BY_TYPE.super)"
+          >
+            Select group
+          </button>
         </h3>
         <div class="admins-edit__rights-group">
-          <tick-field class="admins-edit__checkbox" v-model="signerTypes.primary" :disabled="isMaster || isPending" :required="false"
+          <tick-field
+            class="admins-edit__checkbox"
+            v-model="signerTypes.primary"
+            :disabled="isMaster || isPending"
+            :required="false"
             label="KYC super administrator"
             title="Сan make final review for requests that system cannot handle authomatically"
             :cb-value="SIGNER_TYPES.kycSuperAdmin"
           />
 
-          <tick-field class="admins-edit__checkbox" v-model="signerTypes.primary" :disabled="isMaster || isPending" :required="false"
+          <tick-field
+            class="admins-edit__checkbox"
+            v-model="signerTypes.primary"
+            :disabled="isMaster || isPending"
+            :required="false"
             label="Manage operation thresholds"
             title="Allowed to add/delete signers and trust"
             :cb-value="SIGNER_TYPES.accountManager"
           />
 
-          <tick-field class="admins-edit__checkbox" v-model="signerTypes.secondary" :disabled="isMaster || isPending" :required="false"
+          <tick-field
+            class="admins-edit__checkbox"
+            v-model="signerTypes.secondary"
+            :disabled="isMaster || isPending"
+            :required="false"
             label="View the list of users"
             title="Сan search for the user’s account through the users list"
             :cb-value="SIGNER_TYPES_SECONDARY.viewUserList"
           />
 
-          <tick-field class="admins-edit__checkbox" v-model="signerTypes.secondary" :disabled="isMaster || isPending" :required="false"
+          <tick-field
+            class="admins-edit__checkbox"
+            v-model="signerTypes.secondary"
+            :disabled="isMaster || isPending"
+            :required="false"
             label="View pending KYC requests"
             title="Сan view the pending KYC requests list"
             :cb-value="SIGNER_TYPES_SECONDARY.viewPendingKycRequests"
           />
 
-          <tick-field class="admins-edit__checkbox" v-model="signerTypes.secondary" :disabled="isMaster || isPending" :required="false"
+          <tick-field
+            class="admins-edit__checkbox"
+            v-model="signerTypes.secondary"
+            :disabled="isMaster || isPending"
+            :required="false"
             label="View history KYC requests"
             title="Сan view the history of KYC requests"
             :cb-value="SIGNER_TYPES_SECONDARY.viewHistoryKycRequests"
@@ -80,10 +118,19 @@
 
         <h3 class="admins-edit__rights-group-title">
           <span>KYC administrator</span>
-          <button type="button" @click="toggleSelection(TOGGLE_SELECTIONS_BY_TYPE.kyc)">Select group</button>
+          <button
+            type="button"
+            @click="toggleSelection(TOGGLE_SELECTIONS_BY_TYPE.kyc)"
+          >
+            Select group
+          </button>
         </h3>
         <div class="admins-edit__rights-group">
-          <tick-field class="admins-edit__checkbox" v-model="signerTypes.primary" :disabled="isMaster || isPending" :required="false"
+          <tick-field
+            class="admins-edit__checkbox"
+            v-model="signerTypes.primary"
+            :disabled="isMaster || isPending"
+            :required="false"
             label="KYC account manager"
             title="Can manage KYC of account"
             :cb-value="SIGNER_TYPES.kycAccManager"
@@ -92,40 +139,69 @@
 
         <h3 class="admins-edit__rights-group-title">
           <span>Issuance management</span>
-          <button type="button" @click="toggleSelection(TOGGLE_SELECTIONS_BY_TYPE.issuance)">Select group</button>
+          <button
+            type="button"
+            @click="toggleSelection(TOGGLE_SELECTIONS_BY_TYPE.issuance)"
+          >
+            Select group
+          </button>
         </h3>
         <div class="admins-edit__rights-group">
-          <tick-field class="admins-edit__checkbox" v-model="signerTypes.primary" :disabled="isMaster || isPending" :required="false"
+          <tick-field
+            class="admins-edit__checkbox"
+            v-model="signerTypes.primary"
+            :disabled="isMaster || isPending"
+            :required="false"
             label="Issuance manager"
             title="Allowed to make issuance requests, review issuance, upload preissuance"
             :cb-value="SIGNER_TYPES.issuanceManager"
           />
 
-          <tick-field class="admins-edit__checkbox" v-model="signerTypes.secondary" :disabled="isMaster || isPending" :required="false"
+          <tick-field
+            class="admins-edit__checkbox"
+            v-model="signerTypes.secondary"
+            :disabled="isMaster || isPending"
+            :required="false"
             label="View issuance history"
             title="Сan view the issuance history"
             :cb-value="SIGNER_TYPES_SECONDARY.viewIssuanceHistory"
           />
 
-          <tick-field class="admins-edit__checkbox" v-model="signerTypes.secondary" :disabled="isMaster || isPending" :required="false"
+          <tick-field
+            class="admins-edit__checkbox"
+            v-model="signerTypes.secondary"
+            :disabled="isMaster || isPending"
+            :required="false"
             label="View the pending issuance requests"
             title="Сan view the pending issuance requests list"
             :cb-value="SIGNER_TYPES_SECONDARY.viewPendingIssuanceRequests"
           />
 
-          <tick-field class="admins-edit__checkbox" v-model="signerTypes.primary" :disabled="isMaster || isPending" :required="false"
+          <tick-field
+            class="admins-edit__checkbox"
+            v-model="signerTypes.primary"
+            :disabled="isMaster || isPending"
+            :required="false"
             label="Fulfill and reject the issuance requests"
             title="Allowed to review pre-issuance/issuance requests"
             :cb-value="SIGNER_TYPES.userIssuanceManager"
           />
 
-          <tick-field class="admins-edit__checkbox" v-model="signerTypes.primary" :disabled="isMaster || isPending" :required="false"
+          <tick-field
+            class="admins-edit__checkbox"
+            v-model="signerTypes.primary"
+            :disabled="isMaster || isPending"
+            :required="false"
             label="Withdraw manager"
             title="Allowed to review withdraw requests"
             :cb-value="SIGNER_TYPES.withdrawManager"
           />
 
-          <tick-field class="admins-edit__checkbox" v-model="signerTypes.primary" :disabled="isMaster || isPending" :required="false"
+          <tick-field
+            class="admins-edit__checkbox"
+            v-model="signerTypes.primary"
+            :disabled="isMaster || isPending"
+            :required="false"
             label="Super issuance manager"
             title="Super issuance manager"
             :cb-value="SIGNER_TYPES.superIssuanceManager"
@@ -134,58 +210,99 @@
 
         <h3 class="admins-edit__rights-group-title">
           <span>Security management</span>
-          <button type="button" @click="toggleSelection(TOGGLE_SELECTIONS_BY_TYPE.security)">Select group</button>
+          <button
+            type="button"
+            @click="toggleSelection(TOGGLE_SELECTIONS_BY_TYPE.security)"
+          >
+            Select group
+          </button>
         </h3>
         <div class="admins-edit__rights-group">
-          <tick-field class="admins-edit__checkbox" v-model="signerTypes.secondary" :disabled="isMaster || isPending" :required="false"
+          <tick-field
+            class="admins-edit__checkbox"
+            v-model="signerTypes.secondary"
+            :disabled="isMaster || isPending"
+            :required="false"
             label="View the user's transaction history"
             title="View the user's transaction history"
             :cb-value="SIGNER_TYPES_SECONDARY.viewTransactionHistory"
           />
 
-          <tick-field class="admins-edit__checkbox" v-model="signerTypes.primary" :disabled="isMaster || isPending" :required="false"
+          <tick-field
+            class="admins-edit__checkbox"
+            v-model="signerTypes.primary"
+            :disabled="isMaster || isPending"
+            :required="false"
             label="Syndicate account manager"
             title="Allowed to manage syndicate account"
             :cb-value="SIGNER_TYPES.syndicateAccManager"
           />
 
-          <tick-field class="admins-edit__checkbox" v-model="signerTypes.primary" :disabled="isMaster || isPending" :required="false"
+          <tick-field
+            class="admins-edit__checkbox"
+            v-model="signerTypes.primary"
+            :disabled="isMaster || isPending"
+            :required="false"
             label="Exchange account manager"
             title="Allowed to manage exchange account"
             :cb-value="SIGNER_TYPES.exchangeAccManager"
           />
 
-          <tick-field class="admins-edit__checkbox" v-model="signerTypes.primary" :disabled="isMaster || isPending" :required="false"
+          <tick-field
+            class="admins-edit__checkbox"
+            v-model="signerTypes.primary"
+            :disabled="isMaster || isPending"
+            :required="false"
             label="Not verified account manager"
             title="Can manage not verified account and block/unblock general"
             :cb-value="SIGNER_TYPES.notVerifiedAccManager"
           />
 
-          <tick-field class="admins-edit__checkbox" v-model="signerTypes.primary" :disabled="isMaster || isPending" :required="false"
+          <tick-field
+            class="admins-edit__checkbox"
+            v-model="signerTypes.primary"
+            :disabled="isMaster || isPending"
+            :required="false"
             label="General account manager"
             title="Allowed to create account, block/unblock, change limits for particular general account"
             :cb-value="SIGNER_TYPES.generalAccManager"
           />
 
-          <tick-field class="admins-edit__checkbox" v-model="signerTypes.secondary" :disabled="isMaster || isPending" :required="false"
+          <tick-field
+            class="admins-edit__checkbox"
+            v-model="signerTypes.secondary"
+            :disabled="isMaster || isPending"
+            :required="false"
             label="Search for the user's account"
             title="Search for the user's account"
             :cb-value="SIGNER_TYPES_SECONDARY.searchUserAccount"
           />
 
-          <tick-field class="admins-edit__checkbox" v-model="signerTypes.primary" :disabled="isMaster || isPending" :required="false"
+          <tick-field
+            class="admins-edit__checkbox"
+            v-model="signerTypes.primary"
+            :disabled="isMaster || isPending"
+            :required="false"
             label="External system account id pool manager"
             title="External system account id pool manager"
             :cb-value="SIGNER_TYPES.externalSystemAccountIdPoolManager"
           />
 
-          <tick-field class="admins-edit__checkbox" v-model="signerTypes.primary" :disabled="isMaster || isPending" :required="false"
+          <tick-field
+            class="admins-edit__checkbox"
+            v-model="signerTypes.primary"
+            :disabled="isMaster || isPending"
+            :required="false"
             label="Key value manager"
             title="Can edit key-value set"
             :cb-value="SIGNER_TYPES.keyValueManager"
           />
 
-          <tick-field class="admins-edit__checkbox" v-model="signerTypes.primary" :disabled="isMaster || isPending" :required="false"
+          <tick-field
+            class="admins-edit__checkbox"
+            v-model="signerTypes.primary"
+            :disabled="isMaster || isPending"
+            :required="false"
             label="Events checker"
             title="Events checker"
             :cb-value="SIGNER_TYPES.eventsChecker"
@@ -194,40 +311,69 @@
 
         <h3 class="admins-edit__rights-group-title">
           <span>Operation management</span>
-          <button type="button" @click="toggleSelection(TOGGLE_SELECTIONS_BY_TYPE.operationManager)">Select group</button>
+          <button
+            type="button"
+            @click="toggleSelection(TOGGLE_SELECTIONS_BY_TYPE.operationManager)"
+          >
+            Select group
+          </button>
         </h3>
         <div class="admins-edit__rights-group">
-          <tick-field class="admins-edit__checkbox" v-model="signerTypes.primary" :disabled="isMaster || isPending" :required="false"
+          <tick-field
+            class="admins-edit__checkbox"
+            v-model="signerTypes.primary"
+            :disabled="isMaster || isPending"
+            :required="false"
             label="Direct debit operator"
             title="Direct debit operator"
             :cb-value="SIGNER_TYPES.directDebitOperator"
           />
 
-          <tick-field class="admins-edit__checkbox" v-model="signerTypes.primary" :disabled="isMaster || isPending" :required="false"
+          <tick-field
+            class="admins-edit__checkbox"
+            v-model="signerTypes.primary"
+            :disabled="isMaster || isPending"
+            :required="false"
             label="Invoice manager"
             title="Invoice manager"
             :cb-value="SIGNER_TYPES.invoiceManager"
           />
 
-          <tick-field class="admins-edit__checkbox" v-model="signerTypes.primary" :disabled="isMaster || isPending" :required="false"
+          <tick-field
+            class="admins-edit__checkbox"
+            v-model="signerTypes.primary"
+            :disabled="isMaster || isPending"
+            :required="false"
             label="Payment operator"
             title="Payment operator"
             :cb-value="SIGNER_TYPES.paymentOperator"
           />
 
-          <tick-field class="admins-edit__checkbox" v-model="signerTypes.primary" :disabled="isMaster || isPending" :required="false"
+          <tick-field
+            class="admins-edit__checkbox"
+            v-model="signerTypes.primary"
+            :disabled="isMaster || isPending"
+            :required="false"
             label="Send transactions"
             title="Allowed to send transactions"
             :cb-value="SIGNER_TYPES.txSender"
           />
 
-          <tick-field class="admins-edit__checkbox" v-model="signerTypes.primary" :disabled="isMaster || isPending" :required="false"
+          <tick-field
+            class="admins-edit__checkbox"
+            v-model="signerTypes.primary"
+            :disabled="isMaster || isPending"
+            :required="false"
             label="AML alert manager"
             title="Allowed to manage AML alert"
             :cb-value="SIGNER_TYPES.amlAlertManager"
           />
 
-          <tick-field class="admins-edit__checkbox" v-model="signerTypes.primary" :disabled="isMaster || isPending" :required="false"
+          <tick-field
+            class="admins-edit__checkbox"
+            v-model="signerTypes.primary"
+            :disabled="isMaster || isPending"
+            :required="false"
             label="AML alert reviewer"
             title="Allowed to review AML alert"
             :cb-value="SIGNER_TYPES.amlAlertReviewer"
@@ -236,22 +382,39 @@
 
         <h3 class="admins-edit__rights-group-title">
           <span>Balance management</span>
-          <button type="button" @click="toggleSelection(TOGGLE_SELECTIONS_BY_TYPE.balanceManager)">Select group</button>
+          <button
+            type="button"
+            @click="toggleSelection(TOGGLE_SELECTIONS_BY_TYPE.balanceManager)"
+          >
+            Select group
+          </button>
         </h3>
         <div class="admins-edit__rights-group">
-          <tick-field class="admins-edit__checkbox" v-model="signerTypes.primary" :disabled="isMaster || isPending" :required="false"
+          <tick-field
+            class="admins-edit__checkbox"
+            v-model="signerTypes.primary"
+            :disabled="isMaster || isPending"
+            :required="false"
             label="Balance manager"
             title="Balance manager"
             :cb-value="SIGNER_TYPES.balanceManager"
           />
 
-          <tick-field class="admins-edit__checkbox" v-model="signerTypes.primary" :disabled="isMaster || isPending" :required="false"
+          <tick-field
+            class="admins-edit__checkbox"
+            v-model="signerTypes.primary"
+            :disabled="isMaster || isPending"
+            :required="false"
             label="Commission balance manager"
             title="Commission balance manager"
             :cb-value="SIGNER_TYPES.commissionBalanceManager"
           />
 
-          <tick-field class="admins-edit__checkbox" v-model="signerTypes.primary" :disabled="isMaster || isPending" :required="false"
+          <tick-field
+            class="admins-edit__checkbox"
+            v-model="signerTypes.primary"
+            :disabled="isMaster || isPending"
+            :required="false"
             label="Operational balance manager"
             title="Operational balance manager"
             :cb-value="SIGNER_TYPES.operationalBalanceManager"
@@ -260,10 +423,19 @@
 
         <h3 class="admins-edit__rights-group-title">
           <span>Fees management</span>
-          <button type="button" @click="toggleSelection(TOGGLE_SELECTIONS_BY_TYPE.fees)">Select group</button>
+          <button
+            type="button"
+            @click="toggleSelection(TOGGLE_SELECTIONS_BY_TYPE.fees)"
+          >
+            Select group
+          </button>
         </h3>
         <div class="admins-edit__rights-group">
-          <tick-field class="admins-edit__checkbox" v-model="signerTypes.primary" :disabled="isMaster || isPending" :required="false"
+          <tick-field
+            class="admins-edit__checkbox"
+            v-model="signerTypes.primary"
+            :disabled="isMaster || isPending"
+            :required="false"
             label="Fees manager"
             title="Allowed to manage fees"
             :cb-value="SIGNER_TYPES.feesManager"
@@ -272,10 +444,19 @@
 
         <h3 class="admins-edit__rights-group-title">
           <span>Limits management</span>
-          <button type="button" @click="toggleSelection(TOGGLE_SELECTIONS_BY_TYPE.limits)">Select group</button>
+          <button
+            type="button"
+            @click="toggleSelection(TOGGLE_SELECTIONS_BY_TYPE.limits)"
+          >
+            Select group
+          </button>
         </h3>
         <div class="admins-edit__rights-group">
-          <tick-field class="admins-edit__checkbox" v-model="signerTypes.primary" :disabled="isMaster || isPending" :required="false"
+          <tick-field
+            class="admins-edit__checkbox"
+            v-model="signerTypes.primary"
+            :disabled="isMaster || isPending"
+            :required="false"
             label="Limits manager"
             title="Allowed to change limits"
             :cb-value="SIGNER_TYPES.limitsManager"
@@ -284,16 +465,29 @@
 
         <h3 class="admins-edit__rights-group-title">
           <span>Trade administrator</span>
-          <button type="button" @click="toggleSelection(TOGGLE_SELECTIONS_BY_TYPE.trade)">Select group</button>
+          <button
+            type="button"
+            @click="toggleSelection(TOGGLE_SELECTIONS_BY_TYPE.trade)"
+          >
+            Select group
+          </button>
         </h3>
         <div class="admins-edit__rights-group">
-          <tick-field class="admins-edit__checkbox" v-model="signerTypes.primary" :disabled="isMaster || isPending" :required="false"
+          <tick-field
+            class="admins-edit__checkbox"
+            v-model="signerTypes.primary"
+            :disabled="isMaster || isPending"
+            :required="false"
             label="Asset manager"
             title="Allowed to create assets, asset pairs, update policies and set fees"
             :cb-value="SIGNER_TYPES.assetManager"
           />
 
-          <tick-field class="admins-edit__checkbox" v-model="signerTypes.primary" :disabled="isMaster || isPending" :required="false"
+          <tick-field
+            class="admins-edit__checkbox"
+            v-model="signerTypes.primary"
+            :disabled="isMaster || isPending"
+            :required="false"
             label="Asset rate manager"
             title="Allowed to set physical asset price"
             :cb-value="SIGNER_TYPES.assetRateManager"
@@ -301,19 +495,32 @@
         </div>
 
         <h3 class="admins-edit__rights-group-title">
-          <span>Investment portolio administrator</span>
-          <button type="button" @click="toggleSelection(TOGGLE_SELECTIONS_BY_TYPE.investment)">Select group</button>
+          <span>Fund management</span>
+          <button
+            type="button"
+            @click="toggleSelection(TOGGLE_SELECTIONS_BY_TYPE.investment)"
+          >
+            Select group
+          </button>
         </h3>
         <div class="admins-edit__rights-group">
-          <tick-field class="admins-edit__checkbox" v-model="signerTypes.secondary" :disabled="isMaster || isPending" :required="false"
-            label="View crowdfunding campaign requests"
-            title="Сan view the list of crowdfunding campaign requests"
+          <tick-field
+            class="admins-edit__checkbox"
+            v-model="signerTypes.secondary"
+            :disabled="isMaster || isPending"
+            :required="false"
+            label="View fund requests"
+            title="Сan view the list of fund requests"
             :cb-value="SIGNER_TYPES_SECONDARY.viewCrowdfundingCampaignRequests"
           />
 
-          <tick-field class="admins-edit__checkbox" v-model="signerTypes.primary" :disabled="isMaster || isPending" :required="false"
+          <tick-field
+            class="admins-edit__checkbox"
+            v-model="signerTypes.primary"
+            :disabled="isMaster || isPending"
+            :required="false"
             label="User asset manager"
-                      title="Allowed to review sale, asset creation/update requests"
+            title="Allowed to review fund, asset creation/update requests"
             :cb-value="SIGNER_TYPES.userAssetManager"
           />
         </div>
@@ -321,18 +528,22 @@
 
       <!-- Buttons Row -->
       <div class="admins-edit__form-actions app__form-actions">
-          <button class="app__btn"
-            form="admins-edit-form"
-            :disabled="buttonDisabled">
-            {{addNew ? 'Add' : 'Update'}}
-          </button>
+        <button
+          class="app__btn"
+          form="admins-edit-form"
+          :disabled="buttonDisabled"
+        >
+          {{addNew ? 'Add' : 'Update'}}
+        </button>
 
-          <button class="app__btn-secondary app__btn-secondary--danger"
-            :disabled="buttonDisabled"
-            @click="deleteAdmin"
-            v-if="!addNew">
-            Delete
-          </button>
+        <button
+          class="app__btn-secondary app__btn-secondary--danger"
+          :disabled="buttonDisabled"
+          @click="deleteAdmin"
+          v-if="!addNew"
+        >
+          Delete
+        </button>
       </div>
       <!--/ Buttons Row -->
     </div>
@@ -355,8 +566,8 @@ const TOGGLE_SELECTIONS_BY_TYPE = {
   super: {
     primary: [SIGNER_TYPES.kycSuperAdmin, SIGNER_TYPES.accountManager],
     secondary: SIGNER_TYPES_SECONDARY.viewUserList +
-               SIGNER_TYPES_SECONDARY.viewPendingKycRequests +
-               SIGNER_TYPES_SECONDARY.viewHistoryKycRequests
+      SIGNER_TYPES_SECONDARY.viewPendingKycRequests +
+      SIGNER_TYPES_SECONDARY.viewHistoryKycRequests
   },
   kyc: {
     primary: [SIGNER_TYPES.kycAccManager]
@@ -369,7 +580,7 @@ const TOGGLE_SELECTIONS_BY_TYPE = {
       SIGNER_TYPES.superIssuanceManager
     ],
     secondary: SIGNER_TYPES_SECONDARY.viewIssuanceHistory +
-               SIGNER_TYPES_SECONDARY.viewPendingIssuanceRequests
+      SIGNER_TYPES_SECONDARY.viewPendingIssuanceRequests
   },
   security: {
     primary: [
@@ -382,7 +593,7 @@ const TOGGLE_SELECTIONS_BY_TYPE = {
       SIGNER_TYPES.eventsChecker
     ],
     secondary: SIGNER_TYPES_SECONDARY.viewTransactionHistory +
-               SIGNER_TYPES_SECONDARY.searchUserAccount
+      SIGNER_TYPES_SECONDARY.searchUserAccount
   },
   operationManager: {
     primary: [
@@ -659,7 +870,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 .admins-edit__rights-group {
   display: flex;
   flex-wrap: wrap;

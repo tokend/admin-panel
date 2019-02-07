@@ -1,12 +1,6 @@
 import { ReviewableRequest } from './ReviewableRequest'
-import { snakeToCamelCase } from '@/utils/un-camel-case'
 
 export class TokenRequest extends ReviewableRequest {
-  constructor (record) {
-    super(record)
-    this.operationDetails = this.record[snakeToCamelCase(this.record.requestType)]
-  }
-
   get code () {
     return this.operationDetails.code
   }

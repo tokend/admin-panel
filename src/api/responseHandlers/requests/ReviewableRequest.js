@@ -1,10 +1,14 @@
 import config from '@/config'
 import { Sdk } from '@/sdk'
+import { snakeToCamelCase } from '@/utils/un-camel-case'
 
 export class ReviewableRequest {
   constructor (record) {
     this.record = { ...record, ...record.details }
     delete this.record.details
+
+    this.operationDetails =
+      this.record[snakeToCamelCase(this.record.requestType)]
   }
 
   get id () {

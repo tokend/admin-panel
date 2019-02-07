@@ -6,16 +6,25 @@
         <ul class="key-value-list">
           <li>
             <span>Requestor</span>
-            <email-getter :address="request.sale.requestor" is-titled />
+            <email-getter
+              :address="request.sale.requestor"
+              is-titled
+            />
           </li>
           <li>
             <span>Request state</span>
-            <request-state-formatter :state="request.sale.requestState" is-colored/>
+            <request-state-formatter
+              :state="request.sale.requestState"
+              is-colored
+            />
           </li>
 
           <li>
             <span>Requested at</span>
-            <date-formatter :date="request.sale.createdAt" format="DD MMM YYYY HH:mm:ss" />
+            <date-formatter
+              :date="request.sale.createdAt"
+              format="DD MMM YYYY HH:mm:ss"
+            />
           </li>
         </ul>
 
@@ -32,7 +41,7 @@
 
     <div class="sale-rm-details-tab__row">
       <div class="sale-rm-details-tab__row-item">
-        <label class="data-caption">Investment token details</label>
+        <label class="data-caption">Token details</label>
         <ul class="key-value-list">
           <li>
             <span>Name</span>
@@ -59,7 +68,10 @@
           </li>
           <li>
             <span>Preissuance signer</span>
-            <email-getter :address="request.token.preissuedAssetSigner" is-titled />
+            <email-getter
+              :address="request.token.preissuedAssetSigner"
+              is-titled
+            />
           </li>
           <li>
             <span>Policies</span>
@@ -69,7 +81,9 @@
             <span>Terms</span>
             <span>
               <template v-if="safeGet(request, 'token.details.terms.key')">
-                <doc-link-getter :file-key="request.token.details.terms.key">Open file</doc-link-getter>
+                <doc-link-getter :file-key="request.token.details.terms.key">
+                  Open file
+                </doc-link-getter>
               </template>
 
               <template v-else>
@@ -83,7 +97,8 @@
       <div class="sale-rm-details-tab__row-item">
         <label class="data-caption">Token logo</label>
         <template v-if="safeGet(request, 'token.details.logo.key')">
-          <img-getter class="sale-rm-details-tab__token-logo"
+          <img-getter
+            class="sale-rm-details-tab__token-logo"
             :file-key="request.token.details.logo.key"
             alt="Token logo"
           />
@@ -101,8 +116,8 @@
           <li>
             <span>Name</span>
             <span>
-              <template v-if="safeGet(getSaleDetails, 'details.name')">
-                {{getSaleDetails.details.name}}
+              <template v-if="safeGet(saleDetails, 'details.name')">
+                {{saleDetails.details.name}}
               </template>
               <template v-else>
                 (Not provided yet)
@@ -111,23 +126,38 @@
           </li>
           <li>
             <span>Start time</span>
-            <date-formatter :date="getSaleDetails.startTime" format="DD MMM YYYY HH:mm:ss" />
+            <date-formatter
+              :date="saleDetails.startTime"
+              format="DD MMM YYYY HH:mm:ss"
+            />
           </li>
           <li>
             <span>End time</span>
-            <date-formatter :date="getSaleDetails.endTime" format="DD MMM YYYY HH:mm:ss" />
+            <date-formatter
+              :date="saleDetails.endTime"
+              format="DD MMM YYYY HH:mm:ss"
+            />
           </li>
           <li>
             <span>Soft cap</span>
-            <asset-amount-formatter :amount="getSaleDetails.softCap" :asset="getSaleDetails.defaultQuoteAsset" />
+            <asset-amount-formatter
+              :amount="saleDetails.softCap"
+              :asset="saleDetails.defaultQuoteAsset"
+            />
           </li>
           <li>
             <span>Hard cap</span>
-            <asset-amount-formatter :amount="getSaleDetails.hardCap" :asset="getSaleDetails.defaultQuoteAsset" />
+            <asset-amount-formatter
+              :amount="saleDetails.hardCap"
+              :asset="saleDetails.defaultQuoteAsset"
+            />
           </li>
 
           <label class="data-caption">Prices (per token) </label>
-          <li v-for="(item, index) in getSaleDetails.quoteAssets" :key="index">
+          <li
+            v-for="(item, index) in saleDetails.quoteAssets"
+            :key="index"
+          >
             <span>{{item.quoteAsset}}</span>
             <span>{{item.price}}</span>
           </li>
@@ -135,8 +165,8 @@
 
         <label class="data-caption">Short description</label>
         <p class="text">
-          <template v-if="safeGet(getSaleDetails, 'details.shortDescription')">
-            {{getSaleDetails.details.shortDescription}}
+          <template v-if="safeGet(saleDetails, 'details.shortDescription')">
+            {{saleDetails.details.shortDescription}}
           </template>
           <template v-else>
             (Not provided yet)
@@ -146,9 +176,10 @@
 
       <div class="sale-rm-details-tab__row-item">
         <label class="data-caption">Fund logo</label>
-        <template v-if="safeGet(getSaleDetails, 'details.logo.key')">
-          <img-getter class="sale-rm-details-tab__sale-logo"
-            :file-key="getSaleDetails.details.logo.key"
+        <template v-if="safeGet(saleDetails, 'details.logo.key')">
+          <img-getter
+            class="sale-rm-details-tab__sale-logo"
+            :file-key="saleDetails.details.logo.key"
             alt="Fund logo"
           />
         </template>
@@ -183,7 +214,7 @@ export default {
     RequestStateFormatter
   },
   computed: {
-    getSaleDetails () {
+    saleDetails () {
       return this.request.sale.details[this.request.sale.details.requestType]
     }
   },
