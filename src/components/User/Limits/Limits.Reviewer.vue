@@ -235,7 +235,7 @@
       async getRequest () {
         this.$store.commit('OPEN_LOADER')
         const request = await api.requests.get(this.id)
-        const requestDetails = get(request, 'details', {})
+        const requestDetails = request.details[snakeToCamelCase(request.details.requestType)].details
         const [account, user, limits] = await Promise.all([
           Sdk.horizon.account.get(request.requestor),
           Sdk.api.users.get(request.requestor),
