@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
+## [Unreleased]
+### Fixed
+- Fixed approve Limits.Request
+
 ## [1.1.0](https://github.com/tokend/admin-panel/releases/tag/1.1.0)
 ### Added
 - `jsconfig.json` for Visual Studio Code webpack alias support
@@ -38,3 +42,5 @@ for further information about branching and tagging conventions.
 - Issuance again possible on the issuance page
 - Issuance form now shows correct error message for every issue occured during the issuance
 - Pre-issuance request list now fetches correctly the list
+
+[Unreleased]: https://github.com/olivierlacan/keep-a-changelog/compare/v1.1.0...HEAD
