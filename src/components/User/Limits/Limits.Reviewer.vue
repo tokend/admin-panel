@@ -257,7 +257,6 @@
           const newLimits = []
           if (!isEqual(this.limits[0], this.newLimit)) {
             newLimits.push(this.newLimit)
-            console.log(this.newLimit)
           }
           if (!newLimits.length) {
             this.$store.dispatch('SET_ERROR', 'Please update user limits before approving request')
