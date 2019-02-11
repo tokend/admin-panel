@@ -1,42 +1,60 @@
 <template>
     <div>
       <div class="user-block__block-user" v-if="!account.isBlocked">
-        <button class="app__btn app__btn--danger" :disabled="isPending" @click="showBlockModal">
+        <button
+          class="app__btn app__btn--danger"
+          :disabled="isPending"
+          @click="showBlockModal">
           Block user
         </button>
       </div>
       <div class="user-block__unblock-user" v-else>
-        <p class="user-block__blocked-msg danger">User blocked</p>
-        <button class="app__btn" :disabled="isPending" @click="unblockUser">
+        <p class="user-block__blocked-msg danger">
+          User blocked
+        </p>
+        <button
+          class="app__btn"
+          :disabled="isPending"
+          @click="unblockUser"
+        >
           Unblock user
         </button>
       </div>
 
-      <modal class="user-block__reject-modal"
-             v-if="blockForm.isShown"
-             @close-request="hideBlockModal()"
-             max-width="40rem">
-
-        <form class="user-block__block-form"
-              id="user-block-form"
-              @submit.prevent="hideBlockModal() || blockUser()">
+      <modal
+        class="user-block__reject-modal"
+        v-if="blockForm.isShown"
+        @close-request="hideBlockModal()"
+        max-width="40rem"
+      >
+        <form
+          class="user-block__block-form"
+          id="user-block-form"
+          @submit.prevent="blockUser"
+        >
           <h2 class="user-block__modal-title">Set block reasons</h2>
           <div class="user-block__checkboxes-section">
-            <tick-field class="user-block__checkbox"
-                        v-model="blockForm.blockReasons"
-                        label="Suspicious behaviour"
-                        :cb-value="BLOCK_REASONS.suspiciousBehavior"
+            <tick-field
+              class="user-block__checkbox"
+              v-model="blockForm.blockReasons"
+              label="Suspicious behaviour"
+              :cb-value="BLOCK_REASONS.suspiciousBehavior"
             />
-            <tick-field class="user-block__checkbox"
-                        v-model="blockForm.blockReasons"
-                        label="Too many KYC updates"
-                        :cb-value="BLOCK_REASONS.tooManyKycUpdateRequest"
+            <tick-field
+              class="user-block__checkbox"
+              v-model="blockForm.blockReasons"
+              label="Too many KYC updates"
+              :cb-value="BLOCK_REASONS.tooManyKycUpdateRequest"
             />
           </div>
         </form>
 
         <div class="app__form-actions user-block__reject-form-actions">
-          <button class="app__btn app__btn--danger" form="user-block-form">
+          <button
+            class="app__btn app__btn--danger"
+            form="user-block-form"
+            :disabled="!isBlockReasonSelected"
+          >
             Block
           </button>
           <button class="app__btn-secondary" @click="hideBlockModal">
@@ -44,8 +62,6 @@
           </button>
         </div>
       </modal>
-
-
     </div>
 </template>
 
@@ -69,6 +85,11 @@
         BLOCK_REASONS
       }
     },
+    computed: {
+      isBlockReasonSelected () {
+        return this.blockForm.blockReasons > 0
+      }
+    },
     methods: {
       showBlockModal () {
         this.blockForm.isShown = true
@@ -79,6 +100,7 @@
           this.blockForm.blockReasons.reduce((sum, reason) => sum + reason, 0)
         )
         this.$emit(this.updateRequestEvent)
+        this.hideBlockModal()
         this.$store.dispatch('SET_INFO', 'User blocked')
       },
       async unblockUser () {
@@ -98,7 +120,13 @@
             accountType: account.accountTypeI,
             account: account.accountId,
             source: config.MASTER_ACCOUNT,
-            blockReasonsToAdd: blockReasons
+            
+            // to BLOCK user we must have one of block reason and pass via
+            // `blockReasonsToAdd` parameter
+            // to UNBLOCK user we need to pass current block reason(s) via
+            // 'blockReasonsToRemove' parameter
+            // we CAN NOT combine this parameters in the single operation
+            [isBlock ? 'blockReasonsToAdd' : 'blockReasonsToRemove']: blockReasons
           })
           await Sdk.horizon.transactions.submitOperations(operation)
         } catch (error) {
