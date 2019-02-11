@@ -17,21 +17,30 @@
         </select-field>
 
 
-        <select-field class="fee-list__filter"
-                      v-model.number="filters.paymentFeeSubtype"
-                      v-if="+filters.feeType === FEE_TYPES.paymentFee"
-                      label="Direction"
+        <select-field
+          class="fee-list__filter"
+          v-model.number="filters.paymentFeeSubtype"
+          v-if="+filters.feeType === FEE_TYPES.paymentFee"
+          label="Direction"
         >
-          <option v-for="(value, name) in PAYMENT_FEE_TYPES" :value="value">{{ name }}</option>
+          <option
+            v-for="(value, name) in PAYMENT_FEE_TYPES"
+            :key="`fee-list-item-option-${name}`"
+            :value="value"
+          >
+            {{ name }}
+          </option>
         </select-field>
 
 
         <select-field class="fee-list__filter" label="Asset" v-model="filters.assetCode">
           <template v-if="assetsByType.length">
-            <option v-for="item in assetsByType" :key="item.code"
-                    :value="item.code"
-                    :selected="item.code === filters.assetCode">
-              {{item.code}}
+            <option
+              v-for="item in assetsByType" :key="item.code"
+              :value="item.code"
+              :selected="item.code === filters.assetCode"
+            >
+              {{ item.code }}
             </option>
           </template>
 
@@ -42,14 +51,21 @@
           </template>
         </select-field>
 
-        <select-field class="fee-list__filter" label="Account type" v-model="filters.accountType"
-                      v-if="filters.scope === SCOPE_TYPES.accountType">
+        <select-field
+          class="fee-list__filter"
+          label="Account type"
+          v-model="filters.accountType"
+          v-if="filters.scope === SCOPE_TYPES.accountType"
+        >
           <option :value="ACCOUNT_TYPES.general">General</option>
           <option :value="ACCOUNT_TYPES.notVerified">Not verified</option>
           <option :value="ACCOUNT_TYPES.syndicate">Syndicate</option>
         </select-field>
 
-        <input-field class="fee-list__filter" label="Account" v-model="filters.accountAlias"
+        <input-field
+          class="fee-list__filter"
+          label="Account"
+          v-model="filters.accountAlias"
           placeholder="Email address or account ID"
           v-if="filters.scope === SCOPE_TYPES.account"
         />
@@ -96,14 +112,18 @@
               Percent fee
             </span>
 
-            <span class="app-list__cell"
-                  v-if="+filters.feeType !== FEE_TYPES.offerFee">
+            <span
+              class="app-list__cell"
+              v-if="+filters.feeType !== FEE_TYPES.offerFee"
+            >
               Fixed fee
             </span>
 
-            <span class="app-list__cell"
-                  v-if="+filters.feeType === FEE_TYPES.paymentFee &&
-                         filters.paymentFeeSubtype === PAYMENT_FEE_TYPES.outgoing">
+            <span
+              class="app-list__cell"
+              v-if="+filters.feeType === FEE_TYPES.paymentFee &&
+                    filters.paymentFeeSubtype === PAYMENT_FEE_TYPES.outgoing"
+            >
               Fee asset
             </span>
 
@@ -111,70 +131,80 @@
           </div>
 
           <li class="app-list__li" v-for="(item, id) in feesByFilters" :key="id">
-            <form class="fee-list__li--hidden-form"
-                  @submit.prevent="updateFee(item)"
-                  :id="`fee-list-form-${id}`"
-            ></form>
+            <form
+              class="fee-list__li--hidden-form"
+              @submit.prevent="updateFee(item)"
+              :id="`fee-list-form-${id}`"
+            />
 
             <span class="app-list__cell fee-list__cell">
-              <input-field type="number"
-                           min="0"
-                           :step="DEFAULT_INPUT_STEP"
-                           :form="`fee-list-form-${id}`"
-                           :disabled="isSubmitting || item.exists"
-                           v-model="item.lowerBound"
+              <input-field
+                type="number"
+                min="0"
+                :step="DEFAULT_INPUT_STEP"
+                :form="`fee-list-form-${id}`"
+                :disabled="isSubmitting || item.exists"
+                v-model="item.lowerBound"
               />
             </span>
 
             <span class="app-list__cell fee-list__cell">
-              <input-field type="number"
-                           min="0"
-                           :max="DEFAULT_MAX_AMOUNT"
-                           :step="DEFAULT_INPUT_STEP"
-                           :form="`fee-list-form-${id}`"
-                           :disabled="isSubmitting  || item.exists"
-                           v-model="item.upper_bound"
+              <input-field
+                type="number"
+                min="0"
+                :max="DEFAULT_MAX_AMOUNT"
+                :step="DEFAULT_INPUT_STEP"
+                :form="`fee-list-form-${id}`"
+                :disabled="isSubmitting  || item.exists"
+                v-model="item.upper_bound"
               />
-              <button class="fee-list__btn-max"
-                      @click="item.upper_bound = DEFAULT_MAX_AMOUNT"
-                      v-if="!item.exists"
-                      :disabled="isSubmitting"
-              ><mdi-arrow-up-icon/></button>
+              <button
+                class="fee-list__btn-max"
+                @click="item.upper_bound = DEFAULT_MAX_AMOUNT"
+                v-if="!item.exists"
+                :disabled="isSubmitting"
+              >
+                <mdi-arrow-up-icon/>
+              </button>
             </span>
 
             <span class="app-list__cell fee-list__cell">
-              <input-field type="number"
-                           min="0"
-                           max="100"
-                           :step="DEFAULT_INPUT_STEP"
-                           :form="`fee-list-form-${id}`"
-                           :disabled="isSubmitting"
-                           v-model="item.percent"
+              <input-field
+                type="number"
+                min="0"
+                max="100"
+                :step="DEFAULT_INPUT_STEP"
+                :form="`fee-list-form-${id}`"
+                :disabled="isSubmitting"
+                v-model="item.percent"
               />
             </span>
 
             <span class="app-list__cell fee-list__cell"
                   v-if="+filters.feeType !== FEE_TYPES.offerFee">
-              <input-field type="number"
-                           min="0"
-                           :step="DEFAULT_INPUT_STEP"
-                           :form="`fee-list-form-${id}`"
-                           :disabled="isSubmitting"
-                           v-model="item.fixed"
+              <input-field
+                type="number"
+                min="0"
+                :step="DEFAULT_INPUT_STEP"
+                :form="`fee-list-form-${id}`"
+                :disabled="isSubmitting"
+                v-model="item.fixed"
               />
             </span>
 
-            <span class="app-list__cell fee-list__cell"
-                  v-if="+filters.feeType === FEE_TYPES.paymentFee &&
-                         filters.paymentFeeSubtype === PAYMENT_FEE_TYPES.outgoing"
+            <span
+              class="app-list__cell fee-list__cell"
+              v-if="+filters.feeType === FEE_TYPES.paymentFee &&
+                    filters.paymentFeeSubtype === PAYMENT_FEE_TYPES.outgoing"
             >
               <select-field v-model="item.feeAsset">
                 <template v-if="assets.length">
-                  <option v-for="asset in assets" :key="asset.code"
-                          :value="asset.code"
-                          :selected="asset.code === item.feeAsset"
+                  <option
+                    v-for="asset in assets" :key="asset.code"
+                    :value="asset.code"
+                    :selected="asset.code === item.feeAsset"
                   >
-                        {{asset.code}}
+                    {{ asset.code }}
                    </option>
                 </template>
 
@@ -188,21 +218,30 @@
 
             <span class="app-list__cell fee-list__cell">
               <template v-if="item.exists">
-                <button class="app__btn app__btn--small"
-                        :form="`fee-list-form-${id}`"
-                        :disabled="isSubmitting"
-                >Update</button>
-                <button class="app__btn app__btn--small app__btn--danger"
-                        :disabled="isSubmitting"
-                        @click="deleteFee(item)"
-                >Delete</button>
+                <button
+                  class="app__btn app__btn--small"
+                  :form="`fee-list-form-${id}`"
+                  :disabled="isSubmitting"
+                >
+                  Update
+                </button>
+                <button
+                  class="app__btn app__btn--small app__btn--danger"
+                  :disabled="isSubmitting"
+                  @click="deleteFee(item)"
+                >
+                  Delete
+                </button>
               </template>
 
               <template v-else>
-                <button class="app__btn app__btn--small"
-                        :form="`fee-list-form-${id}`"
-                        :disabled="isSubmitting"
-                >Create</button>
+                <button
+                  class="app__btn app__btn--small"
+                  :form="`fee-list-form-${id}`"
+                  :disabled="isSubmitting"
+                >
+                  Create
+                </button>
               </template>
             </span>
           </li>
@@ -229,7 +268,7 @@
   import throttle from 'lodash/throttle'
   import 'mdi-vue/ArrowUpIcon'
 
-  import { confirmAction } from '../../../../js/modals/confirmation_message'
+  import { confirmAction } from '@/js/modals/confirmation_message'
 
   const SCOPE_TYPES = Object.freeze({ // non-xdr values, internal use only
     account: 'USER',
