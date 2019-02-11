@@ -14,18 +14,19 @@ for further information about branching and tagging conventions.
 ## [1.1.0] - 2019-02-07
 ### Added
 - `jsconfig.json` for Visual Studio Code webpack alias support
-- `cropAddress` filter
+- `cropAddress()` filter
 - `ErrorHandler` class that shows feedback and logs the error
 - `loglevel` package integrated
 
 ### Changed
 - Update @tokend/js-sdk version to 0.3.20
-- `email-getter` shows cropped address instead of full ont if the email fetching failed
-- Refactor to description tab markup of fund and fund request
-- Refactor to admin manager markup
-- `localize()` of `localize.js` has 6 digits of default zero count now
+- `<email-getter>` component shows cropped address instead of full one if the
+  email fetching failed
+- Increased default trailing zero precision of  `localize()` filter from 4 to 6
 - Issuance form now accepts both email and addresses
-- Minor refactor to main.js (moved import of filters)
+- Refactor of description tab markup of fund and fund request
+- Refactor of admin manager markup
+- Tiny refactor of main.js (moved import of filters)
 
 ### Removed
 - Redundant classes from SaleManager.SyndicateTab.vue
@@ -35,12 +36,16 @@ for further information about branching and tagging conventions.
 - Displaying of the Details tab of a fund and fund request
 - Displaying of the Full Description tab of a fund and fund request
 - Video size on Description tab of fund and fund request
-- `getEmailByAddress()` of `users.js` no longer throws exceptions when failed fetching of email
-- Fix some terminology: remove the "investment portfolio" and "investment token" terms
-- `getAccountIdByEmail()` of `users.js` not longer throws an invalid signature exception
+- `getEmailByAddress()` of `users.js` no longer throws exceptions when failed
+  fetching of email
+- Fix some terminology: remove the "investment portfolio" and "investment token"
+  terms
+- `getAccountIdByEmail()` of `users.js` not longer throws an invalid signature
+  exception
 - Titles of issuance history’s cells now show correct values
 - Issuance again possible on the issuance page
-- Issuance form now shows correct error message for every issue occured during the issuance
+- Issuance form now shows correct error message for every issue ocurred during
+  the issuance
 - Pre-issuance request list now fetches correctly the list
 
 [Unreleased]: https://github.com/tokend/admin-panel/compare/1.1.0...HEAD
