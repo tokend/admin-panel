@@ -115,16 +115,17 @@
         const account = this.account
         this.isPending = true
         try {
-          // to BLOCK user we must have one of block reason and pass via
-          // `blockReasonsToAdd` parameter
-          // to UNBLOCK user we need to pass current block reason(s) via
-          // 'blockReasonsToRemove' parameter
-          // we CAN NOT combine this parameters in the single operation
           const operation = Sdk.base.Operation.manageAccount({
             block: isBlock,
             accountType: account.accountTypeI,
             account: account.accountId,
             source: config.MASTER_ACCOUNT,
+            
+            // to BLOCK user we must have one of block reason and pass via
+            // `blockReasonsToAdd` parameter
+            // to UNBLOCK user we need to pass current block reason(s) via
+            // 'blockReasonsToRemove' parameter
+            // we CAN NOT combine this parameters in the single operation
             [isBlock ? 'blockReasonsToAdd' : 'blockReasonsToRemove']: blockReasons
           })
           await Sdk.horizon.transactions.submitOperations(operation)
