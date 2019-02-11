@@ -23,28 +23,28 @@
 
       <modal
         class="user-block__reject-modal"
-             v-if="blockForm.isShown"
-             @close-request="hideBlockModal()"
+        v-if="blockForm.isShown"
+        @close-request="hideBlockModal()"
         max-width="40rem"
       >
         <form
           class="user-block__block-form"
-              id="user-block-form"
+          id="user-block-form"
           @submit.prevent="blockUser"
         >
           <h2 class="user-block__modal-title">Set block reasons</h2>
           <div class="user-block__checkboxes-section">
             <tick-field
               class="user-block__checkbox"
-                        v-model="blockForm.blockReasons"
-                        label="Suspicious behaviour"
-                        :cb-value="BLOCK_REASONS.suspiciousBehavior"
+              v-model="blockForm.blockReasons"
+              label="Suspicious behaviour"
+              :cb-value="BLOCK_REASONS.suspiciousBehavior"
             />
             <tick-field
               class="user-block__checkbox"
-                        v-model="blockForm.blockReasons"
-                        label="Too many KYC updates"
-                        :cb-value="BLOCK_REASONS.tooManyKycUpdateRequest"
+              v-model="blockForm.blockReasons"
+              label="Too many KYC updates"
+              :cb-value="BLOCK_REASONS.tooManyKycUpdateRequest"
             />
           </div>
         </form>
@@ -53,6 +53,7 @@
           <button
             class="app__btn app__btn--danger"
             form="user-block-form"
+            :disabled="!isBlockReasonSelected"
           >
             Block
           </button>
@@ -84,6 +85,11 @@
         BLOCK_REASONS
       }
     },
+    computed: {
+      isBlockReasonSelected () {
+        return this.blockForm.blockReasons > 0
+      }
+    },
     methods: {
       showBlockModal () {
         this.blockForm.isShown = true
@@ -94,6 +100,7 @@
           this.blockForm.blockReasons.reduce((sum, reason) => sum + reason, 0)
         )
         this.$emit(this.updateRequestEvent)
+        this.hideBlockModal()
         this.$store.dispatch('SET_INFO', 'User blocked')
       },
       async unblockUser () {
