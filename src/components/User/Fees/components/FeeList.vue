@@ -156,11 +156,11 @@
                 :step="DEFAULT_INPUT_STEP"
                 :form="`fee-list-form-${id}`"
                 :disabled="isSubmitting  || item.exists"
-                v-model="item.upper_bound"
+                v-model="item.upperBound"
               />
               <button
                 class="fee-list__btn-max"
-                @click="item.upper_bound = DEFAULT_MAX_AMOUNT"
+                @click="item.upperBound = DEFAULT_MAX_AMOUNT"
                 v-if="!item.exists"
                 :disabled="isSubmitting"
               >
@@ -454,6 +454,11 @@
         if (!await confirmAction()) return
 
         const additionalParams = this.composeRequestFilters(this.filters)
+
+        if (+fees.lowerBound > +fees.upperBound) {
+          this.$store.dispatch('SET_ERROR', 'Lower bound should be less or equal to Upper bound')
+          return false
+        }
 
         this.isSubmitting = true
         try {
