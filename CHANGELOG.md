@@ -11,7 +11,7 @@ for further information about branching and tagging conventions.
 ### Fixed
 - Fixed approve Limits.Request
 
-## [1.1.0](https://github.com/tokend/admin-panel/releases/tag/1.1.0)
+## [1.1.0] - 2019-02-07
 ### Added
 - `jsconfig.json` for Visual Studio Code webpack alias support
 - `cropAddress` filter
@@ -43,4 +43,5 @@ for further information about branching and tagging conventions.
 - Issuance form now shows correct error message for every issue occured during the issuance
 - Pre-issuance request list now fetches correctly the list
 
-[Unreleased]: https://github.com/olivierlacan/keep-a-changelog/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/tokend/admin-panel/compare/1.1.0...HEAD
+[1.1.0]: https://github.com/tokend/admin-panel/releases/tag/1.1.0
