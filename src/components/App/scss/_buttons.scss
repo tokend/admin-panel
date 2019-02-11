@@ -49,6 +49,7 @@
 
   &--danger {
     background-color: $color-danger;
+
     &:disabled {
       background-color: $color-danger-inactive;
     }

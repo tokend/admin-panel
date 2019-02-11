@@ -1,33 +1,47 @@
 <template>
     <div>
       <div class="user-block__block-user" v-if="!account.isBlocked">
-        <button class="app__btn app__btn--danger" :disabled="isPending" @click="showBlockModal">
+        <button
+          class="app__btn app__btn--danger"
+          :disabled="isPending"
+          @click="showBlockModal">
           Block user
         </button>
       </div>
       <div class="user-block__unblock-user" v-else>
-        <p class="user-block__blocked-msg danger">User blocked</p>
-        <button class="app__btn" :disabled="isPending" @click="unblockUser">
+        <p class="user-block__blocked-msg danger">
+          User blocked
+        </p>
+        <button
+          class="app__btn"
+          :disabled="isPending"
+          @click="unblockUser"
+        >
           Unblock user
         </button>
       </div>
 
-      <modal class="user-block__reject-modal"
+      <modal
+        class="user-block__reject-modal"
              v-if="blockForm.isShown"
              @close-request="hideBlockModal()"
-             max-width="40rem">
-
-        <form class="user-block__block-form"
+        max-width="40rem"
+      >
+        <form
+          class="user-block__block-form"
               id="user-block-form"
-              @submit.prevent="hideBlockModal() || blockUser()">
+          @submit.prevent="blockUser"
+        >
           <h2 class="user-block__modal-title">Set block reasons</h2>
           <div class="user-block__checkboxes-section">
-            <tick-field class="user-block__checkbox"
+            <tick-field
+              class="user-block__checkbox"
                         v-model="blockForm.blockReasons"
                         label="Suspicious behaviour"
                         :cb-value="BLOCK_REASONS.suspiciousBehavior"
             />
-            <tick-field class="user-block__checkbox"
+            <tick-field
+              class="user-block__checkbox"
                         v-model="blockForm.blockReasons"
                         label="Too many KYC updates"
                         :cb-value="BLOCK_REASONS.tooManyKycUpdateRequest"
@@ -36,7 +50,10 @@
         </form>
 
         <div class="app__form-actions user-block__reject-form-actions">
-          <button class="app__btn app__btn--danger" form="user-block-form">
+          <button
+            class="app__btn app__btn--danger"
+            form="user-block-form"
+          >
             Block
           </button>
           <button class="app__btn-secondary" @click="hideBlockModal">
@@ -44,8 +61,6 @@
           </button>
         </div>
       </modal>
-
-
     </div>
 </template>
 
