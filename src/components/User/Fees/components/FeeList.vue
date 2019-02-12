@@ -118,15 +118,6 @@
             >
               Fixed fee
             </span>
-
-            <span
-              class="app-list__cell"
-              v-if="+filters.feeType === FEE_TYPES.paymentFee &&
-                    filters.paymentFeeSubtype === PAYMENT_FEE_TYPES.outgoing"
-            >
-              Fee asset
-            </span>
-
             <span class="app-list__cell"><!-- empty --></span>
           </div>
 
@@ -190,30 +181,6 @@
                 :disabled="isSubmitting"
                 v-model="item.fixed"
               />
-            </span>
-
-            <span
-              class="app-list__cell fee-list__cell"
-              v-if="+filters.feeType === FEE_TYPES.paymentFee &&
-                    filters.paymentFeeSubtype === PAYMENT_FEE_TYPES.outgoing"
-            >
-              <select-field v-model="item.feeAsset">
-                <template v-if="assets.length">
-                  <option
-                    v-for="asset in assets" :key="asset.code"
-                    :value="asset.code"
-                    :selected="asset.code === item.feeAsset"
-                  >
-                    {{ asset.code }}
-                   </option>
-                </template>
-
-                <template v-else>
-                  <option disabled>
-                    No appropriate assets
-                  </option>
-                </template>
-              </select-field>
             </span>
 
             <span class="app-list__cell fee-list__cell">
@@ -475,10 +442,6 @@
               upperBound: String(fees.upperBound)
             },
             isDelete: fees.isDelete
-          }
-
-          if (+fees.feeType === FEE_TYPES.paymentFee) {
-            opts.fee.feeAsset = fees.feeAsset || fees.feeAsset
           }
 
           const operation = Sdk.base.Operation.setFees(opts)
