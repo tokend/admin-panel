@@ -8,8 +8,12 @@ Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
 ## [Unreleased]
+### Removed
+- "Is coinpayments" checkbox in asset form
+
 ### Fixed
 - Fixed approve Limits.Request
+- Issue with ignored external system type change
 
 ## [1.1.0] - 2019-02-07
 ### Added
