@@ -386,9 +386,11 @@
         const result = {}
 
         if (filters.scope === SCOPE_TYPES.accountType) {
-          result.accountType = filters.accountType
+          // snake_case because sdk wait for it
+          result.account_type = filters.accountType
         } else if (filters.scope === SCOPE_TYPES.account) {
-          result.address = filters.accountAddress
+          // snake_case because sdk wait for it
+          result.account_id = filters.accountAddress
         }
 
         return result
