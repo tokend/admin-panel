@@ -16,7 +16,6 @@
           <option :value="FEE_TYPES.investFee">Invest</option>
         </select-field>
 
-
         <select-field
           class="fee-list__filter"
           v-model.number="filters.paymentFeeSubtype"
@@ -31,7 +30,6 @@
             {{ name }}
           </option>
         </select-field>
-
 
         <select-field class="fee-list__filter" label="Asset" v-model="filters.assetCode">
           <template v-if="assetsByType.length">
@@ -433,13 +431,13 @@
         try {
           const opts = {
             fee: {
-              feeType: xdrTypeFromValue('FeeType', +fees.feeType),
-              subtype: '' + fees.subtype || '0',
+              feeType: xdrTypeFromValue('FeeType', Number(fees.feeType)),
+              subtype: String(fees.subtype) || '0',
               asset: String(fees.asset),
               fixedFee: String(fees.fixed),
               percentFee: String(fees.percent),
-              accountId: additionalParams.accountId || additionalParams.address,
-              accountType: Number(additionalParams.accountType),
+              accountId: additionalParams.account_id || additionalParams.address,
+              accountType: Number(additionalParams.account_type),
               lowerBound: String(fees.lowerBound),
               upperBound: String(fees.upperBound)
             },
