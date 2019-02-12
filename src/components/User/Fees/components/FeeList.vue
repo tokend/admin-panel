@@ -220,6 +220,7 @@
   import api from '@/api'
   import { Sdk } from '@/sdk'
   import { xdrTypeFromValue } from '@/utils/xdrTypeFromValue'
+  import { ErrorHandler } from '@/utils/ErrorHandler'
   import { SelectField, InputField } from '@comcom/fields'
   import {
     ASSET_POLICIES,
@@ -452,7 +453,7 @@
         } catch (error) {
           console.error(error)
           this.isSubmitting = false
-          error.showMessage()
+          ErrorHandler.process(error)
         }
         this.isSubmitting = false
       },
