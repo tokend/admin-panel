@@ -37,8 +37,11 @@
       <template v-if="desiredLimitDetails.requestType === 'docsUploading'">
         <div class="limits-reviewer__uploaded-docs-list-wrapper">
           <h3 class="limits-reviewer__heading">Uploaded documents</h3>
-          <uploaded-docs-list :list="uploadedDocuments"
-                              :uploadDate="request.updatedAt"/>
+          <uploaded-docs-list
+            :list="uploadedDocuments"
+            :uploadDate="request.updatedAt"
+            :userAccountId="user.id"
+          />
         </div>
         <user-details :id="request.requestor" :isReviewing="false"/>
       </template>

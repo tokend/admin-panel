@@ -3,18 +3,81 @@
     target="_blank"
     rel="noopener"
     :href="href"
-  ><slot/><mdi-open-in-new-icon class="doc-link-getter__ico" /></a>
+  >
+    <slot/>
+    <mdi-open-in-new-icon class="doc-link-getter__ico" />
+  </a>
 </template>
 
 <script>
 import config from '@/config'
 import 'mdi-vue/OpenInNewIcon'
+import { DOCUMENTS_POLICIES } from '@/constants'
+import { Sdk } from '@/sdk'
+import { ErrorHandler } from '@/utils/ErrorHandler'
+
 export default {
-  props: ['fileKey', 'fileUrl'],
+  props: {
+    fileKey: {
+      type: String,
+      required: false,
+      default: ''
+    },
+    fileUrl: {
+      type: String,
+      required: false,
+      default: ''
+    },
+    fileType: {
+      type: String,
+      required: false,
+      default: DOCUMENTS_POLICIES.public,
+      validator: function (value) {
+        return Object.values(DOCUMENTS_POLICIES).includes(value)
+      }
+    },
+    userAccountId: {
+      type: String,
+      // required in case when fileType === DOCUMENTS_POLICIES.private
+      required: false,
+      default: ''
+    }
+  },
+
+  data: () => ({
+    privateFileUrl: null
+  }),
 
   computed: {
     href () {
-      return this.fileUrl || `${config.STORAGE_SERVER}/${this.fileKey}`
+      if (this.fileType === DOCUMENTS_POLICIES.public) {
+        return this.fileUrl || `${config.STORAGE_SERVER}/${this.fileKey}`
+      } else {
+        return this.fileUrl || this.privateFileUrl
+      }
+    }
+  },
+  created () {
+    if (this.fileType === DOCUMENTS_POLICIES.private) {
+      if (!this.userAccountId) {
+        throw new Error("'userAccountId' prop is required to getting private user documents!")
+      }
+      if (!this.fileUrl) {
+        this.getPrivateDocumentUrl(this.fileKey)
+      }
+    }
+  },
+  methods: {
+    async getPrivateDocumentUrl (key) {
+      try {
+        const response = await Sdk.api.users.getUserDocumentByFileKey({
+          fileKey: key,
+          accountId: this.userAccountId
+        })
+        this.privateFileUrl = response.url
+      } catch (error) {
+        ErrorHandler.processWithoutFeedback(error)
+      }
     }
   }
 }

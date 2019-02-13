@@ -120,7 +120,7 @@
             accountType: account.accountTypeI,
             account: account.accountId,
             source: config.MASTER_ACCOUNT,
-            
+
             // to BLOCK user we must have one of block reason and pass via
             // `blockReasonsToAdd` parameter
             // to UNBLOCK user we need to pass current block reason(s) via
