@@ -6,29 +6,33 @@
           <h2>Limits management</h2>
           <div class="limits-manager__inner">
             <div class="limits-manager__limits-list-wrp">
-              <select-field v-model="filters.accountType"
-                            class="limits-manager__filter"
-                            label="Account type"
+              <select-field
+                v-model="filters.accountType"
+                class="limits-manager__filter"
+                label="Account type"
               >
-                <option v-for="type in Object.values(ACCOUNT_TYPES)"
-                        v-if="ACCOUNT_TYPES_VERBOSE[type]"
-                        :key="type"
-                        :value="type"
-                        :selected="type === +filters.accountType"
+                <option
+                  v-show="ACCOUNT_TYPES_VERBOSE[type]"
+                  v-for="type in Object.values(ACCOUNT_TYPES)"
+                  :key="type"
+                  :value="type"
+                  :selected="type === +filters.accountType"
                 >
                   {{ ACCOUNT_TYPES_VERBOSE[type] }}
                 </option>
               </select-field>
             </div>
             <div class="limits-manager__limits-list-wrp">
-              <select-field v-model="filters.asset"
-                            class="limits-manager__filter"
-                            label="Asset"
+              <select-field
+                v-model="filters.asset"
+                class="limits-manager__filter"
+                label="Asset"
               >
-                <option v-for="item in assets"
-                        :key="item.code"
-                        :value="item.code"
-                        :selected="item.code === filters.asset"
+                <option
+                  v-for="item in assets"
+                  :key="item.code"
+                  :value="item.code"
+                  :selected="item.code === filters.asset"
                 >
                   {{ item.details.name }} ({{ item.code }})
                 </option>
@@ -41,16 +45,22 @@
         <div class="limits-manager">
           <h2>Limits management</h2>
           <div class="limits-manager-filters">
-            <input-field class="limits-manager-filters__field limits-manager-filters__specific-user-field" v-model.trim="specificUserAddress" label="Email or Account ID" />
+            <input-field
+              class="limits-manager-filters__field
+                    limits-manager-filters__specific-user-field"
+              v-model.trim="specificUserAddress"
+              label="Email or Account ID"
+            />
 
             <select-field v-model="filters.asset"
               class="limits-manager-filters__specific-user-field"
               label="Asset"
             >
-              <option v-for="item in assets"
-                      :key="item.code"
-                      :value="item.code"
-                      :selected="item.code === filters.asset"
+              <option
+                v-for="item in assets"
+                :key="item.code"
+                :value="item.code"
+                :selected="item.code === filters.asset"
               >
                 {{ item.details.name }} ({{ item.code }})
               </option>
@@ -67,13 +77,16 @@
             <div class="limits-manager__limits-list-inner">
               <template v-for="(type,i) in LIMITS_TYPES">
                 <div class="limits-manager__limit-row" :key="i">
-                  <span class="limits-manager__limit-type">{{ type.replace('Out', '') }} limit</span>
-                  <input-field v-model="limits.payment[type]"
-                              class="limits-manager__limit-field"
-                              :step="DEFAULT_INPUT_STEP"
-                              :type="number"
-                              :label="' '"
-                              min="0"
+                  <span class="limits-manager__limit-type">
+                    {{ type.replace('Out', '') }} limit
+                  </span>
+                  <input-field
+                    v-model="limits.payment[type]"
+                    class="limits-manager__limit-field"
+                    :step="DEFAULT_INPUT_STEP"
+                    :type="number"
+                    :label="' '"
+                    min="0"
                   />
                   <switch-field v-model="switchValues.payment[type]" />
                 </div>
@@ -82,9 +95,11 @@
           </div>
 
           <div class="limits-manager__limits-action">
-            <button class="limits-manager__update-btn app__btn"
-                    :disabled="isPending"
-                    @click="updateLimits(limits.payment)">
+            <button
+              class="limits-manager__update-btn app__btn"
+              :disabled="isPending"
+              @click="updateLimits(limits.payment)"
+            >
               Update payment limits
             </button>
           </div>
@@ -97,13 +112,16 @@
             <div class="limits-manager__limits-list-inner">
               <template v-for="(type,i) in LIMITS_TYPES">
                 <div class="limits-manager__limit-row" :key="i">
-                  <span class="limits-manager__limit-type">{{ type.replace('Out', '') }} limit</span>
-                  <input-field v-model="limits.withdrawal[type]"
-                              class="limits-manager__limit-field"
-                              :step="DEFAULT_INPUT_STEP"
-                              :type="number"
-                              :label="' '"
-                              min="0"
+                  <span class="limits-manager__limit-type">
+                    {{ type.replace('Out', '') }} limit
+                  </span>
+                  <input-field
+                    v-model="limits.withdrawal[type]"
+                    class="limits-manager__limit-field"
+                    :step="DEFAULT_INPUT_STEP"
+                    :type="number"
+                    :label="' '"
+                    min="0"
                   />
                   <switch-field v-model="switchValues.withdrawal[type]" />
                 </div>
@@ -112,9 +130,11 @@
           </div>
 
           <div class="limits-manager__limits-action">
-            <button class="limits-manager__update-btn app__btn"
-                    :disabled="isPending"
-                    @click="updateLimits(limits.withdrawal)">
+            <button
+              class="limits-manager__update-btn app__btn"
+              :disabled="isPending"
+              @click="updateLimits(limits.withdrawal)"
+            >
               Update withdrawal limits
             </button>
           </div>
@@ -127,13 +147,16 @@
             <div class="limits-manager__limits-list-inner">
               <template v-for="(type,i) in LIMITS_TYPES">
                 <div class="limits-manager__limit-row" :key="i">
-                  <span class="limits-manager__limit-type">{{ type.replace('Out', '') }} limit</span>
-                  <input-field v-model="limits.deposit[type]"
-                              class="limits-manager__limit-field"
-                              :step="DEFAULT_INPUT_STEP"
-                              :type="number"
-                              :label="' '"
-                              min="0"
+                  <span class="limits-manager__limit-type">
+                    {{ type.replace('Out', '') }} limit
+                  </span>
+                  <input-field
+                    v-model="limits.deposit[type]"
+                    class="limits-manager__limit-field"
+                    :step="DEFAULT_INPUT_STEP"
+                    :type="number"
+                    :label="' '"
+                    min="0"
                   />
                   <switch-field v-model="switchValues.deposit[type]" />
                 </div>
@@ -142,9 +165,11 @@
           </div>
 
           <div class="limits-manager__limits-action">
-            <button class="limits-manager__update-btn app__btn"
-                    :disabled="isPending"
-                    @click="updateLimits(limits.deposit)">
+            <button
+              class="limits-manager__update-btn app__btn"
+              :disabled="isPending"
+              @click="updateLimits(limits.deposit)"
+            >
               Update deposit limits
             </button>
           </div>
@@ -260,29 +285,42 @@
         this.limits.withdrawal = withdrawalLimits
         this.limits.deposit = depositLimits
 
-        const pickedPaymentLimits = pick(this.limits.payment, Object.keys(this.switchValues.payment))
-        const pickedWithdrawLimits = pick(this.limits.withdrawal, Object.keys(this.switchValues.withdrawal))
-        const pickedDepositLimits = pick(this.limits.deposit, Object.keys(this.switchValues.deposit))
-        this.switchValues.payment = Object.keys(this.switchValues.payment).reduce((newObj, key) => {
-          return {
-            ...newObj,
-            [key]: pickedPaymentLimits[key] !== DEFAULT_MAX_AMOUNT // If not equal to DEFAULT_MAX_AMOUNT, limits are enabled
-          }
-        }, {})
+        const pickedPaymentLimits = pick(
+          this.limits.payment,
+          Object.keys(this.switchValues.payment)
+        )
+        const pickedWithdrawLimits = pick(
+          this.limits.withdrawal,
+          Object.keys(this.switchValues.withdrawal)
+        )
+        const pickedDepositLimits = pick(
+          this.limits.deposit,
+          Object.keys(this.switchValues.deposit)
+        )
+        this.switchValues.payment = Object.keys(this.switchValues.payment)
+          .reduce((newObj, key) => {
+            return {
+              ...newObj,
+              // If not equal to DEFAULT_MAX_AMOUNT, limits are enabled
+              [key]: pickedPaymentLimits[key] !== DEFAULT_MAX_AMOUNT
+            }
+          }, {})
 
-        this.switchValues.withdrawal = Object.keys(this.switchValues.withdrawal).reduce((newObj, key) => {
-          return {
-            ...newObj,
-            [key]: pickedWithdrawLimits[key] !== DEFAULT_MAX_AMOUNT
-          }
-        }, {})
+        this.switchValues.withdrawal = Object.keys(this.switchValues.withdrawal)
+          .reduce((newObj, key) => {
+            return {
+              ...newObj,
+              [key]: pickedWithdrawLimits[key] !== DEFAULT_MAX_AMOUNT
+            }
+          }, {})
 
-        this.switchValues.deposit = Object.keys(this.switchValues.deposit).reduce((newObj, key) => {
-          return {
-            ...newObj,
-            [key]: pickedDepositLimits[key] !== DEFAULT_MAX_AMOUNT
-          }
-        }, {})
+        this.switchValues.deposit = Object.keys(this.switchValues.deposit)
+          .reduce((newObj, key) => {
+            return {
+              ...newObj,
+              [key]: pickedDepositLimits[key] !== DEFAULT_MAX_AMOUNT
+            }
+          }, {})
 
         async function getLimit (statsOpType) {
           const response = await Sdk.horizon.limits.get({
@@ -298,8 +336,10 @@
 
       async updateLimits (limits) {
         this.isPending = true
-        const limitsStatsOpTypeStr = Object.keys(STATS_OPERATION_TYPES).find(key => STATS_OPERATION_TYPES[key] === limits.statsOpType)
-        const limitsOpStr = Object.keys(LIMIT_OPS_STR).find(key => LIMIT_OPS_STR[key] === limitsStatsOpTypeStr)
+        const limitsStatsOpTypeStr = Object.keys(STATS_OPERATION_TYPES)
+          .find(key => STATS_OPERATION_TYPES[key] === limits.statsOpType)
+        const limitsOpStr = Object.keys(LIMIT_OPS_STR)
+          .find(key => LIMIT_OPS_STR[key] === limitsStatsOpTypeStr)
         const disabledLimits = Object.keys(this.switchValues[limitsOpStr])
           .filter(item => item)
           .reduce((newObj, item) => {
@@ -310,10 +350,12 @@
           }, {})
         try {
           if (limits.accountType == null) {
-            delete limits.accountType // managelimitbuilder somehow doesnt accept opts.accountType NULL value
+            // managelimitbuilder somehow doesnt accept opts.accountType NULL value
+            delete limits.accountType
           }
           let accountID
-          if (limits.accountId) { // managelimitbuilder somehow doesnt accept opts.accountId NULL value
+          // managelimitbuilder somehow doesnt accept opts.accountId NULL value
+          if (limits.accountId) {
             accountID = limits.accountId
           }
           const operation = Sdk.base.ManageLimitsBuilder.createLimits({
@@ -340,13 +382,19 @@
       },
       setFilters () {
         if (!this.filters.asset) this.filters.asset = get(this.assets, '[0].code')
-        if (!this.filters.accountType) this.filters.accountType = ACCOUNT_TYPES.general + ''
+        if (!this.filters.accountType) {
+          this.filters.accountType = ACCOUNT_TYPES.general + ''
+        }
         if (this.specificUserAddress) {
-          this.filters.accountType = '' // Both accountType and accountId cant be requested at same time
+          // Both accountType and accountId cant be requested at same time
+          this.filters.accountType = ''
           const emailRegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
           const idLength = 56
-          if (emailRegExp.test(this.specificUserAddress)) this.getAccountIdByEmail(this.specificUserAddress)
-          else if (this.specificUserAddress.length === idLength) this.filters.address = this.specificUserAddress
+          if (emailRegExp.test(this.specificUserAddress)) {
+            this.getAccountIdByEmail(this.specificUserAddress)
+          } else if (this.specificUserAddress.length === idLength) {
+            this.filters.address = this.specificUserAddress
+          }
         }
       }
     },
