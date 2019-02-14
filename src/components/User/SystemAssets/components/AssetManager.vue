@@ -25,7 +25,7 @@
         <input-field class="app__form-field"
           label="Asset name"
           v-model="asset.details.name"
-          :disabled="isExistingAsset || isPending"
+          :disabled="isPending"
         />
 
         <input-field class="app__form-field"
@@ -178,15 +178,6 @@
 
       <template v-if="isShownAdvanced">
         <div class="app__form-row">
-          <tick-field class="app__form-field"
-                      label="Available for coinpayments deposit"
-                      v-model="asset.details.is_coinpayments"
-                      :disabled="isPending"
-          />
-        </div>
-
-
-        <div class="app__form-row">
           <input-field class="app__form-field app__form-field--halved"
                        type="number"
                        label="External system type"
@@ -311,7 +302,10 @@ export default {
             code: String(this.asset.code),
             policies: Number(this.asset.policy),
             logoId: String(this.asset.logoId || this.asset.logoId),
-            details: this.asset.details
+            details: {
+              name: this.asset.details.name,
+              externalSystemType: this.asset.details.externalSystemType
+            }
           })
         } else {
           operation = Sdk.base.ManageAssetBuilder.assetCreationRequest({
@@ -321,7 +315,10 @@ export default {
             maxIssuanceAmount: String(this.asset.maxIssuanceAmount || this.asset.maxIssuanceAmount),
             policies: Number(this.asset.policy),
             initialPreissuedAmount: this.asset.initialPreissuedAmount,
-            details: this.asset.details
+            details: {
+              name: this.asset.details.name,
+              externalSystemType: this.asset.details.externalSystemType
+            }
           })
         }
         await Sdk.horizon.transactions.submitOperations(operation)

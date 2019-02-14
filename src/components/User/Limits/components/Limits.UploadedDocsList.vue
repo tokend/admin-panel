@@ -19,7 +19,11 @@
             {{ formatDate(uploadDate) }}
           </span>
           <span class="app-list__cell app-list__cell--center">
-            <doc-link-getter :fileKey="item.file.key">
+            <doc-link-getter
+              :fileKey="item.file.key"
+              :fileType="DOCUMENTS_POLICIES.private"
+              :userAccountId="userAccountId"
+            >
               Open
             </doc-link-getter>
           </span>
@@ -41,15 +45,17 @@
 <script>
   import { formatDate } from '@/utils/formatters'
   import { DocLinkGetter } from '@comcom/getters'
+  import { DOCUMENTS_POLICIES } from '@/constants'
 
   export default {
-    props: ['list', 'uploadDate'],
+    props: ['list', 'uploadDate', 'userAccountId'],
     components: { DocLinkGetter },
     data () {
       return {
         isLoading: false,
         isNoMoreEntries: false,
-        formatDate
+        formatDate,
+        DOCUMENTS_POLICIES
       }
     },
     methods: {

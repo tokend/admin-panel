@@ -129,6 +129,9 @@ export default {
       } else {
         address = await api.users.getAccountIdByEmail(this.form.receiver)
       }
+      if (!address) {
+        return Promise.reject(`Account doesn't exists in the systen`)
+      }
       const response = await Sdk.horizon.account.get(address)
       let account = response.data
       const balance = account.balances.find(item => item.asset === this.form.asset)

@@ -52,6 +52,7 @@
           <uploaded-docs-list
             :list="uploadedDocuments"
             :uploadDate="request.updatedAt"
+            :userAccountId="user.id"
           />
         </div>
         <user-details :id="request.requestor" :isReviewing="false"/>
