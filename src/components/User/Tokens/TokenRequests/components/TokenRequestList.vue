@@ -35,8 +35,11 @@
               {{asset.details[getRequestType(asset)].code}}
             </span>
 
-            <span class="app-list__cell" :title="normalizeType(asset)">
-              {{normalizeType(asset)}}
+            <span
+              class="app-list__cell"
+              :title="REQUEST_STATES_STR[asset.requestState]"
+            >
+              {{ REQUEST_STATES_STR[asset.requestState] }}
             </span>
 
             <span class="app-list__cell" :title="asset.requestor">
@@ -70,7 +73,11 @@ import api from '@/api'
 import { snakeToCamelCase } from '@/utils/un-camel-case'
 import InputField from '@comcom/fields/InputField'
 import SelectField from '@comcom/fields/SelectField'
-import { CREATE_TOKEN_REQUEST_STATES, REQUEST_STATES_STR, REQUEST_STATES } from '@/constants'
+import {
+  CREATE_TOKEN_REQUEST_STATES,
+  REQUEST_STATES_STR,
+  REQUEST_STATES
+} from '@/constants'
 import _ from 'lodash'
 
 export default {
@@ -91,7 +98,8 @@ export default {
         requestor: null,
         asset: null
       },
-      REQUEST_STATES: CREATE_TOKEN_REQUEST_STATES
+      REQUEST_STATES: CREATE_TOKEN_REQUEST_STATES,
+      REQUEST_STATES_STR
     }
   },
 
@@ -123,10 +131,6 @@ export default {
         error.showMessage('Cannot load request list')
       }
       this.isPending = false
-    },
-
-    normalizeType (obj) {
-      return obj.type === 'asset_create' ? 'Create' : 'Update'
     },
 
     async nextPage () {
