@@ -8,8 +8,11 @@
           <h3>
             Current state
           </h3>
-          <p :class="`user-details__state-info user-details__state-info--${latestRequest.requestState}`">
-              {{ requestState }}
+          <p
+            :class="`user-details__state-info
+                    user-details__state-info--${latestRequest.requestState}`"
+          >
+            {{ requestState }}
           </p>
           <p v-if="latestRequest.requestState === REQUEST_STATES_STR.rejected">
             Reason: {{ latestRequest.rejectReason }}
@@ -17,13 +20,15 @@
           <p class="user-details__heading"
              v-if="latestRequest.requestState === REQUEST_STATES_STR.rejected">
             <span>External rejection details</span>
-            <button class="app__btn-secondary app__btn-secondary--iconed"
-                    @click="isShownExternal = !isShownExternal">
-              <mdi-chevron-up-icon   v-if="isShownExternal"/>
+            <button
+              class="app__btn-secondary app__btn-secondary--iconed"
+              @click="isShownExternal = !isShownExternal"
+            >
+              <mdi-chevron-up-icon v-if="isShownExternal"/>
               <mdi-chevron-down-icon v-else/>
             </button>
           </p>
-          <p v-if="isShownExternal" v-html="externalDetails"></p>
+          <p v-if="isShownExternal" v-html="externalDetails" />
         </section>
 
         <section class="user-details__section">
@@ -32,44 +37,53 @@
 
         <template v-if="latestRequest">
           <section class="user-details__section">
-            <kyc-general-section v-if="latestRequest.details.updateKyc.accountTypeToSet.string === USER_TYPES_STR.general"
-                                 :user="user" :blobId="latestRequest.details.updateKyc.kycData.blobId"/>
+            <kyc-general-section
+              v-if="latestRequest.details.updateKyc.accountTypeToSet.string === USER_TYPES_STR.general"
+              :user="user" :blobId="latestRequest.details.updateKyc.kycData.blobId"
+            />
 
-            <kyc-syndicate-section v-if="latestRequest.details.updateKyc.accountTypeToSet.string === USER_TYPES_STR.syndicate"
-                                 :user="user" :blobId="latestRequest.details.updateKyc.kycData.blobId"
-            :previousBlobId="previousBlobIdForKycRequest"/>
+            <kyc-syndicate-section
+              v-if="latestRequest.details.updateKyc.accountTypeToSet.string === USER_TYPES_STR.syndicate"
+              :user="user"
+              :blobId="latestRequest.details.updateKyc.kycData.blobId"
+              :previousBlobId="previousBlobIdForKycRequest"
+            />
           </section>
-
-
           <section v-if="previousBlobIdForKycRequest" class="user-details__section">
             <h1>Previous KYC Request</h1>
-            <kyc-general-section v-if="latestRequest.details.updateKyc.accountTypeToSet.string === USER_TYPES_STR.general"
-                                 :user="user" :blobId="previousBlobIdForKycRequest"/>
-            <kyc-syndicate-section v-if="latestRequest.details.updateKyc.accountTypeToSet.string === USER_TYPES_STR.syndicate"
-                                   :user="user" :blobId="previousBlobIdForKycRequest"/>
+            <kyc-general-section
+              v-if="latestRequest.details.updateKyc.accountTypeToSet.string === USER_TYPES_STR.general"
+              :user="user"
+              :blobId="previousBlobIdForKycRequest"
+            />
+            <kyc-syndicate-section
+              v-if="latestRequest.details.updateKyc.accountTypeToSet.string === USER_TYPES_STR.syndicate"
+              :user="user"
+              :blobId="previousBlobIdForKycRequest"
+            />
           </section>
         </template>
 
         <div class="user-details__actions-wrp">
-
           <template v-if="requestToReview">
             <section class="user-details__section">
-              <request-section :user="user"
-                               :account="account"
-                               :requestToReview="requestToReview"
-                               @update-request="getUser"
-                               update-request-event="update-request"
+              <request-section
+                :user="user"
+                :account="account"
+                :requestToReview="requestToReview"
+                @update-request="getUser"
+                update-request-event="update-request"
               />
             </section>
           </template>
 
-
           <template>
             <div class="user-details__block-section">
-              <block-section :user="user"
-                             :account="account"
-                             @update-request="getUser"
-                             update-request-event="update-request"
+              <block-section
+                :user="user"
+                :account="account"
+                @update-request="getUser"
+                update-request-event="update-request"
               />
             </div>
           </template>
@@ -101,12 +115,12 @@ import {
 import AccountSection from './UserDetails.Account'
 
 import KycGeneralSection from './UserDetails.Kyc'
-import KycSyndicateSection from '../../../Sales/components/SaleManager/SaleManager.SyndicateTab'
+import KycSyndicateSection from '@/components/User/Sales/components/SaleManager/SaleManager.SyndicateTab'
 
 import RequestSection from './UserDetails.Request'
 import BlockSection from './UserDetails.Block'
-import { formatDate } from '../../../../../utils/formatters'
-import { unCamelCase } from '../../../../../utils/un-camel-case'
+import { formatDate } from '@/utils/formatters'
+import { unCamelCase } from '@/utils/un-camel-case'
 
 const OPERATION_TYPE = {
   createKycRequest: '22'
