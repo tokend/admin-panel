@@ -348,6 +348,8 @@
               [item]: this.switchValues[limitsOpStr][item] ? limits[item] : DEFAULT_MAX_AMOUNT
             }
           }, {})
+
+        if (!this.isValidLimits(disabledLimits)) return false
         try {
           if (limits.accountType == null) {
             // managelimitbuilder somehow doesnt accept opts.accountType NULL value
@@ -379,6 +381,22 @@
       },
       async getAccountIdByEmail (email) {
         this.filters.address = await api.users.getAccountIdByEmail(email)
+      },
+      // it's a quick fix of the limits validation. Need to refactor it ASAP
+      isValidLimits (limits) {
+        if (+limits.weeklyOut < +limits.dailyOut) {
+          this.$store.dispatch('SET_ERROR', 'Weekly out limits should be more or equal to daily out')
+          return false
+        }
+        if (+limits.monthlyOut < +limits.dailyOut || +limits.monthlyOut < +limits.weeklyOut) {
+          this.$store.dispatch('SET_ERROR', 'Monthly out limits should be more or equal to daily and/or weekly out')
+          return false
+        }
+        if (+limits.annualOut < +limits.dailyOut || +limits.annualOut < +limits.weeklyOut || +limits.annualOut < +limits.monthlyOut) {
+          this.$store.dispatch('SET_ERROR', 'Annual out limits should be more or equal to daily, weekly and/or monthly out')
+          return false
+        }
+        return true
       },
       setFilters () {
         if (!this.filters.asset) this.filters.asset = get(this.assets, '[0].code')
