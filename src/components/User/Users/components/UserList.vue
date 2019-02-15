@@ -1,18 +1,27 @@
 <template>
   <div class="user-list">
-
     <template v-if="view.mode === VIEW_MODES_VERBOSE.index">
       <div class="user-list__filters-wrp">
         <div class="app-list-filters">
-          <select-field class="issuance-rl__filter app-list-filters__field"
-                        label="User type" v-model="filters.type">
+          <select-field
+            class="issuance-rl__filter app-list-filters__field"
+            label="User type"
+            v-model="filters.type"
+          >
             <option :value="''"></option>
             <option :value="USER_TYPES.general">General</option>
             <option :value="USER_TYPES.syndicate">Сorporate</option>
           </select-field>
-          <input-field class="app-list-filters__field" v-model.trim="filters.email" label="Email"/>
-
-          <input-field class="app-list-filters__field" v-model.trim="filters.address" label="Account ID"/>
+          <input-field
+            class="app-list-filters__field"
+            v-model.trim="filters.email"
+            label="Email"
+          />
+          <input-field
+            class="app-list-filters__field"
+            v-model.trim="filters.address"
+            label="Account ID"
+          />
         </div>
       </div>
 
@@ -31,14 +40,30 @@
             </span>
             </div>
 
-            <button class="app-list__li" v-for="item in list.data" :key="item.id" @click="toggleViewMode(item.id)">
-            <span class="app-list__cell app-list__cell--important user-list__email-cell" :title="item.email">
-              {{item.email}}
-            </span>
-              <account-state-getter class="app-list__cell" :accountId="item.id"/>
-              <span class="app-list__cell app-list__cell--right" :title="item.id">
-              {{item.id}}
-            </span>
+            <button
+              class="app-list__li"
+              v-for="item in list.data"
+              :key="item.id"
+              @click="toggleViewMode(item.id)"
+            >
+              <span
+                class="app-list__cell
+                      app-list__cell--important
+                      user-list__email-cell"
+                :title="item.email"
+              >
+                {{ item.email }}
+              </span>
+              <account-state-getter
+                class="app-list__cell"
+                :accountId="item.id"
+              />
+              <span
+                class="app-list__cell app-list__cell--right"
+                :title="item.id"
+              >
+                {{ item.id }}
+              </span>
             </button>
           </template>
 
@@ -60,9 +85,11 @@
         </div>
 
         <div class="app__more-btn-wrp">
-          <button class="app__btn-secondary"
-                  v-if="!isListEnded && list.data"
-                  @click="onMoreClick">
+          <button
+            class="app__btn-secondary"
+            v-if="!isListEnded && list.data"
+            @click="onMoreClick"
+          >
             More
           </button>
         </div>
