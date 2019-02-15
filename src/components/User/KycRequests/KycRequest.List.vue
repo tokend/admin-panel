@@ -5,24 +5,43 @@
 
       <div class="request-list__filters-wrp">
         <div class="app-list-filters">
-          <input-field class="app-list-filters__field" v-model.trim="filters.email" label="Email" />
-          <select-field class="issuance-rl__filter app-list-filters__field"
-                        label="User type" v-model="filters.type">
+          <input-field
+            class="app-list-filters__field"
+            v-model.trim="filters.email"
+            label="Email"
+          />
+          <select-field
+            class="issuance-rl__filter app-list-filters__field"
+            label="User type"
+            v-model="filters.type"
+          >
             <option :value="''"></option>
             <option :value="ACCOUNT_TYPES.general">General</option>
             <option :value="ACCOUNT_TYPES.syndicate">Сorporate</option>
           </select-field>
-          <select-field class="app-list-filters__field" v-model="filters.state" label="State">
-            <option v-for="state in Object.keys(KYC_REQUEST_STATES)" :value="state">{{ KYC_REQUEST_STATES[state].label }}</option>
+          <select-field
+            class="app-list-filters__field"
+            v-model="filters.state"
+            label="State"
+          >
+            <option
+              v-for="(state, s) in Object.keys(KYC_REQUEST_STATES)"
+              :key="`kyc-request-${s}`"
+              :value="state"
+            >
+              {{ KYC_REQUEST_STATES[state].label }}
+            </option>
           </select-field>
 
-          <input-field class="app-list-filters__field" v-model.trim="filters.address" label="Account ID" />
+          <input-field
+            class="app-list-filters__field"
+            v-model.trim="filters.address"
+            label="Account ID"
+          />
         </div>
       </div>
 
-
       <div class="request-list__list-wrp">
-
         <template v-if="list.data && list.data.length">
           <div class="app-list">
             <div class="app-list__header">
@@ -32,25 +51,50 @@
               <span class="app-list__cell app-list__cell--right">Last updated</span>
               <span class="app-list__cell app-list__cell--right">Type</span>
             </div>
-            <button class="app-list__li" v-for="item in list.data"
-                    :key="item.id"
-                    @click="toggleViewMode(item.details[snakeToCamelCase(item.details.requestType)].accountToUpdateKyc)">
-              <email-getter class="app-list__cell app-list__cell--important"
-                           :address="item.details[snakeToCamelCase(item.details.requestType)].accountToUpdateKyc"
-                            is-titled/>
-              <span class="app-list__cell app-list__cell--right">{{item.requestState}}</span>
+            <button
+              class="app-list__li" v-for="item in list.data"
+              :key="item.id"
+              @click="toggleViewMode(
+                item.details[
+                  snakeToCamelCase(item.details.requestType)
+                ].accountToUpdateKyc
+              )"
+            >
+              <email-getter
+                class="app-list__cell app-list__cell--important"
+                :address="
+                  item.details[
+                    snakeToCamelCase(item.details.requestType)
+                  ].accountToUpdateKyc
+                "
+                is-titled
+              />
               <span class="app-list__cell app-list__cell--right">
-                {{ACCOUNT_TYPES_VERBOSE[item.details[snakeToCamelCase(item.details.requestType)].accountTypeToSet.int]}}
+                {{ item.requestState }}
               </span>
-              <span class="app-list__cell app-list__cell--right">{{formatDate(item.updatedAt)}}</span>
-              <kyc-type class="app-list__cell app-list__cell--right" :accountId="item.details[snakeToCamelCase(item.details.requestType)].accountToUpdateKyc"/>
+              <span class="app-list__cell app-list__cell--right">
+                {{ ACCOUNT_TYPES_VERBOSE[item.details[snakeToCamelCase(item.details.requestType)].accountTypeToSet.int] }}
+              </span>
+              <span class="app-list__cell app-list__cell--right">
+                {{ formatDate(item.updatedAt) }}
+              </span>
+              <kyc-type
+                class="app-list__cell app-list__cell--right"
+                :accountId="
+                  item.details[
+                    snakeToCamelCase(item.details.requestType)
+                  ].accountToUpdateKyc
+                "
+              />
             </button>
           </div>
 
           <div class="app__more-btn-wrp">
-            <button class="app__btn-secondary"
-                    v-if="!isListEnded && list.data"
-                    @click="onMoreClick" >
+            <button
+              class="app__btn-secondary"
+              v-if="!isListEnded && list.data"
+              @click="onMoreClick"
+            >
               More
             </button>
           </div>
@@ -61,13 +105,17 @@
           <div class="app-list">
             <template v-if="isLoading">
               <p class="app-list__li">
-                <span class="app-list__cell app-list__cell--center">Loading...</span>
+                <span class="app-list__cell app-list__cell--center">
+                  Loading...
+                </span>
               </p>
             </template>
 
             <template v-else>
               <p class="app-list__li">
-                <span class="app-list__cell app-list__cell--center">Nothing here yet</span>
+                <span class="app-list__cell app-list__cell--center">
+                  Nothing here yet
+                </span>
               </p>
             </template>
           </div>
@@ -110,7 +158,17 @@
   })
 
   export default {
+    name: 'kyc-request-list',
     components: { UserView, EmailGetter, SelectField, InputField, KycType },
+    provide () {
+      const kycRequestsList = {}
+      Object.defineProperty(kycRequestsList, 'updateAsk', {
+        enumerable: true,
+        get: () => false,
+        set: () => this.getList()
+      })
+      return { kycRequestsList }
+    },
     data () {
       return {
         ACCOUNT_TYPES,
@@ -150,9 +208,11 @@
           } else if (this.filters.email) {
             address = await this.getAccountIdByEmail()
           }
-          this.list = await api.requests.getKycRequests(
-            { state: KYC_REQUEST_STATES[this.filters.state], requestor: address, type: this.filters.type }
-          )
+          this.list = await api.requests.getKycRequests({
+            state: KYC_REQUEST_STATES[this.filters.state],
+            requestor: address,
+            type: this.filters.type
+          })
           this.isListEnded = !(this.list.data || []).length
         } catch (error) {
           console.error(error)

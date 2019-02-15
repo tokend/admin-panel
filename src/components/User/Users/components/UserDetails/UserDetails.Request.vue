@@ -9,22 +9,25 @@
     <template v-if="RENDERED_TASKS_TO_ADD.includes(REVIEW_TASKS.nonLatinDocs)">
       <div class="user-request__block" v-if="hasManualTasks">
         <h3>Details</h3>
-        <tick-field v-model="details.tasksToAdd"
-                    :label="REVIEW_TASKS_VOCABULARY[REVIEW_TASKS.nonLatinDocs]"
-                    :cb-value="REVIEW_TASKS.nonLatinDocs"
+        <tick-field
+          v-model="details.tasksToAdd"
+          :label="REVIEW_TASKS_VOCABULARY[REVIEW_TASKS.nonLatinDocs]"
+          :cb-value="REVIEW_TASKS.nonLatinDocs"
         />
       </div>
     </template>
 
-    <template v-if="RENDERED_TASKS_TO_REMOVE.length ||
-                    RENDERED_TASKS_TO_ADD.length">
-
+    <template
+      v-if="RENDERED_TASKS_TO_REMOVE.length ||
+      RENDERED_TASKS_TO_ADD.length"
+    >
       <div class="user-request__block" v-if="isRequestPending">
-
         <div class="user-request__heading">
           <h3>Advanced</h3>
-          <button class="app__btn-secondary app__btn-secondary--iconed"
-                  @click="isShownAdvanced = !isShownAdvanced">
+          <button
+            class="app__btn-secondary app__btn-secondary--iconed"
+            @click="isShownAdvanced = !isShownAdvanced"
+          >
             <mdi-chevron-up-icon   v-if="isShownAdvanced"/>
             <mdi-chevron-down-icon v-else/>
           </button>
@@ -33,21 +36,25 @@
         <template v-if="isShownAdvanced"
         >
           <h4 v-if="RENDERED_TASKS_TO_REMOVE.length">Tasks to remove</h4>
-          <template v-for="task in RENDERED_TASKS_TO_REMOVE">
-            <tickField class="user-request__tick-field"
-                       v-model="details.tasksToRemove"
-                       v-if="task !== 0"
-                       :cb-value="task"
-                       :label="REVIEW_TASKS_VOCABULARY[task]"
+          <template v-for="(task, t) in RENDERED_TASKS_TO_REMOVE">
+            <tickField
+              :key="`user-details-request-${task}-1-${t}`"
+              class="user-request__tick-field"
+              v-model="details.tasksToRemove"
+              v-if="task !== 0"
+              :cb-value="task"
+              :label="REVIEW_TASKS_VOCABULARY[task]"
             />
           </template>
           <h4 v-if="RENDERED_TASKS_TO_ADD.length">Tasks to add</h4>
-          <template v-for="task in RENDERED_TASKS_TO_ADD">
-            <tickField class="user-request__tick-field"
-                       v-model="details.tasksToAdd"
-                       v-if="task !== 0"
-                       :cb-value="task"
-                       :label="REVIEW_TASKS_VOCABULARY[task]"
+          <template v-for="(task, t) in RENDERED_TASKS_TO_ADD">
+            <tickField
+              :key="`user-details-request-${task}-2-${t}`"
+              class="user-request__tick-field"
+              v-model="details.tasksToAdd"
+              v-if="task !== 0"
+              :cb-value="task"
+              :label="REVIEW_TASKS_VOCABULARY[task]"
             />
           </template>
         </template>
@@ -57,45 +64,59 @@
 
     <template v-if="hasManualTasks || (isShownAdvanced && isRequestPending)">
       <div class="user-request__actions">
-        <button class="app__btn"
-                @click="approve"
-                :disabled="isPending"
-        >{{ isShownAdvanced ? 'Update request state' : 'Approve' }}</button>
+        <button
+          class="app__btn"
+          @click="approve"
+          :disabled="isPending"
+        >
+          {{ isShownAdvanced ? 'Update request state' : 'Approve' }}
+        </button>
 
-        <button class="app__btn-secondary"
-                @click="showRejectModal"
-                :disabled="isPending"
-        >Reject</button>
+        <button
+          class="app__btn-secondary"
+          @click="showRejectModal"
+          :disabled="isPending"
+        >
+          Reject
+        </button>
       </div>
     </template>
 
     <template v-if="isAccreditedInvestor">
       <div class="user-request__actions">
-        <button class="app__btn user-request__approve-ai-btn"
-                @click="approveAccreditedInvestor"
-                :disabled="isPending"
-        >Approve accredited investor</button>
+        <button
+          class="app__btn user-request__approve-ai-btn"
+          @click="approveAccreditedInvestor"
+          :disabled="isPending"
+        >
+          Approve accredited investor
+        </button>
       </div>
     </template>
 
     <template v-if="account.accountTypeI !== ACCOUNT_TYPES.notVerified">
       <div class="user-request__actions">
-        <button class="app__btn-secondary app__btn-secondary--danger user-request__approve-ai-btn"
-                @click="showRejectModal(true)"
-                :disabled="isPending"
-        >Reset to unverified</button>
+        <button
+          class="app__btn-secondary
+                app__btn-secondary--danger
+                user-request__approve-ai-btn"
+          @click="showRejectModal(true)"
+          :disabled="isPending"
+        >
+          Reset to unverified
+        </button>
       </div>
     </template>
-
-
 
     <modal class="user-request__reject-modal"
       v-if="rejectForm.isShown"
       @close-request="hideRejectModal(); this.rejectForm.isReset = false"
-      max-width="40rem">
+      max-width="40rem"
+    >
       <form class="user-request__reject-form"
         id="user-request-reject-form"
-        @submit.prevent="hideRejectModal() || reject()">
+        @submit.prevent="hideRejectModal() || reject()"
+      >
         <div class="app__form-row">
           <text-field label="Reject reason"
             :autofocus="true"
@@ -103,7 +124,7 @@
           />
         </div>
       </form>
-      {{col}}
+      {{ col }}
       <div class="app__form-actions user-request__reject-form-actions">
         <button class="app__btn app__btn--danger" form="user-request-reject-form">
           Reject
@@ -142,11 +163,14 @@ import 'mdi-vue/ChevronUpIcon'
 const EMPTY_REASON = ''
 
 export default {
+  name: 'user-details-request',
   components: {
     Modal,
     TextField,
     TickField
   },
+
+  inject: ['kycRequestsList'],
 
   data () {
     return {
@@ -202,6 +226,7 @@ export default {
           tasksToAdd
         })
         this.$store.dispatch('SET_INFO', 'Request approved successfully')
+        this.kycRequestsList.updateAsk = true
         this.$emit(this.updateRequestEvent)
       } catch (error) {
         console.error(error)
@@ -221,6 +246,7 @@ export default {
           tasksToAdd
         })
         this.$store.dispatch('SET_INFO', 'Request approved successfully')
+        this.kycRequestsList.updateAsk = true
         this.$emit(this.updateRequestEvent)
       } catch (error) {
         console.error(error)
@@ -249,6 +275,7 @@ export default {
         this.rejectForm.isReset = false
         await submitter
         this.$store.dispatch('SET_INFO', `Request rejected successfully`)
+        this.kycRequestsList.updateAsk = true
         this.$emit(this.updateRequestEvent)
       } catch (error) {
         this.isPending = false
