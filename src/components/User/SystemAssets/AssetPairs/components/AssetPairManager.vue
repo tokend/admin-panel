@@ -29,7 +29,8 @@
 
 
         <div class="asset-pair-manager__checkboxes">
-          <tick-field class="asset-pair-manager__checkbox"
+          <tick-field
+            class="asset-pair-manager__checkbox"
                       v-model="form.policies"
                       :disabled="isPending"
                       :required="false"
@@ -37,7 +38,8 @@
                       title="Allowed to trade this pair on secondary market"
                       :cb-value="ASSET_PAIR_POLICIES.tradeableSecondaryMarket"
           />
-          <tick-field class="asset-pair-manager__checkbox"
+          <tick-field
+            class="asset-pair-manager__checkbox"
                       v-model="form.policies"
                       :disabled="isPending"
                       :required="false"
@@ -45,7 +47,8 @@
                       title="If set, then prices for new offers must be greater then physical price with correction"
                       :cb-value="ASSET_PAIR_POLICIES.physicalPriceRestriction"
           />
-          <tick-field class="asset-pair-manager__checkbox"
+          <tick-field
+            class="asset-pair-manager__checkbox"
                       v-model="form.policies"
                       :disabled="isPending"
                       :required="false"
@@ -55,8 +58,10 @@
           />
         </div>
 
-        <button class="asset-pair-manager__submit-btn app__btn"
-                :disabled="isSubmitting">
+        <button
+          class="asset-pair-manager__submit-btn app__btn"
+          :disabled="isSubmitting"
+        >
           Update policy
         </button>
       </form>
@@ -78,7 +83,7 @@ import TickField from '@comcom/fields/TickField'
 import { DEFAULT_INPUT_STEP } from '@/constants'
 import { ASSET_PAIR_POLICIES } from '@/constants/'
 
-import { confirmAction } from '../../../../../js/modals/confirmation_message'
+import { confirmAction } from '@/js/modals/confirmation_message'
 
 export default {
   props: ['base', 'quote'],
