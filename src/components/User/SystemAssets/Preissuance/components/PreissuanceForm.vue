@@ -36,28 +36,56 @@
         <span class="app-list__cell">Signatures</span>
 
       </div>
-      <li v-for="(item, index) in fileInfo" :key="item.fileName" class="preissuance-form__li">
-        <span class="app-list__cell preissuance-form__id--max-width" :title="index + 1">{{index + 1}}.</span>
-        <span class="app-list__cell" :title="item.fileName">{{item.fileName}}</span>
-        <span class="app-list__cell"
-              :title="`${localize(item.issuance.amount)} ${item.issuance.asset}`">
-            {{localize(item.issuance.amount)}} {{item.issuance.asset}}
+      <li
+        v-for="(item, index) in fileInfo"
+        :key="item.fileName"
+        class="preissuance-form__li"
+      >
+        <span
+          class="app-list__cell preissuance-form__id--max-width"
+          :title="index + 1"
+        >
+          {{ index + 1 }}.
+        </span>
+        <span
+          class="app-list__cell"
+          :title="item.fileName"
+        >
+          {{ item.fileName }}
+        </span>
+        <span
+          class="app-list__cell"
+          :title="`${localize(item.issuance.amount)} ${item.issuance.asset}`"
+          >
+            {{ localize(item.issuance.amount) }} {{ item.issuance.asset }}
           </span>
-        <span class="app-list__cell" :title="item.preissuedAssetSigner">{{item.preissuedAssetSigner}}</span>
+        <span
+          class="app-list__cell"
+          :title="item.preissuedAssetSigner"
+        >
+          {{ item.preissuedAssetSigner }}
+          </span>
         <span class="app-list__cell" :title="1">1</span>
       </li>
     </ul>
     <template v-if="notLoadedFiles.length">
       <div class="preissuance-form__not-downloaded">
         <h4>NOT loaded files:</h4>
-        <div v-for="(item, index) in notLoadedFiles" :key="item.fileName">{{index + 1}}. {{item.fileName}} - {{item.msg}}</div>
+        <div
+          v-for="(item, index) in notLoadedFiles"
+          :key="item.fileName"
+        >
+          {{ index + 1 }}. {{ item.fileName }} - {{ item.msg }}
+        </div>
       </div>
     </template>
 
     <div class="preissuance-form__summary-actions" v-if="fileInfo.length">
-      <button class="app__btn"
-              @click="upload()"
-              :disabled="uploadBtnDisable">
+      <button
+        class="app__btn"
+        @click="upload"
+        :disabled="uploadBtnDisable"
+      >
         Upload
       </button>
       <button class="app__btn-secondary" @click="fileInfo = []">
@@ -95,7 +123,6 @@
 
       async getAssets () {
         this.$store.commit('OPEN_LOADER')
-
         try {
           const response = await Sdk.horizon.assets.getAll({
             owner: config.MASTER_ACCOUNT
@@ -180,19 +207,17 @@
             })
           })
           await Sdk.horizon.transactions.submitOperations(...operations)
-          this.$store.commit('CLOSE_LOADER')
           this.$store.dispatch('SET_INFO', 'Pending transaction submitted')
-          this.uploadBtnDisable = false
         } catch (err) {
           const message = errors.tryParseError(err) || 'Something went wrong. Transaction failed'
           this.$store.dispatch('SET_ERROR', message)
-          this.$store.commit('CLOSE_LOADER')
           console.error('not uploaded', err)
+        }
+          this.$store.commit('CLOSE_LOADER')
           this.uploadBtnDisable = false
         }
       }
     }
-  }
 </script>
 
 <style lang="scss" scoped>
