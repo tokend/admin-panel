@@ -11,8 +11,8 @@
         <h3>Details</h3>
         <tick-field
           v-model="details.tasksToAdd"
-                    :label="REVIEW_TASKS_VOCABULARY[REVIEW_TASKS.nonLatinDocs]"
-                    :cb-value="REVIEW_TASKS.nonLatinDocs"
+          :label="REVIEW_TASKS_VOCABULARY[REVIEW_TASKS.nonLatinDocs]"
+          :cb-value="REVIEW_TASKS.nonLatinDocs"
         />
       </div>
     </template>
@@ -40,10 +40,10 @@
             <tickField
               :key="`user-details-request-${task}-1-${t}`"
               class="user-request__tick-field"
-                       v-model="details.tasksToRemove"
-                       v-if="task !== 0"
-                       :cb-value="task"
-                       :label="REVIEW_TASKS_VOCABULARY[task]"
+              v-model="details.tasksToRemove"
+              v-if="task !== 0"
+              :cb-value="task"
+              :label="REVIEW_TASKS_VOCABULARY[task]"
             />
           </template>
           <h4 v-if="RENDERED_TASKS_TO_ADD.length">Tasks to add</h4>
@@ -51,10 +51,10 @@
             <tickField
               :key="`user-details-request-${task}-2-${t}`"
               class="user-request__tick-field"
-                       v-model="details.tasksToAdd"
-                       v-if="task !== 0"
-                       :cb-value="task"
-                       :label="REVIEW_TASKS_VOCABULARY[task]"
+              v-model="details.tasksToAdd"
+              v-if="task !== 0"
+              :cb-value="task"
+              :label="REVIEW_TASKS_VOCABULARY[task]"
             />
           </template>
         </template>
@@ -66,16 +66,16 @@
       <div class="user-request__actions">
         <button
           class="app__btn"
-                @click="approve"
-                :disabled="isPending"
+          @click="approve"
+          :disabled="isPending"
         >
           {{ isShownAdvanced ? 'Update request state' : 'Approve' }}
         </button>
 
         <button
           class="app__btn-secondary"
-                @click="showRejectModal"
-                :disabled="isPending"
+          @click="showRejectModal"
+          :disabled="isPending"
         >
           Reject
         </button>
@@ -86,8 +86,8 @@
       <div class="user-request__actions">
         <button
           class="app__btn user-request__approve-ai-btn"
-                @click="approveAccreditedInvestor"
-                :disabled="isPending"
+          @click="approveAccreditedInvestor"
+          :disabled="isPending"
         >
           Approve accredited investor
         </button>
@@ -100,8 +100,8 @@
           class="app__btn-secondary
                 app__btn-secondary--danger
                 user-request__approve-ai-btn"
-                @click="showRejectModal(true)"
-                :disabled="isPending"
+          @click="showRejectModal(true)"
+          :disabled="isPending"
         >
           Reset to unverified
         </button>
@@ -170,6 +170,8 @@ export default {
     TickField
   },
 
+  inject: ['kycRequestsList'],
+
   data () {
     return {
       USER_STATES_STR,
@@ -224,6 +226,7 @@ export default {
           tasksToAdd
         })
         this.$store.dispatch('SET_INFO', 'Request approved successfully')
+        this.kycRequestsList.updateAsk = true
         this.$emit(this.updateRequestEvent)
       } catch (error) {
         console.error(error)
@@ -243,6 +246,7 @@ export default {
           tasksToAdd
         })
         this.$store.dispatch('SET_INFO', 'Request approved successfully')
+        this.kycRequestsList.updateAsk = true
         this.$emit(this.updateRequestEvent)
       } catch (error) {
         console.error(error)
@@ -271,6 +275,7 @@ export default {
         this.rejectForm.isReset = false
         await submitter
         this.$store.dispatch('SET_INFO', `Request rejected successfully`)
+        this.kycRequestsList.updateAsk = true
         this.$emit(this.updateRequestEvent)
       } catch (error) {
         this.isPending = false

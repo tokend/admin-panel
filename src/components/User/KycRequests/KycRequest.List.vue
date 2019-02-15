@@ -53,7 +53,7 @@
             </div>
             <button
               class="app-list__li" v-for="item in list.data"
-                    :key="item.id"
+              :key="item.id"
               @click="toggleViewMode(
                 item.details[
                   snakeToCamelCase(item.details.requestType)
@@ -92,7 +92,7 @@
           <div class="app__more-btn-wrp">
             <button
               class="app__btn-secondary"
-                    v-if="!isListEnded && list.data"
+              v-if="!isListEnded && list.data"
               @click="onMoreClick"
             >
               More
@@ -160,6 +160,15 @@
   export default {
     name: 'kyc-request-list',
     components: { UserView, EmailGetter, SelectField, InputField, KycType },
+    provide () {
+      const kycRequestsList = {}
+      Object.defineProperty(kycRequestsList, 'updateAsk', {
+        enumerable: true,
+        get: () => false,
+        set: () => this.getList()
+      })
+      return { kycRequestsList }
+    },
     data () {
       return {
         ACCOUNT_TYPES,
