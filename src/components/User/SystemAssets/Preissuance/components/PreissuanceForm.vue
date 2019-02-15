@@ -64,7 +64,7 @@
           :title="item.preissuedAssetSigner"
         >
           {{ item.preissuedAssetSigner }}
-          </span>
+        </span>
         <span class="app-list__cell" :title="1">1</span>
       </li>
     </ul>
@@ -202,7 +202,7 @@
         try {
           const preIssuances = this.fileInfo.map(item => item.issuance.xdr)
           const operations = preIssuances.map(item => {
-            Sdk.base.PreIssuanceRequestOpBuilder.createPreIssuanceRequestOp({
+            return Sdk.base.PreIssuanceRequestOpBuilder.createPreIssuanceRequestOp({
               request: item
             })
           })
@@ -213,11 +213,11 @@
           this.$store.dispatch('SET_ERROR', message)
           console.error('not uploaded', err)
         }
-          this.$store.commit('CLOSE_LOADER')
-          this.uploadBtnDisable = false
-        }
+        this.$store.commit('CLOSE_LOADER')
+        this.uploadBtnDisable = false
       }
     }
+  }
 </script>
 
 <style lang="scss" scoped>
