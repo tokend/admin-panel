@@ -96,7 +96,7 @@ export const requests = {
     const operations = []
     operations.push(Sdk.base.ReviewRequestBuilder.reviewLimitsUpdateRequest({
       requestHash: params.request.hash,
-      requestType: params.request.request_type_i || params.request.requestTypeI,
+      requestType: params.request.details.request_type_i || params.request.details.requestTypeI,
       action: Sdk.xdr.ReviewRequestOpAction.approve().value,
       reason: '',
       requestID: params.request.id,
