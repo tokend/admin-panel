@@ -6,27 +6,34 @@
 
     <div class="sale-list__filters-wrp">
       <div class="app-list-filters sale-list__filters">
-        <input-field class="app-list-filters__field sale-list__field"
-                     label="Token code"
-                     v-model="filters.baseAsset"
+        <input-field
+          class="app-list-filters__field sale-list__field"
+          label="Token code"
+          v-model="filters.baseAsset"
         />
-        <input-field class="app-list-filters__field sale-list__field"
-                     label="Name"
-                     v-model="filters.name"
+        <input-field
+          class="app-list-filters__field sale-list__field"
+          label="Name"
+          v-model="filters.name"
         />
-        <input-field class="app-list-filters__field sale-list__field"
-                     label="Owner"
-                     placeholder="Address (full match)"
-                     v-model="owner"
+        <input-field
+          class="app-list-filters__field sale-list__field"
+          label="Owner"
+          placeholder="Address (full match)"
+          v-model="owner"
         />
-        <input-date-field label="Start date"
-                          class="sale-list__field sale-list__field-margin-top"
-                          :enableTime="false"
-                          v-model="filtersDate.startDate"/>
-        <input-date-field label="End date"
-                          class="sale-list__field sale-list__field-margin-left sale-list__field-margin-top"
-                          :enableTime="false"
-                          v-model="filtersDate.endDate"/>
+        <input-date-field
+          label="Start date"
+          class="sale-list__field sale-list__field-margin-top"
+          :enableTime="false"
+          v-model="filtersDate.startDate"
+        />
+        <input-date-field
+          label="End date"
+          class="sale-list__field sale-list__field-margin-left sale-list__field-margin-top"
+          :enableTime="false"
+          v-model="filtersDate.endDate"
+        />
         <tick-field
           class="app-list-filters__field sale-list__field sale-list__field-margin-left sale-list__field-margin-top"
           label="Open only"
@@ -45,18 +52,31 @@
             <span class="app-list__cell">Owner</span>
           </div>
 
-          <router-link class="app-list__li" v-for="item in list" :key="item.id"
-                       :to="{ name: 'sales.show', params: { id: item.id }}">
-            <span class="app-list__cell app-list__cell--important" :title="item.baseAsset">
-              {{item.baseAsset}}
+          <router-link
+            class="app-list__li"
+            v-for="item in list"
+            :key="item.id"
+            :to="{ name: 'sales.show', params: { id: item.id }}"
+          >
+            <span
+              class="app-list__cell app-list__cell--important"
+              :title="item.baseAsset"
+            >
+              {{ item.baseAsset }}
             </span>
             <span class="app-list__cell" :title="item.name">
-              {{item.name}}
+              {{ item.details.name }}
             </span>
             <span class="app-list__cell">
-              <template v-if="item.state.value === SALE_STATES.open">Open</template>
-              <template v-else-if="item.state.value === SALE_STATES.closed">Closed</template>
-              <template v-else-if="item.state.value === SALE_STATES.cancelled">Cancelled</template>
+              <template v-if="item.state.value === SALE_STATES.open">
+                Open
+              </template>
+              <template v-else-if="item.state.value === SALE_STATES.closed">
+                Closed
+              </template>
+              <template v-else-if="item.state.value === SALE_STATES.cancelled">
+                Cancelled
+              </template>
             </span>
             <span class="app-list__cell">
               <email-getter :address="item.ownerId" is-titled/>
