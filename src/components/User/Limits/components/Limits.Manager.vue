@@ -84,7 +84,7 @@
                     v-model="limits.payment[type]"
                     class="limits-manager__limit-field"
                     :step="DEFAULT_INPUT_STEP"
-                    :type="number"
+                    type="number"
                     :label="' '"
                     min="0"
                   />
@@ -119,7 +119,7 @@
                     v-model="limits.withdrawal[type]"
                     class="limits-manager__limit-field"
                     :step="DEFAULT_INPUT_STEP"
-                    :type="number"
+                    type="number"
                     :label="' '"
                     min="0"
                   />
@@ -154,7 +154,7 @@
                     v-model="limits.deposit[type]"
                     class="limits-manager__limit-field"
                     :step="DEFAULT_INPUT_STEP"
-                    :type="number"
+                    type="number"
                     :label="' '"
                     min="0"
                   />
