@@ -14,6 +14,10 @@ for further information about branching and tagging conventions.
 ### Fixed
 - Fixed approve Limits.Request
 - Issue with ignored external system type change
+- Issue with non-fetched asset and sale pictures
+- KYC list updating
+- Limits field validation
+- Pair price updating
 
 ## [1.1.0] - 2019-02-07
 ### Added
