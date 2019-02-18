@@ -122,6 +122,7 @@ export default {
         seed: '',
         keypair: {}
       },
+      userNameValidatorRegExp: /^\w+$/,
 
       formErrors: {
         seed: { error: false, message: '' },
@@ -223,20 +224,43 @@ export default {
         this.formErrors.username = { error: true, message: 'Enter username' }
         valid = false
       }
+      if (this.credentials.username.length < 3) {
+        this.formErrors.username = {
+          error: true,
+          message: 'Use at least 3 characters for username'
+        }
+        valid = false
+      }
+      if (!this.userNameValidatorRegExp.test(this.credentials.username)) {
+        this.formErrors.username = {
+          error: true,
+          message: 'Only alphaumeric values allowed (A-Z, a-z, 0-9, _)'
+        }
+        valid = false
+      }
       if (this.credentials.password === '') {
         this.formErrors.password = { error: true, message: 'Enter password' }
         valid = false
       }
       if (this.credentials.confirmPassword === '') {
-        this.formErrors.confirmPassword = { error: true, message: 'Enter the same password again' }
+        this.formErrors.confirmPassword = {
+          error: true,
+          message: 'Enter the same password again'
+        }
         valid = false
       }
       if (this.credentials.password.length < 8) {
-        this.formErrors.password = { error: true, message: 'Use at least 8 characters for password' }
+        this.formErrors.password = {
+          error: true,
+          message: 'Use at least 8 characters for password'
+        }
         valid = false
       }
       if (this.credentials.password !== this.credentials.confirmPassword) {
-        this.formErrors.confirmPassword = { error: true, message: 'Enter the same password again' }
+        this.formErrors.confirmPassword = {
+          error: true,
+          message: 'Enter the same password again'
+        }
         valid = false
       }
 
