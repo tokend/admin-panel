@@ -22,6 +22,14 @@ for further information about branching and tagging conventions.
 - KYC list updating
 - Limits field validation
 - Pair price updating
+- Fund filter by owner id
+- Pre-issuance uploading
+
+### Added
+- Username validation in the SignUp form
+- Filter funds by email
+- Validation to set only numeric values in the Limits form
+- Asset creation form validation
 
 ## [1.1.0] - 2019-02-07
 ### Added

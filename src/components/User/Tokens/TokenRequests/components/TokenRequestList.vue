@@ -1,15 +1,31 @@
 <template>
   <div class="token-request-list">
     <div class="token-request-list__filters-wrp">
-      <select-field class="arc-list__filter" v-model="filters.state" label="State">
-        <option v-for="state in Object.keys(REQUEST_STATES)" :value="state" :key="state">
+      <select-field
+        class="arc-list__filter"
+        v-model="filters.state"
+        label="State"
+      >
+        <option
+          v-for="state in Object.keys(REQUEST_STATES)"
+          :value="state"
+          :key="state"
+        >
           {{ state }}
         </option>
       </select-field>
 
-      <input-field class="arc-list__filter" v-model="filters.requestor" label="Requestor"/>
+      <input-field
+        class="arc-list__filter"
+        v-model="filters.requestor"
+        label="Requestor"
+      />
 
-      <input-field class="arc-list__filter" v-model="filters.asset" label="Token code"/>
+      <input-field
+        class="arc-list__filter"
+        v-model="filters.asset"
+        label="Token code"
+      />
     </div>
 
     <div class="token-request-list__table-wrp">
@@ -29,10 +45,17 @@
             </span>
           </div>
 
-          <router-link class="app-list__li" v-for="(asset, i) in records" :key="i"
-            :to="{ name: 'tokens.requests.show', params: { id: asset.id }}">
-            <span class="app-list__cell app-list__cell--important" :title="asset.code">
-              {{asset.details[getRequestType(asset)].code}}
+          <router-link
+            class="app-list__li"
+            v-for="(asset, i) in records"
+            :key="i"
+            :to="{ name: 'tokens.requests.show', params: { id: asset.id }}"
+          >
+            <span
+              class="app-list__cell app-list__cell--important"
+              :title="asset.code"
+            >
+              {{ asset.details[getRequestType(asset)].code }}
             </span>
 
             <span
@@ -70,6 +93,7 @@
 
 <script>
 import api from '@/api'
+import { Sdk } from '@/sdk'
 import { snakeToCamelCase } from '@/utils/un-camel-case'
 import InputField from '@comcom/fields/InputField'
 import SelectField from '@comcom/fields/SelectField'
@@ -120,9 +144,10 @@ export default {
     async getList () {
       this.isPending = true
       try {
+        const requestor = await this.getRequestorAccountId(this.filters.requestor)
         this.list = await api.requests.getAssetRequests({
           state: REQUEST_STATES[this.filters.state],
-          requestor: this.filters.requestor,
+          requestor: requestor,
           code: this.filters.asset
         })
         this.isListEnded = !(this.list.data || []).length
@@ -141,6 +166,18 @@ export default {
       } catch (error) {
         console.error(error)
         error.showMessage('Cannot load next page')
+      }
+    },
+    async getRequestorAccountId (requestor) {
+      if (Sdk.base.Keypair.isValidPublicKey(requestor)) {
+        return requestor
+      } else {
+        try {
+          const address = await api.users.getAccountIdByEmail(requestor)
+          return address || requestor
+        } catch (error) {
+          return requestor
+        }
       }
     }
   },

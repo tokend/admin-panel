@@ -84,7 +84,6 @@
                     v-model="limits.payment[type]"
                     class="limits-manager__limit-field"
                     :step="DEFAULT_INPUT_STEP"
-                    :type="number"
                     :label="' '"
                     min="0"
                   />
@@ -119,7 +118,6 @@
                     v-model="limits.withdrawal[type]"
                     class="limits-manager__limit-field"
                     :step="DEFAULT_INPUT_STEP"
-                    :type="number"
                     :label="' '"
                     min="0"
                   />
@@ -154,7 +152,6 @@
                     v-model="limits.deposit[type]"
                     class="limits-manager__limit-field"
                     :step="DEFAULT_INPUT_STEP"
-                    :type="number"
                     :label="' '"
                     min="0"
                   />
@@ -268,7 +265,8 @@
       isPending: false,
       LIMITS_TYPES,
       ACCOUNT_TYPES,
-      ACCOUNT_TYPES_VERBOSE
+      ACCOUNT_TYPES_VERBOSE,
+      numericValueRegExp: /^\d*\.?\d*$/
     }),
     async created () {
       await this.getAssets()
@@ -349,7 +347,10 @@
             }
           }, {})
 
-        if (!this.isValidLimits(disabledLimits)) return false
+        if (!this.isValidLimits(disabledLimits)) {
+          this.isPending = false
+          return false
+        }
         try {
           if (limits.accountType == null) {
             // managelimitbuilder somehow doesnt accept opts.accountType NULL value
@@ -384,6 +385,12 @@
       },
       // it's a quick fix of the limits validation. Need to refactor it ASAP
       isValidLimits (limits) {
+        for (const limit of Object.values(limits)) {
+          if (!this.numericValueRegExp.test(limit)) {
+            this.$store.dispatch('SET_ERROR', 'Only numeric value allowed')
+            return false
+          }
+        }
         if (+limits.weeklyOut < +limits.dailyOut) {
           this.$store.dispatch('SET_ERROR', 'Weekly out limits should be more or equal to daily out')
           return false
