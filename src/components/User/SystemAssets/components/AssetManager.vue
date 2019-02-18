@@ -28,12 +28,18 @@
           label="Asset name"
           v-model="asset.details.name"
           :disabled="isPending"
+          v-validate="'required|alpha'"
+          name="asset-name"
+          :errorMessage="errors.first('asset-name')"
         />
 
         <input-field class="app__form-field"
           label="Asset code"
           v-model="asset.code"
           :disabled="isExistingAsset || isPending"
+          v-validate="'required|alpha'"
+          name="asset-code"
+          :errorMessage="errors.first('asset-code')"
         />
       </div>
 
@@ -43,6 +49,9 @@
           label="Issuer public key"
           v-model="asset.preissuedAssetSigner"
           :disabled="isExistingAsset || isPending"
+          v-validate="'required|alpha_num'"
+          name="issuer-key"
+          :errorMessage="errors.first('issuer-key')"
         />
 
         <input-field
@@ -51,14 +60,20 @@
           label="Initial preissued amount"
           v-model="asset.initialPreissuedAmount"
           :disabled="isExistingAsset || isPending"
+          v-validate="'required|decimal'"
+          name="initial-preissued"
+          :errorMessage="errors.first('initial-preissued')"
         />
 
         <input-field
           v-else
-                     v-model="asset.availableForIssuance"
-                     class="app__form-field"
-                     label="Available for issuance"
-                     :disabled="true"
+          v-model="asset.availableForIssuance"
+          class="app__form-field"
+          label="Available for issuance"
+          :disabled="true"
+          v-validate="'required|decimal'"
+          name="available-issuance"
+          :errorMessage="errors.first('available-issuance')"
         />
       </div>
 
@@ -69,6 +84,9 @@
           label="Maximum tokens"
           v-model="asset.maxIssuanceAmount"
           :disabled="isExistingAsset || isPending"
+          v-validate="'required|decimal'"
+          name="max-tokens"
+          :errorMessage="errors.first('max-tokens')"
         />
       </div>
 
@@ -83,10 +101,10 @@
           </label>
           <input
             class="app__upload-input"
-                 id="file-select"
-                 type="file"
-                 accept="application/pdf, image/*"
-                 @change="onFileChange($event, DOCUMENT_TYPES.tokenTerms)"
+            id="file-select"
+            type="file"
+            accept="application/pdf, image/*"
+            @change="onFileChange($event, DOCUMENT_TYPES.tokenTerms)"
           />
           <span
             v-if="safeGet(asset, 'terms.name')"
@@ -202,13 +220,13 @@
         <div class="app__form-row">
           <input-field
             class="app__form-field app__form-field--halved"
-                       type="number"
-                       label="External system type"
-                       name="External system type"
-                       v-model="asset.details.externalSystemType"
-                       :required="false"
-                       :disabled="isPending"
-                       v-validate="{max_value: int32}"
+            type="number"
+            label="External system type"
+            name="External system type"
+            v-model="asset.details.externalSystemType"
+            :required="false"
+            :disabled="isPending"
+            v-validate="{max_value: int32}"
           />
         </div>
       </template>
@@ -310,6 +328,7 @@ export default {
     },
 
     async submit () {
+      if (!this.isValid()) return
       if (!await confirmAction()) return
 
       this.isPending = true
@@ -352,6 +371,18 @@ export default {
         error.showMessage()
       }
       this.isPending = false
+    },
+
+    isValid () {
+      if (this.errors.errors.lenght) {
+        this.$store.dispatch('SET_ERROR', 'Some field is invalid')
+        return false
+      }
+      if (!Sdk.base.Keypair.isValidPublicKey(this.asset.preissuedAssetSigner)) {
+        this.$store.dispatch('SET_ERROR', 'Issuer public key is invalid')
+        return false
+      }
+      return true
     },
 
     async onFileChange (event, type) {
