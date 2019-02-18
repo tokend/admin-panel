@@ -18,11 +18,13 @@
         <label class="asset-manager__image-lbl">Upload token logo</label>
         <image-field
           :fileKey="safeGet(asset, `details.logo.key`)"
-          @change="onFileChange($event, DOCUMENT_TYPES.tokenLogo)"/>
+          @change="onFileChange($event, DOCUMENT_TYPES.tokenLogo)"
+        />
       </div>
 
       <div class="app__form-row">
-        <input-field class="app__form-field"
+        <input-field
+          class="app__form-field"
           label="Asset name"
           v-model="asset.details.name"
           :disabled="isPending"
@@ -35,22 +37,24 @@
         />
       </div>
 
-      <!--TODO: need to add validation of public key-->
-
       <div class="app__form-row">
-        <input-field class="app__form-field"
+        <input-field
+          class="app__form-field"
           label="Issuer public key"
           v-model="asset.preissuedAssetSigner"
           :disabled="isExistingAsset || isPending"
         />
 
-        <input-field class="app__form-field" v-if="!isExistingAsset"
+        <input-field
+          v-if="!isExistingAsset"
+          class="app__form-field"
           label="Initial preissued amount"
           v-model="asset.initialPreissuedAmount"
           :disabled="isExistingAsset || isPending"
         />
 
-        <input-field v-else
+        <input-field
+          v-else
                      v-model="asset.availableForIssuance"
                      class="app__form-field"
                      label="Available for issuance"
@@ -59,7 +63,8 @@
       </div>
 
       <div class="app__form-row">
-        <input-field class="app__form-field app__form-field--halved"
+        <input-field
+          class="app__form-field app__form-field--halved"
           type="number" :min="0" :step="DEFAULT_INPUT_STEP"
           label="Maximum tokens"
           v-model="asset.maxIssuanceAmount"
@@ -70,29 +75,37 @@
       <div class="asset-manager__file-input-wrp">
         <span>Terms</span>
         <div class="asset-manager__file-input-inner">
-          <label class="app__upload-btn app__btn app__btn--info"
-                 for="file-select">
+          <label
+            class="app__upload-btn app__btn app__btn--info"
+            for="file-select"
+          >
             Select File
           </label>
-          <input class="app__upload-input"
+          <input
+            class="app__upload-input"
                  id="file-select"
                  type="file"
                  accept="application/pdf, image/*"
                  @change="onFileChange($event, DOCUMENT_TYPES.tokenTerms)"
           />
-          <span v-if="safeGet(asset, 'terms.name')" class="asset-manager__file-name">
-
+          <span
+            v-if="safeGet(asset, 'terms.name')"
+            class="asset-manager__file-name"
+          >
             {{ safeGet(asset, 'terms.name') }}
           </span>
           <span v-else-if="termsUrl" class="asset-manager__file-name">
-            <a :href="termsUrl" target="_blank" rel="noopener">{{ safeGet(asset, 'details.terms.name') }}</a>
+            <a :href="termsUrl" target="_blank" rel="noopener">
+              {{ safeGet(asset, 'details.terms.name') }}
+            </a>
           </span>
           <!--<span v-else-if="safeGet(asset, 'terms..')"></span>-->
         </div>
       </div>
 
       <div class="app__form-row">
-        <tick-field class="app__form-field"
+        <tick-field
+          class="app__form-field"
           v-model="asset.policy"
           :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.transferable]"
           :cb-value="ASSET_POLICIES.transferable"
@@ -101,7 +114,8 @@
       </div>
 
       <div class="app__form-row">
-        <tick-field class="app__form-field"
+        <tick-field
+          class="app__form-field"
           v-model="asset.policy"
           :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.baseAsset]"
           :cb-value="ASSET_POLICIES.baseAsset"
@@ -110,7 +124,8 @@
       </div>
 
       <div class="app__form-row">
-        <tick-field class="app__form-field"
+        <tick-field
+          class="app__form-field"
           v-model="asset.policy"
           :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.statsQuoteAsset]"
           :cb-value="ASSET_POLICIES.statsQuoteAsset"
@@ -119,7 +134,8 @@
       </div>
 
       <div class="app__form-row">
-        <tick-field class="app__form-field"
+        <tick-field
+          class="app__form-field"
           v-model="asset.policy"
           :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.withdrawable]"
           :cb-value="ASSET_POLICIES.withdrawable"
@@ -128,7 +144,8 @@
       </div>
 
       <div class="app__form-row">
-        <tick-field class="app__form-field"
+        <tick-field
+          class="app__form-field"
           v-model="asset.policy"
           :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.withdrawableV2]"
           :cb-value="ASSET_POLICIES.withdrawableV2"
@@ -137,7 +154,8 @@
       </div>
 
       <div class="app__form-row">
-        <tick-field class="app__form-field"
+        <tick-field
+          class="app__form-field"
           v-model="asset.policy"
           :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.twoStepWithdrawal]"
           title="Withdraw operations are done in two steps"
@@ -147,7 +165,8 @@
       </div>
 
       <div class="app__form-row">
-        <tick-field class="app__form-field"
+        <tick-field
+          class="app__form-field"
           v-model="asset.policy"
           :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.requiresKyc]"
           title="Only users with KYC can submit/receive the asset"
@@ -157,7 +176,8 @@
       </div>
 
       <div class="app__form-row">
-        <tick-field class="app__form-field"
+        <tick-field
+          class="app__form-field"
           v-model="asset.policy"
           :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.issuanceManualReviewRequired]"
           :cb-value="ASSET_POLICIES.issuanceManualReviewRequired"
@@ -168,8 +188,10 @@
       <div class="asset-manager-advanced__block">
         <div class="asset-manager-advanced__heading">
           <h3>Advanced</h3>
-          <button class="app__btn-secondary app__btn-secondary--iconed"
-                  @click.prevent="isShownAdvanced = !isShownAdvanced">
+          <button
+            class="app__btn-secondary app__btn-secondary--iconed"
+            @click.prevent="isShownAdvanced = !isShownAdvanced"
+          >
             <mdi-chevron-up-icon   v-if="isShownAdvanced"/>
             <mdi-chevron-down-icon v-else/>
           </button>
@@ -178,7 +200,8 @@
 
       <template v-if="isShownAdvanced">
         <div class="app__form-row">
-          <input-field class="app__form-field app__form-field--halved"
+          <input-field
+            class="app__form-field app__form-field--halved"
                        type="number"
                        label="External system type"
                        name="External system type"
@@ -301,7 +324,7 @@ export default {
             requestID: '0',
             code: String(this.asset.code),
             policies: Number(this.asset.policy),
-            logoId: String(this.asset.logoId || this.asset.logoId),
+            logoId: String(this.asset.logoId),
             details: {
               name: this.asset.details.name,
               externalSystemType: this.asset.details.externalSystemType
@@ -311,8 +334,8 @@ export default {
           operation = Sdk.base.ManageAssetBuilder.assetCreationRequest({
             requestID: '0',
             code: String(this.asset.code),
-            preissuedAssetSigner: String(this.asset.preissuedAssetSigner || this.asset.preissuedAssetSigner),
-            maxIssuanceAmount: String(this.asset.maxIssuanceAmount || this.asset.maxIssuanceAmount),
+            preissuedAssetSigner: String(this.asset.preissuedAssetSigner),
+            maxIssuanceAmount: String(this.asset.maxIssuanceAmount),
             policies: Number(this.asset.policy),
             initialPreissuedAmount: this.asset.initialPreissuedAmount,
             details: {
