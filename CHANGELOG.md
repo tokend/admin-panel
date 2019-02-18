@@ -8,6 +8,10 @@ Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
 ## [Unreleased]
+### Changed
+- Freezed dependencies’ versions
+- Use @tokend/js-sdk@0.3.33
+
 ### Removed
 - "Is coinpayments" checkbox in asset form
 

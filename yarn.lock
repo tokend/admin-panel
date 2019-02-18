@@ -15,20 +15,20 @@
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.7.0.tgz#9a06f4f137ee84d7df0460c1fdb1135ffa6c50fd"
   integrity sha512-ONhaKPIufzzrlNbqtWFFd+jlnemX6lJAgq9ZeiZtS7I1PIf/la7CW4m83rTXRnVnsMbW2k56pGYu7AUFJD9Pow==
 
-"@tokend/js-sdk@0.3.30":
-  version "0.3.30"
-  resolved "https://registry.yarnpkg.com/@tokend/js-sdk/-/js-sdk-0.3.30.tgz#6400f0a30b8f07db1476b9b07474cae27f5b4461"
-  integrity sha512-w/VmnwITJ+4h9mAj7s4ofLWfbgu5FBRJeo63gMn+kpXMJSNLaiio3DUwFbYt5GrhLK3n9oMa69YVJnphzOo5xg==
+"@tokend/js-sdk@0.3.33":
+  version "0.3.33"
+  resolved "https://registry.yarnpkg.com/@tokend/js-sdk/-/js-sdk-0.3.33.tgz#e57def682a38a57acb5d810b4589b806ffc35100"
+  integrity sha512-80cWEXC9OCRBcPuDiIKekPv3pKUuOztFiqmaAJWeGuzPEXNqAu8MmpYN2C7sZ1+y5WCCYFJoBphdxjQUYwFWZw==
   dependencies:
-    axios "^0.16.0"
-    base32.js "~0.1.0"
-    bignumber.js "^2.0.7"
-    crc "^3.3.0"
-    js-xdr "^1.0.5"
-    lodash "^4.17.11"
-    sjcl-tokend "^1.0.6"
-    tweetnacl "^0.13.0"
-    urijs "^1.19.1"
+    axios "0.16.2"
+    base32.js "0.1.0"
+    bignumber.js "2.4.0"
+    crc "3.8.0"
+    js-xdr "1.0.5"
+    lodash "4.17.11"
+    sjcl-tokend "1.0.6"
+    tweetnacl "0.13.3"
+    urijs "1.19.1"
   optionalDependencies:
     ed25519 "0.0.4"
 
@@ -409,7 +409,7 @@ axios@0.15.3:
   dependencies:
     follow-redirects "1.0.0"
 
-axios@^0.16.0:
+axios@0.16.2, axios@^0.16.0:
   version "0.16.2"
   resolved "https://registry.yarnpkg.com/axios/-/axios-0.16.2.tgz#ba4f92f17167dfbab40983785454b9ac149c3c6d"
   integrity sha1-uk+S8XFn37q0CYN4VFS5rBScPG0=
@@ -1081,7 +1081,7 @@ balanced-match@^1.0.0:
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
   integrity sha1-ibTRmasr7kneFk6gK4nORi1xt2c=
 
-base32.js@~0.1.0:
+base32.js@0.1.0, base32.js@~0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/base32.js/-/base32.js-0.1.0.tgz#b582dec693c2f11e893cf064ee6ac5b6131a2202"
   integrity sha1-tYLexpPC8R6JPPBk7mrFthMaIgI=
@@ -1138,15 +1138,15 @@ big.js@^5.2.2:
   resolved "https://registry.yarnpkg.com/big.js/-/big.js-5.2.2.tgz#65f0af382f578bcdc742bd9c281e9cb2d7768328"
   integrity sha512-vyL2OymJxmarO8gxMr0mhChsO9QGwhynfuu4+MHTAW6czfq9humCB7rKpUjDd9YUiDPU4mzpyupFSvOClAwbmQ==
 
+bignumber.js@2.4.0, bignumber.js@^2.0.7:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-2.4.0.tgz#838a992da9f9d737e0f4b2db0be62bb09dd0c5e8"
+  integrity sha1-g4qZLan51zfg9LLbC+YrsJ3Qxeg=
+
 bignumber.js@4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-4.1.0.tgz#db6f14067c140bd46624815a7916c92d9b6c24b1"
   integrity sha512-eJzYkFYy9L4JzXsbymsFn3p54D+llV27oTQ+ziJG7WFRheJcNZilgVXMG0LoZtlQSKBsJdWtLFqOD0u+U0jZKA==
-
-bignumber.js@^2.0.7:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-2.4.0.tgz#838a992da9f9d737e0f4b2db0be62bb09dd0c5e8"
-  integrity sha1-g4qZLan51zfg9LLbC+YrsJ3Qxeg=
 
 binary-extensions@^1.0.0:
   version "1.13.0"
@@ -1982,7 +1982,7 @@ core-util-is@1.0.2, core-util-is@~1.0.0:
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
   integrity sha1-tf1UIgqivFq1eqtxQMlAdUUDwac=
 
-crc@^3.3.0:
+crc@3.8.0, crc@^3.3.0:
   version "3.8.0"
   resolved "https://registry.yarnpkg.com/crc/-/crc-3.8.0.tgz#ad60269c2c856f8c299e2c4cc0de4556914056c6"
   integrity sha512-iX3mfgcTMIq3ZKLIsVFAbv7+Mc10kxabAGQb8HvjA1o3T1PIYprbakQ65d3I+2HGHt6nSKkM9PYjgoJO2KcFBQ==
@@ -4797,7 +4797,16 @@ js-tokens@^3.0.2:
   resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-3.0.2.tgz#9866df395102130e38f7f996bceb65443209c25b"
   integrity sha1-mGbfOVECEw449/mWvOtlRDIJwls=
 
-js-xdr@^1.0.2, js-xdr@^1.0.5:
+js-xdr@1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/js-xdr/-/js-xdr-1.0.5.tgz#c639f62e5988675e20dfe5fc51ede875e8989072"
+  integrity sha512-v0jffMa8bko3uFcGYt1lHrtpd1adhH6qk41RfLPsNPj77/K8fi7LOi4+lUUY3MBEIFnJgaGHrbc6sxdTwHImxQ==
+  dependencies:
+    cursor "^0.1.5"
+    lodash "^4.17.5"
+    long "^2.2.3"
+
+js-xdr@^1.0.2:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/js-xdr/-/js-xdr-1.1.0.tgz#2b0d9373f58020a7061838a0eac75a408897a3d5"
   integrity sha512-g2Q0ccis46I9IgyYhQDAC6P9vW9ceB0HW1UyzbVUPjr1Mpd63bbk3EjopTvjGbglCHO7Lx2ftcRzaXjKso95HA==
@@ -5484,15 +5493,15 @@ lodash@4.17.10:
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.10.tgz#1b7793cf7259ea38fb3661d4d38b3260af8ae4e7"
   integrity sha512-UejweD1pDoXu+AD825lWwp4ZGtSwgnpZxb3JDViD7StjQz+Nb/6l093lx4OQ0foGWNRoc19mWy7BzL+UAK2iVg==
 
+lodash@4.17.11, lodash@^4.0.0, lodash@^4.0.1, lodash@^4.17.0, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.2, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.3.0, lodash@^4.5.0, lodash@~4.17.10:
+  version "4.17.11"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
+  integrity sha512-cQKh8igo5QUhZ7lg38DYWAxMvjSAKG0A8wGSVimP07SIUEK2UO+arSRKbRZWtelMtN5V0Hkwh5ryOto/SshYIg==
+
 lodash@^3.8.0:
   version "3.10.1"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-3.10.1.tgz#5bf45e8e49ba4189e17d482789dfd15bd140b7b6"
   integrity sha1-W/Rejkm6QYnhfUgnid/RW9FAt7Y=
-
-lodash@^4.0.0, lodash@^4.0.1, lodash@^4.17.0, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.2, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.3.0, lodash@^4.5.0, lodash@~4.17.10:
-  version "4.17.11"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
-  integrity sha512-cQKh8igo5QUhZ7lg38DYWAxMvjSAKG0A8wGSVimP07SIUEK2UO+arSRKbRZWtelMtN5V0Hkwh5ryOto/SshYIg==
 
 lodash@~2.4.1:
   version "2.4.2"
@@ -7879,7 +7888,7 @@ sinon@1.17.7:
   version "0.0.1"
   resolved "git+https://github.com/stellar/sjcl-scrypt.git#50ef6665fbf23a291195cfabf55c71d622f899b9"
 
-sjcl-tokend@^1.0.6:
+sjcl-tokend@1.0.6:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/sjcl-tokend/-/sjcl-tokend-1.0.6.tgz#71ba66630723d5cc0e8194f2b0a2aab17565c36f"
   integrity sha512-GapeH/fnMRYO5czpUc1fnbeNG4ieB/afgHj6Y/gYTNq8osn8Vfh6INJIyNPUFMLE1IeIBBqZ2OWPt2BQ+XiDWQ==
@@ -8600,15 +8609,15 @@ tunnel-agent@^0.6.0:
   dependencies:
     safe-buffer "^5.0.1"
 
+tweetnacl@0.13.3, tweetnacl@^0.13.0:
+  version "0.13.3"
+  resolved "https://registry.yarnpkg.com/tweetnacl/-/tweetnacl-0.13.3.tgz#d628b56f3bcc3d5ae74ba9d4c1a704def5ab4b56"
+  integrity sha1-1ii1bzvMPVrnS6nUwacE3vWrS1Y=
+
 tweetnacl@^0.11.2:
   version "0.11.2"
   resolved "https://registry.yarnpkg.com/tweetnacl/-/tweetnacl-0.11.2.tgz#ed4bce52d1ddbceea3a2c504cd17d364a34f414b"
   integrity sha1-7UvOUtHdvO6josUEzRfTZKNPQUs=
-
-tweetnacl@^0.13.0:
-  version "0.13.3"
-  resolved "https://registry.yarnpkg.com/tweetnacl/-/tweetnacl-0.13.3.tgz#d628b56f3bcc3d5ae74ba9d4c1a704def5ab4b56"
-  integrity sha1-1ii1bzvMPVrnS6nUwacE3vWrS1Y=
 
 tweetnacl@^0.14.3, tweetnacl@~0.14.0:
   version "0.14.5"
@@ -8769,7 +8778,7 @@ uri-js@^4.2.2:
   dependencies:
     punycode "^2.1.0"
 
-urijs@^1.19.1:
+urijs@1.19.1, urijs@^1.19.1:
   version "1.19.1"
   resolved "https://registry.yarnpkg.com/urijs/-/urijs-1.19.1.tgz#5b0ff530c0cbde8386f6342235ba5ca6e995d25a"
   integrity sha512-xVrGVi94ueCJNrBSTjWqjvtgvl3cyOTThp2zaMaFNGp3F542TR6sM3f2o8RqZl+AwteClSVmoCyt0ka4RjQOQg==
