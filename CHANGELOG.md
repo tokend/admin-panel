@@ -7,16 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
-## [1.2.0-rc.1] - 2019-02-18
-### Fixed
-- Fund filter by owner id
-- Pre-issuance uploading
+## [Unreleased]
+### Added
+- Validation rules of asset code and asset name on asset management form
 
+### Changed
+- Use @tokend/js-sdk@1.0.0-x.8
+
+### Removed
+- Remove obsolete twoStepWithdrawal and withdrawableV2 policies
+
+### Fixed
+- Missing allTasks: 0 for AssetManager form
+
+## [1.2.0-rc.1] - 2019-02-18
 ### Added
 - Username validation in the SignUp form
 - Filter funds by email
 - Validation to set only numeric values in the Limits form
 - Asset creation form validation
+
+### Fixed
+- Fund filter by owner id
+- Pre-issuance uploading
 
 ## [1.2.0-rc.0] - 2019-02-18
 ### Changed
