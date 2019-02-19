@@ -28,7 +28,7 @@
           label="Asset name"
           v-model="asset.details.name"
           :disabled="isPending"
-          v-validate="'required|alpha'"
+          v-validate="'required|max:255'"
           name="asset-name"
           :errorMessage="errors.first('asset-name')"
         />
@@ -37,7 +37,7 @@
           label="Asset code"
           v-model="asset.code"
           :disabled="isExistingAsset || isPending"
-          v-validate="'required|alpha'"
+          v-validate="'required|alpha_num|max:16'"
           name="asset-code"
           :errorMessage="errors.first('asset-code')"
         />
