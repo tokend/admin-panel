@@ -1,5 +1,5 @@
-import api from '@/api'
 import { getters, actions, mutations } from '../types'
+import { Sdk } from '@/sdk'
 
 const emailBooks = {
   state: {
@@ -18,7 +18,7 @@ const emailBooks = {
 
       state.busyAddresses.add(address)
       try {
-        const email = await api.users.getEmailByAddress(address)
+        const email = await Sdk.horizon.public.getEmailByAccountId(address)
         context.commit(mutations.PUSH_EMAIL_TO_ADDRESS_BOOK, { address, email })
       } catch (error) {
         throw error

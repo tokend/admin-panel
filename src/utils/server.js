@@ -9,15 +9,6 @@ const sdkServer = () => {
   return new StellarSdk.Server(config.HORIZON_SERVER, { allowHttp: true })
 }
 
-const createTx = (operation) => {
-  const source = new StellarSdk.Account(config.MASTER_ACCOUNT)
-  const tx = new StellarSdk.TransactionBuilder(source)
-    .addOperation(operation)
-    .build()
-  tx.sign(store.getters.keypair)
-  return tx.toEnvelope().toXDR().toString('base64')
-}
-
 const submitOperation = (operation) => {
   const sourceID = config.MASTER_ACCOUNT
   const kp = store.getters.keypair
@@ -96,7 +87,6 @@ const post = (path, data = {}, isSigned = false, toKeyserver = false) => {
 
 export default {
   sdkServer: sdkServer(),
-  createTx,
   get,
   patch,
   post,
