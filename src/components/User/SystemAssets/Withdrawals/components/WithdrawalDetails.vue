@@ -132,7 +132,7 @@ export default {
     reviewAllowed () {
       return this.assets
         .find(item => item.code === this.request.details.withdraw.destAssetCode)
-        .policy & ASSET_POLICIES.twoStepWithdrawal
+        .policy & ASSET_POLICIES.withdrawable
     }
   },
   methods: {
