@@ -326,7 +326,8 @@ export default {
             details: {
               name: this.asset.details.name,
               externalSystemType: this.asset.details.externalSystemType
-            }
+            },
+            allTasks: 0
           })
         } else {
           operation = Sdk.base.ManageAssetBuilder.assetCreationRequest({
@@ -339,7 +340,8 @@ export default {
             details: {
               name: this.asset.details.name,
               externalSystemType: this.asset.details.externalSystemType
-            }
+            },
+            allTasks: 0
           })
         }
         await Sdk.horizon.transactions.submitOperations(operation)
