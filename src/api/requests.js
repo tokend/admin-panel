@@ -268,11 +268,7 @@ export const requests = {
     const filters = {}
     if (requestor) filters.requestor = requestor
     if (type) filters.account_type_to_set = type
-    if (state && state.state) {
-      filters.state = state.state
-      state.tasksToProcess ? filters.mask_set = state.tasksToProcess : null
-      state.tasksProcessed ? filters.mask_not_set = state.tasksProcessed : null
-    }
+    if (state && state.state) filters.state = state.state
     const response = await Sdk.horizon.request.getAllForUpdateKyc({
       ...filters,
       order: 'desc',
