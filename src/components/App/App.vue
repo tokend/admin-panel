@@ -1,17 +1,24 @@
 <template>
-  <div id="app" v-if="isAppInitialized">
+  <div
+    id="app"
+    v-if="isAppInitialized"
+  >
     <template v-if="!isGoodBrowser">
-      <no-support-message/>
+      <no-support-message />
     </template>
     <template v-else>
-      <status-message/>
+      <status-message />
 
       <transition name="fade">
-        <div class="modal-background" v-if="isModalOpen" @click="$store.commit('WANT_CLOSE_MODAL')"> </div>
+        <div
+          class="modal-background"
+          v-if="isModalOpen"
+          @click="$store.commit('WANT_CLOSE_MODAL')"
+        > </div>
       </transition>
 
       <transition name="fade">
-        <loading-screen v-if="showLoader"/>
+        <loading-screen v-if="showLoader" />
       </transition>
 
       <verify-tfa></verify-tfa>
@@ -71,12 +78,10 @@ export default {
 
   data () {
     return {
-      checkConnectionI: null,
       connectionError: false,
-      timeCheckerIn: null,
+      checkConnectionI: null,
       sessionKeeperIn: null,
 
-      timeoutDelay: 15 * 60 * 1000,
       isGoodBrowser: true,
       isHorizonInfoLoaded: false,
       isAppInitialized: false
@@ -84,97 +89,92 @@ export default {
   },
 
   async created () {
-    await this.initApp()
-    if (this.$store.getters.GET_USER.keys.seed) {
-      Sdk.sdk
-        .useWallet(new Wallet(
-          '',
-          this.$store.getters.GET_USER.keys.seed,
-          this.$store.getters.GET_USER.keys.accountId,
-          this.$store.getters.GET_USER.wallet.id
-        ))
-    }
     this.isGoodBrowser = !isIE()
     if (!this.isGoodBrowser) return
-    this.checkConnection()
-    this.checkConnectionI = setInterval(this.checkConnection, 15000)
-
-    if (this.$store.state.auth.isLoggedIn) {
-      this.sessionKeeper()
-      this.timeChecker()
+    await this.initApp()
+    if (this.$store.getters.GET_USER.keys.seed) {
+      Sdk.sdk.useWallet(new Wallet(
+        '',
+        this.$store.getters.GET_USER.keys.seed,
+        this.$store.getters.GET_USER.keys.accountId,
+        this.$store.getters.GET_USER.wallet.id
+      ))
+      this.$store.dispatch('LOG_IN')
     }
-
-    this.$store.subscribe((mutation, state) => {
-      switch (mutation.type) {
-        case 'OPEN_MODAL': {
-          document.body.classList.add('modal-open')
-          break
-        }
-        case 'CLOSE_MODAL': {
-          document.body.classList.remove('modal-open')
-          break
-        }
-        case 'LOG_IN': {
-          this.sessionKeeper()
-          this.timeChecker()
-          clearInterval(this.checkConnectionI)
-          break
-        }
-        case 'LOG_OUT': {
-          clearInterval(this.sessionKeeperIn)
-          clearInterval(this.timeCheckerIn)
-          this.$router.push({ name: 'login' })
-          break
-        }
-        default: {
-          if (this.$store.state.auth.isLoggedIn && this.$store.getters.logoutTimer === null) {
-            this.$store.dispatch('START_IDLE')
-          }
-        }
-      }
-    })
   },
 
   methods: {
     async initApp () {
+      await this.checkConnection()
       await Sdk.init(config.HORIZON_SERVER)
+      this.subscribeToStoreMutations()
+      this.checkConnectionI = setInterval(this.checkConnection, 15000)
       this.isAppInitialized = true
     },
-    checkConnection () {
-      return (() => {
-        return this.$http.get(config.HORIZON_SERVER)
-          .then(response => {
-            const info = response.body
-            config.NETWORK_PASSPHRASE = info.network_passphrase
-            config.MASTER_ACCOUNT = info.master_account_id
-            config.COMMISSION_ACCOUNT = info.commission_account_id
-            config.OPERATIONAL_ACCOUNT = info.operational_account_id
-            config.STORAGE_FEE_ACCOUNT = info.storage_fee_account_id
-            this.isHorizonInfoLoaded = true
-            this.connectionError = false
-            this.error = []
-          }).catch(err => {
-            if (err.status !== 404) {
-              this.connectionError = true
-              this.$store.dispatch('SET_ERROR', 'Could not connect to the Network')
+
+    subscribeToStoreMutations () {
+      this.$store.subscribe((mutation, state) => {
+        switch (mutation.type) {
+          case 'OPEN_MODAL': {
+            document.body.classList.add('modal-open')
+            break
+          }
+          case 'CLOSE_MODAL': {
+            document.body.classList.remove('modal-open')
+            break
+          }
+          case 'LOG_IN': {
+            this.sessionKeeper()
+            clearInterval(this.checkConnectionI)
+            break
+          }
+          case 'LOG_OUT': {
+            clearInterval(this.sessionKeeperIn)
+            clearInterval(this.timeCheckerIn)
+            this.$router.push({ name: 'login' })
+            break
+          }
+          default: {
+            if (this.$store.state.auth.isLoggedIn && this.$store.getters.logoutTimer === null) {
+              this.$store.dispatch('START_IDLE')
             }
-          })
-      })().then(() => {
-        return this.$http.get(config.KEY_SERVER_ADMIN + '/kdf_params')
-          .then(() => {
-            this.isHorizonInfoLoaded = true
-            this.connectionError = false
-          }).catch(err => {
-            if (err.status !== 404) {
-              this.connectionError = true
-              this.$store.dispatch('SET_ERROR', 'Could not connect to the KeyStorage')
-            }
-          })
-      }).then(() => {
-        if (!this.connectionError) {
-          clearInterval(this.checkConnectionI)
+          }
         }
       })
+    },
+
+    checkConnection () {
+      return this.$http.get(config.HORIZON_SERVER)
+        .then(response => {
+          const info = response.body
+          config.NETWORK_PASSPHRASE = info.network_passphrase
+          config.MASTER_ACCOUNT = info.master_account_id
+          config.COMMISSION_ACCOUNT = info.commission_account_id
+          config.OPERATIONAL_ACCOUNT = info.operational_account_id
+          config.STORAGE_FEE_ACCOUNT = info.storage_fee_account_id
+          this.isHorizonInfoLoaded = true
+          this.connectionError = false
+          this.error = []
+        }).catch(err => {
+          if (err.status !== 404) {
+            this.connectionError = true
+            this.$store.dispatch('SET_ERROR', 'Could not connect to the Network')
+          }
+        }).then(() => {
+          return this.$http.get(config.KEY_SERVER_ADMIN + '/kdf_params')
+            .then(() => {
+              this.connectionError = false
+            }).catch(err => {
+              if (err.status !== 404) {
+                this.connectionError = true
+                this.$store.dispatch('SET_ERROR', 'Could not connect to the KeyStorage')
+              }
+            })
+        }).then(() => {
+          if (!this.connectionError) {
+            clearInterval(this.checkConnectionI)
+          }
+        })
     },
 
     sessionKeeper () {
@@ -182,18 +182,6 @@ export default {
       this.sessionKeeperIn = setInterval(() => {
         this.$store.commit('KEEP_SESSION')
       }, 10 * 1000)
-    },
-
-    timeChecker () {
-      // handle that device woke up
-      let lastTime = Date.now()
-      this.timeCheckerIn = setInterval(() => {
-        const currentTime = Date.now()
-        if (currentTime > (lastTime + this.timeoutDelay)) {
-          // this.$store.dispatch('LOG_OUT')
-        }
-        lastTime = currentTime
-      }, 2000)
     }
   }
 }
