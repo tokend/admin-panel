@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
-## [Unreleased]
+## [1.2.0-rc.6] - 2019-02-20
 ### Added
 - Build version displaying
 
@@ -108,7 +108,8 @@ for further information about branching and tagging conventions.
   the issuance
 - Pre-issuance request list now fetches correctly the list
 
-[Unreleased]: https://github.com/tokend/admin-panel/compare/1.2.0-rc.5...HEAD
+[Unreleased]: https://github.com/tokend/admin-panel/compare/1.2.0-rc.6...HEAD
+[1.2.0-rc.6]: https://github.com/tokend/admin-panel/compare/1.2.0-rc.5...1.2.0-rc.6
 [1.2.0-rc.5]: https://github.com/tokend/admin-panel/compare/1.2.0-rc.4...1.2.0-rc.5
 [1.2.0-rc.4]: https://github.com/tokend/admin-panel/compare/1.2.0-rc.3...1.2.0-rc.4
 [1.2.0-rc.3]: https://github.com/tokend/admin-panel/compare/1.2.0-rc.2...1.2.0-rc.3
