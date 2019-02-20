@@ -7,8 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
-## [Unreleased]
-### Fix issue with wrongly set tasksToRemove on kyc approving
+## [1.2.0-rc.5] - 2019-02-20
+### Fix
+- Issue with wrongly set tasksToRemove on kyc approving
 
 ## [1.2.0-rc.4] - 2019-02-20
 ### Fix
@@ -103,7 +104,8 @@ for further information about branching and tagging conventions.
   the issuance
 - Pre-issuance request list now fetches correctly the list
 
-[Unreleased]: https://github.com/tokend/admin-panel/compare/1.2.0-rc.4...HEAD
+[Unreleased]: https://github.com/tokend/admin-panel/compare/1.2.0-rc.5...HEAD
+[1.2.0-rc.5]: https://github.com/tokend/admin-panel/compare/1.2.0-rc.4...1.2.0-rc.5
 [1.2.0-rc.4]: https://github.com/tokend/admin-panel/compare/1.2.0-rc.3...1.2.0-rc.4
 [1.2.0-rc.3]: https://github.com/tokend/admin-panel/compare/1.2.0-rc.2...1.2.0-rc.3
 [1.2.0-rc.2]: https://github.com/tokend/admin-panel/compare/1.2.0-rc.1...1.2.0-rc.2
