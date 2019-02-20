@@ -9,8 +9,6 @@ export const ASSET_POLICIES_VERBOSE = {
   [ Sdk.xdr.AssetPolicy.baseAsset().value ]: 'Base asset',
   [ Sdk.xdr.AssetPolicy.statsQuoteAsset().value ]: 'Stats quote asset',
   [ Sdk.xdr.AssetPolicy.withdrawable().value ]: 'Withdrawable',
-  [ Sdk.xdr.AssetPolicy.twoStepWithdrawal().value ]: 'Two step withdrawal',
   [ Sdk.xdr.AssetPolicy.requiresKyc().value ]: 'Requires Kyc',
-  [ Sdk.xdr.AssetPolicy.issuanceManualReviewRequired().value ]: 'Issuance manual review required',
-  [ Sdk.xdr.AssetPolicy.withdrawableV2().value ]: 'Withdrawable V2'
+  [ Sdk.xdr.AssetPolicy.issuanceManualReviewRequired().value ]: 'Issuance manual review required'
 }
