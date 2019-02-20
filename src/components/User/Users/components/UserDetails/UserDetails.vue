@@ -187,7 +187,7 @@ export default {
       if (this.latestRequest.requestState !== REQUEST_STATES_STR.pending) {
         return this.latestRequest.requestState
       }
-      return PENDING_TASKS_VOCABULARY[this.latestRequest.details.updateKyc.pendingTasks] || REQUEST_STATES_STR.pending
+      return PENDING_TASKS_VOCABULARY[this.latestRequest.pendingTasks] || REQUEST_STATES_STR.pending
     }
   },
 
@@ -259,10 +259,6 @@ export default {
   justify-content: space-between;
   align-items: flex-end;
   margin-top: 4rem;
-}
-
-.user-details__block-section {
-  width: 10rem;
 }
 
 .user-details__heading {

@@ -203,11 +203,11 @@ export default {
 
   computed: {
     hasManualTasks () {
-      return !((this.requestToReview.details.updateKyc.pendingTasks & KYC_TASKS_TO_REMOVE_ON_APPROVE) === 0) &&
+      return !((this.requestToReview.pendingTasks & KYC_TASKS_TO_REMOVE_ON_APPROVE) === 0) &&
         this.requestToReview.requestState === REQUEST_STATES_STR.pending
     },
     isAccreditedInvestor () {
-      return this.requestToReview.details.updateKyc.pendingTasks === REVIEW_TASKS.accreditedInvestor
+      return this.requestToReview.pendingTasks === REVIEW_TASKS.accreditedInvestor
     },
     isRequestPending () {
       return this.requestToReview.requestState === REQUEST_STATES_STR.pending

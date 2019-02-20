@@ -46,7 +46,7 @@ export const requests = {
   },
 
   async _reviewKyc ({ action, reason }, request, tasks) {
-    const operation = Sdk.base.ReviewRequestBuilder.reviewUpdateKYCRequest({
+    const opts = {
       requestID: request.id,
       requestHash: request.hash,
       requestType: request.request_type_i || request.requestTypeI,
@@ -55,6 +55,12 @@ export const requests = {
       tasksToAdd: tasks.add,
       tasksToRemove: tasks.remove,
       externalDetails: {}
+    }
+    const operation = Sdk.base.ReviewRequestBuilder.reviewUpdateKYCRequest({
+      ...opts,
+
+      // TODO: remove. added due to a bug in the @tokend/js-sdk
+      requestDetails: opts
     })
     return (await Sdk.horizon.transactions.submitOperations(operation))
   },
@@ -268,11 +274,7 @@ export const requests = {
     const filters = {}
     if (requestor) filters.requestor = requestor
     if (type) filters.account_type_to_set = type
-    if (state && state.state) {
-      filters.state = state.state
-      state.tasksToProcess ? filters.mask_set = state.tasksToProcess : null
-      state.tasksProcessed ? filters.mask_not_set = state.tasksProcessed : null
-    }
+    if (state && state.state) filters.state = state.state
     const response = await Sdk.horizon.request.getAllForUpdateKyc({
       ...filters,
       order: 'desc',
