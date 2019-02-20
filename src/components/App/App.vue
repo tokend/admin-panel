@@ -117,6 +117,7 @@ export default {
         case 'LOG_IN': {
           this.sessionKeeper()
           this.timeChecker()
+          clearInterval(this.checkConnectionI)
           break
         }
         case 'LOG_OUT': {

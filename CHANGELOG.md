@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
-## [Unreleased]
+## [1.2.0-rc.2] - 2019-02-20
 ### Added
 - Validation rules of asset code and asset name on asset management form
 
@@ -19,6 +19,7 @@ for further information about branching and tagging conventions.
 
 ### Fixed
 - Missing allTasks: 0 for AssetManager form
+- Do not show connection message if the admin logged in
 
 ## [1.2.0-rc.1] - 2019-02-18
 ### Added
@@ -84,7 +85,8 @@ for further information about branching and tagging conventions.
   the issuance
 - Pre-issuance request list now fetches correctly the list
 
-[Unreleased]: https://github.com/tokend/admin-panel/compare/1.2.0-rc.1...HEAD
+[Unreleased]: https://github.com/tokend/admin-panel/compare/1.2.0-rc.2...HEAD
+[1.2.0-rc.2]: https://github.com/tokend/admin-panel/compare/1.2.0-rc.1...1.2.0-rc.2
 [1.2.0-rc.1]: https://github.com/tokend/admin-panel/compare/1.2.0-rc.0...1.2.0-rc.1
 [1.2.0]: https://github.com/tokend/admin-panel/compare/1.1.0...1.2.0-rc.0
 [1.1.0]: https://github.com/tokend/admin-panel/releases/tag/1.1.0
