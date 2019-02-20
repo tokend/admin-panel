@@ -116,9 +116,8 @@ export default {
           this.$emit('tfa-done')
         }).catch((err) => {
           this.$store.commit('CLOSE_LOADER')
-
-          if (err.status === 403 && err.extras) {
-            return this.showTfaForm(err.extras.token)
+          if (err.response.status === 403 && err.response.data.extras) {
+            return this.showTfaForm(err.response.data.extras.token)
           } else {
             this.$store.dispatch('SET_ERROR', 'Something went wrong. Try again later')
           }

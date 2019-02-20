@@ -1,21 +1,21 @@
 import store from '../store'
-import server from '../utils/server'
+import keyServer from '../utils/keyServer'
 
 export default {
   addGAuth () {
-    return server.post('/tfa', { username: store.state.user.name }, true, true)
+    return keyServer.post('/tfa', { username: store.state.user.name })
   },
 
   getTfaBackends () {
-    const wId = encodeURIComponent(store.state.user.wallet.id)
-    return server.get(`/tfa?wallet_id=${wId}`, true, null, true)
+    return keyServer.get(`/tfa`, { wallet_id: store.state.user.wallet.id }, true)
   },
 
   enableGAuth (id) {
-    return server.patch(`/tfa/${id}`, { wallet_id: store.state.user.wallet.id, priority: 10 }, true, true)
+    return keyServer.patch(`/tfa/${id}`, { wallet_id: store.state.user.wallet.id, priority: 10 })
   },
 
   verifyTfaCode (code, token) {
-    return server.get('/tfa/verify', false, { code: code, token: token }, true)
+    console.log('verifyTfaCode')
+    return keyServer.get('/tfa/verify', { code: code, token: token }, false)
   }
 }
