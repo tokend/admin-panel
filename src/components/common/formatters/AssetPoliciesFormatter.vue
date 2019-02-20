@@ -6,7 +6,6 @@
         (mask & ASSET_POLICIES.baseAsset) && 'base asset',
         (mask & ASSET_POLICIES.statsQuoteAsset) && 'stats quote asset',
         (mask & ASSET_POLICIES.withdrawable) && 'withdrawable',
-        (mask & ASSET_POLICIES.twoStepWithdrawal) && 'two step withdrawal',
         (mask & ASSET_POLICIES.requiresKyc) && 'KYC required'
       ].filter(item => item).join(', ') || '&mdash;'
     }}

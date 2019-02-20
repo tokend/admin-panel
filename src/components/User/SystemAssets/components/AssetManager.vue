@@ -28,7 +28,7 @@
           label="Asset name"
           v-model="asset.details.name"
           :disabled="isPending"
-          v-validate="'required|alpha'"
+          v-validate="'required|max:255'"
           name="asset-name"
           :errorMessage="errors.first('asset-name')"
         />
@@ -37,7 +37,7 @@
           label="Asset code"
           v-model="asset.code"
           :disabled="isExistingAsset || isPending"
-          v-validate="'required|alpha'"
+          v-validate="'required|alpha_num|max:16'"
           name="asset-code"
           :errorMessage="errors.first('asset-code')"
         />
@@ -157,27 +157,6 @@
           v-model="asset.policy"
           :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.withdrawable]"
           :cb-value="ASSET_POLICIES.withdrawable"
-          :disabled="isPending"
-        />
-      </div>
-
-      <div class="app__form-row">
-        <tick-field
-          class="app__form-field"
-          v-model="asset.policy"
-          :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.withdrawableV2]"
-          :cb-value="ASSET_POLICIES.withdrawableV2"
-          :disabled="isPending"
-        />
-      </div>
-
-      <div class="app__form-row">
-        <tick-field
-          class="app__form-field"
-          v-model="asset.policy"
-          :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.twoStepWithdrawal]"
-          title="Withdraw operations are done in two steps"
-          :cb-value="ASSET_POLICIES.twoStepWithdrawal"
           :disabled="isPending"
         />
       </div>
@@ -347,7 +326,8 @@ export default {
             details: {
               name: this.asset.details.name,
               externalSystemType: this.asset.details.externalSystemType
-            }
+            },
+            allTasks: 0
           })
         } else {
           operation = Sdk.base.ManageAssetBuilder.assetCreationRequest({
@@ -360,7 +340,8 @@ export default {
             details: {
               name: this.asset.details.name,
               externalSystemType: this.asset.details.externalSystemType
-            }
+            },
+            allTasks: 0
           })
         }
         await Sdk.horizon.transactions.submitOperations(operation)

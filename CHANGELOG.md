@@ -7,16 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
-## [1.2.0-rc.1] - 2019-02-18
-### Fixed
-- Fund filter by owner id
-- Pre-issuance uploading
+## [1.2.0-rc.3] - 2019-02-20
+### Changed
+- Use @tokend/js-sdk@1.0.0-x.9
 
+### Fixed
+- Annoying check connection if the user is being logged in already
+
+## [1.2.0-rc.2] - 2019-02-20
+### Added
+- Validation rules of asset code and asset name on asset management form
+
+### Changed
+- Use @tokend/js-sdk@1.0.0-x.8
+
+### Removed
+- Remove obsolete twoStepWithdrawal and withdrawableV2 policies
+
+### Fixed
+- Missing allTasks: 0 for AssetManager form
+- Do not show connection message if the admin logged in
+
+## [1.2.0-rc.1] - 2019-02-18
 ### Added
 - Username validation in the SignUp form
 - Filter funds by email
 - Validation to set only numeric values in the Limits form
 - Asset creation form validation
+
+### Fixed
+- Fund filter by owner id
+- Pre-issuance uploading
 
 ## [1.2.0-rc.0] - 2019-02-18
 ### Changed
@@ -71,7 +92,9 @@ for further information about branching and tagging conventions.
   the issuance
 - Pre-issuance request list now fetches correctly the list
 
-[Unreleased]: https://github.com/tokend/admin-panel/compare/1.2.0-rc.1...HEAD
+[Unreleased]: https://github.com/tokend/admin-panel/compare/1.2.0-rc.3...HEAD
+[1.2.0-rc.3]: https://github.com/tokend/admin-panel/compare/1.2.0-rc.2...1.2.0-rc.3
+[1.2.0-rc.2]: https://github.com/tokend/admin-panel/compare/1.2.0-rc.1...1.2.0-rc.2
 [1.2.0-rc.1]: https://github.com/tokend/admin-panel/compare/1.2.0-rc.0...1.2.0-rc.1
 [1.2.0]: https://github.com/tokend/admin-panel/compare/1.1.0...1.2.0-rc.0
 [1.1.0]: https://github.com/tokend/admin-panel/releases/tag/1.1.0

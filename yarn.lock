@@ -15,17 +15,21 @@
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.7.0.tgz#9a06f4f137ee84d7df0460c1fdb1135ffa6c50fd"
   integrity sha512-ONhaKPIufzzrlNbqtWFFd+jlnemX6lJAgq9ZeiZtS7I1PIf/la7CW4m83rTXRnVnsMbW2k56pGYu7AUFJD9Pow==
 
-"@tokend/js-sdk@0.3.33":
-  version "0.3.33"
-  resolved "https://registry.yarnpkg.com/@tokend/js-sdk/-/js-sdk-0.3.33.tgz#e57def682a38a57acb5d810b4589b806ffc35100"
-  integrity sha512-80cWEXC9OCRBcPuDiIKekPv3pKUuOztFiqmaAJWeGuzPEXNqAu8MmpYN2C7sZ1+y5WCCYFJoBphdxjQUYwFWZw==
+"@tokend/js-sdk@1.0.0-x.9":
+  version "1.0.0-x.9"
+  resolved "https://registry.yarnpkg.com/@tokend/js-sdk/-/js-sdk-1.0.0-x.9.tgz#dcceb59bf3787164569c9409d8f80c4f1618bbb0"
+  integrity sha512-UPoAW4rndZOlgLDO+oB7PaFhfLq+ewUiGkYMkk5vZtXy9NJDvK7SY3zt98KGLT+94tzu8j/ttIKCShIBgMflnQ==
   dependencies:
     axios "0.16.2"
     base32.js "0.1.0"
     bignumber.js "2.4.0"
     crc "3.8.0"
     js-xdr "1.0.5"
+    jsona "1.3.0"
     lodash "4.17.11"
+    loglevel "1.6.1"
+    loglevel-plugin-prefix "0.8.4"
+    moment "2.24.0"
     sjcl-tokend "1.0.6"
     tweetnacl "0.13.3"
     urijs "1.19.1"
@@ -4926,6 +4930,11 @@ jsona@1.1.14:
   resolved "https://registry.yarnpkg.com/jsona/-/jsona-1.1.14.tgz#886f974ead96b4812244a4534c6f17a3f022032d"
   integrity sha512-hrs/bxo7v9+gNbAFFfMqEqdHv+bkeeS1Hj8MDXrjvcuGXusz2SY3it3oK93wfJZUVC1gMUe06m+ax/gtXrFukw==
 
+jsona@1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/jsona/-/jsona-1.3.0.tgz#f73275fec864534cb7c44abb76d3502496478aee"
+  integrity sha512-nOfNhB7aAfRJPB+HyfSRNJkbis4lSn8h0i/0pMFmzJ28J+yiQ4b1IgqSlhElWPlBI9GinNm/vra0dk5wHXLznA==
+
 jsonfile@^2.1.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/jsonfile/-/jsonfile-2.4.0.tgz#3736a2b428b87bbda0cc83b53fa3d633a35c2ae8"
@@ -5523,6 +5532,11 @@ log4js@^0.6.31:
     readable-stream "~1.0.2"
     semver "~4.3.3"
 
+loglevel-plugin-prefix@0.8.4:
+  version "0.8.4"
+  resolved "https://registry.yarnpkg.com/loglevel-plugin-prefix/-/loglevel-plugin-prefix-0.8.4.tgz#2fe0e05f1a820317d98d8c123e634c1bd84ff644"
+  integrity sha512-WpG9CcFAOjz/FtNht+QJeGpvVl/cdR6P0z6OcXSkr8wFJOsV2GRj2j10JLfjuA4aYkcKCNIEqRGCyTife9R8/g==
+
 loglevel@1.6.1:
   version "1.6.1"
   resolved "https://registry.yarnpkg.com/loglevel/-/loglevel-1.6.1.tgz#e0fc95133b6ef276cdc8887cdaf24aa6f156f8fa"
@@ -5978,7 +5992,7 @@ moment@2.22.2:
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.22.2.tgz#3c257f9839fc0e93ff53149632239eb90783ff66"
   integrity sha1-PCV/mDn8DpP/UxSWMiOeuQeD/2Y=
 
-moment@^2.10.2:
+moment@2.24.0, moment@^2.10.2:
   version "2.24.0"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.24.0.tgz#0d055d53f5052aa653c9f6eb68bb5d12bf5c2b5b"
   integrity sha512-bV7f+6l2QigeBBZSM/6yTNq4P2fNpSWj/0e7jQcy87A8e7o2nAfP/34/2ky5Vw4B9S446EtIhodAzkFCcR4dQg==
