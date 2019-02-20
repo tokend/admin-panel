@@ -219,8 +219,8 @@ export default {
       if (!window.confirm('Are you sure? This action cannot be undone')) return
       this.isPending = true
       try {
-        const tasksToRemove = this.details.tasksToRemove.reduce((sum, task) => sum | task, 0)
-        const tasksToAdd = this.details.tasksToAdd.reduce((sum, task) => sum | task, 0)
+        const tasksToRemove = this.requestToReview.pendingTasks
+        const tasksToAdd = 0
         await api.requests.approveKyc(this.requestToReview, {
           tasksToRemove,
           tasksToAdd

@@ -52,9 +52,11 @@ export const requests = {
       requestType: request.request_type_i || request.requestTypeI,
       action,
       reason,
-      tasksToAdd: tasks.add,
-      tasksToRemove: tasks.remove,
-      externalDetails: {}
+      reviewDetails: {
+        tasksToAdd: tasks.add,
+        tasksToRemove: tasks.remove,
+        externalDetails: {}
+      }
     }
     const operation = Sdk.base.ReviewRequestBuilder.reviewUpdateKYCRequest({
       ...opts,
