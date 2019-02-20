@@ -105,10 +105,10 @@ export default {
 
   methods: {
     async initApp () {
-      await this.checkConnection()
       await Sdk.init(config.HORIZON_SERVER)
-      this.subscribeToStoreMutations()
+      await this.checkConnection()
       this.checkConnectionI = setInterval(this.checkConnection, 15000)
+      this.subscribeToStoreMutations()
       this.isAppInitialized = true
     },
 
