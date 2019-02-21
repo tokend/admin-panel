@@ -93,61 +93,31 @@ export default {
     this.isGoodBrowser = !isIE()
     if (!this.isGoodBrowser) return
     await this.initApp()
-    if (this.$store.getters.GET_USER.keys.seed) {
-      const wallet = new Wallet(
-        '',
-        this.$store.getters.GET_USER.keys.seed,
-        this.$store.getters.GET_USER.keys.accountId,
-        this.$store.getters.GET_USER.wallet.id
-      )
-      Sdk.sdk.useWallet(wallet)
-      ApiWrp.setDefaultWallet(wallet)
-      this.$store.dispatch('LOG_IN')
-    }
   },
 
   methods: {
     async initApp () {
-      await Sdk.init(config.HORIZON_SERVER)
+      this.subscribeToStoreMutations()
       await this.checkConnection()
+
+      await Sdk.init(config.HORIZON_SERVER)
+      if (this.$store.getters.GET_USER.keys.seed) {
+        const wallet = new Wallet(
+          '',
+          this.$store.getters.GET_USER.keys.seed,
+          this.$store.getters.GET_USER.keys.accountId,
+          this.$store.getters.GET_USER.wallet.id
+        )
+        Sdk.sdk.useWallet(wallet)
+        ApiWrp.setDefaultWallet(wallet)
+        this.$store.dispatch('LOG_IN')
+      }
 
       ApiWrp.setDefaultHorizonUrl(config.HORIZON_SERVER)
       ApiWrp.setDefaultNetworkPassphrase(config.NETWORK_PASSPHRASE)
 
       this.checkConnectionI = setInterval(this.checkConnection, 15000)
-      this.subscribeToStoreMutations()
       this.isAppInitialized = true
-    },
-
-    subscribeToStoreMutations () {
-      this.$store.subscribe((mutation, state) => {
-        switch (mutation.type) {
-          case 'OPEN_MODAL': {
-            document.body.classList.add('modal-open')
-            break
-          }
-          case 'CLOSE_MODAL': {
-            document.body.classList.remove('modal-open')
-            break
-          }
-          case 'LOG_IN': {
-            this.sessionKeeper()
-            clearInterval(this.checkConnectionI)
-            break
-          }
-          case 'LOG_OUT': {
-            clearInterval(this.sessionKeeperIn)
-            clearInterval(this.timeCheckerIn)
-            this.$router.push({ name: 'login' })
-            break
-          }
-          default: {
-            if (this.$store.state.auth.isLoggedIn && this.$store.getters.logoutTimer === null) {
-              this.$store.dispatch('START_IDLE')
-            }
-          }
-        }
-      })
     },
 
     checkConnection () {
@@ -186,6 +156,37 @@ export default {
             clearInterval(this.checkConnectionI)
           }
         })
+    },
+
+    subscribeToStoreMutations () {
+      this.$store.subscribe((mutation, state) => {
+        switch (mutation.type) {
+          case 'OPEN_MODAL': {
+            document.body.classList.add('modal-open')
+            break
+          }
+          case 'CLOSE_MODAL': {
+            document.body.classList.remove('modal-open')
+            break
+          }
+          case 'LOG_IN': {
+            this.sessionKeeper()
+            clearInterval(this.checkConnectionI)
+            break
+          }
+          case 'LOG_OUT': {
+            clearInterval(this.sessionKeeperIn)
+            clearInterval(this.timeCheckerIn)
+            this.$router.push({ name: 'login' })
+            break
+          }
+          default: {
+            if (this.$store.state.auth.isLoggedIn && this.$store.getters.logoutTimer === null) {
+              this.$store.dispatch('START_IDLE')
+            }
+          }
+        }
+      })
     },
 
     sessionKeeper () {
