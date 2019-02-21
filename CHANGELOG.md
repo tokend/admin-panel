@@ -20,6 +20,10 @@ for further information about branching and tagging conventions.
 - `BlockReasons`
 - `ACCOUNT_TYPES` and `ACCOUNT_TYPES_VERBOSE`
 - Asking for signer types on login
+- remove tokend-js-sdk usage
+
+### Fix
+- keyServer use keyServerCaller from new-js-sdk
 
 ## [1.2.0-rc.6] - 2019-02-20
 ### Added
