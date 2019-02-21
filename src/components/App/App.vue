@@ -148,10 +148,14 @@ export default {
         .then(response => {
           const info = response.body
           config.NETWORK_PASSPHRASE = info.network_passphrase
-          config.MASTER_ACCOUNT = info.master_account_id
+          config.MASTER_ACCOUNT = info.master_account_id ||
+            info.admin_account_id
+
+          // TODO: remove
           config.COMMISSION_ACCOUNT = info.commission_account_id
           config.OPERATIONAL_ACCOUNT = info.operational_account_id
           config.STORAGE_FEE_ACCOUNT = info.storage_fee_account_id
+
           this.isHorizonInfoLoaded = true
           this.connectionError = false
           this.error = []
