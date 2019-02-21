@@ -22,7 +22,7 @@
           </li>
           <li class="issuance-details__list-item">
             <span>Value</span>
-            <span>{{localize(issuance.amount)}} {{issuance.asset}}</span>
+            <span>{{localize(issuance.amount)}} {{issuance.details.issuanceCreate.asset}}</span>
           </li>
           <li class="issuance-details__list-item">
             <span>State</span>
