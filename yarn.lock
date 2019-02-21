@@ -414,7 +414,7 @@ axios@0.16.2, axios@^0.16.0:
     follow-redirects "^1.2.3"
     is-buffer "^1.1.5"
 
-axios@^0.15.3:
+axios@0.15.3:
   version "0.15.3"
   resolved "https://registry.yarnpkg.com/axios/-/axios-0.15.3.tgz#2c9d638b2e191a08ea1d6cc988eadd6ba5bdc053"
   integrity sha1-LJ1jiy4ZGgjqHWzJiOrda6W9wFM=
