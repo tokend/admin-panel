@@ -8,8 +8,17 @@ Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
 ## [Unreleased]
+### Added
+- ApiWrp
+
 ### Changed
 - Use @tokend/js-sdk@1.0.0-x.13
+- Use cheap-source-map
+
+### Removed
+- `AssetPolicy.requiresKyc`
+- `BlockReasons`
+- `ACCOUNT_TYPES` and `ACCOUNT_TYPES_VERBOSE`
 
 ## [1.2.0-rc.6] - 2019-02-20
 ### Added

@@ -44,6 +44,7 @@ import { Sdk } from '@/sdk'
 import { Wallet } from '@tokend/js-sdk'
 
 import './scss/app.scss'
+import { ApiWrp } from '@/api-wrp'
 
 function isIE () {
   const parser = new UAParser()
@@ -93,12 +94,14 @@ export default {
     if (!this.isGoodBrowser) return
     await this.initApp()
     if (this.$store.getters.GET_USER.keys.seed) {
-      Sdk.sdk.useWallet(new Wallet(
+      const wallet = new Wallet(
         '',
         this.$store.getters.GET_USER.keys.seed,
         this.$store.getters.GET_USER.keys.accountId,
         this.$store.getters.GET_USER.wallet.id
-      ))
+      )
+      Sdk.sdk.useWallet(wallet)
+      ApiWrp.setDefaultWallet(wallet)
       this.$store.dispatch('LOG_IN')
     }
   },
@@ -107,6 +110,10 @@ export default {
     async initApp () {
       await Sdk.init(config.HORIZON_SERVER)
       await this.checkConnection()
+
+      ApiWrp.setDefaultHorizonUrl(config.HORIZON_SERVER)
+      ApiWrp.setDefaultNetworkPassphrase(config.NETWORK_PASSPHRASE)
+
       this.checkConnectionI = setInterval(this.checkConnection, 15000)
       this.subscribeToStoreMutations()
       this.isAppInitialized = true
