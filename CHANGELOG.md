@@ -8,9 +8,11 @@ Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
 ## [Unreleased]
+### Removed
+- remove tokend-js-sdk usage
+
 ### Fix
 - keyServer use keyServerCaller from new-js-sdk
-- remove tokend-js-sdk
 
 ## [1.2.0-rc.6] - 2019-02-20
 ### Added
