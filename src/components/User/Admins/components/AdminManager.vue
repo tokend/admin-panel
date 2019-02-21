@@ -560,6 +560,7 @@ import { confirmAction } from '@/js/modals/confirmation_message'
 import { Sdk } from '@/sdk'
 import { ApiWrp } from '@/api-wrp'
 import config from '@/config'
+import { ErrorHandler } from '@/utils/ErrorHandler'
 
 const TOGGLE_SELECTIONS_BY_TYPE = {
   super: {
@@ -717,8 +718,8 @@ export default {
             ? 'Master'
             : signer.details.name
         }
-      } catch (e) {
-        console.error(e)
+      } catch (error) {
+        ErrorHandler.processWithoutFeedback(error)
       }
 
       this.$store.commit('CLOSE_LOADER')
@@ -763,8 +764,7 @@ export default {
         this.$store.dispatch('SET_INFO', 'Successfully submitted')
         this.$router.push({ name: 'admins' })
       } catch (error) {
-        console.error(error)
-        this.$store.dispatch('SET_ERROR', 'Unexpected error ocurred')
+        ErrorHandler.process(error)
       }
 
       this.isPending = false

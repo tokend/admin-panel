@@ -12,7 +12,7 @@ for further information about branching and tagging conventions.
 - ApiWrp
 
 ### Changed
-- Use @tokend/js-sdk@1.0.0-x.14
+- Use @tokend/js-sdk@1.0.0-x.15
 - Use cheap-source-map
 
 ### Removed
@@ -24,6 +24,8 @@ for further information about branching and tagging conventions.
 
 ### Fix
 - keyServer use keyServerCaller from new-js-sdk
+- admin updating, creating, deleting
+- asset creating, updating, showing
 
 ## [1.2.0-rc.6] - 2019-02-20
 ### Added
