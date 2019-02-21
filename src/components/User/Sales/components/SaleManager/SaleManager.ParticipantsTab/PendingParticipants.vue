@@ -31,7 +31,7 @@
         </thead>
         <tbody>
           <tr v-for="(participant, index) in participants" :key="index">
-            <td><email-getter :address="participant.ownerId" /></td>
+            <td><email-getter :account-id="participant.ownerId" /></td>
             <td><date-formatter :date="participant.createdAt" format="DD MMM YYYY HH:mm:ss" /></td>
             <td>{{participant.quoteAmount}}</td>
             <td>{{participant.baseAmount}}</td>

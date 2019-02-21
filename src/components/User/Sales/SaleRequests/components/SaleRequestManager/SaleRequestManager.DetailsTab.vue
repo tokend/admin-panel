@@ -7,7 +7,7 @@
           <li>
             <span>Requestor</span>
             <email-getter
-              :address="request.sale.requestor"
+              :account-id="request.sale.requestor"
               is-titled
             />
           </li>
@@ -69,7 +69,7 @@
           <li>
             <span>Preissuance signer</span>
             <email-getter
-              :address="request.token.preissuedAssetSigner"
+              :account-id="request.token.preissuedAssetSigner"
               is-titled
             />
           </li>

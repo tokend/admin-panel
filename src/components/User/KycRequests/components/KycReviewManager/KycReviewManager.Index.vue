@@ -18,7 +18,7 @@
           <span class="app-list__cell app-list__cell--right"><!--Button--></span>
         </div>
         <div v-for="request in reviewed" class="app-list__li app-list__li--no-shadow">
-          <email-getter class="app-list__cell app-list__cell--thin" :address="request.request.accountToUpdateKyc"/>
+          <email-getter class="app-list__cell app-list__cell--thin" :account-id="request.request.accountToUpdateKyc"/>
           <span class="app-list__cell app-list__cell--right app-list__cell--thin">{{ request.state }}</span>
           <span class="app-list__cell app-list__cell--right app-list__cell--thin">{{ request.reason || '–'}}</span>
           <span class="app-list__cell app-list__cell--right app-list__cell--thin">

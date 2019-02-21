@@ -16,14 +16,14 @@
             <li>
               <span>Owner</span>
               <email-getter
-                :address="token.owner"
+                :account-id="token.owner"
                 is-titled
               />
             </li>
             <li>
               <span>Preissued asset signer</span>
               <email-getter
-                :address="token.preissuedAssetSigner"
+                :account-id="token.preissuedAssetSigner"
                 is-titled
               />
             </li>
@@ -117,7 +117,7 @@
           <li>
             <span>Owner</span>
             <email-getter
-              :address="sale.ownerId"
+              :account-id="sale.ownerId"
               is-titled
             />
           </li>

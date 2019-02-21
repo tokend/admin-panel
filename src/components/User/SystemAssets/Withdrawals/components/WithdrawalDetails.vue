@@ -13,7 +13,7 @@
       </li>
       <li>
         <span>Requestor</span>
-        <email-getter :address="request.requestor" is-titled />
+        <email-getter :account-id="request.requestor" is-titled />
       </li>
       <li>
         <span>Requestor id</span>

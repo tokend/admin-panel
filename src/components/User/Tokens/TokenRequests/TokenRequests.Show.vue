@@ -76,7 +76,7 @@
         </span>
         <email-getter v-if="tokenRequest.signer"
                       class="token-requests-show__value"
-                      :address="tokenRequest.signer" is-titled />
+                      :account-id="tokenRequest.signer" is-titled />
         <span v-else
               class="token-requests-show__value"
               :title="tokenRequest.signer">

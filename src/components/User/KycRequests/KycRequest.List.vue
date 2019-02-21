@@ -62,7 +62,7 @@
             >
               <email-getter
                 class="app-list__cell app-list__cell--important"
-                :address="
+                :account-id="
                   item.details[
                     snakeToCamelCase(item.details.requestType)
                   ].accountToUpdateKyc

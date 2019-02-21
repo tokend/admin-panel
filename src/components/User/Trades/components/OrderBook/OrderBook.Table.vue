@@ -76,7 +76,7 @@
         </li>
         <li>
           <span>Offerer</span>
-          <email-getter :address="itemDetails.ownerId" is-titled />
+          <email-getter :account-id="itemDetails.ownerId" is-titled />
         </li>
         <li>
           <span>Offered amount</span>

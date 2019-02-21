@@ -24,7 +24,7 @@
             {{ item.requestor }}
           </span>
           <span class="app-list__cell">
-            <email-getter :address="item.requestor" is-titled />
+            <email-getter :account-id="item.requestor" is-titled />
           </span>
         </router-link>
       </ul>

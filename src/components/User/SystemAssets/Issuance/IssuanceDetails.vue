@@ -16,13 +16,9 @@
             <span>Initiator</span>
             <span>{{requestorAccount.accountId}}</span>
           </li>
-          <li v-if="requestorAccount.accountId !== this.$store.getters.masterId" class="issuance-details__list-item">
-            <span>Initiator (Email)</span>
-            <span><email-getter :address="issuance.requestor" is-titled/></span>
-          </li>
           <li class="issuance-details__list-item">
-            <span>Initiator account type</span>
-            <span>{{requestorAccount.accountType | accountType}}</span>
+            <span>Initiator (Email)</span>
+            <span><email-getter :account-id="issuance.requestor" is-titled/></span>
           </li>
           <li class="issuance-details__list-item">
             <span>Value</span>

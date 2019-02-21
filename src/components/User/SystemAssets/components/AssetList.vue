@@ -17,8 +17,8 @@
       <li class="asset-list__li" v-for="(asset, i) in parsedAssets" :key="i">
         <router-link class="asset-list__li-a"
           :to="{ name: 'systemAssets.show', params: { asset: asset.code }}">
-          <span class="asset-list__li-name" :title="asset.details.name">
-            {{ asset.details.name }}
+          <span class="asset-list__li-name" :title="asset.creatorDetails.name">
+            {{ asset.creatorDetails.name }}
           </span>
 
           <span class="asset-list__li-code" :title="asset.code">
@@ -72,7 +72,10 @@ export default {
         const response = await Sdk.horizon.assets.getAll({
           owner: config.MASTER_ACCOUNT
         })
-        this.assets = response.data
+        this.assets = response.data.map(item => {
+          const creatorDetails = item.details || item.creatorDetails
+          return Object.assign(item, { creatorDetails })
+        })
         this.$store.commit('CLOSE_LOADER')
       } catch (err) {
         console.error('caught error', err)
