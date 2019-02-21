@@ -12,7 +12,7 @@ for further information about branching and tagging conventions.
 - ApiWrp
 
 ### Changed
-- Use @tokend/js-sdk@1.0.0-x.13
+- Use @tokend/js-sdk@1.0.0-x.14
 - Use cheap-source-map
 
 ### Removed
