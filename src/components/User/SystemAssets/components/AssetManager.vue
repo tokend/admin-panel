@@ -165,17 +165,6 @@
         <tick-field
           class="app__form-field"
           v-model="asset.policy"
-          :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.requiresKyc]"
-          title="Only users with KYC can submit/receive the asset"
-          :cb-value="ASSET_POLICIES.requiresKyc"
-          :disabled="isPending"
-        />
-      </div>
-
-      <div class="app__form-row">
-        <tick-field
-          class="app__form-field"
-          v-model="asset.policy"
           :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.issuanceManualReviewRequired]"
           :cb-value="ASSET_POLICIES.issuanceManualReviewRequired"
           :disabled="isPending"
