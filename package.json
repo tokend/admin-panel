@@ -36,7 +36,6 @@
     "numeral": "2.0.6",
     "querystring": "0.2.0",
     "raven-js": "3.26.4",
-    "tokend-js-sdk": "git+https://github.com/tokend/js-sdk.git",
     "tokend-wallet-js-sdk": "git+https://github.com/tokend/wallet-js-sdk.git",
     "ts-loader": "2.3.7",
     "ua-parser-js": "0.7.18",
