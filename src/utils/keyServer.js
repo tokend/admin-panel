@@ -1,21 +1,22 @@
 import axios from 'axios'
-import { TokenD, KeyServerCallBuilder, Wallet } from '@tokend/js-sdk'
+import { TokenD, KeyServerCaller, Wallet } from '@tokend/js-sdk'
 
 import store from '../store'
 import config from '../config'
 
 const sdkServer = () => {
   const sdkInstance = new TokenD(config.KEY_SERVER_ADMIN, {
-    allowHttp: true,
-    legacySignatures: true
+    allowHttp: true
   }) // true for use http, only localhost
-  return new KeyServerCallBuilder(axios.create({
-    baseURL: config.KEY_SERVER_ADMIN
-  }), sdkInstance)
+  return new KeyServerCaller({
+    axios: axios.create({
+      baseURL: config.KEY_SERVER_ADMIN
+    }),
+    sdk: sdkInstance
+  })
 }
 
 const get = (path, data = null, isSigned) => {
-  console.log('get')
   if (isSigned) {
     const wallet = new Wallet(
       '',
@@ -23,9 +24,7 @@ const get = (path, data = null, isSigned) => {
       store.getters.GET_USER.keys.accountId
     )
     return sdkServer()
-      .appendUrlSegment(path)
-      .withSignature(wallet)
-      .get(data)
+      .getWithSignature(path, data, wallet)
       .then(r => {
         return r.data
       }).catch(err => {
@@ -33,8 +32,7 @@ const get = (path, data = null, isSigned) => {
       })
   } else {
     return sdkServer()
-      .appendUrlSegment(path)
-      .get(data)
+      .get(path, data)
       .then(r => {
         return r.data
       }).catch(err => {
@@ -50,11 +48,8 @@ const patch = (path, data = {}) => {
     store.getters.GET_USER.keys.accountId
   )
   return sdkServer()
-    .appendUrlSegment(path)
-    .withSignature(wallet)
-    .patch(data)
+    .patchWithSignature(path, data, wallet)
     .then(r => {
-      console.log(r)
       return r.data
     }).catch(err => {
       return Promise.reject(err)
@@ -68,9 +63,7 @@ const post = (path, data = {}) => {
     store.getters.GET_USER.keys.accountId
   )
   return sdkServer()
-    .appendUrlSegment(path)
-    .withSignature(wallet)
-    .post(data)
+    .postWithSignature(path, data, wallet)
     .then(r => {
       return r.data
     }).catch(err => {
