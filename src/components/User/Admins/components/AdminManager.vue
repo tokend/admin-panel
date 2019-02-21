@@ -681,7 +681,7 @@ export default {
     },
 
     isMaster () {
-      return this.signer.account.id === this.masterPubKey
+      return this.signer.id === this.masterPubKey
     }
   },
 
@@ -689,6 +689,7 @@ export default {
     if (this.addNew || this.id === 'add') {
       return
     }
+    this.getSignerRules()
     this.loadSigner()
   },
 
@@ -709,10 +710,10 @@ export default {
         const signer = await this.getSignerByAccountId(this.id)
         this.signer = signer
         this.form = {
-          accountId: signer.account.id,
+          accountId: signer.id,
           weight: signer.weight,
           identity: signer.identity,
-          name: signer.account.id === this.masterPubKey
+          name: signer.id === this.masterPubKey
             ? 'Master'
             : signer.details.name
         }
@@ -725,8 +726,14 @@ export default {
 
     async getSignerByAccountId (accountId) {
       const { data } = await ApiWrp.createCallerInstance()
-        .get(`/v3/accounts/${accountId}/signers`)
-      return (data || [])[0]
+        .get(`/v3/accounts/${this.masterPubKey}/signers`)
+      return (data || []).find(item => item.id === accountId)
+    },
+
+    async getSignerRules () {
+      const { data } = await ApiWrp.createCallerInstance()
+        .get(`/v3/signer_rules`)
+      return data
     },
 
     async addAdmin () {

@@ -166,7 +166,7 @@ export default {
         receiver: receiver,
         reference: this.form.reference,
         source: config.MASTER_ACCOUNT,
-        externalDetails: {},
+        creatorDetails: {},
         allTasks: 0
       })
       await Sdk.horizon.transactions.submitOperations(operation)

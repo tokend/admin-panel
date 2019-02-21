@@ -23,30 +23,36 @@
     </div>
 
     <ul class="admin-list__ul">
-      <li class="admin-list__li" v-for="item in list" :key="item.publicKey">
+      <li class="admin-list__li" v-for="item in list" :key="item.id">
         <router-link class="admin-list__li-a"
-          :to="{ name: 'admins.show', params: { id: item.account.id } }">
-          <span class="admin-list__li-name" :title="item.signerName">
-            {{ item.signerName.split(':')[0] }}
-            <template v-if="item.account.id === userAddress">
+          :to="{ name: 'admins.show', params: { id: item.id } }">
+          <span class="admin-list__li-name" :title="item.details.name">
+            <template v-if="item.id === masterPubKey">
+              Master
+            </template>
+            <template v-else>
+              {{ item.details.name }}
+            </template>
+
+            <template v-if="item.id === userAddress">
               <span class="secondary">(you)</span>
             </template>
           </span>
 
-          <span class="admin-list__li-account-id" :title="item.account.id | cropAddress">
-            {{item.account.id | cropAddress}}
+          <span class="admin-list__li-account-id" :title="item.id">
+            {{ item.id }}
           </span>
 
-          <span class="admin-list__li-rights" :title="item.signerTypeI">
+          <span class="admin-list__li-rights" :title="item.signerTypeI | getAdminSignerTypeLabel">
             {{ item.signerTypeI | getAdminSignerTypeLabel }}
           </span>
 
           <span class="admin-list__li-weight" :title="item.weight">
-            {{item.weight}}
+            {{ item.weight }}
           </span>
 
           <span class="admin-list__li-identity" :title="item.identity">
-            {{item.identity}}
+            {{ item.identity }}
           </span>
         </router-link>
       </li>
@@ -77,30 +83,25 @@ export default {
     async getAdminList () {
       this.$store.commit('OPEN_LOADER')
       try {
-        const signers = await this.getSingersOfMaster()
-        this.list = signers
-          .map(signer =>
-            signer.publicKey === this.masterPubKey
-              ? Object.assign(signer, { signerName: 'Master' })
-              : signer
-          )
+        const response = await this.getSingersOfMaster()
+        this.list = response.data
           .sort((signerA, signerB) => {
-            if (signerA.signerName === '') return 1
-            if (signerB.signerName === '') return -1
-            if (signerA.signerName === signerB.signerName) return 0
-            return signerA.signerName > signerB.signerName ? 1 : -1
+            if (signerA.details.name === '') return 1
+            if (signerB.details.name === '') return -1
+            if (signerA.details.name === signerB.details.name) return 0
+            return signerA.details.name > signerB.details.name ? 1 : -1
           })
       } catch (err) {
         console.error(err)
-        this.$store.dispatch('SET_ERROR', 'Can’t load administrators list')
+        this.$store.dispatch('SET_ERROR', 'Can’t load admin list')
       }
       this.$store.commit('CLOSE_LOADER')
     },
 
     async getSingersOfMaster () {
-      const { data } = await ApiWrp.createCallerInstance()
+      const response = await ApiWrp.createCallerInstance()
         .get(`/v3/accounts/${this.masterPubKey}/signers`)
-      return data
+      return response
     }
   }
 }

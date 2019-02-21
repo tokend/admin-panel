@@ -31,9 +31,3 @@ export const ACCOUNT_TYPES_VERBOSE = Object.freeze({
   verified: 'Verified',
   [ACCOUNT_TYPES.verified]: 'Verified'
 })
-
-export default {
-  getAccountTypeLocalizer (id) {
-    return ACCOUNT_TYPES_VERBOSE[id + '']
-  }
-}

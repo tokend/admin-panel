@@ -312,7 +312,7 @@ export default {
             code: String(this.asset.code),
             policies: Number(this.asset.policy),
             logoId: String(this.asset.logoId),
-            details: {
+            creatorDetails: {
               name: this.asset.details.name,
               externalSystemType: this.asset.details.externalSystemType
             },
@@ -326,7 +326,7 @@ export default {
             maxIssuanceAmount: String(this.asset.maxIssuanceAmount),
             policies: Number(this.asset.policy),
             initialPreissuedAmount: this.asset.initialPreissuedAmount,
-            details: {
+            creatorDetails: {
               name: this.asset.details.name,
               externalSystemType: this.asset.details.externalSystemType
             },

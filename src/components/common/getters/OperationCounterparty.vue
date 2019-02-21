@@ -37,7 +37,7 @@
           case OP_TYPES.paymentV2:
             return operation.from
           case OP_TYPES.createWithdrawalRequest:
-            return operation.externalDetails.address
+            return operation.creatorDetails.address
           case OP_TYPES.reviewRequest:
             if (operation.sourceAccount === 'Master') {
               return this.noCounterpartyStr

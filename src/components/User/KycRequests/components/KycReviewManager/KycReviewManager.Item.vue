@@ -114,7 +114,7 @@
         this.$emit('next', {
           request: this.request,
           state: REVIEW_STATES.approved,
-          tasksToAdd: this.details.tasksToAdd.reduce((sum, task) => sum | task, 0)
+          tasksToAdd: 0
         })
       }
     }

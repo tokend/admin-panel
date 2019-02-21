@@ -39,7 +39,7 @@ export const requests = {
         requestType: item.request_type_i || item.requestTypeI,
         action,
         reason,
-        externalDetails: {}
+        creatorDetails: {}
       })
     })
     return Sdk.horizon.transactions.submitOperations(...operations)
@@ -202,7 +202,7 @@ export const requests = {
           reason: '',
           tasksToAdd: KYC_TASKS_TO_ADD_ON_APPROVE,
           tasksToRemove: opts.requestToApprove.pendingTasks,
-          externalDetails: {}
+          creatorDetails: {}
         })
       )
     }
@@ -225,7 +225,7 @@ export const requests = {
           reason: detail.reason || '',
           tasksToAdd: detail.state === REVIEW_STATES.approved ? detail.tasksToAdd : KYC_TASKS_TO_ADD_ON_REJECT,
           tasksToRemove: detail.state === REVIEW_STATES.approved ? KYC_TASKS_TO_REMOVE_ON_APPROVE : KYC_TASKS_TO_REMOVE_ON_REJECT,
-          externalDetails: {}
+          creatorDetails: {}
         }
       ))
     const response = await Sdk.horizon.transactions.submitOperations(...operations)
@@ -328,12 +328,12 @@ function mapRequests (records) {
   return records.map(record => {
     const type = record.details.requestTypeI
     switch (type) {
-      case REQUEST_TYPES.assetCreate:
-      case REQUEST_TYPES.assetUpdate:
+      case REQUEST_TYPES.createAsset:
+      case REQUEST_TYPES.updateAsset:
         return new TokenRequest(record)
-      case REQUEST_TYPES.issuanceCreate:
+      case REQUEST_TYPES.createIssuance:
         return new IssuanceCreateRequest(record)
-      case REQUEST_TYPES.preIssuanceCreate:
+      case REQUEST_TYPES.createPreIssuance:
         return new CreatePreIssuanceRequest(record)
       default:
         throw new Error(`Unknown reviewable request type: ${type}`)

@@ -34,7 +34,7 @@
                   :value="item.code"
                   :selected="item.code === filters.asset"
                 >
-                  {{ item.details.name }} ({{ item.code }})
+                  {{ item.creatorDetails.name }} ({{ item.code }})
                 </option>
               </select-field>
             </div>
@@ -62,7 +62,7 @@
                 :value="item.code"
                 :selected="item.code === filters.asset"
               >
-                {{ item.details.name }} ({{ item.code }})
+                {{ item.creatorDetails.name }} ({{ item.code }})
               </option>
             </select-field>
           </div>
