@@ -25,16 +25,16 @@
     <ul class="admin-list__ul">
       <li class="admin-list__li" v-for="item in list" :key="item.publicKey">
         <router-link class="admin-list__li-a"
-          :to="{ name: 'admins.show', params: { id: item.publicKey } }">
+          :to="{ name: 'admins.show', params: { id: item.account.id } }">
           <span class="admin-list__li-name" :title="item.signerName">
             {{ item.signerName.split(':')[0] }}
-            <template v-if="item.publicKey === userAddress">
+            <template v-if="item.account.id === userAddress">
               <span class="secondary">(you)</span>
             </template>
           </span>
 
-          <span class="admin-list__li-account-id" :title="item.publicKey">
-            {{item.publicKey}}
+          <span class="admin-list__li-account-id" :title="item.account.id | cropAddress">
+            {{item.account.id | cropAddress}}
           </span>
 
           <span class="admin-list__li-rights" :title="item.signerTypeI">
@@ -45,8 +45,8 @@
             {{item.weight}}
           </span>
 
-          <span class="admin-list__li-identity" :title="item.signerIdentity">
-            {{item.signerIdentity}}
+          <span class="admin-list__li-identity" :title="item.identity">
+            {{item.identity}}
           </span>
         </router-link>
       </li>
@@ -58,7 +58,7 @@
 import Vue from 'vue'
 import { mapGetters } from 'vuex'
 import { getters } from '@/store/types'
-import { Sdk } from '@/sdk'
+import { ApiWrp } from '@/api-wrp'
 
 export default {
   data () {
@@ -77,8 +77,7 @@ export default {
     async getAdminList () {
       this.$store.commit('OPEN_LOADER')
       try {
-        const response = await Sdk.horizon.account.get(this.masterPubKey)
-        const { signers } = response.data
+        const signers = await this.getSingersOfMaster()
         this.list = signers
           .map(signer =>
             signer.publicKey === this.masterPubKey
@@ -96,6 +95,12 @@ export default {
         this.$store.dispatch('SET_ERROR', 'Can’t load administrators list')
       }
       this.$store.commit('CLOSE_LOADER')
+    },
+
+    async getSingersOfMaster () {
+      const { data } = await ApiWrp.createCallerInstance()
+        .get(`/v3/accounts/${this.masterPubKey}/signers`)
+      return data
     }
   }
 }

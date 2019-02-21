@@ -14,7 +14,7 @@
             <input-field
               class="app__form-field"
               label="Account ID"
-              v-model="params.accountId"
+              v-model="form.accountId"
               :error-message="formErrors.accountId.message"
               :disabled="(isMaster && !this.addNew) || isPending"
             />
@@ -24,7 +24,7 @@
             <input-field
               class="app__form-field"
               label="Name"
-              v-model="params.name"
+              v-model="form.name"
               :error-message="formErrors.name.message"
               :disabled="isMaster || isPending"
             />
@@ -37,7 +37,7 @@
               type="number"
               min="0"
               max="255"
-              v-model="params.signerIdentity"
+              v-model="form.identity"
               :disabled="isMaster || isPending"
             />
 
@@ -46,9 +46,9 @@
               label="Weight"
               type="number"
               min="1"
-              max="255"
-              v-model="params.weight"
-              :disabled="isPending"
+              max="1000"
+              v-model="form.weight"
+              :disabled="isMaster || isPending"
             />
           </div>
         </div>
@@ -531,14 +531,14 @@
         <button
           class="app__btn"
           form="admins-edit-form"
-          :disabled="buttonDisabled"
+          :disabled="isPending"
         >
           {{addNew ? 'Add' : 'Update'}}
         </button>
 
         <button
           class="app__btn-secondary app__btn-secondary--danger"
-          :disabled="buttonDisabled"
+          :disabled="isPending"
           @click="deleteAdmin"
           v-if="!addNew"
         >
@@ -552,14 +552,13 @@
 
 <script>
 import Vue from 'vue'
-import difference from 'lodash/difference'
-import accounts from '@/api/accounts'
 import InputField from '@comcom/fields/InputField'
 import TickField from '@comcom/fields/TickField'
 import { SIGNER_TYPES, SIGNER_TYPES_SECONDARY } from '@/constants'
 
 import { confirmAction } from '@/js/modals/confirmation_message'
 import { Sdk } from '@/sdk'
+import { ApiWrp } from '@/api-wrp'
 import config from '@/config'
 
 const TOGGLE_SELECTIONS_BY_TYPE = {
@@ -644,21 +643,22 @@ export default {
       SIGNER_TYPES_SECONDARY,
       TOGGLE_SELECTIONS_BY_TYPE,
 
-      params: {
+      form: {
         accountId: '',
         name: '',
         weight: '',
-        signerIdentity: '',
-        signerType: 0
+        identity: ''
+      },
+
+      signer: {
+        account: {},
+        role: {}
       },
 
       signerTypes: {
         primary: [],
         secondary: 0
       },
-      testArr: [],
-
-      test: 5,
 
       formErrors: {
         accountId: { error: false, message: '' },
@@ -677,15 +677,11 @@ export default {
 
   computed: {
     addNew () {
-      return this.id === undefined
-    },
-
-    buttonDisabled () {
-      return this.$store.getters.showLoader
+      return !this.id
     },
 
     isMaster () {
-      return this.params.accountId === this.masterPubKey
+      return this.signer.account.id === this.masterPubKey
     }
   },
 
@@ -708,118 +704,74 @@ export default {
 
     async loadSigner () {
       this.$store.commit('OPEN_LOADER')
+
       try {
-        const response = await Sdk.horizon.account.getSigner(this.id, config.MASTER_ACCOUNT)
-        const signer = response.data
-        this.params = {
-          accountId: signer.publicKey,
+        const signer = await this.getSignerByAccountId(this.id)
+        this.signer = signer
+        this.form = {
+          accountId: signer.account.id,
           weight: signer.weight,
-          signerIdentity: signer.signerIdentity,
-          signerType: signer.signerTypeI,
-          name: signer.publicKey === this.masterPubKey ? 'Master' : signer.signerName
+          identity: signer.identity,
+          name: signer.account.id === this.masterPubKey
+            ? 'Master'
+            : signer.details.name
         }
-
-        signer.signerTypes.forEach((item) => {
-          this.signerTypes.primary.push(item.value)
-        })
-
-        this.params.name = signer.signerName.split(':')[0]
-        this.signerTypes.secondary = Number(signer.signerName.split(':')[1])
-        if (!this.signerTypes.secondary) this.signerTypes.secondary = 0
-
-        this.$store.commit('CLOSE_LOADER')
       } catch (e) {
         console.error(e)
-        this.$store.commit('CLOSE_LOADER')
       }
+
+      this.$store.commit('CLOSE_LOADER')
+    },
+
+    async getSignerByAccountId (accountId) {
+      const { data } = await ApiWrp.createCallerInstance()
+        .get(`/v3/accounts/${accountId}/signers`)
+      return (data || [])[0]
     },
 
     async addAdmin () {
-      this.params.signerType = 0
-      this.signerTypes.primary.forEach(el => {
-        this.params.signerType += Number(el)
-      })
-
-      const signerTypesSecondary = this.signerTypes.secondary
-
-      this.params.name = `${this.params.name}:${signerTypesSecondary}`
-
-      this.$store.commit('OPEN_LOADER')
-      this.isPending = true
-      try {
-        if (this.params.accountId === this.masterPubKey) {
-          await accounts.manageMaster(this.params.weight)
-        } else {
-          await accounts.manageSigner(this.params)
-        }
-        this.$store.commit('CLOSE_LOADER')
-        this.$store.dispatch('SET_INFO', 'Pending transaction for create administrator submitted')
-        this.$router.push({ name: 'admins' })
-      } catch (error) {
-        console.error(error)
-        this.$store.commit('CLOSE_LOADER')
-        error.showMessage()
-      }
-      this.isPending = false
-    },
-
-    async deleteAdmin () {
-      if (!await confirmAction({ title: 'Are you sure you want to delete this admin?' })) return
-      const data = {
-        accountId: this.id,
-        weight: 0,
-        signerIdentity: 0,
-        signerType: 0
-      }
-
-      this.isPending = true
-      this.$store.commit('OPEN_LOADER')
-      try {
-        // for master account we can change only weight
-        if (this.isMaster) {
-          await accounts.manageMaster(0)
-        } else {
-          await accounts.manageSigner(data)
-        }
-        this.$store.dispatch('SET_INFO', 'Pending transaction for delete administrator submitted')
-        this.$store.commit('CLOSE_LOADER')
-        this.$router.push({ name: 'admins' })
-      } catch (error) {
-        console.error(error)
-        error.showMessage()
-        this.$store.commit('CLOSE_LOADER')
-      }
-      this.isPending = false
+      await this.submitTx(Sdk.base.ManageSignerBuilder.createSigner)
     },
 
     async updateAdmin () {
-      this.params.signerType = 0
-      this.signerTypes.primary.forEach(el => {
-        this.params.signerType += Number(el)
-      })
+      await this.submitTx(Sdk.base.ManageSignerBuilder.updateSigner)
+    },
 
-      const signerTypesSecondary = this.signerTypes.secondary
+    async deleteAdmin () {
+      const confirmationTxt = 'Are you sure you want to delete this admin?'
+      if (await confirmAction({ title: confirmationTxt })) {
+        await this.submitTx(Sdk.base.ManageSignerBuilder.deleteSigner)
+      }
+    },
 
-      this.params.name = `${this.params.name}:${signerTypesSecondary}`
-
-      this.$store.commit('OPEN_LOADER')
+    async submitTx (operationConstructor) {
       this.isPending = true
+      this.$store.commit('OPEN_LOADER')
+
       try {
-        // for master account we can change only weight
-        if (this.isMaster) {
-          await accounts.manageMaster(this.params.weight)
-        } else {
-          await accounts.manageSigner(this.params)
-        }
-        this.$store.commit('CLOSE_LOADER')
-        this.$store.dispatch('SET_INFO', 'Pending transaction for update administrator submitted')
+        const opts = this.buildManageSignerOperationOpts()
+        const operation = operationConstructor(opts)
+        await Sdk.horizon.transactions.submitOperations(operation)
+
+        this.$store.dispatch('SET_INFO', 'Successfully submitted')
         this.$router.push({ name: 'admins' })
       } catch (error) {
         console.error(error)
-        error.showMessage()
-        this.$store.commit('CLOSE_LOADER')
+        this.$store.dispatch('SET_ERROR', 'Unexpected error ocurred')
       }
+
       this.isPending = false
+      this.$store.commit('CLOSE_LOADER')
+    },
+
+    buildManageSignerOperationOpts () {
+      return {
+        publicKey: this.form.accountId,
+        roleID: this.signer.role.id || config.ACCOUNT_ROLES.admin,
+        weight: this.form.weight,
+        identity: this.form.identity,
+        details: { name: this.form.name }
+      }
     },
 
     validate () {
@@ -827,43 +779,12 @@ export default {
       this.formErrors.accountId.message = ''
       this.formErrors.weight.message = ''
 
-      if (!Sdk.base.Keypair.isValidPublicKey(this.params.accountId)) {
+      if (!Sdk.base.Keypair.isValidPublicKey(this.form.accountId)) {
         this.formErrors.accountId.message = 'Enter a valid account address'
         valid = false
       }
 
-      if (this.signerTypes.primary.length === 0 && !this.isMaster) {
-        this.$store.dispatch('SET_ERROR', this.formErrors.signerType.message)
-        valid = false
-      }
-
-      if (this.signerTypes.primary.length === 0 && this.signerTypes.secondary === 0) {
-        this.$store.dispatch('SET_ERROR', 'Select at least 1 policy')
-        valid = false
-      }
-
       return valid
-    },
-    toggleSelection (object) {
-      const signerTypes = this.signerTypes.primary
-      const differences = difference(object.primary, signerTypes)
-      const hasDifference = differences.length
-      const secondaryСoincidence = object.secondary ? object.secondary & this.signerTypes.secondary : 1
-
-      if (hasDifference) {
-        differences.forEach(el => this.signerTypes.primary.push(el))
-      } else if (!hasDifference && secondaryСoincidence) {
-        object.primary.forEach(el => {
-          const index = signerTypes.indexOf(el)
-          if (index > -1) this.signerTypes.primary.splice(index, 1)
-        })
-      }
-
-      if (secondaryСoincidence !== object.secondary) {
-        this.signerTypes.secondary = object.secondary | this.signerTypes.secondary
-      } else if (secondaryСoincidence === object.secondary && !hasDifference) {
-        this.signerTypes.secondary -= object.secondary
-      }
     }
   }
 }

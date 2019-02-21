@@ -99,6 +99,7 @@ export default {
     async initApp () {
       this.subscribeToStoreMutations()
       await this.checkConnection()
+      this.checkConnectionI = setInterval(this.checkConnection, 15000)
 
       await Sdk.init(config.HORIZON_SERVER)
       if (this.$store.getters.GET_USER.keys.seed) {
@@ -116,7 +117,6 @@ export default {
       ApiWrp.setDefaultHorizonUrl(config.HORIZON_SERVER)
       ApiWrp.setDefaultNetworkPassphrase(config.NETWORK_PASSPHRASE)
 
-      this.checkConnectionI = setInterval(this.checkConnection, 15000)
       this.isAppInitialized = true
     },
 
