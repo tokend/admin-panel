@@ -1,3 +1,5 @@
+import packageJson from '../package.json'
+
 const defaultFeatures = {
   /* Enable authentication using seed. Such auth has no 2FA.
    * WARN: for demo purposes only, could be very dangerous on prod
@@ -108,7 +110,13 @@ export default Object.assign(
      * Sets the logging level, for more options visit
      * https://www.npmjs.com/package/loglevel#documentation
      */
-    LOG_LEVEL: 'trace'
+    LOG_LEVEL: 'trace',
+
+    /**
+     * Should be populated by DevOps team during the deployment
+     * The field being displayed on login screen.
+     */
+    BUILD_VERSION: 'dev: ' + packageJson.version
   },
   process.env,
   document.ENV

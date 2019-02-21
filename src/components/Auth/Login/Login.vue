@@ -58,6 +58,12 @@
     >
       <g-auth @tfa-done="redirect"></g-auth>
     </div>
+
+    <template v-if="buildVersion">
+      <p class="login__version">
+        {{ buildVersion }}
+      </p>
+    </template>
   </div>
 </template>
 
@@ -86,7 +92,9 @@ export default {
       },
       error: '',
 
-      unsubscribe: null
+      unsubscribe: null,
+
+      buildVersion: config.BUILD_VERSION
     }
   },
 
@@ -223,6 +231,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../../../assets/scss/colors";
+
 .login__block.app__block {
   padding: 5.5rem 4rem 3.5rem;
   max-width: 41rem;
@@ -240,5 +250,12 @@ export default {
 .login__alt-action {
   margin-top: 1.2rem;
   font-size: 1.6rem;
+}
+
+.login__version {
+  font-size: 1.2rem;
+  color: $color-text-secondary;
+  margin: 1.2rem 0 2.4rem;
+  text-align: center;
 }
 </style>
