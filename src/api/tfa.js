@@ -15,7 +15,6 @@ export default {
   },
 
   verifyTfaCode (code, token) {
-    console.log('verifyTfaCode')
     return keyServer.get('/tfa/verify', { code: code, token: token }, false)
   }
 }
