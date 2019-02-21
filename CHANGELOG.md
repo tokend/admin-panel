@@ -9,7 +9,7 @@ for further information about branching and tagging conventions.
 
 ## [Unreleased]
 ### Changed
-- Use @tokend/js-sdk@1.0.0-x.12
+- Use @tokend/js-sdk@1.0.0-x.13
 
 ## [1.2.0-rc.6] - 2019-02-20
 ### Added
