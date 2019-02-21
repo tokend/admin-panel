@@ -19,6 +19,7 @@ for further information about branching and tagging conventions.
 - `AssetPolicy.requiresKyc`
 - `BlockReasons`
 - `ACCOUNT_TYPES` and `ACCOUNT_TYPES_VERBOSE`
+- Asking for signer types on login
 
 ## [1.2.0-rc.6] - 2019-02-20
 ### Added

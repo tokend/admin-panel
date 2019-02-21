@@ -13,7 +13,6 @@ const initialState = () => {
         accountId: ''
       },
       'wallet': {},
-      'signerTypes': [],
       'accountCreator': false,
       'admin': false,
       'forfeitProvider': false
