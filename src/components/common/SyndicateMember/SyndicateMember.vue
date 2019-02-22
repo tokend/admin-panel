@@ -1,12 +1,12 @@
 <template>
-  <div class="syndicate-member">
-    <div class="syndicate-member__row">
-      <div class="syndicate-member__row-item">
-        <img-getter class="syndicate-member__img" :file-key="info.image.key" />
+  <div class="corporate-member">
+    <div class="corporate-member__row">
+      <div class="corporate-member__row-item">
+        <img-getter class="corporate-member__img" :file-key="info.image.key" />
       </div>
-      <div class="syndicate-member__row-item">
-        <div class="syndicate-member__details-wrp">
-          <p class="syndicate-member__name">
+      <div class="corporate-member__row-item">
+        <div class="corporate-member__details-wrp">
+          <p class="corporate-member__name">
             {{info.name}}
           </p>
           <social-links :links="info.social" />
@@ -29,23 +29,23 @@ export default {
 </script>
 
 <style scoped>
-.syndicate-member__row {
+.corporate-member__row {
   display: flex;
 }
 
-.syndicate-member__img {
+.corporate-member__img {
   width: 16rem;
   height: 16rem;
   object-fit: cover;
   border-radius: 50%;
 }
 
-.syndicate-member__name {
+.corporate-member__name {
   font-size: 2rem;
   margin-bottom: 1.4rem;
 }
 
-.syndicate-member__details-wrp {
+.corporate-member__details-wrp {
   margin-left: 4rem;
 }
 </style>

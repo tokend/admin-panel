@@ -1,5 +1,5 @@
 <template>
-  <div class="sale-manager-syndicate-tab">
+  <div class="sale-manager-corporate-tab">
     <template v-if="isLoaded">
       <template v-if="updates.length">
         <timeline-item

@@ -4,7 +4,6 @@
       <ul class="app-list">
         <div class="app-list__header">
           <span class="app-list__cell">Date</span>
-          <span class="app-list__cell">Account type</span>
           <span class="app-list__cell">Request type</span>
           <span class="app-list__cell">Accound Id</span>
           <span class="app-list__cell">Accound email</span>
@@ -13,9 +12,6 @@
           :to="{ name: 'limits.reviewer', params: { id: item.id}}">
           <span class="app-list__cell" :title="item.updatedAt">
             {{ formatDate(item.updatedAt) }}
-          </span>
-          <span class="app-list__cell app-list__cell" :title="item.requestor">
-            <account-type-getter :accountId="item.requestor"/>
           </span>
           <span class="app-list__cell" :title="item.details.requestType">
             {{LIMITS_REQUEST_STATES_STR[item.details.requestType]}}
@@ -42,7 +38,7 @@
 </template>
 
 <script>
-  import { EmailGetter, AccountTypeGetter } from '@comcom/getters'
+  import { EmailGetter } from '@comcom/getters'
   import { formatDate } from '@/utils/formatters'
 
   import {
@@ -53,7 +49,7 @@
 
   export default {
     props: ['list'],
-    components: { EmailGetter, AccountTypeGetter },
+    components: { EmailGetter },
     data () {
       return {
         isLoading: false,

@@ -25,9 +25,7 @@
 
       <idle-logout></idle-logout>
 
-      <template v-if="isHorizonInfoLoaded">
-        <router-view></router-view>
-      </template>
+      <router-view></router-view>
     </template>
   </div>
 </template>
@@ -45,6 +43,7 @@ import { Wallet } from '@tokend/js-sdk'
 
 import './scss/app.scss'
 import { ApiWrp } from '@/api-wrp'
+import { ErrorHandler } from '@/utils/ErrorHandler'
 
 function isIE () {
   const parser = new UAParser()
@@ -79,12 +78,8 @@ export default {
 
   data () {
     return {
-      connectionError: false,
-      checkConnectionI: null,
-      sessionKeeperIn: null,
-
+      sessionKeeperInterval: null,
       isGoodBrowser: true,
-      isHorizonInfoLoaded: false,
       isAppInitialized: false
     }
   },
@@ -98,8 +93,7 @@ export default {
   methods: {
     async initApp () {
       this.subscribeToStoreMutations()
-      await this.checkConnection()
-      this.checkConnectionI = setInterval(this.checkConnection, 15000)
+      await this.loadHorizonConfigs()
 
       await Sdk.init(config.HORIZON_SERVER)
       if (this.$store.getters.GET_USER.keys.seed) {
@@ -114,48 +108,47 @@ export default {
         this.$store.dispatch('LOG_IN')
       }
 
-      ApiWrp.setDefaultHorizonUrl(config.HORIZON_SERVER)
-      ApiWrp.setDefaultNetworkPassphrase(config.NETWORK_PASSPHRASE)
-
       this.isAppInitialized = true
     },
 
-    checkConnection () {
-      return this.$http.get(config.HORIZON_SERVER)
-        .then(response => {
-          const info = response.body
-          config.NETWORK_PASSPHRASE = info.network_passphrase
-          config.MASTER_ACCOUNT = info.master_account_id ||
-            info.admin_account_id
+    async loadHorizonConfigs () {
+      try {
+        const { body: horizonConfig } =
+          await this.$http.get(config.HORIZON_SERVER)
 
-          // TODO: remove
-          config.COMMISSION_ACCOUNT = info.commission_account_id
-          config.OPERATIONAL_ACCOUNT = info.operational_account_id
-          config.STORAGE_FEE_ACCOUNT = info.storage_fee_account_id
+        config.NETWORK_PASSPHRASE = horizonConfig.network_passphrase
+        config.MASTER_ACCOUNT = horizonConfig.master_account_id ||
+          horizonConfig.admin_account_id
 
-          this.isHorizonInfoLoaded = true
-          this.connectionError = false
-          this.error = []
-        }).catch(err => {
-          if (err.status !== 404) {
-            this.connectionError = true
-            this.$store.dispatch('SET_ERROR', 'Could not connect to the Network')
-          }
-        }).then(() => {
-          return this.$http.get(config.KEY_SERVER_ADMIN + '/kdf_params')
-            .then(() => {
-              this.connectionError = false
-            }).catch(err => {
-              if (err.status !== 404) {
-                this.connectionError = true
-                this.$store.dispatch('SET_ERROR', 'Could not connect to the KeyStorage')
-              }
-            })
-        }).then(() => {
-          if (!this.connectionError) {
-            clearInterval(this.checkConnectionI)
-          }
-        })
+        ApiWrp.setDefaultHorizonUrl(config.HORIZON_SERVER)
+        ApiWrp.setDefaultNetworkPassphrase(config.NETWORK_PASSPHRASE)
+      } catch (error) {
+        error.message = 'Cannot load horizon configs'
+        ErrorHandler.process(error)
+      }
+
+      try {
+        const { body: roles } =
+          await this.$http.get(`${config.HORIZON_SERVER}/key_value`)
+        config.ACCOUNT_ROLES.notVerified = roles
+          .find(item => item.key === 'account_role:unverified')
+          .uint32_value
+        config.ACCOUNT_ROLES.general = roles
+          .find(item => item.key === 'account_role:general')
+          .uint32_value
+        config.ACCOUNT_ROLES.corporate = roles
+          .find(item => item.key === 'account_role:corporate')
+          .uint32_value
+        config.ACCOUNT_ROLES.blocked = roles
+          .find(item => item.key === 'account_role:blocked')
+          .uint32_value
+        config.SIGNER_ROLES.default = roles
+          .find(item => item.key === 'signer_role:default')
+          .uint32_value
+      } catch (error) {
+        error.message = 'Cannot load roles'
+        ErrorHandler.process(error)
+      }
     },
 
     subscribeToStoreMutations () {
@@ -171,12 +164,10 @@ export default {
           }
           case 'LOG_IN': {
             this.sessionKeeper()
-            clearInterval(this.checkConnectionI)
             break
           }
           case 'LOG_OUT': {
-            clearInterval(this.sessionKeeperIn)
-            clearInterval(this.timeCheckerIn)
+            clearInterval(this.sessionKeeperInterval)
             this.$router.push({ name: 'login' })
             break
           }
@@ -191,7 +182,7 @@ export default {
 
     sessionKeeper () {
       this.$store.commit('KEEP_SESSION')
-      this.sessionKeeperIn = setInterval(() => {
+      this.sessionKeeperInterval = setInterval(() => {
         this.$store.commit('KEEP_SESSION')
       }, 10 * 1000)
     }

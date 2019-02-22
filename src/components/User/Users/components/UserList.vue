@@ -10,7 +10,7 @@
           >
             <option :value="''"></option>
             <option :value="USER_TYPES.general">General</option>
-            <option :value="USER_TYPES.syndicate">Сorporate</option>
+            <option :value="USER_TYPES.corporate">Сorporate</option>
           </select-field>
           <input-field
             class="app-list-filters__field"
@@ -133,7 +133,7 @@
   const USER_TYPES_VERBOSE = Object.freeze({
     [USER_TYPES_STR.notVerified]: 'Not verified',
     [USER_TYPES_STR.general]: 'General',
-    [USER_TYPES_STR.syndicate]: 'Syndicate'
+    [USER_TYPES_STR.corporate]: 'Syndicate'
   })
   const VIEW_MODES_VERBOSE = Object.freeze({
     index: 'index',

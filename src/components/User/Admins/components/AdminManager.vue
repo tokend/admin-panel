@@ -234,7 +234,7 @@
             :disabled="isMaster || isPending"
             :required="false"
             label="Syndicate account manager"
-            title="Allowed to manage syndicate account"
+            title="Allowed to manage corporate account"
             :cb-value="SIGNER_TYPES.syndicateAccManager"
           />
 

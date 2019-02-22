@@ -4,7 +4,7 @@
       <kyc-general-section v-if="request.accountTypeToSet.string === USER_TYPES_STR.general"
                            :user="user" :blobId="request.kycData.blobId"/>
 
-      <kyc-syndicate-section v-if="request.accountTypeToSet.string === USER_TYPES_STR.syndicate"
+      <kyc-syndicate-section v-if="request.accountTypeToSet.string === USER_TYPES_STR.corporate"
                              :user="user" :blobId="request.kycData.blobId"/>
     </section>
 

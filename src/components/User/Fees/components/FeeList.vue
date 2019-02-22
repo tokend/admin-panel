@@ -57,7 +57,7 @@
         >
           <option :value="ACCOUNT_TYPES.general">General</option>
           <option :value="ACCOUNT_TYPES.notVerified">Not verified</option>
-          <option :value="ACCOUNT_TYPES.syndicate">Syndicate</option>
+          <option :value="ACCOUNT_TYPES.corporate">Syndicate</option>
         </select-field>
 
         <input-field

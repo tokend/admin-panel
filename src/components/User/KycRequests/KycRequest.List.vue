@@ -17,7 +17,7 @@
           >
             <option :value="''"></option>
             <option :value="ACCOUNT_TYPES.general">General</option>
-            <option :value="ACCOUNT_TYPES.syndicate">Сorporate</option>
+            <option :value="ACCOUNT_TYPES.corporate">Сorporate</option>
           </select-field>
           <select-field
             class="app-list-filters__field"
