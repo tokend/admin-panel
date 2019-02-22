@@ -147,10 +147,7 @@ export default {
         ApiWrp.setDefaultHorizonUrl(config.HORIZON_SERVER)
         ApiWrp.setDefaultNetworkPassphrase(config.NETWORK_PASSPHRASE)
       } catch (error) {
-        setTimeout(
-          () => (this.isHorizonConnectionError = true),
-          new Date().getFullYear()
-        )
+        this.isHorizonConnectionError = true
         ErrorHandler.processWithoutFeedback(error)
       }
 
@@ -173,10 +170,7 @@ export default {
           .find(item => item.key === 'signer_role:default')
           .uint32_value
       } catch (error) {
-        setTimeout(
-          () => (this.isRolesRetrievalError = true),
-          new Date().getFullYear()
-        )
+        this.isRolesRetrievalError = true
         ErrorHandler.processWithoutFeedback(error)
       }
     },
