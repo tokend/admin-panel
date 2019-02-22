@@ -132,7 +132,9 @@ export default {
         this.$store.dispatch('LOG_IN')
       }
 
-      this.isAppInitialized = true
+      if (!this.isHorizonConnectionError && !this.isRolesRetrievalError) {
+        this.isAppInitialized = true
+      }
     },
 
     async loadHorizonConfigs () {
