@@ -1,31 +1,53 @@
 <template>
-  <div
-    id="app"
-    v-if="isAppInitialized"
-  >
-    <template v-if="!isGoodBrowser">
-      <no-support-message />
+  <div id="app">
+    <status-message />
+
+    <template v-if="isAppInitialized">
+      <template v-if="!isGoodBrowser">
+        <no-support-message />
+      </template>
+
+      <template v-else>
+        <transition name="fade">
+          <div
+            class="modal-background"
+            v-if="isModalOpen"
+            @click="$store.commit('WANT_CLOSE_MODAL')"
+          > </div>
+        </transition>
+
+        <transition name="fade">
+          <loading-screen v-if="showLoader" />
+        </transition>
+
+        <verify-tfa></verify-tfa>
+
+        <idle-logout></idle-logout>
+
+        <router-view></router-view>
+      </template>
     </template>
+
     <template v-else>
-      <status-message />
+      <div class="app__loading-wrp">
+        <template v-if="isHorizonConnectionError">
+          <p class="app__loading-error-txt">
+            Cannot connect to Horizon
+          </p>
+        </template>
 
-      <transition name="fade">
-        <div
-          class="modal-background"
-          v-if="isModalOpen"
-          @click="$store.commit('WANT_CLOSE_MODAL')"
-        > </div>
-      </transition>
+        <template v-else-if="isRolesRetrievalError">
+          <p class="app__loading-error-txt">
+            Cannot retrieve roles
+          </p>
+        </template>
 
-      <transition name="fade">
-        <loading-screen v-if="showLoader" />
-      </transition>
-
-      <verify-tfa></verify-tfa>
-
-      <idle-logout></idle-logout>
-
-      <router-view></router-view>
+        <template v-else>
+          <p class="app__loading-txt">
+            Initializing the app...
+          </p>
+        </template>
+      </div>
     </template>
   </div>
 </template>
@@ -80,7 +102,9 @@ export default {
     return {
       sessionKeeperInterval: null,
       isGoodBrowser: true,
-      isAppInitialized: false
+      isAppInitialized: false,
+      isRolesRetrievalError: false,
+      isHorizonConnectionError: false
     }
   },
 
@@ -123,8 +147,8 @@ export default {
         ApiWrp.setDefaultHorizonUrl(config.HORIZON_SERVER)
         ApiWrp.setDefaultNetworkPassphrase(config.NETWORK_PASSPHRASE)
       } catch (error) {
-        error.message = 'Cannot load horizon configs'
-        ErrorHandler.process(error)
+        this.isHorizonConnectionError = true
+        ErrorHandler.processWithoutFeedback(error)
       }
 
       try {
@@ -146,8 +170,8 @@ export default {
           .find(item => item.key === 'signer_role:default')
           .uint32_value
       } catch (error) {
-        error.message = 'Cannot load roles'
-        ErrorHandler.process(error)
+        this.isRolesRetrievalError = true
+        ErrorHandler.processWithoutFeedback(error)
       }
     },
 
@@ -199,6 +223,27 @@ export default {
   display: flex;
   flex-direction: column;
   background-color: $color-bg;
+}
+
+.app__loading-wrp {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+}
+
+.app__loading-txt {
+  text-align: center;
+  font-size: 2rem;
+  color: $color-text-secondary;
+  font-weight: bold;
+}
+
+.app__loading-error-txt {
+  text-align: center;
+  font-size: 2rem;
+  color: $color-danger;
+  font-weight: bold;
 }
 
 // ***** Legacy *****

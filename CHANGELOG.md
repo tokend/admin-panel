@@ -10,6 +10,7 @@ for further information about branching and tagging conventions.
 ## [Unreleased]
 ### Added
 - ApiWrp
+- More descriptive errors if cannot connect to horizon on startup
 
 ### Changed
 - Use @tokend/js-sdk@1.0.0-x.15
