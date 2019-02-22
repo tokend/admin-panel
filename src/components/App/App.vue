@@ -147,7 +147,10 @@ export default {
         ApiWrp.setDefaultHorizonUrl(config.HORIZON_SERVER)
         ApiWrp.setDefaultNetworkPassphrase(config.NETWORK_PASSPHRASE)
       } catch (error) {
-        this.isHorizonConnectionError = true
+        setTimeout(
+          () => (this.isHorizonConnectionError = true),
+          new Date().getFullYear()
+        )
         ErrorHandler.processWithoutFeedback(error)
       }
 
@@ -170,7 +173,10 @@ export default {
           .find(item => item.key === 'signer_role:default')
           .uint32_value
       } catch (error) {
-        this.isRolesRetrievalError = true
+        setTimeout(
+          () => (this.isRolesRetrievalError = true),
+          new Date().getFullYear()
+        )
         ErrorHandler.processWithoutFeedback(error)
       }
     },
@@ -234,14 +240,14 @@ export default {
 
 .app__loading-txt {
   text-align: center;
-  font-size: 2rem;
+  font-size: 7.2rem;
   color: $color-text-secondary;
   font-weight: bold;
 }
 
 .app__loading-error-txt {
   text-align: center;
-  font-size: 2rem;
+  font-size: 7.2rem;
   color: $color-danger;
   font-weight: bold;
 }
