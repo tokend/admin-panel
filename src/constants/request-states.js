@@ -5,8 +5,7 @@ export const REQUEST_STATES = Object.freeze({
   cancelled: 2,
   approved: 3,
   rejected: 4,
-  permanentlyRejected: 5,
-  waitForAutoApproval: 6
+  permanentlyRejected: 5
 })
 
 export const REQUEST_STATES_STR = Object.freeze({

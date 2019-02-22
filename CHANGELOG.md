@@ -16,6 +16,7 @@ for further information about branching and tagging conventions.
 - Use @tokend/js-sdk@1.0.0-x.15
 - Use cheap-source-map
 - EmailGetter
+- Updated request states
 
 ### Removed
 - `AssetPolicy.requiresKyc`
