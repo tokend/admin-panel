@@ -5,10 +5,11 @@
         <div class="app-list-filters">
           <select-field
             class="issuance-rl__filter app-list-filters__field"
-            label="User type"
+            label="Role"
             v-model="filters.role"
           >
             <option :value="''"></option>
+            <option :value="ACCOUNT_ROLES.notVerified">Unverified</option>
             <option :value="ACCOUNT_ROLES.general">General</option>
             <option :value="ACCOUNT_ROLES.corporate">Сorporate</option>
           </select-field>
@@ -30,13 +31,16 @@
           <template v-if="list.data && list.data.length">
             <div class="app-list__header">
               <span class="app-list__cell user-list__email-cell">
-                Account Email
-              </span>
-              <span class="app-list__cell user-list__email-cell">
-                Account state
+                Email
               </span>
               <span class="app-list__cell app-list__cell--right">
                 Account ID
+              </span>
+              <span class="app-list__cell app-list__cell--right">
+                Role
+              </span>
+              <span class="app-list__cell app-list__cell--right">
+                State
               </span>
             </div>
 
@@ -54,16 +58,25 @@
               >
                 {{ item.email }}
               </span>
-              <account-state-getter
-                class="app-list__cell"
-                :accountId="item.id"
-              />
+
               <span
                 class="app-list__cell app-list__cell--right"
-                :title="item.id"
+                :title="item.address | cropAddress"
               >
-                {{ item.id }}
+                {{ item.address | cropAddress }}
               </span>
+
+              <span
+                class="app-list__cell app-list__cell--right"
+                :title="item.role | roleIdToString"
+              >
+                {{ item.role | roleIdToString }}
+              </span>
+
+              <account-state-getter
+                class="app-list__cell app-list__cell--right"
+                :accountId="item.address"
+              />
             </button>
           </template>
 
