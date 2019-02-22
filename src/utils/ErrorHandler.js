@@ -32,6 +32,13 @@ export class ErrorHandler {
       return serverError
     }
 
+    const isSignatureFailed =
+      _get(error, 'originalError.response.data.extras.invalid_field') ===
+      'signature'
+    if (isSignatureFailed) {
+      return 'Signature is not valid'
+    }
+
     if (error.message) {
       return error.message
     }
