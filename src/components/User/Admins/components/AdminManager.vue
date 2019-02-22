@@ -727,13 +727,13 @@ export default {
 
     async getSignerByAccountId (accountId) {
       const { data } = await ApiWrp.createCallerInstance()
-        .get(`/v3/accounts/${this.masterPubKey}/signers`)
+        .getWithSignature(`/v3/accounts/${this.masterPubKey}/signers`)
       return (data || []).find(item => item.id === accountId)
     },
 
     async getSignerRules () {
       const { data } = await ApiWrp.createCallerInstance()
-        .get(`/v3/signer_rules`)
+        .getWithSignature(`/v3/signer_rules`)
       return data
     },
 

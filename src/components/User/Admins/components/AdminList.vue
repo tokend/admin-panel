@@ -100,7 +100,7 @@ export default {
 
     async getSingersOfMaster () {
       const response = await ApiWrp.createCallerInstance()
-        .get(`/v3/accounts/${this.masterPubKey}/signers`)
+        .getWithSignature(`/v3/accounts/${this.masterPubKey}/signers`)
       return response
     }
   }
