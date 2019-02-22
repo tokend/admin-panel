@@ -12,6 +12,7 @@ for further information about branching and tagging conventions.
 - ApiWrp
 - More descriptive errors if cannot connect to horizon on startup
 - Handle 400 bad signature
+- rolIdToString and lowerCase filters
 
 ### Changed
 - Use @tokend/js-sdk@1.0.0-x.15

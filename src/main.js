@@ -93,18 +93,20 @@ Vue.use(api)
 /* Vue filters */
 
 import {
-  filterAccountType,
   filterDateWithTime,
   localizeIssuanceRequestState,
   adminSignerType,
-  cropAddress
+  cropAddress,
+  roleIdToString,
+  lowerCase
 } from './components/App/filters/filters'
 
-Vue.filter('accountType', filterAccountType)
 Vue.filter('dateTime', filterDateWithTime)
 Vue.filter('localizeIssuanceRequestState', localizeIssuanceRequestState)
 Vue.filter('adminSignerType', adminSignerType)
 Vue.filter('cropAddress', cropAddress)
+Vue.filter('roleIdToString', roleIdToString)
+Vue.filter('lowerCase', lowerCase)
 
 /* Logger module */
 
