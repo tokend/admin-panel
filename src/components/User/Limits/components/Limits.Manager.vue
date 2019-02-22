@@ -7,18 +7,18 @@
           <div class="limits-manager__inner">
             <div class="limits-manager__limits-list-wrp">
               <select-field
-                v-model="filters.accountType"
+                v-model="filters.accountRole"
                 class="limits-manager__filter"
                 label="Account type"
               >
                 <option
-                  v-show="ACCOUNT_TYPES_VERBOSE[type]"
-                  v-for="type in Object.values(ACCOUNT_TYPES)"
+                  v-for="type in Object.values(ACCOUNT_ROLES)"
+                  v-show="ACCOUNT_ROLES_VERBOSE[type]"
                   :key="type"
                   :value="type"
-                  :selected="type === +filters.accountType"
+                  :selected="type === +filters.accountRole"
                 >
-                  {{ ACCOUNT_TYPES_VERBOSE[type] }}
+                  {{ ACCOUNT_ROLES_VERBOSE[type] }}
                 </option>
               </select-field>
             </div>
@@ -34,7 +34,7 @@
                   :value="item.code"
                   :selected="item.code === filters.asset"
                 >
-                  {{ item.creatorDetails.name }} ({{ item.code }})
+                  {{ item.details.name }} ({{ item.code }})
                 </option>
               </select-field>
             </div>
@@ -62,7 +62,7 @@
                 :value="item.code"
                 :selected="item.code === filters.asset"
               >
-                {{ item.creatorDetails.name }} ({{ item.code }})
+                {{ item.details.name }} ({{ item.code }})
               </option>
             </select-field>
           </div>
@@ -194,16 +194,13 @@
     Tab
   } from '@comcom/Tabs'
 
-  import {
-    STATS_OPERATION_TYPES,
-    ACCOUNT_TYPES,
-    DEFAULT_MAX_AMOUNT
-  } from '@/constants'
+  import { STATS_OPERATION_TYPES, DEFAULT_MAX_AMOUNT } from '@/constants'
+  import config from '@/config'
 
-  const ACCOUNT_TYPES_VERBOSE = Object.freeze({
-    [ACCOUNT_TYPES.notVerified]: 'Unverified user',
-    [ACCOUNT_TYPES.general]: 'Individual user',
-    [ACCOUNT_TYPES.syndicate]: 'Syndicate user'
+  const ACCOUNT_ROLES_VERBOSE = Object.freeze({
+    [config.ACCOUNT_ROLES.notVerified]: 'Unverified user',
+    [config.ACCOUNT_ROLES.general]: 'Individual user',
+    [config.ACCOUNT_ROLES.corporate]: 'Corporate user'
   })
 
   const LIMIT_OPS_STR = Object.freeze({
@@ -231,7 +228,7 @@
     data: _ => ({
       filters: {
         asset: '',
-        accountType: '',
+        accountRole: '',
         email: '',
         address: ''
       },
@@ -264,8 +261,8 @@
       assets: [],
       isPending: false,
       LIMITS_TYPES,
-      ACCOUNT_TYPES,
-      ACCOUNT_TYPES_VERBOSE,
+      ACCOUNT_ROLES: config.ACCOUNT_ROLES,
+      ACCOUNT_ROLES_VERBOSE,
       numericValueRegExp: /^\d*\.?\d*$/
     }),
     async created () {
@@ -321,14 +318,24 @@
           }, {})
 
         async function getLimit (statsOpType) {
-          const response = await Sdk.horizon.limits.get({
+          const { data } = await Sdk.horizon.limits.get({
             account_id: this.filters.address,
-            account_type: this.filters.accountType,
+            account_type: this.filters.accountRole,
             stats_op_type: statsOpType,
             asset: this.filters.asset,
             email: this.filters.email
           })
-          return response.data
+
+          // TODO: remove legacy consistency fix
+          if (data.accountType || data.accountType === null) {
+            const role = data.accountType === null
+              ? null
+              : String(data.accountType)
+            data.accountRole = role
+            delete data.accountType
+          }
+
+          return data
         }
       },
 
@@ -352,9 +359,9 @@
           return false
         }
         try {
-          if (limits.accountType == null) {
-            // managelimitbuilder somehow doesnt accept opts.accountType NULL value
-            delete limits.accountType
+          if (limits.accountRole == null) {
+            // managelimitbuilder somehow doesnt accept opts.accountRole NULL value
+            delete limits.accountRole
           }
           let accountID
           // managelimitbuilder somehow doesnt accept opts.accountId NULL value
@@ -407,12 +414,12 @@
       },
       setFilters () {
         if (!this.filters.asset) this.filters.asset = get(this.assets, '[0].code')
-        if (!this.filters.accountType) {
-          this.filters.accountType = ACCOUNT_TYPES.general + ''
+        if (!this.filters.accountRole) {
+          this.filters.accountRole = config.ACCOUNT_ROLES.general + ''
         }
         if (this.specificUserAddress) {
-          // Both accountType and accountId cant be requested at same time
-          this.filters.accountType = ''
+          // Both accountRole and accountId cant be requested at same time
+          this.filters.accountRole = ''
           const emailRegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
           const idLength = 56
           if (emailRegExp.test(this.specificUserAddress)) {
@@ -431,7 +438,7 @@
         },
         immediate: true
       },
-      'filters.accountType': {
+      'filters.accountRole': {
         handler: function (value) {
           if (value) {
             this.specificUserAddress = ''
