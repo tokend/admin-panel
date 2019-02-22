@@ -97,7 +97,6 @@ import {
   filterDateWithTime,
   localizeIssuanceRequestState,
   adminSignerType,
-  getAdminSignerTypeLabel,
   cropAddress
 } from './components/App/filters/filters'
 
@@ -105,7 +104,6 @@ Vue.filter('accountType', filterAccountType)
 Vue.filter('dateTime', filterDateWithTime)
 Vue.filter('localizeIssuanceRequestState', localizeIssuanceRequestState)
 Vue.filter('adminSignerType', adminSignerType)
-Vue.filter('getAdminSignerTypeLabel', getAdminSignerTypeLabel)
 Vue.filter('cropAddress', cropAddress)
 
 /* Logger module */

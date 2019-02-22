@@ -2,8 +2,6 @@ import { unCamelCase } from '../../../utils/un-camel-case'
 import moment from 'moment'
 import { KYC_REQUEST_STATES } from '@/constants'
 
-export { getAdminSignerTypeLabel } from './admin_signer_type'
-
 export function filterAccountType (accountType) {
   const newStr = unCamelCase(accountType)
   return newStr.replace(/Account Type /g, '')

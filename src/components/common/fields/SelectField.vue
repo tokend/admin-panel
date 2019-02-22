@@ -139,8 +139,9 @@ export default {
   filter: grayscale(100%);
   color: $field-color-unfocused;
 
-  & ~ .input-field__label {
-    filter: grayscale(100%);
+  & ~ .select-field__label,
+  & ~ .select-field__arrow {
+    filter: grayscale(100%) opacity(0.75);
   }
 }
 
