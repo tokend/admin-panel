@@ -32,6 +32,7 @@ for further information about branching and tagging conventions.
 - asset creating, updating, showing
 - limits showing, updating, filtering
 - fee list showing, updating, filtering
+- email fetching by EmailGetter component
 
 ## [1.2.0-rc.6] - 2019-02-20
 ### Added

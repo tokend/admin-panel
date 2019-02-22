@@ -29,6 +29,7 @@
 import { Sdk } from '@/sdk'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import config from '@/config'
+import { ApiWrp } from '@/api-wrp'
 
 export default {
   props: {
@@ -73,7 +74,9 @@ export default {
     async loadEmail () {
       try {
         const accountId = await this.getAccountId()
-        this.email = await Sdk.horizon.public.getEmailByAccountId(accountId)
+        const { data } = await ApiWrp.createCallerInstance()
+          .getWithSignature('/identities', { filter: { address: accountId }})
+        this.email = ((data || [])[0] || {}).email || this.email
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }
