@@ -26,6 +26,7 @@ for further information about branching and tagging conventions.
 - `ACCOUNT_TYPES` and `ACCOUNT_TYPES_VERBOSE`
 - Asking for signer types on login
 - remove tokend-js-sdk usage
+- unused KycReviewManager
 
 ### Fix
 - keyServer use keyServerCaller from new-js-sdk

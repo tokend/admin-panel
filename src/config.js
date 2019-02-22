@@ -7,7 +7,6 @@ const defaultFeatures = {
   SEED_AUTH: true,
 
   PHOTO_VERIFICATION: true,
-  KYC_REVIEW_MANAGER: false,
   KYC_REQUEST_STATES: ['approved', 'rejected', 'pending'],
   KYC_TASKS: {
     superAdmin: {
