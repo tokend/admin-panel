@@ -115,14 +115,14 @@ export default Object.assign(
     BUILD_VERSION: 'dev: ' + packageJson.version,
 
     ACCOUNT_ROLES: {
-      notVerified: '2',
-      general: '3',
-      corporate: '4',
-      blocked: '5'
+      notVerified: '',
+      general: '',
+      corporate: '',
+      blocked: ''
     },
 
     SIGNER_ROLES: {
-      default: '1'
+      default: ''
     }
   },
   process.env,

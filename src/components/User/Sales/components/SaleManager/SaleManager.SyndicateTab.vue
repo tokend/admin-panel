@@ -10,7 +10,10 @@
           </li>
           <li>
             <span>Founded</span>
-            <date-formatter :date="corporate.found_date" format="DD MMM YYYY" />
+            <date-formatter
+              :date="corporate.found_date"
+              format="DD MMM YYYY"
+            />
           </li>
           <li>
             <span>Headquarters</span>
@@ -58,6 +61,7 @@ import SocialLinks from '@comcom/SocialLinks'
 import { BLOB_TYPES } from '../../../../../constants'
 
 import _get from 'lodash/get'
+import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   components: {
@@ -78,8 +82,8 @@ export default {
   created () {
     this.getCorporate({
       ownerId: _get(this.sale, 'ownerId') ||
-               _get(this.saleRequest, 'requestor') ||
-               _get(this.user, 'id'),
+        _get(this.saleRequest, 'requestor') ||
+        _get(this.user, 'address'),
       blobId: this.blobId
     })
   },
@@ -97,8 +101,7 @@ export default {
         )
         this.isLoaded = true
       } catch (error) {
-        console.error(error)
-        this.isFailed = true
+        ErrorHandler.processWithoutFeedback(error)
       }
     }
   }

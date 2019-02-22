@@ -52,13 +52,6 @@ export const UserRoutes = {
           component: function (resolve) {
             require(['../../components/User/KycRequests/KycRequests.Index.vue'], resolve)
           }
-        },
-        {
-          path: 'manager',
-          name: 'kycRequests.manager',
-          component: function (resolve) {
-            require(['../../components/User/KycRequests/components/KycReviewManager/KycReviewManager.Index.vue'], resolve)
-          }
         }
       ]
     },

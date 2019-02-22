@@ -27,6 +27,7 @@ for further information about branching and tagging conventions.
 - Asking for signer types on login
 - remove tokend-js-sdk usage
 - unused KycReviewManager
+- unused env files
 
 ### Fix
 - keyServer use keyServerCaller from new-js-sdk

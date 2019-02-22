@@ -22,26 +22,26 @@ export const REVIEW_TASKS = Object.freeze(
 
 export const RENDERED_TASKS_TO_ADD = Object.freeze(
   Object.entries(config.FEATURES.KYC_TASKS)
-      .filter(([key, val]) => val.render.add)
-      .map(([key, val]) => REVIEW_TASKS_INDEX[key])
+    .filter(([, val]) => val.render.add)
+    .map(([key]) => REVIEW_TASKS_INDEX[key])
 )
 
 export const RENDERED_TASKS_TO_REMOVE = Object.freeze(
   Object.entries(config.FEATURES.KYC_TASKS)
-      .filter(([key, val]) => val.render.remove)
-      .map(([key, val]) => REVIEW_TASKS_INDEX[key])
+    .filter(([, val]) => val.render.remove)
+    .map(([key]) => REVIEW_TASKS_INDEX[key])
 )
 
 export const SELECTED_TASKS_TO_ADD = Object.freeze(
   Object.entries(config.FEATURES.KYC_TASKS)
-      .filter(([key, val]) => val.selected.add)
-      .map(([key, val]) => REVIEW_TASKS_INDEX[key])
+    .filter(([, val]) => val.selected.add)
+    .map(([key]) => REVIEW_TASKS_INDEX[key])
 )
 
 export const SELECTED_TASKS_TO_REMOVE = Object.freeze(
   Object.entries(config.FEATURES.KYC_TASKS)
-      .filter(([key, val]) => val.selected.remove)
-      .map(([key, val]) => REVIEW_TASKS_INDEX[key])
+    .filter(([, val]) => val.selected.remove)
+    .map(([key]) => REVIEW_TASKS_INDEX[key])
 )
 
 export const REVIEW_TASKS_VOCABULARY = Object.freeze({
@@ -56,7 +56,7 @@ export const REVIEW_TASKS_VOCABULARY = Object.freeze({
 })
 
 export const PENDING_TASKS_VOCABULARY = Object.freeze({
-  [ REVIEW_TASKS_INDEX.photoMatch |
+  [REVIEW_TASKS_INDEX.photoMatch |
     REVIEW_TASKS_INDEX.validPoa |
     REVIEW_TASKS_INDEX.requestForAutoReviewApproved |
     REVIEW_TASKS_INDEX.requestForAutoReviewSent
