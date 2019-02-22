@@ -1,38 +1,24 @@
 <template>
   <span class="quote-fiat-currency">
-    <template v-if="kycType">
-      {{ kycType }}
-    </template>
+    &mdash;
   </span>
 </template>
-<script>
-import { Sdk } from '@/sdk'
-import { ACCOUNT_TYPES } from '@/constants'
 
-const KYC_TYPE = {
-  new: 'New',
-  update: 'Update'
-}
+<script>
+// TODO
+
+// new: 'New',
+// update: 'Update'
 
 export default {
-  props: ['accountId'],
-  data: _ => ({
-    account: null,
-    kycType: null
-  }),
-  methods: {
-    async getAccount () {
-      const account = await Sdk.horizon.account.get(this.accountId)
-      return account.data
+  props: {
+    request: {
+      required: true
     }
-  },
-  async created () {
-    this.account = await this.getAccount()
-    this.kycType = this.account.accountTypeI === ACCOUNT_TYPES.notVerified
-      ? KYC_TYPE.new
-      : KYC_TYPE.update
   }
+  // TODO
 }
 </script>
+
 <style scoped lang="scss">
 </style>
