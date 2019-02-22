@@ -1,16 +1,19 @@
 <template>
   <div class="admin-list">
-    <div class="admin-list__table-header" v-if="list">
+    <div
+      class="admin-list__table-header"
+      v-if="list.length"
+    >
       <span class="admin-list__li-name secondary">
         <!-- empty -->
       </span>
 
-      <span class="admin-list__li-account-id secondary">
-        Account ID
+      <span class="admin-list__li-role secondary">
+        Role
       </span>
 
-      <span class="admin-list__li-rights secondary">
-        Rights
+      <span class="admin-list__li-account-id secondary">
+        Account ID
       </span>
 
       <span class="admin-list__li-weight secondary">
@@ -23,10 +26,19 @@
     </div>
 
     <ul class="admin-list__ul">
-      <li class="admin-list__li" v-for="item in list" :key="item.id">
-        <router-link class="admin-list__li-a"
-          :to="{ name: 'admins.show', params: { id: item.id } }">
-          <span class="admin-list__li-name" :title="item.details.name">
+      <li
+        class="admin-list__li"
+        v-for="item in list"
+        :key="item.id"
+      >
+        <router-link
+          class="admin-list__li-a"
+          :to="{ name: 'admins.show', params: { id: item.id } }"
+        >
+          <span
+            class="admin-list__li-name"
+            :title="item.details.name"
+          >
             <template v-if="item.id === masterPubKey">
               Master
             </template>
@@ -39,19 +51,31 @@
             </template>
           </span>
 
-          <span class="admin-list__li-account-id" :title="item.id">
-            {{ item.id }}
+          <span
+            class="admin-list__li-role"
+            :title="item.role.id | deriveRoleName(signerRoles)"
+          >
+            {{ item.role.id | deriveRoleName(signerRoles) }}
           </span>
 
-          <span class="admin-list__li-rights" :title="item.signerTypeI | getAdminSignerTypeLabel">
-            {{ item.signerTypeI | getAdminSignerTypeLabel }}
+          <span
+            class="admin-list__li-account-id"
+            :title="item.id"
+          >
+            {{ item.id | cropAddress }}
           </span>
 
-          <span class="admin-list__li-weight" :title="item.weight">
+          <span
+            class="admin-list__li-weight"
+            :title="item.weight"
+          >
             {{ item.weight }}
           </span>
 
-          <span class="admin-list__li-identity" :title="item.identity">
+          <span
+            class="admin-list__li-identity"
+            :title="item.identity"
+          >
             {{ item.identity }}
           </span>
         </router-link>
@@ -65,36 +89,76 @@ import Vue from 'vue'
 import { mapGetters } from 'vuex'
 import { getters } from '@/store/types'
 import { ApiWrp } from '@/api-wrp'
+import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   data () {
     return {
-      list: undefined,
-      masterPubKey: Vue.params.MASTER_ACCOUNT
+      list: [],
+      masterPubKey: Vue.params.MASTER_ACCOUNT,
+      signerRoles: []
     }
   },
+
+  filters: {
+    deriveRoleName (roleId, signerRoles = []) {
+      if (+roleId === 1) {
+        return 'Master'
+      }
+      const role = signerRoles.find(item => item.id === roleId) || {}
+      return (role.details || {}).name || `Unnamed (${roleId})`
+    }
+  },
+
   computed: {
     ...mapGetters({ userAddress: getters.GET_USER_ADDRESS })
   },
-  created () {
-    this.getAdminList()
+
+  async created () {
+    try {
+      await this.loadSignerRoles()
+      await this.loadSignerList()
+    } catch (error) {
+      ErrorHandler.process(error)
+    }
   },
+
   methods: {
-    async getAdminList () {
-      this.$store.commit('OPEN_LOADER')
-      try {
-        const response = await this.getSingersOfMaster()
-        this.list = response.data
-          .sort((signerA, signerB) => {
-            if (signerA.details.name === '') return 1
-            if (signerB.details.name === '') return -1
-            if (signerA.details.name === signerB.details.name) return 0
-            return signerA.details.name > signerB.details.name ? 1 : -1
-          })
-      } catch (err) {
-        console.error(err)
-        this.$store.dispatch('SET_ERROR', 'Can’t load admin list')
+    async loadSignerRoles () {
+      const signerRoles = await this.getAllSignerRoles()
+      this.signerRoles = signerRoles.data
+    },
+
+    async getAllSignerRoles () {
+      const pageLimit = 100
+      const list = await ApiWrp.createCallerInstance()
+        .get('/v3/signer_roles', {
+          page: { limit: pageLimit }
+        })
+
+      let isListFullyLoaded = list.data.length < pageLimit
+      while (!isListFullyLoaded) {
+        const newChunk = await list.fetchNext()
+        const oldLength = list.data.length
+        list._data = list.data.concat(newChunk)
+        if (oldLength === list.data.length) {
+          isListFullyLoaded = true
+        }
       }
+
+      return list
+    },
+
+    async loadSignerList () {
+      this.$store.commit('OPEN_LOADER')
+      const response = await this.getSingersOfMaster()
+      this.list = response.data
+        .sort((itemA, itemB) => {
+          if (itemA.details.name === '') return 1
+          if (itemB.details.name === '') return -1
+          if (itemA.details.name === itemB.details.name) return 0
+          return itemA.details.name > itemB.details.name ? 1 : -1
+        })
       this.$store.commit('CLOSE_LOADER')
     },
 
@@ -145,25 +209,24 @@ export default {
 
 .admin-list__li-name {
   @extend %space-right;
-  width: 25%;
+  width: 20%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   font-weight: 600;
 }
 
-.admin-list__li-account-id {
+.admin-list__li-role {
   @extend %space-right;
-  width: 20%;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  width: 35%;
+  text-align: right;
 }
 
-.admin-list__li-rights,
+.admin-list__li-account-id,
 .admin-list__li-weight,
 .admin-list__li-identity {
   @extend %space-right;
-  width: 10%;
+  width: 15%;
   text-align: right;
 }
 </style>

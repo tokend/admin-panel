@@ -1,50 +1,5 @@
 <template>
   <div class="admins-index">
-    <!-- Thresholds Section -->
-    <!-- TODO: extract thresholds to component -->
-
-    <div class="admins-index__heading-row">
-      <h2>Operation Thresholds</h2>
-    </div>
-
-    <div class="app__block">
-      <form @submit.prevent="updateThresholds">
-        <div class="admins-index__threshold-form-row app__form-row">
-          <input-field class="app__form-field"
-            type="number" min="0" max="255"
-            label="Low" v-model="thresholds.lowThreshold"
-            :disabled="isThresholdPending"
-            @input="isThresholdSubmitDisabled = false"
-          />
-
-          <input-field class="app__form-field"
-            type="number" min="0" max="255"
-            label="Medium" v-model="thresholds.medThreshold"
-            :disabled="isThresholdPending"
-            @input="isThresholdSubmitDisabled = false"
-          />
-
-          <input-field class="app__form-field"
-            type="number" min="0" max="255"
-            label="High" v-model="thresholds.highThreshold"
-            :disabled="isThresholdPending"
-            @input="isThresholdSubmitDisabled = false"
-          />
-
-          <button class="app__btn app__form-field"
-            :disabled="isThresholdPending || isThresholdSubmitDisabled">
-            Update
-          </button>
-        </div>
-      </form>
-
-      <p class="admins-index__threshold-hint">
-        Check <router-link :to="{ name: 'signing-rules' }">signing rule list</router-link>
-        for more information about thresholds
-      </p>
-    </div>
-    <!--/ Thresholds Section -->
-
     <div class="admins-index__heading-row">
       <h2>Admin list</h2>
 
