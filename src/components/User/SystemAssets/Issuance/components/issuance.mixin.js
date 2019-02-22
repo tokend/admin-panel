@@ -5,6 +5,7 @@ import SelectField from '@comcom/fields/SelectField'
 import Bus from '@/utils/EventBus'
 
 import { REQUEST_STATES, ASSET_POLICIES } from '@/constants'
+import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   components: {
@@ -78,10 +79,11 @@ export default {
     async onMoreButtonClick () {
       try {
         const oldLength = this.list.data.length
-        this.list = await this.list.concatNext()
+        const chunk = await this.list.fetchNext()
+        this.list._data = this.list.data.concat(chunk.data)
         this.isNoMoreEntries = oldLength === this.list.data.length
       } catch (error) {
-        error.showMessage('Cannot fetch new entries. Please try again later')
+        ErrorHandler.process(error)
       }
     }
   },

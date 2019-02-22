@@ -18,16 +18,16 @@
             <span class="app-list__cell issuance-rl__id-max-width">
               ID
             </span>
-            <span class="app-list__cell">
+            <span class="app-list__cell app-list__cell--right">
               Value
             </span>
-            <span class="app-list__cell">
+            <span class="app-list__cell app-list__cell--right">
               Requestor
             </span>
-            <span class="app-list__cell">
+            <span class="app-list__cell app-list__cell--right">
               Receiver
             </span>
-            <span class="app-list__cell">
+            <span class="app-list__cell app-list__cell--right">
               Date
             </span>
 
@@ -38,22 +38,22 @@
               {{item.id}}
             </span>
 
-            <span class="app-list__cell app-list__cell--important"
+            <span class="app-list__cell app-list__cell--right app-list__cell--important"
                   :title="`${localize(item.details.issuanceCreate.amount)} ${item.details.issuanceCreate.asset}`">
               {{localize(item.details.issuanceCreate.amount)}} {{item.details.issuanceCreate.asset}}
             </span>
 
-            <span class="app-list__cell"
+            <span class="app-list__cell app-list__cell--right "
                   :title="item.requestor">
-              {{item.requestor}}
+              {{ item.requestor | cropAddress }}
             </span>
 
-            <span class="app-list__cell"
+            <span class="app-list__cell app-list__cell--right "
                   :title="item.details.issuanceCreate.receiver">
-              {{item.details.issuanceCreate.receiver}}
+              {{ item.details.issuanceCreate.receiver | cropAddress }}
             </span>
 
-            <span class="app-list__cell app-list__cell--wrap"
+            <span class="app-list__cell app-list__cell--right  app-list__cell--wrap"
                   :title="item.createdAt">
               {{item.createdAt | dateTime}}
             </span>

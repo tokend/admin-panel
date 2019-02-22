@@ -117,8 +117,7 @@ export default {
         this.assets = issuableAssets
         this.form.asset = this.form.asset || (issuableAssets[0] || {}).code
       } catch (error) {
-        console.error(error)
-        this.$store.dispatch('SET_ERROR', 'Cannot load asset list')
+        ErrorHandler.process(error)
       }
     },
 
@@ -145,8 +144,7 @@ export default {
           })
           await Sdk.horizon.transactions.submitOperations(operation)
         } catch (error) {
-          console.error(error)
-          this.$store.dispatch('SET_ERROR', 'Unexpected error')
+          ErrorHandler.process(error)
         }
         const response = await Sdk.horizon.account.get(address)
         account = response.data
