@@ -4,7 +4,7 @@
       <div class="fee-list__filters">
         <select-field class="fee-list__filter" label="Scope" v-model="filters.scope">
           <option :value="SCOPE_TYPES.global">Global</option>
-          <option :value="SCOPE_TYPES.accountType">Account type</option>
+          <option :value="SCOPE_TYPES.accountRole">Account type</option>
           <option :value="SCOPE_TYPES.account">Account</option>
         </select-field>
 
@@ -52,12 +52,12 @@
         <select-field
           class="fee-list__filter"
           label="Account type"
-          v-model="filters.accountType"
-          v-if="filters.scope === SCOPE_TYPES.accountType"
+          v-model="filters.accountRole"
+          v-if="filters.scope === SCOPE_TYPES.accountRole"
         >
-          <option :value="ACCOUNT_TYPES.general">General</option>
-          <option :value="ACCOUNT_TYPES.notVerified">Not verified</option>
-          <option :value="ACCOUNT_TYPES.corporate">Syndicate</option>
+          <option :value="ACCOUNT_ROLES.general">General</option>
+          <option :value="ACCOUNT_ROLES.notVerified">Not verified</option>
+          <option :value="ACCOUNT_ROLES.corporate">Corporate</option>
         </select-field>
 
         <input-field
@@ -228,7 +228,6 @@
     DEFAULT_INPUT_STEP,
     FEE_TYPES,
     PAYMENT_FEE_TYPES,
-    ACCOUNT_TYPES,
     DEFAULT_BASE_ASSET
   } from '@/constants'
   import throttle from 'lodash/throttle'
@@ -236,9 +235,11 @@
 
   import { confirmAction } from '@/js/modals/confirmation_message'
 
+  import config from '@/config'
+
   const SCOPE_TYPES = Object.freeze({ // non-xdr values, internal use only
     account: 'USER',
-    accountType: 'ACCOUNT_TYPE',
+    accountRole: 'ACCOUNT_TYPE',
     global: 'GLOBAL'
   })
 
@@ -252,7 +253,7 @@
       return {
         SCOPE_TYPES,
         FEE_TYPES,
-        ACCOUNT_TYPES,
+        ACCOUNT_ROLES: config.ACCOUNT_ROLES,
         DEFAULT_MAX_AMOUNT,
         DEFAULT_INPUT_STEP,
         PAYMENT_FEE_TYPES,
@@ -268,7 +269,7 @@
           assetCode: DEFAULT_BASE_ASSET,
 
           // secondary
-          accountType: ACCOUNT_TYPES.general,
+          accountRole: config.ACCOUNT_ROLES.general,
           accountAlias: '', // address or email
           accountAddress: '', // address will be inserted here
 
@@ -343,7 +344,7 @@
         }
       },
 
-      'filters.accountType': function () {
+      'filters.accountRole': function () {
         this.fees = {}
         this.getFees()
       },
@@ -384,9 +385,9 @@
 
         const result = {}
 
-        if (filters.scope === SCOPE_TYPES.accountType) {
+        if (filters.scope === SCOPE_TYPES.accountRole) {
           // snake_case because sdk wait for it
-          result.account_type = filters.accountType
+          result.account_type = filters.accountRole
         } else if (filters.scope === SCOPE_TYPES.account) {
           // snake_case because sdk wait for it
           result.account_id = filters.accountAddress
@@ -438,7 +439,9 @@
               fixedFee: String(fees.fixed),
               percentFee: String(fees.percent),
               accountId: additionalParams.account_id || additionalParams.address,
-              accountType: Number(additionalParams.account_type),
+              accountRole: additionalParams.account_type
+                ? String(additionalParams.account_type)
+                : undefined,
               lowerBound: String(fees.lowerBound),
               upperBound: String(fees.upperBound)
             },
