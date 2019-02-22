@@ -2,7 +2,7 @@
   <div class="user-request">
     <h3>Latest request</h3>
     <p class="user-request__block text">
-      Create a {{ (ACCOUNT_TYPES_VERBOSE[requestToReview.details.updateKyc.accountTypeToSet.int]).toLowerCase() }} account:
+      Create a {{ requestToReview | deriveLowerCasedRoleToSet }} account:
       {{ requestToReview.requestState }}
     </p>
 
@@ -94,23 +94,9 @@
       </div>
     </template>
 
-    <template v-if="account.accountTypeI !== ACCOUNT_TYPES.notVerified">
-      <div class="user-request__actions">
-        <button
-          class="app__btn-secondary
-                app__btn-secondary--danger
-                user-request__approve-ai-btn"
-          @click="showRejectModal(true)"
-          :disabled="isPending"
-        >
-          Reset to unverified
-        </button>
-      </div>
-    </template>
-
     <modal class="user-request__reject-modal"
       v-if="rejectForm.isShown"
-      @close-request="hideRejectModal(); this.rejectForm.isReset = false"
+      @close-request="hideRejectModal()"
       max-width="40rem"
     >
       <form class="user-request__reject-form"
@@ -159,6 +145,7 @@ import Modal from '@comcom/modals/Modal'
 
 import 'mdi-vue/ChevronDownIcon'
 import 'mdi-vue/ChevronUpIcon'
+import config from '@/config'
 
 const EMPTY_REASON = ''
 
@@ -201,13 +188,20 @@ export default {
 
   props: ['user', 'requestToReview', 'account', 'updateRequestEvent'],
 
+  filters: {
+    deriveLowerCasedRoleToSet (item) {
+      return {
+        [config.ACCOUNT_ROLES.notVerified]: 'Unverified',
+        [config.ACCOUNT_ROLES.general]: 'Individual',
+        [config.ACCOUNT_ROLES.corporate]: 'Corporate'
+      }[item.requestDetails.accountRoleToSet].toLowerCase()
+    }
+  },
+
   computed: {
     hasManualTasks () {
       return !((this.requestToReview.pendingTasks & KYC_TASKS_TO_REMOVE_ON_APPROVE) === 0) &&
         this.requestToReview.requestState === REQUEST_STATES_STR.pending
-    },
-    isAccreditedInvestor () {
-      return this.requestToReview.pendingTasks === REVIEW_TASKS.accreditedInvestor
     },
     isRequestPending () {
       return this.requestToReview.requestState === REQUEST_STATES_STR.pending
@@ -239,7 +233,7 @@ export default {
       if (!window.confirm('Are you sure? This action cannot be undone')) return
       this.isPending = true
       try {
-        const tasksToRemove = REVIEW_TASKS.accreditedInvestor
+        const tasksToRemove = this.reviewRequest
         const tasksToAdd = KYC_TASKS_TO_ADD_ON_APPROVE
         await api.requests.approveKyc(this.requestToReview, {
           tasksToRemove,
@@ -259,21 +253,10 @@ export default {
       if (!window.confirm('Are you sure? This action cannot be undone')) return
       this.isPending = true
       try {
-        const submitter = this.rejectForm.isReset
-          ? api.requests.resetToUnverified({
-            accountToUpdateKyc: this.requestToReview.details.updateKyc.accountToUpdateKyc,
-            accountTypeToSet: this.requestToReview.details.updateKyc.accountTypeToSet.int,
-            blobId: this.requestToReview.details.updateKyc.kycData.blobId,
-            rejectReason: this.rejectForm.reason,
-            requestToApprove: this.requestToReview.requestState !== REQUEST_STATES_STR.approved
-              ? this.requestToReview : null
-          })
-          : api.requests.rejectKyc(
-            this.requestToReview,
-            this.rejectForm.reason
-          )
-        this.rejectForm.isReset = false
-        await submitter
+        await api.requests.rejectKyc(
+          this.requestToReview,
+          this.rejectForm.reason
+        )
         this.$store.dispatch('SET_INFO', `Request rejected successfully`)
         this.kycRequestsList.updateAsk = true
         this.$emit(this.updateRequestEvent)
@@ -285,13 +268,9 @@ export default {
       this.isPending = false
     },
 
-    showRejectModal (isReset = false) {
-      if (typeof isReset !== 'boolean') {
-        isReset = false
-      }
+    showRejectModal () {
       this.rejectForm.reason = '' + EMPTY_REASON
       this.rejectForm.isShown = true
-      this.rejectForm.isReset = isReset
     },
 
     hideRejectModal () {

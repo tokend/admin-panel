@@ -5,11 +5,6 @@
 
       <div class="request-list__filters-wrp">
         <div class="app-list-filters">
-          <input-field
-            class="app-list-filters__field"
-            v-model.trim="filters.email"
-            label="Email"
-          />
           <select-field
             class="issuance-rl__filter app-list-filters__field"
             label="Role to set"
@@ -47,9 +42,8 @@
             <div class="app-list__header">
               <span class="app-list__cell">Email</span>
               <span class="app-list__cell app-list__cell--right">State</span>
-              <span class="app-list__cell app-list__cell--right">Account type</span>
               <span class="app-list__cell app-list__cell--right">Last updated</span>
-              <span class="app-list__cell app-list__cell--right">Type</span>
+              <span class="app-list__cell app-list__cell--right">Role to set</span>
             </div>
             <button
               class="app-list__li"
@@ -66,15 +60,11 @@
                 {{ item.state }}
               </span>
               <span class="app-list__cell app-list__cell--right">
-                {{ ACCOUNT_ROLES_VERBOSE[item.requestDetails.accountRoleToSet] }}
-              </span>
-              <span class="app-list__cell app-list__cell--right">
                 {{ formatDate(item.updatedAt) }}
               </span>
-              <kyc-type
-                class="app-list__cell app-list__cell--right"
-                :request="item"
-              />
+              <span class="app-list__cell app-list__cell--right">
+                {{ item | deriveRoleToSet }}
+              </span>
             </button>
           </div>
 
@@ -126,9 +116,7 @@
 import { EmailGetter } from '@comcom/getters'
 import { formatDate } from '@/utils/formatters'
 import Vue from 'vue'
-import api from '@/api'
 import UserView from '../Users/Users.Show'
-import KycType from './components/KycRequests.Type'
 
 import SelectField from '@comcom/fields/SelectField'
 import InputField from '@comcom/fields/InputField'
@@ -146,15 +134,9 @@ const VIEW_MODES_VERBOSE = Object.freeze({
   user: 'user'
 })
 
-const ACCOUNT_ROLES_VERBOSE = {
-  [config.ACCOUNT_ROLES.notVerified]: 'Unverified user',
-  [config.ACCOUNT_ROLES.general]: 'Individual user',
-  [config.ACCOUNT_ROLES.corporate]: 'Corporate user'
-}
-
 export default {
   name: 'kyc-request-list',
-  components: { UserView, EmailGetter, SelectField, InputField, KycType },
+  components: { UserView, EmailGetter, SelectField, InputField },
   provide () {
     const kycRequestsList = {}
     Object.defineProperty(kycRequestsList, 'updateAsk', {
@@ -176,15 +158,23 @@ export default {
       },
       filters: {
         state: 'pending',
-        email: '',
         address: '',
         type: ''
       },
       VIEW_MODES_VERBOSE,
       REQUEST_STATES,
       KYC_REQUEST_STATES,
-      ACCOUNT_ROLES: config.ACCOUNT_ROLES,
-      ACCOUNT_ROLES_VERBOSE
+      ACCOUNT_ROLES: config.ACCOUNT_ROLES
+    }
+  },
+
+  filters: {
+    deriveRoleToSet (item) {
+      return {
+        [config.ACCOUNT_ROLES.notVerified]: 'Unverified',
+        [config.ACCOUNT_ROLES.general]: 'Individual',
+        [config.ACCOUNT_ROLES.corporate]: 'Corporate'
+      }[item.requestDetails.accountRoleToSet]
     }
   },
 
@@ -200,8 +190,6 @@ export default {
         let address = ''
         if (this.filters.address) {
           address = this.filters.address
-        } else if (this.filters.email) {
-          address = await this.getAccountIdByEmail()
         }
         this.list = await ApiWrp.createCallerInstance().getWithSignature(
           '/v3/change_role_requests',
@@ -211,7 +199,7 @@ export default {
               requestor: address,
               'request_details.account_role_to_set': this.filters.roleToSet
             }),
-            include: ['request_details']
+            include: ['request_details.account']
           }
         )
         this.isListEnded = !(this.list.data || []).length
@@ -221,16 +209,6 @@ export default {
       this.isLoading = false
     },
 
-    async getAccountIdByEmail () {
-      let address
-      try {
-        address = (api.users.getAccountIdByEmail(this.filters.email))
-      } catch (e) {
-        address = ''
-      }
-      return address
-    },
-
     async onMoreClick () {
       const oldLength = this.list.data.length
       try {
@@ -238,7 +216,7 @@ export default {
         this.list._data = this.list.data.concat(chunk.data)
         this.isListEnded = oldLength === this.list.data.length
       } catch (error) {
-        error.showMessage('Cannot load next page')
+        ErrorHandler.process(error)
       }
     },
 
@@ -261,8 +239,7 @@ export default {
   watch: {
     'filters.state' () { this.loadList() },
     'filters.roleToSet' () { this.loadList() },
-    'filters.address': _.throttle(function () { this.loadList() }, 1000),
-    'filters.email': _.throttle(function () { this.loadList() }, 1000)
+    'filters.address': _.throttle(function () { this.loadList() }, 1000)
   }
 }
 </script>

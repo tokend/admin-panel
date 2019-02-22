@@ -6,11 +6,11 @@
           <select-field
             class="issuance-rl__filter app-list-filters__field"
             label="User type"
-            v-model="filters.type"
+            v-model="filters.role"
           >
             <option :value="''"></option>
-            <option :value="USER_TYPES.general">General</option>
-            <option :value="USER_TYPES.corporate">Сorporate</option>
+            <option :value="ACCOUNT_ROLES.general">General</option>
+            <option :value="ACCOUNT_ROLES.corporate">Сorporate</option>
           </select-field>
           <input-field
             class="app-list-filters__field"
@@ -107,39 +107,22 @@
 
 <script>
 import Vue from 'vue'
-import { Sdk } from '@/sdk'
 import { clearObject } from '@/utils/clearObject'
 import SelectField from '@comcom/fields/SelectField'
 import InputField from '@comcom/fields/InputField'
 import { AccountStateGetter } from '@comcom/getters'
 import UserView from '../Users.Show'
-import {
-  USER_STATES,
-  USER_STATES_STR,
-  USER_TYPES,
-  USER_TYPES_STR
-} from '@/constants'
 import _ from 'lodash'
-import { createTxtFile } from '@/utils/file_writer'
 import 'mdi-vue/DownloadIcon'
 import { ApiWrp } from '@/api-wrp'
+import config from '@/config'
+import { ErrorHandler } from '@/utils/ErrorHandler'
 
-const WHOLE_GROUP = 'all'
-const USER_STATES_VERBOSE = Object.freeze({
-  [USER_STATES_STR.nil]: 'Not verified',
-  [USER_STATES_STR.waitingForApproval]: 'Waiting for review',
-  [USER_STATES_STR.approved]: 'Approved',
-  [USER_STATES_STR.rejected]: 'Rejected'
-})
-const USER_TYPES_VERBOSE = Object.freeze({
-  [USER_TYPES_STR.notVerified]: 'Not verified',
-  [USER_TYPES_STR.general]: 'General',
-  [USER_TYPES_STR.corporate]: 'Corporate'
-})
 const VIEW_MODES_VERBOSE = Object.freeze({
   index: 'index',
   user: 'user'
 })
+
 export default {
   components: {
     SelectField,
@@ -150,15 +133,11 @@ export default {
 
   data () {
     return {
-      WHOLE_GROUP,
-      USER_STATES_VERBOSE,
-      USER_TYPES_VERBOSE,
       VIEW_MODES_VERBOSE,
-      USER_TYPES_STR,
       filters: {
         email: '',
         address: '',
-        type: ''
+        role: ''
       },
       view: {
         mode: VIEW_MODES_VERBOSE.index,
@@ -169,9 +148,7 @@ export default {
       isListEnded: false,
       isLoading: false,
 
-      txtURL: '',
-      USER_STATES,
-      USER_TYPES
+      ACCOUNT_ROLES: config.ACCOUNT_ROLES
     }
   },
 
@@ -181,15 +158,20 @@ export default {
 
   methods: {
     async getList () {
-      this.txtURL = ''
       this.isLoading = true
       try {
-        // this.list = await Sdk.api.users.getPage(clearObject(this.collectFilters()))
+        console.log(this.filters)
         this.list = await ApiWrp.createCallerInstance()
-          .getWithSignature('/identities', { filter: { address: this.id }})
+          .getWithSignature('/identities', {
+            filter: clearObject({
+              email: this.filters.email,
+              role: this.filters.role,
+              address: this.filters.address
+            })
+          })
         this.isListEnded = !(this.list.data || []).length
       } catch (error) {
-        error.showMessage('Cannot load user list')
+        ErrorHandler.process(error)
       }
       this.isLoading = false
     },
@@ -197,23 +179,12 @@ export default {
     async onMoreClick () {
       const oldLength = this.list.data.length
       try {
-        this.list = await this.list.concatNext()
+        const chunk = await this.list.fetchNext()
+        this.list._data = this.list.data.concat(chunk.data)
         this.isListEnded = oldLength === this.list.data.length
       } catch (error) {
-        error.showMessage('Cannot load next page')
+        ErrorHandler.process(error)
       }
-    },
-
-    collectFilters () {
-      const result = {}
-      for (const key in this.filters) {
-        if (this.filters.hasOwnProperty(key)) {
-          const element = this.filters[key]
-          if (element === WHOLE_GROUP) continue
-          result[key] = element
-        }
-      }
-      return result
     },
 
     toggleViewMode (id) {
@@ -229,37 +200,6 @@ export default {
         window.scroll(0, this.view.scrollPosition)
         this.view.scrollPosition = 0
       })
-    },
-
-    async getFullList () {
-      let list = await Sdk.api.users.getPage(clearObject(this.collectFilters()))
-      let length = list.data.length
-      while (1) {
-        list = await list.concatNext()
-        if (list.data.length === length) {
-          break
-        }
-        length = list.data.length
-      }
-      return list
-    },
-
-    async generateFile () {
-      const response = await this.getFullList()
-      const list = response.data
-      this.txtURL = createTxtFile(this.usersListToCSV(list), 'text/csv;encoding:utf-8')
-    },
-
-    usersListToTxt (list) {
-      return list.reduce((result, user) =>
-        result + `\t\t${user.state}\t${user.id}\t${user.email}\t\t \r\n`,
-        'Name\tLast Name\tState\tAccount id\t Email\t Country \r\n')
-    },
-
-    usersListToCSV (list) {
-      return list.reduce((result, user) =>
-        result + `,,${user.state},${user.id},${user.email},, \r\n`,
-        'Name,Last Name,State,Account id, Email, Country \r\n')
     }
   },
 
@@ -267,7 +207,7 @@ export default {
     'filters.state' () {
       this.getList()
     },
-    'filters.type' () {
+    'filters.role' () {
       this.getList()
     },
     'filters.email': _.throttle(function () {

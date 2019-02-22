@@ -4,60 +4,72 @@
       <h2>User details</h2>
 
       <template v-if="isLoaded && view.mode === VIEW_MODES.user">
-        <section class="user-details__section" v-if="latestRequest">
+        <section
+          class="user-details__section"
+          v-if="latestRequest"
+        >
           <h3>
             Current state
           </h3>
-          <p
-            :class="`user-details__state-info
-                    user-details__state-info--${latestRequest.requestState}`"
-          >
-            {{ requestState }}
+          <p :class="`user-details__state-info
+                      user-details__state-info--${latestRequest.state}`">
+            {{ stat }}
           </p>
-          <p v-if="latestRequest.requestState === REQUEST_STATES_STR.rejected">
+          <p v-if="latestRequest.state === REQUEST_STATES_STR.rejected">
             Reason: {{ latestRequest.rejectReason }}
           </p>
-          <p class="user-details__heading"
-             v-if="latestRequest.requestState === REQUEST_STATES_STR.rejected">
+          <p
+            class="user-details__heading"
+            v-if="latestRequest.state === REQUEST_STATES_STR.rejected"
+          >
             <span>External rejection details</span>
             <button
               class="app__btn-secondary app__btn-secondary--iconed"
               @click="isShownExternal = !isShownExternal"
             >
-              <mdi-chevron-up-icon v-if="isShownExternal"/>
-              <mdi-chevron-down-icon v-else/>
+              <mdi-chevron-up-icon v-if="isShownExternal" />
+              <mdi-chevron-down-icon v-else />
             </button>
           </p>
-          <p v-if="isShownExternal" v-html="externalDetails" />
+          <p
+            v-if="isShownExternal"
+            v-html="externalDetails"
+          />
         </section>
 
         <section class="user-details__section">
-          <account-section :user="user" :account="account"/>
+          <account-section
+            :user="user"
+            :account="account"
+          />
         </section>
 
         <template v-if="latestRequest">
           <section class="user-details__section">
             <kyc-general-section
-              v-if="latestRequest.details.updateKyc.accountTypeToSet.string === USER_TYPES_STR.general"
-              :user="user" :blobId="latestRequest.details.updateKyc.kycData.blobId"
+              v-if="latestRequest.requestDetails.accountRoleToSet === ACCOUNT_ROLES.general"
+              :user="user"
+              :blobId="latestRequest.requestDetails.kycData.blobId"
             />
 
             <kyc-syndicate-section
-              v-if="latestRequest.details.updateKyc.accountTypeToSet.string === USER_TYPES_STR.syndicate"
+              v-if="latestRequest.requestDetails.accountRoleToSet === ACCOUNT_ROLES.syndicate"
               :user="user"
-              :blobId="latestRequest.details.updateKyc.kycData.blobId"
-              :previousBlobId="previousBlobIdForKycRequest"
+              :blobId="latestRequest.requestDetails.kycData.blobId"
             />
           </section>
-          <section v-if="previousBlobIdForKycRequest" class="user-details__section">
+          <section
+            v-if="previousBlobIdForKycRequest"
+            class="user-details__section"
+          >
             <h1>Previous KYC Request</h1>
             <kyc-general-section
-              v-if="latestRequest.details.updateKyc.accountTypeToSet.string === USER_TYPES_STR.general"
+              v-if="latestRequest.requestDetails.accountRoleToSet === ACCOUNT_ROLES.general"
               :user="user"
               :blobId="previousBlobIdForKycRequest"
             />
             <kyc-syndicate-section
-              v-if="latestRequest.details.updateKyc.accountTypeToSet.string === USER_TYPES_STR.syndicate"
+              v-if="latestRequest.requestDetails.accountRoleToSet === ACCOUNT_ROLES.syndicate"
               :user="user"
               :blobId="previousBlobIdForKycRequest"
             />
@@ -103,10 +115,8 @@
 </template>
 
 <script>
-import api from '@/api'
 import { Sdk } from '@/sdk'
 import {
-  USER_TYPES_STR,
   USER_STATES_STR,
   REQUEST_STATES,
   REQUEST_STATES_STR,
@@ -121,6 +131,9 @@ import RequestSection from './UserDetails.Request'
 import BlockSection from './UserDetails.Block'
 import { formatDate } from '@/utils/formatters'
 import { unCamelCase } from '@/utils/un-camel-case'
+import { ApiWrp } from '@/api-wrp'
+import { ErrorHandler } from '@/utils/ErrorHandler'
+import config from '@/config'
 
 const OPERATION_TYPE = {
   createKycRequest: '22'
@@ -141,7 +154,7 @@ export default {
 
   data () {
     return {
-      USER_TYPES_STR,
+      ACCOUNT_ROLES: config.ACCOUNT_ROLES,
       USER_STATES_STR,
       OPERATION_TYPE,
       isLoaded: false,
@@ -184,8 +197,9 @@ export default {
         .join('<br>')
     },
     requestState () {
-      if (this.latestRequest.requestState !== REQUEST_STATES_STR.pending) {
-        return this.latestRequest.requestState
+      if (!this.latestRequest) return
+      if (this.latestRequest.state !== REQUEST_STATES_STR.pending) {
+        return this.latestRequest.state
       }
       return PENDING_TASKS_VOCABULARY[this.latestRequest.pendingTasks] || REQUEST_STATES_STR.pending
     }
@@ -196,20 +210,24 @@ export default {
       this.isLoaded = false
       this.isFailed = false
       try {
-        const [user, account, request, requests] = await Promise.all([
-          Sdk.api.users.get(this.id),
-          Sdk.horizon.account.get(this.id),
-          this.getRequest(),
-          this.getAllUserRequests()
+        const [user, requests] = await Promise.all([
+          ApiWrp.createCallerInstance()
+            .getWithSignature('/identities', {
+              filter: { address: this.id }
+            }),
+          this.getAllChangeRoleRequests()
         ])
-        this.user = user.data
-        this.account = account.data
-        this.requestToReview = request[0]
+        this.user = user.data[0]
+        // this.account = account.data
+        this.requestToReview = requests.data
+          .find(item => item.stateI === REQUEST_STATES.pending)
         this.requests = requests
         this.isLoaded = true
+        console.log(this.user)
+        console.log(this.requestState)
+        console.log(requests)
       } catch (error) {
-        console.error(error)
-        error.showMessage()
+        ErrorHandler.process(error)
         this.isFailed = true
       }
       if (this.latestRequest) {
@@ -229,18 +247,27 @@ export default {
       })
       return operationsList.data
     },
-    async getRequest () {
-      const requests = await api.requests.getKycRequests({
-        state: REQUEST_STATES.pending,
-        requestor: this.id
-      })
-      return requests.data || null
-    },
-    async getAllUserRequests () {
-      const requests = await api.requests.getKycRequests({
-        requestor: this.id
-      })
-      return requests.data
+    async getAllChangeRoleRequests () {
+      const pageLimit = 100
+      const list = await ApiWrp.createCallerInstance()
+        .getWithSignature('/v3/change_role_requests', {
+          filter: { requestor: this.id },
+          page: { limit: pageLimit },
+          include: ['request_details']
+        },
+      )
+
+      let isListFullyLoaded = list.data.length < pageLimit
+      while (!isListFullyLoaded) {
+        const newChunk = await list.fetchNext()
+        const oldLength = list.data.length
+        list._data = list.data.concat(newChunk)
+        if (oldLength === list.data.length) {
+          isListFullyLoaded = true
+        }
+      }
+
+      return list
     },
     formatDate
   }
@@ -248,7 +275,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../../../../../assets/scss/colors';
+@import "../../../../../assets/scss/colors";
 
 .user-details__section:not(:first-of-type) {
   margin-top: 3rem;
@@ -288,7 +315,7 @@ export default {
   margin: 2rem 0;
   color: $color-active;
   &:hover {
-    opacity: .85;
+    opacity: 0.85;
   }
 }
 
