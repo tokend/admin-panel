@@ -89,12 +89,13 @@
           :errorMessage="errors.first('max-tokens')"
         />
 
+        <!-- the field is disabled due to omitted testing session of trailingDigitsCount -->
         <input-field
           class="app__form-field app__form-field--halved"
           type="number" :min="0" :step="0"
           label="Trailing digits count"
           v-model="asset.trailingDigitsCount"
-          :disabled="isExistingAsset || isPending"
+          :disabled="true || isExistingAsset || isPending"
           v-validate="'required|numeric|max_value:6'"
           name="trailing-digits-count"
           :errorMessage="errors.first('trailing-digits-count')"
@@ -271,6 +272,7 @@ export default {
         preissuedAssetSigner: config.MASTER_ACCOUNT,
         policy: 0,
         initialPreissuedAmount: '0',
+        trailingDigitsCount: '6',
         creatorDetails: {
           name: '',
           logo: {},
@@ -345,7 +347,7 @@ export default {
             allTasks: 0,
             creatorDetails: {
               name: this.asset.creatorDetails.name,
-              externalSystemType: this.asset.creatorDetails.externalSystemType,
+              external_system_type: this.asset.creatorDetails.externalSystemType,
               logo: {
                 key: this.asset.creatorDetails.logo.key,
                 type: this.asset.creatorDetails.logo.type
@@ -370,7 +372,7 @@ export default {
             allTasks: 0,
             creatorDetails: {
               name: this.asset.creatorDetails.name,
-              externalSystemType: this.asset.creatorDetails.externalSystemType,
+              external_system_type: this.asset.creatorDetails.externalSystemType,
               logo: {
                 key: this.asset.creatorDetails.logo.key,
                 type: this.asset.creatorDetails.logo.type
@@ -417,7 +419,7 @@ export default {
       const config = await Sdk.api.documents.masterCreate(type, this[type].mime)
       await api.documents.uploadFile(this[type].file, config, this[type].mime)
       this.asset.creatorDetails[type === DOCUMENT_TYPES.tokenTerms ? 'terms' : 'logo'] = {
-        key: config.key,
+        key: config.formData.key,
         name: this[type].name,
         type: this[type].mime
       }
