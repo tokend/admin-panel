@@ -18,14 +18,14 @@
   & > .app__form-field + .app__form-field {
     margin-left: 2rem;
   }
-
-  & + .app__form-actions {
-    margin-top: 3.5rem;
-  }
 }
 
 .app__form-actions {
   display: flex;
+
+  &:not(:first-child) {
+    margin-top: 3.5rem;
+  }
 
   & > button + button {
     margin-left: 1rem
