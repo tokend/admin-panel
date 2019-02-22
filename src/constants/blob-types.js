@@ -4,7 +4,7 @@ export const BLOB_TYPES = Object.freeze({
   saleUpdate: 4,
   navUpdate: 8,
   saleDocument: 16,
-  syndicateKyc: 32,
+  corporateKyc: 32,
   bravo: 64,
   charlie: 128,
   delta: 256,

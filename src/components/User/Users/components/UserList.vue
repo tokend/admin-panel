@@ -133,7 +133,7 @@
   const USER_TYPES_VERBOSE = Object.freeze({
     [USER_TYPES_STR.notVerified]: 'Not verified',
     [USER_TYPES_STR.general]: 'General',
-    [USER_TYPES_STR.corporate]: 'Syndicate'
+    [USER_TYPES_STR.corporate]: 'Corporate'
   })
   const VIEW_MODES_VERBOSE = Object.freeze({
     index: 'index',

@@ -2,7 +2,7 @@
   <div class="sale-manager-corporate-tab">
     <template v-if="isLoaded">
       <div class="sale-manager-corporate-tab__details-wrp">
-        <label class="data-caption">Syndicate user details</label>
+        <label class="data-caption">Corporate user details</label>
         <ul class="key-value-list">
           <li>
             <span>Name</span>
@@ -76,7 +76,7 @@ export default {
     }
   },
   created () {
-    this.getSyndicate({
+    this.getCorporate({
       ownerId: _get(this.sale, 'ownerId') ||
                _get(this.saleRequest, 'requestor') ||
                _get(this.user, 'id'),
@@ -85,12 +85,12 @@ export default {
   },
 
   methods: {
-    async getSyndicate ({ ownerId: owner, blobId }) {
+    async getCorporate ({ ownerId: owner, blobId }) {
       try {
         const response = blobId
           ? await Sdk.api.blobs.get(blobId, owner)
           : await Sdk.api.blobs.getAll({
-            type: BLOB_TYPES.syndicateKyc | BLOB_TYPES.kycForm
+            type: BLOB_TYPES.corporateKyc | BLOB_TYPES.kycForm
           }, owner)
         this.corporate = JSON.parse(
           response.data.value || response.data[0].value
