@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
-## [Unreleased]
+## [1.0.0-rc.7]
 ### Added
 - ApiCallerFactory
 - More descriptive errors if cannot connect to horizon on startup
@@ -151,7 +151,8 @@ for further information about branching and tagging conventions.
   the issuance
 - Pre-issuance request list now fetches correctly the list
 
-[Unreleased]: https://github.com/tokend/admin-panel/compare/1.2.0-rc.6...HEAD
+[Unreleased]: https://github.com/tokend/admin-panel/compare/1.2.0-rc.7...HEAD
+[1.2.0-rc.7]: https://github.com/tokend/admin-panel/compare/1.2.0-rc.6...1.2.0-rc.7
 [1.2.0-rc.6]: https://github.com/tokend/admin-panel/compare/1.2.0-rc.5...1.2.0-rc.6
 [1.2.0-rc.5]: https://github.com/tokend/admin-panel/compare/1.2.0-rc.4...1.2.0-rc.5
 [1.2.0-rc.4]: https://github.com/tokend/admin-panel/compare/1.2.0-rc.3...1.2.0-rc.4
