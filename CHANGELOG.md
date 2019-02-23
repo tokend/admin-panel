@@ -31,6 +31,7 @@ for further information about branching and tagging conventions.
 - unused env files
 - user 'block' button
 - 'reset to unverified' button
+- address and dates kyc fields from kyc view
 
 ### Fix
 - keyServer use keyServerCaller from new-js-sdk
@@ -42,6 +43,10 @@ for further information about branching and tagging conventions.
 - app__form-actions positioning
 - user list displyaing, user item displaying
 - kyc retrieval, approval
+- issuance displaying, approving, rejecting
+- preissuance uploading
+- preissuance asset signer changer
+-
 
 ## [1.2.0-rc.6] - 2019-02-20
 ### Added

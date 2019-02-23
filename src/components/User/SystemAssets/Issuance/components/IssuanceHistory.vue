@@ -60,14 +60,14 @@
 
             <span
               class="app-list__cell app-list__cell--right "
-              :title="item.requestor | cropAddress"
+              :title="item.requestor"
             >
               <email-getter :account-id="item.requestor" />
             </span>
 
             <span
               class="app-list__cell app-list__cell--right "
-              :title="item.details.issuanceCreate.receiver | cropAddress"
+              :title="item.details.issuanceCreate.receiver"
             >
               <email-getter :balance-id="item.details.issuanceCreate.receiver" />
             </span>

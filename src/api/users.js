@@ -7,7 +7,8 @@ export default {
       const { data } = await ApiCallerFactory
         .createCallerInstance()
         .get('/identities', {
-          filter: { email }
+          filter: { email },
+          page: { limit: 1 }
         })
       return ((data || [])[0] || {}).address
     } catch (error) {

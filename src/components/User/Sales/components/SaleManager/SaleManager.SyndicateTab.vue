@@ -9,13 +9,6 @@
             <span>{{corporate.name}}</span>
           </li>
           <li>
-            <span>Founded</span>
-            <date-formatter
-              :date="corporate.found_date"
-              format="DD MMM YYYY"
-            />
-          </li>
-          <li>
             <span>Headquarters</span>
             <span>{{corporate.headquarters}}</span>
           </li>

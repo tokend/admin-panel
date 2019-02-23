@@ -125,7 +125,7 @@ export default {
       }
       this.isPending = true
       try {
-        await api.requests.approveKyc(this.requestToReview)
+        await api.requests.approve(this.requestToReview)
         this.$store.dispatch('SET_INFO', 'Request approved successfully')
         this.kycRequestsList.updateAsk = true
         this.$emit(this.updateRequestEvent)
@@ -141,9 +141,9 @@ export default {
       }
       this.isPending = true
       try {
-        await api.requests.rejectKyc(
-          this.requestToReview,
-          this.rejectForm.reason
+        await api.requests.reject(
+          { reason: this.rejectForm.reason },
+          { ...this.requestToReview, reviewDetails: { tasksToRemove: 0 }}
         )
         this.$store.dispatch('SET_INFO', `Request rejected successfully`)
         this.kycRequestsList.updateAsk = true

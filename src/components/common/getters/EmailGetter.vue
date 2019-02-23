@@ -76,7 +76,10 @@ export default {
         const accountId = await this.getAccountId()
         const { data } = await ApiCallerFactory
           .createCallerInstance()
-          .getWithSignature('/identities', { filter: { address: accountId }})
+          .getWithSignature('/identities', {
+            filter: { address: accountId },
+            page: { limit: 1 }
+          })
         this.email = ((data || [])[0] || {}).email || this.email
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)

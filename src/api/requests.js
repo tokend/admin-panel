@@ -10,17 +10,20 @@ import { clearObject } from '@/utils/clearObject'
 import _get from 'lodash/get'
 
 export const requests = {
-  _review ({ action, reason = '', requestType = '' }, ...requests) {
+  _review ({ action, reason = '' }, ...requests) {
     const operations = requests.map(function (item) {
-
       const opts = {
         requestID: item.id,
         requestHash: item.hash,
-        requestType: requestType || item.details.requestTypeI,
+        requestType:
+          _get(item, 'xdrType.value') ||
+          _get(item, 'details.requestTypeI') ||
+          _get(item, 'requestTypeI'),
         reviewDetails: {
-          tasksToAdd: 0,
-          tasksToRemove: _get(item, 'reviewDetails.tasksToRemove') ||
-            item.pendingTasks,
+          tasksToAdd: _get(item, 'reviewDetails.tasksToAdd', 0),
+          tasksToRemove: _get(item, 'reviewDetails.tasksToRemove',
+            item.pendingTasks
+          ),
           externalDetails: '{}'
         },
         action,
@@ -69,24 +72,6 @@ export const requests = {
   async approveWithdraw (...requests) {
     const action = Sdk.xdr.ReviewRequestOpAction.approve().value
     const { data } = await this._reviewWithdraw({ action }, ...requests)
-    return data
-  },
-
-  async approveKyc (request, opts = {}) {
-    const action = Sdk.xdr.ReviewRequestOpAction.approve().value
-    const requestType = REQUEST_TYPES.changeRole
-
-    const { data } = await this._review(
-      { action, requestType },
-      {
-        ...request,
-        reviewDetails: {
-          tasksToAdd: opts.tasksToAdd || 0,
-          tasksToRemove: opts.tasksToRemove || opts.pendingTasks
-        }
-      }
-    )
-
     return data
   },
 

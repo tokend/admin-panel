@@ -92,12 +92,12 @@
 <script>
 import moment from 'moment'
 import api from '@/api'
-import errors from '@/errors'
 import localize from '@/utils/localize'
 import { verbozify } from '@/utils/verbozify'
 import InputField from '@comcom/fields/InputField'
 
 import { CreatePreIssuanceRequest } from '@/api/responseHandlers/requests/CreatePreIssuanceRequest'
+import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   components: {
@@ -232,11 +232,9 @@ export default {
         this.clear()
         this.$store.dispatch('SET_INFO', 'Pending transaction for rejected request submitted')
         return this.getRequests()
-      }).catch(err => {
-        console.error('error', err)
+      }).catch(error => {
         this.clear()
-        const message = errors.tryParseError(err) || 'Rejection tx failed'
-        this.$store.dispatch('SET_ERROR', message)
+        ErrorHandler.process(error)
       })
     },
 
@@ -248,11 +246,10 @@ export default {
           this.$store.dispatch('SET_INFO', 'Pending transaction for fulfill request submitted')
           this.$emit('need-to-update')
           return this.getRequests()
-        }).catch(err => {
-          console.error('error', err)
+        }).catch(error => {
+          console.error('error', error)
           this.clear()
-          const message = errors.tryParseError(err) || 'Issuance tx failed'
-          this.$store.dispatch('SET_ERROR', message)
+          ErrorHandler.process(error)
         })
     }
   }

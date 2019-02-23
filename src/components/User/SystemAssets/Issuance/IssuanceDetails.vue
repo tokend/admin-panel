@@ -135,7 +135,13 @@ export default {
       this.isSubmitting = true
       if (await confirmAction()) {
         try {
-          await api.requests.approve(issuance)
+          let tasksToRemove = issuance.pendingTasks
+          if (tasksToRemove & 1) tasksToRemove = tasksToRemove - 1
+          if (tasksToRemove & 4) tasksToRemove = tasksToRemove - 4
+          await api.requests.approve({
+            ...issuance,
+            reviewDetails: { tasksToRemove }
+          })
           await this.getIssuance(this.id)
           this.$store.dispatch('SET_INFO', 'Request fulfilled successfully.')
         } catch (error) {
@@ -150,12 +156,18 @@ export default {
       this.itemToReject = item
       this.rejectForm.reason = ''
     },
-    async reject (item) {
+    async reject (issuance) {
       this.isSubmitting = true
       try {
+        let tasksToRemove = issuance.pendingTasks
+        if (tasksToRemove & 1) tasksToRemove = tasksToRemove - 1
+        if (tasksToRemove & 4) tasksToRemove = tasksToRemove - 4
         await api.requests.reject(
           { reason: this.rejectForm.reason, isPermanent: true },
-          item
+          {
+            ...issuance,
+            reviewDetails: { tasksToRemove }
+          }
         )
         await this.getIssuance(this.id)
         this.$store.dispatch('SET_INFO', 'Request rejected successfully.')

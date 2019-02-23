@@ -63,7 +63,7 @@
           class="app-list__cell"
           :title="item.preissuedAssetSigner"
         >
-          {{ item.preissuedAssetSigner }}
+          {{ item.preissuedAssetSigner | cropAddress }}
         </span>
         <span class="app-list__cell" :title="1">1</span>
       </li>
@@ -98,9 +98,9 @@
 <script>
   import { Sdk } from '@/sdk'
   import config from '@/config'
-  import errors from '@/errors'
 
   import localize from '@/utils/localize'
+import { ErrorHandler } from '@/utils/ErrorHandler'
 
   export default {
     data () {
@@ -207,11 +207,10 @@
             })
           })
           await Sdk.horizon.transactions.submitOperations(...operations)
-          this.$store.dispatch('SET_INFO', 'Pending transaction submitted')
-        } catch (err) {
-          const message = errors.tryParseError(err) || 'Something went wrong. Transaction failed'
-          this.$store.dispatch('SET_ERROR', message)
-          console.error('not uploaded', err)
+          this.fileInfo = []
+          this.$store.dispatch('SET_INFO', 'Successfully submitted')
+        } catch (error) {
+          ErrorHandler.process(error)
         }
         this.$store.commit('CLOSE_LOADER')
         this.uploadBtnDisable = false

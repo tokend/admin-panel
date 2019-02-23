@@ -61,7 +61,7 @@
 
               <span
                 class="app-list__cell app-list__cell--right"
-                :title="item.address | cropAddress"
+                :title="item.address"
               >
                 {{ item.address | cropAddress }}
               </span>

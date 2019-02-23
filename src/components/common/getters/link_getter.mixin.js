@@ -31,8 +31,8 @@ export default {
           this.isFailed = true
           return
         }
-        const response = await Sdk.api.documents.get(this.fileKey)
-        this.href = response.url
+        const { data } = await Sdk.api.documents.get(this.fileKey)
+        this.href = data.url
         this.isLoaded = true
       } catch (error) {
         this.isFailed = true

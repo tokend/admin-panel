@@ -15,7 +15,7 @@
         <span>
           Account ID
         </span>
-        <span :title="user.address | cropAddress">
+        <span :title="user.address">
           {{ user.address | cropAddress }}
         </span>
       </li>
