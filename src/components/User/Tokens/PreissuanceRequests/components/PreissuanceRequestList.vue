@@ -1,92 +1,115 @@
 <template>
-    <div>
-        <!-- Reject Form -->
-        <div class="flex-column info-block" v-if="requestSelected">
-            <h2 class="preissuance-request-list__reject-heading">
-              Reject
-            </h2>
+  <div>
+    <!-- Reject Form -->
+    <div
+      class="flex-column info-block"
+      v-if="requestSelected"
+    >
+      <h2 class="preissuance-request-list__reject-heading">
+        Reject
+      </h2>
 
-            <p class="preissuance-request-list__reject-hint">
-              Input reject reason and submit rejection
-            </p>
+      <p class="preissuance-request-list__reject-hint">
+        Input reject reason and submit rejection
+      </p>
 
-            <div class="preissuance-request-list__form-row app__form-row">
-              <input-field class="app__form-field"
-                v-model="rejectReason"
-                label="Reject reason"
-              />
-            </div>
+      <div class="preissuance-request-list__form-row app__form-row">
+        <input-field
+          class="app__form-field"
+          v-model="rejectReason"
+          label="Reject reason"
+        />
+      </div>
 
-            <div class="preissuance-request-list__form-actions app__form-actions">
-              <button class="app__btn app__btn--danger"
-                @click="reject(currentRequest)"
-                :disabled="buttonDisabled">
-                Submit rejection
-              </button>
-              <button class="app__btn-secondary"
-                @click="requestSelected = false"
-                :disabled="buttonDisabled">
-                Cancel
-              </button>
-            </div>
-        </div>
-        <!--/ Reject Form -->
-
-        <!-- Request List -->
-        <div v-show="!requestSelected">
-            <div class="full-width preissuance-request-list" v-if="requestsLoaded">
-                <table class="preissuance-request-list__table">
-
-                    <thead>
-                      <tr>
-                        <th><span class="secondary">Amount</span></th>
-                        <th><span class="secondary">Asset</span></th>
-                        <th><span class="secondary">Status</span></th>
-                      </tr>
-                    </thead>
-
-                    <tbody>
-                      <tr v-for="request in filteredRequests" :key="request.id">
-                        <td><span>{{ localize(request.amount()) }}</span></td>
-                        <td><span>{{ request.asset() }}</span></td>
-                        <td><span>{{ verbozify(request.state) }}</span></td>
-
-                        <td>
-                          <div class="preissuance-request-list__td-actions-wrp">
-                            <button class="app__btn app__btn--small app__btn--danger"
-                              @click="setReject(request)"
-                              :disabled="request.state !== 'pending'">
-                              Reject
-                            </button>
-
-                            <button class="app__btn app__btn--small"
-                              @click="fulfill(request)"
-                              :disabled="buttonDisabled || request.state !== 'pending'">
-                              <!--TODO: here button is being disabled if '!hasIssuances', resolve wtf -->
-                              Accept
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    </tbody>
-                </table>
-
-                <div class="app__more-btn-wrp">
-                    <button class="app__btn-secondary"
-                        v-if="!pageableLoadCompleted && filteredRequests.length !== 0"
-                        @click="nextPageLoader" >
-                        More
-                    </button>
-                </div>
-            </div>
-
-            <p class="loading" v-else>
-              Loading<span class="loading__dot">.</span><span class="loading__dot">.</span><span class="loading__dot">.</span>
-            </p>
-        </div>
-        <!--/ Request List -->
-
+      <div class="preissuance-request-list__form-actions app__form-actions">
+        <button
+          class="app__btn app__btn--danger"
+          @click="reject(currentRequest)"
+          :disabled="buttonDisabled"
+        >
+          Submit rejection
+        </button>
+        <button
+          class="app__btn-secondary"
+          @click="requestSelected = false"
+          :disabled="buttonDisabled"
+        >
+          Cancel
+        </button>
+      </div>
     </div>
+    <!--/ Reject Form -->
+
+    <!-- Request List -->
+    <div v-show="!requestSelected">
+      <div
+        class="full-width preissuance-request-list"
+        v-if="requestsLoaded"
+      >
+        <table class="preissuance-request-list__table">
+
+          <thead>
+            <tr>
+              <th><span class="secondary">Amount</span></th>
+              <th><span class="secondary">Asset</span></th>
+              <th><span class="secondary">Status</span></th>
+              <th></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr
+              v-for="request in filteredRequests"
+              :key="request.id"
+            >
+              <td><span>{{ localize(request.amount()) }}</span></td>
+              <td><span>{{ request.asset() }}</span></td>
+              <td><span>{{ verbozify(request.state) }}</span></td>
+
+              <td>
+                <span class="preissuance-request-list__td-actions-wrp">
+                  <button
+                    class="app__btn app__btn--small app__btn--danger"
+                    @click="setReject(request)"
+                    :disabled="request.state !== 'pending'"
+                  >
+                    Reject
+                  </button>
+
+                  <button
+                    class="app__btn app__btn--small"
+                    @click="fulfill(request)"
+                    :disabled="buttonDisabled || request.state !== 'pending'"
+                  >
+                    Accept
+                  </button>
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="app__more-btn-wrp">
+          <button
+            class="app__btn-secondary"
+            v-if="!pageableLoadCompleted && filteredRequests.length !== 0"
+            @click="nextPageLoader"
+          >
+            More
+          </button>
+        </div>
+      </div>
+
+      <p
+        class="loading"
+        v-else
+      >
+        Loading<span class="loading__dot">.</span><span class="loading__dot">.</span><span class="loading__dot">.</span>
+      </p>
+    </div>
+    <!--/ Request List -->
+
+  </div>
 </template>
 
 <script>
@@ -133,10 +156,6 @@ export default {
   computed: {
     buttonDisabled () {
       return this.$store.getters.showLoader
-    },
-
-    hasIssuances () {
-      return this.availableAmount > 0
     },
 
     filteredRequests () {
@@ -262,31 +281,9 @@ export default {
   max-width: 1000px;
 }
 
-.info-block__input {
-  min-width: 320px;
-}
-
-.info-block__row-item {
-  margin-bottom: 15px;
-}
-
-.inline-btn,
-.info-block__input {
-  margin-left: 15px;
-  margin-right: 15px;
-}
-
-.select__btn {
-  padding-top: 15px;
-}
-
 .preissuance-request-list__table {
   border-spacing: 0;
   width: 100%;
-
-  .accountId {
-    max-width: 160px;
-  }
 
   th {
     font-weight: normal;
@@ -294,15 +291,19 @@ export default {
   }
 }
 
-.exchange-id {
-  max-width: 220px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 .preissuance-request-list__td-actions-wrp {
-  display: flex;
+  display: inline-flex;
   align-items: center;
+  width: 100%;
+
+  & > .app__btn {
+    min-width: 0;
+    max-width: 12rem;
+
+    &:not(:first-child) {
+      margin-left: .8rem;
+    }
+  }
 }
 
 h2.preissuance-request-list__reject-heading {
@@ -311,13 +312,6 @@ h2.preissuance-request-list__reject-heading {
 
 .preissuance-request-list__form-row.app__form-row {
   max-width: 40rem;
-}
-
-.preissuance-request-list__form-actions.app__form-actions {
-  & > .app__btn,
-  & > .app__btn-secondary {
-    max-width: 20rem;
-  }
 }
 
 .preissuance-request-list__reject-hint {

@@ -46,7 +46,9 @@ for further information about branching and tagging conventions.
 - issuance displaying, approving, rejecting
 - preissuance uploading
 - preissuance asset signer changer
--
+- more button pos
+- token request displyaing, filtering, approving, rejecting
+- preissuance request markup issues
 
 ## [1.2.0-rc.6] - 2019-02-20
 ### Added

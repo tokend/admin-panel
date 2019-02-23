@@ -3,6 +3,8 @@ import { ApiCallerFactory } from '@/api-caller-factory'
 export default {
 
   async getAccountIdByEmail (email) {
+    if (!email) return ''
+
     try {
       const { data } = await ApiCallerFactory
         .createCallerInstance()

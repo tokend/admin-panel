@@ -30,6 +30,11 @@ $container-padding: 0 30px;
 }
 
 .app__more-btn-wrp {
-  max-width: 6rem;
   margin: 2rem auto 0;
+  text-align: center;
+
+  & > button {
+    max-width: 6rem;
+    margin: 0 auto;
+  }
 }
