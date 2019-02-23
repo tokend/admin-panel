@@ -103,6 +103,7 @@ import {
   REQUEST_STATES
 } from '@/constants'
 import _ from 'lodash'
+import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   components: {
@@ -159,13 +160,14 @@ export default {
     },
 
     async nextPage () {
-      const oldLength = this.list.data.length
       try {
-        this.list = await this.list.concatNext()
+        const oldLength = this.list.data.length
+        const chunk = await this.list.fetchNext()
+        this.list._data = this.list.data.concat(chunk.data)
+        this.list.fetchNext = chunk.fetchNext
         this.isListEnded = oldLength === this.list.data.length
       } catch (error) {
-        console.error(error)
-        error.showMessage('Cannot load next page')
+        ErrorHandler.process(error)
       }
     },
     async getRequestorAccountId (requestor) {

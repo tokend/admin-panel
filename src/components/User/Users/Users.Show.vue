@@ -50,7 +50,6 @@ export default {
   },
 
   props: ['id'],
-  inject: ['kycRequestsList'],
 
   data: _ => ({
     view: {
@@ -73,7 +72,6 @@ export default {
     back () {
       if (this.view.mode === VIEW_MODES_VERBOSE.user) {
         this.$emit('back')
-        this.kycRequestsList.updateAsk = true
         return
       }
       this.view.mode = VIEW_MODES_VERBOSE.user

@@ -209,8 +209,8 @@ export default {
     },
 
     async onMoreClick () {
-      const oldLength = this.list.data.length
       try {
+        const oldLength = this.list.data.length
         const chunk = await this.list.fetchNext()
         this.list._data = this.list.data.concat(chunk.data)
         this.list.fetchNext = chunk.fetchNext

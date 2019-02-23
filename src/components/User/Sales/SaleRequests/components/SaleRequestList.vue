@@ -85,6 +85,7 @@ import InputField from '@comcom/fields/InputField'
 import { EmailGetter } from '@comcom/getters'
 import { AssetAmountFormatter } from '@comcom/formatters'
 import _ from 'lodash'
+import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   components: {
@@ -128,9 +129,15 @@ export default {
     },
 
     async getMoreEntries () {
-      const oldLength = (this.list.data || []).length
-      this.list = await this.list.concatNext()
-      this.isNoMoreEntries = oldLength === this.list.data.length
+      try {
+        const oldLength = (this.list.data || []).length
+        const chunk = await this.list.fetchNext()
+        this.list._data = this.list.data.concat(chunk.data)
+        this.list.fetchNext = chunk.fetchNext
+        this.isNoMoreEntries = oldLength === this.list.data.length
+      } catch (error) {
+        ErrorHandler.process(error)
+      }
     }
   },
 

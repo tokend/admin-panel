@@ -39,7 +39,7 @@ for further information about branching and tagging conventions.
 - fee list showing, updating, filtering
 - email fetching by EmailGetter component
 - app__form-actions positioning
-- user list displyaing
+- user list displyaing, user item displaying
 - kyc retrieval, approval
 
 ## [1.2.0-rc.6] - 2019-02-20

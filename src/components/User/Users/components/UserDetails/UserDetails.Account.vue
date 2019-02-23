@@ -6,8 +6,9 @@
         <span>
           Email
         </span>
+
         <span :title="user.email">
-          {{user.email}}
+          {{ user.email }}
         </span>
       </li>
       <li>
@@ -23,7 +24,7 @@
           Account type
         </span>
         <span :title="user.role | roleIdToString">
-          {{user.role | roleIdToString}}
+          {{ user.role | roleIdToString }}
         </span>
       </li>
 
@@ -51,11 +52,6 @@
 <script>
 import { USER_STATES_STR } from '@/constants'
 import { AccountStateGetter } from '@comcom/getters'
-const ACCOUNT_TYPES_VERBOSE = {
-  AccountTypeNotVerified: 'Not verified',
-  AccountTypeGeneral: 'General',
-  AccountTypeCorporate: 'Corporate'
-}
 
 export default {
   components: {
@@ -63,12 +59,18 @@ export default {
   },
   data () {
     return {
-      USER_STATES_STR,
-      ACCOUNT_TYPES_VERBOSE
+      USER_STATES_STR
     }
   },
 
-  props: ['user', 'account']
+  props: {
+    user: {
+      type: Object,
+      default () {
+        return {}
+      }
+    }
+  }
 }
 </script>
 

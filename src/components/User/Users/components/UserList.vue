@@ -48,7 +48,7 @@
               class="app-list__li"
               v-for="item in list.data"
               :key="item.id"
-              @click="toggleViewMode(item.id)"
+              @click="toggleViewMode(item.address)"
             >
               <span
                 class="app-list__cell
@@ -190,8 +190,8 @@ export default {
     },
 
     async onMoreClick () {
-      const oldLength = this.list.data.length
       try {
+        const oldLength = this.list.data.length
         const chunk = await this.list.fetchNext()
         this.list._data = this.list.data.concat(chunk.data)
         this.list.fetchNext = chunk.fetchNext

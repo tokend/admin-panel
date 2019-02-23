@@ -185,7 +185,7 @@ export default {
     }
   },
 
-  props: ['user', 'requestToReview', 'account', 'updateRequestEvent'],
+  props: ['user', 'requestToReview', 'updateRequestEvent'],
 
   computed: {
     hasManualTasks () {
