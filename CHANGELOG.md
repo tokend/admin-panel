@@ -19,6 +19,7 @@ for further information about branching and tagging conventions.
 - Use cheap-source-map
 - EmailGetter
 - Updated request states
+- Removed unused tasks constants
 
 ### Removed
 - `AssetPolicy.requiresKyc`

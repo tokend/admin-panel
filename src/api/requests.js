@@ -7,18 +7,21 @@ import { CreatePreIssuanceRequest } from './responseHandlers/requests/CreatePreI
 import { TokenRequest } from './responseHandlers/requests/TokenRequest'
 import { IssuanceCreateRequest } from './responseHandlers/requests/IssuanceCreateRequest'
 import { clearObject } from '@/utils/clearObject'
+import _get from 'lodash/get'
 
 export const requests = {
   _review ({ action, reason = '', requestType = '' }, ...requests) {
     const operations = requests.map(function (item) {
+
       const opts = {
         requestID: item.id,
         requestHash: item.hash,
         requestType: requestType || item.details.requestTypeI,
-        externalDetails: {
+        reviewDetails: {
           tasksToAdd: 0,
-          tasksToRemove: item.pendingTasks || item.pending_tasks,
-          externalDetails: ''
+          tasksToRemove: _get(item, 'reviewDetails.tasksToRemove') ||
+            item.pendingTasks,
+          externalDetails: '{}'
         },
         action,
         reason
@@ -39,10 +42,10 @@ export const requests = {
         requestID: item.id,
         requestHash: item.hash,
         requestType: item.request_type_i || item.requestTypeI,
-        externalDetails: {
+        reviewDetails: {
           tasksToAdd: 0,
           tasksToRemove: item.pendingTasks || item.pending_tasks,
-          externalDetails: ''
+          externalDetails: '{}'
         },
         action,
         reason
@@ -192,18 +195,6 @@ export const requests = {
       order: 'desc',
       ...filters
     }))
-  },
-
-  async getKycRequests ({ state, requestor, type }) {
-    const filters = {}
-    if (requestor) filters.requestor = requestor
-    if (type) filters.account_type_to_set = type
-    if (state && state.state) filters.state = state.state
-    const response = await Sdk.horizon.request.getAllForUpdateKyc({
-      ...filters,
-      order: 'desc'
-    })
-    return response
   },
 
   async getAssetRequests (filters) {

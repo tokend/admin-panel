@@ -16,19 +16,6 @@ export { OP_TYPES } from './operation-type'
 export { DOCUMENTS_POLICIES } from './documents-policies'
 export { SALES_SORT_CRITERIA } from './sorts-criteria'
 export { LIMITS_REQUEST_STATES, LIMITS_REQUEST_STATES_STR } from './limits-request-states'
-export {
-  REVIEW_TASKS,
-  RENDERED_TASKS_TO_ADD,
-  RENDERED_TASKS_TO_REMOVE,
-  SELECTED_TASKS_TO_ADD,
-  SELECTED_TASKS_TO_REMOVE,
-  REVIEW_TASKS_VOCABULARY,
-  KYC_TASKS_TO_REMOVE_ON_APPROVE,
-  KYC_TASKS_TO_REMOVE_ON_REJECT,
-  KYC_TASKS_TO_ADD_ON_APPROVE,
-  KYC_TASKS_TO_ADD_ON_REJECT,
-  PENDING_TASKS_VOCABULARY
-} from './review-tasks'
 export { STATS_OPERATION_TYPES } from './stats-op-types'
 export {
   DEFAULT_BASE_ASSET,

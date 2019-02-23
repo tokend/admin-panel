@@ -14,7 +14,7 @@
           </li>
           <li class="issuance-details__list-item">
             <span>Initiator</span>
-            <span>{{requestorAccount.accountId}}</span>
+            <span>{{ issuance.requestor }}</span>
           </li>
           <li class="issuance-details__list-item">
             <span>Initiator (Email)</span>
@@ -94,7 +94,6 @@
 </template>
 
 <script>
-import { Sdk } from '@/sdk'
 import api from '@/api'
 import { REQUEST_STATES } from '@/constants'
 import Modal from '@comcom/modals/Modal'
@@ -118,7 +117,6 @@ export default {
     itemToReject: null,
     isRejectionModalShown: false,
     isSubmitting: false,
-    requestorAccount: null,
     isLoaded: false,
     rejectForm: {
       reason: ''
@@ -126,14 +124,6 @@ export default {
   }),
   methods: {
     localize,
-    async getAccount (id) {
-      try {
-        const response = await await Sdk.horizon.account.get(id)
-        this.requestorAccount = response.data
-      } catch (error) {
-        ErrorHandler.process(error)
-      }
-    },
     async getIssuance (id) {
       try {
         this.issuance = await api.requests.get(id)
@@ -180,7 +170,6 @@ export default {
   },
   async created () {
     await this.getIssuance(this.id)
-    await this.getAccount(this.issuance.requestor)
     this.isLoaded = true
   }
 }

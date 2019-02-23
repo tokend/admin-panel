@@ -6,76 +6,18 @@
       {{ requestToReview.state }}
     </p>
 
-    <template v-if="RENDERED_TASKS_TO_ADD.includes(REVIEW_TASKS.nonLatinDocs)">
-      <div
-        class="user-request__block"
-        v-if="hasManualTasks"
-      >
-        <h3>Details</h3>
-        <tick-field
-          v-model="details.tasksToAdd"
-          :label="REVIEW_TASKS_VOCABULARY[REVIEW_TASKS.nonLatinDocs]"
-          :cb-value="REVIEW_TASKS.nonLatinDocs"
-        />
-      </div>
-    </template>
-
-    <template v-if="RENDERED_TASKS_TO_REMOVE.length || RENDERED_TASKS_TO_ADD.length">
-      <div
-        class="user-request__block"
-        v-if="isRequestPending"
-      >
-        <div class="user-request__heading">
-          <h3>Advanced</h3>
-          <button
-            class="app__btn-secondary app__btn-secondary--iconed"
-            @click="isShownAdvanced = !isShownAdvanced"
-          >
-            <mdi-chevron-up-icon v-if="isShownAdvanced" />
-            <mdi-chevron-down-icon v-else />
-          </button>
-        </div>
-
-        <template v-if="isShownAdvanced">
-          <h4 v-if="RENDERED_TASKS_TO_REMOVE.length">Tasks to remove</h4>
-          <template v-for="(task, t) in RENDERED_TASKS_TO_REMOVE">
-            <tickField
-              :key="`user-details-request-${task}-1-${t}`"
-              class="user-request__tick-field"
-              v-model="details.tasksToRemove"
-              v-if="task !== 0"
-              :cb-value="task"
-              :label="REVIEW_TASKS_VOCABULARY[task]"
-            />
-          </template>
-          <h4 v-if="RENDERED_TASKS_TO_ADD.length">Tasks to add</h4>
-          <template v-for="(task, t) in RENDERED_TASKS_TO_ADD">
-            <tickField
-              :key="`user-details-request-${task}-2-${t}`"
-              class="user-request__tick-field"
-              v-model="details.tasksToAdd"
-              v-if="task !== 0"
-              :cb-value="task"
-              :label="REVIEW_TASKS_VOCABULARY[task]"
-            />
-          </template>
-        </template>
-
-      </div>
-    </template>
-
-    <template v-if="hasManualTasks || (isShownAdvanced && isRequestPending)">
+    <template v-if="isRequestPending">
       <div class="app__form-actions user-details-request__form-actions">
         <button
           class="app__btn"
           @click="approve"
           :disabled="isPending"
         >
-          {{ isShownAdvanced ? 'Update request state' : 'Approve' }}
+          Approve
         </button>
 
         <button
-          class="app__btn-secondary"
+          class="app__btn app__btn--danger"
           @click="showRejectModal"
           :disabled="isPending"
         >
@@ -128,13 +70,6 @@ import {
   USER_STATES_STR,
   USER_TYPES_STR,
   REQUEST_STATES_STR,
-  KYC_TASKS_TO_REMOVE_ON_APPROVE,
-  REVIEW_TASKS,
-  RENDERED_TASKS_TO_ADD,
-  RENDERED_TASKS_TO_REMOVE,
-  SELECTED_TASKS_TO_ADD,
-  SELECTED_TASKS_TO_REMOVE,
-  REVIEW_TASKS_VOCABULARY,
   ACCOUNT_TYPES,
   ACCOUNT_TYPES_VERBOSE
 } from '@/constants'
@@ -163,12 +98,6 @@ export default {
       USER_STATES_STR,
       USER_TYPES_STR,
       REQUEST_STATES_STR,
-      REVIEW_TASKS,
-      RENDERED_TASKS_TO_ADD,
-      RENDERED_TASKS_TO_REMOVE,
-      SELECTED_TASKS_TO_ADD,
-      SELECTED_TASKS_TO_REMOVE,
-      REVIEW_TASKS_VOCABULARY,
       ACCOUNT_TYPES,
       ACCOUNT_TYPES_VERBOSE,
       rejectForm: {
@@ -176,22 +105,14 @@ export default {
         isShown: false,
         isReset: false
       },
-      details: {
-        tasksToAdd: [...SELECTED_TASKS_TO_ADD],
-        tasksToRemove: [...SELECTED_TASKS_TO_REMOVE]
-      },
       isShownAdvanced: false,
       isPending: false
     }
   },
 
-  props: ['user', 'requestToReview', 'updateRequestEvent'],
+  props: ['requestToReview', 'updateRequestEvent'],
 
   computed: {
-    hasManualTasks () {
-      return !((this.requestToReview.pendingTasks & KYC_TASKS_TO_REMOVE_ON_APPROVE) === 0) &&
-        this.requestToReview.state === REQUEST_STATES_STR.pending
-    },
     isRequestPending () {
       return this.requestToReview.state === REQUEST_STATES_STR.pending
     }
@@ -199,7 +120,9 @@ export default {
 
   methods: {
     async approve () {
-      if (!await confirmAction('Are you sure? This action cannot be undone')) return
+      if (!await confirmAction('Are you sure? This action cannot be undone')) {
+        return
+      }
       this.isPending = true
       try {
         await api.requests.approveKyc(this.requestToReview)
@@ -213,7 +136,9 @@ export default {
     },
 
     async reject () {
-      if (!await confirmAction('Are you sure? This action cannot be undone')) return
+      if (!await confirmAction('Are you sure? This action cannot be undone')) {
+        return
+      }
       this.isPending = true
       try {
         await api.requests.rejectKyc(

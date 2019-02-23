@@ -48,13 +48,13 @@
             <kyc-general-section
               v-if="requestToReview.requestDetails.accountRoleToSet === ACCOUNT_ROLES.general"
               :user="user"
-              :blobId="requestToReview.requestDetails.kycData.blobId"
+              :blobId="requestToReview.requestDetails.creatorDetails.blobId"
             />
 
             <kyc-syndicate-section
               v-if="requestToReview.requestDetails.accountRoleToSet === ACCOUNT_ROLES.corporate"
               :user="user"
-              :blobId="requestToReview.requestDetails.kycData.blobId"
+              :blobId="requestToReview.requestDetails.creatorDetails.blobId"
             />
           </section>
           <section
@@ -65,12 +65,12 @@
             <kyc-general-section
               v-if="requestToReview.requestDetails.accountRoleToSet === ACCOUNT_ROLES.general"
               :user="user"
-              :blobId="prevChangeRoleRequest.requestDetails.kycData.blobId"
+              :blobId="prevChangeRoleRequest.requestDetails.creatorDetails.blobId"
             />
             <kyc-syndicate-section
               v-if="requestToReview.requestDetails.accountRoleToSet === ACCOUNT_ROLES.corporate"
               :user="user"
-              :blobId="prevChangeRoleRequest.requestDetails.kycData.blobId"
+              :blobId="prevChangeRoleRequest.requestDetails.creatorDetails.blobId"
             />
           </section>
         </template>
@@ -104,8 +104,7 @@
 import {
   USER_STATES_STR,
   REQUEST_STATES,
-  REQUEST_STATES_STR,
-  PENDING_TASKS_VOCABULARY
+  REQUEST_STATES_STR
 } from '@/constants'
 import AccountSection from './UserDetails.Account'
 
@@ -145,7 +144,6 @@ export default {
       requestToReview: null,
       requests: [],
       REQUEST_STATES_STR,
-      PENDING_TASKS_VOCABULARY,
       prevChangeRoleRequest: null
     }
   },
