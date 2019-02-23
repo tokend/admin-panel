@@ -81,6 +81,7 @@ export default {
         const oldLength = this.list.data.length
         const chunk = await this.list.fetchNext()
         this.list._data = this.list.data.concat(chunk.data)
+        this.list.fetchNext = chunk.fetchNext
         this.isNoMoreEntries = oldLength === this.list.data.length
       } catch (error) {
         ErrorHandler.process(error)

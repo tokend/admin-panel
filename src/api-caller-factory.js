@@ -5,6 +5,44 @@ let defaultHorizonUrl
 let defaultWallet
 let defaultNetworkPassphrase
 
+export class StubbornApiCaller {
+  constructor (apiCaller) {
+    if (apiCaller instanceof ApiCaller) {
+      this._apiCaller = apiCaller
+      this._pageLimit = 100
+    } else {
+      throw new Error('StubbornApiCaller.constructor() accepts only ApiCaller instance as the argument')
+    }
+  }
+
+  async stubbornGet (endpoint, query, signNeeded = false) {
+    const list = await this._apiCaller.get(
+      endpoint,
+      { ...query, page: { limit: this._pageLimit }},
+      signNeeded
+    )
+
+    let isListFullyLoaded = list.data.length < this._pageLimit
+    while (!isListFullyLoaded) {
+      const newChunk = await list.fetchNext()
+
+      const oldLength = list.data.length
+      list._data = list.data.concat(newChunk.data)
+      list.fetchNext = newChunk.fetchNext
+
+      if (oldLength === list.data.length) {
+        isListFullyLoaded = true
+      }
+    }
+
+    return list
+  }
+
+  async stubbornGetWithSignature (endpoint, query) {
+    return this.stubbornGet(endpoint, query, true)
+  }
+}
+
 export class ApiCallerFactory {
   /**
    * Sets default horizon url to be used on creating new caller instances
@@ -43,6 +81,18 @@ export class ApiCallerFactory {
 
   static get defaultNetworkPassphrase () {
     return defaultNetworkPassphrase
+  }
+
+  /**
+   * Creates an ApiCaller instance but with getters that fetches the full list
+   * @param {Object} [opts]
+   * @param {Object} [opts.wallet]
+   * @param {Object} [opts.horizonUrl]
+   * @param {Object} [opts.networkPassphrase]
+   */
+  static createStubbornCallerInstance (opts = {}) {
+    const callerInstance = ApiCallerFactory.createCallerInstance(opts)
+    return new StubbornApiCaller(callerInstance)
   }
 
   /**

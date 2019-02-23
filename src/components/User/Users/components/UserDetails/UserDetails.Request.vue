@@ -2,12 +2,15 @@
   <div class="user-request">
     <h3>Latest request</h3>
     <p class="user-request__block text">
-      Create a {{ requestToReview | deriveLowerCasedRoleToSet }} account:
-      {{ requestToReview.requestState }}
+      Create a {{ requestToReview.requestDetails.accountRoleToSet | roleIdToString | lowerCase }} account:
+      {{ requestToReview.state }}
     </p>
 
     <template v-if="RENDERED_TASKS_TO_ADD.includes(REVIEW_TASKS.nonLatinDocs)">
-      <div class="user-request__block" v-if="hasManualTasks">
+      <div
+        class="user-request__block"
+        v-if="hasManualTasks"
+      >
         <h3>Details</h3>
         <tick-field
           v-model="details.tasksToAdd"
@@ -17,24 +20,23 @@
       </div>
     </template>
 
-    <template
-      v-if="RENDERED_TASKS_TO_REMOVE.length ||
-      RENDERED_TASKS_TO_ADD.length"
-    >
-      <div class="user-request__block" v-if="isRequestPending">
+    <template v-if="RENDERED_TASKS_TO_REMOVE.length || RENDERED_TASKS_TO_ADD.length">
+      <div
+        class="user-request__block"
+        v-if="isRequestPending"
+      >
         <div class="user-request__heading">
           <h3>Advanced</h3>
           <button
             class="app__btn-secondary app__btn-secondary--iconed"
             @click="isShownAdvanced = !isShownAdvanced"
           >
-            <mdi-chevron-up-icon   v-if="isShownAdvanced"/>
-            <mdi-chevron-down-icon v-else/>
+            <mdi-chevron-up-icon v-if="isShownAdvanced" />
+            <mdi-chevron-down-icon v-else />
           </button>
         </div>
 
-        <template v-if="isShownAdvanced"
-        >
+        <template v-if="isShownAdvanced">
           <h4 v-if="RENDERED_TASKS_TO_REMOVE.length">Tasks to remove</h4>
           <template v-for="(task, t) in RENDERED_TASKS_TO_REMOVE">
             <tickField
@@ -63,7 +65,7 @@
     </template>
 
     <template v-if="hasManualTasks || (isShownAdvanced && isRequestPending)">
-      <div class="user-request__actions">
+      <div class="app__form-actions user-details-request__form-actions">
         <button
           class="app__btn"
           @click="approve"
@@ -82,40 +84,37 @@
       </div>
     </template>
 
-    <template v-if="isAccreditedInvestor">
-      <div class="user-request__actions">
-        <button
-          class="app__btn user-request__approve-ai-btn"
-          @click="approveAccreditedInvestor"
-          :disabled="isPending"
-        >
-          Approve accredited investor
-        </button>
-      </div>
-    </template>
-
-    <modal class="user-request__reject-modal"
+    <modal
+      class="user-request__reject-modal"
       v-if="rejectForm.isShown"
       @close-request="hideRejectModal()"
       max-width="40rem"
     >
-      <form class="user-request__reject-form"
+      <form
+        class="user-request__reject-form"
         id="user-request-reject-form"
         @submit.prevent="hideRejectModal() || reject()"
       >
         <div class="app__form-row">
-          <text-field label="Reject reason"
+          <text-field
+            label="Reject reason"
             :autofocus="true"
             v-model="rejectForm.reason"
           />
         </div>
       </form>
-      {{ col }}
-      <div class="app__form-actions user-request__reject-form-actions">
-        <button class="app__btn app__btn--danger" form="user-request-reject-form">
+
+      <div class="app__form-actions">
+        <button
+          class="app__btn app__btn--danger"
+          form="user-request-reject-form"
+        >
           Reject
         </button>
-        <button class="app__btn-secondary" @click="hideRejectModal">
+        <button
+          class="app__btn-secondary"
+          @click="hideRejectModal"
+        >
           Cancel
         </button>
       </div>
@@ -130,7 +129,6 @@ import {
   USER_TYPES_STR,
   REQUEST_STATES_STR,
   KYC_TASKS_TO_REMOVE_ON_APPROVE,
-  KYC_TASKS_TO_ADD_ON_APPROVE,
   REVIEW_TASKS,
   RENDERED_TASKS_TO_ADD,
   RENDERED_TASKS_TO_REMOVE,
@@ -145,7 +143,8 @@ import Modal from '@comcom/modals/Modal'
 
 import 'mdi-vue/ChevronDownIcon'
 import 'mdi-vue/ChevronUpIcon'
-import config from '@/config'
+import { ErrorHandler } from '@/utils/ErrorHandler'
+import { confirmAction } from '@/js/modals/confirmation_message'
 
 const EMPTY_REASON = ''
 
@@ -188,69 +187,33 @@ export default {
 
   props: ['user', 'requestToReview', 'account', 'updateRequestEvent'],
 
-  filters: {
-    deriveLowerCasedRoleToSet (item) {
-      return {
-        [config.ACCOUNT_ROLES.notVerified]: 'Unverified',
-        [config.ACCOUNT_ROLES.general]: 'Individual',
-        [config.ACCOUNT_ROLES.corporate]: 'Corporate'
-      }[item.requestDetails.accountRoleToSet].toLowerCase()
-    }
-  },
-
   computed: {
     hasManualTasks () {
       return !((this.requestToReview.pendingTasks & KYC_TASKS_TO_REMOVE_ON_APPROVE) === 0) &&
-        this.requestToReview.requestState === REQUEST_STATES_STR.pending
+        this.requestToReview.state === REQUEST_STATES_STR.pending
     },
     isRequestPending () {
-      return this.requestToReview.requestState === REQUEST_STATES_STR.pending
+      return this.requestToReview.state === REQUEST_STATES_STR.pending
     }
   },
 
   methods: {
     async approve () {
-      if (!window.confirm('Are you sure? This action cannot be undone')) return
+      if (!await confirmAction('Are you sure? This action cannot be undone')) return
       this.isPending = true
       try {
-        const tasksToRemove = this.requestToReview.pendingTasks
-        const tasksToAdd = 0
-        await api.requests.approveKyc(this.requestToReview, {
-          tasksToRemove,
-          tasksToAdd
-        })
+        await api.requests.approveKyc(this.requestToReview)
         this.$store.dispatch('SET_INFO', 'Request approved successfully')
         this.kycRequestsList.updateAsk = true
         this.$emit(this.updateRequestEvent)
       } catch (error) {
-        console.error(error)
-        error.showMessage()
-      }
-      this.isPending = false
-    },
-
-    async approveAccreditedInvestor () {
-      if (!window.confirm('Are you sure? This action cannot be undone')) return
-      this.isPending = true
-      try {
-        const tasksToRemove = this.reviewRequest
-        const tasksToAdd = KYC_TASKS_TO_ADD_ON_APPROVE
-        await api.requests.approveKyc(this.requestToReview, {
-          tasksToRemove,
-          tasksToAdd
-        })
-        this.$store.dispatch('SET_INFO', 'Request approved successfully')
-        this.kycRequestsList.updateAsk = true
-        this.$emit(this.updateRequestEvent)
-      } catch (error) {
-        console.error(error)
-        error.showMessage()
+        ErrorHandler.process(error)
       }
       this.isPending = false
     },
 
     async reject () {
-      if (!window.confirm('Are you sure? This action cannot be undone')) return
+      if (!await confirmAction('Are you sure? This action cannot be undone')) return
       this.isPending = true
       try {
         await api.requests.rejectKyc(
@@ -262,8 +225,7 @@ export default {
         this.$emit(this.updateRequestEvent)
       } catch (error) {
         this.isPending = false
-        console.error(error)
-        error.showMessage()
+        ErrorHandler.process(error)
       }
       this.isPending = false
     },
@@ -281,7 +243,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import '../../../../../assets/scss/colors';
+@import "../../../../../assets/scss/colors";
 
 .user-request__actions {
   display: flex;
@@ -310,13 +272,10 @@ export default {
 }
 
 .user-request__tick-field {
-  margin-bottom: .5rem;
+  margin-bottom: 0.5rem;
 }
 
-.user-request__reject-form-actions {
-  margin-top: 2rem;
-}
-.user-request__approve-ai-btn {
-  min-width: 25rem;
+.user-details-request__form-actions {
+  max-width: 48rem;
 }
 </style>

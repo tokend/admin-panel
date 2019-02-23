@@ -115,59 +115,29 @@ export default {
   },
 
   async created () {
+    this.$store.commit('OPEN_LOADER')
     try {
       await this.loadSignerRoles()
       await this.loadSignerList()
     } catch (error) {
       ErrorHandler.process(error)
     }
+    this.$store.commit('CLOSE_LOADER')
   },
 
   methods: {
     async loadSignerRoles () {
-      const signerRoles = await this.getAllSignerRoles()
+      const signerRoles = await ApiCallerFactory
+        .createStubbornCallerInstance()
+        .stubbornGet('/v3/signer_roles')
       this.signerRoles = signerRoles.data
     },
 
-    async getAllSignerRoles () {
-      const pageLimit = 100
-      const list = await ApiCallerFactory
-        .createCallerInstance()
-        .get('/v3/signer_roles', {
-          page: { limit: pageLimit }
-        })
-
-      let isListFullyLoaded = list.data.length < pageLimit
-      while (!isListFullyLoaded) {
-        const newChunk = await list.fetchNext()
-        const oldLength = list.data.length
-        list._data = list.data.concat(newChunk)
-        if (oldLength === list.data.length) {
-          isListFullyLoaded = true
-        }
-      }
-
-      return list
-    },
-
     async loadSignerList () {
-      this.$store.commit('OPEN_LOADER')
-      const response = await this.getSingersOfMaster()
-      this.list = response.data
-        .sort((itemA, itemB) => {
-          if (itemA.details.name === '') return 1
-          if (itemB.details.name === '') return -1
-          if (itemA.details.name === itemB.details.name) return 0
-          return itemA.details.name > itemB.details.name ? 1 : -1
-        })
-      this.$store.commit('CLOSE_LOADER')
-    },
-
-    async getSingersOfMaster () {
-      const response = await ApiCallerFactory
+      const { data } = await await ApiCallerFactory
         .createCallerInstance()
         .getWithSignature(`/v3/accounts/${this.masterPubKey}/signers`)
-      return response
+      this.list = data
     }
   }
 }

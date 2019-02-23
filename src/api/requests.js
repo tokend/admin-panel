@@ -1,16 +1,7 @@
 import config from '@/config'
-import { KYC_TASKS_TO_REMOVE_ON_REJECT } from '../constants'
-import store from '../store'
-import { deriveRequestIdFromCreateKycRequestResult } from '../utils/parseXdrTxResponse'
 import { Sdk } from '@/sdk'
 
-import {
-  REQUEST_TYPES,
-  REVIEW_STATES,
-  KYC_TASKS_TO_REMOVE_ON_APPROVE,
-  KYC_TASKS_TO_ADD_ON_APPROVE,
-  KYC_TASKS_TO_ADD_ON_REJECT
-} from '@/constants'
+import { REQUEST_TYPES } from '@/constants'
 
 import { CreatePreIssuanceRequest } from './responseHandlers/requests/CreatePreIssuanceRequest'
 import { TokenRequest } from './responseHandlers/requests/TokenRequest'
@@ -18,14 +9,25 @@ import { IssuanceCreateRequest } from './responseHandlers/requests/IssuanceCreat
 import { clearObject } from '@/utils/clearObject'
 
 export const requests = {
-  _review ({ action, reason = '' }, ...requests) {
+  _review ({ action, reason = '', requestType = '' }, ...requests) {
     const operations = requests.map(function (item) {
-      return Sdk.base.ReviewRequestBuilder.reviewRequest({
+      const opts = {
         requestID: item.id,
         requestHash: item.hash,
-        requestType: item.details.requestTypeI,
+        requestType: requestType || item.details.requestTypeI,
+        externalDetails: {
+          tasksToAdd: 0,
+          tasksToRemove: item.pendingTasks || item.pending_tasks,
+          externalDetails: ''
+        },
         action,
         reason
+      }
+      return Sdk.base.ReviewRequestBuilder.reviewRequest({
+        ...opts,
+
+        // TODO: remove. added due to a bug in the @tokend/js-sdk
+        requestDetails: opts
       })
     })
     return Sdk.horizon.transactions.submitOperations(...operations)
@@ -33,57 +35,56 @@ export const requests = {
 
   _reviewWithdraw ({ action, reason = '' }, ...requests) {
     const operations = requests.map(function (item) {
-      return Sdk.base.ReviewRequestBuilder.reviewTwoStepWithdrawRequest({
+      const opts = {
         requestID: item.id,
         requestHash: item.hash,
         requestType: item.request_type_i || item.requestTypeI,
+        externalDetails: {
+          tasksToAdd: 0,
+          tasksToRemove: item.pendingTasks || item.pending_tasks,
+          externalDetails: ''
+        },
         action,
-        reason,
-        creatorDetails: {}
+        reason
+      }
+      return Sdk.base.ReviewRequestBuilder.reviewWithdrawRequest({
+        ...opts,
+
+        // TODO: remove. added due to a bug in the @tokend/js-sdk
+        requestDetails: opts
       })
     })
     return Sdk.horizon.transactions.submitOperations(...operations)
   },
 
-  async _reviewKyc ({ action, reason }, request, tasks) {
-    const opts = {
-      requestID: request.id,
-      requestHash: request.hash,
-      requestType: request.request_type_i || request.requestTypeI,
-      action,
-      reason,
-      reviewDetails: {
-        tasksToAdd: tasks.add,
-        tasksToRemove: tasks.remove,
-        externalDetails: {}
-      }
-    }
-    const operation = Sdk.base.ReviewRequestBuilder.reviewUpdateKYCRequest({
-      ...opts,
-
-      // TODO: remove. added due to a bug in the @tokend/js-sdk
-      requestDetails: opts
-    })
-    return (await Sdk.horizon.transactions.submitOperations(operation))
-  },
-
   async approve (...requests) {
     const action = Sdk.xdr.ReviewRequestOpAction.approve().value
-    return (await this._review({ action }, ...requests)).data
+    const { data } = await this._review({ action }, ...requests)
+    return data
   },
 
   async approveWithdraw (...requests) {
     const action = Sdk.xdr.ReviewRequestOpAction.approve().value
-    return (await this._reviewWithdraw({ action }, ...requests)).data
+    const { data } = await this._reviewWithdraw({ action }, ...requests)
+    return data
   },
 
   async approveKyc (request, opts = {}) {
     const action = Sdk.xdr.ReviewRequestOpAction.approve().value
+    const requestType = REQUEST_TYPES.changeRole
 
-    return (await this._reviewKyc({ action, reason: '' }, request, {
-      remove: opts.tasksToRemove || KYC_TASKS_TO_REMOVE_ON_APPROVE,
-      add: opts.tasksToAdd || KYC_TASKS_TO_ADD_ON_APPROVE
-    })).data
+    const { data } = await this._review(
+      { action, requestType },
+      {
+        ...request,
+        reviewDetails: {
+          tasksToAdd: opts.tasksToAdd || 0,
+          tasksToRemove: opts.tasksToRemove || opts.pendingTasks
+        }
+      }
+    )
+
+    return data
   },
 
   /**
@@ -156,82 +157,6 @@ export const requests = {
     return (await this._reviewWithdraw({ action, reason }, ...requests)).data
   },
 
-  async rejectKyc (request, reason) {
-    const action = Sdk.xdr.ReviewRequestOpAction.reject().value
-
-    return (await this._reviewKyc({ action, reason },
-      request, {
-        remove: KYC_TASKS_TO_REMOVE_ON_REJECT,
-        add: KYC_TASKS_TO_ADD_ON_REJECT
-      })).data
-  },
-
-  /**
-   * @param {object} opts
-   * @param {string} opts.accountToUpdateKyc
-   * @param {string} opts.accountTypeToSet
-   * @param {string} opts.blobId
-   * @param {string} opts.rejectReason
-   * @param {string} opts.requestToApprove
-   */
-  async resetToUnverified (opts) {
-    const operations = [
-      Sdk.base.CreateUpdateKYCRequestBuilder.createUpdateKYCRequest({
-        requestID: '0',
-        accountToUpdateKYC: opts.accountToUpdateKyc,
-        accountTypeToSet: Sdk.xdr.AccountType.notVerified().value,
-        kycLevelToSet: 0,
-        kycData: { blob_id: opts.blobId },
-        allTasks: 0
-      }),
-      Sdk.base.CreateUpdateKYCRequestBuilder.createUpdateKYCRequest({
-        requestID: '0',
-        accountToUpdateKYC: opts.accountToUpdateKyc,
-        accountTypeToSet: opts.accountTypeToSet,
-        kycLevelToSet: 0,
-        kycData: { blob_id: opts.blobId }
-      })
-    ]
-    if (opts.requestToApprove) {
-      operations.unshift(
-        Sdk.base.ReviewRequestBuilder.reviewUpdateKYCRequest({
-          requestID: opts.requestToApprove.id,
-          requestHash: opts.requestToApprove.hash,
-          requestType: opts.requestToApprove.request_type_i || opts.requestToApprove.requestTypeI,
-          action: Sdk.xdr.ReviewRequestOpAction.approve().value,
-          reason: '',
-          tasksToAdd: KYC_TASKS_TO_ADD_ON_APPROVE,
-          tasksToRemove: opts.requestToApprove.pendingTasks,
-          creatorDetails: {}
-        })
-      )
-    }
-    const txResponse = await Sdk.horizon.transactions.submitOperations(...operations)
-
-    const requestId = deriveRequestIdFromCreateKycRequestResult(txResponse, operations.length - 1)
-    await this.rejectKyc(await this.get(requestId), opts.rejectReason)
-  },
-
-  async reviewMultipleKycRequests (requestsDetails) {
-    const rejectAction = Sdk.xdr.ReviewRequestOpAction.reject().value
-    const approveAction = Sdk.xdr.ReviewRequestOpAction.approve().value
-
-    const operations = requestsDetails.map(detail =>
-        Sdk.base.ReviewRequestBuilder.reviewUpdateKYCRequest({
-          requestID: detail.request.id,
-          requestHash: detail.request.hash,
-          requestType: detail.request.request_type_i || detail.request.requestTypeI,
-          action: detail.state === REVIEW_STATES.approved ? approveAction : rejectAction,
-          reason: detail.reason || '',
-          tasksToAdd: detail.state === REVIEW_STATES.approved ? detail.tasksToAdd : KYC_TASKS_TO_ADD_ON_REJECT,
-          tasksToRemove: detail.state === REVIEW_STATES.approved ? KYC_TASKS_TO_REMOVE_ON_APPROVE : KYC_TASKS_TO_REMOVE_ON_REJECT,
-          creatorDetails: {}
-        }
-      ))
-    const response = await Sdk.horizon.transactions.submitOperations(...operations)
-    return response.data
-  },
-
   async get (id) {
     const response = await Sdk.horizon.request.get(id)
     return response.data
@@ -244,7 +169,6 @@ export const requests = {
     return (await Sdk.horizon.request.getAllForIssuances({
       order: 'desc',
       reviewer: config.MASTER_ACCOUNT,
-      limit: store.getters.pageLimit,
       ...filters
     }))
   },
@@ -256,7 +180,6 @@ export const requests = {
     if (requestor) filters.requestor = requestor
     return (await Sdk.horizon.request.getAllForWithdrawals({
       order: 'desc',
-      limit: store.getters.pageLimit,
       ...filters
     }))
   },
@@ -267,7 +190,6 @@ export const requests = {
     if (requestor) filters.requestor = requestor
     return (await Sdk.horizon.request.getAllForSales({
       order: 'desc',
-      limit: store.getters.pageLimit,
       ...filters
     }))
   },
@@ -279,8 +201,7 @@ export const requests = {
     if (state && state.state) filters.state = state.state
     const response = await Sdk.horizon.request.getAllForUpdateKyc({
       ...filters,
-      order: 'desc',
-      limit: store.getters.pageLimit
+      order: 'desc'
     })
     return response
   },
@@ -303,7 +224,6 @@ export const requests = {
     if (requestor) filters.requestor = requestor
     return (await Sdk.horizon.request.getAllForLimitsUpdates({
       order: 'desc',
-      limit: store.getters.pageLimit,
       ...filters
     }))
   },

@@ -30,15 +30,9 @@
 
     <template v-else>
       <div class="app__loading-wrp">
-        <template v-if="isHorizonConnectionError">
+        <template v-if="isConfigGatheringFailed">
           <p class="app__loading-error-txt">
-            Cannot connect to Horizon
-          </p>
-        </template>
-
-        <template v-else-if="isRolesRetrievalError">
-          <p class="app__loading-error-txt">
-            Cannot retrieve roles
+            Initializing failed
           </p>
         </template>
 
@@ -64,7 +58,7 @@ import { Sdk } from '@/sdk'
 import { Wallet } from '@tokend/js-sdk'
 
 import './scss/app.scss'
-import { ApiWrp } from '@/api-wrp'
+import { ApiCallerFactory } from '@/api-caller-factory'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 function isIE () {
@@ -103,8 +97,7 @@ export default {
       sessionKeeperInterval: null,
       isGoodBrowser: true,
       isAppInitialized: false,
-      isRolesRetrievalError: false,
-      isHorizonConnectionError: false
+      isConfigGatheringFailed: false
     }
   },
 
@@ -117,7 +110,7 @@ export default {
   methods: {
     async initApp () {
       this.subscribeToStoreMutations()
-      await this.loadHorizonConfigs()
+      await this.loadConfigs()
 
       await Sdk.init(config.HORIZON_SERVER)
       if (this.$store.getters.GET_USER.keys.seed) {
@@ -128,53 +121,55 @@ export default {
           this.$store.getters.GET_USER.wallet.id
         )
         Sdk.sdk.useWallet(wallet)
-        ApiWrp.setDefaultWallet(wallet)
+        ApiCallerFactory.setDefaultWallet(wallet)
         this.$store.dispatch('LOG_IN')
       }
 
-      if (!this.isHorizonConnectionError && !this.isRolesRetrievalError) {
+      if (!this.isConfigGatheringFailed) {
         this.isAppInitialized = true
       }
     },
 
+    async loadConfigs () {
+      try {
+        await this.loadHorizonConfigs()
+        await this.loadAccountRolesConfigs()
+      } catch (error) {
+        this.isConfigLoadingFailed = true
+        ErrorHandler.process(error)
+      }
+    },
+
     async loadHorizonConfigs () {
-      try {
-        const { body: horizonConfig } =
-          await this.$http.get(config.HORIZON_SERVER)
+      const { body: horizonConfig } =
+        await this.$http.get(config.HORIZON_SERVER)
 
-        config.NETWORK_PASSPHRASE = horizonConfig.network_passphrase
-        config.MASTER_ACCOUNT = horizonConfig.master_account_id ||
-          horizonConfig.admin_account_id
+      config.NETWORK_PASSPHRASE = horizonConfig.network_passphrase
+      config.MASTER_ACCOUNT = horizonConfig.master_account_id ||
+        horizonConfig.admin_account_id
 
-        ApiWrp.setDefaultHorizonUrl(config.HORIZON_SERVER)
-        ApiWrp.setDefaultNetworkPassphrase(config.NETWORK_PASSPHRASE)
-      } catch (error) {
-        this.isHorizonConnectionError = true
-        ErrorHandler.processWithoutFeedback(error)
-      }
+      ApiCallerFactory.setDefaultHorizonUrl(config.HORIZON_SERVER)
+      ApiCallerFactory.setDefaultNetworkPassphrase(config.NETWORK_PASSPHRASE)
+    },
 
-      try {
-        const { body: roles } =
-          await this.$http.get(`${config.HORIZON_SERVER}/key_value`)
-        config.ACCOUNT_ROLES.notVerified = roles
-          .find(item => item.key === 'account_role:unverified')
-          .uint32_value
-        config.ACCOUNT_ROLES.general = roles
-          .find(item => item.key === 'account_role:general')
-          .uint32_value
-        config.ACCOUNT_ROLES.corporate = roles
-          .find(item => item.key === 'account_role:corporate')
-          .uint32_value
-        config.ACCOUNT_ROLES.blocked = roles
-          .find(item => item.key === 'account_role:blocked')
-          .uint32_value
-        config.SIGNER_ROLES.default = roles
-          .find(item => item.key === 'signer_role:default')
-          .uint32_value
-      } catch (error) {
-        this.isRolesRetrievalError = true
-        ErrorHandler.processWithoutFeedback(error)
-      }
+    async loadAccountRolesConfigs () {
+      const { body: roles } =
+        await this.$http.get(`${config.HORIZON_SERVER}/key_value`)
+      config.ACCOUNT_ROLES.notVerified = roles
+        .find(item => item.key === 'account_role:unverified')
+        .uint32_value
+      config.ACCOUNT_ROLES.general = roles
+        .find(item => item.key === 'account_role:general')
+        .uint32_value
+      config.ACCOUNT_ROLES.corporate = roles
+        .find(item => item.key === 'account_role:corporate')
+        .uint32_value
+      config.ACCOUNT_ROLES.blocked = roles
+        .find(item => item.key === 'account_role:blocked')
+        .uint32_value
+      config.SIGNER_ROLES.default = roles
+        .find(item => item.key === 'signer_role:default')
+        .uint32_value
     },
 
     subscribeToStoreMutations () {
@@ -239,13 +234,13 @@ export default {
   font-size: 7.2rem;
   color: $color-text-secondary;
   font-weight: bold;
+  text-shadow: .1rem .1rem 0 $color-shadow-secondary-text;
 }
 
 .app__loading-error-txt {
-  text-align: center;
-  font-size: 7.2rem;
-  color: $color-danger;
-  font-weight: bold;
+  @extend .app__loading-txt;
+  color: $color-text-init-loading-failed;
+  text-shadow: .1rem .1rem 0 $color-shadow-init-loading-failed;
 }
 
 // ***** Legacy *****

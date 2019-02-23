@@ -173,7 +173,6 @@ export default {
     async getList () {
       this.isLoading = true
       try {
-        console.log(this.filters)
         this.list = await ApiCallerFactory
           .createCallerInstance()
           .getWithSignature('/identities', {
@@ -195,6 +194,7 @@ export default {
       try {
         const chunk = await this.list.fetchNext()
         this.list._data = this.list.data.concat(chunk.data)
+        this.list.fetchNext = chunk.fetchNext
         this.isListEnded = oldLength === this.list.data.length
       } catch (error) {
         ErrorHandler.process(error)

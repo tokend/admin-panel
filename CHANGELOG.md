@@ -9,7 +9,7 @@ for further information about branching and tagging conventions.
 
 ## [Unreleased]
 ### Added
-- ApiWrp
+- ApiCallerFactory
 - More descriptive errors if cannot connect to horizon on startup
 - Handle 400 bad signature
 - rolIdToString and lowerCase filters
@@ -28,6 +28,8 @@ for further information about branching and tagging conventions.
 - remove tokend-js-sdk usage
 - unused KycReviewManager
 - unused env files
+- user 'block' button
+- 'reset to unverified' button
 
 ### Fix
 - keyServer use keyServerCaller from new-js-sdk
@@ -38,6 +40,7 @@ for further information about branching and tagging conventions.
 - email fetching by EmailGetter component
 - app__form-actions positioning
 - user list displyaing
+- kyc retrieval, approval
 
 ## [1.2.0-rc.6] - 2019-02-20
 ### Added

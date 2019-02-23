@@ -193,7 +193,9 @@ export default {
     },
 
     async initSignerRolesPicker () {
-      const signerRoles = await this.getSignerRoles()
+      const signerRoles = await ApiCallerFactory
+        .createStubbornCallerInstance()
+        .stubbornGet('/v3/signer_roles')
       this.signerRoles = signerRoles.data
         .filter(item => {
           return (item.details || {}).adminRole || +item.id === +MASTER_ROLE_ID
@@ -214,27 +216,6 @@ export default {
           }
         })
       this.form.signerRoleId = this.form.signerRoleId || this.signerRoles[0].id
-    },
-
-    async getSignerRoles () {
-      const pageLimit = 100
-      const list = await ApiCallerFactory
-        .createCallerInstance()
-        .get('/v3/signer_roles', {
-          page: { limit: pageLimit }
-        })
-
-      let isListFullyLoaded = list.data.length < pageLimit
-      while (!isListFullyLoaded) {
-        const newChunk = await list.fetchNext()
-        const oldLength = list.data.length
-        list._data = list.data.concat(newChunk)
-        if (oldLength === list.data.length) {
-          isListFullyLoaded = true
-        }
-      }
-
-      return list
     },
 
     async loadSigner () {
