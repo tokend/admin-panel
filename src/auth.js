@@ -5,7 +5,7 @@ import StellarWallet from 'tokend-wallet-js-sdk'
 import { Sdk } from '@/sdk'
 import { Wallet } from '@tokend/js-sdk'
 import config from '@/config'
-import { ApiWrp } from './api-wrp'
+import { ApiCallerFactory } from '@/api-caller-factory'
 
 const server = {
   'trusted': true,
@@ -112,7 +112,7 @@ export default {
       user.keys.accountId
     )
     Sdk.sdk.useWallet(wallet)
-    ApiWrp.setDefaultWallet(wallet)
+    ApiCallerFactory.setDefaultWallet(wallet)
 
     store.commit('UPDATE_USER', user)
     store.commit('UPDATE_AUTH', auth)
@@ -132,7 +132,7 @@ export default {
       credentials.getWalletId()
     )
     Sdk.sdk.useWallet(wallet)
-    ApiWrp.setDefaultWallet(wallet)
+    ApiCallerFactory.setDefaultWallet(wallet)
     user.wallet = {
       id: credentials.getWalletId()
     }

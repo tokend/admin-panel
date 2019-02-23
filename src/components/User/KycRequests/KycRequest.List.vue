@@ -125,7 +125,7 @@ import { snakeToCamelCase } from '@/utils/un-camel-case'
 import { REQUEST_STATES, KYC_REQUEST_STATES } from '@/constants'
 
 import config from '@/config'
-import { ApiWrp } from '@/api-wrp'
+import { ApiCallerFactory } from '@/api-caller-factory'
 import { clearObject } from '@/utils/clearObject'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
@@ -191,17 +191,16 @@ export default {
         if (this.filters.address) {
           address = this.filters.address
         }
-        this.list = await ApiWrp.createCallerInstance().getWithSignature(
-          '/v3/change_role_requests',
-          {
+        this.list = await ApiCallerFactory
+          .createCallerInstance()
+          .getWithSignature('/v3/change_role_requests', {
             filter: clearObject({
               state: KYC_REQUEST_STATES[this.filters.state].state,
               requestor: address,
               'request_details.account_role_to_set': this.filters.roleToSet
             }),
             include: ['request_details.account']
-          }
-        )
+          })
         this.isListEnded = !(this.list.data || []).length
       } catch (error) {
         ErrorHandler.process(error)

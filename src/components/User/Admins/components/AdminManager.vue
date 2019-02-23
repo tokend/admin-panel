@@ -114,7 +114,7 @@ import SelectField from '@comcom/fields/SelectField'
 
 import { confirmAction } from '@/js/modals/confirmation_message'
 import { Sdk } from '@/sdk'
-import { ApiWrp } from '@/api-wrp'
+import { ApiCallerFactory } from '@/api-caller-factory'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 const MASTER_ROLE_ID = 1
@@ -186,7 +186,8 @@ export default {
 
   methods: {
     async getSignerByAccountId (accountId) {
-      const { data } = await ApiWrp.createCallerInstance()
+      const { data } = await ApiCallerFactory
+        .createCallerInstance()
         .getWithSignature(`/v3/accounts/${this.masterPubKey}/signers`)
       return (data || []).find(item => item.id === accountId)
     },
@@ -217,7 +218,8 @@ export default {
 
     async getSignerRoles () {
       const pageLimit = 100
-      const list = await ApiWrp.createCallerInstance()
+      const list = await ApiCallerFactory
+        .createCallerInstance()
         .get('/v3/signer_roles', {
           page: { limit: pageLimit }
         })

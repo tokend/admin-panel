@@ -18,7 +18,7 @@ export function cropAddress (value) {
   return `${value.slice(0, 4)}…${value.slice(-4)}`
 }
 
-export function roleIdToString (roleId, postProcessor) {
+export function roleIdToString (roleId) {
   return {
     [config.ACCOUNT_ROLES.notVerified]: 'Unverified',
     [config.ACCOUNT_ROLES.general]: 'Individual',

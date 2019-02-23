@@ -127,7 +127,7 @@ import { AccountStateGetter } from '@comcom/getters'
 import UserView from '../Users.Show'
 import _ from 'lodash'
 import 'mdi-vue/DownloadIcon'
-import { ApiWrp } from '@/api-wrp'
+import { ApiCallerFactory } from '@/api-caller-factory'
 import config from '@/config'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
@@ -174,7 +174,8 @@ export default {
       this.isLoading = true
       try {
         console.log(this.filters)
-        this.list = await ApiWrp.createCallerInstance()
+        this.list = await ApiCallerFactory
+          .createCallerInstance()
           .getWithSignature('/identities', {
             filter: clearObject({
               email: this.filters.email,

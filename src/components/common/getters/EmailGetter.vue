@@ -29,7 +29,7 @@
 import { Sdk } from '@/sdk'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import config from '@/config'
-import { ApiWrp } from '@/api-wrp'
+import { ApiCallerFactory } from '@/api-caller-factory'
 
 export default {
   props: {
@@ -74,7 +74,8 @@ export default {
     async loadEmail () {
       try {
         const accountId = await this.getAccountId()
-        const { data } = await ApiWrp.createCallerInstance()
+        const { data } = await ApiCallerFactory
+          .createCallerInstance()
           .getWithSignature('/identities', { filter: { address: accountId }})
         this.email = ((data || [])[0] || {}).email || this.email
       } catch (error) {

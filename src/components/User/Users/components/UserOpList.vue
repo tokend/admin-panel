@@ -97,7 +97,7 @@ export default {
           this.list.next = response.next
           return
         }
-        if (response.records.length < this.$store.getters.pageLimit) {
+        if (response.records.length < 10) {
           this.isListEnded = true
         }
       }).catch((err) => {

@@ -88,7 +88,7 @@
 import Vue from 'vue'
 import { mapGetters } from 'vuex'
 import { getters } from '@/store/types'
-import { ApiWrp } from '@/api-wrp'
+import { ApiCallerFactory } from '@/api-caller-factory'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
@@ -131,7 +131,8 @@ export default {
 
     async getAllSignerRoles () {
       const pageLimit = 100
-      const list = await ApiWrp.createCallerInstance()
+      const list = await ApiCallerFactory
+        .createCallerInstance()
         .get('/v3/signer_roles', {
           page: { limit: pageLimit }
         })
@@ -163,7 +164,8 @@ export default {
     },
 
     async getSingersOfMaster () {
-      const response = await ApiWrp.createCallerInstance()
+      const response = await ApiCallerFactory
+        .createCallerInstance()
         .getWithSignature(`/v3/accounts/${this.masterPubKey}/signers`)
       return response
     }

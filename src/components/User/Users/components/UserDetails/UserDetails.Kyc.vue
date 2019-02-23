@@ -143,6 +143,7 @@ import { fromKycTemplate } from '../../../../../utils/kyc-tempater'
 import deepCamelCase from 'camelcase-keys-deep'
 import config from '@/config'
 import { Sdk } from '@/sdk'
+import { ErrorHandler } from '@/utils/ErrorHandler'
 
 const ID_DOCUMENTS_VERBOSE = {
   passport: 'Passport',
@@ -180,12 +181,12 @@ export default {
       this.isFailed = false
 
       try {
-        const response = await Sdk.api.blobs.get(this.blobId, this.user.id)
+        const response = await Sdk.api.blobs.get(this.blobId, this.user.address)
         const kycFormResponse = response.data
         this.kyc = deepCamelCase(fromKycTemplate(JSON.parse(kycFormResponse.value)))
         this.isLoaded = true
       } catch (error) {
-        console.error(error)
+        ErrorHandler.process(error)
         this.isFailed = true
       }
     }
@@ -219,7 +220,7 @@ export default {
     width: 100%;
 
     &:first-child {
-      margin-right: 2rem;
+      margin-bottom: 2rem;
     }
   }
 

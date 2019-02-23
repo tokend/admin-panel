@@ -175,7 +175,7 @@ export default {
             return
           }
 
-          if (response.data.length < this.$store.getters.pageLimit) {
+          if (response.data.length < 10) {
             this.pageableLoadCompleted = true
           }
 

@@ -5,7 +5,7 @@ let defaultHorizonUrl
 let defaultWallet
 let defaultNetworkPassphrase
 
-export class ApiWrp {
+export class ApiCallerFactory {
   /**
    * Sets default horizon url to be used on creating new caller instances
    * @param {string} horizonUrl
@@ -20,7 +20,7 @@ export class ApiWrp {
    */
   static setDefaultWallet (wallet) {
     if (!wallet instanceof Wallet) {
-      throw new Error('ApiWrp.setDefaultWallet(): wallet should be instance of Wallet')
+      throw new Error('ApiCallerFactory.setDefaultWallet(): wallet should be instance of Wallet')
     }
     defaultWallet = wallet
   }
@@ -53,26 +53,37 @@ export class ApiWrp {
    * @param {Object} [opts.networkPassphrase]
    */
   static createCallerInstance (opts = {}) {
-    if (!opts.horizonUrl && !ApiWrp.defaultHorizonUrl) {
-      throw new Error('ApiWrp.createCallerInstance(): neither opts.horizonUrl nor ApiWrp.defaultHorizonUrl provided')
+    const callerInstance = ApiCallerFactory.createPublicCallerInstance(opts)
+
+    if (!opts.wallet && !ApiCallerFactory.defaultWallet) {
+      throw new Error('ApiCallerFactory.createCallerInstance(): neither opts.wallet nor ApiCallerFactory.defaultWallet provided')
     }
 
-    const horizonUrl = opts.horizonUrl || ApiWrp.defaultHorizonUrl
-    const callerInstance = ApiCaller.getInstance(horizonUrl)
-
-    if (!opts.wallet && !ApiWrp.defaultWallet) {
-      throw new Error('ApiWrp.createCallerInstance(): neither opts.wallet nor ApiWrp.defaultWallet provided')
-    }
-
-    const wallet = opts.wallet || ApiWrp.defaultWallet
+    const wallet = opts.wallet || ApiCallerFactory.defaultWallet
     callerInstance.useWallet(wallet)
 
-    if (!opts.networkPassphrase && !ApiWrp.defaultNetworkPassphrase) {
-      throw new Error('ApiWrp.createCallerInstance(): neither opts.networkPassphrase nor ApiWrp.defaultNetworkPassphrase provided')
+    if (!opts.networkPassphrase && !ApiCallerFactory.defaultNetworkPassphrase) {
+      throw new Error('ApiCallerFactory.createCallerInstance(): neither opts.networkPassphrase nor ApiCallerFactory.defaultNetworkPassphrase provided')
     }
 
-    const networkPassphrase = opts.networkPassphrase || ApiWrp.defaultNetworkPassphrase
+    const networkPassphrase = opts.networkPassphrase || ApiCallerFactory.defaultNetworkPassphrase
     callerInstance.usePassphrase(networkPassphrase)
+
+    return callerInstance
+  }
+
+  /**
+   * Creates a new public caller instance (requires no keypair and passphrase)
+   * @param {Object} [opts]
+   * @param {Object} [opts.horizonUrl]
+   */
+  static createPublicCallerInstance (opts = {}) {
+    if (!opts.horizonUrl && !ApiCallerFactory.defaultHorizonUrl) {
+      throw new Error('ApiCallerFactory.createCallerInstance(): neither opts.horizonUrl nor ApiCallerFactory.defaultHorizonUrl provided')
+    }
+
+    const horizonUrl = opts.horizonUrl || ApiCallerFactory.defaultHorizonUrl
+    const callerInstance = ApiCaller.getInstance(horizonUrl)
 
     return callerInstance
   }
