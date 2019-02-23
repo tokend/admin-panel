@@ -1,22 +1,31 @@
 <template>
   <div class="users-show">
-    <button class="users-show__back-btn" @click="back">
+    <button
+      class="users-show__back-btn"
+      @click="back"
+    >
       <span class="users-show__back-btn-inner">
-        <mdi-chevron-left-icon/>
+        <mdi-chevron-left-icon />
       </span>
       Back
     </button>
     <template v-if="view.mode === VIEW_MODES_VERBOSE.user">
       <div class="users-show__details-wrp">
-        <user-details :id="id"/>
+        <user-details :id="id" />
       </div>
 
       <div class="users-show__list-wrp">
-        <user-op-list :id="id" @op-select="toggleViewMode"/>
+        <user-op-list
+          :id="id"
+          @op-select="toggleViewMode"
+        />
       </div>
     </template>
     <template v-if="view.mode === VIEW_MODES_VERBOSE.operation">
-      <op-details :operation="view.operation" :user-id="id"/>
+      <op-details
+        :operation="view.operation"
+        :user-id="id"
+      />
     </template>
   </div>
 </template>
@@ -41,7 +50,6 @@ export default {
   },
 
   props: ['id'],
-  inject: ['kycRequestsList'],
 
   data: _ => ({
     view: {
@@ -64,7 +72,6 @@ export default {
     back () {
       if (this.view.mode === VIEW_MODES_VERBOSE.user) {
         this.$emit('back')
-        this.kycRequestsList.updateAsk = true
         return
       }
       this.view.mode = VIEW_MODES_VERBOSE.user
@@ -91,7 +98,7 @@ export default {
   height: $dimension;
   margin-right: 10px;
   position: relative;
-  transition: .2s;
+  transition: 0.2s;
   width: $dimension;
 
   &:hover {

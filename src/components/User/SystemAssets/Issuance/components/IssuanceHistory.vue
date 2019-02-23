@@ -2,11 +2,18 @@
   <div class="issuance-rl">
     <div class="issuance-rl__filters-wrp">
       <div class="issuance-rl__filters">
-        <select-field class="issuance-rl__filter app-list-filters__field"
-                      label="Asset"
-                      v-model="filters.asset"
+        <select-field
+          class="issuance-rl__filter app-list-filters__field"
+          label="Asset"
+          v-model="filters.asset"
         >
-          <option v-for="asset in assets" :value="asset">{{ asset }}</option>
+          <option
+            v-for="asset in assets"
+            :value="asset"
+            :key="asset"
+          >
+            {{ asset }}
+          </option>
         </select-field>
       </div>
     </div>
@@ -18,52 +25,68 @@
             <span class="app-list__cell issuance-rl__id-max-width">
               ID
             </span>
-            <span class="app-list__cell">
+            <span class="app-list__cell app-list__cell--right">
               Value
             </span>
-            <span class="app-list__cell">
+            <span class="app-list__cell app-list__cell--right">
               Requestor
             </span>
-            <span class="app-list__cell">
+            <span class="app-list__cell app-list__cell--right">
               Receiver
             </span>
-            <span class="app-list__cell">
+            <span class="app-list__cell app-list__cell--right">
               Date
             </span>
 
           </div>
-          <li v-for="item in list.data" :key="item.id" class="issuance-rl__li">
-            <span class="app-list__cell issuance-rl__id-max-width"
-                  :title="item.id">
-              {{item.id}}
+          <li
+            v-for="item in list.data"
+            :key="item.id"
+            class="issuance-rl__li"
+          >
+            <span
+              class="app-list__cell issuance-rl__id-max-width"
+              :title="item.id"
+            >
+              {{ item.id }}
             </span>
 
-            <span class="app-list__cell app-list__cell--important"
-                  :title="`${localize(item.details.issuanceCreate.amount)} ${item.details.issuanceCreate.asset}`">
-              {{localize(item.details.issuanceCreate.amount)}} {{item.details.issuanceCreate.asset}}
+            <span
+              class="app-list__cell app-list__cell--right app-list__cell--important"
+              :title="`${localize(item.details.issuanceCreate.amount)} ${item.details.issuanceCreate.asset}`"
+            >
+              {{ localize(item.details.issuanceCreate.amount) }} {{item.details.issuanceCreate.asset }}
             </span>
 
-            <span class="app-list__cell"
-                  :title="item.requestor">
-              {{item.requestor}}
+            <span
+              class="app-list__cell app-list__cell--right "
+              :title="item.requestor"
+            >
+              <email-getter :account-id="item.requestor" />
             </span>
 
-            <span class="app-list__cell"
-                  :title="item.details.issuanceCreate.receiver">
-              {{item.details.issuanceCreate.receiver}}
+            <span
+              class="app-list__cell app-list__cell--right "
+              :title="item.details.issuanceCreate.receiver"
+            >
+              <email-getter :balance-id="item.details.issuanceCreate.receiver" />
             </span>
 
-            <span class="app-list__cell app-list__cell--wrap"
-                  :title="item.createdAt">
-              {{item.createdAt | dateTime}}
+            <span
+              class="app-list__cell app-list__cell--right  app-list__cell--wrap"
+              :title="item.createdAt"
+            >
+              {{ item.createdAt | dateTime }}
             </span>
           </li>
         </ul>
 
         <div class="app__more-btn-wrp">
-          <button class="app__btn-secondary"
-                  v-if="!isNoMoreEntries && list.data"
-                  @click="onMoreButtonClick">
+          <button
+            class="app__btn-secondary"
+            v-if="!isNoMoreEntries && list.data"
+            @click="onMoreButtonClick"
+          >
             More
           </button>
         </div>
@@ -81,17 +104,19 @@
 </template>
 
 <script>
-  import IssuanceMixin from './issuance.mixin'
+import IssuanceMixin from './issuance.mixin'
+import { EmailGetter } from '@comcom/getters'
 
-  export default {
-    mixins: [IssuanceMixin]
-  }
+export default {
+  mixins: [IssuanceMixin],
+  components: { EmailGetter }
+}
 </script>
 
 <style scoped lang="scss">
-  @import "./issuance";
+@import "./issuance";
 
-  .issuance-rl__id--max-width {
-    max-width: 111px;
-  }
+.issuance-rl__id--max-width {
+  max-width: 111px;
+}
 </style>

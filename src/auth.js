@@ -5,6 +5,7 @@ import StellarWallet from 'tokend-wallet-js-sdk'
 import { Sdk } from '@/sdk'
 import { Wallet } from '@tokend/js-sdk'
 import config from '@/config'
+import { ApiCallerFactory } from '@/api-caller-factory'
 
 const server = {
   'trusted': true,
@@ -111,9 +112,8 @@ export default {
       user.keys.accountId
     )
     Sdk.sdk.useWallet(wallet)
-    const signerTypes = await this._getSignerTypes(user.keys.accountId)
+    ApiCallerFactory.setDefaultWallet(wallet)
 
-    Object.assign(user, signerTypes)
     store.commit('UPDATE_USER', user)
     store.commit('UPDATE_AUTH', auth)
   },
@@ -132,36 +132,12 @@ export default {
       credentials.getWalletId()
     )
     Sdk.sdk.useWallet(wallet)
+    ApiCallerFactory.setDefaultWallet(wallet)
     user.wallet = {
       id: credentials.getWalletId()
     }
 
-    const signerTypes = await this._getSignerTypes(user.keys.accountId)
-
-    Object.assign(user, signerTypes)
     store.commit('UPDATE_USER', user)
     store.commit('UPDATE_AUTH', auth)
-  },
-
-  async _getSignerTypes (accountId) {
-    const result = {}
-    let signer = {}
-    try {
-      const response = await Sdk.horizon.account.getSigner(accountId)
-      signer = response.data
-    } catch (error) {
-      console.error(error)
-      error.message = 'Cannot get signer types'
-      throw error
-    }
-
-    result.signerTypes = signer.signerTypes
-    result.signerTypes.forEach((val) => {
-      if (val.value === 2) result.admin = true
-      if (val.value === 4) result.accountCreator = true
-      if (val.value === 32) result.forfeitProvider = true
-    })
-
-    return result
   }
 }

@@ -1,5 +1,7 @@
 <template>
-  <span class="account-state-getter" v-if="accountState">{{ accountState }}</span>
+  <span class="account-state-getter" v-if="accountState">
+    {{ accountState }}
+  </span>
 </template>
 
 <script>

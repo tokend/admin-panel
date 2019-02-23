@@ -13,7 +13,7 @@
             <description-tab :sale-request="request.sale" />
           </tab>
 
-          <tab name="Syndicate user">
+          <tab name="Corporate user">
             <syndicate-tab :sale-request="request.sale" />
           </tab>
         </tabs>

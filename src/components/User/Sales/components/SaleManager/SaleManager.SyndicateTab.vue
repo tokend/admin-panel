@@ -1,36 +1,32 @@
 <template>
-  <div class="sale-manager-syndicate-tab">
+  <div class="sale-manager-corporate-tab">
     <template v-if="isLoaded">
-      <div class="sale-manager-syndicate-tab__details-wrp">
-        <label class="data-caption">Syndicate user details</label>
+      <div class="sale-manager-corporate-tab__details-wrp">
+        <label class="data-caption">Corporate user details</label>
         <ul class="key-value-list">
           <li>
             <span>Name</span>
-            <span>{{syndicate.name}}</span>
-          </li>
-          <li>
-            <span>Founded</span>
-            <date-formatter :date="syndicate.found_date" format="DD MMM YYYY" />
+            <span>{{corporate.name}}</span>
           </li>
           <li>
             <span>Headquarters</span>
-            <span>{{syndicate.headquarters}}</span>
+            <span>{{corporate.headquarters}}</span>
           </li>
           <li>
             <span>Homepage</span>
-            <span>{{syndicate.homepage}}</span>
+            <span>{{corporate.homepage}}</span>
           </li>
           <li>
             <span>Industry / Tags</span>
-            <span>{{syndicate.industry}}</span>
+            <span>{{corporate.industry}}</span>
           </li>
           <li>
             <span>Team size</span>
-            <span>{{syndicate.team_size}}</span>
+            <span>{{corporate.team_size}}</span>
           </li>
           <li>
             <span>Company</span>
-            <span>{{syndicate.company}}</span>
+            <span>{{corporate.company}}</span>
           </li>
         </ul>
       </div>
@@ -58,6 +54,7 @@ import SocialLinks from '@comcom/SocialLinks'
 import { BLOB_TYPES } from '../../../../../constants'
 
 import _get from 'lodash/get'
+import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   components: {
@@ -70,35 +67,34 @@ export default {
 
   data () {
     return {
-      syndicate: {},
+      corporate: {},
       isLoaded: false,
       isFailed: false
     }
   },
   created () {
-    this.getSyndicate({
+    this.getCorporate({
       ownerId: _get(this.sale, 'ownerId') ||
-               _get(this.saleRequest, 'requestor') ||
-               _get(this.user, 'id'),
+        _get(this.saleRequest, 'requestor') ||
+        _get(this.user, 'address'),
       blobId: this.blobId
     })
   },
 
   methods: {
-    async getSyndicate ({ ownerId: owner, blobId }) {
+    async getCorporate ({ ownerId: owner, blobId }) {
       try {
         const response = blobId
           ? await Sdk.api.blobs.get(blobId, owner)
           : await Sdk.api.blobs.getAll({
-            type: BLOB_TYPES.syndicateKyc | BLOB_TYPES.kycForm
+            type: BLOB_TYPES.corporateKyc | BLOB_TYPES.kycForm
           }, owner)
-        this.syndicate = JSON.parse(
+        this.corporate = JSON.parse(
           response.data.value || response.data[0].value
         )
         this.isLoaded = true
       } catch (error) {
-        console.error(error)
-        this.isFailed = true
+        ErrorHandler.processWithoutFeedback(error)
       }
     }
   }
@@ -106,7 +102,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.sale-manager-syndicate-tab__details-wrp {
+.sale-manager-corporate-tab__details-wrp {
   max-width: 48rem;
 }
 </style>

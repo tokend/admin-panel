@@ -1,37 +1,48 @@
 <template>
-    <div class="trrf">
-      <h2>
-        Reject {{assetRequest.code}} {{assetRequest.type === 'asset_create' ? 'create' : 'update'}} request
-      </h2>
+  <div class="trrf">
+    <h2>
+      Reject {{assetRequest.code}} {{assetRequest.type === 'asset_create' ? 'create' : 'update'}} request
+    </h2>
 
-      <form @submit.prevent="reject" id="trrf-form">
-        <div class="app__form-row">
-          <text-field label="Describe reject reason"
-            v-model="rejectReason"
-            :disabled="isPending"
-            rows="5"
-          />
-        </div>
-
-        <div class="app__form-row">
-          <tick-field label="Reject permanently"
-            v-model="isPermanentReject"
-            :disabled="isPending"
-          />
-        </div>
-      </form>
-
-      <div class="trrf__form-actions app__form-actions">
-        <button class="app__btn app__btn--danger"
-                form="trrf-form"
-                :disabled="isPending"
-        >Reject</button>
-        <button class="app__btn-secondary"
-                @click="$emit('close')"
-                :disabled="isPending"
-        >Cancel</button>
+    <form
+      @submit.prevent="reject"
+      id="trrf-form"
+    >
+      <div class="app__form-row">
+        <text-field
+          label="Describe reject reason"
+          v-model="rejectReason"
+          :disabled="isPending"
+          rows="5"
+        />
       </div>
+
+      <div class="app__form-row">
+        <tick-field
+          label="Reject permanently"
+          v-model="isPermanentReject"
+          :disabled="isPending"
+        />
+      </div>
+    </form>
+
+    <div class="trrf__form-actions app__form-actions">
+      <button
+        class="app__btn app__btn--danger"
+        form="trrf-form"
+        :disabled="isPending"
+      >
+        Reject
+      </button>
+      <button
+        class="app__btn-secondary"
+        @click="$emit('close')"
+        :disabled="isPending"
+      >
+        Cancel
+      </button>
     </div>
+  </div>
 </template>
 
 <script>

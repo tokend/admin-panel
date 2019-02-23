@@ -20,7 +20,7 @@ export const ACCOUNT_TYPES_VERBOSE = Object.freeze({
   [ACCOUNT_TYPES.notVerified]: 'Not verified',
 
   syndycate: 'Syndicate user',
-  [ACCOUNT_TYPES.syndicate]: 'Syndicate user',
+  [ACCOUNT_TYPES.corporate]: 'Syndicate user',
 
   exchange: 'Exchange',
   [ACCOUNT_TYPES.exchange]: 'Exchange',
@@ -31,9 +31,3 @@ export const ACCOUNT_TYPES_VERBOSE = Object.freeze({
   verified: 'Verified',
   [ACCOUNT_TYPES.verified]: 'Verified'
 })
-
-export default {
-  getAccountTypeLocalizer (id) {
-    return ACCOUNT_TYPES_VERBOSE[id + '']
-  }
-}

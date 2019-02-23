@@ -5,19 +5,14 @@
 
       <div class="request-list__filters-wrp">
         <div class="app-list-filters">
-          <input-field
-            class="app-list-filters__field"
-            v-model.trim="filters.email"
-            label="Email"
-          />
           <select-field
             class="issuance-rl__filter app-list-filters__field"
-            label="User type"
-            v-model="filters.type"
+            label="Role to set"
+            v-model="filters.roleToSet"
           >
             <option :value="''"></option>
-            <option :value="ACCOUNT_TYPES.general">General</option>
-            <option :value="ACCOUNT_TYPES.syndicate">Сorporate</option>
+            <option :value="ACCOUNT_ROLES.general">General</option>
+            <option :value="ACCOUNT_ROLES.corporate">Сorporate</option>
           </select-field>
           <select-field
             class="app-list-filters__field"
@@ -47,45 +42,29 @@
             <div class="app-list__header">
               <span class="app-list__cell">Email</span>
               <span class="app-list__cell app-list__cell--right">State</span>
-              <span class="app-list__cell app-list__cell--right">Account type</span>
               <span class="app-list__cell app-list__cell--right">Last updated</span>
-              <span class="app-list__cell app-list__cell--right">Type</span>
+              <span class="app-list__cell app-list__cell--right">Role to set</span>
             </div>
             <button
-              class="app-list__li" v-for="item in list.data"
+              class="app-list__li"
+              v-for="item in list.data"
               :key="item.id"
-              @click="toggleViewMode(
-                item.details[
-                  snakeToCamelCase(item.details.requestType)
-                ].accountToUpdateKyc
-              )"
+              @click="toggleViewMode(item.requestor.id)"
             >
               <email-getter
                 class="app-list__cell app-list__cell--important"
-                :address="
-                  item.details[
-                    snakeToCamelCase(item.details.requestType)
-                  ].accountToUpdateKyc
-                "
+                :account-id="item.requestor.id"
                 is-titled
               />
               <span class="app-list__cell app-list__cell--right">
-                {{ item.requestState }}
-              </span>
-              <span class="app-list__cell app-list__cell--right">
-                {{ ACCOUNT_TYPES_VERBOSE[item.details[snakeToCamelCase(item.details.requestType)].accountTypeToSet.int] }}
+                {{ item.state }}
               </span>
               <span class="app-list__cell app-list__cell--right">
                 {{ formatDate(item.updatedAt) }}
               </span>
-              <kyc-type
-                class="app-list__cell app-list__cell--right"
-                :accountId="
-                  item.details[
-                    snakeToCamelCase(item.details.requestType)
-                  ].accountToUpdateKyc
-                "
-              />
+              <span class="app-list__cell app-list__cell--right">
+                {{ item | deriveRoleToSet }}
+              </span>
             </button>
           </div>
 
@@ -134,140 +113,139 @@
 </template>
 
 <script>
-  import { EmailGetter } from '@comcom/getters'
-  import { formatDate } from '@/utils/formatters'
-  import Vue from 'vue'
-  import api from '@/api'
-  import UserView from '../Users/Users.Show'
-  import KycType from './components/KycRequests.Type'
+import { EmailGetter } from '@comcom/getters'
+import { formatDate } from '@/utils/formatters'
+import Vue from 'vue'
+import UserView from '../Users/Users.Show'
 
-  import SelectField from '@comcom/fields/SelectField'
-  import InputField from '@comcom/fields/InputField'
-  import { snakeToCamelCase } from '@/utils/un-camel-case'
+import SelectField from '@comcom/fields/SelectField'
+import InputField from '@comcom/fields/InputField'
+import { snakeToCamelCase } from '@/utils/un-camel-case'
 
-  import {
-    REQUEST_STATES,
-    KYC_REQUEST_STATES,
-    ACCOUNT_TYPES,
-    ACCOUNT_TYPES_VERBOSE
-  } from '@/constants'
+import { REQUEST_STATES, KYC_REQUEST_STATES } from '@/constants'
 
-  const VIEW_MODES_VERBOSE = Object.freeze({
-    index: 'index',
-    user: 'user'
-  })
+import config from '@/config'
+import { ApiCallerFactory } from '@/api-caller-factory'
+import { clearObject } from '@/utils/clearObject'
+import { ErrorHandler } from '@/utils/ErrorHandler'
 
-  export default {
-    name: 'kyc-request-list',
-    components: { UserView, EmailGetter, SelectField, InputField, KycType },
-    provide () {
-      const kycRequestsList = {}
-      Object.defineProperty(kycRequestsList, 'updateAsk', {
-        enumerable: true,
-        get: () => false,
-        set: () => this.getList()
-      })
-      return { kycRequestsList }
-    },
-    data () {
+const VIEW_MODES_VERBOSE = Object.freeze({
+  index: 'index',
+  user: 'user'
+})
+
+export default {
+  name: 'kyc-request-list',
+  components: { UserView, EmailGetter, SelectField, InputField },
+  provide () {
+    const kycRequestsList = {}
+    Object.defineProperty(kycRequestsList, 'updateAsk', {
+      enumerable: true,
+      get: () => false,
+      set: () => this.loadList()
+    })
+    return { kycRequestsList }
+  },
+  data () {
+    return {
+      isLoading: false,
+      isListEnded: false,
+      list: {},
+      view: {
+        mode: VIEW_MODES_VERBOSE.index,
+        userId: null,
+        scrollPosition: 0
+      },
+      filters: {
+        state: 'pending',
+        address: '',
+        type: ''
+      },
+      VIEW_MODES_VERBOSE,
+      REQUEST_STATES,
+      KYC_REQUEST_STATES,
+      ACCOUNT_ROLES: config.ACCOUNT_ROLES
+    }
+  },
+
+  filters: {
+    deriveRoleToSet (item) {
       return {
-        ACCOUNT_TYPES,
-        isLoading: false,
-        isListEnded: false,
-        list: {},
-        view: {
-          mode: VIEW_MODES_VERBOSE.index,
-          userId: null,
-          scrollPosition: 0
-        },
-        filters: {
-          state: 'pending',
-          email: '',
-          address: '',
-          type: ''
-        },
-        VIEW_MODES_VERBOSE,
-        REQUEST_STATES,
-        KYC_REQUEST_STATES,
-        ACCOUNT_TYPES_VERBOSE
+        [config.ACCOUNT_ROLES.notVerified]: 'Unverified',
+        [config.ACCOUNT_ROLES.general]: 'Individual',
+        [config.ACCOUNT_ROLES.corporate]: 'Corporate'
+      }[item.requestDetails.accountRoleToSet]
+    }
+  },
+
+  created () {
+    this.loadList()
+  },
+
+  methods: {
+    snakeToCamelCase,
+    async loadList () {
+      this.isLoading = true
+      try {
+        let address = ''
+        if (this.filters.address) {
+          address = this.filters.address
+        }
+        this.list = await ApiCallerFactory
+          .createCallerInstance()
+          .getWithSignature('/v3/change_role_requests', {
+            filter: clearObject({
+              state: KYC_REQUEST_STATES[this.filters.state].state,
+              requestor: address,
+              'request_details.account_role_to_set': this.filters.roleToSet
+            }),
+            include: ['request_details.account']
+          })
+        this.isListEnded = !(this.list.data || []).length
+      } catch (error) {
+        ErrorHandler.process(error)
+      }
+      this.isLoading = false
+    },
+
+    async onMoreClick () {
+      try {
+        const oldLength = this.list.data.length
+        const chunk = await this.list.fetchNext()
+        this.list._data = this.list.data.concat(chunk.data)
+        this.list.fetchNext = chunk.fetchNext
+        this.isListEnded = oldLength === this.list.data.length
+      } catch (error) {
+        ErrorHandler.process(error)
       }
     },
 
-    created () {
-      this.getList()
+    toggleViewMode (id) {
+      if (id) {
+        this.view.mode = VIEW_MODES_VERBOSE.user
+        this.view.userId = id
+        this.view.scrollPosition = window.scrollY
+        return
+      }
+      this.view.mode = VIEW_MODES_VERBOSE.index
+      this.view.userId = null
+      Vue.nextTick(() => {
+        window.scroll(0, this.view.scrollPosition)
+        this.view.scrollPosition = 0
+      })
     },
-
-    methods: {
-      snakeToCamelCase,
-      async getList () {
-        this.isLoading = true
-        try {
-          let address = ''
-          if (this.filters.address) {
-            address = this.filters.address
-          } else if (this.filters.email) {
-            address = await this.getAccountIdByEmail()
-          }
-          this.list = await api.requests.getKycRequests({
-            state: KYC_REQUEST_STATES[this.filters.state],
-            requestor: address,
-            type: this.filters.type
-          })
-          this.isListEnded = !(this.list.data || []).length
-        } catch (error) {
-          console.error(error)
-          error.showMessage('Cannot load request list')
-        }
-        this.isLoading = false
-      },
-
-      async getAccountIdByEmail () {
-        let address
-        try {
-          address = (api.users.getAccountIdByEmail(this.filters.email))
-        } catch (e) {
-          address = ''
-        }
-        return address
-      },
-
-      async onMoreClick () {
-        const oldLength = this.list.data.length
-        try {
-          this.list = await this.list.concatNext()
-          this.isListEnded = oldLength === this.list.data.length
-        } catch (error) {
-          error.showMessage('Cannot load next page')
-        }
-      },
-
-      toggleViewMode (id) {
-        if (id) {
-          this.view.mode = VIEW_MODES_VERBOSE.user
-          this.view.userId = id
-          this.view.scrollPosition = window.scrollY
-          return
-        }
-        this.view.mode = VIEW_MODES_VERBOSE.index
-        this.view.userId = null
-        Vue.nextTick(() => {
-          window.scroll(0, this.view.scrollPosition)
-          this.view.scrollPosition = 0
-        })
-      },
-      formatDate
-    },
-    watch: {
-      'filters.state' () { this.getList() },
-      'filters.type' () { this.getList() },
-      'filters.address': _.throttle(function () { this.getList() }, 1000),
-      'filters.email': _.throttle(function () { this.getList() }, 1000)
-    }
+    formatDate
+  },
+  watch: {
+    'filters.state' () { this.loadList() },
+    'filters.roleToSet' () { this.loadList() },
+    'filters.address': _.throttle(function () { this.loadList() }, 1000)
   }
+}
 </script>
 
 <style scoped>
-  .request-list__filters-wrp {
-    margin-bottom: 4rem;
-  }
+.request-list__filters-wrp {
+  margin-bottom: 4rem;
+}
 </style>

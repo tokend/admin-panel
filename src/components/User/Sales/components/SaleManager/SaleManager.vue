@@ -17,7 +17,7 @@
             <participants-tab :sale="sale" />
           </tab>
 
-          <tab name="Syndicate user">
+          <tab name="Corporate user">
             <syndicate-tab :sale="sale" />
           </tab>
 

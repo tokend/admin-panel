@@ -3,106 +3,97 @@
     class="email-getter"
     :title="isTitled && (email || accountId || balanceId)"
   >
-    <template v-if="email">
+    <template v-if="isMasterAccount">
+      Master
+    </template>
+
+    <template v-else-if="isLoading">
+      Loading...
+    </template>
+
+    <template v-else-if="email">
       {{ email }}
     </template>
-    <template v-else>
+
+    <template v-else-if="accountId || balanceId">
       {{ accountId || balanceId | cropAddress }}
+    </template>
+
+    <template v-else>
+      &mdash;
     </template>
   </span>
 </template>
 
 <script>
-import { actions, getters, mutations } from '@/store/types'
-import { mapActions, mapGetters } from 'vuex'
 import { Sdk } from '@/sdk'
-import get from 'lodash/get'
+import { ErrorHandler } from '@/utils/ErrorHandler'
+import config from '@/config'
+import { ApiCallerFactory } from '@/api-caller-factory'
 
 export default {
-  data () {
-    return {
-      accountId: '',
-      balanceId: '',
-      email: '',
-      storeUnsubscribe: null
-    }
-  },
-
   props: {
-    address: {
+    accountId: {
       type: String,
       default: ''
     },
-    balance: {
+    balanceId: {
       type: String,
       default: ''
     },
     isTitled: {
       type: Boolean,
-      default: false
+      default: true
     }
   },
 
-  computed: {
-    ...mapGetters({ emailAddressBook: getters.GET_EMAIL_ADDRESS_BOOK })
-  },
+  data: _ => ({
+    email: '',
+    isMasterAccount: false,
+    isLoading: false
+  }),
 
   async created () {
-    this.storeUnsubscribe = this.storeSubscribe()
-    await this.updateAddressses()
-    this.updateEmail()
-  },
-
-  beforeDestroy () {
-    this.storeUnsubscribe()
-  },
-
-  watch: {
-    address () {
-      this.updateEmail()
-    },
-    balance () {
-      this.updateAddressses()
-      this.updateEmail()
-    }
+    await this.init()
   },
 
   methods: {
-    ...mapActions({
-      requestEmailByAddress: actions.REQUEST_EMAIL_BY_ADDRESS
-    }),
-
-    storeSubscribe () {
-      return this.$store.subscribe(mutation => {
-        const expectedMutation = mutations.PUSH_EMAIL_TO_ADDRESS_BOOK
-
-        if (mutation.type === expectedMutation) {
-          if (get(mutation, 'payload.address') === this.accountId) {
-            this.email = get(mutation, 'payload.email')
-          }
-        }
-      })
-    },
-
-    async updateAddressses () {
-      const accountId = this.address
-      const balanceId = this.balance
-      if (accountId) {
-        this.accountId = accountId
+    async init () {
+      if (this.accountId === config.MASTER_ACCOUNT) {
+        this.isMasterAccount = true
         return
       }
-      if (balanceId) {
-        this.balanceId = balanceId
-        const response = await Sdk.horizon.balances.getAccount(balanceId)
-        this.accountId = response.data.accountId
-        return
+
+      if (this.accountId || this.balanceId) {
+        this.isLoading = true
+        await this.loadEmail()
+        this.isLoading = false
       }
-      throw new Error('You should provide either account or balance id')
     },
 
-    async updateEmail () {
-      if (!this.email) {
-        this.requestEmailByAddress(this.accountId)
+    async loadEmail () {
+      try {
+        const accountId = await this.getAccountId()
+        const { data } = await ApiCallerFactory
+          .createCallerInstance()
+          .getWithSignature('/identities', {
+            filter: { address: accountId },
+            page: { limit: 1 }
+          })
+        this.email = ((data || [])[0] || {}).email || this.email
+      } catch (error) {
+        ErrorHandler.processWithoutFeedback(error)
+      }
+    },
+
+    async getAccountId () {
+      if (this.accountId) {
+        return this.accountId
+      } else if (this.balanceId) {
+        const { data } = await Sdk.horizon.balances.getAccount(this.balanceId)
+        return data.accountId
+      } else {
+        return ''
       }
     }
   }

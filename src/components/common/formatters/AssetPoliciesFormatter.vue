@@ -5,8 +5,7 @@
         (mask & ASSET_POLICIES.transferable) && 'transferable',
         (mask & ASSET_POLICIES.baseAsset) && 'base asset',
         (mask & ASSET_POLICIES.statsQuoteAsset) && 'stats quote asset',
-        (mask & ASSET_POLICIES.withdrawable) && 'withdrawable',
-        (mask & ASSET_POLICIES.requiresKyc) && 'KYC required'
+        (mask & ASSET_POLICIES.withdrawable) && 'withdrawable'
       ].filter(item => item).join(', ') || '&mdash;'
     }}
   </span>

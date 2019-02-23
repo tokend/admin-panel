@@ -13,7 +13,7 @@
         </thead>
         <tbody>
           <tr v-for="(item, index) in list" :key="index">
-            <td><email-getter :address="item.accountId" /></td>
+            <td><email-getter :account-id="item.accountId" /></td>
             <td><date-formatter :date="item.createdAt" format="DD MMM YYYY HH:mm:ss" /></td>
             <td>{{item.balance}}</td>
           </tr>

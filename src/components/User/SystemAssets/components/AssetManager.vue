@@ -17,7 +17,7 @@
       <div class="asset-manager__image-field-wrp">
         <label class="asset-manager__image-lbl">Upload token logo</label>
         <image-field
-          :fileKey="safeGet(asset, `details.logo.key`)"
+          :fileKey="safeGet(asset, `creatorDetails.logo.key`)"
           @change="onFileChange($event, DOCUMENT_TYPES.tokenLogo)"
         />
       </div>
@@ -26,7 +26,7 @@
         <input-field
           class="app__form-field"
           label="Asset name"
-          v-model="asset.details.name"
+          v-model="asset.creatorDetails.name"
           :disabled="isPending"
           v-validate="'required|max:255'"
           name="asset-name"
@@ -88,6 +88,31 @@
           name="max-tokens"
           :errorMessage="errors.first('max-tokens')"
         />
+
+        <!-- the field is disabled due to omitted testing session of trailingDigitsCount -->
+        <input-field
+          class="app__form-field app__form-field--halved"
+          type="number" :min="0" :step="0"
+          label="Trailing digits count"
+          v-model="asset.trailingDigitsCount"
+          :disabled="true || isExistingAsset || isPending"
+          v-validate="'required|numeric|max_value:6'"
+          name="trailing-digits-count"
+          :errorMessage="errors.first('trailing-digits-count')"
+        />
+      </div>
+
+      <div class="app__form-row">
+        <input-field
+          class="app__form-field app__form-field--halved"
+          type="number" :min="0" :step="DEFAULT_INPUT_STEP"
+          label="Asset type"
+          v-model="asset.assetType"
+          :disabled="isExistingAsset || isPending"
+          v-validate="'required|numeric'"
+          name="asset-type"
+          :errorMessage="errors.first('asset-type')"
+        />
       </div>
 
       <div class="asset-manager__file-input-wrp">
@@ -107,14 +132,14 @@
             @change="onFileChange($event, DOCUMENT_TYPES.tokenTerms)"
           />
           <span
-            v-if="safeGet(asset, 'terms.name')"
+            v-if="safeGet(asset, 'creatorDetails.terms.name')"
             class="asset-manager__file-name"
           >
-            {{ safeGet(asset, 'terms.name') }}
+            {{ safeGet(asset, 'creatorDetails.terms.name') }}
           </span>
           <span v-else-if="termsUrl" class="asset-manager__file-name">
             <a :href="termsUrl" target="_blank" rel="noopener">
-              {{ safeGet(asset, 'details.terms.name') }}
+              {{ safeGet(asset, 'creatorDetails.terms.name') }}
             </a>
           </span>
           <!--<span v-else-if="safeGet(asset, 'terms..')"></span>-->
@@ -165,17 +190,6 @@
         <tick-field
           class="app__form-field"
           v-model="asset.policy"
-          :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.requiresKyc]"
-          title="Only users with KYC can submit/receive the asset"
-          :cb-value="ASSET_POLICIES.requiresKyc"
-          :disabled="isPending"
-        />
-      </div>
-
-      <div class="app__form-row">
-        <tick-field
-          class="app__form-field"
-          v-model="asset.policy"
           :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.issuanceManualReviewRequired]"
           :cb-value="ASSET_POLICIES.issuanceManualReviewRequired"
           :disabled="isPending"
@@ -202,7 +216,7 @@
             type="number"
             label="External system type"
             name="External system type"
-            v-model="asset.details.externalSystemType"
+            v-model="asset.creatorDetails.externalSystemType"
             :required="false"
             :disabled="isPending"
             v-validate="{max_value: int32}"
@@ -236,6 +250,7 @@ import 'mdi-vue/ChevronDownIcon'
 import 'mdi-vue/ChevronUpIcon'
 
 import { confirmAction } from '../../../../js/modals/confirmation_message'
+import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   components: {
@@ -254,9 +269,16 @@ export default {
       isShownAdvanced: false,
 
       asset: {
+        preissuedAssetSigner: config.MASTER_ACCOUNT,
         policy: 0,
         initialPreissuedAmount: '0',
-        details: {}
+        trailingDigitsCount: '6',
+        creatorDetails: {
+          name: '',
+          logo: {},
+          terms: {},
+          externalSystemType: ''
+        }
       },
 
       [DOCUMENT_TYPES.tokenTerms]: {
@@ -287,8 +309,8 @@ export default {
       return !!this.assetCode
     },
     termsUrl () {
-      if (safeGet(this.asset, 'details.terms.key')) {
-        return `${config.STORAGE_SERVER}/${safeGet(this.asset, 'details.terms.key')}`
+      if (safeGet(this.asset, 'creatorDetails.terms.key')) {
+        return `${config.STORAGE_SERVER}/${safeGet(this.asset, 'creatorDetails.terms.key')}`
       }
       return ''
     }
@@ -298,11 +320,11 @@ export default {
     safeGet,
     async getAsset () {
       try {
-        const response = await Sdk.horizon.assets.get(this.assetCode)
-        this.asset = response.data
+        const { data } = await Sdk.horizon.assets.get(this.assetCode)
+        data.creatorDetails = data.creatorDetails || data.details
+        Object.assign(this.asset, data)
       } catch (error) {
-        console.error(error)
-        this.$store.dispatch('SET_ERROR', 'Receiving asset failed. Please try again later')
+        ErrorHandler.process(error)
       }
     },
 
@@ -322,12 +344,20 @@ export default {
             requestID: '0',
             code: String(this.asset.code),
             policies: Number(this.asset.policy),
-            logoId: String(this.asset.logoId),
-            details: {
-              name: this.asset.details.name,
-              externalSystemType: this.asset.details.externalSystemType
-            },
-            allTasks: 0
+            allTasks: 0,
+            creatorDetails: {
+              name: this.asset.creatorDetails.name,
+              external_system_type: this.asset.creatorDetails.externalSystemType,
+              logo: {
+                key: this.asset.creatorDetails.logo.key,
+                type: this.asset.creatorDetails.logo.type
+              },
+              terms: {
+                key: this.asset.creatorDetails.terms.key,
+                type: this.asset.creatorDetails.terms.type,
+                name: this.asset.creatorDetails.terms.name
+              }
+            }
           })
         } else {
           operation = Sdk.base.ManageAssetBuilder.assetCreationRequest({
@@ -336,12 +366,23 @@ export default {
             preissuedAssetSigner: String(this.asset.preissuedAssetSigner),
             maxIssuanceAmount: String(this.asset.maxIssuanceAmount),
             policies: Number(this.asset.policy),
-            initialPreissuedAmount: this.asset.initialPreissuedAmount,
-            details: {
-              name: this.asset.details.name,
-              externalSystemType: this.asset.details.externalSystemType
-            },
-            allTasks: 0
+            assetType: String(this.asset.assetType),
+            initialPreissuedAmount: String(this.asset.initialPreissuedAmount),
+            trailingDigitsCount: Number(this.asset.trailingDigitsCount),
+            allTasks: 0,
+            creatorDetails: {
+              name: this.asset.creatorDetails.name,
+              external_system_type: this.asset.creatorDetails.externalSystemType,
+              logo: {
+                key: this.asset.creatorDetails.logo.key,
+                type: this.asset.creatorDetails.logo.type
+              },
+              terms: {
+                key: this.asset.creatorDetails.terms.key,
+                type: this.asset.creatorDetails.terms.type,
+                name: this.asset.creatorDetails.terms.name
+              }
+            }
           })
         }
         await Sdk.horizon.transactions.submitOperations(operation)
@@ -349,7 +390,7 @@ export default {
         this.$store.dispatch('SET_INFO', 'Submitted successfully.')
         this.$router.push({ name: 'systemAssets.index' })
       } catch (error) {
-        error.showMessage()
+        ErrorHandler.process(error)
       }
       this.isPending = false
     },
@@ -377,8 +418,8 @@ export default {
       if (!this[type].file) return
       const config = await Sdk.api.documents.masterCreate(type, this[type].mime)
       await api.documents.uploadFile(this[type].file, config, this[type].mime)
-      this.asset.details[type === DOCUMENT_TYPES.tokenTerms ? 'terms' : 'logo'] = {
-        key: config.key,
+      this.asset.creatorDetails[type === DOCUMENT_TYPES.tokenTerms ? 'terms' : 'logo'] = {
+        key: config.formData.key,
         name: this[type].name,
         type: this[type].mime
       }

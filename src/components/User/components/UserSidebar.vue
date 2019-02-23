@@ -61,7 +61,7 @@
       </li>
 
       <div class="user-sidebar__nav-section-heading">
-        SYNDICATE
+        CORPORATE
       </div>
 
       <li class="user-sidebar__nav-li">

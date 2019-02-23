@@ -47,7 +47,6 @@ export const CLEAR_ALL_DATA = (state) => {
   state.user.name = ''
   state.user.keys = { seed: '', accountId: '' }
   state.user.wallet = {}
-  state.user.signerTypes = []
   state.user.accountCreator = false
   state.user.admin = false
 

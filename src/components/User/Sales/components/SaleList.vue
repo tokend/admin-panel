@@ -79,7 +79,7 @@
               </template>
             </span>
             <span class="app-list__cell">
-              <email-getter :address="item.ownerId" is-titled/>
+              <email-getter :account-id="item.ownerId" is-titled/>
             </span>
           </router-link>
         </ul>

@@ -1,4 +1,3 @@
-import accounts from './accounts'
 import assets from './assets'
 import documents from './documents'
 import tfa from './tfa'
@@ -12,7 +11,6 @@ export default {
   },
 
   assets: assets,
-  accounts: accounts,
   documents: documents,
   tfa: tfa,
   users: users,

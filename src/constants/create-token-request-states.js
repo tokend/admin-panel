@@ -4,10 +4,10 @@ export const CREATE_TOKEN_REQUEST_STATES = Object.freeze({
     codeVerbose: 'pending',
     text: 'Pending'
   },
-  cancelled: {
+  canceled: {
     code: 2,
-    codeVerbose: 'cancelled',
-    text: 'Cancelled'
+    codeVerbose: 'canceled',
+    text: 'Canceled'
   },
   approved: {
     code: 3,
@@ -22,6 +22,6 @@ export const CREATE_TOKEN_REQUEST_STATES = Object.freeze({
   permanentlyRejected: {
     code: 5,
     codeVerbose: 'permanentlyRejected',
-    text: 'Permamnntly rejected'
+    text: 'Permanently rejected'
   }
 })

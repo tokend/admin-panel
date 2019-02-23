@@ -7,11 +7,11 @@
         label="State"
       >
         <option
-          v-for="state in Object.keys(REQUEST_STATES)"
-          :value="state"
-          :key="state"
+          v-for="stateObj in Object.values(CREATE_TOKEN_REQUEST_STATES)"
+          :value="stateObj.codeVerbose"
+          :key="stateObj.codeVerbose"
         >
-          {{ state }}
+          {{ stateObj.text }}
         </option>
       </select-field>
 
@@ -37,7 +37,7 @@
             </span>
 
             <span class="app-list__cell">
-              Type
+              State
             </span>
 
             <span class="app-list__cell">
@@ -53,16 +53,16 @@
           >
             <span
               class="app-list__cell app-list__cell--important"
-              :title="asset.code"
+              :title="asset | deriveCode "
             >
-              {{ asset.details[getRequestType(asset)].code }}
+              {{ asset | deriveCode  }}
             </span>
 
             <span
               class="app-list__cell"
-              :title="REQUEST_STATES_STR[asset.requestState]"
+              :title="CREATE_TOKEN_REQUEST_STATES[snakeToCamelCase(asset.requestState)].text"
             >
-              {{ REQUEST_STATES_STR[asset.requestState] }}
+              {{ CREATE_TOKEN_REQUEST_STATES[snakeToCamelCase(asset.requestState)].text }}
             </span>
 
             <span class="app-list__cell" :title="asset.requestor">
@@ -94,23 +94,21 @@
 <script>
 import api from '@/api'
 import { Sdk } from '@/sdk'
-import { snakeToCamelCase } from '@/utils/un-camel-case'
 import InputField from '@comcom/fields/InputField'
 import SelectField from '@comcom/fields/SelectField'
 import {
   CREATE_TOKEN_REQUEST_STATES,
-  REQUEST_STATES_STR,
-  REQUEST_STATES
+  REQUEST_STATES_STR
 } from '@/constants'
 import _ from 'lodash'
+import { ErrorHandler } from '@/utils/ErrorHandler'
+import { snakeToCamelCase } from '@/utils/un-camel-case'
 
 export default {
   components: {
     InputField,
     SelectField
   },
-
-  props: [/* ... */],
 
   data () {
     return {
@@ -122,8 +120,16 @@ export default {
         requestor: null,
         asset: null
       },
-      REQUEST_STATES: CREATE_TOKEN_REQUEST_STATES,
+      CREATE_TOKEN_REQUEST_STATES,
       REQUEST_STATES_STR
+    }
+  },
+
+  filters: {
+    deriveCode (record) {
+      const valuableRequestDetailsKey = Object.keys(record.details)
+        .find(item => !/request_type|requestType/gi.test(item))
+      return (record.details[valuableRequestDetailsKey] || {}).code
     }
   },
 
@@ -133,39 +139,38 @@ export default {
 
   computed: {
     records () {
-      return (this.list || {}).data
+      return (this.list || {}).data || []
     }
   },
 
   methods: {
-    getRequestType (request) {
-      return snakeToCamelCase(request.details.requestType)
-    },
+    snakeToCamelCase,
+
     async getList () {
       this.isPending = true
       try {
         const requestor = await this.getRequestorAccountId(this.filters.requestor)
         this.list = await api.requests.getAssetRequests({
-          state: REQUEST_STATES[this.filters.state],
+          state: CREATE_TOKEN_REQUEST_STATES[this.filters.state].code,
           requestor: requestor,
           code: this.filters.asset
         })
         this.isListEnded = !(this.list.data || []).length
       } catch (error) {
-        console.error(error)
-        error.showMessage('Cannot load request list')
+        ErrorHandler.process(error)
       }
       this.isPending = false
     },
 
     async nextPage () {
-      const oldLength = this.list.data.length
       try {
-        this.list = await this.list.concatNext()
+        const oldLength = this.list.data.length
+        const chunk = await this.list.fetchNext()
+        this.list._data = this.list.data.concat(chunk.data)
+        this.list.fetchNext = chunk.fetchNext
         this.isListEnded = oldLength === this.list.data.length
       } catch (error) {
-        console.error(error)
-        error.showMessage('Cannot load next page')
+        ErrorHandler.process(error)
       }
     },
     async getRequestorAccountId (requestor) {

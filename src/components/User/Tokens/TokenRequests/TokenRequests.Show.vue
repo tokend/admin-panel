@@ -1,6 +1,21 @@
 <template>
   <div class="token-requests-show app__block">
-    <div class="token-requests-show" v-if="tokenRequest.id && !isRejecting">
+    <template v-if="isInitializing">
+      <p class="text">
+        Loading...
+      </p>
+    </template>
+
+    <template v-else-if="isInitFailed">
+      <p class="text danger">
+        An error occurred. Please try again later
+      </p>
+    </template>
+
+    <div
+      class="token-requests-show"
+      v-else-if="tokenRequest.id && !isRejecting"
+    >
       <h2>
         <template v-if="tokenRequest.type === 'asset_create'">
           Token creation request
@@ -19,7 +34,8 @@
           Token logo
         </span>
         <template v-if="safeGet(tokenRequest, 'operationDetails.details.logo.key')">
-          <img-getter class="token-requests-show__token-logo"
+          <img-getter
+            class="token-requests-show__token-logo"
             :file-key="tokenRequest.operationDetails.details.logo.key"
             alt="Token logo"
           />
@@ -29,7 +45,10 @@
         <span class="token-requests-show__key">
           Token name
         </span>
-        <span class="token-requests-show__value" :title="tokenRequest.operationDetails.details.name">
+        <span
+          class="token-requests-show__value"
+          :title="tokenRequest.operationDetails.details.name"
+        >
           {{ tokenRequest.operationDetails.details.name || '—' }}
         </span>
       </div>
@@ -43,16 +62,10 @@
         </span>
       </div>
 
-      <div class="token-requests-show__row">
-        <span class="token-requests-show__key">
-          External resource link
-        </span>
-        <span class="token-requests-show__value">
-          {{ tokenRequest.externalLink || '—' }}
-        </span>
-      </div>
-
-      <div class="token-requests-show__row" v-if="tokenRequest.type !== 'asset_update'">
+      <div
+        class="token-requests-show__row"
+        v-if="tokenRequest.type !== 'asset_update'"
+      >
         <span class="token-requests-show__key">
           Max issuance amount
         </span>
@@ -61,7 +74,10 @@
         </span>
       </div>
 
-      <div class="token-requests-show__row" v-if="tokenRequest.type !== 'asset_update'">
+      <div
+        class="token-requests-show__row"
+        v-if="tokenRequest.type !== 'asset_update'"
+      >
         <span class="token-requests-show__key">
           Issued amount
         </span>
@@ -74,12 +90,17 @@
         <span class="token-requests-show__key">
           Preissuance signer
         </span>
-        <email-getter v-if="tokenRequest.signer"
-                      class="token-requests-show__value"
-                      :address="tokenRequest.signer" is-titled />
-        <span v-else
-              class="token-requests-show__value"
-              :title="tokenRequest.signer">
+        <email-getter
+          v-if="tokenRequest.signer"
+          class="token-requests-show__value"
+          :account-id="tokenRequest.signer"
+          is-titled
+        />
+        <span
+          v-else
+          class="token-requests-show__value"
+          :title="tokenRequest.signer"
+        >
           —
         </span>
       </div>
@@ -90,12 +111,14 @@
             Policies
           </span>
           <div class="token-requests-show__policies-wrapper">
-          <template v-for="policy in tokenRequest.operationDetails.policies">
-            <span :key='policy.value'
-                  class="token-requests-show__key token-requests-show__key--informative">
-            {{ ASSET_POLICIES_VERBOSE[policy.value] }}
-            </span>
-          </template>
+            <template v-for="policy in tokenRequest.operationDetails.policies">
+              <span
+                :key='policy.value'
+                class="token-requests-show__key token-requests-show__key--informative"
+              >
+                {{ ASSET_POLICIES_VERBOSE[policy.value] }}
+              </span>
+            </template>
           </div>
         </div>
       </template>
@@ -104,18 +127,22 @@
         <span class="token-requests-show__key">
           Creation date
         </span>
-        <date-formatter :date="tokenRequest.creationDate"
-            format="DD MMM YYYY HH:mm:ss"
-            class="token-requests-show__value" />
+        <date-formatter
+          :date="tokenRequest.creationDate"
+          format="DD MMM YYYY HH:mm:ss"
+          class="token-requests-show__value"
+        />
       </div>
 
       <div class="token-requests-show__row">
         <span class="token-requests-show__key">
           Update date
         </span>
-        <date-formatter :date="tokenRequest.updateDate"
-            format="DD MMM YYYY HH:mm:ss"
-            class="token-requests-show__value" />
+        <date-formatter
+          :date="tokenRequest.updateDate"
+          format="DD MMM YYYY HH:mm:ss"
+          class="token-requests-show__value"
+        />
       </div>
 
       <template v-if="tokenRequest.state !== 'pending'">
@@ -132,39 +159,40 @@
 
       <template v-if="tokenRequest.state === 'rejected'">
         <div class="token-requests-show__reject-reason-wrp">
-          <text-field label="Reject reason"
+          <text-field
+            label="Reject reason"
             :value="tokenRequest.rejectReason"
             :readonly="true"
           />
         </div>
       </template>
 
-      <div class="token-requests-show__buttons" v-if="tokenRequest.state === 'pending'">
-        <button class="app__btn"
+      <div
+        class="token-requests-show__buttons"
+        v-if="tokenRequest.state === 'pending'"
+      >
+        <button
+          class="app__btn"
           :disabled="isPending"
-          @click="fulfill">
+          @click="fulfill"
+        >
           Fulfill
         </button>
 
-        <button class="app__btn-secondary"
-          :disabled="isPending"
-          @click="cancel"
-          v-if="false && isCancellable">
-          Cancel
-        </button>
-
-        <button class="app__btn-secondary"
+        <button
+          class="app__btn-secondary"
           :disabled="isPending"
           @click="isRejecting = true"
-          v-else>
+        >
           Reject
         </button>
       </div>
     </div>
 
-    <token-request-reject-form @close="isRejecting = false"
+    <token-request-reject-form
+      @close="isRejecting = false"
       :assetRequest="tokenRequest"
-      v-else
+      v-else-if="isRejecting"
     />
   </div>
 </template>
@@ -181,6 +209,7 @@ import { DateFormatter } from '@comcom/formatters'
 import { verbozify } from '@/utils/verbozify'
 import { TokenRequest } from '@/api/responseHandlers/requests/TokenRequest'
 import get from 'lodash/get'
+import { ErrorHandler } from '@/utils/ErrorHandler'
 // TODO: extract to TokenRequestForm
 
 export default {
@@ -199,13 +228,24 @@ export default {
       tokenRequest: {},
       isRejecting: false,
       isPending: false,
+      isInitializing: false,
+      isInitFailed: false,
       ASSET_POLICIES_VERBOSE
     }
   },
 
   async created () {
-    const response = await Sdk.horizon.request.get(this.id)
-    this.tokenRequest = new TokenRequest(response.data)
+    this.isInitializing = true
+
+    try {
+      const response = await Sdk.horizon.request.get(this.id)
+      this.tokenRequest = new TokenRequest(response.data)
+    } catch (error) {
+      ErrorHandler.process(error)
+      this.isInitFailed = true
+    }
+
+    this.isInitializing = false
   },
 
   computed: {
@@ -228,23 +268,8 @@ export default {
           await this.tokenRequest.fulfill()
           this.$store.dispatch('SET_INFO', 'Token successfully created')
           this.$router.push({ name: 'tokens' })
-        } catch (err) {
-          console.error(err)
-          this.$store.dispatch('SET_ERROR', 'Failed to fulfill request')
-        }
-      }
-      this.isPending = false
-    },
-    async cancel () {
-      this.isPending = true
-      if (await confirmAction()) {
-        try {
-          await this.tokenRequest.cancel()
-          this.$store.dispatch('SET_INFO', 'Request cancelled')
-          this.$router.push({ name: 'tokens' })
         } catch (error) {
-          console.error(error)
-          this.$store.dispatch('SET_ERROR', 'Failed to cancel request')
+          ErrorHandler.process(error)
         }
       }
       this.isPending = false

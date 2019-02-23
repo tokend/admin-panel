@@ -3,21 +3,39 @@
     <h3>Account information</h3>
     <ul class="key-value-list">
       <li>
-        <span>Email</span>
-        <span :title="user.email">{{user.email}}</span>
+        <span>
+          Email
+        </span>
+
+        <span :title="user.email">
+          {{ user.email }}
+        </span>
       </li>
       <li>
-        <span>Account ID</span>
-        <span :title="user.id">{{user.id}}</span>
+        <span>
+          Account ID
+        </span>
+        <span :title="user.address">
+          {{ user.address | cropAddress }}
+        </span>
       </li>
       <li>
-        <span>Account type</span>
-        <span :title="ACCOUNT_TYPES_VERBOSE[account.accountType]">{{ACCOUNT_TYPES_VERBOSE[account.accountType]}}</span>
+        <span>
+          Account type
+        </span>
+        <span :title="user.role | roleIdToString">
+          {{ user.role | roleIdToString }}
+        </span>
       </li>
 
       <li>
-        <span>Account state</span>
-        <account-state-getter class="app-list__cell" :accountId="user.id" />
+        <span>
+          Account state
+        </span>
+        <account-state-getter
+          class="app-list__cell"
+          :accountId="user.address"
+        />
       </li>
 
       <template v-if="user.state === USER_STATES_STR.rejected">
@@ -34,11 +52,6 @@
 <script>
 import { USER_STATES_STR } from '@/constants'
 import { AccountStateGetter } from '@comcom/getters'
-const ACCOUNT_TYPES_VERBOSE = {
-  AccountTypeNotVerified: 'Not verified',
-  AccountTypeGeneral: 'General',
-  AccountTypeSyndicate: 'Syndicate'
-}
 
 export default {
   components: {
@@ -46,15 +59,20 @@ export default {
   },
   data () {
     return {
-      USER_STATES_STR,
-      ACCOUNT_TYPES_VERBOSE
+      USER_STATES_STR
     }
   },
 
-  props: ['user', 'account']
+  props: {
+    user: {
+      type: Object,
+      default () {
+        return {}
+      }
+    }
+  }
 }
 </script>
 
 <style scoped>
-
 </style>

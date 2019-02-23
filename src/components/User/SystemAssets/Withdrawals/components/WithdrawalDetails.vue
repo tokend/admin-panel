@@ -13,7 +13,7 @@
       </li>
       <li>
         <span>Requestor</span>
-        <email-getter :address="request.requestor" is-titled />
+        <email-getter :account-id="request.requestor" is-titled />
       </li>
       <li>
         <span>Requestor id</span>
@@ -21,7 +21,7 @@
       </li>
       <li>
         <span>Receiver address</span>
-        <span :title="request.details.withdraw.externalDetails.address">{{request.details.withdraw.externalDetails.address}}</span>
+        <span :title="request.details.withdraw.creatorDetails.address">{{request.details.withdraw.creatorDetails.address}}</span>
       </li>
       <template v-if="request.details.withdraw.reviewerDetails">
         <li>

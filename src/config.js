@@ -7,7 +7,6 @@ const defaultFeatures = {
   SEED_AUTH: true,
 
   PHOTO_VERIFICATION: true,
-  KYC_REVIEW_MANAGER: false,
   KYC_REQUEST_STATES: ['approved', 'rejected', 'pending'],
   KYC_TASKS: {
     superAdmin: {
@@ -101,10 +100,7 @@ export default Object.assign(
     STORAGE_SERVER: process.env.STORAGE_SERVER,
     FEATURES: defaultFeatures,
     MASTER_ACCOUNT: '',
-    COMMISSION_ACCOUNT: 'GAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHV4',
-    OPERATIONAL_ACCOUNT: 'GABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABVCX',
-    STORAGE_FEE_ACCOUNT: 'GABQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABEQO',
-    NETWORK_PASSPHRASE: 'Test SDF Network ; September 2015',
+    NETWORK_PASSPHRASE: '',
 
     /**
      * Sets the logging level, for more options visit
@@ -116,7 +112,18 @@ export default Object.assign(
      * Should be populated by DevOps team during the deployment
      * The field being displayed on login screen.
      */
-    BUILD_VERSION: 'dev: ' + packageJson.version
+    BUILD_VERSION: 'dev: ' + packageJson.version,
+
+    ACCOUNT_ROLES: {
+      notVerified: '',
+      general: '',
+      corporate: '',
+      blocked: ''
+    },
+
+    SIGNER_ROLES: {
+      default: ''
+    }
   },
   process.env,
   document.ENV

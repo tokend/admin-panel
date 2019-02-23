@@ -8,11 +8,47 @@ Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
 ## [Unreleased]
+### Added
+- ApiCallerFactory
+- More descriptive errors if cannot connect to horizon on startup
+- Handle 400 bad signature
+- rolIdToString and lowerCase filters
+
+### Changed
+- Use @tokend/js-sdk@1.0.0-x.15
+- Use cheap-source-map
+- EmailGetter
+- Updated request states
+- Removed unused tasks constants
+
 ### Removed
+- `AssetPolicy.requiresKyc`
+- `BlockReasons`
+- `ACCOUNT_TYPES` and `ACCOUNT_TYPES_VERBOSE`
+- Asking for signer types on login
 - remove tokend-js-sdk usage
+- unused KycReviewManager
+- unused env files
+- user 'block' button
+- 'reset to unverified' button
+- address and dates kyc fields from kyc view
 
 ### Fix
 - keyServer use keyServerCaller from new-js-sdk
+- admin updating, creating, deleting
+- asset creating, updating, showing
+- limits showing, updating, filtering
+- fee list showing, updating, filtering
+- email fetching by EmailGetter component
+- app__form-actions positioning
+- user list displyaing, user item displaying
+- kyc retrieval, approval
+- issuance displaying, approving, rejecting
+- preissuance uploading
+- preissuance asset signer changer
+- more button pos
+- token request displyaing, filtering, approving, rejecting
+- preissuance request markup issues
 
 ## [1.2.0-rc.6] - 2019-02-20
 ### Added

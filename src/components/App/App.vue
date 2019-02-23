@@ -1,33 +1,47 @@
 <template>
-  <div
-    id="app"
-    v-if="isAppInitialized"
-  >
-    <template v-if="!isGoodBrowser">
-      <no-support-message />
-    </template>
-    <template v-else>
-      <status-message />
+  <div id="app">
+    <status-message />
 
-      <transition name="fade">
-        <div
-          class="modal-background"
-          v-if="isModalOpen"
-          @click="$store.commit('WANT_CLOSE_MODAL')"
-        > </div>
-      </transition>
+    <template v-if="isAppInitialized">
+      <template v-if="!isGoodBrowser">
+        <no-support-message />
+      </template>
 
-      <transition name="fade">
-        <loading-screen v-if="showLoader" />
-      </transition>
+      <template v-else>
+        <transition name="fade">
+          <div
+            class="modal-background"
+            v-if="isModalOpen"
+            @click="$store.commit('WANT_CLOSE_MODAL')"
+          > </div>
+        </transition>
 
-      <verify-tfa></verify-tfa>
+        <transition name="fade">
+          <loading-screen v-if="showLoader" />
+        </transition>
 
-      <idle-logout></idle-logout>
+        <verify-tfa></verify-tfa>
 
-      <template v-if="isHorizonInfoLoaded">
+        <idle-logout></idle-logout>
+
         <router-view></router-view>
       </template>
+    </template>
+
+    <template v-else>
+      <div class="app__loading-wrp">
+        <template v-if="isConfigGatheringFailed">
+          <p class="app__loading-error-txt">
+            Initializing failed
+          </p>
+        </template>
+
+        <template v-else>
+          <p class="app__loading-txt">
+            Initializing the app...
+          </p>
+        </template>
+      </div>
     </template>
   </div>
 </template>
@@ -44,6 +58,8 @@ import { Sdk } from '@/sdk'
 import { Wallet } from '@tokend/js-sdk'
 
 import './scss/app.scss'
+import { ApiCallerFactory } from '@/api-caller-factory'
+import { ErrorHandler } from '@/utils/ErrorHandler'
 
 function isIE () {
   const parser = new UAParser()
@@ -78,13 +94,10 @@ export default {
 
   data () {
     return {
-      connectionError: false,
-      checkConnectionI: null,
-      sessionKeeperIn: null,
-
+      sessionKeeperInterval: null,
       isGoodBrowser: true,
-      isHorizonInfoLoaded: false,
-      isAppInitialized: false
+      isAppInitialized: false,
+      isConfigGatheringFailed: false
     }
   },
 
@@ -92,24 +105,71 @@ export default {
     this.isGoodBrowser = !isIE()
     if (!this.isGoodBrowser) return
     await this.initApp()
-    if (this.$store.getters.GET_USER.keys.seed) {
-      Sdk.sdk.useWallet(new Wallet(
-        '',
-        this.$store.getters.GET_USER.keys.seed,
-        this.$store.getters.GET_USER.keys.accountId,
-        this.$store.getters.GET_USER.wallet.id
-      ))
-      this.$store.dispatch('LOG_IN')
-    }
   },
 
   methods: {
     async initApp () {
-      await Sdk.init(config.HORIZON_SERVER)
-      await this.checkConnection()
-      this.checkConnectionI = setInterval(this.checkConnection, 15000)
       this.subscribeToStoreMutations()
-      this.isAppInitialized = true
+      await this.loadConfigs()
+
+      await Sdk.init(config.HORIZON_SERVER)
+      if (this.$store.getters.GET_USER.keys.seed) {
+        const wallet = new Wallet(
+          '',
+          this.$store.getters.GET_USER.keys.seed,
+          this.$store.getters.GET_USER.keys.accountId,
+          this.$store.getters.GET_USER.wallet.id
+        )
+        Sdk.sdk.useWallet(wallet)
+        ApiCallerFactory.setDefaultWallet(wallet)
+        this.$store.dispatch('LOG_IN')
+      }
+
+      if (!this.isConfigGatheringFailed) {
+        this.isAppInitialized = true
+      }
+    },
+
+    async loadConfigs () {
+      try {
+        await this.loadHorizonConfigs()
+        await this.loadAccountRolesConfigs()
+      } catch (error) {
+        this.isConfigLoadingFailed = true
+        ErrorHandler.process(error)
+      }
+    },
+
+    async loadHorizonConfigs () {
+      const { body: horizonConfig } =
+        await this.$http.get(config.HORIZON_SERVER)
+
+      config.NETWORK_PASSPHRASE = horizonConfig.network_passphrase
+      config.MASTER_ACCOUNT = horizonConfig.master_account_id ||
+        horizonConfig.admin_account_id
+
+      ApiCallerFactory.setDefaultHorizonUrl(config.HORIZON_SERVER)
+      ApiCallerFactory.setDefaultNetworkPassphrase(config.NETWORK_PASSPHRASE)
+    },
+
+    async loadAccountRolesConfigs () {
+      const { body: roles } =
+        await this.$http.get(`${config.HORIZON_SERVER}/key_value`)
+      config.ACCOUNT_ROLES.notVerified = roles
+        .find(item => item.key === 'account_role:unverified')
+        .uint32_value
+      config.ACCOUNT_ROLES.general = roles
+        .find(item => item.key === 'account_role:general')
+        .uint32_value
+      config.ACCOUNT_ROLES.corporate = roles
+        .find(item => item.key === 'account_role:corporate')
+        .uint32_value
+      config.ACCOUNT_ROLES.blocked = roles
+        .find(item => item.key === 'account_role:blocked')
+        .uint32_value
+      config.SIGNER_ROLES.default = roles
+        .find(item => item.key === 'signer_role:default')
+        .uint32_value
     },
 
     subscribeToStoreMutations () {
@@ -125,12 +185,10 @@ export default {
           }
           case 'LOG_IN': {
             this.sessionKeeper()
-            clearInterval(this.checkConnectionI)
             break
           }
           case 'LOG_OUT': {
-            clearInterval(this.sessionKeeperIn)
-            clearInterval(this.timeCheckerIn)
+            clearInterval(this.sessionKeeperInterval)
             this.$router.push({ name: 'login' })
             break
           }
@@ -143,43 +201,9 @@ export default {
       })
     },
 
-    checkConnection () {
-      return this.$http.get(config.HORIZON_SERVER)
-        .then(response => {
-          const info = response.body
-          config.NETWORK_PASSPHRASE = info.network_passphrase
-          config.MASTER_ACCOUNT = info.master_account_id
-          config.COMMISSION_ACCOUNT = info.commission_account_id
-          config.OPERATIONAL_ACCOUNT = info.operational_account_id
-          config.STORAGE_FEE_ACCOUNT = info.storage_fee_account_id
-          this.isHorizonInfoLoaded = true
-          this.connectionError = false
-          this.error = []
-        }).catch(err => {
-          if (err.status !== 404) {
-            this.connectionError = true
-            this.$store.dispatch('SET_ERROR', 'Could not connect to the Network')
-          }
-        }).then(() => {
-          return this.$http.get(config.KEY_SERVER_ADMIN + '/kdf_params')
-            .then(() => {
-              this.connectionError = false
-            }).catch(err => {
-              if (err.status !== 404) {
-                this.connectionError = true
-                this.$store.dispatch('SET_ERROR', 'Could not connect to the KeyStorage')
-              }
-            })
-        }).then(() => {
-          if (!this.connectionError) {
-            clearInterval(this.checkConnectionI)
-          }
-        })
-    },
-
     sessionKeeper () {
       this.$store.commit('KEEP_SESSION')
-      this.sessionKeeperIn = setInterval(() => {
+      this.sessionKeeperInterval = setInterval(() => {
         this.$store.commit('KEEP_SESSION')
       }, 10 * 1000)
     }
@@ -196,6 +220,27 @@ export default {
   display: flex;
   flex-direction: column;
   background-color: $color-bg;
+}
+
+.app__loading-wrp {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+}
+
+.app__loading-txt {
+  text-align: center;
+  font-size: 7.2rem;
+  color: $color-text-secondary;
+  font-weight: bold;
+  text-shadow: .1rem .1rem 0 $color-shadow-secondary-text;
+}
+
+.app__loading-error-txt {
+  @extend .app__loading-txt;
+  color: $color-text-init-loading-failed;
+  text-shadow: .1rem .1rem 0 $color-shadow-init-loading-failed;
 }
 
 // ***** Legacy *****

@@ -4,11 +4,6 @@
       <router-link :to="{ name: 'kycRequests.index' }" slot="nav">
         Index
       </router-link>
-      <router-link
-        v-if="config.FEATURES.KYC_REVIEW_MANAGER"
-        :to="{ name: 'kycRequests.manager' }" slot="nav">
-        Review Manager
-      </router-link>
     </user-header>
     <div class="app__user-container">
       <router-view/>
