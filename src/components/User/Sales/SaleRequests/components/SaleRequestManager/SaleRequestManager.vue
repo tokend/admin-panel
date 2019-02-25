@@ -18,13 +18,22 @@
           </tab>
         </tabs>
 
-        <div class="sale-rm__actions app__form-actions"
-          v-if="request.sale.requestStateI === REQUEST_STATES.pending">
-          <button class="app__btn" @click="approve" :disabled="isSubmitting">
+        <div
+          class="sale-rm__actions app__form-actions"
+          v-if="request.sale.requestStateI === REQUEST_STATES.pending"
+        >
+          <button
+            class="app__btn"
+            @click="approve"
+            :disabled="isSubmitting"
+          >
             Approve
           </button>
-          <button class="app__btn app__btn--danger" :disabled="isSubmitting"
-            @click="showRejectForm">
+          <button
+            class="app__btn app__btn--danger"
+            :disabled="isSubmitting"
+            @click="showRejectForm"
+          >
             Reject
           </button>
         </div>
@@ -38,25 +47,44 @@
       </template>
     </div>
 
-    <modal v-if="rejectForm.isShown" @close-request="hideRejectForm" max-width="40rem">
+    <modal
+      v-if="rejectForm.isShown"
+      @close-request="hideRejectForm"
+      max-width="40rem"
+    >
       <p class="text">Reject reason</p>
 
-      <form class="sale-rm__reject-form" id="sale-reject-form"
-        @submit.prevent="reject() & hideRejectForm()">
+      <form
+        class="sale-rm__reject-form"
+        id="sale-reject-form"
+        @submit.prevent="reject() & hideRejectForm()"
+      >
         <div class="app__form-row">
-          <text-field v-model="rejectForm.reason" :label="null"/>
+          <text-field
+            v-model="rejectForm.reason"
+            :label="null"
+          />
         </div>
 
         <div class="app__form-row">
-          <tick-field v-model="rejectForm.isPermanentReject" label="Reject permanently" />
+          <tick-field
+            v-model="rejectForm.isPermanentReject"
+            label="Reject permanently"
+          />
         </div>
       </form>
 
       <div class="sale-rm__reject-form-actions app__form-actions">
-        <button class="app__btn app__btn--danger" form="sale-reject-form">
+        <button
+          class="app__btn app__btn--danger"
+          form="sale-reject-form"
+        >
           Reject
         </button>
-        <button class="app__btn-secondary" @click="hideRejectForm">
+        <button
+          class="app__btn-secondary"
+          @click="hideRejectForm"
+        >
           Cancel
         </button>
       </div>
@@ -76,6 +104,9 @@ import DescriptionTab from './SaleRequestManager.DescriptionTab'
 import { confirmAction } from '../../../../../../js/modals/confirmation_message'
 import SyndicateTab from '../../../components/SaleManager/SaleManager.SyndicateTab'
 import { Tabs, Tab } from '@comcom/Tabs'
+import cloneDeep from 'lodash/cloneDeep'
+import { snakeToCamelCase } from '@/utils/un-camel-case'
+import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   components: {
@@ -107,17 +138,14 @@ export default {
     }
   },
 
-  props: ['id', 'sale'],
+  props: ['id'],
   computed: {
     getSaleDetails () {
       return this.request.sale.details[this.request.sale.details.requestType]
     }
   },
   created () {
-    if (this.sale) {
-      // TODO: check source/purpose of this code, delete if sure it wont break app
-      this.assignRequest(this.sale)
-    } else if (this.id) {
+    if (this.id) {
       this.getRequest(this.id)
     } else {
       throw new Error('SaleRequestManager: provide "id" or "sale"')
@@ -125,40 +153,23 @@ export default {
   },
 
   methods: {
-    async assignRequest (request) {
-      try {
-        this.request.sale = request
-        const response = await Sdk.horizon.request.getAllForAssets({
-          asset: this.getSaleDetails.baseAsset,
-          requestor: this.request.sale.requestor,
-          state: this.request.sale.requestState,
-          reviewer: this.request.sale.reviewer,
-          order: 'desc'
-        })
-        this.request.token = response.data[0]
-        this.request.isReady = true
-      } catch (error) {
-        error.showMessage('Cannot get fund request. Pleazse try again later')
-        this.request.isFailed = true
-      }
-    },
-
     async getRequest (id) {
       try {
         this.request.sale = await this.getSaleRequest(id)
-        const response = await await Sdk.horizon.assets
+        const response = await Sdk.horizon.assets
           .get(this.getSaleDetails.baseAsset)
         this.request.token = response.data
         this.request.isReady = true
       } catch (error) {
-        console.error(error)
-        error.showMessage('Cannot get fund request. Please try again later')
+        ErrorHandler.process(error)
         this.request.isFailed = true
       }
     },
 
-    getSaleRequest (id) {
-      return api.requests.get(id)
+    async getSaleRequest (id) {
+      const response = await api.requests.get(id)
+      const sale = this.fixDetails(response)
+      return sale
     },
 
     showRejectForm () {
@@ -177,8 +188,7 @@ export default {
           this.$store.dispatch('SET_INFO', 'Fund request approved.')
           this.$router.push({ name: 'sales.requests' })
         } catch (error) {
-          console.error(error)
-          error.showMessage()
+          ErrorHandler.process(error)
         }
       }
       this.isSubmitting = false
@@ -197,10 +207,23 @@ export default {
         this.$store.dispatch('SET_INFO', 'Fund request rejected successfully.')
         this.$router.push({ name: 'sales.requests' })
       } catch (error) {
-        console.error(error)
-        error.showMessage()
+        ErrorHandler.process(error)
       }
       this.isSubmitting = false
+    },
+
+    fixDetails (record) {
+      const newRecord = cloneDeep(record)
+
+      const valuableRequestDetailsKey = Object.keys(record.details)
+        .find(item => !/request_type|requestType/gi.test(item))
+
+      newRecord.details.requestType =
+        snakeToCamelCase(record.details.requestType)
+      newRecord.details[newRecord.details.requestType] =
+        record.details[valuableRequestDetailsKey] || {}
+
+      return newRecord
     }
   }
 }

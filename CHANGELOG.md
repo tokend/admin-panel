@@ -11,6 +11,9 @@ for further information about branching and tagging conventions.
 ### Change
 - Rename Individual => General
 
+### Fix
+- Sale request showing, approving, rejecting, list showing
+
 ## [1.2.0-rc.9] - 2019-02-25
 ### Change
 - Asset type is select-field now
