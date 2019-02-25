@@ -8,11 +8,12 @@ Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
 ## [Unreleased]
-### Change
+### Changed
 - Rename Individual => General
 
 ### Fix
 - Sale request showing, approving, rejecting, list showing
+- Sale showing, salle list showing
 
 ## [1.2.0-rc.9] - 2019-02-25
 ### Change
