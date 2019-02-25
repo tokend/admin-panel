@@ -9,7 +9,7 @@ for further information about branching and tagging conventions.
 
 ## [Unreleased]
 ### Added
-- favicon
+- Favicon
 
 ### Changed
 - Rename Individual => General
@@ -38,7 +38,7 @@ for further information about branching and tagging conventions.
 - ApiCallerFactory
 - More descriptive errors if cannot connect to horizon on startup
 - Handle 400 bad signature
-- rolIdToString and lowerCase filters
+- `rolIdToString` and lowerCase filters
 
 ### Changed
 - Use @tokend/js-sdk@1.0.0-x.15
@@ -52,29 +52,29 @@ for further information about branching and tagging conventions.
 - `BlockReasons`
 - `ACCOUNT_TYPES` and `ACCOUNT_TYPES_VERBOSE`
 - Asking for signer types on login
-- remove tokend-js-sdk usage
-- unused KycReviewManager
-- unused env files
-- user 'block' button
+- Remove tokend-js-sdk usage
+- Unused KycReviewManager
+- Unused env files
+- User 'block' button
 - 'reset to unverified' button
-- address and dates kyc fields from kyc view
+- Address and dates kyc fields from kyc view
 
 ### Fix
-- keyServer use keyServerCaller from new-js-sdk
-- admin updating, creating, deleting
-- asset creating, updating, showing
-- limits showing, updating, filtering
-- fee list showing, updating, filtering
-- email fetching by EmailGetter component
-- app__form-actions positioning
-- user list displyaing, user item displaying
-- kyc retrieval, approval
-- issuance displaying, approving, rejecting
-- preissuance uploading
-- preissuance asset signer changer
-- more button pos
-- token request displyaing, filtering, approving, rejecting
-- preissuance request markup issues
+- KeyServer use keyServerCaller from new-js-sdk
+- Admin updating, creating, deleting
+- Asset creating, updating, showing
+- Limits showing, updating, filtering
+- Fee list showing, updating, filtering
+- Email fetching by EmailGetter component
+- App__form-actions positioning
+- User list displyaing, user item displaying
+- Kyc retrieval, approval
+- Issuance displaying, approving, rejecting
+- Preissuance uploading
+- Preissuance asset signer changer
+- More button pos
+- Token request displyaing, filtering, approving, rejecting
+- Preissuance request markup issues
 
 ## [1.2.0-rc.6] - 2019-02-20
 ### Added
