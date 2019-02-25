@@ -6,10 +6,8 @@ export class ReviewableRequest {
     this.record = { ...record, ...record.details }
     delete this.record.details
 
-    const [valuableRequestDetailsKey] = Object.entries(this.record)
-      .find(([key, value]) => {
-        return typeof value === 'object' && !/details/gi.test(key)
-      })
+    const valuableRequestDetailsKey = Object.keys(record.details)
+      .find(item => !/request_type|requestType/gi.test(item))
     this.operationDetails = this.record[valuableRequestDetailsKey]
   }
 

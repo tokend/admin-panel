@@ -155,9 +155,7 @@ export default {
   },
 
   props: {
-    id: {
-      required: true
-    }
+    id: ''
   },
 
   filters: {
@@ -176,12 +174,15 @@ export default {
     }
   },
 
-  created () {
-    if (this.addNew || this.id === 'add') {
-      return
+  async created () {
+    try {
+      await this.initSignerRolesPicker()
+      if (!this.addNew) {
+        await this.loadSigner()
+      }
+    } catch (error) {
+      ErrorHandler.process(error)
     }
-    this.initSignerRolesPicker()
-    this.loadSigner()
   },
 
   methods: {
@@ -215,26 +216,23 @@ export default {
             description: (item.details || {}).description || '(No description)'
           }
         })
-      this.form.signerRoleId = this.form.signerRoleId || this.signerRoles[0].id
+      this.form.signerRoleId = this.form.signerRoleId ||
+        this.signerRoles.find(item => item.name !== 'Master').id
     },
 
     async loadSigner () {
       this.$store.commit('OPEN_LOADER')
 
-      try {
-        const signer = await this.getSignerByAccountId(this.id)
-        this.signer = signer
-        this.form = {
-          accountId: signer.id,
-          weight: signer.weight,
-          identity: signer.identity,
-          signerRoleId: String(signer.role.id),
-          name: signer.id === this.masterPubKey
-            ? 'Master'
-            : signer.details.name
-        }
-      } catch (error) {
-        ErrorHandler.processWithoutFeedback(error)
+      const signer = await this.getSignerByAccountId(this.id)
+      this.signer = signer
+      this.form = {
+        accountId: signer.id,
+        weight: signer.weight,
+        identity: signer.identity,
+        signerRoleId: String(signer.role.id),
+        name: signer.id === this.masterPubKey
+          ? 'Master'
+          : signer.details.name
       }
 
       this.$store.commit('CLOSE_LOADER')

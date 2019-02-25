@@ -19,14 +19,15 @@
           <li class="issuance-details__list-item">
             <span>Initiator (Email)</span>
             <span>
-              <email-getter
-                :account-id="issuance.requestor"
-                is-titled
-              /></span>
+              <email-getter :account-id="issuance.requestor" is-titled />
+            </span>
           </li>
           <li class="issuance-details__list-item">
             <span>Value</span>
-            <span>{{localize(issuance.amount)}} {{issuance.details.issuanceCreate.asset}}</span>
+            <span>
+              {{ localize(issuance.amount) }}
+              {{ issuance.details.createIssuance.asset }}
+            </span>
           </li>
           <li class="issuance-details__list-item">
             <span>State</span>

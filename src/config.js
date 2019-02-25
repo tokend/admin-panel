@@ -115,6 +115,7 @@ export default Object.assign(
     BUILD_VERSION: 'dev: ' + packageJson.version,
 
     ACCOUNT_ROLES: {
+      // Will be updated on init
       notVerified: '',
       general: '',
       corporate: '',
@@ -122,7 +123,14 @@ export default Object.assign(
     },
 
     SIGNER_ROLES: {
+      // Will be updated on init
       default: ''
+    },
+
+    ASSET_TYPES: {
+      // Will be updated on init
+      default: '0',
+      kycRequired: '1'
     }
   },
   process.env,

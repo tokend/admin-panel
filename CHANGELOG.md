@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
+## [Unreleased]
+### Change
+- Asset type is select-field now
+- `operationDetails` deriving of ReviewableRequest
+
+### Fix
+- New admin form loading
+- Fees filtering (likely)
+- Sale request list fetching
+
 ## [1.0.0-rc.8] - 2019-02-23
 ### Changed
 - Use @tokend/js-sdk@1.0.0-x.17

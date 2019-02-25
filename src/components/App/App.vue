@@ -60,6 +60,7 @@ import { Wallet } from '@tokend/js-sdk'
 import './scss/app.scss'
 import { ApiCallerFactory } from '@/api-caller-factory'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { snakeToCamelCase } from '@/utils/un-camel-case'
 
 function isIE () {
   const parser = new UAParser()
@@ -134,6 +135,7 @@ export default {
       try {
         await this.loadHorizonConfigs()
         await this.loadAccountRolesConfigs()
+        await this.loadAssetTypesConfigs()
       } catch (error) {
         this.isConfigLoadingFailed = true
         ErrorHandler.process(error)
@@ -170,6 +172,18 @@ export default {
       config.SIGNER_ROLES.default = roles
         .find(item => item.key === 'signer_role:default')
         .uint32_value
+    },
+
+    async loadAssetTypesConfigs () {
+      const { body: keyValues } =
+        await this.$http.get(`${config.HORIZON_SERVER}/key_value`)
+      config.ASSET_TYPES = keyValues
+        .filter(item => /asset_type/ig.test(item.key))
+        .reduce((result, item) => {
+          const assetTypeName = snakeToCamelCase(item.key.split(':')[1])
+          result[assetTypeName] = String(item.uint32_value)
+          return result
+        }, config.ASSET_TYPES)
     },
 
     subscribeToStoreMutations () {

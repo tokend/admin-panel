@@ -316,9 +316,13 @@
         const type = +this.filters.feeType
         const asset = this.filters.assetCode
         const paymentFeeSubtype = +this.filters.paymentFeeSubtype
-        return this.fees[asset.toLowerCase()]
-          .filter(item => item.feeType === type)
-          .filter(item => type === FEE_TYPES.paymentFee ? item.subtype === paymentFeeSubtype : true)
+
+        // TODO: fetch from /v3/fees/ instead
+        const filtered = Object.entries(this.fees)
+          .find(([key]) => key.toLowerCase() === asset.toLowerCase())
+        return filtered[1]
+          .filter((item) => item.feeType === type)
+          .filter((item) => type === FEE_TYPES.paymentFee ? item.subtype === paymentFeeSubtype : true)
       }
     },
 
@@ -403,8 +407,7 @@
           const assetsResponse = await Sdk.horizon.assetPairs.getAll()
           this.assetPairs = assetsResponse.data
         } catch (error) {
-          console.error(error)
-          this.$store.dispatch('SET_ERROR', 'Cannot load asset list. Please try again later')
+          ErrorHandler.process(error)
         }
       },
 
@@ -414,8 +417,7 @@
           const response = await Sdk.horizon.fees.getAll(filters)
           this.fees = response.data.fees
         } catch (error) {
-          console.error(error)
-          this.$store.dispatch('SET_ERROR', 'Cannot load fee list. Please try again later')
+          ErrorHandler.process(error)
         }
       },
 
@@ -454,7 +456,6 @@
           await this.getFees()
           this.$store.dispatch('SET_INFO', 'Submitted successfully')
         } catch (error) {
-          console.error(error)
           this.isSubmitting = false
           ErrorHandler.process(error)
         }

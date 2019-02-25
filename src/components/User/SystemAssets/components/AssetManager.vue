@@ -1,6 +1,9 @@
 <template>
   <div class="asset-manager">
-    <div class="asset-manager__current-wrp" v-if="asset.availableForIssuance && asset.issued">
+    <div
+      class="asset-manager__current-wrp"
+      v-if="asset.availableForIssuance && asset.issued"
+    >
       <div class="asset-manager__current-issuance-details">
         <span class="available">
           <span class="highlight amount text">{{ asset.availableForIssuance }}&nbsp;•&nbsp;</span>
@@ -33,7 +36,8 @@
           :errorMessage="errors.first('asset-name')"
         />
 
-        <input-field class="app__form-field"
+        <input-field
+          class="app__form-field"
           label="Asset code"
           v-model="asset.code"
           :disabled="isExistingAsset || isPending"
@@ -80,7 +84,9 @@
       <div class="app__form-row">
         <input-field
           class="app__form-field app__form-field--halved"
-          type="number" :min="0" :step="DEFAULT_INPUT_STEP"
+          type="number"
+          :min="0"
+          :step="DEFAULT_INPUT_STEP"
           label="Maximum tokens"
           v-model="asset.maxIssuanceAmount"
           :disabled="isExistingAsset || isPending"
@@ -92,7 +98,9 @@
         <!-- the field is disabled due to omitted testing session of trailingDigitsCount -->
         <input-field
           class="app__form-field app__form-field--halved"
-          type="number" :min="0" :step="0"
+          type="number"
+          :min="0"
+          :step="0"
           label="Trailing digits count"
           v-model="asset.trailingDigitsCount"
           :disabled="true || isExistingAsset || isPending"
@@ -103,16 +111,18 @@
       </div>
 
       <div class="app__form-row">
-        <input-field
+        <select-field
           class="app__form-field app__form-field--halved"
-          type="number" :min="0" :step="DEFAULT_INPUT_STEP"
           label="Asset type"
           v-model="asset.assetType"
           :disabled="isExistingAsset || isPending"
-          v-validate="'required|numeric'"
           name="asset-type"
+          v-validate="'required'"
           :errorMessage="errors.first('asset-type')"
-        />
+        >
+          <option :value="ASSET_TYPES.default">Default</option>
+          <option :value="ASSET_TYPES.kycRequired">KYC required</option>
+        </select-field>
       </div>
 
       <div class="asset-manager__file-input-wrp">
@@ -137,8 +147,15 @@
           >
             {{ safeGet(asset, 'creatorDetails.terms.name') }}
           </span>
-          <span v-else-if="termsUrl" class="asset-manager__file-name">
-            <a :href="termsUrl" target="_blank" rel="noopener">
+          <span
+            v-else-if="termsUrl"
+            class="asset-manager__file-name"
+          >
+            <a
+              :href="termsUrl"
+              target="_blank"
+              rel="noopener"
+            >
               {{ safeGet(asset, 'creatorDetails.terms.name') }}
             </a>
           </span>
@@ -203,8 +220,8 @@
             class="app__btn-secondary app__btn-secondary--iconed"
             @click.prevent="isShownAdvanced = !isShownAdvanced"
           >
-            <mdi-chevron-up-icon   v-if="isShownAdvanced"/>
-            <mdi-chevron-down-icon v-else/>
+            <mdi-chevron-up-icon v-if="isShownAdvanced" />
+            <mdi-chevron-down-icon v-else />
           </button>
         </div>
       </div>
@@ -225,7 +242,10 @@
       </template>
 
       <div class="app__form-actions">
-        <button class="app__btn" :disabled="isPending">
+        <button
+          class="app__btn"
+          :disabled="isPending"
+        >
           {{ isExistingAsset ? 'Update asset' : 'Create asset' }}
         </button>
       </div>
@@ -242,7 +262,7 @@ import safeGet from 'lodash/get'
 import config from '../../../../config'
 import Bus from '@/utils/EventBus'
 
-import { ImageField, TickField, InputField } from '@comcom/fields'
+import { ImageField, TickField, InputField, SelectField } from '@comcom/fields'
 import { ASSET_POLICIES, DEFAULT_INPUT_STEP, DOCUMENT_TYPES, ASSET_POLICIES_VERBOSE } from '@/constants'
 import { fileReader } from '../../../../utils/file-reader'
 
@@ -255,6 +275,7 @@ import { ErrorHandler } from '@/utils/ErrorHandler'
 export default {
   components: {
     InputField,
+    SelectField,
     TickField,
     ImageField
   },
@@ -267,12 +288,14 @@ export default {
       DEFAULT_INPUT_STEP,
       ASSET_POLICIES_VERBOSE,
       isShownAdvanced: false,
+      ASSET_TYPES: config.ASSET_TYPES,
 
       asset: {
         preissuedAssetSigner: config.MASTER_ACCOUNT,
         policy: 0,
         initialPreissuedAmount: '0',
         trailingDigitsCount: '6',
+        assetType: '0',
         creatorDetails: {
           name: '',
           logo: {},
@@ -340,6 +363,17 @@ export default {
         ])
         let operation
         if (this.isExistingAsset) {
+          const logo = {}
+          if (this.asset.creatorDetails.logo) {
+            logo.key = this.asset.creatorDetails.logo.key
+            logo.type = this.asset.creatorDetails.logo.type
+          }
+          const terms = {}
+          if (this.asset.creatorDetails.terms) {
+            terms.key = this.asset.creatorDetails.terms.key
+            terms.type = this.asset.creatorDetails.terms.type
+            terms.name = this.asset.creatorDetails.terms.name
+          }
           operation = Sdk.base.ManageAssetBuilder.assetUpdateRequest({
             requestID: '0',
             code: String(this.asset.code),
@@ -348,15 +382,8 @@ export default {
             creatorDetails: {
               name: this.asset.creatorDetails.name,
               external_system_type: this.asset.creatorDetails.externalSystemType,
-              logo: {
-                key: this.asset.creatorDetails.logo.key,
-                type: this.asset.creatorDetails.logo.type
-              },
-              terms: {
-                key: this.asset.creatorDetails.terms.key,
-                type: this.asset.creatorDetails.terms.type,
-                name: this.asset.creatorDetails.terms.name
-              }
+              logo,
+              terms
             }
           })
         } else {
@@ -460,7 +487,7 @@ export default {
 
 .asset-manager__image-lbl {
   display: block;
-  margin-bottom: .5rem;
+  margin-bottom: 0.5rem;
 }
 
 .asset-manager__file-input-wrp {
@@ -500,7 +527,6 @@ export default {
     }
   }
 }
-
 
 .asset-manager-advanced__heading {
   color: $color-active;

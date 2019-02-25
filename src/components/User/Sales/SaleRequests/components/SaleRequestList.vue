@@ -6,7 +6,11 @@
 
     <div class="sale-rl__filters-wrp">
       <div class="app-list-filters">
-        <select-field class="app-list-filters__field" label="State" v-model="filters.state">
+        <select-field
+          class="app-list-filters__field"
+          label="State"
+          v-model="filters.state"
+        >
           <option :value="REQUEST_STATES.pending">Pending</option>
           <option :value="REQUEST_STATES.cancelled">Cancelled</option>
           <option :value="REQUEST_STATES.approved">Approved</option>
@@ -14,7 +18,8 @@
           <option :value="REQUEST_STATES.permanentlyRejected">Permanently rejected</option>
         </select-field>
 
-        <input-field class="app-list-filters__field sale-rl__requestor-filter"
+        <input-field
+          class="app-list-filters__field sale-rl__requestor-filter"
           label="Requestor"
           placeholder="Address (full match)"
           v-model="filters.requestor"
@@ -26,40 +31,54 @@
       <template v-if="list.data && list.data.length">
         <ul class="app-list">
           <div class="app-list__header">
-            <span class="app-list__cell"><!-- empty --></span>
+            <span class="app-list__cell">
+              <!-- empty --></span>
             <span class="app-list__cell">Name</span>
             <span class="app-list__cell">Hard cap</span>
             <span class="app-list__cell">Requestor</span>
           </div>
 
-          <router-link class="app-list__li" v-for="item in list.data"
-                       :key="item.id"
+          <router-link
+            class="app-list__li"
+            v-for="item in list.data"
+            :key="item.id"
             :to="{ name: 'sales.requests.show', params: { id: item.id }}"
           >
-            <span class="app-list__cell app-list__cell--important"
-                  :title="item.baseAsset"
+            <span
+              class="app-list__cell app-list__cell--important"
+              :title="item.baseAsset"
             >
-              {{item.details[item.details.requestType].baseAsset}}
+              {{ extractDetails(item).baseAsset }}
             </span>
-            <span class="app-list__cell"
-                  :title="item.details[item.details.requestType].details.name"
+            <span
+              class="app-list__cell"
+              :title="extractDetails(item).details.name"
             >
-              {{item.details[item.details.requestType].details.name}}
+              {{extractDetails(item).details.name}}
             </span>
             <span class="app-list__cell">
               <asset-amount-formatter
-                :amount="item.details[item.details.requestType].hardCap"
-                :asset="item.details[item.details.requestType].defaultQuoteAsset"
+                :amount="extractDetails(item).hardCap"
+                :asset="extractDetails(item).defaultQuoteAsset"
               />
             </span>
             <span class="app-list__cell">
-              <email-getter :account-id="item.requestor" is-titled />
+              <email-getter
+                :account-id="item.requestor"
+                is-titled
+              />
             </span>
           </router-link>
         </ul>
 
-        <div class="app__more-btn-wrp" v-if="!isNoMoreEntries">
-          <button class="app__btn-secondary" @click="getMoreEntries">
+        <div
+          class="app__more-btn-wrp"
+          v-if="!isNoMoreEntries"
+        >
+          <button
+            class="app__btn-secondary"
+            @click="getMoreEntries"
+          >
             More
           </button>
         </div>
@@ -138,6 +157,12 @@ export default {
       } catch (error) {
         ErrorHandler.process(error)
       }
+    },
+
+    extractDetails (record) {
+      const valuableRequestDetailsKey = Object.keys(record.details)
+        .find(item => !/request_type|requestType/gi.test(item))
+      return record.details[valuableRequestDetailsKey] || {}
     }
   },
 

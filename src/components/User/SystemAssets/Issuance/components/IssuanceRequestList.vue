@@ -2,15 +2,26 @@
   <div class="issuance-rl">
     <div class="issuance-rl__filters-wrp">
       <div class="issuance-rl__filters">
-        <select-field class="issuance-rl__filter app-list-filters__field"
-                      label="State" v-model="filters.state">
+        <select-field
+          class="issuance-rl__filter app-list-filters__field"
+          label="State" v-model="filters.state"
+        >
           <option :value="REQUEST_STATES.pending">Pending</option>
           <option :value="REQUEST_STATES.approved">Approved</option>
           <option :value="REQUEST_STATES.permanentlyRejected">Permanently rejected</option>
         </select-field>
-        <select-field class="issuance-rl__filter app-list-filters__field"
-                      label="Asset" v-model="filters.asset">
-          <option v-for="asset in assets" :value="asset">{{ asset }}</option>
+        <select-field
+          class="issuance-rl__filter app-list-filters__field"
+          label="Asset"
+          v-model="filters.asset"
+        >
+          <option
+            v-for="asset in assets"
+            :value="asset"
+            :key="`issuance-request-list-${asset}`"
+          >
+            {{ asset }}
+          </option>
         </select-field>
       </div>
     </div>
@@ -41,11 +52,16 @@
 
           </div>
           <li v-for="item in list.data" :key="item.id" class="issuance-rl__li">
-            <router-link class="issuance-rl__li-a"
-                         :to="{ name: 'systemAssets.issuance.props', params: { id: item.id } }">
-            <span class="app-list__cell app-list__cell--important"
-                  :title="`${localize(item.amount)} ${item.asset}`">
-              {{localize(item.details.issuanceCreate.amount)}} {{item.details.issuanceCreate.asset}}
+            <router-link
+              class="issuance-rl__li-a"
+              :to="{ name: 'systemAssets.issuance.props', params: { id: item.id } }"
+            >
+            <span
+              class="app-list__cell app-list__cell--important"
+              :title="`${localize(item.amount)} ${item.asset}`"
+            >
+              {{ localize(item.details.createIssuance.amount) }}
+              {{ item.details.createIssuance.asset }}
             </span>
 
               <span class="app-list__cell app-list__cell--wrap"
@@ -82,11 +98,11 @@
 </template>
 
 <script>
-  import IssuanceMixin from './issuance.mixin'
+import IssuanceMixin from './issuance.mixin'
 
-  export default {
-    mixins: [IssuanceMixin]
-  }
+export default {
+  mixins: [IssuanceMixin]
+}
 </script>
 
 <style scoped lang="scss">
