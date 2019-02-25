@@ -8,12 +8,16 @@ Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
 ## [Unreleased]
+### Added
+- favicon
+
 ### Changed
 - Rename Individual => General
 
-### Fix
+### Fixed
 - Sale request showing, approving, rejecting, list showing
 - Sale showing, salle list showing
+- Init error showing
 
 ## [1.2.0-rc.9] - 2019-02-25
 ### Change
