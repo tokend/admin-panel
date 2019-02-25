@@ -199,7 +199,7 @@
 
   const ACCOUNT_ROLES_VERBOSE = Object.freeze({
     [config.ACCOUNT_ROLES.notVerified]: 'Unverified user',
-    [config.ACCOUNT_ROLES.general]: 'Individual user',
+    [config.ACCOUNT_ROLES.general]: 'General user',
     [config.ACCOUNT_ROLES.corporate]: 'Corporate user'
   })
 
