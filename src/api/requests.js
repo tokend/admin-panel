@@ -88,7 +88,7 @@ export const requests = {
         ...limits,
         id: '' + limits.id,
         accountID: params.accountId,
-        accountType: undefined
+        accountRole: undefined
       }))
     const operations = []
     operations.push(Sdk.base.ReviewRequestBuilder.reviewLimitsUpdateRequest({
@@ -97,7 +97,13 @@ export const requests = {
       action: Sdk.xdr.ReviewRequestOpAction.approve().value,
       reason: '',
       requestID: params.request.id,
-      newLimits: newLimits[0]
+      newLimits: newLimits[0],
+      reviewDetails: {
+        tasksToAdd: 0,
+        tasksToRemove: params.request.pendingTasks ||
+          params.request.pending_tasks,
+        externalDetails: '{}'
+      }
     }))
     newLimits
       .forEach(limits => {

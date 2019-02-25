@@ -2,7 +2,14 @@
   <p class="detail-row">
     <span class="detail-row__key">{{ label }}</span>
     <span class="detail-row__value">
-      <span class="detail-row__value-text" v-html="value || '—'"></span>
+      <template>
+        <slot v-if="$slots.default" />
+        <span
+          v-else
+          v-html="value || '—'"
+          class="detail-row__value-text"
+        />
+      </template>
     </span>
   </p>
 </template>

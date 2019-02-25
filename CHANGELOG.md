@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
+## [Unreleased]
+### Added
+- Tasks for approving limits update operation
+- `EmailGetter` for displaying account email to the `Limits.Reviewer` component
+- Slot to the `Detail.Row` component
+
+### Changed
+- Displaying loading & no data message on the `Limits.Requests` component
+
+### Fixed
+- Using account roles instead of account types for limits requests
+- Using `request.details.updateLimits` instead of `request.details.limitsUpdate`
+
+### Removed
+- Using `ACCOUNT_TYPES_VERBOSE` constant on the `Limits.Reviewer` component
+- Loading the user (`Sdk.api.users.get`) from the `Limits.Reviewer`
+
 ## [1.2.0-rc.9] - 2019-02-25
 ### Change
 - Asset type is select-field now
