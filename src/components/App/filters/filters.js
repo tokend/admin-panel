@@ -1,5 +1,4 @@
 import moment from 'moment'
-import { KYC_REQUEST_STATES } from '@/constants'
 import config from '@/config'
 
 export function filterDateWithTime (date, format = 'DD MMM YYYY [at] hh:mm:ss') {
@@ -11,7 +10,15 @@ export function filterDateWithTime (date, format = 'DD MMM YYYY [at] hh:mm:ss') 
 }
 
 export function localizeIssuanceRequestState (type) {
-  return KYC_REQUEST_STATES[type].label
+  return {
+    approved: 'Approved',
+    pending: 'Pending',
+    rejected: 'Rejected',
+    permanently_rejected: 'Permanently rejected',
+    permanentlyRejected: 'Permanently rejected',
+    canceled: 'Canceled',
+    cancelled: 'Cancelled'
+  }[type]
 }
 
 export function cropAddress (value) {
