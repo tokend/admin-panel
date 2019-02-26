@@ -29,6 +29,7 @@ for further information about branching and tagging conventions.
 - STORAGE_SERVER => FILE_STORAGE (sync with web-client)
 - Changed line-height of text on change-asset-issuer form
 - Font sizes of back buttons
+- Add 'limit: 1000' in to getting requests
 
 ### Fixed
 - Using account roles instead of account types for limits requests
