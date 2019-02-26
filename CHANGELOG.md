@@ -20,6 +20,7 @@ for further information about branching and tagging conventions.
 - Sale request showing, approving, rejecting, list showing
 - Sale showing, salle list showing
 - Init error showing
+- KYC_TASKS leftovers
 
 ### Changed
 - Displaying loading & no data message on the `Limits.Requests` component
