@@ -111,7 +111,6 @@
     "url-loader": "0.5.9",
     "vue-loader": "10.0.0",
     "vue-resource": "1.5.1",
-    "vue-router": "2.8.1",
     "vue-style-loader": "1.0.0",
     "vuex": "2.5.0",
     "webpack": "1.15.0",

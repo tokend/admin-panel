@@ -21,6 +21,7 @@ for further information about branching and tagging conventions.
 - Sale showing, salle list showing
 - Init error showing
 - KYC_TASKS leftovers
+- Dupe vue-router dependency
 
 ### Changed
 - Displaying loading & no data message on the `Limits.Requests` component
