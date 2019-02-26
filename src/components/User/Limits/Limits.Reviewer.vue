@@ -1,10 +1,10 @@
 <template>
   <div class="limits-reviewer">
     <button
-      class="users-show__back-btn"
+      class="limits-reviewer__back-btn"
       @click="back"
     >
-      <span class="users-show__back-btn-inner">
+      <span class="limits-reviewer__back-btn-inner">
         <mdi-chevron-left-icon />
       </span>
       Back
@@ -510,13 +510,15 @@ export default {
   }
 }
 
-.users-show__back-btn {
+.limits-reviewer__back-btn {
   display: flex;
   align-items: center;
   margin-bottom: 20px;
+  font-size: 1.3rem;
+  font-weight: bold;
 }
 
-.users-show__back-btn-inner {
+.limits-reviewer__back-btn-inner {
   $dimension: 3.5rem;
 
   background: $color-content-bg;
