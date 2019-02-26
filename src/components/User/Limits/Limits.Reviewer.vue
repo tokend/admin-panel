@@ -58,7 +58,7 @@
           <uploaded-docs-list
             :list="uploadedDocuments"
             :uploadDate="request.updatedAt"
-            :userAccountId="user.id"
+            :userAccountId="account.id"
           />
         </div>
         <user-details :id="request.requestor" :isReviewing="false"/>
@@ -195,7 +195,6 @@ import 'mdi-vue/ChevronLeftIcon'
 
 const DEFAULT_LIMIT_STRUCT = {
   'id': 0,
-  'accountRole': null,
   'accountId': null,
   'statsOpType': null,
   'assetCode': null,
@@ -339,7 +338,7 @@ export default {
         await api.requests.rejectLimitsUpdate({
           request: this.request,
           oldLimits: this.limits[0],
-          newLimits: [this.limits[0]],
+          newLimits: [this.newLimit],
           accountId: this.request.requestor,
           reason: this.rejectForm.reason,
           isPermanent: true
@@ -363,7 +362,7 @@ export default {
         await api.requests.rejectLimitsUpdate({
           request: this.request,
           oldLimits: this.limits[0],
-          newLimits: [this.limits[0]],
+          newLimits: [this.newLimit],
           accountId: this.request.requestor,
           reason: requireDocsDetails,
           isPermanent: false

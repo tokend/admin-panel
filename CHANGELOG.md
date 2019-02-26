@@ -20,6 +20,7 @@ for further information about branching and tagging conventions.
 - Sale request showing, approving, rejecting, list showing
 - Sale showing, salle list showing
 - Init error showing
+- `accountRole` from `DEFAULT_LIMIT_STRUCT`
 
 ### Changed
 - Displaying loading & no data message on the `Limits.Requests` component
@@ -28,6 +29,8 @@ for further information about branching and tagging conventions.
 ### Fixed
 - Using account roles instead of account types for limits requests
 - Using `request.details.updateLimits` instead of `request.details.limitsUpdate`
+- Using `account.id` instead of `user.id` for `UploadedDocsList` component on the limits reviewer page update params
+- Setting new limits in the params when calling `api.requests.rejectLimitsUpdate`
 
 ## [1.2.0-rc.9] - 2019-02-25
 ### Change
