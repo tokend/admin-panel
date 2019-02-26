@@ -27,9 +27,9 @@
       class="change-asset-issuer-form__details"
       v-if="asset && accountId"
     >
-      <p>Signer will change on asset: {{ asset }}</p>
-      <p>New signer will be: {{ accountId }}</p>
-      <p>Transaction source: {{ source }}</p>
+      <p class="text">Signer will change on asset: {{ asset }}</p>
+      <p class="text">New signer will be: {{ accountId }}</p>
+      <p class="text">Transaction source: {{ source }}</p>
     </div>
 
     <p class="note"><i>Note: </i>Transaction is valid for one week since the file was created</p>
