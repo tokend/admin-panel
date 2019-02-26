@@ -172,7 +172,7 @@ export default {
     deriveRoleToSet (item) {
       return {
         [config.ACCOUNT_ROLES.notVerified]: 'Unverified',
-        [config.ACCOUNT_ROLES.general]: 'Individual',
+        [config.ACCOUNT_ROLES.general]: 'General',
         [config.ACCOUNT_ROLES.corporate]: 'Corporate'
       }[item.requestDetails.accountRoleToSet]
     }

@@ -1,14 +1,22 @@
 <template>
   <div class="sale-manager-description-tab">
     <label class="data-caption">Fund video</label>
-    <iframe
-      class="sale-manager-description-tab__video"
-      :src="`https://www.youtube.com/embed/${sale.details.youtubeVideoId}`"
-      allowfullscreen="true"
-    ></iframe>
+    <template v-if="sale.details.youtubeVideoId">
+      <iframe
+        class="sale-manager-description-tab__video"
+        :src="`https://www.youtube.com/embed/${sale.details.youtubeVideoId}`"
+        allowfullscreen="true"
+      ></iframe>
+    </template>
 
+    <template v-else>
+      <p class="text">
+        (No video provided)
+      </p>
+    </template>
+
+    <label class="data-caption">Fund description</label>
     <template v-if="isLoaded">
-      <label class="data-caption">Fund description</label>
       <div class="sale-manager-description-tab__description-wrp">
         <markdown-formatter :source="description" />
       </div>

@@ -50,6 +50,7 @@ import DescriptionTab from './SaleManager.DescriptionTab'
 import ParticipantsTab from './SaleManager.ParticipantsTab'
 import SyndicateTab from './SaleManager.SyndicateTab'
 import UpdatesTab from './SaleManager.UpdatesTab'
+import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   components: {
@@ -83,7 +84,7 @@ export default {
         this.sale = response.data
         this.isLoaded = true
       } catch (error) {
-        error.showMessage('Cannot get fund details. Please try again later')
+        ErrorHandler.process(error)
         this.isFailed = true
       }
     }

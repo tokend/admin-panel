@@ -30,7 +30,7 @@
 
     <template v-else>
       <div class="app__loading-wrp">
-        <template v-if="isConfigGatheringFailed">
+        <template v-if="isConfigLoadingFailed">
           <p class="app__loading-error-txt">
             Initializing failed
           </p>
@@ -98,7 +98,7 @@ export default {
       sessionKeeperInterval: null,
       isGoodBrowser: true,
       isAppInitialized: false,
-      isConfigGatheringFailed: false
+      isConfigLoadingFailed: false
     }
   },
 
@@ -126,7 +126,7 @@ export default {
         this.$store.dispatch('LOG_IN')
       }
 
-      if (!this.isConfigGatheringFailed) {
+      if (!this.isConfigLoadingFailed) {
         this.isAppInitialized = true
       }
     },

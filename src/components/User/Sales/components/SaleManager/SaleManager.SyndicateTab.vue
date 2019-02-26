@@ -51,7 +51,6 @@ import { Sdk } from '@/sdk'
 import { DateFormatter } from '@comcom/formatters'
 import SyndicateMember from '@comcom/SyndicateMember'
 import SocialLinks from '@comcom/SocialLinks'
-import { BLOB_TYPES } from '../../../../../constants'
 
 import _get from 'lodash/get'
 import { ErrorHandler } from '@/utils/ErrorHandler'
@@ -86,9 +85,10 @@ export default {
       try {
         const response = blobId
           ? await Sdk.api.blobs.get(blobId, owner)
-          : await Sdk.api.blobs.getAll({
-            type: BLOB_TYPES.corporateKyc | BLOB_TYPES.kycForm
-          }, owner)
+          : await Sdk.api.blobs.get(
+            (await Sdk.horizon.account.getAccountKyc(owner))
+              .data.kycData.blobId
+          )
         this.corporate = JSON.parse(
           response.data.value || response.data[0].value
         )

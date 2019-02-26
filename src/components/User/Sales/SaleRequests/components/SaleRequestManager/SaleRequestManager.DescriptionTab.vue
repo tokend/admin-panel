@@ -1,14 +1,22 @@
 <template>
   <div class="sale-rm-description-tab">
     <label class="data-caption">Fund video</label>
-    <iframe
-      class="sale-rm-description-tab__video"
-      :src="`https://www.youtube.com/embed/${videoId}`"
-      allowfullscreen="true"
-    ></iframe>
+    <template v-if="saleRequest.details.youtubeVideoId">
+      <iframe
+        class="sale-rm-description-tab__video"
+        :src="`https://www.youtube.com/embed/${videoId}`"
+        allowfullscreen="true"
+      ></iframe>
+    </template>
 
+    <template v-else>
+      <p class="text">
+        (No video provided)
+      </p>
+    </template>
+
+    <label class="data-caption">Fund description</label>
     <template v-if="description">
-      <label class="data-caption">Fund description</label>
       <div class="sale-rm-description-tab__description-wrp">
         <markdown-formatter :source="description" />
       </div>
