@@ -1,7 +1,7 @@
 <template>
   <div class="sale-rm-description-tab">
     <label class="data-caption">Fund video</label>
-    <template v-if="saleRequest.details.youtubeVideoId">
+    <template v-if="videoId">
       <iframe
         class="sale-rm-description-tab__video"
         :src="`https://www.youtube.com/embed/${videoId}`"
@@ -68,10 +68,11 @@ export default {
 
   computed: {
     videoId () {
-      const requestType = this.saleRequest.details.requestType
+      const valuableRequestDetailsKey = Object.keys(this.saleRequest.details)
+        .find(item => !/request_type|requestType/gi.test(item))
       return _get(
         this.saleRequest,
-        `details.${requestType}.details.youtubeVideoId`
+        `details.${valuableRequestDetailsKey}.details.youtubeVideoId`
       )
     }
   },
@@ -88,7 +89,7 @@ export default {
 
       try {
         const response = await Sdk.api.blobs.get(blobId, userId)
-        this.description = response.data.value
+        this.description = JSON.parse(response.data.value)
         this.isLoaded = true
       } catch (error) {
         if (error.status === 404) {

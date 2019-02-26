@@ -64,7 +64,7 @@ export default {
         const { ownerId: userId, description: blobId } = this.sale.details
         const response = await Sdk.api.blobs.get(blobId, userId)
         const blob = response.data
-        this.description = blob.value
+        this.description = JSON.parse(blob.value)
         this.isLoaded = true
       } catch (error) {
         this.isFailed = true

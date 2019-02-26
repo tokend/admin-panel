@@ -35,6 +35,7 @@ for further information about branching and tagging conventions.
 - Using `request.details.updateLimits` instead of `request.details.limitsUpdate`
 - `localizeIssuanceRequestState` filter
 - "More" button on sale list
+- Video and Description displaying of the Sale description tab
 
 ## [1.2.0-rc.9] - 2019-02-25
 ### Change
