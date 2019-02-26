@@ -32,7 +32,9 @@
       <p class="text">Transaction source: {{ source }}</p>
     </div>
 
-    <p class="note"><i>Note: </i>Transaction is valid for one week since the file was created</p>
+    <p class="change-asset-issuer-form__expiration-date-note text">
+      <i>Note: </i>Transaction is valid for one week since the file was created
+    </p>
 
     <div
       class="change-asset-issuer-form__summary-actions"
@@ -159,5 +161,9 @@ export default {
 
 .change-asset-issuer-form__details {
   margin-top: 2rem;
+}
+
+.change-asset-issuer-form__expiration-date-note {
+  margin-top: 1rem;
 }
 </style>
