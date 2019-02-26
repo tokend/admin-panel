@@ -1,20 +1,15 @@
 <template>
   <div class="limits-requests">
-    <template v-if="list.data">
+    <template v-if="list.data && list.data.length">
       <limits-list :list="list.data" />
     </template>
     <template v-else>
-      <template v-if="isLoading">
-        <p>
-          Loading...
-        </p>
-      </template>
-
-      <template v-else>
-        <p>
-          Nothing here yet
-        </p>
-      </template>
+      <ul class="app-list">
+        <li class="app-list__li-like">
+          <template v-if="isLoading">Loading...</template>
+          <template v-else>Nothing here yet</template>
+        </li>
+      </ul>
     </template>
   </div>
 </template>

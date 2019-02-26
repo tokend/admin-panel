@@ -15,14 +15,20 @@
             :value="formatDateWithTime(request.createdAt)"
           />
           <detail
-            label="Account type"
-            :value="ACCOUNT_TYPES_VERBOSE[account.accountTypeI]"
+            label="Account role"
+            :value="account.roleId | roleIdToString"
           />
           <detail
             label="Request type"
             :value="LIMITS_REQUEST_STATES_STR[get(request, 'details.requestType')]"
           />
-          <detail label="Account email" :value="user.email"/>
+          <detail label="Account email">
+            <email-getter
+              class="app-list__cell app-list__cell--important"
+              :account-id="account.id"
+              is-titled
+            />
+          </detail>
           <detail label="Account ID" :value="request.requestor"/>
           <detail label="Note" :value="get(desiredLimitDetails, 'note')"/>
           <detail label="Limits for asset" :value="get(desiredLimitDetails, 'asset')"/>
@@ -160,6 +166,7 @@
 </template>
 
 <script>
+import { EmailGetter } from '@comcom/getters'
 import Detail from '../../common/details/Detail.Row'
 import UserDetails from '../Users/components/UserDetails/UserDetails'
 import UserLimits from './components/Limits.UserLimits'
@@ -174,7 +181,6 @@ import { Sdk } from '@/sdk'
 import { snakeToCamelCase } from '@/utils/un-camel-case'
 
 import {
-  ACCOUNT_TYPES_VERBOSE,
   REQUEST_STATES,
   DOCUMENT_TYPES_STR,
   LIMITS_REQUEST_STATES_STR
@@ -189,7 +195,7 @@ import 'mdi-vue/ChevronLeftIcon'
 
 const DEFAULT_LIMIT_STRUCT = {
   'id': 0,
-  'accountType': null,
+  'accountRole': null,
   'accountId': null,
   'statsOpType': null,
   'assetCode': null,
@@ -217,12 +223,12 @@ export default {
     UserLimits,
     DateFormatter,
     UserDocLinkGetter,
-    UploadedDocsList
+    UploadedDocsList,
+    EmailGetter
   },
   props: ['id'],
   data: _ => ({
     request: null,
-    user: null,
     account: null,
     limits: null,
     isLoaded: false,
@@ -231,7 +237,6 @@ export default {
     assetCode: null,
     desiredLimitDetails: null,
     REQUEST_STATES,
-    ACCOUNT_TYPES_VERBOSE,
     DOCUMENT_TYPES_STR,
     LIMITS_REQUEST_STATES_STR,
     uploadDocs: [
@@ -284,9 +289,8 @@ export default {
       this.$store.commit('OPEN_LOADER')
       const request = await api.requests.get(this.id)
       const requestDetails = request.details[snakeToCamelCase(request.details.requestType)].details
-      const [account, user, limits] = await Promise.all([
+      const [account, limits] = await Promise.all([
         Sdk.horizon.account.get(request.requestor),
-        Sdk.api.users.get(request.requestor),
         Sdk.horizon.account.getLimits(request.requestor)
       ])
       this.request = request
@@ -294,7 +298,6 @@ export default {
       this.request.asset = requestDetails.asset
       this.assetCode = requestDetails.asset
       this.account = account.data
-      this.user = user.data
       this.limits = (get(limits, 'data.limits') || []).map(limit => limit.limit)
       this.isLoaded = true
       this.$store.commit('CLOSE_LOADER')
@@ -314,7 +317,7 @@ export default {
         const oldLimits = this.limits
           .find(item => {
             return item.assetCode === this.request.asset &&
-                  item.statsOpType === STATS_OPERATION_TYPES[OPERATION_TYPES[this.request.details.limitsUpdate.details.operationType]]
+                  item.statsOpType === STATS_OPERATION_TYPES[OPERATION_TYPES[this.request.details.updateLimits.details.operationType]]
           })
         await api.requests.approveLimitsUpdate({
           request: this.request,
