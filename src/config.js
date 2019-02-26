@@ -97,7 +97,7 @@ export default Object.assign(
     PAGE_LIMIT: 10,
     KEY_SERVER_ADMIN: process.env.KEY_SERVER_ADMIN,
     HORIZON_SERVER: process.env.HORIZON_SERVER,
-    STORAGE_SERVER: process.env.STORAGE_SERVER,
+    FILE_STORAGE: process.env.FILE_STORAGE,
     FEATURES: defaultFeatures,
     MASTER_ACCOUNT: '',
     NETWORK_PASSPHRASE: '',

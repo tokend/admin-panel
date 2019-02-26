@@ -60,7 +60,7 @@
 
     computed: {
       imgUrl () {
-        return this.imageDataUrl || (this.fileKey ? `${config.STORAGE_SERVER}/${this.fileKey}` : '')
+        return this.imageDataUrl || (this.fileKey ? `${config.FILE_STORAGE}/${this.fileKey}` : '')
       }
     },
 

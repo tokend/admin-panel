@@ -24,6 +24,7 @@ for further information about branching and tagging conventions.
 ### Changed
 - Displaying loading & no data message on the `Limits.Requests` component
 - Rename Individual => General
+- STORAGE_SERVER => FILE_STORAGE (sync with web-client)
 
 ### Fixed
 - Using account roles instead of account types for limits requests
