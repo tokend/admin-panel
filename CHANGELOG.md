@@ -36,6 +36,7 @@ for further information about branching and tagging conventions.
 - Font sizes of back buttons
 - Add 'limit: 1000' in to getting requests
 - Displaying full account ID on the `UserDetails.Account` component instead of cropped one
+- Use @tokend/js-sdk@1.0.0-x.19
 
 ### Fixed
 - Using account roles instead of account types for limits requests
