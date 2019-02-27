@@ -37,6 +37,7 @@ for further information about branching and tagging conventions.
 - `localizeIssuanceRequestState` filter
 - "More" button on sale list and user operations list
 - Video and Description displaying of the Sale description tab
+- Getting user details after KYC review
 
 ## [1.2.0-rc.9] - 2019-02-25
 ### Change

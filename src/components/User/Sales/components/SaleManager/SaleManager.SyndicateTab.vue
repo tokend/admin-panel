@@ -17,7 +17,7 @@
             <span>{{corporate.homepage}}</span>
           </li>
           <li>
-            <span>Industry / Tags</span>
+            <span>Industry</span>
             <span>{{corporate.industry}}</span>
           </li>
           <li>
