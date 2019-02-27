@@ -134,7 +134,7 @@ export default {
     },
 
     async loadSignerList () {
-      const { data } = await await ApiCallerFactory
+      const { data } = await ApiCallerFactory
         .createCallerInstance()
         .getWithSignature(`/v3/accounts/${this.masterPubKey}/signers`)
       this.list = data

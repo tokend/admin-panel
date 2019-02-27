@@ -104,8 +104,10 @@ import Vue from 'vue'
 import Qrcode from 'v-qrcode'
 import StellarWallet from 'tokend-wallet-js-sdk'
 import { Sdk } from '@/sdk'
+import { ApiCallerFactory } from '@/api-caller-factory'
 import config from '@/config'
 import GAuth from '../../settings/GAuth.vue'
+import { ErrorHandler } from '@/utils/ErrorHandler'
 
 import InputField from '@comcom/fields/InputField'
 
@@ -141,9 +143,18 @@ export default {
   methods: {
     async isSigner () {
       try {
-        await Sdk.horizon.account.getSigner(this.credentials.publicKey, config.MASTER_ACCOUNT)
+        const { data } = await ApiCallerFactory
+          .createPublicCallerInstance()
+          .get(`/v3/accounts/${config.MASTER_ACCOUNT}/signers`)
+        const isSignerExists = data
+          .find(item => item.id === this.credentials.publicKey)
+
+        if (!isSignerExists) {
+          setTimeout(this.isSigner, 5000)
+          return
+        }
       } catch (e) {
-        console.error(e)
+        ErrorHandler.processWithoutFeedback(e)
         setTimeout(this.isSigner, 5000)
         return
       }
