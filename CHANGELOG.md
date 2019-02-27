@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
-## [Unreleased]
+## [1.2.0-rc.10] - 2019-02-27
 ### Added
 - Tasks for approving limits update operation
 - `EmailGetter` for displaying account email to the `Limits.Reviewer` component
@@ -209,7 +209,8 @@ for further information about branching and tagging conventions.
   the issuance
 - Pre-issuance request list now fetches correctly the list
 
-[Unreleased]: https://github.com/tokend/admin-panel/compare/1.2.0-rc.9...HEAD
+[Unreleased]: https://github.com/tokend/admin-panel/compare/1.2.0-rc.10...HEAD
+[1.2.0-rc.10]: https://github.com/tokend/admin-panel/compare/1.2.0-rc.9...1.2.0-rc.10
 [1.2.0-rc.9]: https://github.com/tokend/admin-panel/compare/1.2.0-rc.8...1.2.0-rc.9
 [1.2.0-rc.8]: https://github.com/tokend/admin-panel/compare/1.2.0-rc.7...1.2.0-rc.8
 [1.2.0-rc.7]: https://github.com/tokend/admin-panel/compare/1.2.0-rc.6...1.2.0-rc.7
