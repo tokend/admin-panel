@@ -16,6 +16,7 @@ for further information about branching and tagging conventions.
 - `assetType` getter to the `TokenRequest` wrapper
 - Displaying asset type on the `TokenRequests.Show` component
 - `assetTypeToString` filter
+- Max amount to be sold row to the sale details & sale request details pages
 
 ### Removed
 - Using `ACCOUNT_TYPES_VERBOSE` constant on the `Limits.Reviewer` component
