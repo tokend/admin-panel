@@ -57,22 +57,23 @@
               :blobId="requestToReview.requestDetails.creatorDetails.blobId"
             />
           </section>
-          <section
-            v-if="prevChangeRoleRequest"
-            class="user-details__section"
-          >
-            <h1>Previous KYC Request</h1>
+        </template>
+
+        <template v-if="prevApprovedRequest">
+          <section class="user-details__section">
+            <h2>Previous approved KYC Request</h2>
             <kyc-general-section
-              v-if="requestToReview.requestDetails.accountRoleToSet === ACCOUNT_ROLES.general"
+              v-if="prevApprovedRequest.requestDetails.accountRoleToSet === ACCOUNT_ROLES.general"
               :user="user"
-              :blobId="prevChangeRoleRequest.requestDetails.creatorDetails.blobId"
+              :blobId="prevApprovedRequest.requestDetails.creatorDetails.blobId"
             />
             <kyc-syndicate-section
-              v-if="requestToReview.requestDetails.accountRoleToSet === ACCOUNT_ROLES.corporate"
+              v-if="prevApprovedRequest.requestDetails.accountRoleToSet === ACCOUNT_ROLES.corporate"
               :user="user"
-              :blobId="prevChangeRoleRequest.requestDetails.creatorDetails.blobId"
+              :blobId="prevApprovedRequest.requestDetails.creatorDetails.blobId"
             />
           </section>
+
         </template>
 
         <template v-if="requestToReview">
@@ -81,7 +82,7 @@
               <request-section
                 :user="user"
                 :requestToReview="requestToReview"
-                @update-request="getUser"
+                @update-request="getUpdatedUser"
                 update-request-event="update-request"
               />
             </section>
@@ -144,7 +145,7 @@ export default {
       requestToReview: null,
       requests: [],
       REQUEST_STATES_STR,
-      prevChangeRoleRequest: null
+      prevApprovedRequest: null
     }
   },
 
@@ -190,14 +191,21 @@ export default {
         this.requests = requests || []
         this.requestToReview = this.requests.data
           .find(item => item.stateI === REQUEST_STATES.pending)
-        if (this.requests.length > 0) {
-          this.prevChangeRoleRequest = this.requests[1]
-        }
+        this.prevApprovedRequest = this.requests.data
+          .find(item => item.stateI === REQUEST_STATES.approved)
         this.isLoaded = true
       } catch (error) {
         ErrorHandler.process(error)
         this.isFailed = true
       }
+    },
+
+    async getUpdatedUser () {
+      this.isLoaded = false
+      this.isFailed = false
+      setTimeout(async () => {
+        await this.getUser()
+      }, 1500)
     }
   }
 }
@@ -208,6 +216,10 @@ export default {
 
 .user-details__section {
   flex: 1;
+
+  & > h1, & > h2, & > h3 {
+    margin-bottom: 1.2rem;
+  }
 }
 
 .user-details__section:not(:first-of-type) {

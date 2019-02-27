@@ -34,17 +34,18 @@ for further information about branching and tagging conventions.
 - Changed line-height of text on change-asset-issuer form
 - Font sizes of back buttons
 - Add 'limit: 1000' in to getting requests
-- Displaying full account ID on the `UserDetails.Account` component
+- Displaying full account ID on the `UserDetails.Account` component instead of cropped one
 
 ### Fixed
 - Using account roles instead of account types for limits requests
 - Using `request.details.updateLimits` instead of `request.details.limitsUpdate`
 - `localizeIssuanceRequestState` filter
-- "More" button on sale list
+- "More" button on sale list and user operations list
 - Video and Description displaying of the Sale description tab
 - Renamed asset request types:
   - `asset_create` -> `create_asset`
   - `asset_update` -> `update_asset`
+- Getting user details after KYC review
 
 ## [1.2.0-rc.9] - 2019-02-25
 ### Change
