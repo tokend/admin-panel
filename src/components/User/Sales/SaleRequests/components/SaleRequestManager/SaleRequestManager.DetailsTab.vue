@@ -152,6 +152,13 @@
               :asset="saleDetails.defaultQuoteAsset"
             />
           </li>
+          <li>
+            <span>Max {{ saleDetails.baseAsset }} amount to be sold</span>
+            <asset-amount-formatter
+              :amount="saleDetails.baseAssetForHardCap"
+              :asset="saleDetails.baseAsset"
+            />
+          </li>
 
           <label class="data-caption">Prices (per token) </label>
           <li

@@ -17,11 +17,11 @@
       v-else-if="tokenRequest.id && !isRejecting"
     >
       <h2>
-        <template v-if="tokenRequest.type === 'asset_create'">
+        <template v-if="tokenRequest.type === 'create_asset'">
           Token creation request
         </template>
 
-        <template v-else-if="tokenRequest.type === 'asset_update'">
+        <template v-else-if="tokenRequest.type === 'update_asset'">
           Token update request
         </template>
 
@@ -64,7 +64,7 @@
 
       <div
         class="token-requests-show__row"
-        v-if="tokenRequest.type !== 'asset_update'"
+        v-if="tokenRequest.type !== 'update_asset'"
       >
         <span class="token-requests-show__key">
           Max issuance amount
@@ -76,7 +76,7 @@
 
       <div
         class="token-requests-show__row"
-        v-if="tokenRequest.type !== 'asset_update'"
+        v-if="tokenRequest.type !== 'update_asset'"
       >
         <span class="token-requests-show__key">
           Issued amount
@@ -86,7 +86,10 @@
         </span>
       </div>
 
-      <div class="token-requests-show__row">
+      <div
+        class="token-requests-show__row"
+        v-if="tokenRequest.type !== 'update_asset'"
+      >
         <span class="token-requests-show__key">
           Preissuance signer
         </span>
@@ -102,6 +105,18 @@
           :title="tokenRequest.signer"
         >
           —
+        </span>
+      </div>
+
+      <div
+        class="token-requests-show__row"
+        v-if="tokenRequest.type !== 'update_asset'"
+      >
+        <span class="token-requests-show__key">
+          Type
+        </span>
+        <span class="token-requests-show__value">
+          {{ tokenRequest.assetType | assetTypeToString }}
         </span>
       </div>
 

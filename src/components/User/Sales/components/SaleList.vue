@@ -43,7 +43,7 @@
     </div>
 
     <div class="sale-list__list-wrp">
-      <template v-if="list && list.data.length">
+      <template v-if="list.data && list.data.length">
         <ul class="app-list">
           <div class="app-list__header">
             <span class="app-list__cell">
