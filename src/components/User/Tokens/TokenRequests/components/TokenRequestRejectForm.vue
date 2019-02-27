@@ -1,7 +1,7 @@
 <template>
   <div class="trrf">
     <h2>
-      Reject {{assetRequest.code}} {{assetRequest.type === 'asset_create' ? 'create' : 'update'}} request
+      Reject {{assetRequest.code}} {{assetRequest.type === 'create_asset' ? 'create' : 'update'}} request
     </h2>
 
     <form

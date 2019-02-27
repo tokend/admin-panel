@@ -13,6 +13,9 @@ for further information about branching and tagging conventions.
 - `EmailGetter` for displaying account email to the `Limits.Reviewer` component
 - Slot to the `Detail.Row` component
 - Favicon
+- `assetType` getter to the `TokenRequest` wrapper
+- Displaying asset type on the `TokenRequests.Show` component
+- `assetTypeToString` filter
 
 ### Removed
 - Using `ACCOUNT_TYPES_VERBOSE` constant on the `Limits.Reviewer` component
@@ -30,6 +33,7 @@ for further information about branching and tagging conventions.
 - Changed line-height of text on change-asset-issuer form
 - Font sizes of back buttons
 - Add 'limit: 1000' in to getting requests
+- Displaying full account ID on the `UserDetails.Account` component
 
 ### Fixed
 - Using account roles instead of account types for limits requests
@@ -37,6 +41,9 @@ for further information about branching and tagging conventions.
 - `localizeIssuanceRequestState` filter
 - "More" button on sale list
 - Video and Description displaying of the Sale description tab
+- Renamed asset request types:
+  - `asset_create` -> `create_asset`
+  - `asset_update` -> `update_asset`
 
 ## [1.2.0-rc.9] - 2019-02-25
 ### Change

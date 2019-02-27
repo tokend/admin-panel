@@ -30,7 +30,11 @@ export class TokenRequest extends ReviewableRequest {
   }
 
   get type () {
-    return this.record.requesType
+    return this.record.requestType
+  }
+
+  get assetType () {
+    return this.operationDetails.type
   }
 
   get rejectReason () {

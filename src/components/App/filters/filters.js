@@ -33,6 +33,13 @@ export function roleIdToString (roleId) {
   }[+roleId]
 }
 
+export function assetTypeToString (assetType) {
+  return {
+    [+config.ASSET_TYPES.default]: 'Does not require KYC',
+    [+config.ASSET_TYPES.kycRequired]: 'Requires KYC'
+  }[+assetType]
+}
+
 export function lowerCase (string) {
   return String(string).toLowerCase()
 }
