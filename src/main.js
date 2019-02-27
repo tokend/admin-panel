@@ -98,6 +98,7 @@ import {
   adminSignerType,
   cropAddress,
   roleIdToString,
+  assetTypeToString,
   lowerCase
 } from './components/App/filters/filters'
 
@@ -106,6 +107,7 @@ Vue.filter('localizeIssuanceRequestState', localizeIssuanceRequestState)
 Vue.filter('adminSignerType', adminSignerType)
 Vue.filter('cropAddress', cropAddress)
 Vue.filter('roleIdToString', roleIdToString)
+Vue.filter('assetTypeToString', assetTypeToString)
 Vue.filter('lowerCase', lowerCase)
 
 /* Logger module */

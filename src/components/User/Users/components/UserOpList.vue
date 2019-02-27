@@ -53,6 +53,7 @@ import { Sdk } from '@/sdk'
 import moment from 'moment'
 import { formatAssetAmount } from '@/utils/formatters'
 import { OperationCounterparty } from '@comcom/getters'
+import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   components: {
@@ -90,20 +91,15 @@ export default {
     },
 
     async getNextPage () {
-      return this.list.next(this.$store.getters.keypair).then((response) => {
-        if (response.records.length > 0) {
-          this.list.records = this.list.records.concat(response.records)
-          this.list.prev = response.prev
-          this.list.next = response.next
-          return
-        }
-        if (response.records.length < 10) {
-          this.isListEnded = true
-        }
-      }).catch((err) => {
-        console.error(err)
-        this.isListEnded = true
-      })
+      try {
+        const oldLength = this.list.data.length
+        const chunk = await this.list.fetchNext()
+        this.list._data = this.list.data.concat(chunk.data)
+        this.list.fetchNext = chunk.fetchNext
+        this.isListEnded = oldLength === this.list.data.length
+      } catch (error) {
+        ErrorHandler.process(error)
+      }
     },
 
     normalizeRecords (records) {

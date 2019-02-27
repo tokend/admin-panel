@@ -9,7 +9,7 @@ export default {
 
   computed: {
     src () {
-      return `${config.STORAGE_SERVER}/${this.fileKey}`
+      return `${config.FILE_STORAGE}/${this.fileKey}`
     }
   }
 }

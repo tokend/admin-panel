@@ -87,6 +87,8 @@ export default {
   display: flex;
   align-items: center;
   margin-bottom: 20px;
+  font-size: 1.3rem;
+  font-weight: bold;
 }
 
 .users-show__back-btn-inner {

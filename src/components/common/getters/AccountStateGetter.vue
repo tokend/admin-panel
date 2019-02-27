@@ -1,6 +1,11 @@
 <template>
-  <span class="account-state-getter" v-if="accountState">
-    {{ accountState }}
+  <span class="account-state-getter">
+    <template v-if="accountState">
+      {{ accountState }}
+    </template>
+    <template v-else>
+      Loading...
+    </template>
   </span>
 </template>
 

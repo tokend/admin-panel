@@ -163,6 +163,7 @@ export const requests = {
     return (await Sdk.horizon.request.getAllForIssuances({
       order: 'desc',
       reviewer: config.MASTER_ACCOUNT,
+      limit: 1000,
       ...filters
     }))
   },
@@ -174,6 +175,7 @@ export const requests = {
     if (requestor) filters.requestor = requestor
     return (await Sdk.horizon.request.getAllForWithdrawals({
       order: 'desc',
+      limit: 1000,
       ...filters
     }))
   },
@@ -184,6 +186,7 @@ export const requests = {
     if (requestor) filters.requestor = requestor
     return (await Sdk.horizon.request.getAllForSales({
       order: 'desc',
+      limit: 1000,
       ...filters
     }))
   },
@@ -194,7 +197,8 @@ export const requests = {
       requestor: filters.requestor,
       state: filters.state,
       reviewer: filters.reviewer,
-      order: 'desc'
+      order: 'desc',
+      limit: 1000
     })
     return (await Sdk.horizon.request.getAllForAssets(params))
   },
@@ -206,6 +210,7 @@ export const requests = {
     if (requestor) filters.requestor = requestor
     return (await Sdk.horizon.request.getAllForLimitsUpdates({
       order: 'desc',
+      limit: 1000,
       ...filters
     }))
   },
@@ -217,6 +222,7 @@ export const requests = {
     const response = await Sdk.horizon.request.getAllForPreissuances({
       asset: asset,
       order: 'desc',
+      limit: 1000,
       reviewer: config.MASTER_ACCOUNT
     })
     response.records = mapRequests(response.data)

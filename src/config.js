@@ -7,86 +7,7 @@ const defaultFeatures = {
   SEED_AUTH: true,
 
   PHOTO_VERIFICATION: true,
-  KYC_REQUEST_STATES: ['approved', 'rejected', 'pending'],
-  KYC_TASKS: {
-    superAdmin: {
-      exist: true,
-      render: {
-        add: true,
-        remove: true
-      },
-      selected: {
-        add: false,
-        remove: true
-      }
-    },
-    photoMatch: {
-      exist: true,
-      render: {
-        add: true,
-        remove: true
-      },
-      selected: {
-        add: false,
-        remove: true
-      }
-    },
-    validPoa: {
-      exist: true,
-      render: {
-        add: true,
-        remove: true
-      },
-      selected: {
-        add: false,
-        remove: true
-      }
-    },
-    requestForAutoReviewSent: {
-      exist: true,
-      render: {
-        add: true,
-        remove: true
-      },
-      selected: {
-        add: false,
-        remove: true
-      }
-    },
-    requestForAutoReviewApproved: {
-      exist: true,
-      render: {
-        add: true,
-        remove: true
-      },
-      selected: {
-        add: false,
-        remove: true
-      }
-    },
-    accreditedInvestor: {
-      exist: true,
-      render: {
-        add: true,
-        remove: true
-      },
-      selected: {
-        add: false,
-        remove: false
-      }
-    },
-    nonLatinDocs: {
-      exist: true,
-      render: {
-        add: true,
-        remove: true
-      },
-      selected: {
-        add: false,
-        remove: false
-      }
-    }
-  }
+  KYC_REQUEST_STATES: ['approved', 'rejected', 'pending']
 }
 
 export default Object.assign(
@@ -97,7 +18,7 @@ export default Object.assign(
     PAGE_LIMIT: 10,
     KEY_SERVER_ADMIN: process.env.KEY_SERVER_ADMIN,
     HORIZON_SERVER: process.env.HORIZON_SERVER,
-    STORAGE_SERVER: process.env.STORAGE_SERVER,
+    FILE_STORAGE: process.env.FILE_STORAGE,
     FEATURES: defaultFeatures,
     MASTER_ACCOUNT: '',
     NETWORK_PASSPHRASE: '',

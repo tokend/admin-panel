@@ -333,7 +333,7 @@ export default {
     },
     termsUrl () {
       if (safeGet(this.asset, 'creatorDetails.terms.key')) {
-        return `${config.STORAGE_SERVER}/${safeGet(this.asset, 'creatorDetails.terms.key')}`
+        return `${config.FILE_STORAGE}/${safeGet(this.asset, 'creatorDetails.terms.key')}`
       }
       return ''
     }

@@ -51,7 +51,7 @@ export default {
   computed: {
     href () {
       if (this.fileType === DOCUMENTS_POLICIES.public) {
-        return this.fileUrl || `${config.STORAGE_SERVER}/${this.fileKey}`
+        return this.fileUrl || `${config.FILE_STORAGE}/${this.fileKey}`
       } else {
         return this.fileUrl || this.privateFileUrl
       }

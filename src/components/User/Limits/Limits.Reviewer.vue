@@ -1,8 +1,11 @@
 <template>
   <div class="limits-reviewer">
-    <button class="users-show__back-btn" @click="back">
-      <span class="users-show__back-btn-inner">
-        <mdi-chevron-left-icon/>
+    <button
+      class="limits-reviewer__back-btn"
+      @click="back"
+    >
+      <span class="limits-reviewer__back-btn-inner">
+        <mdi-chevron-left-icon />
       </span>
       Back
     </button>
@@ -29,9 +32,18 @@
               is-titled
             />
           </detail>
-          <detail label="Account ID" :value="request.requestor"/>
-          <detail label="Note" :value="get(desiredLimitDetails, 'note')"/>
-          <detail label="Limits for asset" :value="get(desiredLimitDetails, 'asset')"/>
+          <detail
+            label="Account ID"
+            :value="request.requestor"
+          />
+          <detail
+            label="Note"
+            :value="get(desiredLimitDetails, 'note')"
+          />
+          <detail
+            label="Limits for asset"
+            :value="get(desiredLimitDetails, 'asset')"
+          />
           <detail
             label="Operation type limits"
             :value="get(desiredLimitDetails, 'operationType')"
@@ -41,13 +53,19 @@
           <div class="limits-review__limits-item">
             <h3 class="limits-reviewer__heading">Current limits</h3>
             <div class="limits-reviewer__content-section">
-              <user-limits :limits="currentLimits" :key="1"/>
+              <user-limits
+                :limits="currentLimits"
+                :key="1"
+              />
             </div>
           </div>
           <div class="limits-review__limits-item">
             <h3 class="limits-reviewer__heading">Desired limits</h3>
             <div class="limits-reviewer__content-section">
-              <user-limits :limits="desiredLimitDetails.limits" :key="2"/>
+              <user-limits
+                :limits="desiredLimitDetails.limits"
+                :key="2"
+              />
             </div>
           </div>
         </div>
@@ -61,7 +79,10 @@
             :userAccountId="account.id"
           />
         </div>
-        <user-details :id="request.requestor" :isReviewing="false"/>
+        <user-details
+          :id="request.requestor"
+          :isReviewing="false"
+        />
       </template>
       <div class="app__form-actions limits-reviewer__btn-outer">
         <button
@@ -77,9 +98,9 @@
           :disabled="isPending ||
           desiredLimitDetails.requestType === 'docsUploading' ||
           request.requestState === REQUEST_STATES.pending"
-          >
-            Request docs
-          </button>
+        >
+          Request docs
+        </button>
         <button
           class="app__btn-secondary"
           @click="showRejectModal"
@@ -102,51 +123,61 @@
     <template v-if="isRequiringDocs">
       <div class="limits-reviewer__doc-list-form">
         <template v-for="(item,i) in uploadDocs">
-          <div class="limits-reviewer__doc-list-item" :key="i">
+          <div
+            class="limits-reviewer__doc-list-item"
+            :key="i"
+          >
             <div class="limits-reviewer__doc-label">
-              <datalist-field :docItem="item" :key="i"/>
+              <datalist-field
+                :docItem="item"
+                :key="i"
+              />
             </div>
-            <text-field label="Document description"
+            <text-field
+              label="Document description"
               class="limits-reviewer__doc-textfield"
               :autofocus="true"
               v-model="item.description"
             />
             <div class="limits-reviewer__doc-close-btn-wrapper">
               <button @click="removeDoc(i)">
-                <mdi-close-icon/>
+                <mdi-close-icon />
               </button>
             </div>
           </div>
         </template>
-          <div class="app__form-actions limits-reviewer__doc-list-form-actions">
-            <button
-              class="app__btn"
-              :disabled="isPending"
-              @click="addMoreDoc"
-            >
-              Add more
-            </button>
-            <button
-              class="app__btn"
-              :disabled="isPending"
-              @click="requireDocsRequest"
-            >
-              Submit
-            </button>
-          </div>
+        <div class="app__form-actions limits-reviewer__doc-list-form-actions">
+          <button
+            class="app__btn"
+            :disabled="isPending"
+            @click="addMoreDoc"
+          >
+            Add more
+          </button>
+          <button
+            class="app__btn"
+            :disabled="isPending"
+            @click="requireDocsRequest"
+          >
+            Submit
+          </button>
         </div>
+      </div>
     </template>
-    <modal class="limits-reviewer__reject-modal"
+    <modal
+      class="limits-reviewer__reject-modal"
       v-if="rejectForm.isShown"
       @close-request="hideRejectModal()"
       max-width="40rem"
     >
-      <form class="limits-reviewer__reject-form"
+      <form
+        class="limits-reviewer__reject-form"
         id="limits-reviewer__reject-form"
         @submit.prevent="hideRejectModal() || rejectRequest()"
       >
         <div class="app__form-row">
-          <text-field label="Reject reason"
+          <text-field
+            label="Reject reason"
             class="limits-reviewer__reject-form-textfield"
             :autofocus="true"
             v-model="rejectForm.reason"
@@ -154,10 +185,16 @@
         </div>
       </form>
       <div class="app__form-actions limits-reviewer__reject-form-actions">
-        <button class="app__btn" form="limits-reviewer__reject-form">
+        <button
+          class="app__btn"
+          form="limits-reviewer__reject-form"
+        >
           Reject
         </button>
-        <button class="app__btn-secondary" @click="hideRejectModal">
+        <button
+          class="app__btn-secondary"
+          @click="hideRejectModal"
+        >
           Cancel
         </button>
       </div>
@@ -192,6 +229,7 @@ import get from 'lodash/get'
 import isEqual from 'lodash/isEqual'
 import 'mdi-vue/CloseIcon'
 import 'mdi-vue/ChevronLeftIcon'
+import { ErrorHandler } from '@/utils/ErrorHandler'
 
 const DEFAULT_LIMIT_STRUCT = {
   'id': 0,
@@ -316,7 +354,7 @@ export default {
         const oldLimits = this.limits
           .find(item => {
             return item.assetCode === this.request.asset &&
-                  item.statsOpType === STATS_OPERATION_TYPES[OPERATION_TYPES[this.request.details.updateLimits.details.operationType]]
+              item.statsOpType === STATS_OPERATION_TYPES[OPERATION_TYPES[this.request.details.updateLimits.details.operationType]]
           })
         await api.requests.approveLimitsUpdate({
           request: this.request,
@@ -326,9 +364,8 @@ export default {
         })
         this.$router.push({ name: 'limits.requests' })
         this.$store.dispatch('SET_INFO', 'Request approved. Limits are changed')
-      } catch (e) {
-        console.error(e)
-        e.showMessage()
+      } catch (error) {
+        ErrorHandler.process(error)
       }
       this.isPending = false
     },
@@ -345,10 +382,9 @@ export default {
         }, this.request)
         this.$router.push({ name: 'limits.requests' })
         this.$store.dispatch('SET_INFO', 'Request rejected. Limits are not changed')
-      } catch (e) {
+      } catch (error) {
         this.isPending = false
-        console.error(e)
-        e.showMessage()
+        ErrorHandler.process(error)
       }
       this.isPending = false
     },
@@ -369,10 +405,9 @@ export default {
         })
         this.$store.dispatch('SET_INFO', 'Upload additional documents requested.')
         this.isRequiringDocs = false
-      } catch (e) {
+      } catch (error) {
         this.isPending = false
-        console.error(e)
-        e.showMessage()
+        ErrorHandler.process(error)
       }
       this.isPending = false
     },
@@ -412,75 +447,77 @@ export default {
 
 
 <style lang="scss" scoped>
-  @import "../../../assets/scss/colors";
+@import "../../../assets/scss/colors";
+.limits-reviewer__heading {
+  margin-bottom: 2rem;
+}
+
+.limits-reviewer__content-section {
+  margin-bottom: 3rem;
+}
+
+.limits-reviewer__limits-wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+.limits-review__limits-item {
+  width: 50%;
+}
+
+.limits-reviewer__btn-outer {
+  display: flex;
+  width: 32rem;
+  margin-top: 2rem;
+  &:first-child:not(:only-child) {
+    margin-right: 1rem;
+  }
+}
+
+.limits-reviewer__reject-form-textfield {
+  margin-bottom: 2rem;
+}
+.limits-reviewer__doc-list-item {
+  display: flex;
+  margin-bottom: 3rem;
+}
+
+.limits-reviewer__doc-label {
+  width: 50%;
+}
+
+.limits-reviewer__doc-list-form {
+  margin-top: 3rem;
+}
+
+.limits-reviewer__doc-list-form-actions {
+  width: 32rem;
+}
+
+.limits-reviewer__doc-list-form,
+.limits-reviewer__card {
+  background: $color-content-bg;
+  border-radius: 2px;
+  padding: 24px;
+}
+
+.limits-reviewer__uploaded-docs-list-wrapper {
+  background: $color-content-bg;
+  margin: 1rem auto;
   .limits-reviewer__heading {
-    margin-bottom: 2rem;
-  }
-
-  .limits-reviewer__content-section {
-    margin-bottom: 3rem;
-  }
-
-  .limits-reviewer__limits-wrapper {
-    display: flex;
-    justify-content: space-between;
-  }
-
-  .limits-review__limits-item {
-    width: 50%;
-  }
-
-  .limits-reviewer__btn-outer {
-    display: flex;
-    width: 32rem;
-    margin-top: 2rem;
-    &:first-child:not(:only-child) {
-      margin-right: 1rem;
-    }
-  }
-
-  .limits-reviewer__reject-form-textfield {
-    margin-bottom: 2rem;
-  }
-  .limits-reviewer__doc-list-item {
-    display: flex;
-    margin-bottom: 3rem;
-  }
-
-  .limits-reviewer__doc-label {
-    width: 50%;
-  }
-
-  .limits-reviewer__doc-list-form {
-    margin-top: 3rem;
-  }
-
-  .limits-reviewer__doc-list-form-actions {
-    width: 32rem;
-  }
-
-  .limits-reviewer__doc-list-form,
-  .limits-reviewer__card {
-    background: $color-content-bg;
-    border-radius: 2px;
     padding: 24px;
   }
+}
 
-  .limits-reviewer__uploaded-docs-list-wrapper {
-    background: $color-content-bg;
-    margin: 1rem auto;
-    .limits-reviewer__heading {
-      padding: 24px;
-    }
-  }
-
-  .users-show__back-btn {
+.limits-reviewer__back-btn {
   display: flex;
   align-items: center;
   margin-bottom: 20px;
+  font-size: 1.3rem;
+  font-weight: bold;
 }
 
-.users-show__back-btn-inner {
+.limits-reviewer__back-btn-inner {
   $dimension: 3.5rem;
 
   background: $color-content-bg;
@@ -489,7 +526,7 @@ export default {
   height: $dimension;
   margin-right: 10px;
   position: relative;
-  transition: .2s;
+  transition: 0.2s;
   width: $dimension;
 
   &:hover {
@@ -503,5 +540,4 @@ export default {
     transform: translate(-50%, -50%);
   }
 }
-
 </style>
