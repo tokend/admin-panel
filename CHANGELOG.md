@@ -35,7 +35,7 @@ for further information about branching and tagging conventions.
 - Using account roles instead of account types for limits requests
 - Using `request.details.updateLimits` instead of `request.details.limitsUpdate`
 - `localizeIssuanceRequestState` filter
-- "More" button on sale list
+- "More" button on sale list and user operations list
 - Video and Description displaying of the Sale description tab
 
 ## [1.2.0-rc.9] - 2019-02-25
