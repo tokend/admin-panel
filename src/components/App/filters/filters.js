@@ -43,3 +43,12 @@ export function assetTypeToString (assetType) {
 export function lowerCase (string) {
   return String(string).toLowerCase()
 }
+
+export function formatVersion (string) {
+  const isHash = new RegExp('^[a-zA-Z0-9]*$')
+  if (isHash.test(string)) {
+    return string.slice(0, 7)
+  } else {
+    return string
+  }
+}
