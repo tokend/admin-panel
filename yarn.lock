@@ -15,10 +15,10 @@
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.7.0.tgz#9a06f4f137ee84d7df0460c1fdb1135ffa6c50fd"
   integrity sha512-ONhaKPIufzzrlNbqtWFFd+jlnemX6lJAgq9ZeiZtS7I1PIf/la7CW4m83rTXRnVnsMbW2k56pGYu7AUFJD9Pow==
 
-"@tokend/js-sdk@1.0.0-x.19":
-  version "1.0.0-x.19"
-  resolved "https://registry.yarnpkg.com/@tokend/js-sdk/-/js-sdk-1.0.0-x.19.tgz#7cd51ce600783ba395fb01925f6dbcefbdaa16e9"
-  integrity sha512-iIH+U6Ln+2wiav93uRxeEkudT7cQFKS4jZjlkZFhbpJHE5UtCfjBWaXuy2Aa5s8gx3TU/U9iK1fWKDAnEbb9jQ==
+"@tokend/js-sdk@1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@tokend/js-sdk/-/js-sdk-1.3.0.tgz#c377099adb0526bfd7cd7660ac81115d5d89e245"
+  integrity sha512-vQuId/miSkKqYYxLBV70TP7RW8y2qNZAs3U2zs+MuWmgMu3L8ET0MWNOAWPY0qSue4uTX5GOTcXC04tWycRlYQ==
   dependencies:
     axios "0.16.2"
     base32.js "0.1.0"
@@ -413,7 +413,7 @@ axios@0.15.3:
   dependencies:
     follow-redirects "1.0.0"
 
-axios@0.16.2, axios@^0.16.0:
+axios@0.16.2:
   version "0.16.2"
   resolved "https://registry.yarnpkg.com/axios/-/axios-0.16.2.tgz#ba4f92f17167dfbab40983785454b9ac149c3c6d"
   integrity sha1-uk+S8XFn37q0CYN4VFS5rBScPG0=
@@ -1153,9 +1153,9 @@ binary-extensions@^1.0.0:
   integrity sha512-EgmjVLMn22z7eGGv3kcnHwSnJXmFHjISTY9E/S5lIcTD3Oxw05QTcBLNkJFzcb3cNueUdF/IN4U+d78V0zO8Hw==
 
 bindings@^1.2.1:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/bindings/-/bindings-1.4.0.tgz#909efa49f2ebe07ecd3cb136778f665052040127"
-  integrity sha512-7znEVX22Djn+nYjxCWKDne0RRloa9XfYa84yk3s+HkE3LpDYZmhArYr9O9huBoHY3/oXispx5LorIX7Sl2CgSQ==
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/bindings/-/bindings-1.5.0.tgz#10353c9e945334bc0511a6d90b38fbc7c9c504df"
+  integrity sha512-p2q/t/mhvuOj/UeLlV6566GD/guowlr0hHxClI0W9m7MWYkL1F0hLo+0Aexs9HSPCtR1SXQ0TD3MMKrXZajbiQ==
   dependencies:
     file-uri-to-path "1.0.0"
 
@@ -1176,7 +1176,7 @@ block-stream@*:
   dependencies:
     inherits "~2.0.0"
 
-bluebird@^2.3.11:
+bluebird@2.11.0:
   version "2.11.0"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-2.11.0.tgz#534b9033c022c9579c56ba3b3e5a5caafbb650e1"
   integrity sha1-U0uQM8AiyVecVro7Plpcqvu2UOE=
@@ -1305,7 +1305,7 @@ browserslist@^1.3.6, browserslist@^1.5.2, browserslist@^1.7.6:
     caniuse-db "^1.0.30000639"
     electron-to-chromium "^1.2.7"
 
-bs58@~2.0.0:
+bs58@2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/bs58/-/bs58-2.0.1.tgz#55908d58f1982aba2008fa1bed8f91998a29bf8d"
   integrity sha1-VZCNWPGYKrogCPob7Y+RmYopv40=
@@ -1424,6 +1424,13 @@ callsites@^0.2.0:
   resolved "https://registry.yarnpkg.com/callsites/-/callsites-0.2.0.tgz#afab96262910a7f33c19a5775825c69f34e350ca"
   integrity sha1-r6uWJikQp/M8GaV3WCXGnzTjUMo=
 
+camel-case@1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/camel-case/-/camel-case-1.0.2.tgz#700f8c6e3e4f242a0951ac709034ba12d28fd02a"
+  integrity sha1-cA+Mbj5PJCoJUaxwkDS6EtKP0Co=
+  dependencies:
+    sentence-case "^1.0.2"
+
 camel-case@3.0.x:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/camel-case/-/camel-case-3.0.0.tgz#ca3c3688a4e9cf3a4cda777dc4dcbc713249cf73"
@@ -1431,13 +1438,6 @@ camel-case@3.0.x:
   dependencies:
     no-case "^2.2.0"
     upper-case "^1.1.1"
-
-camel-case@~1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/camel-case/-/camel-case-1.0.2.tgz#700f8c6e3e4f242a0951ac709034ba12d28fd02a"
-  integrity sha1-cA+Mbj5PJCoJUaxwkDS6EtKP0Co=
-  dependencies:
-    sentence-case "^1.0.2"
 
 camelcase-keys-deep@0.1.0:
   version "0.1.0"
@@ -5436,6 +5436,11 @@ lodash.words@^3.0.0:
   dependencies:
     lodash._root "^3.0.0"
 
+lodash@2.4.2:
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-2.4.2.tgz#fadd834b9683073da179b3eae6d9c0d15053f73e"
+  integrity sha1-+t2DS5aDBz2hebPq5tnA0VBT9z4=
+
 lodash@4.17.10:
   version "4.17.10"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.10.tgz#1b7793cf7259ea38fb3661d4d38b3260af8ae4e7"
@@ -5450,11 +5455,6 @@ lodash@^3.8.0:
   version "3.10.1"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-3.10.1.tgz#5bf45e8e49ba4189e17d482789dfd15bd140b7b6"
   integrity sha1-W/Rejkm6QYnhfUgnid/RW9FAt7Y=
-
-lodash@~2.4.1:
-  version "2.4.2"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-2.4.2.tgz#fadd834b9683073da179b3eae6d9c0d15053f73e"
-  integrity sha1-+t2DS5aDBz2hebPq5tnA0VBT9z4=
 
 log-symbols@^1.0.2:
   version "1.0.2"
@@ -7567,7 +7567,7 @@ ripemd160@0.2.0:
   resolved "https://registry.yarnpkg.com/ripemd160/-/ripemd160-0.2.0.tgz#2bf198bde167cacfa51c0a928e84b68bbe171fce"
   integrity sha1-K/GYveFnys+lHAqSjoS2i74XH84=
 
-ripemd160@~0.2.0:
+ripemd160@0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/ripemd160/-/ripemd160-0.2.1.tgz#dee19248a3e1c815ff9aea39e753a337f56a243d"
   integrity sha1-3uGSSKPhyBX/muo551OjN/VqJD0=
@@ -8220,7 +8220,7 @@ strip-json-comments@~2.0.1:
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-2.0.1.tgz#3c531942e908c2697c0ec344858c286c7ca0a60a"
   integrity sha1-PFMZQukIwml8DsNEhYwobHygpgo=
 
-superagent@~0.20.0:
+superagent@0.20.0:
   version "0.20.0"
   resolved "https://registry.yarnpkg.com/superagent/-/superagent-0.20.0.tgz#8593557806af7fb65301bb6a08626d97ebe1a9d3"
   integrity sha1-hZNVeAavf7ZTAbtqCGJtl+vhqdM=
@@ -8325,7 +8325,7 @@ text-table@^0.2.0, text-table@~0.2.0:
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
 
-thirty-two@~0.0.2:
+thirty-two@0.0.2:
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/thirty-two/-/thirty-two-0.0.2.tgz#4253e29d8cb058f0480267c5698c0e4927e54b6a"
   integrity sha1-QlPinYywWPBIAmfFaYwOSSflS2o=
@@ -8438,22 +8438,22 @@ to-regex@^3.0.1, to-regex@^3.0.2:
   optionalDependencies:
     ed25519 "0.0.4"
 
-"tokend-wallet-js-sdk@git+https://github.com/tokend/wallet-js-sdk.git":
+"tokend-wallet-js-sdk@git+https://github.com/tokend/wallet-js-sdk.git#ec401cabdb6d9a4e122f54bf1332cf1957e80956":
   version "0.1.2"
-  resolved "git+https://github.com/tokend/wallet-js-sdk.git#5cff8c745be00849d4abbc2ebc8b77165d9be653"
+  resolved "git+https://github.com/tokend/wallet-js-sdk.git#ec401cabdb6d9a4e122f54bf1332cf1957e80956"
   dependencies:
-    axios "^0.16.0"
-    bluebird "^2.3.11"
-    bs58 "~2.0.0"
-    camel-case "~1.0.2"
-    lodash "~2.4.1"
-    ripemd160 "~0.2.0"
+    axios "0.16.2"
+    bluebird "2.11.0"
+    bs58 "2.0.1"
+    camel-case "1.0.2"
+    lodash "2.4.2"
+    ripemd160 "0.2.1"
     sjcl "git+https://github.com/stellar/sjcl.git"
     sjcl-scrypt "git+https://github.com/stellar/sjcl-scrypt.git"
-    superagent "~0.20.0"
-    thirty-two "~0.0.2"
+    superagent "0.20.0"
+    thirty-two "0.0.2"
     tokend-js-base "https://github.com/tokend/js-base.git"
-    tweetnacl "^0.11.2"
+    tweetnacl "0.11.2"
 
 toposort@^1.0.0:
   version "1.0.7"
@@ -8512,15 +8512,15 @@ tunnel-agent@^0.6.0:
   dependencies:
     safe-buffer "^5.0.1"
 
+tweetnacl@0.11.2:
+  version "0.11.2"
+  resolved "https://registry.yarnpkg.com/tweetnacl/-/tweetnacl-0.11.2.tgz#ed4bce52d1ddbceea3a2c504cd17d364a34f414b"
+  integrity sha1-7UvOUtHdvO6josUEzRfTZKNPQUs=
+
 tweetnacl@0.13.3, tweetnacl@^0.13.0:
   version "0.13.3"
   resolved "https://registry.yarnpkg.com/tweetnacl/-/tweetnacl-0.13.3.tgz#d628b56f3bcc3d5ae74ba9d4c1a704def5ab4b56"
   integrity sha1-1ii1bzvMPVrnS6nUwacE3vWrS1Y=
-
-tweetnacl@^0.11.2:
-  version "0.11.2"
-  resolved "https://registry.yarnpkg.com/tweetnacl/-/tweetnacl-0.11.2.tgz#ed4bce52d1ddbceea3a2c504cd17d364a34f414b"
-  integrity sha1-7UvOUtHdvO6josUEzRfTZKNPQUs=
 
 tweetnacl@^0.14.3, tweetnacl@~0.14.0:
   version "0.14.5"
