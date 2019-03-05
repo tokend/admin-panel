@@ -228,6 +228,14 @@
 
       <template v-if="isShownAdvanced">
         <div class="app__form-row">
+          <tick-field
+            class="app__form-field"
+            v-model="asset.creatorDetails.isCoinpayments"
+            label="Use Coinpayments"
+            :disabled="isPending"
+          />
+        </div>
+        <div class="app__form-row">
           <input-field
             class="app__form-field app__form-field--halved"
             type="number"
@@ -300,7 +308,8 @@ export default {
           name: '',
           logo: {},
           terms: {},
-          externalSystemType: ''
+          externalSystemType: '',
+          isCoinpayments: false
         }
       },
 
@@ -382,6 +391,7 @@ export default {
             creatorDetails: {
               name: this.asset.creatorDetails.name,
               external_system_type: this.asset.creatorDetails.externalSystemType,
+              is_coinpayments: this.asset.creatorDetails.isCoinpayments,
               logo,
               terms
             }
@@ -400,6 +410,7 @@ export default {
             creatorDetails: {
               name: this.asset.creatorDetails.name,
               external_system_type: this.asset.creatorDetails.externalSystemType,
+              is_coinpayments: this.asset.creatorDetails.isCoinpayments,
               logo: {
                 key: this.asset.creatorDetails.logo.key,
                 type: this.asset.creatorDetails.logo.type
