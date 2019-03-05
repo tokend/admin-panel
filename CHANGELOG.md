@@ -11,3 +11,6 @@ for further information about branching and tagging conventions.
 
 [Unreleased]: https://github.com/tokend/admin-panel/compare/1.3.0...HEAD
 [1.3.0]: https://github.com/tokend/admin-panel/releases/tag/1.3.0
+
+### Changed
+- Modified pre-commit hook so it blocks commit if no changes were made to CHANGELOG.md
