@@ -173,57 +173,9 @@ export default {
   },
 
   methods: {
-    // async getList () {
-    //   this.isLoading = true
-    //   try {
-    //     this.list = await ApiCallerFactory
-    //       .createCallerInstance()
-    //       .getWithSignature('/identities', {
-    //         filter: clearObject({
-    //           email: this.filters.email,
-    //           role: this.filters.role,
-    //           address: this.filters.address
-    //         })
-    //       })
-    //     this.isListEnded = !(this.list.data || []).length
-    //   } catch (error) {
-    //     ErrorHandler.process(error)
-    //   }
-    //   this.isLoading = false
-    // },
-
-    // async onMoreClick () {
-    //   console.log(this.list)
-    //   try {
-    //     const oldLength = this.list.data.length
-    //     const chunk = await this.list.fetchNext()
-    //     this.list._data = this.list.data.concat(chunk.data)
-    //     this.list.fetchNext = chunk.fetchNext
-    //     this.isListEnded = oldLength === this.list.data.length
-    //   } catch (error) {
-    //     ErrorHandler.process(error)
-    //   }
-    // },
-
-    // toggleViewMode (id) {
-    //   if (id) {
-    //     this.view.mode = VIEW_MODES_VERBOSE.user
-    //     this.view.userId = id
-    //     this.view.scrollPosition = window.scrollY
-    //     return
-    //   }
-    //   this.view.mode = VIEW_MODES_VERBOSE.index
-    //   this.view.userId = null
-    //   Vue.nextTick(() => {
-    //     window.scroll(0, this.view.scrollPosition)
-    //     this.view.scrollPosition = 0
-    //   })
-    // }
-
     async getList () {
       this.isLoading = true
       let response = {}
-
       try {
         response = await ApiCallerFactory
           .createCallerInstance()
@@ -237,19 +189,17 @@ export default {
       } catch (error) {
         ErrorHandler.process(error)
       }
+      this.isLoading = false
       return response
     },
 
     setList (data) {
-      console.log(data)
       this.list.data = data
-      this.isLoading = false
       this.isLoaded = true
     },
 
     extendList (data) {
       this.list.data = this.list.data.concat(data)
-      console.log(this.list.data)
     },
 
     toggleViewMode (id) {

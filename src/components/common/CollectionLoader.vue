@@ -36,7 +36,7 @@ const EVENTS = {
   nextPageLoad: 'next-page-load',
   error: 'error'
 }
-const DEFAULT_PAGE_LIMIT = 5
+const DEFAULT_PAGE_LIMIT = 10
 
 export default {
   name: 'collection-loader',
@@ -70,7 +70,6 @@ export default {
     async loadPage (eventName, loaderFn) {
       try {
         const response = await loaderFn()
-        console.log(response.data.length)
         this.$emit(eventName, response.data)
         this.nextPageLoader = response.fetchNext
         this.isCollectionFetched = response.data.length < this.pageLimit
