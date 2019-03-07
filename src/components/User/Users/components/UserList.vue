@@ -97,15 +97,15 @@
           </template>
         </div>
 
-        <div class="app__more-btn-wrp">
-          <button
-            class="app__btn-secondary"
-            v-if="!isListEnded && list.data"
-            @click="onMoreClick"
-          >
-            More
-          </button>
-        </div>
+      <div class="app__more-btn-wrp">
+        <collection-loader
+          :first-page-loader="this.getList"
+          @first-page-load="this.setList"
+          @next-page-load="this.extendList"
+          ref="child"
+        />
+      </div>
+        
       </div>
     </template>
 
@@ -130,6 +130,7 @@ import 'mdi-vue/DownloadIcon'
 import { ApiCallerFactory } from '@/api-caller-factory'
 import config from '@/config'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { CollectionLoader } from '@/components/common'
 
 const VIEW_MODES_VERBOSE = Object.freeze({
   index: 'index',
@@ -141,7 +142,8 @@ export default {
     SelectField,
     InputField,
     UserView,
-    AccountStateGetter
+    AccountStateGetter,
+    CollectionLoader
   },
 
   data () {
@@ -157,8 +159,9 @@ export default {
         userId: null,
         scrollPosition: 0
       },
-      list: {},
-      isListEnded: false,
+      list: {
+        data: []
+      },
       isLoading: false,
 
       ACCOUNT_ROLES: config.ACCOUNT_ROLES
@@ -166,14 +169,63 @@ export default {
   },
 
   created () {
-    this.getList()
+    // this.getList()
   },
 
   methods: {
+    // async getList () {
+    //   this.isLoading = true
+    //   try {
+    //     this.list = await ApiCallerFactory
+    //       .createCallerInstance()
+    //       .getWithSignature('/identities', {
+    //         filter: clearObject({
+    //           email: this.filters.email,
+    //           role: this.filters.role,
+    //           address: this.filters.address
+    //         })
+    //       })
+    //     this.isListEnded = !(this.list.data || []).length
+    //   } catch (error) {
+    //     ErrorHandler.process(error)
+    //   }
+    //   this.isLoading = false
+    // },
+
+    // async onMoreClick () {
+    //   console.log(this.list)
+    //   try {
+    //     const oldLength = this.list.data.length
+    //     const chunk = await this.list.fetchNext()
+    //     this.list._data = this.list.data.concat(chunk.data)
+    //     this.list.fetchNext = chunk.fetchNext
+    //     this.isListEnded = oldLength === this.list.data.length
+    //   } catch (error) {
+    //     ErrorHandler.process(error)
+    //   }
+    // },
+
+    // toggleViewMode (id) {
+    //   if (id) {
+    //     this.view.mode = VIEW_MODES_VERBOSE.user
+    //     this.view.userId = id
+    //     this.view.scrollPosition = window.scrollY
+    //     return
+    //   }
+    //   this.view.mode = VIEW_MODES_VERBOSE.index
+    //   this.view.userId = null
+    //   Vue.nextTick(() => {
+    //     window.scroll(0, this.view.scrollPosition)
+    //     this.view.scrollPosition = 0
+    //   })
+    // }
+
     async getList () {
       this.isLoading = true
+      let response = {}
+
       try {
-        this.list = await ApiCallerFactory
+        response = await ApiCallerFactory
           .createCallerInstance()
           .getWithSignature('/identities', {
             filter: clearObject({
@@ -182,23 +234,22 @@ export default {
               address: this.filters.address
             })
           })
-        this.isListEnded = !(this.list.data || []).length
       } catch (error) {
         ErrorHandler.process(error)
       }
-      this.isLoading = false
+      return response
     },
 
-    async onMoreClick () {
-      try {
-        const oldLength = this.list.data.length
-        const chunk = await this.list.fetchNext()
-        this.list._data = this.list.data.concat(chunk.data)
-        this.list.fetchNext = chunk.fetchNext
-        this.isListEnded = oldLength === this.list.data.length
-      } catch (error) {
-        ErrorHandler.process(error)
-      }
+    setList (data) {
+      console.log(data)
+      this.list.data = data
+      this.isLoading = false
+      this.isLoaded = true
+    },
+
+    extendList (data) {
+      this.list.data = this.list.data.concat(data)
+      console.log(this.list.data)
     },
 
     toggleViewMode (id) {
@@ -219,16 +270,16 @@ export default {
 
   watch: {
     'filters.state' () {
-      this.getList()
+      this.$refs.child.loadFirstPage()
     },
     'filters.role' () {
-      this.getList()
+      this.$refs.child.loadFirstPage()
     },
     'filters.email': _.throttle(function () {
-      this.getList()
+      this.$refs.child.loadFirstPage()
     }, 1000),
     'filters.address': _.throttle(function () {
-      this.getList()
+      this.$refs.child.loadFirstPage()
     }, 1000)
   }
 }
