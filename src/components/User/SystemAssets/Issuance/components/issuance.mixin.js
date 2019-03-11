@@ -2,19 +2,22 @@ import api from '@/api'
 import { Sdk } from '@/sdk'
 import localize from '@/utils/localize'
 import SelectField from '@comcom/fields/SelectField'
-import Bus from '@/utils/EventBus'
 
 import { REQUEST_STATES, ASSET_POLICIES } from '@/constants'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { CollectionLoader } from '@/components/common'
 
 export default {
   components: {
-    SelectField
+    SelectField,
+    CollectionLoader
   },
   data () {
     return {
       REQUEST_STATES,
-      list: {},
+      list: {
+        data: []
+      },
       listCounter: {
         pending: null,
         approved: null
@@ -36,8 +39,6 @@ export default {
 
   async created () {
     await this.getAssets()
-    Bus.$on('issuance:updateRequestList', _ => this.getList())
-    this.getList()
   },
 
   methods: {
@@ -58,31 +59,28 @@ export default {
 
     async getList () {
       this.isLoaded = false
+      let response = {}
       try {
         const filters = { ...this.filters }
-        this.list = await api.requests.getIssuanceRequests(filters)
-        this.getListCounter()
+        response = await api.requests.getIssuanceRequests(filters)
+        this.listCounter.pending = response._rawResponse.data._embedded.meta.count.pending
+        this.listCounter.approved = response._rawResponse.data._embedded.meta.count.approved
         this.isNoMoreEntries = false
       } catch (error) {
         console.error(error)
         this.$store.dispatch('SET_ERROR', 'Cannot load issuance request list.')
       }
       this.isLoaded = true
+      return response
     },
 
-    getListCounter () {
-      if (this.list) {
-        this.listCounter.pending = this.list._rawResponse.data._embedded.meta.count.pending
-        this.listCounter.approved = this.list._rawResponse.data._embedded.meta.count.approved
-      }
+    setList (data) {
+      this.list.data = data
     },
-    async onMoreButtonClick () {
+
+    async onMoreButtonClick (data) {
       try {
-        const oldLength = this.list.data.length
-        const chunk = await this.list.fetchNext()
-        this.list._data = this.list.data.concat(chunk.data)
-        this.list.fetchNext = chunk.fetchNext
-        this.isNoMoreEntries = oldLength === this.list.data.length
+        this.list.data = this.list.data.concat(data)
       } catch (error) {
         ErrorHandler.process(error)
       }
@@ -90,7 +88,7 @@ export default {
   },
 
   watch: {
-    'filters.state' () { this.getList() },
-    'filters.asset' () { this.getList() }
+    'filters.state' () { this.$refs.collectionLoaderBtn.loadFirstPage() },
+    'filters.asset' () { this.$refs.collectionLoaderBtn.loadFirstPage() }
   }
 }

@@ -40,9 +40,11 @@
     </ul>
 
     <div class="app__more-btn-wrp">
-      <button class="app__btn-secondary" v-if="!isListEnded && records" @click="getNextPage">
-        More
-      </button>
+      <collection-loader
+        :first-page-loader="this.getList"
+        @first-page-load="this.setList"
+        @next-page-load="this.getNextPage"
+      />
     </div>
   </div>
 </template>
@@ -54,16 +56,19 @@ import moment from 'moment'
 import { formatAssetAmount } from '@/utils/formatters'
 import { OperationCounterparty } from '@comcom/getters'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { CollectionLoader } from '@/components/common'
 
 export default {
   components: {
-    OperationCounterparty
+    OperationCounterparty,
+    CollectionLoader
   },
   data () {
     return {
       formatAssetAmount,
-      list: undefined,
-      isListEnded: false,
+      list: {
+        data: []
+      },
       masterPubKey: Vue.params.MASTER_ACCOUNT
     }
   },
@@ -77,26 +82,24 @@ export default {
     }
   },
 
-  created () {
-    this.getList()
-  },
-
   methods: {
     async getList () {
+      let response = {}
       try {
-        this.list = (await Sdk.horizon.account.getOperations(this.id))
+        response = await Sdk.horizon.account.getOperations(this.id)
       } catch (error) {
         this.$store.dispatch('SET_ERROR', 'Cannot load transaction list')
       }
+      return response
     },
 
-    async getNextPage () {
+    setList (data) {
+      this.list.data = data
+    },
+
+    async getNextPage (data) {
       try {
-        const oldLength = this.list.data.length
-        const chunk = await this.list.fetchNext()
-        this.list._data = this.list.data.concat(chunk.data)
-        this.list.fetchNext = chunk.fetchNext
-        this.isListEnded = oldLength === this.list.data.length
+        this.list.data = this.list.data.concat(data)
       } catch (error) {
         ErrorHandler.process(error)
       }

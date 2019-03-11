@@ -29,7 +29,7 @@
     </div>
 
     <div class="token-request-list__table-wrp">
-      <template v-if="records && records.length">
+      <template v-if="list.data && list.data.length">
         <ul class="app-list">
           <div class="app-list__header">
             <span class="app-list__cell">
@@ -47,7 +47,7 @@
 
           <router-link
             class="app-list__li"
-            v-for="(asset, i) in records"
+            v-for="(asset, i) in list.data"
             :key="i"
             :to="{ name: 'tokens.requests.show', params: { id: asset.id }}"
           >
@@ -72,11 +72,12 @@
         </ul>
 
         <div class="app__more-btn-wrp">
-          <button class="app__btn-secondary"
-            v-if="!isListEnded"
-            @click="nextPage" >
-            More
-          </button>
+          <collection-loader
+            :first-page-loader="this.getList"
+            @first-page-load="this.setList"
+            @next-page-load="this.nextPage"
+            ref="collectionLoaderBtn"
+          />
         </div>
       </template>
 
@@ -86,6 +87,12 @@
             {{ isPending ? 'Loading...' : 'Nothing here yet' }}
           </li>
         </ul>
+        <collection-loader
+          :first-page-loader="this.getList"
+          @first-page-load="this.setList"
+          @next-page-load="this.nextPage"
+          ref="collectionLoaderBtn"
+        />
       </template>
     </div>
   </div>
@@ -103,17 +110,20 @@ import {
 import _ from 'lodash'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { snakeToCamelCase } from '@/utils/un-camel-case'
+import { CollectionLoader } from '@/components/common'
 
 export default {
   components: {
     InputField,
-    SelectField
+    SelectField,
+    CollectionLoader
   },
 
   data () {
     return {
-      list: null,
-      isListEnded: false,
+      list: {
+        data: []
+      },
       isPending: false,
       filters: {
         state: REQUEST_STATES_STR.pending,
@@ -133,24 +143,15 @@ export default {
     }
   },
 
-  created () {
-    this.getList()
-  },
-
-  computed: {
-    records () {
-      return (this.list || {}).data || []
-    }
-  },
-
   methods: {
     snakeToCamelCase,
 
     async getList () {
       this.isPending = true
+      let response = {}
       try {
         const requestor = await this.getRequestorAccountId(this.filters.requestor)
-        this.list = await api.requests.getAssetRequests({
+        response = await api.requests.getAssetRequests({
           state: CREATE_TOKEN_REQUEST_STATES[this.filters.state].code,
           requestor: requestor,
           code: this.filters.asset
@@ -160,15 +161,16 @@ export default {
         ErrorHandler.process(error)
       }
       this.isPending = false
+      return response
     },
 
-    async nextPage () {
+    setList (data) {
+      this.list.data = data
+    },
+
+    async nextPage (data) {
       try {
-        const oldLength = this.list.data.length
-        const chunk = await this.list.fetchNext()
-        this.list._data = this.list.data.concat(chunk.data)
-        this.list.fetchNext = chunk.fetchNext
-        this.isListEnded = oldLength === this.list.data.length
+        this.list.data = this.list.data.concat(data)
       } catch (error) {
         ErrorHandler.process(error)
       }
@@ -187,9 +189,9 @@ export default {
     }
   },
   watch: {
-    'filters.state' () { this.getList() },
-    'filters.requestor': _.throttle(function () { this.getList() }, 1000),
-    'filters.asset': _.throttle(function () { this.getList() }, 1000)
+    'filters.state' () { this.$refs.collectionLoaderBtn.loadFirstPage() },
+    'filters.requestor': _.throttle(function () { this.$refs.collectionLoaderBtn.loadFirstPage() }, 1000),
+    'filters.asset': _.throttle(function () { this.$refs.collectionLoaderBtn.loadFirstPage() }, 1000)
   }
 }
 </script>

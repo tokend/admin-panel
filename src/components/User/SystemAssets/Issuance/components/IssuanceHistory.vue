@@ -82,13 +82,12 @@
         </ul>
 
         <div class="app__more-btn-wrp">
-          <button
-            class="app__btn-secondary"
-            v-if="!isNoMoreEntries && list.data"
-            @click="onMoreButtonClick"
-          >
-            More
-          </button>
+          <collection-loader
+            :first-page-loader="getList"
+            @first-page-load="setList"
+            @next-page-load="onMoreButtonClick"
+            ref="collectionLoaderBtn"
+          />
         </div>
       </template>
 
@@ -98,6 +97,12 @@
             <p>{{isLoaded ? 'Nothing here yet' : 'Loading...'}}</p>
           </div>
         </div>
+        <collection-loader
+            :first-page-loader="getList"
+            @first-page-load="setList"
+            @next-page-load="onMoreButtonClick"
+            ref="collectionLoaderBtn"
+          />
       </template>
     </div>
   </div>
@@ -106,10 +111,15 @@
 <script>
 import IssuanceMixin from './issuance.mixin'
 import { EmailGetter } from '@comcom/getters'
+import Bus from '@/utils/EventBus'
 
 export default {
   mixins: [IssuanceMixin],
-  components: { EmailGetter }
+  components: { EmailGetter },
+
+  async created () {
+    Bus.$on('issuance:updateRequestList', _ => { this.$refs.collectionLoaderBtn.loadFirstPage() })
+  }
 }
 </script>
 

@@ -102,7 +102,7 @@
           :first-page-loader="this.getList"
           @first-page-load="this.setList"
           @next-page-load="this.extendList"
-          ref="child"
+          ref="collectionLoaderBtn"
         />
       </div>
         
@@ -220,16 +220,16 @@ export default {
 
   watch: {
     'filters.state' () {
-      this.$refs.child.loadFirstPage()
+      this.$refs.collectionLoaderBtn.loadFirstPage()
     },
     'filters.role' () {
-      this.$refs.child.loadFirstPage()
+      this.$refs.collectionLoaderBtn.loadFirstPage()
     },
     'filters.email': _.throttle(function () {
-      this.$refs.child.loadFirstPage()
+      this.$refs.collectionLoaderBtn.loadFirstPage()
     }, 1000),
     'filters.address': _.throttle(function () {
-      this.$refs.child.loadFirstPage()
+      this.$refs.collectionLoaderBtn.loadFirstPage()
     }, 1000)
   }
 }

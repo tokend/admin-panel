@@ -78,11 +78,12 @@
         </ul>
 
         <div class="app__more-btn-wrp">
-          <button class="app__btn-secondary"
-            v-if="!isNoMoreEntries && list.data"
-            @click="onMoreButtonClick" >
-            More
-          </button>
+          <collection-loader
+            :first-page-loader="getList"
+            @first-page-load="setList"
+            @next-page-load="onMoreButtonClick"
+            ref="collectionLoaderBtn"
+          />
         </div>
       </template>
 
@@ -92,6 +93,12 @@
             <p>{{isLoaded ? 'Nothing here yet' : 'Loading...'}}</p>
           </div>
         </div>
+        <collection-loader
+          :first-page-loader="getList"
+          @first-page-load="setList"
+          @next-page-load="onMoreButtonClick"
+          ref="collectionLoaderBtn"
+        />
       </template>
     </div>
   </div>

@@ -69,13 +69,12 @@
           </div>
 
           <div class="app__more-btn-wrp">
-            <button
-              class="app__btn-secondary"
-              v-if="!isListEnded && list.data"
-              @click="onMoreClick"
-            >
-              More
-            </button>
+            <collection-loader
+              :first-page-loader="this.loadList"
+              @first-page-load="this.setList"
+              @next-page-load="this.onMoreClick"
+              ref="collectionLoaderBtn"
+            />
           </div>
 
         </template>
@@ -98,6 +97,12 @@
               </p>
             </template>
           </div>
+          <collection-loader
+              :first-page-loader="this.loadList"
+              @first-page-load="this.setList"
+              @next-page-load="this.onMoreClick"
+              ref="collectionLoaderBtn"
+            />
         </template>
 
       </div>
@@ -128,6 +133,7 @@ import config from '@/config'
 import { ApiCallerFactory } from '@/api-caller-factory'
 import { clearObject } from '@/utils/clearObject'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { CollectionLoader } from '@/components/common'
 
 const VIEW_MODES_VERBOSE = Object.freeze({
   index: 'index',
@@ -136,7 +142,7 @@ const VIEW_MODES_VERBOSE = Object.freeze({
 
 export default {
   name: 'kyc-request-list',
-  components: { UserView, EmailGetter, SelectField, InputField },
+  components: { UserView, EmailGetter, SelectField, InputField, CollectionLoader },
   provide () {
     const kycRequestsList = {}
     Object.defineProperty(kycRequestsList, 'updateAsk', {
@@ -150,7 +156,9 @@ export default {
     return {
       isLoading: false,
       isListEnded: false,
-      list: {},
+      list: {
+        data: []
+      },
       view: {
         mode: VIEW_MODES_VERBOSE.index,
         userId: null,
@@ -178,20 +186,17 @@ export default {
     }
   },
 
-  created () {
-    this.loadList()
-  },
-
   methods: {
     snakeToCamelCase,
     async loadList () {
       this.isLoading = true
+      let response = {}
       try {
         let address = ''
         if (this.filters.address) {
           address = this.filters.address
         }
-        this.list = await ApiCallerFactory
+        response = await ApiCallerFactory
           .createCallerInstance()
           .getWithSignature('/v3/change_role_requests', {
             filter: clearObject({
@@ -201,20 +206,21 @@ export default {
             }),
             include: ['request_details.account']
           })
-        this.isListEnded = !(this.list.data || []).length
+        this.isListEnded = !(response.data || []).length
       } catch (error) {
         ErrorHandler.process(error)
       }
       this.isLoading = false
+      return response
     },
 
-    async onMoreClick () {
+    setList (data) {
+      this.list.data = data
+    },
+
+    async onMoreClick (data) {
       try {
-        const oldLength = this.list.data.length
-        const chunk = await this.list.fetchNext()
-        this.list._data = this.list.data.concat(chunk.data)
-        this.list.fetchNext = chunk.fetchNext
-        this.isListEnded = oldLength === this.list.data.length
+        this.list.data = this.list.data.concat(data)
       } catch (error) {
         ErrorHandler.process(error)
       }
@@ -237,9 +243,9 @@ export default {
     formatDate
   },
   watch: {
-    'filters.state' () { this.loadList() },
-    'filters.roleToSet' () { this.loadList() },
-    'filters.address': _.throttle(function () { this.loadList() }, 1000)
+    'filters.state' () { this.$refs.collectionLoaderBtn.loadFirstPage() },
+    'filters.roleToSet' () { this.$refs.collectionLoaderBtn.loadFirstPage() },
+    'filters.address': _.throttle(function () { this.$refs.collectionLoaderBtn.loadFirstPage() }, 1000)
   }
 }
 </script>
