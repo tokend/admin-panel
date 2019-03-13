@@ -91,18 +91,6 @@
             </span>
           </router-link>
         </ul>
-
-        <div
-          class="app__more-btn-wrp"
-          v-if="!isNoMoreEntries"
-        >
-          <button
-            class="app__btn-secondary"
-            @click="getMoreEntries"
-          >
-            More
-          </button>
-        </div>
       </template>
 
       <template v-else>
@@ -113,6 +101,14 @@
           </li>
         </ul>
       </template>
+      <div class="app__more-btn-wrp">
+        <collection-loader
+          :first-page-loader="this.getList"
+          @first-page-load="this.setList"
+          @next-page-load="this.getMoreEntries"
+          ref="collectionLoaderBtn"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -127,6 +123,7 @@ import _ from 'lodash'
 import { Sdk } from '@/sdk'
 import config from '@/config'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { CollectionLoader } from '@/components/common'
 
 export default {
   components: {
@@ -134,15 +131,18 @@ export default {
     InputField,
     TickField,
     EmailGetter,
-    InputDateField
+    InputDateField,
+    CollectionLoader
   },
 
   data () {
     return {
       SALE_STATES,
 
-      list: [],
-      rawList: [],
+      list: {
+        data: [],
+        rawData: []
+      },
       isLoaded: false,
       owner: '',
       filters: {
@@ -159,10 +159,6 @@ export default {
     }
   },
 
-  created () {
-    this.getList()
-  },
-
   methods: {
     async getOwner () {
       const emailRegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -177,9 +173,9 @@ export default {
 
     async getList () {
       this.isLoaded = false
-      this.isNoMoreEntries = false
+      let response = {}
       try {
-        const response = await Sdk.horizon.sales.getPage({
+        response = await Sdk.horizon.sales.getPage({
           base_asset: this.filters.baseAsset,
           owner: this.filters.owner,
           open_only: this.filters.openOnly,
@@ -187,34 +183,33 @@ export default {
           order: this.filters.order || 'desc',
           limit: this.filters.limit || config.PAGE_LIMIT
         })
-        this.list = response
-        this.rawList = response
-        this.filterByDate()
       } catch (error) {
         ErrorHandler.process(error)
       }
-
       this.isLoaded = true
+      return response
+    },
+
+    setList (data) {
+      this.list.data = data
+      this.list.rawData = data
     },
 
     filterByDate () {
-      let sortedList = this.rawList.data
+      let sortedList = this.list.rawData
       if (this.filtersDate.startDate) {
         sortedList = sortedList.filter(sale => +new Date(sale.startTime) >= +new Date(this.filtersDate.startDate))
       }
       if (this.filtersDate.endDate) {
         sortedList = sortedList.filter(sale => +new Date(sale.endTime) <= +new Date(this.filtersDate.endDate))
       }
-      this.list._data = sortedList
+      this.list.data = sortedList
     },
 
-    async getMoreEntries () {
+    async getMoreEntries (data) {
       try {
-        const oldLength = this.list.data.length
-        const chunk = await this.list.fetchNext()
-        this.list._data = this.list.data.concat(chunk.data)
-        this.list.fetchNext = chunk.fetchNext
-        this.isNoMoreEntries = oldLength === this.list.data.length
+        this.list.data = this.list.data.concat(data)
+        this.list.rowData = this.list.data.concat(data)
       } catch (error) {
         ErrorHandler.process(error)
       }
@@ -223,23 +218,27 @@ export default {
 
   watch: {
     'filters.openOnly' () {
-      this.getList()
+      this.$refs.collectionLoaderBtn.loadFirstPage()
     },
     'owner': _.throttle(function () {
       this.getOwner()
-      this.getList()
+      this.$refs.collectionLoaderBtn.loadFirstPage()
     }, 1000),
     'filters.name': _.throttle(function () {
-      this.getList()
+      this.$refs.collectionLoaderBtn.loadFirstPage()
     }, 1000),
     'filters.baseAsset': _.throttle(function () {
-      this.getList()
+      this.$refs.collectionLoaderBtn.loadFirstPage()
     }, 1000),
     'filtersDate.startDate' () {
       this.filterByDate()
+      // hides collection-loader button
+      this.$refs.collectionLoaderBtn.isCollectionFetched = true
     },
     'filtersDate.endDate' () {
       this.filterByDate()
+      // hides collection-loader button
+      this.$refs.collectionLoaderBtn.isCollectionFetched = true
     }
   }
 }

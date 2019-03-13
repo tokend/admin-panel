@@ -66,9 +66,7 @@ export default {
   data () {
     return {
       formatAssetAmount,
-      list: {
-        data: []
-      },
+      list: [],
       masterPubKey: Vue.params.MASTER_ACCOUNT
     }
   },
@@ -78,7 +76,7 @@ export default {
   computed: {
     records () {
       if (!this.list) return undefined
-      return this.normalizeRecords(this.list.data)
+      return this.normalizeRecords(this.list)
     }
   },
 
@@ -94,12 +92,12 @@ export default {
     },
 
     setList (data) {
-      this.list.data = data
+      this.list = data
     },
 
     async getNextPage (data) {
       try {
-        this.list.data = this.list.data.concat(data)
+        this.list = this.list.concat(data)
       } catch (error) {
         ErrorHandler.process(error)
       }

@@ -35,7 +35,7 @@
       </p>
     </div>
     <div class="issuance-rl__list-wrp">
-      <template v-if="list.data && list.data.length">
+      <template v-if="list && list.length">
         <ul class="app-list">
           <div class="app-list__header issuance-rl__li-header">
             <span class="app-list__cell">
@@ -51,7 +51,7 @@
             </span>
 
           </div>
-          <li v-for="item in list.data" :key="item.id" class="issuance-rl__li">
+          <li v-for="item in list" :key="item.id" class="issuance-rl__li">
             <router-link
               class="issuance-rl__li-a"
               :to="{ name: 'systemAssets.issuance.props', params: { id: item.id } }"
@@ -76,15 +76,6 @@
             </router-link>
           </li>
         </ul>
-
-        <div class="app__more-btn-wrp">
-          <collection-loader
-            :first-page-loader="getList"
-            @first-page-load="setList"
-            @next-page-load="onMoreButtonClick"
-            ref="collectionLoaderBtn"
-          />
-        </div>
       </template>
 
       <template v-else>
@@ -93,13 +84,16 @@
             <p>{{isLoaded ? 'Nothing here yet' : 'Loading...'}}</p>
           </div>
         </div>
+      </template>
+
+      <div class="app__more-btn-wrp">
         <collection-loader
           :first-page-loader="getList"
           @first-page-load="setList"
           @next-page-load="onMoreButtonClick"
           ref="collectionLoaderBtn"
         />
-      </template>
+      </div>
     </div>
   </div>
 </template>

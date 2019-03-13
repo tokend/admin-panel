@@ -28,7 +28,7 @@
 
       <div class="user-list__list-wrp">
         <div class="app-list">
-          <template v-if="list.data && list.data.length">
+          <template v-if="list && list.length">
             <div class="app-list__header">
               <span class="app-list__cell user-list__email-cell">
                 Email
@@ -46,7 +46,7 @@
 
             <button
               class="app-list__li"
-              v-for="item in list.data"
+              v-for="item in list"
               :key="item.id"
               @click="toggleViewMode(item.address)"
             >
@@ -159,17 +159,11 @@ export default {
         userId: null,
         scrollPosition: 0
       },
-      list: {
-        data: []
-      },
+      list: [],
       isLoading: false,
 
       ACCOUNT_ROLES: config.ACCOUNT_ROLES
     }
-  },
-
-  created () {
-    // this.getList()
   },
 
   methods: {
@@ -194,12 +188,12 @@ export default {
     },
 
     setList (data) {
-      this.list.data = data
+      this.list = data
       this.isLoaded = true
     },
 
     extendList (data) {
-      this.list.data = this.list.data.concat(data)
+      this.list = this.list.concat(data)
     },
 
     toggleViewMode (id) {

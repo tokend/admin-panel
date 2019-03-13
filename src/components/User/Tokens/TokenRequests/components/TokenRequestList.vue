@@ -29,7 +29,7 @@
     </div>
 
     <div class="token-request-list__table-wrp">
-      <template v-if="list.data && list.data.length">
+      <template v-if="list && list.length">
         <ul class="app-list">
           <div class="app-list__header">
             <span class="app-list__cell">
@@ -47,7 +47,7 @@
 
           <router-link
             class="app-list__li"
-            v-for="(asset, i) in list.data"
+            v-for="(asset, i) in list"
             :key="i"
             :to="{ name: 'tokens.requests.show', params: { id: asset.id }}"
           >
@@ -70,15 +70,6 @@
             </span>
           </router-link>
         </ul>
-
-        <div class="app__more-btn-wrp">
-          <collection-loader
-            :first-page-loader="this.getList"
-            @first-page-load="this.setList"
-            @next-page-load="this.nextPage"
-            ref="collectionLoaderBtn"
-          />
-        </div>
       </template>
 
       <template v-else>
@@ -87,13 +78,16 @@
             {{ isPending ? 'Loading...' : 'Nothing here yet' }}
           </li>
         </ul>
+      </template>
+
+      <div class="app__more-btn-wrp">
         <collection-loader
           :first-page-loader="this.getList"
           @first-page-load="this.setList"
           @next-page-load="this.nextPage"
           ref="collectionLoaderBtn"
         />
-      </template>
+      </div>
     </div>
   </div>
 </template>
@@ -121,9 +115,7 @@ export default {
 
   data () {
     return {
-      list: {
-        data: []
-      },
+      list: [],
       isPending: false,
       filters: {
         state: REQUEST_STATES_STR.pending,
@@ -156,7 +148,7 @@ export default {
           requestor: requestor,
           code: this.filters.asset
         })
-        this.isListEnded = !(this.list.data || []).length
+        this.isListEnded = !(this.list || []).length
       } catch (error) {
         ErrorHandler.process(error)
       }
@@ -165,12 +157,12 @@ export default {
     },
 
     setList (data) {
-      this.list.data = data
+      this.list = data
     },
 
     async nextPage (data) {
       try {
-        this.list.data = this.list.data.concat(data)
+        this.list = this.list.concat(data)
       } catch (error) {
         ErrorHandler.process(error)
       }

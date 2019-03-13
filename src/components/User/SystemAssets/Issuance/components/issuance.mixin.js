@@ -15,9 +15,7 @@ export default {
   data () {
     return {
       REQUEST_STATES,
-      list: {
-        data: []
-      },
+      list: [],
       listCounter: {
         pending: null,
         approved: null
@@ -75,12 +73,12 @@ export default {
     },
 
     setList (data) {
-      this.list.data = data
+      this.list = data
     },
 
     async onMoreButtonClick (data) {
       try {
-        this.list.data = this.list.data.concat(data)
+        this.list = this.list.concat(data)
       } catch (error) {
         ErrorHandler.process(error)
       }

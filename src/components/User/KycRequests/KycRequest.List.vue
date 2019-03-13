@@ -37,7 +37,7 @@
       </div>
 
       <div class="request-list__list-wrp">
-        <template v-if="list.data && list.data.length">
+        <template v-if="list && list.length">
           <div class="app-list">
             <div class="app-list__header">
               <span class="app-list__cell">Email</span>
@@ -47,7 +47,7 @@
             </div>
             <button
               class="app-list__li"
-              v-for="item in list.data"
+              v-for="item in list"
               :key="item.id"
               @click="toggleViewMode(item.requestor.id)"
             >
@@ -67,16 +67,6 @@
               </span>
             </button>
           </div>
-
-          <div class="app__more-btn-wrp">
-            <collection-loader
-              :first-page-loader="this.loadList"
-              @first-page-load="this.setList"
-              @next-page-load="this.onMoreClick"
-              ref="collectionLoaderBtn"
-            />
-          </div>
-
         </template>
 
         <template v-else>
@@ -97,14 +87,16 @@
               </p>
             </template>
           </div>
-          <collection-loader
-              :first-page-loader="this.loadList"
-              @first-page-load="this.setList"
-              @next-page-load="this.onMoreClick"
-              ref="collectionLoaderBtn"
-            />
         </template>
 
+        <div class="app__more-btn-wrp">
+          <collection-loader
+            :first-page-loader="this.loadList"
+            @first-page-load="this.setList"
+            @next-page-load="this.onMoreClick"
+            ref="collectionLoaderBtn"
+          />
+        </div>
       </div>
     </template>
 
@@ -156,9 +148,7 @@ export default {
     return {
       isLoading: false,
       isListEnded: false,
-      list: {
-        data: []
-      },
+      list: [],
       view: {
         mode: VIEW_MODES_VERBOSE.index,
         userId: null,
@@ -215,12 +205,12 @@ export default {
     },
 
     setList (data) {
-      this.list.data = data
+      this.list = data
     },
 
     async onMoreClick (data) {
       try {
-        this.list.data = this.list.data.concat(data)
+        this.list = this.list.concat(data)
       } catch (error) {
         ErrorHandler.process(error)
       }
