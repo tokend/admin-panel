@@ -41,7 +41,12 @@
 
       <template v-else>
         <p>
-          <template v-if="request.isFailed">An error occurred</template>
+          <template v-if="request.isFailedLoadAsset || request.isFailedLoadSale">
+            <template v-if="request.isFailedLoadAsset">
+              Please сonfirm token creation request: {{ getSaleDetails.baseAsset }}
+            </template>
+            <template v-else>An error occurred</template>
+          </template>
           <template v-else>Loading...</template>
         </p>
       </template>
@@ -127,7 +132,8 @@ export default {
         sale: {},
         token: {},
         isReady: false,
-        isFailed: false
+        isFailedLoadAsset: false,
+        isFailedLoadSale: false
       },
       rejectForm: {
         reason: '',
@@ -156,13 +162,19 @@ export default {
     async getRequest (id) {
       try {
         this.request.sale = await this.getSaleRequest(id)
+      } catch (error) {
+        ErrorHandler.process(error)
+        this.request.isFailedLoadSale = true
+      }
+      try {
+        if (this.request.isFailedLoadSale) return
         const response = await Sdk.horizon.assets
           .get(this.getSaleDetails.baseAsset)
         this.request.token = response.data
         this.request.isReady = true
       } catch (error) {
         ErrorHandler.process(error)
-        this.request.isFailed = true
+        this.request.isFailedLoadAsset = true
       }
     },
 
