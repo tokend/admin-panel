@@ -20,7 +20,7 @@
       :form="form"
       @input="onInput"
       @focus="isVisibleAutocomplete = !isVisibleAutocomplete"
-      @blur="onBlur"
+      @blur="isVisibleAutocomplete = !isVisibleAutocomplete"
     >
 
     <div
@@ -142,12 +142,7 @@ export default {
           target.value = value.replace(replaceRe, '$1')
         }
       }
-    },
-
-    onBlur () {
-      setTimeout(() => { this.isVisibleAutocomplete = !this.isVisibleAutocomplete }, 200)
     }
-
   }
 }
 </script>

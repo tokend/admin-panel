@@ -20,11 +20,15 @@
             label="Email"
             email-autocomplete
           >
-            <button
+            <button href="#"
               class="autocomplete-option"
+              :class="{'autocomplete-option--active': item.email === activeOption}"
               v-for="item in emailAddress" 
               v-bind:key="item.email"
-              @click="filters.email = item.address"
+              :id="item.email"
+              :ref="item.address"
+              @mousedown="filters.email = item.email"
+              @mouseover="activeOption = item.email"
             >
               {{ item.email }}
             </button>
@@ -40,7 +44,7 @@
               class="autocomplete-option"
               v-for="item in emailAddress" 
               v-bind:key="item.address"
-              @click="filters.address = item.address"
+              @mousedown="filters.address = item.address"
             >
               {{ item.address }}
             </button>
@@ -185,6 +189,7 @@ export default {
       isListEnded: false,
       isLoading: false,
       emailAddress: [],
+      activeOption: '',
 
       ACCOUNT_ROLES: config.ACCOUNT_ROLES
     }
@@ -192,6 +197,7 @@ export default {
 
   created () {
     this.getList()
+    window.addEventListener('keydown', this.onKey)
   },
 
   methods: {
@@ -262,9 +268,25 @@ export default {
       }
     },
 
-    selectItem (value) {
-      console.log(value)
-      this.filters.email = value
+    onKey (event) {
+      if (event.key === 'ArrowUp' && this.emailAddress.length) {
+        this.activeOption = this.$refs.GAVTS6ZBGNKCVI4KM2VU7JPYMCHP2T2WIGXRN2SX4RH776DRPEJXYVXT[0].id
+        this.$refs.GAVTS6ZBGNKCVI4KM2VU7JPYMCHP2T2WIGXRN2SX4RH776DRPEJXYVXT[0].focus()
+        event.preventDefault()
+      }
+      if ((event.key === 'ArrowDown' && this.emailAddress.length)) {
+        console.log('Down')
+      }
+    },
+
+    clickOnInput (event) {
+      // if (event.key === 'ArrowUp' && this.emailAddress.length) {
+      console.log(event)
+      const clickOnInputEventListaner = window.addEventListener('mousedown', function () {
+        console.log(2222)
+        window.removeEventListener('mousedown', clickOnInputEventListaner)
+      })
+      // }
     }
   },
 
@@ -281,6 +303,7 @@ export default {
     }, 400),
     'filters.address': _.debounce(function () {
       this.getList()
+      this.getEmailsList()
     }, 400)
   }
 }
@@ -317,8 +340,8 @@ export default {
   width: 100%;
   padding: 1rem;
 
-  &:hover {
-    background-color: black;
+  &--active {
+    background-color: $color-unfocused;
   }
 }
 </style>
