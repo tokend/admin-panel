@@ -25,10 +25,10 @@
           v-if="config.FEATURES.PHOTO_VERIFICATION"
           class="user-details-account__doc-view-wrp"
         >
-          <h3>Photo with code: {{ user.id.slice(1, 6) }}</h3>
+          <h3>Photo with code: {{ user.address.slice(1, 6) }}</h3>
           <user-doc-getter
             class="user-details-account__doc-view"
-            :user-id="user.id"
+            :user-id="user.address"
             :file-key="kyc.documents.bravo || kyc.documents.kycSelfie"
           />
         </div>
@@ -51,7 +51,6 @@
           <span>ID Document</span>
           <span>
             <user-doc-link-getter
-              :user-id="user.id"
               :file-key="kyc.documents.kycIdDocument"
             >
               Open file
@@ -62,7 +61,6 @@
           <span>Photo with verification code</span>
           <span>
             <user-doc-link-getter
-              :user-id="user.id"
               :file-key="kyc.documents.bravo"
             >
               Open file
@@ -73,7 +71,6 @@
           <span>Photo with verification code</span>
           <span>
             <user-doc-link-getter
-              :user-id="user.id"
               :file-key="kyc.documents.kycSelfie"
             >
               Open file
@@ -84,7 +81,7 @@
           class="code-details"
           v-if="kyc.documents.bravo || kyc.documents.kycSelfie"
         >
-          Code: {{ user.id.slice(1, 6) }}
+          Code: {{ user.address.slice(1, 6) }}
         </li>
       </ul>
       <div class="user-details-account__info">
