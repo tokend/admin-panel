@@ -18,6 +18,7 @@ for further information about branching and tagging conventions.
   - sinon
   - nightwatch
   - bootstrap-sass
+- DocLinkgetter unused `accountId` prop
 
 ### Fixed
 - Add missing quotes to `KEY_SERVER_ADMIN` of `config/default.env.js`

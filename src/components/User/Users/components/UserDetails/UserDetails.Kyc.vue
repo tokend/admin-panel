@@ -51,7 +51,6 @@
           <span>ID Document</span>
           <span>
             <user-doc-link-getter
-              :user-id="user.id"
               :file-key="kyc.documents.kycIdDocument"
             >
               Open file
@@ -62,7 +61,6 @@
           <span>Photo with verification code</span>
           <span>
             <user-doc-link-getter
-              :user-id="user.id"
               :file-key="kyc.documents.bravo"
             >
               Open file
@@ -73,7 +71,6 @@
           <span>Photo with verification code</span>
           <span>
             <user-doc-link-getter
-              :user-id="user.id"
               :file-key="kyc.documents.kycSelfie"
             >
               Open file
