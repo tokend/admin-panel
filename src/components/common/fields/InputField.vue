@@ -8,6 +8,7 @@
       :disabled="disabled"
       :name="name"
       :autocomplete="autocomplete"
+      :email-autocomplete="emailAutocomplete"
       :autofocus="autofocus"
       :min="min"
       :max="max"
@@ -18,7 +19,16 @@
       :title="title"
       :form="form"
       @input="onInput"
+      @focus="isVisibleAutocomplete = !isVisibleAutocomplete"
+      @blur="onBlur"
     >
+
+    <div
+      v-show="emailAutocomplete && isVisibleAutocomplete"
+      class="input-field__autocomplete"
+    >
+      <slot/>
+    </div>
 
     <span class="input-field__label">
       {{label}}
@@ -43,6 +53,7 @@ export default {
     value: { type: [String, Number], default: undefined },
     errorMessage: { type: String, default: undefined },
     align: { type: String, default: 'left' },
+    emailAutocomplete: { type: Boolean, default: false },
     // proxies
     autocomplete: { type: String, default: 'off' },
     autofocus: { type: Boolean, default: false },
@@ -63,7 +74,7 @@ export default {
 
   data () {
     return {
-      // data
+      isVisibleAutocomplete: false
     }
   },
 
@@ -131,7 +142,12 @@ export default {
           target.value = value.replace(replaceRe, '$1')
         }
       }
+    },
+
+    onBlur () {
+      setTimeout(() => { this.isVisibleAutocomplete = !this.isVisibleAutocomplete }, 200)
     }
+
   }
 }
 </script>

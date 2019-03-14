@@ -13,16 +13,38 @@
             <option :value="ACCOUNT_ROLES.general">General</option>
             <option :value="ACCOUNT_ROLES.corporate">Сorporate</option>
           </select-field>
+
           <input-field
             class="app-list-filters__field"
             v-model.trim="filters.email"
             label="Email"
-          />
+            email-autocomplete
+          >
+            <button
+              class="autocomplete-option"
+              v-for="item in emailAddress" 
+              v-bind:key="item.email"
+              @click="filters.email = item.address"
+            >
+              {{ item.email }}
+            </button>
+          </input-field>
+
           <input-field
             class="app-list-filters__field"
             v-model.trim="filters.address"
             label="Account ID"
-          />
+            email-autocomplete
+          >
+            <button
+              class="autocomplete-option"
+              v-for="item in emailAddress" 
+              v-bind:key="item.address"
+              @click="filters.address = item.address"
+            >
+              {{ item.address }}
+            </button>
+          </input-field>
         </div>
       </div>
 
@@ -120,6 +142,8 @@
 
 <script>
 import Vue from 'vue'
+// import api from '@/api'
+// import { Sdk } from '@/sdk'
 import { clearObject } from '@/utils/clearObject'
 import SelectField from '@comcom/fields/SelectField'
 import InputField from '@comcom/fields/InputField'
@@ -160,6 +184,7 @@ export default {
       list: {},
       isListEnded: false,
       isLoading: false,
+      emailAddress: [],
 
       ACCOUNT_ROLES: config.ACCOUNT_ROLES
     }
@@ -214,6 +239,32 @@ export default {
         window.scroll(0, this.view.scrollPosition)
         this.view.scrollPosition = 0
       })
+    },
+
+    async getEmailsList () {
+      if (this.filters.email || this.filters.address) {
+        try {
+          const response = await ApiCallerFactory
+            .createCallerInstance()
+            .getWithSignature('/identities', {
+              filter: clearObject({
+                email: this.filters.email,
+                address: this.filters.address
+              })
+            })
+          this.emailAddress = response.data
+          console.log(this.emailAddress)
+        } catch (error) {
+          ErrorHandler.processWithoutFeedback(error)
+        }
+      } else {
+        this.emailAddress = []
+      }
+    },
+
+    selectItem (value) {
+      console.log(value)
+      this.filters.email = value
     }
   },
 
@@ -224,12 +275,13 @@ export default {
     'filters.role' () {
       this.getList()
     },
-    'filters.email': _.throttle(function () {
+    'filters.email': _.debounce(function () {
       this.getList()
-    }, 1000),
-    'filters.address': _.throttle(function () {
+      this.getEmailsList()
+    }, 400),
+    'filters.address': _.debounce(function () {
       this.getList()
-    }, 1000)
+    }, 400)
   }
 }
 </script>
@@ -257,6 +309,16 @@ export default {
     margin-left: 5px;
     transform: translateY(4px);
     width: 16px;
+  }
+}
+
+.autocomplete-option {
+  display: block;
+  width: 100%;
+  padding: 1rem;
+
+  &:hover {
+    background-color: black;
   }
 }
 </style>
