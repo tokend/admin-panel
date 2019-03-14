@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
-## [Unreleased]
+## [1.3.1] - 2019-03-14
 ### Added
 - Added filter for displaying app version
 
@@ -18,7 +18,7 @@ for further information about branching and tagging conventions.
   - sinon
   - nightwatch
   - bootstrap-sass
-- DocLinkgetter unused `accountId` prop
+  - DocLinkgetter - unused `accountId` prop
 
 ### Fixed
 - Add missing quotes to `KEY_SERVER_ADMIN` of `config/default.env.js`
@@ -29,5 +29,6 @@ for further information about branching and tagging conventions.
 
 ## [1.3.0] - 2019-03-01
 
-[Unreleased]: https://github.com/tokend/admin-panel/compare/1.3.0...HEAD
+[Unreleased]: https://github.com/tokend/admin-panel/compare/1.3.1...HEAD
+[1.3.1]: https://github.com/tokend/admin-panel/compare/1.3.0...1.3.1
 [1.3.0]: https://github.com/tokend/admin-panel/releases/tag/1.3.0
