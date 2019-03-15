@@ -1,147 +1,23 @@
 <template>
-  <div class="user-list">
-    <template v-if="view.mode === VIEW_MODES_VERBOSE.index">
-      <div class="user-list__filters-wrp">
-        <div class="app-list-filters">
-          <select-field
-            class="issuance-rl__filter app-list-filters__field"
-            label="Role"
-            v-model="filters.role"
-          >
-            <option :value="''"></option>
-            <option :value="ACCOUNT_ROLES.notVerified">Unverified</option>
-            <option :value="ACCOUNT_ROLES.general">General</option>
-            <option :value="ACCOUNT_ROLES.corporate">Сorporate</option>
-          </select-field>
-
-          <input-field
-            class="app-list-filters__field"
-            v-model.trim="filters.email"
-            label="Email"
-            email-autocomplete
-          >
-            <button href="#"
-              class="autocomplete-option"
-              :class="{'autocomplete-option--active': item.address === activeOption}"
-              v-for="item in emailAddress" 
-              v-bind:key="item.email"
-              :id="item.address"
-              :ref="item.address"
-              @mousedown="filters.email = item.email"
-              @mouseover="activeOption = item.address"
-            >
-              {{ item.email }}
-            </button>
-          </input-field>
-
-          <input-field
-            class="app-list-filters__field"
-            v-model.trim="filters.address"
-            label="Account ID"
-            email-autocomplete
-          >
-            <button
-              class="autocomplete-option"
-              v-for="item in emailAddress" 
-              v-bind:key="item.address"
-              @mousedown="filters.address = item.address"
-            >
-              {{ item.address }}
-            </button>
-          </input-field>
-        </div>
-      </div>
-
-      <div class="user-list__list-wrp">
-        <div class="app-list">
-          <template v-if="list.data && list.data.length">
-            <div class="app-list__header">
-              <span class="app-list__cell user-list__email-cell">
-                Email
-              </span>
-              <span class="app-list__cell app-list__cell--right">
-                Account ID
-              </span>
-              <span class="app-list__cell app-list__cell--right">
-                Role
-              </span>
-              <span class="app-list__cell app-list__cell--right">
-                State
-              </span>
-            </div>
-
-            <button
-              class="app-list__li"
-              v-for="item in list.data"
-              :key="item.id"
-              @click="toggleViewMode(item.address)"
-            >
-              <span
-                class="app-list__cell
-                      app-list__cell--important
-                      user-list__email-cell"
-                :title="item.email"
-              >
-                {{ item.email }}
-              </span>
-
-              <span
-                class="app-list__cell app-list__cell--right"
-                :title="item.address"
-              >
-                {{ item.address | cropAddress }}
-              </span>
-
-              <span
-                class="app-list__cell app-list__cell--right"
-                :title="item.role | roleIdToString"
-              >
-                {{ item.role | roleIdToString }}
-              </span>
-
-              <account-state-getter
-                class="app-list__cell app-list__cell--right"
-                :accountId="item.address"
-              />
-            </button>
-          </template>
-
-          <template v-else>
-            <div class="app-list__li-like">
-              <template v-if="isLoading">
-                <p>
-                  Loading...
-                </p>
-              </template>
-
-              <template v-else>
-                <p>
-                  Nothing here yet
-                </p>
-              </template>
-            </div>
-          </template>
-        </div>
-
-        <div class="app__more-btn-wrp">
-          <button
-            class="app__btn-secondary"
-            v-if="!isListEnded && list.data"
-            @click="onMoreClick"
-          >
-            More
-          </button>
-        </div>
-      </div>
-    </template>
-
-    <user-view
-      v-if="view.mode === VIEW_MODES_VERBOSE.user"
-      :id="view.userId"
-      @back="toggleViewMode(null)"
-    />
-
-  </div>
+  <input-field
+    class="app-list-filters__field"
+    v-model.trim="filters.email"
+    label="Email"
+    email-autocomplete
+  >
+    <button href="#"
+      class="autocomplete-option"
+      :class="{'autocomplete-option--active': item.address === activeOption}"
+      v-for="item in emailAddress" 
+      v-bind:key="item.email"
+      :id="item.address"
+      :ref="item.address"
+      @mousedown="filters.email = item.email"
+      @mouseover="activeOption = item.address"
+    >
+      {{ item.email }}
+    </button>
+  </input-field>
 </template>
 
 <script>

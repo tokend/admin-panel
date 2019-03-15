@@ -19,8 +19,7 @@
       :title="title"
       :form="form"
       @input="onInput"
-      @focus="isVisibleAutocomplete = !isVisibleAutocomplete"
-      @blur="isVisibleAutocomplete = !isVisibleAutocomplete"
+      @focus="isVisibleAutocomplete = true"
     >
 
     <div
