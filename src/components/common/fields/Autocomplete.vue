@@ -1,7 +1,7 @@
 <template>
   <div 
     class="autocomplete"
-    v-if="isEmailInputFocused === 'true'"
+    v-if="isInputFocused"
   >
     <button
       class="autocomplete-option"
@@ -42,13 +42,13 @@ export default {
       emailAddress: [],
       activeEmail: '',
       activeAddress: '',
-      isVisible: false
+      isVisible: false,
+      isInputFocused: false
     }
   },
 
   created () {
-    // this.getEmailsList()
-
+    // created
   },
 
   methods: {
@@ -79,32 +79,34 @@ export default {
       const currentElement = this.getActiveElement()
 
       if (this.autocompleteData.length) {
-        if (currentElement) {
-          if (event.key === 'ArrowUp' && currentElement.previousSibling) {
-            const previousElement = this.$refs[currentElement.previousSibling.id][0]
-            this.activeEmail = previousElement.dataset.email
-            this.activeAddress = previousElement.id
-            previousElement.focus()
-            event.preventDefault()
-          }
-          if (event.key === 'ArrowDown' && currentElement.nextSibling) {
-            const nextElement = this.$refs[currentElement.nextSibling.id][0]
-            this.activeEmail = nextElement.dataset.email
-            this.activeAddress = nextElement.id
-            nextElement.focus()
-            event.preventDefault()
-          }
-          if (currentElement && event.key === 'Enter') {
-            this.setEmail()
-          }
-        } else {
-          if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-            const firstElement = this.$refs[this.autocompleteData[0].address][0]
-            this.activeEmail = firstElement.dataset.email
-            this.activeAddress = firstElement.id
-            firstElement.focus()
-            event.preventDefault()
-          }
+        if (currentElement && event.key === 'ArrowUp' && currentElement.previousSibling) {
+          const previousElement = this.$refs[currentElement.previousSibling.id][0]
+          this.activeEmail = previousElement.dataset.email
+          this.activeAddress = previousElement.id
+          previousElement.focus()
+          event.preventDefault()
+        }
+        if (currentElement && event.key === 'ArrowDown' && currentElement.nextSibling) {
+          const nextElement = this.$refs[currentElement.nextSibling.id][0]
+          this.activeEmail = nextElement.dataset.email
+          this.activeAddress = nextElement.id
+          nextElement.focus()
+          event.preventDefault()
+        }
+        if (currentElement && event.key === 'Enter') {
+          this.setEmail(this.inputType)
+          window.removeEventListener('click', this.onClick)
+        }
+        if (event.key === 'Escape') {
+          this.closeDropdown()
+          window.removeEventListener('click', this.onClick)
+        }
+        if (!currentElement && event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+          const firstElement = this.$refs[this.autocompleteData[0].address][0]
+          this.activeEmail = firstElement.dataset.email
+          this.activeAddress = firstElement.id
+          firstElement.focus()
+          event.preventDefault()
         }
       }
     },
@@ -125,6 +127,7 @@ export default {
         case 'address':
           this.$emit('address', this.activeAddress)
       }
+      this.closeDropdown()
     },
 
     setActiveOption (data) {
@@ -133,16 +136,25 @@ export default {
     },
 
     onClick (event) {
-      console.log('dropdown closed')
+      this.closeDropdown()
       window.removeEventListener('click', this.onClick)
     },
 
     addKeyHandler () {
+      console.log('added')
       window.addEventListener('keydown', this.onKey)
     },
 
     addClickHandler () {
       window.addEventListener('click', this.onClick)
+    },
+
+    closeDropdown () {
+      this.isInputFocused = false
+    },
+
+    openDropdown () {
+      this.isInputFocused = true
     }
   }
 }

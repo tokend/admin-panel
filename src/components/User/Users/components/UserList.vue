@@ -37,7 +37,6 @@
               </button>
             </div> -->
             <autocomplete
-              :isEmailInputFocused="isEmailInputFocused"
               :autocompleteData="autocompleteData"
               v-on:setAutocompleteData="setAutocompleteData"
               :filtersEmail="filters.email"
@@ -66,7 +65,6 @@
               {{ item.address }}
             </button> -->
             <autocomplete
-              :isEmailInputFocused="isAddressInputFocused"
               :autocompleteData="autocompleteData"
               v-on:setAutocompleteData="setAutocompleteData"
               :filtersEmail="filters.email"
@@ -292,7 +290,7 @@ export default {
     },
 
     onEmailFocus () {
-      this.isEmailInputFocused = 'true'
+      this.$refs.emailAutocomplete.openDropdown()
       this.$refs.emailAutocomplete.getEmailsList()
       this.$refs.emailAutocomplete.addKeyHandler()
     },
@@ -303,7 +301,7 @@ export default {
     },
 
     onAddressFocus () {
-      this.isAddressInputFocused = 'true'
+      this.$refs.addressAutocomplete.openDropdown()
       this.$refs.addressAutocomplete.getEmailsList()
       this.$refs.addressAutocomplete.addKeyHandler()
     },
