@@ -19,13 +19,11 @@
       :title="title"
       :form="form"
       @input="onInput"
-      @focus="isVisibleAutocomplete = true"
+      @focus="onFocus"
+      @blur="onBlur"
     >
 
-    <div
-      v-show="emailAutocomplete && isVisibleAutocomplete"
-      class="input-field__autocomplete"
-    >
+    <div class="input-field__autocomplete">
       <slot/>
     </div>
 
@@ -73,7 +71,7 @@ export default {
 
   data () {
     return {
-      isVisibleAutocomplete: false
+      // data
     }
   },
 
@@ -89,6 +87,14 @@ export default {
     onInput (event) {
       this.beforeEmit(event.target)
       this.$emit('input', event.target.value)
+    },
+
+    onFocus (event) {
+      this.$emit('focus', event.target.value)
+    },
+
+    onBlur (event) {
+      this.$emit('blur', event.target.value)
     },
 
     beforeEmit (target) {

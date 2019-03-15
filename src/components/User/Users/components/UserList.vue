@@ -19,19 +19,34 @@
             v-model.trim="filters.email"
             label="Email"
             email-autocomplete
+            @focus="onEmailFocus"
+            @blur="onEmailBlur"
           >
-            <button href="#"
-              class="autocomplete-option"
-              :class="{'autocomplete-option--active': item.address === activeOption}"
-              v-for="item in emailAddress" 
-              v-bind:key="item.email"
-              :id="item.address"
-              :ref="item.address"
-              @mousedown="filters.email = item.email"
-              @mouseover="activeOption = item.address"
-            >
-              {{ item.email }}
-            </button>
+            <!-- <div>
+              <button
+                class="autocomplete-option"
+                :class="{'autocomplete-option--active': item.address === activeOption}"
+                v-for="item in emailAddress" 
+                v-bind:key="item.email"
+                :id="item.address"
+                :ref="item.address"
+                @mousedown="filters.email = item.email"
+                @mouseover="activeOption = item.address"
+              >
+                {{ item.email }}
+              </button>
+            </div> -->
+            <autocomplete
+              :isEmailInputFocused="isEmailInputFocused"
+              :autocompleteData="autocompleteData"
+              v-on:setAutocompleteData="setAutocompleteData"
+              :filtersEmail="filters.email"
+              :filtersAddress="filters.address"
+              v-on:email="setEmail"
+              v-on:address="setAddress"
+              ref="emailAutocomplete"
+              inputType="email"
+            />
           </input-field>
 
           <input-field
@@ -39,15 +54,28 @@
             v-model.trim="filters.address"
             label="Account ID"
             email-autocomplete
+            @focus="onAddressFocus"
+            @blur="onAddressBlur"
           >
-            <button
+            <!-- <button
               class="autocomplete-option"
               v-for="item in emailAddress" 
               v-bind:key="item.address"
               @mousedown="filters.address = item.address"
             >
               {{ item.address }}
-            </button>
+            </button> -->
+            <autocomplete
+              :isEmailInputFocused="isAddressInputFocused"
+              :autocompleteData="autocompleteData"
+              v-on:setAutocompleteData="setAutocompleteData"
+              :filtersEmail="filters.email"
+              :filtersAddress="filters.address"
+              v-on:email="setEmail"
+              v-on:address="setAddress"
+              ref="addressAutocomplete"
+              inputType="address"
+            />
           </input-field>
         </div>
       </div>
@@ -146,8 +174,6 @@
 
 <script>
 import Vue from 'vue'
-// import api from '@/api'
-// import { Sdk } from '@/sdk'
 import { clearObject } from '@/utils/clearObject'
 import SelectField from '@comcom/fields/SelectField'
 import InputField from '@comcom/fields/InputField'
@@ -158,6 +184,7 @@ import 'mdi-vue/DownloadIcon'
 import { ApiCallerFactory } from '@/api-caller-factory'
 import config from '@/config'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { Autocomplete } from '@comcom/fields'
 
 const VIEW_MODES_VERBOSE = Object.freeze({
   index: 'index',
@@ -169,7 +196,8 @@ export default {
     SelectField,
     InputField,
     UserView,
-    AccountStateGetter
+    AccountStateGetter,
+    Autocomplete
   },
 
   data () {
@@ -190,6 +218,9 @@ export default {
       isLoading: false,
       emailAddress: [],
       activeOption: '',
+      autocompleteData: [],
+      isEmailInputFocused: 'false',
+      isEmailAddressFocused: 'false',
 
       ACCOUNT_ROLES: config.ACCOUNT_ROLES
     }
@@ -197,7 +228,7 @@ export default {
 
   created () {
     this.getList()
-    window.addEventListener('keydown', this.onKey)
+    // window.addEventListener('keydown', this.onKey)
   },
 
   methods: {
@@ -247,69 +278,39 @@ export default {
       })
     },
 
-    async getEmailsList () {
-      if (this.filters.email || this.filters.address) {
-        try {
-          const response = await ApiCallerFactory
-            .createCallerInstance()
-            .getWithSignature('/identities', {
-              filter: clearObject({
-                email: this.filters.email,
-                address: this.filters.address
-              })
-            })
-          this.emailAddress = response.data
-          console.log(this.emailAddress)
-        } catch (error) {
-          ErrorHandler.processWithoutFeedback(error)
-        }
-      } else {
-        this.emailAddress = []
-      }
+    setEmail (value) {
+      console.log(1111)
+      this.filters.email = value
     },
 
-    onKey (event) {
-      const currentElement = this.getActiveElement()
-      if (currentElement && event.key === 'ArrowUp' && this.emailAddress.length && currentElement.previousSibling) {
-        this.activeOption = this.$refs[currentElement.previousSibling.id][0].id
-        this.$refs[currentElement.previousSibling.id][0].focus()
-        console.log(this.$refs[currentElement.previousSibling.id])
-        event.preventDefault()
-      }
-      if (currentElement && event.key === 'ArrowDown' && this.emailAddress.length && currentElement.nextSibling) {
-        this.activeOption = this.$refs[currentElement.nextSibling.id][0].id
-        this.$refs[currentElement.nextSibling.id][0].focus()
-        console.log(this.$refs[currentElement.nextSibling.id])
-        event.preventDefault()
-      }
-
-      if ((event.key === 'ArrowDown' || event.key === 'ArrowUp') && this.emailAddress.length && !currentElement) {
-        this.activeOption = this.$refs[this.emailAddress[0].address][0].id
-        this.$refs[this.emailAddress[0].address][0].focus()
-        event.preventDefault()
-      }
-
-      if (currentElement && event.key === 'Enter' && this.emailAddress.length) {
-        this.filters.email = this.activeOption
-      }
+    setAddress (value) {
+      this.filters.address = value
     },
 
-    getActiveElement () {
-      let element
-      if (this.activeOption) {
-        element = document.getElementById(this.activeOption)
-      }
-      return element
+    setAutocompleteData (data) {
+      this.autocompleteData = data
     },
 
-    clickOnInput (event) {
-      // if (event.key === 'ArrowUp' && this.emailAddress.length) {
-      console.log(event)
-      const clickOnInputEventListaner = window.addEventListener('mousedown', function () {
-        console.log(2222)
-        window.removeEventListener('mousedown', clickOnInputEventListaner)
-      })
-      // }
+    onEmailFocus () {
+      this.isEmailInputFocused = 'true'
+      this.$refs.emailAutocomplete.getEmailsList()
+      this.$refs.emailAutocomplete.addKeyHandler()
+    },
+
+    onEmailBlur () {
+      console.log(333)
+      this.$refs.emailAutocomplete.addClickHandler()
+    },
+
+    onAddressFocus () {
+      this.isAddressInputFocused = 'true'
+      this.$refs.addressAutocomplete.getEmailsList()
+      this.$refs.addressAutocomplete.addKeyHandler()
+    },
+
+    onAddressBlur () {
+      console.log(333)
+      this.$refs.addressAutocomplete.addClickHandler()
     }
   },
 
@@ -322,11 +323,11 @@ export default {
     },
     'filters.email': _.debounce(function () {
       this.getList()
-      this.getEmailsList()
+      this.$refs.emailAutocomplete.getEmailsList()
     }, 400),
     'filters.address': _.debounce(function () {
       this.getList()
-      this.getEmailsList()
+      this.$refs.addressAutocomplete.getEmailsList()
     }, 400)
   }
 }
