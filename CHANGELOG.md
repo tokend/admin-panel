@@ -28,4 +28,4 @@ for further information about branching and tagging conventions.
 [1.3.0]: https://github.com/tokend/admin-panel/releases/tag/1.3.0
 
 ### Changed
-- Modified pre-commit hook so it blocks commit if no changes were made to CHANGELOG.md
+- Added collection-loader component
