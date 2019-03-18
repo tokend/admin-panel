@@ -284,11 +284,9 @@ export default {
     },
     'filters.email': _.debounce(function () {
       this.getList()
-      this.$refs.emailAutocomplete.getEmailsList()
     }, 400),
     'filters.address': _.debounce(function () {
       this.getList()
-      this.$refs.addressAutocomplete.getEmailsList()
     }, 400)
   }
 }

@@ -19,7 +19,18 @@
         class="arc-list__filter"
         v-model="filters.requestor"
         label="Requestor"
-      />
+        email-autocomplete
+        @click="onRequestorClick"
+      >
+        <autocomplete
+          :autocompleteData="autocompleteData"
+          v-on:setAutocompleteData="setAutocompleteData"
+          :filtersAddress="filters.requestor"
+          v-on:address="setRequestor"
+          ref="requestorAutocomplete"
+          inputType="address"
+        />
+      </input-field>
 
       <input-field
         class="arc-list__filter"
@@ -103,11 +114,13 @@ import {
 import _ from 'lodash'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { snakeToCamelCase } from '@/utils/un-camel-case'
+import { Autocomplete } from '@comcom/fields'
 
 export default {
   components: {
     InputField,
-    SelectField
+    SelectField,
+    Autocomplete
   },
 
   data () {
@@ -120,6 +133,7 @@ export default {
         requestor: null,
         asset: null
       },
+      autocompleteData: [],
       CREATE_TOKEN_REQUEST_STATES,
       REQUEST_STATES_STR
     }
@@ -184,6 +198,19 @@ export default {
           return requestor
         }
       }
+    },
+
+    setRequestor (value) {
+      this.filters.requestor = value
+    },
+
+    setAutocompleteData (data) {
+      this.autocompleteData = data
+    },
+
+    onRequestorClick (event) {
+      this.$refs.requestorAutocomplete.openDropdown(event)
+      this.$refs.requestorAutocomplete.getEmailsList()
     }
   },
   watch: {

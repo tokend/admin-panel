@@ -9,7 +9,18 @@
             v-model="form.receiver"
             label="Receiver (email or address)"
             :disabled="isSubmitting"
-          />
+            email-autocomplete
+            @click="onEmailClick"
+          >
+            <autocomplete
+              :autocompleteData="autocompleteData"
+              v-on:setAutocompleteData="setAutocompleteData"
+              :filtersEmail="form.receiver"
+              v-on:email="setEmail"
+              ref="emailAutocomplete"
+              inputType="email"
+            />
+          </input-field>
         </div>
 
         <div class="app__form-row">
@@ -73,12 +84,14 @@ import { DEFAULT_INPUT_STEP, DEFAULT_INPUT_MIN } from '@/constants'
 
 import { confirmAction } from '../../../../../js/modals/confirmation_message'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { Autocomplete } from '@comcom/fields'
 
 export default {
   components: {
     InputField,
     SelectField,
-    AssetAmountFormatter
+    AssetAmountFormatter,
+    Autocomplete
   },
 
   created () {
@@ -97,7 +110,8 @@ export default {
         asset: ''
       },
       assets: [],
-      isSubmitting: false
+      isSubmitting: false,
+      autocompleteData: []
     }
   },
 
@@ -193,6 +207,19 @@ export default {
         .finally(() => {
           this.isSubmitting = false
         })
+    },
+
+    setEmail (value) {
+      this.form.receiver = value
+    },
+
+    setAutocompleteData (data) {
+      this.autocompleteData = data
+    },
+
+    onEmailClick (event) {
+      this.$refs.emailAutocomplete.openDropdown(event)
+      this.$refs.emailAutocomplete.getEmailsList()
     }
   }
 }

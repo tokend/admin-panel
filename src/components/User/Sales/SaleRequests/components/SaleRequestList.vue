@@ -23,7 +23,18 @@
           label="Requestor"
           placeholder="Address (full match)"
           v-model="filters.requestor"
-        />
+          email-autocomplete
+          @click="onRequestorClick"
+        >
+          <autocomplete
+            :autocompleteData="autocompleteData"
+            v-on:setAutocompleteData="setAutocompleteData"
+            :filtersEmail="filters.requestor"
+            v-on:email="setRequestor"
+            ref="requestorAutocomplete"
+            inputType="email"
+          />
+        </input-field>
       </div>
     </div>
 
@@ -105,13 +116,15 @@ import { EmailGetter } from '@comcom/getters'
 import { AssetAmountFormatter } from '@comcom/formatters'
 import _ from 'lodash'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { Autocomplete } from '@comcom/fields'
 
 export default {
   components: {
     SelectField,
     InputField,
     EmailGetter,
-    AssetAmountFormatter
+    AssetAmountFormatter,
+    Autocomplete
   },
 
   data () {
@@ -124,7 +137,8 @@ export default {
         requestor: ''
       },
       isLoaded: false,
-      isNoMoreEntries: false
+      isNoMoreEntries: false,
+      autocompleteData: []
     }
   },
 
@@ -163,6 +177,19 @@ export default {
       const valuableRequestDetailsKey = Object.keys(record.details)
         .find(item => !/request_type|requestType/gi.test(item))
       return record.details[valuableRequestDetailsKey] || {}
+    },
+
+    setRequestor (value) {
+      this.filters.requestor = value
+    },
+
+    setAutocompleteData (data) {
+      this.autocompleteData = data
+    },
+
+    onRequestorClick (event) {
+      this.$refs.requestorAutocomplete.openDropdown(event)
+      this.$refs.requestorAutocomplete.getEmailsList()
     }
   },
 

@@ -21,7 +21,18 @@
           label="Owner"
           placeholder="Address (full match)"
           v-model="owner"
-        />
+          email-autocomplete
+          @click="onOwnerClick"
+        >
+          <autocomplete
+            :autocompleteData="autocompleteData"
+            v-on:setAutocompleteData="setAutocompleteData"
+            :filtersEmail="owner"
+            v-on:email="setOwner"
+            ref="ownerAutocomplete"
+            inputType="email"
+          />
+        </input-field>
         <input-date-field
           label="Start date"
           class="sale-list__field sale-list__field-margin-top"
@@ -127,6 +138,7 @@ import _ from 'lodash'
 import { Sdk } from '@/sdk'
 import config from '@/config'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { Autocomplete } from '@comcom/fields'
 
 export default {
   components: {
@@ -134,7 +146,8 @@ export default {
     InputField,
     TickField,
     EmailGetter,
-    InputDateField
+    InputDateField,
+    Autocomplete
   },
 
   data () {
@@ -155,7 +168,8 @@ export default {
         startDate: '',
         endDate: ''
       },
-      isNoMoreEntries: false
+      isNoMoreEntries: false,
+      autocompleteData: []
     }
   },
 
@@ -218,6 +232,19 @@ export default {
       } catch (error) {
         ErrorHandler.process(error)
       }
+    },
+
+    setOwner (value) {
+      this.owner = value
+    },
+
+    setAutocompleteData (data) {
+      this.autocompleteData = data
+    },
+
+    onOwnerClick (event) {
+      this.$refs.ownerAutocomplete.openDropdown(event)
+      this.$refs.ownerAutocomplete.getEmailsList()
     }
   },
 

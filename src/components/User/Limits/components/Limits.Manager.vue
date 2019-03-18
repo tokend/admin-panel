@@ -50,7 +50,18 @@
                     limits-manager-filters__specific-user-field"
               v-model.trim="specificUserAddress"
               label="Email or Account ID"
-            />
+              email-autocomplete
+              @click="onEmailClick"
+            >
+              <autocomplete
+                :autocompleteData="autocompleteData"
+                v-on:setAutocompleteData="setAutocompleteData"
+                :filtersEmail="specificUserAddress"
+                v-on:email="setEmail"
+                ref="emailAutocomplete"
+                inputType="email"
+              />
+            </input-field>
 
             <select-field v-model="filters.asset"
               class="limits-manager-filters__specific-user-field"
@@ -196,6 +207,7 @@
 
   import { STATS_OPERATION_TYPES, DEFAULT_MAX_AMOUNT } from '@/constants'
   import config from '@/config'
+  import { Autocomplete } from '@comcom/fields'
 
   const ACCOUNT_ROLES_VERBOSE = Object.freeze({
     [config.ACCOUNT_ROLES.notVerified]: 'Unverified user',
@@ -223,7 +235,8 @@
       InputField,
       TickField,
       Tabs,
-      Tab
+      Tab,
+      Autocomplete
     },
     data: _ => ({
       filters: {
@@ -263,7 +276,8 @@
       LIMITS_TYPES,
       ACCOUNT_ROLES: config.ACCOUNT_ROLES,
       ACCOUNT_ROLES_VERBOSE,
-      numericValueRegExp: /^\d*\.?\d*$/
+      numericValueRegExp: /^\d*\.?\d*$/,
+      autocompleteData: []
     }),
     async created () {
       await this.getAssets()
@@ -428,6 +442,19 @@
             this.filters.address = this.specificUserAddress
           }
         }
+      },
+
+      setEmail (value) {
+        this.specificUserAddress = value
+      },
+
+      setAutocompleteData (data) {
+        this.autocompleteData = data
+      },
+
+      onEmailClick (event) {
+        this.$refs.emailAutocomplete.openDropdown(event)
+        this.$refs.emailAutocomplete.getEmailsList()
       }
     },
     watch: {

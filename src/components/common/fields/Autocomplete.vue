@@ -23,6 +23,7 @@
 import { clearObject } from '@/utils/clearObject'
 import { ApiCallerFactory } from '@/api-caller-factory'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import _ from 'lodash'
 
 export default {
   props: {
@@ -39,7 +40,6 @@ export default {
 
   data () {
     return {
-      emailAddress: [],
       activeEmail: '',
       activeAddress: '',
       isInputFocused: false,
@@ -83,31 +83,48 @@ export default {
 
     onKey (event) {
       const currentElement = this.getActiveElement()
-      const arrowUpPressed = currentElement && event.key === 'ArrowUp' && currentElement.previousSibling
-      const arrowDownPressed = currentElement && event.key === 'ArrowDown' && currentElement.nextSibling
-      const enterPressed = currentElement && event.key === 'Enter'
-      const escapePressed = event.key === 'Escape'
+      const hasNextSibling = currentElement && currentElement.nextSibling
+      const hasPreviousSibling = currentElement && currentElement.previousSibling
 
       if (this.autocompleteData.length) {
-        if (arrowUpPressed) {
-          const previousElement = this.$refs[currentElement.previousSibling.id][0]
-          this.setSelectedOption(previousElement)
-        }
-        if (arrowDownPressed) {
-          const nextElement = this.$refs[currentElement.nextSibling.id][0]
-          this.setSelectedOption(nextElement)
-        }
-        if (enterPressed) {
-          this.setEmail(this.inputType)
-          window.removeEventListener('mouseup', this.onClick, false)
-        }
-        if (escapePressed) {
-          this.closeDropdown()
-          window.removeEventListener('mouseup', this.onClick, false)
-        }
-        if (!currentElement && (event.key === 'ArrowDown' || event.key === 'ArrowUp')) {
-          const firstElement = this.$refs[this.autocompleteData[0].address][0]
-          this.setSelectedOption(firstElement)
+        switch (event.key) {
+          case 'ArrowUp':
+            if (hasPreviousSibling) {
+              const previousElement = this.$refs[currentElement.previousSibling.id][0]
+              this.setSelectedOption(previousElement)
+            }
+            if (!currentElement) {
+              const firstElement = this.$refs[this.autocompleteData[0].address][0]
+              this.setSelectedOption(firstElement)
+            }
+            break
+
+          case 'ArrowDown':
+            if (hasNextSibling) {
+              const nextElement = this.$refs[currentElement.nextSibling.id][0]
+              this.setSelectedOption(nextElement)
+            }
+            if (!currentElement) {
+              const firstElement = this.$refs[this.autocompleteData[0].address][0]
+              this.setSelectedOption(firstElement)
+            }
+            break
+
+          case 'Enter':
+            if (currentElement) {
+              this.setEmail(this.inputType)
+              window.removeEventListener('mouseup', this.onClick, false)
+            }
+            break
+
+          case 'Escape':
+            this.closeDropdown()
+            window.removeEventListener('mouseup', this.onClick, false)
+            break
+
+          default:
+            this.activeInputEvent.target.focus()
+            break
         }
       }
     },
@@ -137,8 +154,8 @@ export default {
     },
 
     onClick (event) {
-      const clickOnInputField = this.activeInputEvent && (event.target === this.activeInputEvent.target)
-      if (!clickOnInputField) {
+      const clickOnInputField = !(this.activeInputEvent && (event.target === this.activeInputEvent.target))
+      if (clickOnInputField) {
         this.closeDropdown()
         window.removeEventListener('mouseup', this.onClick, false)
       }
@@ -164,6 +181,15 @@ export default {
       this.addKeyHandler()
       this.addClickHandler()
     }
+  },
+  watch: {
+    'filtersAddress': _.debounce(function () {
+      this.getEmailsList()
+    }, 400),
+
+    'filtersEmail': _.debounce(function () {
+      this.getEmailsList()
+    }, 400)
   }
 }
 </script>
