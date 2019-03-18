@@ -282,10 +282,10 @@ export default {
     'filters.role' () {
       this.getList()
     },
-    'filters.email': _.debounce(function () {
+    'filters.email': _.throttle(function () {
       this.getList()
     }, 400),
-    'filters.address': _.debounce(function () {
+    'filters.address': _.throttle(function () {
       this.getList()
     }, 400)
   }
