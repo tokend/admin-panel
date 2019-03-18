@@ -19,8 +19,7 @@
       :title="title"
       :form="form"
       @input="onInput"
-      @focus="onFocus"
-      @blur="onBlur"
+      @click="onClick"
     >
 
     <div class="input-field__autocomplete">
@@ -89,12 +88,8 @@ export default {
       this.$emit('input', event.target.value)
     },
 
-    onFocus (event) {
-      this.$emit('focus', event.target.value)
-    },
-
-    onBlur (event) {
-      this.$emit('blur', event.target.value)
+    onClick (event) {
+      this.$emit('click', event)
     },
 
     beforeEmit (target) {

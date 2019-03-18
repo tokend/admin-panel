@@ -42,8 +42,8 @@ export default {
       emailAddress: [],
       activeEmail: '',
       activeAddress: '',
-      isVisible: false,
-      isInputFocused: false
+      isInputFocused: false,
+      activeInputEvent: {}
     }
   },
 
@@ -66,7 +66,6 @@ export default {
               })
             })
           this.$emit('setAutocompleteData', response.data)
-          this.isVisible = true
         } catch (error) {
           ErrorHandler.processWithoutFeedback(error)
         }
@@ -75,38 +74,40 @@ export default {
       }
     },
 
+    setSelectedOption (element) {
+      this.activeEmail = element.dataset.email
+      this.activeAddress = element.id
+      element.focus()
+      event.preventDefault()
+    },
+
     onKey (event) {
       const currentElement = this.getActiveElement()
+      const arrowUpPressed = currentElement && event.key === 'ArrowUp' && currentElement.previousSibling
+      const arrowDownPressed = currentElement && event.key === 'ArrowDown' && currentElement.nextSibling
+      const enterPressed = currentElement && event.key === 'Enter'
+      const escapePressed = event.key === 'Escape'
 
       if (this.autocompleteData.length) {
-        if (currentElement && event.key === 'ArrowUp' && currentElement.previousSibling) {
+        if (arrowUpPressed) {
           const previousElement = this.$refs[currentElement.previousSibling.id][0]
-          this.activeEmail = previousElement.dataset.email
-          this.activeAddress = previousElement.id
-          previousElement.focus()
-          event.preventDefault()
+          this.setSelectedOption(previousElement)
         }
-        if (currentElement && event.key === 'ArrowDown' && currentElement.nextSibling) {
+        if (arrowDownPressed) {
           const nextElement = this.$refs[currentElement.nextSibling.id][0]
-          this.activeEmail = nextElement.dataset.email
-          this.activeAddress = nextElement.id
-          nextElement.focus()
-          event.preventDefault()
+          this.setSelectedOption(nextElement)
         }
-        if (currentElement && event.key === 'Enter') {
+        if (enterPressed) {
           this.setEmail(this.inputType)
-          window.removeEventListener('click', this.onClick)
+          window.removeEventListener('mouseup', this.onClick, false)
         }
-        if (event.key === 'Escape') {
+        if (escapePressed) {
           this.closeDropdown()
-          window.removeEventListener('click', this.onClick)
+          window.removeEventListener('mouseup', this.onClick, false)
         }
-        if (!currentElement && event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+        if (!currentElement && (event.key === 'ArrowDown' || event.key === 'ArrowUp')) {
           const firstElement = this.$refs[this.autocompleteData[0].address][0]
-          this.activeEmail = firstElement.dataset.email
-          this.activeAddress = firstElement.id
-          firstElement.focus()
-          event.preventDefault()
+          this.setSelectedOption(firstElement)
         }
       }
     },
@@ -136,25 +137,32 @@ export default {
     },
 
     onClick (event) {
-      this.closeDropdown()
-      window.removeEventListener('click', this.onClick)
+      const clickOnInputField = this.activeInputEvent && (event.target === this.activeInputEvent.target)
+      if (!clickOnInputField) {
+        this.closeDropdown()
+        window.removeEventListener('mouseup', this.onClick, false)
+      }
     },
 
     addKeyHandler () {
-      console.log('added')
       window.addEventListener('keydown', this.onKey)
     },
 
     addClickHandler () {
-      window.addEventListener('click', this.onClick)
+      window.addEventListener('mouseup', this.onClick)
     },
 
     closeDropdown () {
       this.isInputFocused = false
+      window.removeEventListener('mouseup', this.onClick, false)
+      window.removeEventListener('keydown', this.onKey, false)
     },
 
-    openDropdown () {
+    openDropdown (event) {
+      this.activeInputEvent = event
       this.isInputFocused = true
+      this.addKeyHandler()
+      this.addClickHandler()
     }
   }
 }

@@ -19,23 +19,8 @@
             v-model.trim="filters.email"
             label="Email"
             email-autocomplete
-            @focus="onEmailFocus"
-            @blur="onEmailBlur"
+            @click="onEmailClick"
           >
-            <!-- <div>
-              <button
-                class="autocomplete-option"
-                :class="{'autocomplete-option--active': item.address === activeOption}"
-                v-for="item in emailAddress" 
-                v-bind:key="item.email"
-                :id="item.address"
-                :ref="item.address"
-                @mousedown="filters.email = item.email"
-                @mouseover="activeOption = item.address"
-              >
-                {{ item.email }}
-              </button>
-            </div> -->
             <autocomplete
               :autocompleteData="autocompleteData"
               v-on:setAutocompleteData="setAutocompleteData"
@@ -53,17 +38,8 @@
             v-model.trim="filters.address"
             label="Account ID"
             email-autocomplete
-            @focus="onAddressFocus"
-            @blur="onAddressBlur"
+            @click="onAddressClick"
           >
-            <!-- <button
-              class="autocomplete-option"
-              v-for="item in emailAddress" 
-              v-bind:key="item.address"
-              @mousedown="filters.address = item.address"
-            >
-              {{ item.address }}
-            </button> -->
             <autocomplete
               :autocompleteData="autocompleteData"
               v-on:setAutocompleteData="setAutocompleteData"
@@ -277,7 +253,6 @@ export default {
     },
 
     setEmail (value) {
-      console.log(1111)
       this.filters.email = value
     },
 
@@ -289,26 +264,14 @@ export default {
       this.autocompleteData = data
     },
 
-    onEmailFocus () {
-      this.$refs.emailAutocomplete.openDropdown()
+    onEmailClick (event) {
+      this.$refs.emailAutocomplete.openDropdown(event)
       this.$refs.emailAutocomplete.getEmailsList()
-      this.$refs.emailAutocomplete.addKeyHandler()
     },
 
-    onEmailBlur () {
-      console.log(333)
-      this.$refs.emailAutocomplete.addClickHandler()
-    },
-
-    onAddressFocus () {
-      this.$refs.addressAutocomplete.openDropdown()
+    onAddressClick (event) {
+      this.$refs.addressAutocomplete.openDropdown(event)
       this.$refs.addressAutocomplete.getEmailsList()
-      this.$refs.addressAutocomplete.addKeyHandler()
-    },
-
-    onAddressBlur () {
-      console.log(333)
-      this.$refs.addressAutocomplete.addClickHandler()
     }
   },
 
