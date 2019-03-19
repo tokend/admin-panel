@@ -69,7 +69,7 @@
           <li>
             <span>Preissuance signer</span>
             <email-getter
-              :account-id="request.token.preissuedAssetSigner"
+              :account-id="request.token.preissuedAssetSigner || request.token.preIssuedAssetSigner "
               is-titled
             />
           </li>

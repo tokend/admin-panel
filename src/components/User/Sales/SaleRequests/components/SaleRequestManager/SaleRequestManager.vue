@@ -93,7 +93,6 @@
 </template>
 
 <script>
-import { Sdk } from '@/sdk'
 import api from '@/api'
 import TextField from '@comcom/fields/TextField'
 import TickField from '@comcom/fields/TickField'
@@ -107,6 +106,7 @@ import { Tabs, Tab } from '@comcom/Tabs'
 import cloneDeep from 'lodash/cloneDeep'
 import { snakeToCamelCase } from '@/utils/un-camel-case'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { TokenRequest } from '@/api/responseHandlers/requests/TokenRequest'
 
 export default {
   components: {
@@ -134,6 +134,7 @@ export default {
         isShown: false,
         isPermanentReject: false
       },
+      token: {},
       isSubmitting: false
     }
   },
@@ -156,14 +157,24 @@ export default {
     async getRequest (id) {
       try {
         this.request.sale = await this.getSaleRequest(id)
-        const response = await Sdk.horizon.assets
-          .get(this.getSaleDetails.baseAsset)
-        this.request.token = response.data
+        const token = await this.getToken()
+        this.token = token
+        this.request.token = token.operationDetails
         this.request.isReady = true
       } catch (error) {
         ErrorHandler.process(error)
         this.request.isFailed = true
       }
+    },
+
+    async getToken () {
+      const response = await api.requests.getAssetRequests({})
+      const token = response.data
+          .map(response => new TokenRequest(response))
+          .filter(response => {
+            return response.code === this.getSaleDetails.baseAsset
+          })
+      return token[0]
     },
 
     async getSaleRequest (id) {
@@ -184,6 +195,7 @@ export default {
       this.isSubmitting = true
       if (await confirmAction()) {
         try {
+          await api.requests.approve(this.token._rawRequest)
           await api.requests.approve(this.request.sale)
           this.$store.dispatch('SET_INFO', 'Fund request approved.')
           this.$router.push({ name: 'sales.requests' })
