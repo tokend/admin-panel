@@ -103,7 +103,7 @@ import api from '@/api'
 import TextField from '@comcom/fields/TextField'
 import TickField from '@comcom/fields/TickField'
 import Modal from '@comcom/modals/Modal'
-import { REQUEST_STATES } from '@/constants'
+import { REQUEST_STATES, ASSET_PAIR_POLICIES } from '@/constants'
 import DetailsTab from './SaleRequestManager.DetailsTab'
 import DescriptionTab from './SaleRequestManager.DescriptionTab'
 import { confirmAction } from '../../../../../../js/modals/confirmation_message'
@@ -197,6 +197,7 @@ export default {
       if (await confirmAction()) {
         try {
           await api.requests.approve(this.request.sale)
+          await this.makePairTradeable()
           this.$store.dispatch('SET_INFO', 'Fund request approved.')
           this.$router.push({ name: 'sales.requests' })
         } catch (error) {
@@ -204,6 +205,19 @@ export default {
         }
       }
       this.isSubmitting = false
+    },
+
+    async makePairTradeable () {
+      const response = await Sdk.horizon.assetPairs.getAll()
+      const pairs = response.data
+        .filter(item => item.base === this.request.token.code)
+
+      pairs.forEach(async item => {
+        item.policies = [ASSET_PAIR_POLICIES.tradeableSecondaryMarket]
+          .reduce((sum, policy) => sum | policy, 0)
+
+        await api.assets.updatePair({ ...item, updatePolicy: true })
+      })
     },
 
     async reject () {

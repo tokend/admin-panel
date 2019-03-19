@@ -289,7 +289,6 @@ export default {
       }
       this.isPending = false
     },
-
     localizeAmount: localize
   }
 }
