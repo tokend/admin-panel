@@ -111,7 +111,7 @@
 
     <div class="sale-rm-details-tab__row">
       <div class="sale-rm-details-tab__row-item">
-        <label class="data-caption">Fund details</label>
+        <label class="data-caption">Opportunity details</label>
         <ul class="key-value-list">
           <li>
             <span>Name</span>
@@ -182,12 +182,12 @@
       </div>
 
       <div class="sale-rm-details-tab__row-item">
-        <label class="data-caption">Fund logo</label>
+        <label class="data-caption">Opportunity logo</label>
         <template v-if="safeGet(saleDetails, 'details.logo.key')">
           <img-getter
             class="sale-rm-details-tab__sale-logo"
             :file-key="saleDetails.details.logo.key"
-            alt="Fund logo"
+            alt="Opportunity logo"
           />
         </template>
         <template v-else>

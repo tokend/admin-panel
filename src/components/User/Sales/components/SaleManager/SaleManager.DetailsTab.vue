@@ -95,7 +95,7 @@
     <div class="sale-manager-details-tab__row">
       <div class="sale-manager-details-tab__row-item">
         <ul class="key-value-list">
-          <label class="data-caption">Fund details</label>
+          <label class="data-caption">Opportunity details</label>
           <li>
             <span>Name</span>
             <span>{{ sale.details.name || '&mdash;' }}</span>
@@ -161,7 +161,7 @@
           </li>
           <li>
             <!-- eslint-disable-next-line max-len -->
-            <span :title="`Hard cap of the fund in the ${item.asset} equivalent`">Hard cap</span>
+            <span :title="`Hard cap of the opportunity in the ${item.asset} equivalent`">Hard cap</span>
             <asset-amount-formatter :amount="item.hardCap" />
           </li>
         </ul>
@@ -213,12 +213,12 @@
       </div>
 
       <div class="sale-manager-details-tab__row-item">
-        <label class="data-caption">Fund logo</label>
+        <label class="data-caption">Opportunity logo</label>
         <template v-if="sale.details.logo && sale.details.logo.key">
           <img-getter
             class="sale-manager-details-tab__sale-logo"
             :file-key="sale.details.logo.key"
-            alt="Fund logo"
+            alt="Opportunity logo"
           />
         </template>
         <template v-else>

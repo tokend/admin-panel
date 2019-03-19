@@ -1,6 +1,6 @@
 <template>
   <div class="sale-rm">
-    <h2>Manage fund request</h2>
+    <h2>Manage opportunity request</h2>
 
     <div class="app__block">
       <template v-if="request.isReady">
@@ -195,9 +195,8 @@ export default {
       this.isSubmitting = true
       if (await confirmAction()) {
         try {
-          await api.requests.approve(this.token._rawRequest)
-          await api.requests.approve(this.request.sale)
-          this.$store.dispatch('SET_INFO', 'Fund request approved.')
+          await api.requests.approve(this.token._rawRequest, this.request.sale)
+          this.$store.dispatch('SET_INFO', 'Opportunity request approved.')
           this.$router.push({ name: 'sales.requests' })
         } catch (error) {
           ErrorHandler.process(error)
@@ -214,9 +213,10 @@ export default {
             reason: this.rejectForm.reason,
             isPermanent: this.rejectForm.isPermanentReject
           },
+          this.token._rawRequest,
           this.request.sale
         )
-        this.$store.dispatch('SET_INFO', 'Fund request rejected successfully.')
+        this.$store.dispatch('SET_INFO', 'Opportunity request rejected successfully.')
         this.$router.push({ name: 'sales.requests' })
       } catch (error) {
         ErrorHandler.process(error)

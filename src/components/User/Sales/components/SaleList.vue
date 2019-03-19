@@ -1,7 +1,7 @@
 <template>
   <div class="sale-list">
     <h2>
-      Fund list
+      Opportunities list
     </h2>
 
     <div class="sale-list__filters-wrp">
