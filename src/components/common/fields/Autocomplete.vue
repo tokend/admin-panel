@@ -46,6 +46,7 @@ export default {
   computed: {
     dropdownShown () {
       if (this.shouldShowDropdown) {
+        this.getList()
         window.addEventListener('keydown', this.onKey)
         window.addEventListener('mouseup', this.onClick)
         this.closeDropdown = false
