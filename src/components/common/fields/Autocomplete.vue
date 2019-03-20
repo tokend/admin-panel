@@ -45,19 +45,16 @@ export default {
 
   computed: {
     dropdownShown () {
-      let value = this.shouldShowDropdown | !this.closeDropdown
       if (this.shouldShowDropdown) {
-        value = true
         window.addEventListener('keydown', this.onKey)
         window.addEventListener('mouseup', this.onClick)
         this.closeDropdown = false
       }
       if (this.closeDropdown) {
-        value = false
         window.removeEventListener('mouseup', this.onClick, false)
         window.removeEventListener('keydown', this.onKey, false)
       }
-      return value
+      return this.shouldShowDropdown | !this.closeDropdown
     }
   },
 
