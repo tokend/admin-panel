@@ -94,34 +94,23 @@ export default {
       const currentElement = this.hoveredValue ? document.getElementById(this.hoveredValue) : undefined
       const hasNextSibling = currentElement && currentElement.nextSibling
       const hasPreviousSibling = currentElement && currentElement.previousSibling
+      const firstElement = this.$el.firstChild
       const input = this.$parent.$el.querySelector('input')
 
       if (this.list.length) {
         switch (event.key) {
           case 'ArrowUp':
-            if (hasPreviousSibling) {
-              this.setHoverOnKeyPress(currentElement.previousSibling)
-            }
-            if (!currentElement) {
-              const firstElement = this.$refs[this.list[0][this.autocompleteType]][0]
-              this.setHoverOnKeyPress(firstElement)
-            }
+            hasPreviousSibling ? this.setHoverOnKeyPress(currentElement.previousSibling) : null
+            !currentElement ? this.setHoverOnKeyPress(firstElement) : null
             break
 
           case 'ArrowDown':
-            if (hasNextSibling) {
-              this.setHoverOnKeyPress(currentElement.nextSibling)
-            }
-            if (!currentElement) {
-              const firstElement = this.$refs[this.list[0][this.autocompleteType]][0]
-              this.setHoverOnKeyPress(firstElement)
-            }
+            hasNextSibling ? this.setHoverOnKeyPress(currentElement.nextSibling) : null
+            !currentElement ? this.setHoverOnKeyPress(firstElement) : null
             break
 
           case 'Enter':
-            if (currentElement) {
-              this.emitDataToSetInputValue()
-            }
+            currentElement ? this.emitDataToSetInputValue() : null
             break
 
           case 'Escape':
