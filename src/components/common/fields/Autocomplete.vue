@@ -11,8 +11,8 @@
       :id="item.address"
       :ref="item.address"
       :data-email="item.email"
-      @mousedown="setEmail(inputType)"
-      @mouseover="setActiveOption(item)"
+      @mousedown="emitDataToSetInputValue(inputType)"
+      @mouseover="setHoverOnMouseOver(item)"
     >
       {{ item[inputType] }}
     </button>
@@ -27,8 +27,8 @@ import _ from 'lodash'
 
 export default {
   props: {
-    filtersEmail: { type: String, default: '' },
-    filtersAddress: { type: String, default: '' },
+    enteredEmail: { type: String, default: '' },
+    enteredAddress: { type: String, default: '' },
     inputType: { type: String, default: '' },
     autocompleteData: { type: Array, default: [] },
     isEmailInputFocused: { type: String, default: 'false' }
@@ -43,7 +43,7 @@ export default {
       activeEmail: '',
       activeAddress: '',
       isInputFocused: false,
-      activeInputEvent: {}
+      inputEvent: {}
     }
   },
 
@@ -53,16 +53,16 @@ export default {
 
   methods: {
 
-    async getEmailsList () {
+    async getList () {
       let response = []
-      if (this.filtersEmail || this.filtersAddress) {
+      if (this.enteredEmail || this.enteredAddress) {
         try {
           response = await ApiCallerFactory
             .createCallerInstance()
             .getWithSignature('/identities', {
               filter: clearObject({
-                email: this.filtersEmail,
-                address: this.filtersAddress
+                email: this.enteredEmail,
+                address: this.enteredAddress
               })
             })
           this.$emit('setAutocompleteData', response.data)
@@ -70,11 +70,11 @@ export default {
           ErrorHandler.processWithoutFeedback(error)
         }
       } else {
-        this.$emit('setAutocompleteData', [])
+        this.$emit('setAutocompleteData', response)
       }
     },
 
-    setSelectedOption (element) {
+    setHoverOnKeyPress (element) {
       this.activeEmail = element.dataset.email
       this.activeAddress = element.id
       element.focus()
@@ -91,39 +91,38 @@ export default {
           case 'ArrowUp':
             if (hasPreviousSibling) {
               const previousElement = this.$refs[currentElement.previousSibling.id][0]
-              this.setSelectedOption(previousElement)
+              this.setHoverOnKeyPress(previousElement)
             }
             if (!currentElement) {
               const firstElement = this.$refs[this.autocompleteData[0].address][0]
-              this.setSelectedOption(firstElement)
+              this.setHoverOnKeyPress(firstElement)
             }
             break
 
           case 'ArrowDown':
             if (hasNextSibling) {
               const nextElement = this.$refs[currentElement.nextSibling.id][0]
-              this.setSelectedOption(nextElement)
+              this.setHoverOnKeyPress(nextElement)
             }
             if (!currentElement) {
               const firstElement = this.$refs[this.autocompleteData[0].address][0]
-              this.setSelectedOption(firstElement)
+              this.setHoverOnKeyPress(firstElement)
             }
             break
 
           case 'Enter':
             if (currentElement) {
-              this.setEmail(this.inputType)
-              window.removeEventListener('mouseup', this.onClick, false)
+              this.emitDataToSetInputValue(this.inputType)
+              this.closeDropdown()
             }
             break
 
           case 'Escape':
             this.closeDropdown()
-            window.removeEventListener('mouseup', this.onClick, false)
             break
 
           default:
-            this.activeInputEvent.target.focus()
+            this.inputEvent.target.focus()
             break
         }
       }
@@ -137,31 +136,31 @@ export default {
       return element
     },
 
-    setEmail (typeOfClickedInput) {
-      switch (typeOfClickedInput) {
-        case 'email':
-          this.$emit('email', this.activeEmail)
-          break
-        case 'address':
-          this.$emit('address', this.activeAddress)
+    emitDataToSetInputValue (typeOfClickedInput) {
+      let value
+      if (typeOfClickedInput === 'email') {
+        value = this.activeEmail
       }
+      if (typeOfClickedInput === 'address') {
+        value = this.activeAddress
+      }
+      this.$emit('setInputValue', value)
       this.closeDropdown()
     },
 
-    setActiveOption (data) {
+    setHoverOnMouseOver (data) {
       this.activeEmail = data.email
       this.activeAddress = data.address
     },
 
     onClick (event) {
-      const clickOnInputField = !(this.activeInputEvent && (event.target === this.activeInputEvent.target))
+      const clickOnInputField = !(this.inputEvent && (event.target === this.inputEvent.target))
       if (clickOnInputField) {
         this.closeDropdown()
-        window.removeEventListener('mouseup', this.onClick, false)
       }
     },
 
-    addKeyHandler () {
+    addKeydownHandler () {
       window.addEventListener('keydown', this.onKey)
     },
 
@@ -176,20 +175,21 @@ export default {
     },
 
     openDropdown (event) {
-      this.activeInputEvent = event
+      this.inputEvent = event
       this.isInputFocused = true
-      this.addKeyHandler()
+      this.addKeydownHandler()
       this.addClickHandler()
     }
   },
   watch: {
-    'filtersAddress': _.debounce(function () {
-      this.getEmailsList()
+    'enteredEmail': _.debounce(function () {
+      this.getList()
     }, 400),
 
-    'filtersEmail': _.debounce(function () {
-      this.getEmailsList()
+    'enteredAddress': _.debounce(function () {
+      this.getList()
     }, 400)
+
   }
 }
 </script>

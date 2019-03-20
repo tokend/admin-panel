@@ -23,14 +23,13 @@
           label="Requestor"
           placeholder="Address (full match)"
           v-model="filters.requestor"
-          email-autocomplete
           @click="onRequestorClick"
         >
           <autocomplete
             :autocompleteData="autocompleteData"
             v-on:setAutocompleteData="setAutocompleteData"
-            :filtersEmail="filters.requestor"
-            v-on:email="setRequestor"
+            :enteredEmail="filters.requestor"
+            v-on:setInputValue="setRequestor"
             ref="requestorAutocomplete"
             inputType="email"
           />
@@ -189,7 +188,6 @@ export default {
 
     onRequestorClick (event) {
       this.$refs.requestorAutocomplete.openDropdown(event)
-      this.$refs.requestorAutocomplete.getEmailsList()
     }
   },
 

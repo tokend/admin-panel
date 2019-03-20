@@ -8,7 +8,6 @@
       :disabled="disabled"
       :name="name"
       :autocomplete="autocomplete"
-      :email-autocomplete="emailAutocomplete"
       :autofocus="autofocus"
       :min="min"
       :max="max"
@@ -49,7 +48,6 @@ export default {
     value: { type: [String, Number], default: undefined },
     errorMessage: { type: String, default: undefined },
     align: { type: String, default: 'left' },
-    emailAutocomplete: { type: Boolean, default: false },
     // proxies
     autocomplete: { type: String, default: 'off' },
     autofocus: { type: Boolean, default: false },

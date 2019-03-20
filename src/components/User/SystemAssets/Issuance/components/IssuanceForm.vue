@@ -9,14 +9,13 @@
             v-model="form.receiver"
             label="Receiver (email or address)"
             :disabled="isSubmitting"
-            email-autocomplete
             @click="onEmailClick"
           >
             <autocomplete
               :autocompleteData="autocompleteData"
               v-on:setAutocompleteData="setAutocompleteData"
-              :filtersEmail="form.receiver"
-              v-on:email="setEmail"
+              :enteredEmail="form.receiver"
+              v-on:setInputValue="setEmail"
               ref="emailAutocomplete"
               inputType="email"
             />
@@ -219,7 +218,6 @@ export default {
 
     onEmailClick (event) {
       this.$refs.emailAutocomplete.openDropdown(event)
-      this.$refs.emailAutocomplete.getEmailsList()
     }
   }
 }

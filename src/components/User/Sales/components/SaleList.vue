@@ -21,14 +21,13 @@
           label="Owner"
           placeholder="Address (full match)"
           v-model="owner"
-          email-autocomplete
           @click="onOwnerClick"
         >
           <autocomplete
             :autocompleteData="autocompleteData"
             v-on:setAutocompleteData="setAutocompleteData"
-            :filtersEmail="owner"
-            v-on:email="setOwner"
+            :enteredEmail="owner"
+            v-on:setInputValue="setOwner"
             ref="ownerAutocomplete"
             inputType="email"
           />
@@ -244,7 +243,6 @@ export default {
 
     onOwnerClick (event) {
       this.$refs.ownerAutocomplete.openDropdown(event)
-      this.$refs.ownerAutocomplete.getEmailsList()
     }
   },
 

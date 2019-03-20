@@ -50,14 +50,13 @@
                     limits-manager-filters__specific-user-field"
               v-model.trim="specificUserAddress"
               label="Email or Account ID"
-              email-autocomplete
               @click="onEmailClick"
             >
               <autocomplete
                 :autocompleteData="autocompleteData"
                 v-on:setAutocompleteData="setAutocompleteData"
-                :filtersEmail="specificUserAddress"
-                v-on:email="setEmail"
+                :enteredEmail="specificUserAddress"
+                v-on:setInputValue="setEmail"
                 ref="emailAutocomplete"
                 inputType="email"
               />
@@ -454,7 +453,6 @@
 
       onEmailClick (event) {
         this.$refs.emailAutocomplete.openDropdown(event)
-        this.$refs.emailAutocomplete.getEmailsList()
       }
     },
     watch: {

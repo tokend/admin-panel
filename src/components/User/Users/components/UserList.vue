@@ -18,16 +18,14 @@
             class="app-list-filters__field"
             v-model.trim="filters.email"
             label="Email"
-            email-autocomplete
             @click="onEmailClick"
           >
             <autocomplete
               :autocompleteData="autocompleteData"
               v-on:setAutocompleteData="setAutocompleteData"
-              :filtersEmail="filters.email"
-              :filtersAddress="filters.address"
-              v-on:email="setEmail"
-              v-on:address="setAddress"
+              :enteredEmail="filters.email"
+              :enteredAddress="filters.address"
+              v-on:setInputValue="setEmail"
               ref="emailAutocomplete"
               inputType="email"
             />
@@ -37,16 +35,14 @@
             class="app-list-filters__field"
             v-model.trim="filters.address"
             label="Account ID"
-            email-autocomplete
             @click="onAddressClick"
           >
             <autocomplete
               :autocompleteData="autocompleteData"
               v-on:setAutocompleteData="setAutocompleteData"
-              :filtersEmail="filters.email"
-              :filtersAddress="filters.address"
-              v-on:email="setEmail"
-              v-on:address="setAddress"
+              :enteredEmail="filters.email"
+              :enteredAddress="filters.address"
+              v-on:setInputValue="setAddress"
               ref="addressAutocomplete"
               inputType="address"
             />
@@ -266,12 +262,10 @@ export default {
 
     onEmailClick (event) {
       this.$refs.emailAutocomplete.openDropdown(event)
-      this.$refs.emailAutocomplete.getEmailsList()
     },
 
     onAddressClick (event) {
       this.$refs.addressAutocomplete.openDropdown(event)
-      this.$refs.addressAutocomplete.getEmailsList()
     }
   },
 

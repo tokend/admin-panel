@@ -19,14 +19,13 @@
         class="arc-list__filter"
         v-model="filters.requestor"
         label="Requestor"
-        email-autocomplete
         @click="onRequestorClick"
       >
         <autocomplete
           :autocompleteData="autocompleteData"
           v-on:setAutocompleteData="setAutocompleteData"
-          :filtersAddress="filters.requestor"
-          v-on:address="setRequestor"
+          :enteredAddress="filters.requestor"
+          v-on:setInputValue="setRequestor"
           ref="requestorAutocomplete"
           inputType="address"
         />
@@ -210,7 +209,6 @@ export default {
 
     onRequestorClick (event) {
       this.$refs.requestorAutocomplete.openDropdown(event)
-      this.$refs.requestorAutocomplete.getEmailsList()
     }
   },
   watch: {
