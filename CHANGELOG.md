@@ -10,7 +10,7 @@ for further information about branching and tagging conventions.
 ## [Unreleased]
 ### Added
 - Added filter for displaying app version
-
+- Added single approving token and sale 
 ### Removed
 - Unused dependencies:
   - karma
