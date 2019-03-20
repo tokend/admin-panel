@@ -213,6 +213,15 @@
         />
       </div>
 
+      <div class="app__form-row">
+        <tick-field
+          class="app__form-field"
+          v-model="asset.creatorDetails.isFiat"
+          label="Fiat asset"
+          :disabled="isPending"
+        />
+      </div>
+
       <div class="asset-manager-advanced__block">
         <div class="asset-manager-advanced__heading">
           <h3>Advanced</h3>
@@ -297,6 +306,7 @@ export default {
         trailingDigitsCount: '6',
         assetType: '0',
         creatorDetails: {
+          isFiat: false,
           name: '',
           logo: {},
           terms: {},
@@ -381,6 +391,7 @@ export default {
             allTasks: 0,
             creatorDetails: {
               name: this.asset.creatorDetails.name,
+              isFiat: this.asset.creatorDetails.isFiat,
               external_system_type: this.asset.creatorDetails.externalSystemType,
               logo,
               terms
@@ -399,6 +410,7 @@ export default {
             allTasks: 0,
             creatorDetails: {
               name: this.asset.creatorDetails.name,
+              isFiat: this.asset.creatorDetails.isFiat,
               external_system_type: this.asset.creatorDetails.externalSystemType,
               logo: {
                 key: this.asset.creatorDetails.logo.key,

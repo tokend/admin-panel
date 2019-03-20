@@ -99,7 +99,8 @@ import {
   cropAddress,
   roleIdToString,
   assetTypeToString,
-  lowerCase
+  lowerCase,
+  formatVersion
 } from './components/App/filters/filters'
 
 Vue.filter('dateTime', filterDateWithTime)
@@ -109,6 +110,7 @@ Vue.filter('cropAddress', cropAddress)
 Vue.filter('roleIdToString', roleIdToString)
 Vue.filter('assetTypeToString', assetTypeToString)
 Vue.filter('lowerCase', lowerCase)
+Vue.filter('formatVersion', formatVersion)
 
 /* Logger module */
 
