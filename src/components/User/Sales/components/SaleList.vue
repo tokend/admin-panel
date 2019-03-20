@@ -21,15 +21,15 @@
           label="Owner"
           placeholder="Address (full match)"
           v-model="owner"
-          @click="onOwnerClick"
+          @focus="isOwnerInputFocused = true"
+          @blur="isOwnerInputFocused = false"
         >
           <autocomplete
-            :autocompleteData="autocompleteData"
-            v-on:setAutocompleteData="setAutocompleteData"
-            :enteredEmail="owner"
-            v-on:setInputValue="setOwner"
-            ref="ownerAutocomplete"
-            inputType="email"
+            slot="autocomplete"
+            :input-value="owner"
+            @set-input-value="owner = $event"
+            autocomplete-type="email"
+            :should-show-dropdown="isOwnerInputFocused"
           />
         </input-field>
         <input-date-field
@@ -168,7 +168,7 @@ export default {
         endDate: ''
       },
       isNoMoreEntries: false,
-      autocompleteData: []
+      isOwnerInputFocused: false
     }
   },
 
@@ -231,18 +231,6 @@ export default {
       } catch (error) {
         ErrorHandler.process(error)
       }
-    },
-
-    setOwner (value) {
-      this.owner = value
-    },
-
-    setAutocompleteData (data) {
-      this.autocompleteData = data
-    },
-
-    onOwnerClick (event) {
-      this.$refs.ownerAutocomplete.openDropdown(event)
     }
   },
 

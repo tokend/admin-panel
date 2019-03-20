@@ -19,15 +19,15 @@
         class="arc-list__filter"
         v-model="filters.requestor"
         label="Requestor"
-        @click="onRequestorClick"
+        @focus="isRequestorInputFocused = true"
+        @blur="isRequestorInputFocused = false"
       >
         <autocomplete
-          :autocompleteData="autocompleteData"
-          v-on:setAutocompleteData="setAutocompleteData"
-          :enteredAddress="filters.requestor"
-          v-on:setInputValue="setRequestor"
-          ref="requestorAutocomplete"
-          inputType="address"
+          slot="autocomplete"
+          :input-value="filters.requestor"
+          @set-input-value="filters.requestor = $event"
+          autocomplete-type="address"
+          :should-show-dropdown="isRequestorInputFocused"
         />
       </input-field>
 
@@ -132,7 +132,7 @@ export default {
         requestor: null,
         asset: null
       },
-      autocompleteData: [],
+      isRequestorInputFocused: false,
       CREATE_TOKEN_REQUEST_STATES,
       REQUEST_STATES_STR
     }
@@ -197,18 +197,6 @@ export default {
           return requestor
         }
       }
-    },
-
-    setRequestor (value) {
-      this.filters.requestor = value
-    },
-
-    setAutocompleteData (data) {
-      this.autocompleteData = data
-    },
-
-    onRequestorClick (event) {
-      this.$refs.requestorAutocomplete.openDropdown(event)
     }
   },
   watch: {

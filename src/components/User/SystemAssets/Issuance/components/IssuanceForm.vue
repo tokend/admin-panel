@@ -9,15 +9,15 @@
             v-model="form.receiver"
             label="Receiver (email or address)"
             :disabled="isSubmitting"
-            @click="onEmailClick"
+            @focus="isReceiverInputFocused = true"
+            @blur="isReceiverInputFocused = false"
           >
             <autocomplete
-              :autocompleteData="autocompleteData"
-              v-on:setAutocompleteData="setAutocompleteData"
-              :enteredEmail="form.receiver"
-              v-on:setInputValue="setEmail"
-              ref="emailAutocomplete"
-              inputType="email"
+              slot="autocomplete"
+              :input-value="form.receiver"
+              @set-input-value="form.receiver = $event"
+              autocomplete-type="email"
+              :should-show-dropdown="isReceiverInputFocused"
             />
           </input-field>
         </div>
@@ -110,7 +110,7 @@ export default {
       },
       assets: [],
       isSubmitting: false,
-      autocompleteData: []
+      isReceiverInputFocused: false
     }
   },
 
@@ -206,18 +206,6 @@ export default {
         .finally(() => {
           this.isSubmitting = false
         })
-    },
-
-    setEmail (value) {
-      this.form.receiver = value
-    },
-
-    setAutocompleteData (data) {
-      this.autocompleteData = data
-    },
-
-    onEmailClick (event) {
-      this.$refs.emailAutocomplete.openDropdown(event)
     }
   }
 }

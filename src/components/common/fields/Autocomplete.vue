@@ -1,20 +1,19 @@
 <template>
   <div 
     class="autocomplete"
-    v-if="isInputFocused"
+    v-if="dropdownShown"
   >
     <button
       class="autocomplete-option"
-      :class="{'autocomplete-option--active': item.email === activeEmail}"
-      v-for="item in autocompleteData" 
-      v-bind:key="item.email"
-      :id="item.address"
-      :ref="item.address"
-      :data-email="item.email"
-      @mousedown="emitDataToSetInputValue(inputType)"
-      @mouseover="setHoverOnMouseOver(item)"
+      :class="{ 'autocomplete-option--active': item[autocompleteType] === hoveredValue }"
+      v-for="item in list"
+      :key="item[autocompleteType]"
+      :id="item[autocompleteType]"
+      :ref="item[autocompleteType]"
+      @mousedown="emitDataToSetInputValue"
+      @mouseover="hoveredValue = item[autocompleteType]"
     >
-      {{ item[inputType] }}
+      {{ item[autocompleteType] }}
     </button>
   </div>
 </template>
@@ -27,11 +26,9 @@ import _ from 'lodash'
 
 export default {
   props: {
-    enteredEmail: { type: String, default: '' },
-    enteredAddress: { type: String, default: '' },
-    inputType: { type: String, default: '' },
-    autocompleteData: { type: Array, default: [] },
-    isEmailInputFocused: { type: String, default: 'false' }
+    inputValue: { type: String, default: '' },
+    autocompleteType: { type: String, default: '' },
+    shouldShowDropdown: { type: Boolean, default: false }
   },
 
   components: {
@@ -40,10 +37,27 @@ export default {
 
   data () {
     return {
-      activeEmail: '',
-      activeAddress: '',
-      isInputFocused: false,
-      inputEvent: {}
+      hoveredValue: '',
+      list: [],
+      closeDropdown: false
+    }
+  },
+
+  computed: {
+    dropdownShown () {
+      let value = this.shouldShowDropdown | !this.closeDropdown
+      if (this.shouldShowDropdown) {
+        value = true
+        window.addEventListener('keydown', this.onKey)
+        window.addEventListener('mouseup', this.onClick)
+        this.closeDropdown = false
+      }
+      if (this.closeDropdown) {
+        value = false
+        window.removeEventListener('mouseup', this.onClick, false)
+        window.removeEventListener('keydown', this.onKey, false)
+      }
+      return value
     }
   },
 
@@ -55,141 +69,94 @@ export default {
 
     async getList () {
       let response = []
-      if (this.enteredEmail || this.enteredAddress) {
+      if (this.inputValue || this.enteredAddress) {
         try {
           response = await ApiCallerFactory
             .createCallerInstance()
             .getWithSignature('/identities', {
               filter: clearObject({
-                email: this.enteredEmail,
-                address: this.enteredAddress
+                [this.autocompleteType]: this.inputValue
               })
             })
-          this.$emit('setAutocompleteData', response.data)
+          this.list = response.data
         } catch (error) {
           ErrorHandler.processWithoutFeedback(error)
         }
       } else {
-        this.$emit('setAutocompleteData', response)
+        this.list = response
       }
     },
 
     setHoverOnKeyPress (element) {
-      this.activeEmail = element.dataset.email
-      this.activeAddress = element.id
+      this.hoveredValue = element.id
       element.focus()
       event.preventDefault()
     },
 
     onKey (event) {
-      const currentElement = this.getActiveElement()
+      const currentElement = this.hoveredValue ? document.getElementById(this.hoveredValue) : undefined
       const hasNextSibling = currentElement && currentElement.nextSibling
       const hasPreviousSibling = currentElement && currentElement.previousSibling
+      const input = this.$parent.$el.querySelector('input')
 
-      if (this.autocompleteData.length) {
+      if (this.list.length) {
         switch (event.key) {
           case 'ArrowUp':
             if (hasPreviousSibling) {
-              const previousElement = this.$refs[currentElement.previousSibling.id][0]
-              this.setHoverOnKeyPress(previousElement)
+              this.setHoverOnKeyPress(currentElement.previousSibling)
             }
             if (!currentElement) {
-              const firstElement = this.$refs[this.autocompleteData[0].address][0]
+              const firstElement = this.$refs[this.list[0][this.autocompleteType]][0]
               this.setHoverOnKeyPress(firstElement)
             }
             break
 
           case 'ArrowDown':
             if (hasNextSibling) {
-              const nextElement = this.$refs[currentElement.nextSibling.id][0]
-              this.setHoverOnKeyPress(nextElement)
+              this.setHoverOnKeyPress(currentElement.nextSibling)
             }
             if (!currentElement) {
-              const firstElement = this.$refs[this.autocompleteData[0].address][0]
+              const firstElement = this.$refs[this.list[0][this.autocompleteType]][0]
               this.setHoverOnKeyPress(firstElement)
             }
             break
 
           case 'Enter':
             if (currentElement) {
-              this.emitDataToSetInputValue(this.inputType)
-              this.closeDropdown()
+              this.emitDataToSetInputValue()
             }
             break
 
           case 'Escape':
-            this.closeDropdown()
+            input.blur()
+            this.closeDropdown = true
+            break
+
+          case 'Tab':
+            this.$emit('tab')
+            this.closeDropdown = true
             break
 
           default:
-            this.inputEvent.target.focus()
+            input.focus()
             break
         }
       }
     },
 
-    getActiveElement () {
-      let element
-      if (this.activeAddress) {
-        element = document.getElementById(this.activeAddress)
-      }
-      return element
-    },
-
-    emitDataToSetInputValue (typeOfClickedInput) {
-      let value
-      if (typeOfClickedInput === 'email') {
-        value = this.activeEmail
-      }
-      if (typeOfClickedInput === 'address') {
-        value = this.activeAddress
-      }
-      this.$emit('setInputValue', value)
-      this.closeDropdown()
-    },
-
-    setHoverOnMouseOver (data) {
-      this.activeEmail = data.email
-      this.activeAddress = data.address
+    emitDataToSetInputValue () {
+      this.$emit('set-input-value', this.hoveredValue)
+      this.closeDropdown = true
     },
 
     onClick (event) {
-      const clickOnInputField = !(this.inputEvent && (event.target === this.inputEvent.target))
-      if (clickOnInputField) {
-        this.closeDropdown()
-      }
-    },
-
-    addKeydownHandler () {
-      window.addEventListener('keydown', this.onKey)
-    },
-
-    addClickHandler () {
-      window.addEventListener('mouseup', this.onClick)
-    },
-
-    closeDropdown () {
-      this.isInputFocused = false
-      window.removeEventListener('mouseup', this.onClick, false)
-      window.removeEventListener('keydown', this.onKey, false)
-    },
-
-    openDropdown (event) {
-      this.inputEvent = event
-      this.isInputFocused = true
-      this.addKeydownHandler()
-      this.addClickHandler()
+      this.closeDropdown = true
     }
   },
   watch: {
-    'enteredEmail': _.debounce(function () {
-      this.getList()
-    }, 400),
-
-    'enteredAddress': _.debounce(function () {
+    'inputValue': _.debounce(function () {
       this.getList()
     }, 400)
-
   }
 }
 </script>

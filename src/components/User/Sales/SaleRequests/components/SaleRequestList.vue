@@ -23,15 +23,15 @@
           label="Requestor"
           placeholder="Address (full match)"
           v-model="filters.requestor"
-          @click="onRequestorClick"
+          @focus="isRequestorInputFocused = true"
+          @blur="isRequestorInputFocused = false"
         >
           <autocomplete
-            :autocompleteData="autocompleteData"
-            v-on:setAutocompleteData="setAutocompleteData"
-            :enteredEmail="filters.requestor"
-            v-on:setInputValue="setRequestor"
-            ref="requestorAutocomplete"
-            inputType="email"
+            slot="autocomplete"
+            :input-value="filters.requestor"
+            @set-input-value="filters.requestor = $event"
+            autocomplete-type="email"
+            :should-show-dropdown="isRequestorInputFocused"
           />
         </input-field>
       </div>
@@ -137,7 +137,7 @@ export default {
       },
       isLoaded: false,
       isNoMoreEntries: false,
-      autocompleteData: []
+      isRequestorInputFocused: false
     }
   },
 
@@ -176,18 +176,6 @@ export default {
       const valuableRequestDetailsKey = Object.keys(record.details)
         .find(item => !/request_type|requestType/gi.test(item))
       return record.details[valuableRequestDetailsKey] || {}
-    },
-
-    setRequestor (value) {
-      this.filters.requestor = value
-    },
-
-    setAutocompleteData (data) {
-      this.autocompleteData = data
-    },
-
-    onRequestorClick (event) {
-      this.$refs.requestorAutocomplete.openDropdown(event)
     }
   },
 

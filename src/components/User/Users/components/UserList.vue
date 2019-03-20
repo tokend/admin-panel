@@ -18,16 +18,15 @@
             class="app-list-filters__field"
             v-model.trim="filters.email"
             label="Email"
-            @click="onEmailClick"
+            @focus="isEmailInputFocused = true"
+            @blur="isEmailInputFocused = false"
           >
             <autocomplete
-              :autocompleteData="autocompleteData"
-              v-on:setAutocompleteData="setAutocompleteData"
-              :enteredEmail="filters.email"
-              :enteredAddress="filters.address"
-              v-on:setInputValue="setEmail"
-              ref="emailAutocomplete"
-              inputType="email"
+              slot="autocomplete"
+              :input-value="filters.email"
+              @set-input-value="filters.email = $event"
+              autocomplete-type="email"
+              :should-show-dropdown="isEmailInputFocused"
             />
           </input-field>
 
@@ -35,16 +34,15 @@
             class="app-list-filters__field"
             v-model.trim="filters.address"
             label="Account ID"
-            @click="onAddressClick"
+            @focus="isAddressInputFocused = true"
+            @blur="isAddressInputFocused = false"
           >
             <autocomplete
-              :autocompleteData="autocompleteData"
-              v-on:setAutocompleteData="setAutocompleteData"
-              :enteredEmail="filters.email"
-              :enteredAddress="filters.address"
-              v-on:setInputValue="setAddress"
-              ref="addressAutocomplete"
-              inputType="address"
+              slot="autocomplete"
+              :input-value="filters.address"
+              @set-input-value="filters.address = $event"
+              autocomplete-type="address"
+              :should-show-dropdown="isAddressInputFocused"
             />
           </input-field>
         </div>
@@ -188,9 +186,8 @@ export default {
       isLoading: false,
       emailAddress: [],
       activeOption: '',
-      autocompleteData: [],
-      isEmailInputFocused: 'false',
-      isEmailAddressFocused: 'false',
+      isEmailInputFocused: false,
+      isAddressInputFocused: false,
 
       ACCOUNT_ROLES: config.ACCOUNT_ROLES
     }
@@ -246,26 +243,6 @@ export default {
         window.scroll(0, this.view.scrollPosition)
         this.view.scrollPosition = 0
       })
-    },
-
-    setEmail (value) {
-      this.filters.email = value
-    },
-
-    setAddress (value) {
-      this.filters.address = value
-    },
-
-    setAutocompleteData (data) {
-      this.autocompleteData = data
-    },
-
-    onEmailClick (event) {
-      this.$refs.emailAutocomplete.openDropdown(event)
-    },
-
-    onAddressClick (event) {
-      this.$refs.addressAutocomplete.openDropdown(event)
     }
   },
 
