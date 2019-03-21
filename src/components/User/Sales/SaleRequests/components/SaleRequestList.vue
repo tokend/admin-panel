@@ -1,7 +1,7 @@
 <template>
   <div class="sale-rl">
     <h2>
-      Fund request list
+      Opportunity request list
     </h2>
 
     <div class="sale-rl__filters-wrp">
@@ -141,7 +141,7 @@ export default {
         const filters = { ...this.filters }
         this.list = await api.requests.getSaleRequests(filters)
       } catch (error) {
-        error.showMessage('Cannot get fund request list. Please try again later')
+        error.showMessage('Cannot get opportunity request list. Please try again later')
       }
 
       this.isLoaded = true

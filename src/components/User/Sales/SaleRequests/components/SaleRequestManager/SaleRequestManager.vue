@@ -1,6 +1,6 @@
 <template>
   <div class="sale-rm">
-    <h2>Manage fund request</h2>
+    <h2>Manage opportunity request</h2>
 
     <div class="app__block">
       <template v-if="request.isReady">
@@ -98,7 +98,6 @@
 </template>
 
 <script>
-import { Sdk } from '@/sdk'
 import api from '@/api'
 import TextField from '@comcom/fields/TextField'
 import TickField from '@comcom/fields/TickField'
@@ -112,6 +111,7 @@ import { Tabs, Tab } from '@comcom/Tabs'
 import cloneDeep from 'lodash/cloneDeep'
 import { snakeToCamelCase } from '@/utils/un-camel-case'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { TokenRequest } from '@/api/responseHandlers/requests/TokenRequest'
 
 export default {
   components: {
@@ -140,6 +140,7 @@ export default {
         isShown: false,
         isPermanentReject: false
       },
+      token: {},
       isSubmitting: false
     }
   },
@@ -162,20 +163,24 @@ export default {
     async getRequest (id) {
       try {
         this.request.sale = await this.getSaleRequest(id)
-      } catch (error) {
-        ErrorHandler.process(error)
-        this.request.isFailedLoadSale = true
-      }
-      try {
-        if (this.request.isFailedLoadSale) return
-        const response = await Sdk.horizon.assets
-          .get(this.getSaleDetails.baseAsset)
-        this.request.token = response.data
+        const token = await this.getToken()
+        this.token = token
+        this.request.token = token.operationDetails
         this.request.isReady = true
       } catch (error) {
         ErrorHandler.process(error)
         this.request.isFailedLoadAsset = true
       }
+    },
+
+    async getToken () {
+      const response = await api.requests.getAssetRequests({})
+      const token = response.data
+          .map(response => new TokenRequest(response))
+          .filter(response => {
+            return response.code === this.getSaleDetails.baseAsset
+          })
+      return token[0]
     },
 
     async getSaleRequest (id) {
@@ -196,8 +201,8 @@ export default {
       this.isSubmitting = true
       if (await confirmAction()) {
         try {
-          await api.requests.approve(this.request.sale)
-          this.$store.dispatch('SET_INFO', 'Fund request approved.')
+          await api.requests.approve(this.token._rawRequest, this.request.sale)
+          this.$store.dispatch('SET_INFO', 'Opportunity request approved.')
           this.$router.push({ name: 'sales.requests' })
         } catch (error) {
           ErrorHandler.process(error)
@@ -214,9 +219,10 @@ export default {
             reason: this.rejectForm.reason,
             isPermanent: this.rejectForm.isPermanentReject
           },
+          this.token._rawRequest,
           this.request.sale
         )
-        this.$store.dispatch('SET_INFO', 'Fund request rejected successfully.')
+        this.$store.dispatch('SET_INFO', 'Opportunity request rejected successfully.')
         this.$router.push({ name: 'sales.requests' })
       } catch (error) {
         ErrorHandler.process(error)

@@ -1,6 +1,6 @@
 <template>
   <div class="sale-manager-description-tab">
-    <label class="data-caption">Fund video</label>
+    <label class="data-caption">Opportunity video</label>
     <template v-if="sale.details.youtubeVideoId">
       <iframe
         class="sale-manager-description-tab__video"
@@ -15,7 +15,7 @@
       </p>
     </template>
 
-    <label class="data-caption">Fund description</label>
+    <label class="data-caption">Opportunity description</label>
     <template v-if="isLoaded">
       <div class="sale-manager-description-tab__description-wrp">
         <markdown-formatter :source="description" />

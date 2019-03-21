@@ -8,7 +8,10 @@ export class ReviewableRequest {
 
     const valuableRequestDetailsKey = Object.keys(record.details)
       .find(item => !/request_type|requestType/gi.test(item))
-    this.operationDetails = this.record[valuableRequestDetailsKey]
+    this.operationDetails = {
+      id: this.id,
+      ...this.record[valuableRequestDetailsKey]
+    }
   }
 
   get id () {
