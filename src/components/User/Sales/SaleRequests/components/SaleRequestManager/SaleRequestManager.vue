@@ -225,14 +225,7 @@ export default {
           })
 
         pairs.forEach(async item => {
-          if (!(item.policies.value & ASSET_PAIR_POLICIES.tradeableSecondaryMarket)) {
-            item.policies.value =
-              [
-                item.policies.value,
-                ASSET_PAIR_POLICIES.tradeableSecondaryMarket
-              ]
-              .reduce((sum, policy) => sum | policy, 0)
-          }
+          item.policies.value |= ASSET_PAIR_POLICIES.tradeableSecondaryMarket
 
           await api.assets.updatePair({
             base: item.baseAsset.id,
