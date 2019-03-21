@@ -1,6 +1,6 @@
 <template>
   <div class="sale-rm">
-    <h2>Manage fund request</h2>
+    <h2>Manage opportunity request</h2>
 
     <div class="app__block">
       <template v-if="request.isReady">
@@ -98,20 +98,22 @@
 </template>
 
 <script>
-import { Sdk } from '@/sdk'
 import api from '@/api'
 import TextField from '@comcom/fields/TextField'
 import TickField from '@comcom/fields/TickField'
 import Modal from '@comcom/modals/Modal'
-import { REQUEST_STATES, ASSET_PAIR_POLICIES } from '@/constants'
+import { REQUEST_STATES } from '@/constants'
 import DetailsTab from './SaleRequestManager.DetailsTab'
 import DescriptionTab from './SaleRequestManager.DescriptionTab'
-import { confirmAction } from '../../../../../../js/modals/confirmation_message'
+import { confirmAction } from '@/js/modals/confirmation_message'
 import SyndicateTab from '../../../components/SaleManager/SaleManager.SyndicateTab'
 import { Tabs, Tab } from '@comcom/Tabs'
 import cloneDeep from 'lodash/cloneDeep'
 import { snakeToCamelCase } from '@/utils/un-camel-case'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { TokenRequest } from '@/api/responseHandlers/requests/TokenRequest'
+import { ASSET_PAIR_POLICIES } from '@/constants'
+import { ApiCallerFactory } from '@/api-caller-factory'
 
 export default {
   components: {
@@ -140,6 +142,8 @@ export default {
         isShown: false,
         isPermanentReject: false
       },
+      token: {},
+      ASSET_PAIR_POLICIES,
       isSubmitting: false
     }
   },
@@ -156,26 +160,31 @@ export default {
     } else {
       throw new Error('SaleRequestManager: provide "id" or "sale"')
     }
+    this.makePairTradeable()
   },
 
   methods: {
     async getRequest (id) {
       try {
         this.request.sale = await this.getSaleRequest(id)
-      } catch (error) {
-        ErrorHandler.process(error)
-        this.request.isFailedLoadSale = true
-      }
-      try {
-        if (this.request.isFailedLoadSale) return
-        const response = await Sdk.horizon.assets
-          .get(this.getSaleDetails.baseAsset)
-        this.request.token = response.data
+        const token = await this.getToken()
+        this.token = token
+        this.request.token = token.operationDetails
         this.request.isReady = true
       } catch (error) {
         ErrorHandler.process(error)
         this.request.isFailedLoadAsset = true
       }
+    },
+
+    async getToken () {
+      const response = await api.requests.getAssetRequests({})
+      const token = response.data
+          .map(response => new TokenRequest(response))
+          .filter(response => {
+            return response.code === this.getSaleDetails.baseAsset
+          })
+      return token[0]
     },
 
     async getSaleRequest (id) {
@@ -196,9 +205,9 @@ export default {
       this.isSubmitting = true
       if (await confirmAction()) {
         try {
-          await api.requests.approve(this.request.sale)
+          await api.requests.approve(this.token._rawRequest, this.request.sale)
           await this.makePairTradeable()
-          this.$store.dispatch('SET_INFO', 'Fund request approved.')
+          this.$store.dispatch('SET_INFO', 'Opportunity request approved.')
           this.$router.push({ name: 'sales.requests' })
         } catch (error) {
           ErrorHandler.process(error)
@@ -208,16 +217,37 @@ export default {
     },
 
     async makePairTradeable () {
-      const response = await Sdk.horizon.assetPairs.getAll()
-      const pairs = response.data
-        .filter(item => item.base === this.request.token.code)
+      try {
+        const { data: pairs } = await ApiCallerFactory
+          .createCallerInstance()
+          .get('/v3/asset_pairs', {
+            filter: { base_asset: this.request.token.code }
+          })
 
-      pairs.forEach(async item => {
-        item.policies = [ASSET_PAIR_POLICIES.tradeableSecondaryMarket]
-          .reduce((sum, policy) => sum | policy, 0)
+        pairs.forEach(async item => {
+          if (!(item.policies.value & ASSET_PAIR_POLICIES.tradeableSecondaryMarket)) {
+            item.policies.value =
+              [
+                item.policies.value,
+                ASSET_PAIR_POLICIES.tradeableSecondaryMarket
+              ]
+              .reduce((sum, policy) => sum | policy, 0)
+          }
 
-        await api.assets.updatePair({ ...item, updatePolicy: true })
-      })
+          await api.assets.updatePair({
+            base: item.baseAsset.id,
+            quote: item.quoteAsset.id,
+            policies: Number(item.policies.value),
+            physicalPrice: String(item.price),
+            updatePolicy: true,
+            // `0` because of xdr-operation requires for it
+            physicalPriceCorrection: '0',
+            maxPriceStep: '0'
+          })
+        })
+      } catch (error) {
+        ErrorHandler.processWithoutFeedback(error)
+      }
     },
 
     async reject () {
@@ -228,9 +258,10 @@ export default {
             reason: this.rejectForm.reason,
             isPermanent: this.rejectForm.isPermanentReject
           },
+          this.token._rawRequest,
           this.request.sale
         )
-        this.$store.dispatch('SET_INFO', 'Fund request rejected successfully.')
+        this.$store.dispatch('SET_INFO', 'Opportunity request rejected successfully.')
         this.$router.push({ name: 'sales.requests' })
       } catch (error) {
         ErrorHandler.process(error)

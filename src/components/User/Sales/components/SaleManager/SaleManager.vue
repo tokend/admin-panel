@@ -1,6 +1,6 @@
 <template>
   <div class="sale-manager">
-    <h2>Fund overview</h2>
+    <h2>Opportunity overview</h2>
 
     <div class="app__block">
       <template v-if="isLoaded">
