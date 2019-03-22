@@ -43,7 +43,7 @@
     </div>
 
     <div class="sale-list__list-wrp">
-      <template v-if="list.data && list.data.length">
+      <template v-if="list && list.length">
         <ul class="app-list">
           <div class="app-list__header">
             <span class="app-list__cell">
@@ -56,7 +56,7 @@
 
           <router-link
             class="app-list__li"
-            v-for="item in list.data"
+            v-for="item in list"
             :key="item.id"
             :to="{ name: 'sales.show', params: { id: item.id }}"
           >
@@ -103,9 +103,9 @@
       </template>
       <div class="app__more-btn-wrp">
         <collection-loader
-          :first-page-loader="this.getList"
-          @first-page-load="this.setList"
-          @next-page-load="this.getMoreEntries"
+          :first-page-loader="getList"
+          @first-page-load="setList"
+          @next-page-load="extendList"
           ref="collectionLoaderBtn"
         />
       </div>
@@ -139,10 +139,8 @@ export default {
     return {
       SALE_STATES,
 
-      list: {
-        data: [],
-        rawData: []
-      },
+      list: [],
+      rawList: [],
       isLoaded: false,
       owner: '',
       filters: {
@@ -154,8 +152,7 @@ export default {
       filtersDate: {
         startDate: '',
         endDate: ''
-      },
-      isNoMoreEntries: false
+      }
     }
   },
 
@@ -184,61 +181,61 @@ export default {
           limit: this.filters.limit || config.PAGE_LIMIT
         })
       } catch (error) {
-        ErrorHandler.process(error)
+        ErrorHandler.processWithoutFeedback(error)
       }
       this.isLoaded = true
       return response
     },
 
     setList (data) {
-      this.list.data = data
-      this.list.rawData = data
+      this.list = data
+      this.rawList = data
     },
 
-    filterByDate () {
-      let sortedList = this.list.rawData
+    filterByDate (filteredList) {
+      let sortedList = filteredList
       if (this.filtersDate.startDate) {
         sortedList = sortedList.filter(sale => +new Date(sale.startTime) >= +new Date(this.filtersDate.startDate))
       }
       if (this.filtersDate.endDate) {
         sortedList = sortedList.filter(sale => +new Date(sale.endTime) <= +new Date(this.filtersDate.endDate))
       }
-      this.list.data = sortedList
+      this.list = sortedList
     },
 
-    async getMoreEntries (data) {
-      try {
-        this.list.data = this.list.data.concat(data)
-        this.list.rowData = this.list.data.concat(data)
-      } catch (error) {
-        ErrorHandler.process(error)
+    async extendList (data) {
+      this.rawList = this.rawList.concat(data)
+      if (this.filtersDate.startDate || this.filtersDate.endDate) {
+        this.filterByDate(this.rawList)
+      } else {
+        this.list = this.list.concat(data)
       }
+    },
+
+    reloadCollectionLoader () {
+      this.$refs.collectionLoaderBtn.loadFirstPage()
     }
   },
 
   watch: {
     'filters.openOnly' () {
-      this.$refs.collectionLoaderBtn.loadFirstPage()
+      this.reloadCollectionLoader()
     },
     'owner': _.throttle(function () {
       this.getOwner()
-      this.$refs.collectionLoaderBtn.loadFirstPage()
+      this.reloadCollectionLoader()
     }, 1000),
     'filters.name': _.throttle(function () {
-      this.$refs.collectionLoaderBtn.loadFirstPage()
+      this.reloadCollectionLoader()
     }, 1000),
     'filters.baseAsset': _.throttle(function () {
-      this.$refs.collectionLoaderBtn.loadFirstPage()
+      this.reloadCollectionLoader()
     }, 1000),
     'filtersDate.startDate' () {
-      this.filterByDate()
-      // hides collection-loader button
-      this.$refs.collectionLoaderBtn.isCollectionFetched = true
+      this.filterByDate(this.rawList)
     },
     'filtersDate.endDate' () {
-      this.filterByDate()
-      // hides collection-loader button
-      this.$refs.collectionLoaderBtn.isCollectionFetched = true
+      this.filterByDate(this.rawList)
     }
   }
 }

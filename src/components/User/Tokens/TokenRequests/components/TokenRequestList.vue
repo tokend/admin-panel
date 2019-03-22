@@ -82,9 +82,9 @@
 
       <div class="app__more-btn-wrp">
         <collection-loader
-          :first-page-loader="this.getList"
-          @first-page-load="this.setList"
-          @next-page-load="this.nextPage"
+          :first-page-loader="getList"
+          @first-page-load="setList"
+          @next-page-load="extendList"
           ref="collectionLoaderBtn"
         />
       </div>
@@ -150,7 +150,7 @@ export default {
         })
         this.isListEnded = !(this.list || []).length
       } catch (error) {
-        ErrorHandler.process(error)
+        ErrorHandler.processWithoutFeedback(error)
       }
       this.isPending = false
       return response
@@ -160,12 +160,8 @@ export default {
       this.list = data
     },
 
-    async nextPage (data) {
-      try {
-        this.list = this.list.concat(data)
-      } catch (error) {
-        ErrorHandler.process(error)
-      }
+    async extendList (data) {
+      this.list = this.list.concat(data)
     },
     async getRequestorAccountId (requestor) {
       if (Sdk.base.Keypair.isValidPublicKey(requestor)) {
@@ -178,12 +174,20 @@ export default {
           return requestor
         }
       }
+    },
+
+    reloadCollectionLoader () {
+      this.$refs.collectionLoaderBtn.loadFirstPage()
     }
   },
   watch: {
-    'filters.state' () { this.$refs.collectionLoaderBtn.loadFirstPage() },
-    'filters.requestor': _.throttle(function () { this.$refs.collectionLoaderBtn.loadFirstPage() }, 1000),
-    'filters.asset': _.throttle(function () { this.$refs.collectionLoaderBtn.loadFirstPage() }, 1000)
+    'filters.state' () { this.reloadCollectionLoader() },
+    'filters.requestor': _.throttle(function () {
+      this.reloadCollectionLoader()
+    }, 1000),
+    'filters.asset': _.throttle(function () {
+      this.reloadCollectionLoader()
+    }, 1000)
   }
 }
 </script>

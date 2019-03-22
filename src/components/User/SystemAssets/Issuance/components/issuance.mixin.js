@@ -4,8 +4,8 @@ import localize from '@/utils/localize'
 import SelectField from '@comcom/fields/SelectField'
 
 import { REQUEST_STATES, ASSET_POLICIES } from '@/constants'
-import { ErrorHandler } from '@/utils/ErrorHandler'
 import { CollectionLoader } from '@/components/common'
+import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   components: {
@@ -61,32 +61,37 @@ export default {
       try {
         const filters = { ...this.filters }
         response = await api.requests.getIssuanceRequests(filters)
-        this.listCounter.pending = response._rawResponse.data._embedded.meta.count.pending
-        this.listCounter.approved = response._rawResponse.data._embedded.meta.count.approved
+        this.getListCounter(response)
         this.isNoMoreEntries = false
       } catch (error) {
-        console.error(error)
-        this.$store.dispatch('SET_ERROR', 'Cannot load issuance request list.')
+        ErrorHandler.processWithoutFeedback(error)
       }
       this.isLoaded = true
       return response
+    },
+
+    getListCounter (response) {
+      if (response) {
+        this.listCounter.pending = response._rawResponse.data._embedded.meta.count.pending
+        this.listCounter.approved = response._rawResponse.data._embedded.meta.count.approved
+      }
     },
 
     setList (data) {
       this.list = data
     },
 
-    async onMoreButtonClick (data) {
-      try {
-        this.list = this.list.concat(data)
-      } catch (error) {
-        ErrorHandler.process(error)
-      }
+    async extendList (data) {
+      this.list = this.list.concat(data)
+    },
+
+    reloadCollectionLoader () {
+      this.$refs.collectionLoaderBtn.loadFirstPage()
     }
   },
 
   watch: {
-    'filters.state' () { this.$refs.collectionLoaderBtn.loadFirstPage() },
-    'filters.asset' () { this.$refs.collectionLoaderBtn.loadFirstPage() }
+    'filters.state' () { this.reloadCollectionLoader() },
+    'filters.asset' () { this.reloadCollectionLoader() }
   }
 }

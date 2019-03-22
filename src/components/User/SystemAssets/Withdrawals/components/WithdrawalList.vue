@@ -53,7 +53,7 @@
         </ul>
 
         <div class="app__more-btn-wrp" v-if="!isNoMoreEntries">
-          <button class="app__btn-secondary" @click="getMoreEntries">
+          <button class="app__btn-secondary" @click="extendList">
             More
           </button>
         </div>
@@ -155,7 +155,7 @@ export default {
       this.isLoaded = true
     },
 
-    async getMoreEntries () {
+    async extendList () {
       try {
         const oldLength = (this.list.data || []).length
         const chunk = await this.list.fetchNext()

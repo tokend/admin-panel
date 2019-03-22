@@ -83,9 +83,9 @@
       
       <div class="app__more-btn-wrp">
         <collection-loader
-          :first-page-loader="this.getList"
-          @first-page-load="this.setList"
-          @next-page-load="this.getMoreEntries"
+          :first-page-loader="getList"
+          @first-page-load="setList"
+          @next-page-load="extendList"
           ref="collectionLoaderBtn"
         />
       </div>
@@ -101,8 +101,8 @@ import InputField from '@comcom/fields/InputField'
 import { EmailGetter } from '@comcom/getters'
 import { AssetAmountFormatter } from '@comcom/formatters'
 import _ from 'lodash'
-import { ErrorHandler } from '@/utils/ErrorHandler'
 import { CollectionLoader } from '@/components/common'
+import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   components: {
@@ -134,7 +134,7 @@ export default {
         const filters = { ...this.filters }
         response = await api.requests.getSaleRequests(filters)
       } catch (error) {
-        error.showMessage('Cannot get fund request list. Please try again later')
+        ErrorHandler.processWithoutFeedback(error)
       }
 
       this.isLoaded = true
@@ -145,24 +145,26 @@ export default {
       this.list = data
     },
 
-    async getMoreEntries (data) {
-      try {
-        this.list = this.list.concat(data)
-      } catch (error) {
-        ErrorHandler.process(error)
-      }
+    async extendList (data) {
+      this.list = this.list.concat(data)
     },
 
     extractDetails (record) {
       const valuableRequestDetailsKey = Object.keys(record.details)
         .find(item => !/request_type|requestType/gi.test(item))
       return record.details[valuableRequestDetailsKey] || {}
+    },
+
+    reloadCollectionLoader () {
+      this.$refs.collectionLoaderBtn.loadFirstPage()
     }
   },
 
   watch: {
-    'filters.state' () { this.$refs.collectionLoaderBtn.loadFirstPage() },
-    'filters.requestor': _.throttle(function () { this.$refs.collectionLoaderBtn.loadFirstPage() }, 1000)
+    'filters.state' () { this.reloadCollectionLoader() },
+    'filters.requestor': _.throttle(function () {
+      this.reloadCollectionLoader()
+    }, 1000)
   }
 }
 </script>

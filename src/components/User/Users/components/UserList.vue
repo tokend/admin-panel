@@ -99,9 +99,9 @@
 
       <div class="app__more-btn-wrp">
         <collection-loader
-          :first-page-loader="this.getList"
-          @first-page-load="this.setList"
-          @next-page-load="this.extendList"
+          :first-page-loader="getList"
+          @first-page-load="setList"
+          @next-page-load="extendList"
           ref="collectionLoaderBtn"
         />
       </div>
@@ -181,7 +181,7 @@ export default {
             })
           })
       } catch (error) {
-        ErrorHandler.process(error)
+        ErrorHandler.processWithoutFeedback(error)
       }
       this.isLoading = false
       return response
@@ -209,21 +209,25 @@ export default {
         window.scroll(0, this.view.scrollPosition)
         this.view.scrollPosition = 0
       })
+    },
+
+    reloadCollectionLoader () {
+      this.$refs.collectionLoaderBtn.loadFirstPage()
     }
   },
 
   watch: {
     'filters.state' () {
-      this.$refs.collectionLoaderBtn.loadFirstPage()
+      this.reloadCollectionLoader()
     },
     'filters.role' () {
-      this.$refs.collectionLoaderBtn.loadFirstPage()
+      this.reloadCollectionLoader()
     },
     'filters.email': _.throttle(function () {
-      this.$refs.collectionLoaderBtn.loadFirstPage()
+      this.reloadCollectionLoader()
     }, 1000),
     'filters.address': _.throttle(function () {
-      this.$refs.collectionLoaderBtn.loadFirstPage()
+      this.reloadCollectionLoader()
     }, 1000)
   }
 }

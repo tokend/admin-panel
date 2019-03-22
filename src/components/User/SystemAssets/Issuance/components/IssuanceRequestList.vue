@@ -90,7 +90,7 @@
         <collection-loader
           :first-page-loader="getList"
           @first-page-load="setList"
-          @next-page-load="onMoreButtonClick"
+          @next-page-load="extendList"
           ref="collectionLoaderBtn"
         />
       </div>

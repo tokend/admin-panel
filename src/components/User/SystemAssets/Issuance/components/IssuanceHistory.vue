@@ -94,7 +94,7 @@
         <collection-loader
           :first-page-loader="getList"
           @first-page-load="setList"
-          @next-page-load="onMoreButtonClick"
+          @next-page-load="extendList"
           ref="collectionLoaderBtn"
         />
       </div>
@@ -112,7 +112,9 @@ export default {
   components: { EmailGetter },
 
   async created () {
-    Bus.$on('issuance:updateRequestList', _ => { this.$refs.collectionLoaderBtn.loadFirstPage() })
+    Bus.$on('issuance:updateRequestList', _ => {
+      this.reloadCollectionLoader()
+    })
   }
 }
 </script>

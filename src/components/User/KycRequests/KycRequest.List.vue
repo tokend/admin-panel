@@ -91,9 +91,9 @@
 
         <div class="app__more-btn-wrp">
           <collection-loader
-            :first-page-loader="this.loadList"
-            @first-page-load="this.setList"
-            @next-page-load="this.onMoreClick"
+            :first-page-loader="loadList"
+            @first-page-load="setList"
+            @next-page-load="extendList"
             ref="collectionLoaderBtn"
           />
         </div>
@@ -147,7 +147,6 @@ export default {
   data () {
     return {
       isLoading: false,
-      isListEnded: false,
       list: [],
       view: {
         mode: VIEW_MODES_VERBOSE.index,
@@ -196,9 +195,8 @@ export default {
             }),
             include: ['request_details.account']
           })
-        this.isListEnded = !(response.data || []).length
       } catch (error) {
-        ErrorHandler.process(error)
+        ErrorHandler.processWithoutFeedback(error)
       }
       this.isLoading = false
       return response
@@ -208,12 +206,8 @@ export default {
       this.list = data
     },
 
-    async onMoreClick (data) {
-      try {
-        this.list = this.list.concat(data)
-      } catch (error) {
-        ErrorHandler.process(error)
-      }
+    async extendList (data) {
+      this.list = this.list.concat(data)
     },
 
     toggleViewMode (id) {
@@ -230,12 +224,18 @@ export default {
         this.view.scrollPosition = 0
       })
     },
+
+    reloadCollectionLoader () {
+      this.$refs.collectionLoaderBtn.loadFirstPage()
+    },
     formatDate
   },
   watch: {
-    'filters.state' () { this.$refs.collectionLoaderBtn.loadFirstPage() },
-    'filters.roleToSet' () { this.$refs.collectionLoaderBtn.loadFirstPage() },
-    'filters.address': _.throttle(function () { this.$refs.collectionLoaderBtn.loadFirstPage() }, 1000)
+    'filters.state' () { this.reloadCollectionLoader() },
+    'filters.roleToSet' () { this.reloadCollectionLoader() },
+    'filters.address': _.throttle(function () {
+      this.reloadCollectionLoader()
+    }, 1000)
   }
 }
 </script>

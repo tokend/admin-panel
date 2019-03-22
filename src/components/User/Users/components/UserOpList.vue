@@ -41,9 +41,9 @@
 
     <div class="app__more-btn-wrp">
       <collection-loader
-        :first-page-loader="this.getList"
-        @first-page-load="this.setList"
-        @next-page-load="this.getNextPage"
+        :first-page-loader="getList"
+        @first-page-load="setList"
+        @next-page-load="extendList"
       />
     </div>
   </div>
@@ -55,7 +55,6 @@ import { Sdk } from '@/sdk'
 import moment from 'moment'
 import { formatAssetAmount } from '@/utils/formatters'
 import { OperationCounterparty } from '@comcom/getters'
-import { ErrorHandler } from '@/utils/ErrorHandler'
 import { CollectionLoader } from '@/components/common'
 
 export default {
@@ -86,7 +85,7 @@ export default {
       try {
         response = await Sdk.horizon.account.getOperations(this.id)
       } catch (error) {
-        this.$store.dispatch('SET_ERROR', 'Cannot load transaction list')
+        ErrorHandler.processWithoutFeedback(error)
       }
       return response
     },
@@ -95,12 +94,8 @@ export default {
       this.list = data
     },
 
-    async getNextPage (data) {
-      try {
-        this.list = this.list.concat(data)
-      } catch (error) {
-        ErrorHandler.process(error)
-      }
+    async extendList (data) {
+      this.list = this.list.concat(data)
     },
 
     normalizeRecords (records) {
