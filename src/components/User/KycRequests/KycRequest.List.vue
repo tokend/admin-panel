@@ -30,6 +30,12 @@
 
           <input-field
             class="app-list-filters__field"
+            v-model.trim="filters.email"
+            label="Email"
+          />
+
+          <input-field
+            class="app-list-filters__field"
             v-model.trim="filters.address"
             label="Account ID"
           />
@@ -128,6 +134,7 @@ import config from '@/config'
 import { ApiCallerFactory } from '@/api-caller-factory'
 import { clearObject } from '@/utils/clearObject'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import api from '@/api'
 
 const VIEW_MODES_VERBOSE = Object.freeze({
   index: 'index',
@@ -158,6 +165,7 @@ export default {
       },
       filters: {
         state: 'pending',
+        email: '',
         address: '',
         type: ''
       },
@@ -190,6 +198,8 @@ export default {
         let address = ''
         if (this.filters.address) {
           address = this.filters.address
+        } else if (this.filters.email) {
+          address = await this.getAccountIdByEmail()
         }
         this.list = await ApiCallerFactory
           .createCallerInstance()
@@ -234,11 +244,22 @@ export default {
         this.view.scrollPosition = 0
       })
     },
+
+    async getAccountIdByEmail () {
+      let address
+      try {
+        address = await api.users.getAccountIdByEmail(this.filters.email)
+      } catch (e) {
+        address = ''
+      }
+      return address
+    },
     formatDate
   },
   watch: {
     'filters.state' () { this.loadList() },
     'filters.roleToSet' () { this.loadList() },
+    'filters.email': _.throttle(function () { this.loadList() }, 1000),
     'filters.address': _.throttle(function () { this.loadList() }, 1000)
   }
 }
