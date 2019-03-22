@@ -105,13 +105,15 @@ import Modal from '@comcom/modals/Modal'
 import { REQUEST_STATES } from '@/constants'
 import DetailsTab from './SaleRequestManager.DetailsTab'
 import DescriptionTab from './SaleRequestManager.DescriptionTab'
-import { confirmAction } from '../../../../../../js/modals/confirmation_message'
+import { confirmAction } from '@/js/modals/confirmation_message'
 import SyndicateTab from '../../../components/SaleManager/SaleManager.SyndicateTab'
 import { Tabs, Tab } from '@comcom/Tabs'
 import cloneDeep from 'lodash/cloneDeep'
 import { snakeToCamelCase } from '@/utils/un-camel-case'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { TokenRequest } from '@/api/responseHandlers/requests/TokenRequest'
+import { ASSET_PAIR_POLICIES } from '@/constants'
+import { ApiCallerFactory } from '@/api-caller-factory'
 
 export default {
   components: {
@@ -141,6 +143,7 @@ export default {
         isPermanentReject: false
       },
       token: {},
+      ASSET_PAIR_POLICIES,
       isSubmitting: false
     }
   },
@@ -157,6 +160,7 @@ export default {
     } else {
       throw new Error('SaleRequestManager: provide "id" or "sale"')
     }
+    this.makePairTradeable()
   },
 
   methods: {
@@ -202,6 +206,7 @@ export default {
       if (await confirmAction()) {
         try {
           await api.requests.approve(this.token._rawRequest, this.request.sale)
+          await this.makePairTradeable()
           this.$store.dispatch('SET_INFO', 'Opportunity request approved.')
           this.$router.push({ name: 'sales.requests' })
         } catch (error) {
@@ -209,6 +214,33 @@ export default {
         }
       }
       this.isSubmitting = false
+    },
+
+    async makePairTradeable () {
+      try {
+        const { data: pairs } = await ApiCallerFactory
+          .createCallerInstance()
+          .get('/v3/asset_pairs', {
+            filter: { base_asset: this.request.token.code }
+          })
+
+        pairs.forEach(async item => {
+          item.policies.value |= ASSET_PAIR_POLICIES.tradeableSecondaryMarket
+
+          await api.assets.updatePair({
+            base: item.baseAsset.id,
+            quote: item.quoteAsset.id,
+            policies: Number(item.policies.value),
+            physicalPrice: String(item.price),
+            updatePolicy: true,
+            // `0` because of xdr-operation requires for it
+            physicalPriceCorrection: '0',
+            maxPriceStep: '0'
+          })
+        })
+      } catch (error) {
+        ErrorHandler.processWithoutFeedback(error)
+      }
     },
 
     async reject () {

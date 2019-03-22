@@ -9,8 +9,10 @@ for further information about branching and tagging conventions.
 
 ## [Unreleased]
 ### Added
-- Added filter for displaying app version
-- Added single approving token and sale 
+- Filter for displaying app version
+- Single opportunity approve
+- Add tradeable policy after opportunity approve
+
 ### Removed
 - Unused dependencies:
   - karma
