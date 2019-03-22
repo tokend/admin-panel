@@ -56,6 +56,7 @@ import moment from 'moment'
 import { formatAssetAmount } from '@/utils/formatters'
 import { OperationCounterparty } from '@comcom/getters'
 import { CollectionLoader } from '@/components/common'
+import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   components: {
