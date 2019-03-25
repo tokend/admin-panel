@@ -20,6 +20,9 @@ for further information about branching and tagging conventions.
   - bootstrap-sass
   - DocLinkgetter - unused `accountId` prop
 
+### Added
+- Removed invest fee type from FeeList.vue
+
 ### Fixed
 - Add missing quotes to `KEY_SERVER_ADMIN` of `config/default.env.js`
 - Show verification code in KYC request details
