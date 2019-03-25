@@ -16,6 +16,9 @@ for further information about branching and tagging conventions.
   - nightwatch
   - bootstrap-sass
 
+### Added
+- Autocomplete for input fields
+
 ### Fixed
 - Add missing quotes to `KEY_SERVER_ADMIN` of `config/default.env.js`
 
