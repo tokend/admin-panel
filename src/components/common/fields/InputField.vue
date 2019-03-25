@@ -18,13 +18,18 @@
       :title="title"
       :form="form"
       @input="onInput"
-      @focus="onFocus"
-      @blur="onBlur"
+      @focus="isInputFocused = true"
+      @blur="isInputFocused = false"
     >
 
-    <div class="input-field__autocomplete">
-      <slot name="autocomplete"/>
-    </div>
+    <autocomplete
+      v-if="autocompleteType"
+      class="input-field__autocomplete"
+      :input-value="value"
+      @set-input-value="$emit('input', $event)"
+      :autocomplete-type="autocompleteType"
+      :is-input-focused="isInputFocused"
+    />
 
     <span class="input-field__label">
       {{label}}
@@ -39,9 +44,11 @@
 </template>
 
 <script>
+import Autocomplete from './Autocomplete'
+
 export default {
   components: {
-    // components
+    Autocomplete
   },
 
   props: {
@@ -49,6 +56,8 @@ export default {
     value: { type: [String, Number], default: undefined },
     errorMessage: { type: String, default: undefined },
     align: { type: String, default: 'left' },
+    shouldShowAutocomplete: { type: Boolean, default: false },
+    autocompleteType: { type: String, default: '' },
     // proxies
     autocomplete: { type: String, default: 'off' },
     autofocus: { type: Boolean, default: false },
@@ -69,7 +78,7 @@ export default {
 
   data () {
     return {
-      // data
+      isInputFocused: false
     }
   },
 
@@ -85,14 +94,6 @@ export default {
     onInput (event) {
       this.beforeEmit(event.target)
       this.$emit('input', event.target.value)
-    },
-
-    onFocus (event) {
-      this.$emit('focus', event)
-    },
-
-    onBlur (event) {
-      this.$emit('blur', event)
     },
 
     beforeEmit (target) {

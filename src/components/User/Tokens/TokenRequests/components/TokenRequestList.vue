@@ -19,17 +19,8 @@
         class="arc-list__filter"
         v-model="filters.requestor"
         label="Requestor"
-        @focus="isRequestorInputFocused = true"
-        @blur="isRequestorInputFocused = false"
-      >
-        <autocomplete
-          slot="autocomplete"
-          :input-value="filters.requestor"
-          @set-input-value="filters.requestor = $event"
-          autocomplete-type="address"
-          :should-show-dropdown="isRequestorInputFocused"
-        />
-      </input-field>
+        autocomplete-type="address"
+      />
 
       <input-field
         class="arc-list__filter"
@@ -132,7 +123,6 @@ export default {
         requestor: null,
         asset: null
       },
-      isRequestorInputFocused: false,
       CREATE_TOKEN_REQUEST_STATES,
       REQUEST_STATES_STR
     }

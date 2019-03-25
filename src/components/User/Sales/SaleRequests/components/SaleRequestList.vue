@@ -23,17 +23,8 @@
           label="Requestor"
           placeholder="Address (full match)"
           v-model="filters.requestor"
-          @focus="isRequestorInputFocused = true"
-          @blur="isRequestorInputFocused = false"
-        >
-          <autocomplete
-            slot="autocomplete"
-            :input-value="filters.requestor"
-            @set-input-value="filters.requestor = $event"
-            autocomplete-type="email"
-            :should-show-dropdown="isRequestorInputFocused"
-          />
-        </input-field>
+          autocomplete-type="email"
+        />
       </div>
     </div>
 
@@ -136,8 +127,7 @@ export default {
         requestor: ''
       },
       isLoaded: false,
-      isNoMoreEntries: false,
-      isRequestorInputFocused: false
+      isNoMoreEntries: false
     }
   },
 

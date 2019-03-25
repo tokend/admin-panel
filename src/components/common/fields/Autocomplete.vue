@@ -1,19 +1,18 @@
 <template>
   <div 
     class="autocomplete"
-    v-if="dropdownShown"
+    v-if="isDropdownShown"
   >
     <button
       class="autocomplete-option"
-      :class="{ 'autocomplete-option--active': item[autocompleteType] === hoveredValue }"
+      :class="{ 'autocomplete-option--active': getOptionValue(item) === hoveredOptionId }"
       v-for="item in list"
-      :key="item[autocompleteType]"
-      :id="item[autocompleteType]"
-      :ref="item[autocompleteType]"
-      @mousedown="emitDataToSetInputValue"
-      @mouseover="hoveredValue = item[autocompleteType]"
+      :key="getOptionValue(item)"
+      :id="getOptionValue(item)"
+      @click="emitSetInputValue"
+      @mouseover="hoveredOptionId = getOptionValue(item)"
     >
-      {{ item[autocompleteType] }}
+      {{ getOptionValue(item) }}
     </button>
   </div>
 </template>
@@ -28,100 +27,106 @@ export default {
   props: {
     inputValue: { type: String, default: '' },
     autocompleteType: { type: String, default: '' },
-    shouldShowDropdown: { type: Boolean, default: false }
-  },
-
-  components: {
-    // components
+    isInputFocused: { type: Boolean, default: false }
   },
 
   data () {
     return {
-      hoveredValue: '',
+      hoveredOptionId: '',
       list: [],
-      closeDropdown: false
+      isDropdownFocused: false
     }
   },
 
   computed: {
-    dropdownShown () {
-      if (this.shouldShowDropdown) {
+    isDropdownShown () {
+      if (this.isInputFocused) {
         this.getList()
-        window.addEventListener('keydown', this.onKey)
-        window.addEventListener('mouseup', this.onClick)
-        this.closeDropdown = false
+        window.addEventListener('keydown', this.onKeyDown)
+        window.addEventListener('click', this.onClick)
+        this.isDropdownFocused = true
       }
-      if (this.closeDropdown) {
-        window.removeEventListener('mouseup', this.onClick, false)
-        window.removeEventListener('keydown', this.onKey, false)
+      if (!this.isDropdownFocused) {
+        window.removeEventListener('click', this.onClick, false)
+        window.removeEventListener('keydown', this.onKeyDown, false)
       }
-      return this.shouldShowDropdown | !this.closeDropdown
+      return this.isInputFocused | this.isDropdownFocused
     }
-  },
-
-  created () {
-    // created
   },
 
   methods: {
 
     async getList () {
       let response = []
-      if (this.inputValue || this.enteredAddress) {
+      if (this.inputValue) {
         try {
           response = await ApiCallerFactory
             .createCallerInstance()
-            .getWithSignature('/identities', {
-              filter: clearObject({
-                [this.autocompleteType]: this.inputValue
-              })
-            })
+            .getWithSignature('/identities', this.generateRequestObject())
           this.list = response.data
         } catch (error) {
-          ErrorHandler.processWithoutFeedback(error)
+          ErrorHandler.process(error)
         }
       } else {
         this.list = response
       }
     },
 
-    setHoverOnKeyPress (element) {
-      this.hoveredValue = element.id
+    setHover (element) {
+      this.hoveredOptionId = element.id
       element.focus()
       event.preventDefault()
     },
 
-    onKey (event) {
-      const currentElement = this.hoveredValue ? document.getElementById(this.hoveredValue) : undefined
-      const hasNextSibling = currentElement && currentElement.nextSibling
-      const hasPreviousSibling = currentElement && currentElement.previousSibling
-      const firstElement = this.$el.firstChild
+    generateRequestObject () {
+      return {
+        filter: clearObject({
+          [this.autocompleteType]: this.inputValue
+        })
+      }
+    },
+
+    onKeyDown (event) {
+      const currentHoveredOption = this.hoveredOptionId
+        ? document.getElementById(this.hoveredOptionId)
+        : undefined
+      const hasNextSibling = currentHoveredOption && currentHoveredOption.nextSibling
+      const hasPreviousSibling = currentHoveredOption && currentHoveredOption.previousSibling
+      const firstOption = this.$el.firstChild
       const input = this.$parent.$el.querySelector('input')
 
       if (this.list.length) {
         switch (event.key) {
           case 'ArrowUp':
-            hasPreviousSibling ? this.setHoverOnKeyPress(currentElement.previousSibling) : null
-            !currentElement ? this.setHoverOnKeyPress(firstElement) : null
+            if (hasPreviousSibling) {
+              this.setHover(currentHoveredOption.previousSibling)
+            }
+            if (!currentHoveredOption) {
+              this.setHover(firstOption)
+            }
             break
 
           case 'ArrowDown':
-            hasNextSibling ? this.setHoverOnKeyPress(currentElement.nextSibling) : null
-            !currentElement ? this.setHoverOnKeyPress(firstElement) : null
+            if (hasNextSibling) {
+              this.setHover(currentHoveredOption.nextSibling)
+            }
+            if (!currentHoveredOption) {
+              this.setHover(firstOption)
+            }
             break
 
           case 'Enter':
-            currentElement ? this.emitDataToSetInputValue() : null
+            currentHoveredOption ? this.emitSetInputValue() : null
             break
 
           case 'Escape':
             input.blur()
-            this.closeDropdown = true
+            this.isDropdownFocused = false
             break
 
           case 'Tab':
             this.$emit('tab')
-            this.closeDropdown = true
+            this.isDropdownFocused = false
             break
 
           default:
@@ -131,13 +136,17 @@ export default {
       }
     },
 
-    emitDataToSetInputValue () {
-      this.$emit('set-input-value', this.hoveredValue)
-      this.closeDropdown = true
+    emitSetInputValue () {
+      this.$emit('set-input-value', this.hoveredOptionId)
+      this.isDropdownFocused = false
     },
 
     onClick (event) {
-      this.closeDropdown = true
+      this.isDropdownFocused = false
+    },
+
+    getOptionValue (item) {
+      return item[this.autocompleteType]
     }
   },
   watch: {

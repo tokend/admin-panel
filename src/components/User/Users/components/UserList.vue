@@ -18,33 +18,15 @@
             class="app-list-filters__field"
             v-model.trim="filters.email"
             label="Email"
-            @focus="isEmailInputFocused = true"
-            @blur="isEmailInputFocused = false"
-          >
-            <autocomplete
-              slot="autocomplete"
-              :input-value="filters.email"
-              @set-input-value="filters.email = $event"
-              autocomplete-type="email"
-              :should-show-dropdown="isEmailInputFocused"
-            />
-          </input-field>
+            autocomplete-type="email"
+          />
 
           <input-field
             class="app-list-filters__field"
             v-model.trim="filters.address"
             label="Account ID"
-            @focus="isAddressInputFocused = true"
-            @blur="isAddressInputFocused = false"
-          >
-            <autocomplete
-              slot="autocomplete"
-              :input-value="filters.address"
-              @set-input-value="filters.address = $event"
-              autocomplete-type="address"
-              :should-show-dropdown="isAddressInputFocused"
-            />
-          </input-field>
+            autocomplete-type="address"
+          />
         </div>
       </div>
 
@@ -152,7 +134,7 @@ import 'mdi-vue/DownloadIcon'
 import { ApiCallerFactory } from '@/api-caller-factory'
 import config from '@/config'
 import { ErrorHandler } from '@/utils/ErrorHandler'
-import { Autocomplete } from '@comcom/fields'
+// import { Autocomplete } from '@comcom/fields'
 
 const VIEW_MODES_VERBOSE = Object.freeze({
   index: 'index',
@@ -164,8 +146,8 @@ export default {
     SelectField,
     InputField,
     UserView,
-    AccountStateGetter,
-    Autocomplete
+    AccountStateGetter
+    // Autocomplete
   },
 
   data () {
@@ -186,8 +168,6 @@ export default {
       isLoading: false,
       emailAddress: [],
       activeOption: '',
-      isEmailInputFocused: false,
-      isAddressInputFocused: false,
 
       ACCOUNT_ROLES: config.ACCOUNT_ROLES
     }
@@ -195,7 +175,6 @@ export default {
 
   created () {
     this.getList()
-    // window.addEventListener('keydown', this.onKey)
   },
 
   methods: {
@@ -286,16 +265,6 @@ export default {
     margin-left: 5px;
     transform: translateY(4px);
     width: 16px;
-  }
-}
-
-.autocomplete-option {
-  display: block;
-  width: 100%;
-  padding: 1rem;
-
-  &--active {
-    background-color: $color-unfocused;
   }
 }
 </style>

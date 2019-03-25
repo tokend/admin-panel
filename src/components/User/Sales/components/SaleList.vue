@@ -21,17 +21,8 @@
           label="Owner"
           placeholder="Address (full match)"
           v-model="owner"
-          @focus="isOwnerInputFocused = true"
-          @blur="isOwnerInputFocused = false"
-        >
-          <autocomplete
-            slot="autocomplete"
-            :input-value="owner"
-            @set-input-value="owner = $event"
-            autocomplete-type="email"
-            :should-show-dropdown="isOwnerInputFocused"
-          />
-        </input-field>
+          autocomplete-type="email"
+        />
         <input-date-field
           label="Start date"
           class="sale-list__field sale-list__field-margin-top"
@@ -167,8 +158,7 @@ export default {
         startDate: '',
         endDate: ''
       },
-      isNoMoreEntries: false,
-      isOwnerInputFocused: false
+      isNoMoreEntries: false
     }
   },
 

@@ -50,17 +50,8 @@
                     limits-manager-filters__specific-user-field"
               v-model.trim="specificUserAddress"
               label="Email or Account ID"
-              @focus="isSpecificUserAddressInputFocused = true"
-              @blur="isSpecificUserAddressInputFocused = false"
-            >
-              <autocomplete
-                slot="autocomplete"
-                :input-value="specificUserAddress"
-                @set-input-value="specificUserAddress = $event"
-                autocomplete-type="email"
-                :should-show-dropdown="isSpecificUserAddressInputFocused"
-              />
-            </input-field>
+              autocomplete-type="email"
+            />
 
             <select-field v-model="filters.asset"
               class="limits-manager-filters__specific-user-field"
@@ -275,8 +266,7 @@
       LIMITS_TYPES,
       ACCOUNT_ROLES: config.ACCOUNT_ROLES,
       ACCOUNT_ROLES_VERBOSE,
-      numericValueRegExp: /^\d*\.?\d*$/,
-      isSpecificUserAddressInputFocused: false
+      numericValueRegExp: /^\d*\.?\d*$/
     }),
     async created () {
       await this.getAssets()

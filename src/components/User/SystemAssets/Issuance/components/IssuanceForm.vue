@@ -9,17 +9,8 @@
             v-model="form.receiver"
             label="Receiver (email or address)"
             :disabled="isSubmitting"
-            @focus="isReceiverInputFocused = true"
-            @blur="isReceiverInputFocused = false"
-          >
-            <autocomplete
-              slot="autocomplete"
-              :input-value="form.receiver"
-              @set-input-value="form.receiver = $event"
-              autocomplete-type="email"
-              :should-show-dropdown="isReceiverInputFocused"
-            />
-          </input-field>
+            autocomplete-type="email"
+          />
         </div>
 
         <div class="app__form-row">
@@ -109,8 +100,7 @@ export default {
         asset: ''
       },
       assets: [],
-      isSubmitting: false,
-      isReceiverInputFocused: false
+      isSubmitting: false
     }
   },
 
