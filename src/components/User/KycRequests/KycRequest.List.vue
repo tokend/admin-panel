@@ -134,7 +134,6 @@ import config from '@/config'
 import { ApiCallerFactory } from '@/api-caller-factory'
 import { clearObject } from '@/utils/clearObject'
 import { ErrorHandler } from '@/utils/ErrorHandler'
-import api from '@/api'
 
 const VIEW_MODES_VERBOSE = Object.freeze({
   index: 'index',
@@ -248,7 +247,14 @@ export default {
     async getAccountIdByEmail () {
       let address
       try {
-        address = await api.users.getAccountIdByEmail(this.filters.email)
+        const { data } = await ApiCallerFactory
+          .createCallerInstance()
+          .getWithSignature('/identities', {
+            filter: clearObject({
+              email: this.filters.email
+            })
+          })
+        address = data[0].address
       } catch (e) {
         address = ''
       }
