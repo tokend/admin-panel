@@ -30,6 +30,12 @@
 
           <input-field
             class="app-list-filters__field"
+            v-model.trim="filters.email"
+            label="Email"
+          />
+
+          <input-field
+            class="app-list-filters__field"
             v-model.trim="filters.address"
             label="Account ID"
           />
@@ -158,6 +164,7 @@ export default {
       },
       filters: {
         state: 'pending',
+        email: '',
         address: '',
         type: ''
       },
@@ -190,6 +197,8 @@ export default {
         let address = ''
         if (this.filters.address) {
           address = this.filters.address
+        } else if (this.filters.email) {
+          address = await this.getAccountIdByEmail()
         }
         this.list = await ApiCallerFactory
           .createCallerInstance()
@@ -234,11 +243,29 @@ export default {
         this.view.scrollPosition = 0
       })
     },
+
+    async getAccountIdByEmail () {
+      let address
+      try {
+        const { data } = await ApiCallerFactory
+          .createCallerInstance()
+          .getWithSignature('/identities', {
+            filter: clearObject({
+              email: this.filters.email
+            })
+          })
+        address = data[0].address
+      } catch (e) {
+        address = ''
+      }
+      return address
+    },
     formatDate
   },
   watch: {
     'filters.state' () { this.loadList() },
     'filters.roleToSet' () { this.loadList() },
+    'filters.email': _.throttle(function () { this.loadList() }, 1000),
     'filters.address': _.throttle(function () { this.loadList() }, 1000)
   }
 }
