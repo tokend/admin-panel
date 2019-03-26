@@ -22,6 +22,8 @@ for further information about branching and tagging conventions.
 
 ### Added
 - Restored email filtering on kyc request page
+
+### Removed
 - Removed invest fee type from FeeList.vue
 
 ### Fixed
