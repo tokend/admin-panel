@@ -21,6 +21,7 @@ for further information about branching and tagging conventions.
   - DocLinkgetter - unused `accountId` prop
 
 ### Added
+- Restored email filtering on kyc request page
 - Removed invest fee type from FeeList.vue
 
 ### Fixed
