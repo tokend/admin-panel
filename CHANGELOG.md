@@ -23,6 +23,9 @@ for further information about branching and tagging conventions.
 ### Added
 - Restored email filtering on kyc request page
 
+### Removed
+- Removed invest fee type from FeeList.vue
+
 ### Fixed
 - Add missing quotes to `KEY_SERVER_ADMIN` of `config/default.env.js`
 - Show verification code in KYC request details
