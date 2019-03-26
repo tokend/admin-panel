@@ -229,6 +229,7 @@
       <template v-if="isShownAdvanced">
         <div class="app__form-row">
           <tick-field
+            title="Use Coinpayments service for deposition"
             class="app__form-field"
             v-model="asset.creatorDetails.isCoinpayments"
             label="Use Coinpayments"
