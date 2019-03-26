@@ -9,7 +9,7 @@ for further information about branching and tagging conventions.
 
 ## [Unreleased]
 ### Added
--  Added checkbox is_coinpayments in creatorDetailsclient
+-  Added checkbox is_coinpayments in creatorDetails
 
 ## [1.3.1] - 2019-03-14
 ### Added
