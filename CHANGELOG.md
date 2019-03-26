@@ -29,6 +29,7 @@ for further information about branching and tagging conventions.
 ### Fixed
 - Add missing quotes to `KEY_SERVER_ADMIN` of `config/default.env.js`
 - Show verification code in KYC request details
+- Displaying long sale description string on sale request manager tab
 
 ### Security
 - Resolve security issues in package.json
