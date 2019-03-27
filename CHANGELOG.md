@@ -31,6 +31,9 @@ for further information about branching and tagging conventions.
 ### Removed
 - Removed invest fee type from FeeList.vue
 
+### Added
+- Autocomplete for input fields
+
 ### Fixed
 - Add missing quotes to `KEY_SERVER_ADMIN` of `config/default.env.js`
 - Show verification code in KYC request details

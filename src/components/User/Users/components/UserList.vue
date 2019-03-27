@@ -13,15 +13,19 @@
             <option :value="ACCOUNT_ROLES.general">General</option>
             <option :value="ACCOUNT_ROLES.corporate">Сorporate</option>
           </select-field>
+
           <input-field
             class="app-list-filters__field"
             v-model.trim="filters.email"
             label="Email"
+            autocomplete-type="email"
           />
+
           <input-field
             class="app-list-filters__field"
             v-model.trim="filters.address"
             label="Account ID"
+            autocomplete-type="address"
           />
         </div>
       </div>
