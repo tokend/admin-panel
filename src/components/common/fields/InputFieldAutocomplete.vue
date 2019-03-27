@@ -46,7 +46,6 @@ export default {
   },
 
   methods: {
-
     async getList () {
       let response = []
       if (this.inputValue) {
