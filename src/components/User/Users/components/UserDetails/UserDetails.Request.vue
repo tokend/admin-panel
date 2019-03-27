@@ -82,6 +82,9 @@ import { ErrorHandler } from '@/utils/ErrorHandler'
 import { confirmAction } from '@/js/modals/confirmation_message'
 
 const EMPTY_REASON = ''
+const EVENTS = {
+  reviewed: 'reviewed'
+}
 
 export default {
   name: 'user-details-request',
@@ -90,8 +93,6 @@ export default {
     TextField,
     TickField
   },
-
-  inject: ['kycRequestsList'],
 
   data () {
     return {
@@ -110,7 +111,7 @@ export default {
     }
   },
 
-  props: ['requestToReview', 'updateRequestEvent'],
+  props: ['requestToReview'],
 
   computed: {
     isRequestPending () {
@@ -127,8 +128,7 @@ export default {
       try {
         await api.requests.approve(this.requestToReview)
         this.$store.dispatch('SET_INFO', 'Request approved successfully')
-        if (this.kycRequestsList) this.kycRequestsList.updateAsk = true
-        this.$emit(this.updateRequestEvent)
+        this.$emit(EVENTS.reviewed)
       } catch (error) {
         ErrorHandler.process(error)
       }
@@ -146,8 +146,7 @@ export default {
           { ...this.requestToReview, reviewDetails: { tasksToRemove: 0 }}
         )
         this.$store.dispatch('SET_INFO', `Request rejected successfully`)
-        if (this.kycRequestsList) this.kycRequestsList.updateAsk = true
-        this.$emit(this.updateRequestEvent)
+        this.$emit(EVENTS.reviewed)
       } catch (error) {
         this.isPending = false
         ErrorHandler.process(error)

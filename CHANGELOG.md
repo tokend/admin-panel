@@ -23,6 +23,8 @@ for further information about branching and tagging conventions.
   - nightwatch
   - bootstrap-sass
   - DocLinkgetter - unused `accountId` prop
+  
+- Removed use 'provide-inject'
 
 ### Added
 - Restored email filtering on kyc request page
