@@ -141,6 +141,14 @@ export default {
       this.isDropdownShown = false
       window.removeEventListener('click', this.onClick, false)
       window.removeEventListener('keydown', this.onKeyDown, false)
+    },
+
+    openDropdown () {
+      if (this.isInputFocused) {
+        window.addEventListener('keydown', this.onKeyDown)
+        window.addEventListener('click', this.onClick)
+        this.isDropdownShown = true
+      }
     }
   },
   watch: {
@@ -149,12 +157,7 @@ export default {
     }, 400),
 
     'isInputFocused' () {
-      if (this.isInputFocused) {
-        this.getList()
-        window.addEventListener('keydown', this.onKeyDown)
-        window.addEventListener('click', this.onClick)
-        this.isDropdownShown = true
-      }
+      this.openDropdown()
     }
   }
 }
