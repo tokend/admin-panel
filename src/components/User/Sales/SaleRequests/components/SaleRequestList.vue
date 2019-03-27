@@ -23,6 +23,7 @@
           label="Requestor"
           placeholder="Address (full match)"
           v-model="filters.requestor"
+          autocomplete-type="email"
         />
       </div>
     </div>

@@ -30,6 +30,12 @@
 
           <input-field
             class="app-list-filters__field"
+            v-model.trim="filters.email"
+            label="Email"
+          />
+
+          <input-field
+            class="app-list-filters__field"
             v-model.trim="filters.address"
             label="Account ID"
           />
@@ -104,6 +110,7 @@
       v-if="view.mode === VIEW_MODES_VERBOSE.user"
       :id="view.userId"
       @back="toggleViewMode(null)"
+      @reviewed="loadList"
     />
 
   </div>
@@ -155,6 +162,7 @@ export default {
       },
       filters: {
         state: 'pending',
+        email: '',
         address: '',
         type: ''
       },
@@ -184,6 +192,8 @@ export default {
         let address = ''
         if (this.filters.address) {
           address = this.filters.address
+        } else if (this.filters.email) {
+          address = await this.getAccountIdByEmail()
         }
         response = await ApiCallerFactory
           .createCallerInstance()

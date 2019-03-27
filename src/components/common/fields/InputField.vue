@@ -18,7 +18,17 @@
       :title="title"
       :form="form"
       @input="onInput"
+      @focus="isInputFocused = true"
+      @blur="isInputFocused = false"
     >
+
+    <input-field-autocomplete
+      v-if="autocompleteType"
+      :input-value="value"
+      @option-selected="$emit('input', $event)"
+      :autocomplete-type="autocompleteType"
+      :is-input-focused="isInputFocused"
+    />
 
     <span class="input-field__label">
       {{label}}
@@ -33,9 +43,11 @@
 </template>
 
 <script>
+import InputFieldAutocomplete from './InputFieldAutocomplete'
+
 export default {
   components: {
-    // components
+    InputFieldAutocomplete
   },
 
   props: {
@@ -43,6 +55,7 @@ export default {
     value: { type: [String, Number], default: undefined },
     errorMessage: { type: String, default: undefined },
     align: { type: String, default: 'left' },
+    autocompleteType: { type: String, default: '' },
     // proxies
     autocomplete: { type: String, default: 'off' },
     autofocus: { type: Boolean, default: false },
@@ -63,7 +76,7 @@ export default {
 
   data () {
     return {
-      // data
+      isInputFocused: false
     }
   },
 

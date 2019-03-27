@@ -7,9 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
+## [Unreleased]
+### Added
+-  Added is_coinpayments checkbox on asset creation page
+
 ## [1.3.1] - 2019-03-14
 ### Added
 - Added filter for displaying app version
+- Added noscript tag with message for users with JavaScript switched off or browsers that don't support JavaScript
 
 ### Removed
 - Unused dependencies:
@@ -19,10 +24,21 @@ for further information about branching and tagging conventions.
   - nightwatch
   - bootstrap-sass
   - DocLinkgetter - unused `accountId` prop
+- Removed use 'provide-inject'
+
+### Added
+- Restored email filtering on kyc request page
+
+### Removed
+- Removed invest fee type from FeeList.vue
+
+### Added
+- Autocomplete for input fields
 
 ### Fixed
 - Add missing quotes to `KEY_SERVER_ADMIN` of `config/default.env.js`
 - Show verification code in KYC request details
+- Displaying long sale description string on sale request manager tab
 
 ### Security
 - Resolve security issues in package.json

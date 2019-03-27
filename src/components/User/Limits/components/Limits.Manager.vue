@@ -50,6 +50,7 @@
                     limits-manager-filters__specific-user-field"
               v-model.trim="specificUserAddress"
               label="Email or Account ID"
+              autocomplete-type="email"
             />
 
             <select-field v-model="filters.asset"
