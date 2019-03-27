@@ -113,6 +113,7 @@
       v-if="view.mode === VIEW_MODES_VERBOSE.user"
       :id="view.userId"
       @back="toggleViewMode(null)"
+      @reviewed="loadList"
     />
 
   </div>
@@ -143,15 +144,6 @@ const VIEW_MODES_VERBOSE = Object.freeze({
 export default {
   name: 'kyc-request-list',
   components: { UserView, EmailGetter, SelectField, InputField },
-  provide () {
-    const kycRequestsList = {}
-    Object.defineProperty(kycRequestsList, 'updateAsk', {
-      enumerable: true,
-      get: () => false,
-      set: () => this.loadList()
-    })
-    return { kycRequestsList }
-  },
   data () {
     return {
       isLoading: false,

@@ -21,6 +21,7 @@
           label="Owner"
           placeholder="Address (full match)"
           v-model="owner"
+          autocomplete-type="email"
         />
         <input-date-field
           label="Start date"

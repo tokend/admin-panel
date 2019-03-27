@@ -27,6 +27,7 @@ for further information about branching and tagging conventions.
 ## [1.3.1] - 2019-03-14
 ### Added
 - Added filter for displaying app version
+- Added noscript tag with message for users with JavaScript switched off or browsers that don't support JavaScript
 
 ### Removed
 - Unused dependencies:
@@ -36,12 +37,16 @@ for further information about branching and tagging conventions.
   - nightwatch
   - bootstrap-sass
   - DocLinkgetter - unused `accountId` prop
+- Removed use 'provide-inject'
 
 ### Added
 - Restored email filtering on kyc request page
 
 ### Removed
 - Removed invest fee type from FeeList.vue
+
+### Added
+- Autocomplete for input fields
 
 ### Fixed
 - Add missing quotes to `KEY_SERVER_ADMIN` of `config/default.env.js`
