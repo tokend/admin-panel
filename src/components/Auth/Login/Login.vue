@@ -61,7 +61,7 @@
 
     <template v-if="buildVersion">
       <p class="login__version">
-        {{ buildVersion }}
+        {{ buildVersion | formatVersion}}
       </p>
     </template>
   </div>

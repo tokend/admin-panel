@@ -10,14 +10,13 @@ export default {
     }
   },
 
-  props: ['userId', 'fileKey'],
+  props: ['fileKey'],
 
   created () {
     this.getHref()
   },
 
   watch: {
-    userId () { this.getHref() },
     fileKey () { this.getHref() }
   },
 
