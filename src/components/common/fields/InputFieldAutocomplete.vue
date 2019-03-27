@@ -143,11 +143,9 @@ export default {
     },
 
     openDropdown () {
-      if (this.isInputFocused) {
-        window.addEventListener('keydown', this.onKeyDown)
-        window.addEventListener('click', this.onClick)
-        this.isDropdownShown = true
-      }
+      window.addEventListener('keydown', this.onKeyDown)
+      window.addEventListener('click', this.onClick)
+      this.isDropdownShown = true
     }
   },
   watch: {
@@ -156,7 +154,9 @@ export default {
     }, 400),
 
     'isInputFocused' () {
-      this.openDropdown()
+      if (this.isInputFocused) {
+        this.openDropdown()
+      }
     }
   }
 }
