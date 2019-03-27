@@ -14,6 +14,7 @@ for further information about branching and tagging conventions.
 ## [1.3.1] - 2019-03-14
 ### Added
 - Added filter for displaying app version
+- Added noscript tag with message for users with JavaScript switched off or browsers that don't support JavaScript
 
 ### Removed
 - Unused dependencies:
