@@ -11,7 +11,10 @@
     </button>
     <template v-if="view.mode === VIEW_MODES_VERBOSE.user">
       <div class="users-show__details-wrp">
-        <user-details :id="id" />
+        <user-details
+          :id="id"
+          @reviewed="$emit(EVENTS.reviewed)"
+        />
       </div>
 
       <div class="users-show__list-wrp">
@@ -41,6 +44,10 @@ const VIEW_MODES_VERBOSE = {
   user: 'user',
   operation: 'operation'
 }
+const EVENTS = {
+  reviewed: 'reviewed',
+  back: 'back'
+}
 
 export default {
   components: {
@@ -56,7 +63,8 @@ export default {
       mode: VIEW_MODES_VERBOSE.user,
       operation: null
     },
-    VIEW_MODES_VERBOSE
+    VIEW_MODES_VERBOSE,
+    EVENTS
   }),
 
   methods: {
@@ -71,7 +79,7 @@ export default {
     },
     back () {
       if (this.view.mode === VIEW_MODES_VERBOSE.user) {
-        this.$emit('back')
+        this.$emit(EVENTS.back)
         return
       }
       this.view.mode = VIEW_MODES_VERBOSE.user

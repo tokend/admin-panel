@@ -82,8 +82,7 @@
               <request-section
                 :user="user"
                 :requestToReview="requestToReview"
-                @update-request="getUpdatedUser"
-                update-request-event="update-request"
+                @reviewed="getUpdatedUser"
               />
             </section>
           </div>
@@ -121,6 +120,9 @@ import config from '@/config'
 
 const OPERATION_TYPE = {
   createKycRequest: '22'
+}
+const EVENTS = {
+  reviewed: 'reviewed'
 }
 
 export default {
@@ -201,6 +203,7 @@ export default {
     },
 
     async getUpdatedUser () {
+      this.$emit(EVENTS.reviewed)
       this.isLoaded = false
       this.isFailed = false
       setTimeout(async () => {
