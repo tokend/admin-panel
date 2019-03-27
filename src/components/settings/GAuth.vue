@@ -124,12 +124,12 @@ export default {
         })
     },
 
-    showTfaForm (token) {
+    showTfaForm (asset) {
       if (this.wantResend) return
 
       this.$store.commit('OPEN_MODAL')
       this.$store.commit('REQUIRE_TFA', {
-        token: token,
+        asset: asset,
         phone: '',
         initiator: 'g_auth'
       })

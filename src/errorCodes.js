@@ -53,8 +53,8 @@ const OpSignerAlreadyExists = 'Signer already exist'
 const OpDestinationNotFound = 'Destination not found'
 const OpAnotherExchange = 'Another exchange'
 const OpDemurrageRejectionNotAllowed = 'Demurrage rejection not allowed'
-const OpTokenAlreadyExists = 'Token already exists'
-const OpAssetTokenAlreadySet = 'Asset token already set'
+const OpAssetAlreadyExists = 'Asset already exists'
+const OpAssetAlreadySet = 'Asset already set'
 const OpSerialDuplication = 'Serial is duplicated'
 const OpMalformedPreemissions = 'Malformed preissuances'
 const OpNoTrust = 'No trust'
@@ -156,8 +156,8 @@ export const OpErrorCodes = new Map([
   ['op_destination_not_found', OpDestinationNotFound],
   ['op_another_exchange', OpAnotherExchange],
   ['demurrage_rejection_not_allowed', OpDemurrageRejectionNotAllowed],
-  ['op_token_already_exists', OpTokenAlreadyExists],
-  ['op_asset_token_already_set', OpAssetTokenAlreadySet],
+  ['op_asset_already_exists', OpAssetAlreadyExists],
+  ['op_asset_token_already_set', OpAssetAlreadySet],
   ['serial_duplication', OpSerialDuplication],
   ['malformed_preemissions', OpMalformedPreemissions],
   ['op_no_trust', OpNoTrust],

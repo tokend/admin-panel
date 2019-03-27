@@ -18,10 +18,10 @@
 
     <form @submit.prevent="submit">
       <div class="asset-manager__image-field-wrp">
-        <label class="asset-manager__image-lbl">Upload token logo</label>
+        <label class="asset-manager__image-lbl">Upload asset logo</label>
         <image-field
           :fileKey="safeGet(asset, `creatorDetails.logo.key`)"
-          @change="onFileChange($event, DOCUMENT_TYPES.tokenLogo)"
+          @change="onFileChange($event, DOCUMENT_TYPES.assetLogo)"
         />
       </div>
 
@@ -87,12 +87,12 @@
           type="number"
           :min="0"
           :step="DEFAULT_INPUT_STEP"
-          label="Maximum tokens"
+          label="Maximum assets"
           v-model="asset.maxIssuanceAmount"
           :disabled="isExistingAsset || isPending"
           v-validate="'required|decimal'"
-          name="max-tokens"
-          :errorMessage="errors.first('max-tokens')"
+          name="max-assets"
+          :errorMessage="errors.first('max-assets')"
         />
 
         <!-- the field is disabled due to omitted testing session of trailingDigitsCount -->
@@ -139,7 +139,7 @@
             id="file-select"
             type="file"
             accept="application/pdf, image/*"
-            @change="onFileChange($event, DOCUMENT_TYPES.tokenTerms)"
+            @change="onFileChange($event, DOCUMENT_TYPES.assetTerms)"
           />
           <span
             v-if="safeGet(asset, 'creatorDetails.terms.name')"
@@ -314,13 +314,13 @@ export default {
         }
       },
 
-      [DOCUMENT_TYPES.tokenTerms]: {
+      [DOCUMENT_TYPES.assetTerms]: {
         file: null,
         mime: null,
         name: null
       },
 
-      [DOCUMENT_TYPES.tokenLogo]: {
+      [DOCUMENT_TYPES.assetLogo]: {
         file: null,
         mime: null,
         name: null
@@ -368,8 +368,8 @@ export default {
       this.isPending = true
       try {
         await Promise.all([
-          this.uploadFile(DOCUMENT_TYPES.tokenTerms),
-          this.uploadFile(DOCUMENT_TYPES.tokenLogo)
+          this.uploadFile(DOCUMENT_TYPES.assetTerms),
+          this.uploadFile(DOCUMENT_TYPES.assetLogo)
         ])
         let operation
         if (this.isExistingAsset) {
@@ -457,7 +457,7 @@ export default {
       if (!this[type].file) return
       const config = await Sdk.api.documents.masterCreate(type, this[type].mime)
       await api.documents.uploadFile(this[type].file, config, this[type].mime)
-      this.asset.creatorDetails[type === DOCUMENT_TYPES.tokenTerms ? 'terms' : 'logo'] = {
+      this.asset.creatorDetails[type === DOCUMENT_TYPES.assetTerms ? 'terms' : 'logo'] = {
         key: config.formData.key,
         name: this[type].name,
         type: this[type].mime

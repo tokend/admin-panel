@@ -1,18 +1,18 @@
 const state = {
-  token: '',
+  asset: '',
   isRequired: false,
   initiator: ''
 }
 
 const getters = {
   tfaIsRequired: state => state.isRequired,
-  tfaToken: state => state.token,
+  tfaAsset: state => state.asset,
   tfaInitiator: state => state.initiator
 }
 
 const actions = {
   'CLOSE_TFA' ({ commit, state }) {
-    state.token = ''
+    state.asset = ''
     state.isRequired = false
     commit('CLOSE_MODAL')
   }
@@ -21,7 +21,7 @@ const actions = {
 const mutations = {
   'REQUIRE_TFA' (state, payload) {
     state.isRequired = true
-    state.token = payload.token
+    state.asset = payload.asset
     state.initiator = payload.initiator
   },
 

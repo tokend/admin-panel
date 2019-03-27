@@ -39,7 +39,7 @@ export default {
       server: Vue.params.KEY_SERVER_ADMIN,
       keypair: signingKeys
     }).then((response) => {
-      this._storeToken(response, credentials.username)
+      this._storeAsset(response, credentials.username)
 
       if (redirect) router.push({ name: redirect })
     }).catch((errorResponse) => {
@@ -56,7 +56,7 @@ export default {
 
     return StellarWallet.getWallet(params)
       .then(wallet => {
-        this._storeToken(wallet, creds.username)
+        this._storeAsset(wallet, creds.username)
         return { ok: true, enabledTFA: false }
       }).catch(err => {
         if (err.status === 403 && err.tfaRequired) {
@@ -90,7 +90,7 @@ export default {
 
     return StellarWallet.showWallet(options)
       .then(wallet => {
-        this._storeToken(wallet, params.username)
+        this._storeAsset(wallet, params.username)
         return { ok: true }
       }).catch(err => {
         return { ok: false, message: err.message, code: err.status }
@@ -118,7 +118,7 @@ export default {
     store.commit('UPDATE_AUTH', auth)
   },
 
-  async _storeToken (credentials, username) {
+  async _storeAsset (credentials, username) {
     const auth = store.state.auth
     const user = store.state.user
     user.name = username

@@ -1,4 +1,4 @@
-export { CREATE_TOKEN_REQUEST_STATES } from './create-token-request-states'
+export { CREATE_ASSET_REQUEST_STATES } from './create-asset-request-states'
 export { ASSET_POLICIES, ASSET_POLICIES_VERBOSE } from './asset-policies'
 export { ASSET_PAIR_POLICIES, ASSET_PAIR_POLICIES_VERBOSE } from './asset-pair-policies'
 export { USER_TYPES, USER_TYPES_STR } from './user-types'
