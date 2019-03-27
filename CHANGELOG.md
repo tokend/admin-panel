@@ -12,7 +12,7 @@ for further information about branching and tagging conventions.
 -  Added is_coinpayments checkbox on asset creation page
 
 ### Changed
-- Hide input placeholder only if label prop is empty
+- Hide input placeholder only if label prop is not empty
 - Set input label prop default value to empty string
 - Show "Unlimited" placeholder if limits are set to max limit value
 - Titles & labels on limits management page
@@ -22,6 +22,7 @@ for further information about branching and tagging conventions.
 
 ### Removed
 - Switch fields on limits management page
+- Unnecessary align prop from input field
 
 ## [1.3.1] - 2019-03-14
 ### Added

@@ -5,10 +5,7 @@
   >
     <input
       class="input-field__input"
-      :class="{
-        'input-field__input--placeholder-overflowed': label,
-        ['text-align-' + align]: true
-      }"
+      :class="{ 'input-field__input--placeholder-auto-hidden': label }"
       :type="type"
       :placeholder="placeholder || ' '"
       :value="value"
@@ -48,7 +45,6 @@ export default {
     label: { type: String, default: '' },
     value: { type: [String, Number], default: undefined },
     errorMessage: { type: String, default: undefined },
-    align: { type: String, default: 'left' },
     // proxies
     autocomplete: { type: String, default: 'off' },
     autofocus: { type: Boolean, default: false },

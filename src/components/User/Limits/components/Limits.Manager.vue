@@ -81,11 +81,11 @@
                     {{ type.replace('Out', '') }}
                   </span>
                   <input-field
-                    :value="getLimitShownAmount(limits.payment[type])"
+                    :value="normalizeLimitAmount(limits.payment[type])"
                     @input="limits.payment[type] = $event || DEFAULT_MAX_AMOUNT"
                     class="limits-manager__limit-field"
                     :step="DEFAULT_INPUT_STEP"
-                    :placeholder="'Unlimited'"
+                    placeholder="Unlimited"
                     min="0"
                   />
                 </div>
@@ -115,11 +115,11 @@
                     {{ type.replace('Out', '') }}
                   </span>
                   <input-field
-                    :value="getLimitShownAmount(limits.withdrawal[type])"
+                    :value="normalizeLimitAmount(limits.withdrawal[type])"
                     @input="limits.withdrawal[type] = $event || DEFAULT_MAX_AMOUNT"
                     class="limits-manager__limit-field"
                     :step="DEFAULT_INPUT_STEP"
-                    :placeholder="'Unlimited'"
+                    placeholder="Unlimited"
                     min="0"
                   />
                 </div>
@@ -149,11 +149,11 @@
                     {{ type.replace('Out', '') }}
                   </span>
                   <input-field
-                    :value="getLimitShownAmount(limits.deposit[type])"
+                    :value="normalizeLimitAmount(limits.deposit[type])"
                     @input="limits.deposit[type] = $event || DEFAULT_MAX_AMOUNT"
                     class="limits-manager__limit-field"
                     :step="DEFAULT_INPUT_STEP"
-                    :placeholder="'Unlimited'"
+                    placeholder="Unlimited"
                     min="0"
                   />
                 </div>
@@ -354,7 +354,7 @@
           }
         }
       },
-      getLimitShownAmount (limit) {
+      normalizeLimitAmount (limit) {
         return limit >= DEFAULT_MAX_AMOUNT ? '' : limit
       }
     },
