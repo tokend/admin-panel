@@ -20,7 +20,7 @@
   // HACK: do not merge these rulesets
 
   @mixin placeholder {
-    color: $field-placeholer-color;
+    color: $field-placeholder-color;
     transition: opacity $field-transition-duration;
   }
 
@@ -43,6 +43,10 @@
   &::placeholder {
     @include placeholder;
   }
+}
+
+.input-field__input--placeholder-overflowed {
+  // HACK: do not merge these rulesets
 
   &:placeholder-shown:not(:focus)::-webkit-input-placeholder {
     opacity: 0;
