@@ -128,7 +128,6 @@ import _ from 'lodash'
 import { Sdk } from '@/sdk'
 import config from '@/config'
 import { ErrorHandler } from '@/utils/ErrorHandler'
-import { Autocomplete } from '@comcom/fields'
 
 export default {
   components: {
@@ -136,8 +135,7 @@ export default {
     InputField,
     TickField,
     EmailGetter,
-    InputDateField,
-    Autocomplete
+    InputDateField
   },
 
   data () {

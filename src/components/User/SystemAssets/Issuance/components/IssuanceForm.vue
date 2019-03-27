@@ -74,14 +74,12 @@ import { DEFAULT_INPUT_STEP, DEFAULT_INPUT_MIN } from '@/constants'
 
 import { confirmAction } from '../../../../../js/modals/confirmation_message'
 import { ErrorHandler } from '@/utils/ErrorHandler'
-import { Autocomplete } from '@comcom/fields'
 
 export default {
   components: {
     InputField,
     SelectField,
-    AssetAmountFormatter,
-    Autocomplete
+    AssetAmountFormatter
   },
 
   created () {

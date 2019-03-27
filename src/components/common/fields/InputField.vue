@@ -22,11 +22,12 @@
       @blur="isInputFocused = false"
     >
 
-    <autocomplete
+    <input-field-autocomplete
       v-if="autocompleteType"
       class="input-field__autocomplete"
+      v-model="value"
       :input-value="value"
-      @set-input-value="$emit('input', $event)"
+      @option-selected="$emit('input', $event)"
       :autocomplete-type="autocompleteType"
       :is-input-focused="isInputFocused"
     />
@@ -44,11 +45,11 @@
 </template>
 
 <script>
-import Autocomplete from './Autocomplete'
+import InputFieldAutocomplete from './InputFieldAutocomplete'
 
 export default {
   components: {
-    Autocomplete
+    InputFieldAutocomplete
   },
 
   props: {
@@ -56,7 +57,6 @@ export default {
     value: { type: [String, Number], default: undefined },
     errorMessage: { type: String, default: undefined },
     align: { type: String, default: 'left' },
-    shouldShowAutocomplete: { type: Boolean, default: false },
     autocompleteType: { type: String, default: '' },
     // proxies
     autocomplete: { type: String, default: 'off' },

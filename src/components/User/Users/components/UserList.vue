@@ -134,7 +134,6 @@ import 'mdi-vue/DownloadIcon'
 import { ApiCallerFactory } from '@/api-caller-factory'
 import config from '@/config'
 import { ErrorHandler } from '@/utils/ErrorHandler'
-// import { Autocomplete } from '@comcom/fields'
 
 const VIEW_MODES_VERBOSE = Object.freeze({
   index: 'index',
@@ -147,7 +146,6 @@ export default {
     InputField,
     UserView,
     AccountStateGetter
-    // Autocomplete
   },
 
   data () {
@@ -166,8 +164,6 @@ export default {
       list: {},
       isListEnded: false,
       isLoading: false,
-      emailAddress: [],
-      activeOption: '',
 
       ACCOUNT_ROLES: config.ACCOUNT_ROLES
     }

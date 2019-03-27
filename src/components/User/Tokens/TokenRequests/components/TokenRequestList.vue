@@ -104,13 +104,11 @@ import {
 import _ from 'lodash'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { snakeToCamelCase } from '@/utils/un-camel-case'
-import { Autocomplete } from '@comcom/fields'
 
 export default {
   components: {
     InputField,
-    SelectField,
-    Autocomplete
+    SelectField
   },
 
   data () {

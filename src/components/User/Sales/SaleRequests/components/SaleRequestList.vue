@@ -106,15 +106,13 @@ import { EmailGetter } from '@comcom/getters'
 import { AssetAmountFormatter } from '@comcom/formatters'
 import _ from 'lodash'
 import { ErrorHandler } from '@/utils/ErrorHandler'
-import { Autocomplete } from '@comcom/fields'
 
 export default {
   components: {
     SelectField,
     InputField,
     EmailGetter,
-    AssetAmountFormatter,
-    Autocomplete
+    AssetAmountFormatter
   },
 
   data () {

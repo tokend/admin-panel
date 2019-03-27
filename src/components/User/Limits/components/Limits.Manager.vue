@@ -197,7 +197,6 @@
 
   import { STATS_OPERATION_TYPES, DEFAULT_MAX_AMOUNT } from '@/constants'
   import config from '@/config'
-  import { Autocomplete } from '@comcom/fields'
 
   const ACCOUNT_ROLES_VERBOSE = Object.freeze({
     [config.ACCOUNT_ROLES.notVerified]: 'Unverified user',
@@ -225,8 +224,7 @@
       InputField,
       TickField,
       Tabs,
-      Tab,
-      Autocomplete
+      Tab
     },
     data: _ => ({
       filters: {
