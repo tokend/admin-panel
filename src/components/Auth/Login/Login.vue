@@ -163,7 +163,6 @@ export default {
             this.$store.dispatch('SET_ERROR', r.message)
             return
           }
-          console.log(r)
           if (r.enabledTFA) {
             this.loginParams = r.loginParams
             this.loginParams.username = this.credentials.username.toLowerCase().trim()
