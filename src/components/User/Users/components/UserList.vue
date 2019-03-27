@@ -230,10 +230,10 @@ export default {
     },
     'filters.email': _.throttle(function () {
       this.getList()
-    }, 400),
+    }, 1000),
     'filters.address': _.throttle(function () {
       this.getList()
-    }, 400)
+    }, 1000)
   }
 }
 </script>

@@ -169,7 +169,6 @@ export default {
   position: absolute;
   width: 100%;
   background-color: $color-content-bg;
-  transition: 0.2s ease-out;
   left: 0;
   min-width: 16rem;
   top: calc(100% + 0.1rem);

@@ -24,8 +24,6 @@
 
     <input-field-autocomplete
       v-if="autocompleteType"
-      class="input-field__autocomplete"
-      v-model="value"
       :input-value="value"
       @option-selected="$emit('input', $event)"
       :autocomplete-type="autocompleteType"
