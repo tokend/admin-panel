@@ -4,7 +4,10 @@
       Operations
     </h2>
 
-    <ul class="app-list">
+    <ul
+      class="app-list"
+      v-if="records && records.length"
+    >
       <div class="app-list__header">
         <span class="app-list__cell">
           Type
@@ -39,6 +42,22 @@
       </button>
     </ul>
 
+    <template v-else>
+      <div class="app-list__li-like">
+        <template v-if="isLoading">
+          <p>
+            Loading...
+          </p>
+        </template>
+
+        <template v-else>
+          <p>
+            Nothing here yet
+          </p>
+        </template>
+      </div>
+    </template>
+
     <div class="app__more-btn-wrp">
       <button class="app__btn-secondary" v-if="!isListEnded && records" @click="getNextPage">
         More
@@ -64,7 +83,8 @@ export default {
       formatAssetAmount,
       list: undefined,
       isListEnded: false,
-      masterPubKey: Vue.params.MASTER_ACCOUNT
+      masterPubKey: Vue.params.MASTER_ACCOUNT,
+      isLoading: false
     }
   },
 
@@ -83,11 +103,13 @@ export default {
 
   methods: {
     async getList () {
+      this.isLoading = true
       try {
         this.list = (await Sdk.horizon.account.getOperations(this.id))
       } catch (error) {
         this.$store.dispatch('SET_ERROR', 'Cannot load transaction list')
       }
+      this.isLoading = false
     },
 
     async getNextPage () {

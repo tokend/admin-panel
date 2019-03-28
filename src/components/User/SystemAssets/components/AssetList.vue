@@ -13,7 +13,10 @@
       </span>
     </div>
 
-    <ul class="asset-list__ul">
+    <ul
+      class="asset-list__ul"
+      v-if="assets && assets.length"
+    >
       <li class="asset-list__li" v-for="(asset, i) in parsedAssets" :key="i">
         <router-link class="asset-list__li-a"
           :to="{ name: 'systemAssets.show', params: { asset: asset.code }}">
@@ -31,6 +34,21 @@
         </router-link>
       </li>
     </ul>
+    <template v-else>
+      <div class="app-list__li-like">
+        <template v-if="isLoading">
+          <p>
+            Loading...
+          </p>
+        </template>
+
+        <template v-else>
+          <p>
+            Nothing here yet
+          </p>
+        </template>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -42,7 +60,8 @@ import trim from 'lodash/trim'
 export default {
   data () {
     return {
-      assets: []
+      assets: [],
+      isLoading: false
     }
   },
 
@@ -68,6 +87,7 @@ export default {
     async getAssets () {
       this.assets = []
       this.$store.commit('OPEN_LOADER')
+      this.isLoading = true
       try {
         const response = await Sdk.horizon.assets.getAll({
           owner: config.MASTER_ACCOUNT
@@ -82,6 +102,7 @@ export default {
         this.$store.commit('CLOSE_LOADER')
         this.$store.dispatch('SET_ERROR', 'Something went wrong. Can\'t to load assets list')
       }
+      this.isLoading = false
     }
   }
 }
