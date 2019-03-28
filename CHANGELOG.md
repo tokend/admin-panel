@@ -11,6 +11,10 @@ for further information about branching and tagging conventions.
 ### Added
 -  Added is_coinpayments checkbox on asset creation page
 
+### Changed
+- Moved ACCOUNT_ROLES_VERBOSE constant to the component data on the limits
+management page
+
 ## [1.3.1] - 2019-03-14
 ### Added
 - Added filter for displaying app version
