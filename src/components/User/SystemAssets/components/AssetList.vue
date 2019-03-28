@@ -19,17 +19,17 @@
     >
       <li class="asset-list__li" v-for="(asset, i) in parsedAssets" :key="i">
         <router-link class="asset-list__li-a"
-          :to="{ name: 'systemAssets.show', params: { asset: asset.code }}">
+          :to="{ name: 'systemAssets.show', params: { asset: asset.id }}">
           <span class="asset-list__li-name" :title="asset.creatorDetails.name">
             {{ asset.creatorDetails.name }}
           </span>
 
-          <span class="asset-list__li-code" :title="asset.code">
-            {{ asset.code }}
+          <span class="asset-list__li-code" :title="asset.id">
+            {{ asset.id }}
           </span>
 
-          <span class="asset-list__li-policy" :title="asset.policy">
-            {{ asset.policy }}
+          <span class="asset-list__li-policy" :title="asset.policies.value">
+            {{ asset.policies.value }}
           </span>
         </router-link>
       </li>
@@ -49,6 +49,15 @@
         </template>
       </div>
     </template>
+    <div class="app__more-btn-wrp">
+      <button
+        class="app__btn-secondary"
+        v-if="!isListEnded && assets"
+        @click="onMoreClick"
+      >
+        More
+      </button>
+    </div>
   </div>
 </template>
 
@@ -56,12 +65,16 @@
 import config from '@/config'
 import { Sdk } from '@/sdk'
 import trim from 'lodash/trim'
+import { ApiCallerFactory } from '@/api-caller-factory'
+import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   data () {
     return {
       assets: [],
-      isLoading: false
+      isLoading: false,
+      isListEnded: false,
+      rawAssetsList: {}
     }
   },
 
@@ -89,13 +102,14 @@ export default {
       this.$store.commit('OPEN_LOADER')
       this.isLoading = true
       try {
-        const response = await Sdk.horizon.assets.getAll({
-          owner: config.MASTER_ACCOUNT
-        })
-        this.assets = response.data.map(item => {
-          const creatorDetails = item.details || item.creatorDetails
-          return Object.assign(item, { creatorDetails })
-        })
+        const response = await ApiCallerFactory
+          .createCallerInstance()
+          .getWithSignature('/v3/assets', {
+            filter: { owner: config.MASTER_ACCOUNT }
+          })
+        console.log(response)
+        this.rawAssetsList = response
+        this.assets = this.addСreatorDetailsKeyToObjects(response)
         this.$store.commit('CLOSE_LOADER')
       } catch (err) {
         console.error('caught error', err)
@@ -103,6 +117,27 @@ export default {
         this.$store.dispatch('SET_ERROR', 'Something went wrong. Can\'t to load assets list')
       }
       this.isLoading = false
+    },
+
+    async onMoreClick () {
+      try {
+        const oldLength = this.assets.length
+        const chunk = await this.rawAssetsList.fetchNext()
+        const mapedChunk = this.addСreatorDetailsKeyToObjects(chunk)
+        this.assets = this.assets.concat(mapedChunk)
+        this.rawAssetsList.fetchNext = chunk.fetchNext
+        this.isListEnded = oldLength === this.assets.length
+        console.log(this.assets)
+      } catch (error) {
+        ErrorHandler.process(error)
+      }
+    },
+
+    addСreatorDetailsKeyToObjects (array) {
+      return array.data.map(item => {
+        const creatorDetails = item.details || item.creatorDetails
+        return Object.assign(item, { creatorDetails })
+      })
     }
   }
 }
