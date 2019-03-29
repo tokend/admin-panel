@@ -26,59 +26,63 @@
           </button>
         </div>
       </template>
-
-      <modal
-        class="user-request__reject-modal"
-        v-if="rejectForm.isShown"
-        @close-request="hideRejectModal()"
-        max-width="40rem"
-      >
-        <form
-          class="user-request__reject-form"
-          id="user-request-reject-form"
-          @submit.prevent="hideRejectModal() || reject()"
-        >
-          <div class="app__form-row">
-            <text-field
-              label="Reject reason"
-              :autofocus="true"
-              v-model="rejectForm.reason"
-            />
-          </div>
-        </form>
-
-        <div class="app__form-actions">
-          <button
-            class="app__btn app__btn--danger"
-            form="user-request-reject-form"
-          >
-            Reject
-          </button>
-          <button
-            class="app__btn-secondary"
-            @click="hideRejectModal"
-          >
-            Cancel
-          </button>
-        </div>
-      </modal>
     </template>
 
-    <template v-else-if="user.role !== ACCOUNT_ROLES.notVerified">
+    <template v-else-if="canRoleBeReset">
       <button
-        class="app__btn user-request__reset-to-unverified-btn"
-        @click="resetToUnverified"
+        class="app__btn
+               app__btn--danger
+               user-request__reset-to-unverified-btn"
+        @click="showRejectModal"
         :disabled="isPending"
       >
         Reset to unverified
       </button>
     </template>
+
+    <modal
+      class="user-request__reject-modal"
+      v-if="rejectForm.isShown"
+      @close-request="hideRejectModal()"
+      max-width="40rem"
+    >
+      <form
+        class="user-request__reject-form"
+        id="user-request-reject-form"
+        @submit.prevent="submitRejectForm"
+      >
+        <div class="app__form-row">
+          <text-field
+            :label="canRoleBeReset ? 'Reason' : 'Reject reason'"
+            :autofocus="true"
+            v-model="rejectForm.reason"
+          />
+        </div>
+      </form>
+
+      <div class="app__form-actions">
+        <button
+          class="app__btn app__btn--danger"
+          form="user-request-reject-form"
+        >
+          {{ canRoleBeReset ? 'Reset' : 'Reject' }}
+        </button>
+        <button
+          class="app__btn-secondary"
+          @click="hideRejectModal"
+        >
+          Cancel
+        </button>
+      </div>
+    </modal>
   </div>
 </template>
 
 <script>
 import api from '@/api'
 import { Sdk } from '@/sdk'
+
+import safeGet from 'lodash/get'
 
 import {
   USER_STATES_STR,
@@ -112,12 +116,12 @@ export default {
 
   props: {
     requestToReview: { type: Object, default: _ => ({}) },
+    latestApprovedRequest: { type: Object, default: _ => ({}) },
     user: { type: Object, default: _ => ({}) }
   },
 
   data () {
     return {
-      ACCOUNT_ROLES: config.ACCOUNT_ROLES,
       USER_STATES_STR,
       USER_TYPES_STR,
       REQUEST_STATES_STR,
@@ -136,6 +140,9 @@ export default {
   computed: {
     isRequestPending () {
       return this.requestToReview.state === REQUEST_STATES_STR.pending
+    },
+    canRoleBeReset () {
+      return this.user.role !== config.ACCOUNT_ROLES.notVerified
     }
   },
 
@@ -185,11 +192,17 @@ export default {
             requestID: '0',
             destinationAccount: this.user.address,
             accountRoleToSet: config.ACCOUNT_ROLES.notVerified.toString(),
-            creatorDetails: {},
+            creatorDetails: {
+              reason: this.rejectForm.reason,
+              ...safeGet(
+                this.latestApprovedRequest,
+                'requestDetails.creatorDetails'
+              )
+            },
             allTasks: 0
           })
         await Sdk.horizon.transactions.submitOperations(operation)
-        this.$store.dispatch('SET_INFO', 'The user account type was reset to unverified')
+        this.$store.dispatch('SET_INFO', 'The user account was reset to unverified')
         this.$emit(EVENTS.reviewed)
       } catch (error) {
         ErrorHandler.process(error)
@@ -204,6 +217,16 @@ export default {
 
     hideRejectModal () {
       this.rejectForm.isShown = false
+    },
+
+    async submitRejectForm () {
+      this.hideRejectModal()
+
+      if (this.canRoleBeReset) {
+        await this.resetToUnverified()
+      } else {
+        await this.reject()
+      }
     }
   }
 }

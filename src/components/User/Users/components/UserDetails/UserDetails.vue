@@ -82,6 +82,7 @@
             <request-section
               :user="user"
               :requestToReview="requestToReview"
+              :latest-approved-request="prevApprovedRequest"
               @reviewed="getUpdatedUser"
             />
           </section>
@@ -184,6 +185,7 @@ export default {
           ApiCallerFactory
             .createCallerInstance()
             .getWithSignature('/v3/change_role_requests', {
+              page: { order: 'desc' },
               filter: { requestor: this.id },
               include: ['request_details']
             })
@@ -193,7 +195,10 @@ export default {
         this.requestToReview = this.requests.data
           .find(item => item.stateI === REQUEST_STATES.pending)
         this.prevApprovedRequest = this.requests.data
-          .find(item => item.stateI === REQUEST_STATES.approved)
+          .find(item => item.stateI === REQUEST_STATES.approved &&
+            item.requestDetails.accountRoleToSet !==
+              this.ACCOUNT_ROLES.notVerified
+          )
         this.isLoaded = true
       } catch (error) {
         ErrorHandler.process(error)
