@@ -107,9 +107,10 @@ export default {
           .getWithSignature('/v3/assets', {
             filter: { owner: config.MASTER_ACCOUNT }
           })
-        console.log(response)
         this.rawAssetsList = response
+        console.log(response.data)
         this.assets = this.addСreatorDetailsKeyToObjects(response)
+        console.log(this.assets)
         this.$store.commit('CLOSE_LOADER')
       } catch (err) {
         console.error('caught error', err)

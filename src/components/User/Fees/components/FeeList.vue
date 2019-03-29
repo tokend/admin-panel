@@ -70,7 +70,7 @@
     </div>
 
     <div class="fee-list__list-wrp">
-      <template v-if="!Object.keys(fees).length">
+      <template v-if="!fees.length">
         <div class="app-list">
           <p class="app-list__li-like">
             Loading...
@@ -86,7 +86,7 @@
         </div>
       </template>
 
-      <template v-else-if="!feesByFilters.length">
+      <template v-else-if="!fees.length">
         <div class="app-list">
           <p class="app-list__li-like">
             No fees available for current filter settings
@@ -118,7 +118,7 @@
             <span class="app-list__cell"><!-- empty --></span>
           </div>
 
-          <li class="app-list__li" v-for="(item, id) in feesByFilters" :key="id">
+          <li class="app-list__li" v-for="(item, id) in fees" :key="id">
             <form
               class="fee-list__li--hidden-form"
               @submit.prevent="updateFee(item)"
@@ -131,7 +131,7 @@
                 min="0"
                 :step="DEFAULT_INPUT_STEP"
                 :form="`fee-list-form-${id}`"
-                :disabled="isSubmitting || item.exists"
+                :disabled="isSubmitting || !!item.id"
                 v-model="item.lowerBound"
               />
             </span>
@@ -143,13 +143,13 @@
                 :max="DEFAULT_MAX_AMOUNT"
                 :step="DEFAULT_INPUT_STEP"
                 :form="`fee-list-form-${id}`"
-                :disabled="isSubmitting  || item.exists"
+                :disabled="isSubmitting  || !!item.id"
                 v-model="item.upperBound"
               />
               <button
                 class="fee-list__btn-max"
                 @click="item.upperBound = DEFAULT_MAX_AMOUNT"
-                v-if="!item.exists"
+                v-if="!item.id"
                 :disabled="isSubmitting"
               >
                 <mdi-arrow-up-icon/>
@@ -181,7 +181,7 @@
             </span>
 
             <span class="app-list__cell fee-list__cell">
-              <template v-if="item.exists">
+              <template v-if="!!item.id">
                 <button
                   class="app__btn app__btn--small"
                   :form="`fee-list-form-${id}`"
@@ -210,6 +210,15 @@
             </span>
           </li>
         </ul>
+        <div class="app__more-btn-wrp">
+          <button
+            class="app__btn-secondary"
+            v-if="!isListEnded && fees"
+            @click="onMoreClick"
+          >
+            More
+          </button>
+        </div>
       </template>
     </div>
   </div>
@@ -231,6 +240,7 @@
   } from '@/constants'
   import throttle from 'lodash/throttle'
   import 'mdi-vue/ArrowUpIcon'
+  import { ApiCallerFactory } from '@/api-caller-factory'
 
   import { confirmAction } from '@/js/modals/confirmation_message'
 
@@ -273,7 +283,10 @@
           accountAddress: '', // address will be inserted here
 
           paymentFeeSubtype: PAYMENT_FEE_TYPES.outgoing // every fee has a subtype, but we're interested only in payment's
-        }
+        },
+
+        rawFeesList: {},
+        isListEnded: false
       }
     },
 
@@ -305,23 +318,6 @@
             break
         }
         return result
-      },
-
-      feesByFilters () {
-        const isFeeListEmpty = !Object.keys(this.fees).length
-        const isInvalidAsset = !this.filters.assetCode
-        if (isFeeListEmpty || isInvalidAsset) return []
-
-        const type = +this.filters.feeType
-        const asset = this.filters.assetCode
-        const paymentFeeSubtype = +this.filters.paymentFeeSubtype
-
-        // TODO: fetch from /v3/fees/ instead
-        const filtered = Object.entries(this.fees)
-          .find(([key]) => key.toLowerCase() === asset.toLowerCase())
-        return filtered[1]
-          .filter((item) => item.feeType === type)
-          .filter((item) => type === FEE_TYPES.paymentFee ? item.subtype === paymentFeeSubtype : true)
       }
     },
 
@@ -395,7 +391,7 @@
           // snake_case because sdk wait for it
           result.account_id = filters.accountAddress
         }
-
+        result.page = { limit: 10 }
         return result
       },
 
@@ -413,8 +409,14 @@
       async getFees () {
         try {
           const filters = this.composeRequestFilters(this.filters)
+          const some = await ApiCallerFactory
+            .createCallerInstance()
+            .getWithSignature('/v3/fees', filters)
+          console.log(some)
           const response = await Sdk.horizon.fees.getAll(filters)
-          this.fees = response.data.fees
+          console.log(response.data)
+          this.rawFeesList = some
+          this.fees = some.data
         } catch (error) {
           ErrorHandler.process(error)
         }
@@ -465,6 +467,18 @@
         if (!await confirmAction({ title: 'Delete the fee rule?' })) return
         fee.isDelete = true
         return this.updateFee(Object.assign({}, fee, { isDelete: true }))
+      },
+
+      async onMoreClick () {
+        try {
+          const oldLength = this.fees.length
+          const chunk = await this.rawFeesList.fetchNext()
+          this.fees = this.fees.concat(chunk.data)
+          this.rawFeesList.fetchNext = chunk.fetchNext
+          this.isListEnded = oldLength === this.fees.length
+        } catch (error) {
+          ErrorHandler.process(error)
+        }
       }
     }
   }
