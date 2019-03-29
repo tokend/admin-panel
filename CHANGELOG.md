@@ -10,6 +10,13 @@ for further information about branching and tagging conventions.
 ## [Unreleased]
 ### Added
 -  Added is_coinpayments checkbox on asset creation page
+- Reset account role to unverified action on user details
+
+### Changed
+- Now order KYC request list by descending creation date
+
+### Fixed
+- Loading user list after emitting reviewed event
 
 ## [1.3.1] - 2019-03-14
 ### Added

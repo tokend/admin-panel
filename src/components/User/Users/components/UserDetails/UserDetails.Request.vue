@@ -1,71 +1,85 @@
 <template>
   <div class="user-request">
-    <h3>Latest request</h3>
-    <p class="user-request__block text">
-      Create a {{ requestToReview.requestDetails.accountRoleToSet | roleIdToString | lowerCase }} account:
-      {{ requestToReview.state }}
-    </p>
+    <template v-if="requestToReview.state">
+      <h3>Latest request</h3>
+      <p class="user-request__block text">
+        Create a {{ requestToReview.requestDetails.accountRoleToSet | roleIdToString | lowerCase }} account:
+        {{ requestToReview.state }}
+      </p>
 
-    <template v-if="isRequestPending">
-      <div class="app__form-actions user-details-request__form-actions">
-        <button
-          class="app__btn"
-          @click="approve"
-          :disabled="isPending"
-        >
-          Approve
-        </button>
+      <template v-if="isRequestPending">
+        <div class="app__form-actions user-details-request__form-actions">
+          <button
+            class="app__btn"
+            @click="approve"
+            :disabled="isPending"
+          >
+            Approve
+          </button>
 
-        <button
-          class="app__btn app__btn--danger"
-          @click="showRejectModal"
-          :disabled="isPending"
+          <button
+            class="app__btn app__btn--danger"
+            @click="showRejectModal"
+            :disabled="isPending"
+          >
+            Reject
+          </button>
+        </div>
+      </template>
+
+      <modal
+        class="user-request__reject-modal"
+        v-if="rejectForm.isShown"
+        @close-request="hideRejectModal()"
+        max-width="40rem"
+      >
+        <form
+          class="user-request__reject-form"
+          id="user-request-reject-form"
+          @submit.prevent="hideRejectModal() || reject()"
         >
-          Reject
-        </button>
-      </div>
+          <div class="app__form-row">
+            <text-field
+              label="Reject reason"
+              :autofocus="true"
+              v-model="rejectForm.reason"
+            />
+          </div>
+        </form>
+
+        <div class="app__form-actions">
+          <button
+            class="app__btn app__btn--danger"
+            form="user-request-reject-form"
+          >
+            Reject
+          </button>
+          <button
+            class="app__btn-secondary"
+            @click="hideRejectModal"
+          >
+            Cancel
+          </button>
+        </div>
+      </modal>
     </template>
 
-    <modal
-      class="user-request__reject-modal"
-      v-if="rejectForm.isShown"
-      @close-request="hideRejectModal()"
-      max-width="40rem"
-    >
-      <form
-        class="user-request__reject-form"
-        id="user-request-reject-form"
-        @submit.prevent="hideRejectModal() || reject()"
+    <template v-else-if="user.role !== ACCOUNT_ROLES.notVerified">
+      <button
+        class="app__btn user-request__reset-to-unverified-btn"
+        @click="resetToUnverified"
+        :disabled="isPending"
       >
-        <div class="app__form-row">
-          <text-field
-            label="Reject reason"
-            :autofocus="true"
-            v-model="rejectForm.reason"
-          />
-        </div>
-      </form>
-
-      <div class="app__form-actions">
-        <button
-          class="app__btn app__btn--danger"
-          form="user-request-reject-form"
-        >
-          Reject
-        </button>
-        <button
-          class="app__btn-secondary"
-          @click="hideRejectModal"
-        >
-          Cancel
-        </button>
-      </div>
-    </modal>
+        Reset to unverified
+      </button>
+    </template>
   </div>
 </template>
 
 <script>
 import api from '@/api'
+import { Sdk } from '@/sdk'
+
 import {
   USER_STATES_STR,
   USER_TYPES_STR,
@@ -81,6 +95,8 @@ import 'mdi-vue/ChevronUpIcon'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { confirmAction } from '@/js/modals/confirmation_message'
 
+import config from '@/config'
+
 const EMPTY_REASON = ''
 const EVENTS = {
   reviewed: 'reviewed'
@@ -94,8 +110,14 @@ export default {
     TickField
   },
 
+  props: {
+    requestToReview: { type: Object, default: _ => ({}) },
+    user: { type: Object, default: _ => ({}) }
+  },
+
   data () {
     return {
+      ACCOUNT_ROLES: config.ACCOUNT_ROLES,
       USER_STATES_STR,
       USER_TYPES_STR,
       REQUEST_STATES_STR,
@@ -110,8 +132,6 @@ export default {
       isPending: false
     }
   },
-
-  props: ['requestToReview'],
 
   computed: {
     isRequestPending () {
@@ -149,6 +169,29 @@ export default {
         this.$emit(EVENTS.reviewed)
       } catch (error) {
         this.isPending = false
+        ErrorHandler.process(error)
+      }
+      this.isPending = false
+    },
+
+    async resetToUnverified () {
+      if (!await confirmAction('Are you sure? This action cannot be undone')) {
+        return
+      }
+      this.isPending = true
+      try {
+        const operation = Sdk.base.CreateChangeRoleRequestBuilder
+          .createChangeRoleRequest({
+            requestID: '0',
+            destinationAccount: this.user.address,
+            accountRoleToSet: config.ACCOUNT_ROLES.notVerified.toString(),
+            creatorDetails: {},
+            allTasks: 0
+          })
+        await Sdk.horizon.transactions.submitOperations(operation)
+        this.$store.dispatch('SET_INFO', 'The user account type was reset to unverified')
+        this.$emit(EVENTS.reviewed)
+      } catch (error) {
         ErrorHandler.process(error)
       }
       this.isPending = false
@@ -201,5 +244,10 @@ export default {
 
 .user-details-request__form-actions {
   max-width: 48rem;
+}
+
+.user-request__reset-to-unverified-btn {
+  max-width: 23.5rem;
+  width: 100%;
 }
 </style>

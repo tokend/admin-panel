@@ -76,17 +76,16 @@
 
         </template>
 
-        <template v-if="requestToReview">
-          <div class="user-details__actions-wrp">
-            <section class="user-details__section">
-              <request-section
-                :user="user"
-                :requestToReview="requestToReview"
-                @reviewed="getUpdatedUser"
-              />
-            </section>
-          </div>
-        </template>
+
+        <div class="user-details__actions-wrp">
+          <section class="user-details__section">
+            <request-section
+              :user="user"
+              :requestToReview="requestToReview"
+              @reviewed="getUpdatedUser"
+            />
+          </section>
+        </div>
       </template>
 
       <template v-else-if="!isFailed">
@@ -203,11 +202,11 @@ export default {
     },
 
     async getUpdatedUser () {
-      this.$emit(EVENTS.reviewed)
       this.isLoaded = false
       this.isFailed = false
       setTimeout(async () => {
         await this.getUser()
+        this.$emit(EVENTS.reviewed)
       }, 1500)
     }
   }

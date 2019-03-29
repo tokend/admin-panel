@@ -195,6 +195,7 @@ export default {
         this.list = await ApiCallerFactory
           .createCallerInstance()
           .getWithSignature('/v3/change_role_requests', {
+            page: { order: 'desc' },
             filter: clearObject({
               state: KYC_REQUEST_STATES[this.filters.state].state,
               requestor: address,
