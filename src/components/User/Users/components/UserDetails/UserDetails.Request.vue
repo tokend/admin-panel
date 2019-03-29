@@ -194,6 +194,10 @@ export default {
             accountRoleToSet: config.ACCOUNT_ROLES.notVerified.toString(),
             creatorDetails: {
               reason: this.rejectForm.reason,
+              previousAccountRole: String(safeGet(
+                this.latestApprovedRequest,
+                'requestDetails.accountRoleToSet'
+              )),
               ...safeGet(
                 this.latestApprovedRequest,
                 'requestDetails.creatorDetails'
