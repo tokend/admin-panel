@@ -13,22 +13,26 @@
             <option :value="ACCOUNT_ROLES.general">General</option>
             <option :value="ACCOUNT_ROLES.corporate">Сorporate</option>
           </select-field>
+
           <input-field
             class="app-list-filters__field"
             v-model.trim="filters.email"
             label="Email"
+            autocomplete-type="email"
           />
+
           <input-field
             class="app-list-filters__field"
             v-model.trim="filters.address"
             label="Account ID"
+            autocomplete-type="address"
           />
         </div>
       </div>
 
       <div class="user-list__list-wrp">
         <div class="app-list">
-          <template v-if="list.data && list.data.length">
+          <template v-if="list && list.length">
             <div class="app-list__header">
               <span class="app-list__cell user-list__email-cell">
                 Email
@@ -46,7 +50,7 @@
 
             <button
               class="app-list__li"
-              v-for="item in list.data"
+              v-for="item in list"
               :key="item.id"
               @click="toggleViewMode(item.address)"
             >
@@ -97,15 +101,15 @@
           </template>
         </div>
 
-        <div class="app__more-btn-wrp">
-          <button
-            class="app__btn-secondary"
-            v-if="!isListEnded && list.data"
-            @click="onMoreClick"
-          >
-            More
-          </button>
-        </div>
+      <div class="app__more-btn-wrp">
+        <collection-loader
+          :first-page-loader="getList"
+          @first-page-load="setList"
+          @next-page-load="extendList"
+          ref="collectionLoaderBtn"
+        />
+      </div>
+        
       </div>
     </template>
 
@@ -113,6 +117,7 @@
       v-if="view.mode === VIEW_MODES_VERBOSE.user"
       :id="view.userId"
       @back="toggleViewMode(null)"
+      @reviewed="getList"
     />
 
   </div>
@@ -130,6 +135,7 @@ import 'mdi-vue/DownloadIcon'
 import { ApiCallerFactory } from '@/api-caller-factory'
 import config from '@/config'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { CollectionLoader } from '@/components/common'
 
 const VIEW_MODES_VERBOSE = Object.freeze({
   index: 'index',
@@ -141,7 +147,8 @@ export default {
     SelectField,
     InputField,
     UserView,
-    AccountStateGetter
+    AccountStateGetter,
+    CollectionLoader
   },
 
   data () {
@@ -157,23 +164,19 @@ export default {
         userId: null,
         scrollPosition: 0
       },
-      list: {},
-      isListEnded: false,
+      list: [],
       isLoading: false,
 
       ACCOUNT_ROLES: config.ACCOUNT_ROLES
     }
   },
 
-  created () {
-    this.getList()
-  },
-
   methods: {
     async getList () {
       this.isLoading = true
+      let response = {}
       try {
-        this.list = await ApiCallerFactory
+        response = await ApiCallerFactory
           .createCallerInstance()
           .getWithSignature('/identities', {
             filter: clearObject({
@@ -182,23 +185,20 @@ export default {
               address: this.filters.address
             })
           })
-        this.isListEnded = !(this.list.data || []).length
       } catch (error) {
-        ErrorHandler.process(error)
+        ErrorHandler.processWithoutFeedback(error)
       }
       this.isLoading = false
+      return response
     },
 
-    async onMoreClick () {
-      try {
-        const oldLength = this.list.data.length
-        const chunk = await this.list.fetchNext()
-        this.list._data = this.list.data.concat(chunk.data)
-        this.list.fetchNext = chunk.fetchNext
-        this.isListEnded = oldLength === this.list.data.length
-      } catch (error) {
-        ErrorHandler.process(error)
-      }
+    setList (data) {
+      this.list = data
+      this.isLoaded = true
+    },
+
+    extendList (data) {
+      this.list = this.list.concat(data)
     },
 
     toggleViewMode (id) {
@@ -214,21 +214,25 @@ export default {
         window.scroll(0, this.view.scrollPosition)
         this.view.scrollPosition = 0
       })
+    },
+
+    reloadCollectionLoader () {
+      this.$refs.collectionLoaderBtn.loadFirstPage()
     }
   },
 
   watch: {
     'filters.state' () {
-      this.getList()
+      this.reloadCollectionLoader()
     },
     'filters.role' () {
-      this.getList()
+      this.reloadCollectionLoader()
     },
     'filters.email': _.throttle(function () {
-      this.getList()
+      this.reloadCollectionLoader()
     }, 1000),
     'filters.address': _.throttle(function () {
-      this.getList()
+      this.reloadCollectionLoader()
     }, 1000)
   }
 }

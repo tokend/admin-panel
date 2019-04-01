@@ -19,6 +19,7 @@
         class="arc-list__filter"
         v-model="filters.requestor"
         label="Requestor"
+        autocomplete-type="address"
       />
 
       <input-field
@@ -28,8 +29,8 @@
       />
     </div>
 
-    <div class="asset-request-list__table-wrp">
-      <template v-if="records && records.length">
+    <div class="token-request-list__table-wrp">
+      <template v-if="list && list.length">
         <ul class="app-list">
           <div class="app-list__header">
             <span class="app-list__cell">
@@ -47,7 +48,7 @@
 
           <router-link
             class="app-list__li"
-            v-for="(asset, i) in records"
+            v-for="(asset, i) in list"
             :key="i"
             :to="{ name: 'assets.requests.show', params: { id: asset.id }}"
           >
@@ -70,14 +71,6 @@
             </span>
           </router-link>
         </ul>
-
-        <div class="app__more-btn-wrp">
-          <button class="app__btn-secondary"
-            v-if="!isListEnded"
-            @click="nextPage" >
-            More
-          </button>
-        </div>
       </template>
 
       <template v-else>
@@ -87,6 +80,15 @@
           </li>
         </ul>
       </template>
+
+      <div class="app__more-btn-wrp">
+        <collection-loader
+          :first-page-loader="getList"
+          @first-page-load="setList"
+          @next-page-load="extendList"
+          ref="collectionLoaderBtn"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -103,17 +105,18 @@ import {
 import _ from 'lodash'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { snakeToCamelCase } from '@/utils/un-camel-case'
+import { CollectionLoader } from '@/components/common'
 
 export default {
   components: {
     InputField,
-    SelectField
+    SelectField,
+    CollectionLoader
   },
 
   data () {
     return {
-      list: null,
-      isListEnded: false,
+      list: [],
       isPending: false,
       filters: {
         state: REQUEST_STATES_STR.pending,
@@ -133,45 +136,33 @@ export default {
     }
   },
 
-  created () {
-    this.getList()
-  },
-
-  computed: {
-    records () {
-      return (this.list || {}).data || []
-    }
-  },
-
   methods: {
     snakeToCamelCase,
 
     async getList () {
       this.isPending = true
+      let response = {}
       try {
         const requestor = await this.getRequestorAccountId(this.filters.requestor)
-        this.list = await api.requests.getAssetRequests({
+        response = await api.requests.getAssetRequests({
           state: CREATE_ASSET_REQUEST_STATES[this.filters.state].code,
           requestor: requestor,
           code: this.filters.asset
         })
-        this.isListEnded = !(this.list.data || []).length
+        this.isListEnded = !(this.list || []).length
       } catch (error) {
-        ErrorHandler.process(error)
+        ErrorHandler.processWithoutFeedback(error)
       }
       this.isPending = false
+      return response
     },
 
-    async nextPage () {
-      try {
-        const oldLength = this.list.data.length
-        const chunk = await this.list.fetchNext()
-        this.list._data = this.list.data.concat(chunk.data)
-        this.list.fetchNext = chunk.fetchNext
-        this.isListEnded = oldLength === this.list.data.length
-      } catch (error) {
-        ErrorHandler.process(error)
-      }
+    setList (data) {
+      this.list = data
+    },
+
+    async extendList (data) {
+      this.list = this.list.concat(data)
     },
     async getRequestorAccountId (requestor) {
       if (Sdk.base.Keypair.isValidPublicKey(requestor)) {
@@ -184,12 +175,20 @@ export default {
           return requestor
         }
       }
+    },
+
+    reloadCollectionLoader () {
+      this.$refs.collectionLoaderBtn.loadFirstPage()
     }
   },
   watch: {
-    'filters.state' () { this.getList() },
-    'filters.requestor': _.throttle(function () { this.getList() }, 1000),
-    'filters.asset': _.throttle(function () { this.getList() }, 1000)
+    'filters.state' () { this.reloadCollectionLoader() },
+    'filters.requestor': _.throttle(function () {
+      this.reloadCollectionLoader()
+    }, 1000),
+    'filters.asset': _.throttle(function () {
+      this.reloadCollectionLoader()
+    }, 1000)
   }
 }
 </script>

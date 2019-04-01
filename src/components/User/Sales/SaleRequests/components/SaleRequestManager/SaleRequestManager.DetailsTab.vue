@@ -171,7 +171,10 @@
         </ul>
 
         <label class="data-caption">Short description</label>
-        <p class="text">
+        <p
+          class="text sale-rm-details-tab__short-description"
+          :title="safeGet(saleDetails, 'details.shortDescription')"
+        >
           <template v-if="safeGet(saleDetails, 'details.shortDescription')">
             {{saleDetails.details.shortDescription}}
           </template>
@@ -242,6 +245,7 @@ export default {
 
 .sale-rm-details-tab__row-item {
   flex: 1;
+  min-width: 0;
 
   & + & {
     margin-left: 4rem;
@@ -261,5 +265,10 @@ export default {
 .sale-rm-details-tab__sale-logo {
   max-width: 20rem;
   max-height: 20rem;
+}
+
+.sale-rm-details-tab__short-description {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>

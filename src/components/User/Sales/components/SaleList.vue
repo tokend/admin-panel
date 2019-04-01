@@ -21,6 +21,7 @@
           label="Owner"
           placeholder="Address (full match)"
           v-model="owner"
+          autocomplete-type="email"
         />
         <input-date-field
           label="Start date"
@@ -43,7 +44,7 @@
     </div>
 
     <div class="sale-list__list-wrp">
-      <template v-if="list.data && list.data.length">
+      <template v-if="list && list.length">
         <ul class="app-list">
           <div class="app-list__header">
             <span class="app-list__cell">
@@ -56,7 +57,7 @@
 
           <router-link
             class="app-list__li"
-            v-for="item in list.data"
+            v-for="item in list"
             :key="item.id"
             :to="{ name: 'sales.show', params: { id: item.id }}"
           >
@@ -91,18 +92,6 @@
             </span>
           </router-link>
         </ul>
-
-        <div
-          class="app__more-btn-wrp"
-          v-if="!isNoMoreEntries"
-        >
-          <button
-            class="app__btn-secondary"
-            @click="getMoreEntries"
-          >
-            More
-          </button>
-        </div>
       </template>
 
       <template v-else>
@@ -113,6 +102,14 @@
           </li>
         </ul>
       </template>
+      <div class="app__more-btn-wrp">
+        <collection-loader
+          :first-page-loader="getList"
+          @first-page-load="setList"
+          @next-page-load="extendList"
+          ref="collectionLoaderBtn"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -127,6 +124,7 @@ import _ from 'lodash'
 import { Sdk } from '@/sdk'
 import config from '@/config'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { CollectionLoader } from '@/components/common'
 
 export default {
   components: {
@@ -134,7 +132,8 @@ export default {
     InputField,
     TickField,
     EmailGetter,
-    InputDateField
+    InputDateField,
+    CollectionLoader
   },
 
   data () {
@@ -154,13 +153,8 @@ export default {
       filtersDate: {
         startDate: '',
         endDate: ''
-      },
-      isNoMoreEntries: false
+      }
     }
-  },
-
-  created () {
-    this.getList()
   },
 
   methods: {
@@ -177,9 +171,9 @@ export default {
 
     async getList () {
       this.isLoaded = false
-      this.isNoMoreEntries = false
+      let response = {}
       try {
-        const response = await Sdk.horizon.sales.getPage({
+        response = await Sdk.horizon.sales.getPage({
           base_asset: this.filters.baseAsset,
           owner: this.filters.owner,
           open_only: this.filters.openOnly,
@@ -187,59 +181,62 @@ export default {
           order: this.filters.order || 'desc',
           limit: this.filters.limit || config.PAGE_LIMIT
         })
-        this.list = response
-        this.rawList = response
-        this.filterByDate()
       } catch (error) {
-        ErrorHandler.process(error)
+        ErrorHandler.processWithoutFeedback(error)
       }
-
       this.isLoaded = true
+      return response
     },
 
-    filterByDate () {
-      let sortedList = this.rawList.data
+    setList (data) {
+      this.list = data
+      this.rawList = data
+    },
+
+    filterByDate (filteredList) {
+      let sortedList = filteredList
       if (this.filtersDate.startDate) {
         sortedList = sortedList.filter(sale => +new Date(sale.startTime) >= +new Date(this.filtersDate.startDate))
       }
       if (this.filtersDate.endDate) {
         sortedList = sortedList.filter(sale => +new Date(sale.endTime) <= +new Date(this.filtersDate.endDate))
       }
-      this.list._data = sortedList
+      this.list = sortedList
     },
 
-    async getMoreEntries () {
-      try {
-        const oldLength = this.list.data.length
-        const chunk = await this.list.fetchNext()
-        this.list._data = this.list.data.concat(chunk.data)
-        this.list.fetchNext = chunk.fetchNext
-        this.isNoMoreEntries = oldLength === this.list.data.length
-      } catch (error) {
-        ErrorHandler.process(error)
+    async extendList (data) {
+      this.rawList = this.rawList.concat(data)
+      if (this.filtersDate.startDate || this.filtersDate.endDate) {
+        this.filterByDate(this.rawList)
+      } else {
+        this.list = this.list.concat(data)
       }
+    },
+
+    reloadCollectionLoader () {
+      this.$refs.collectionLoaderBtn.loadFirstPage()
     }
   },
 
   watch: {
     'filters.openOnly' () {
-      this.getList()
+      this.reloadCollectionLoader()
     },
     'owner': _.throttle(function () {
       this.getOwner()
-      this.getList()
+      this.reloadCollectionLoader()
     }, 1000),
     'filters.name': _.throttle(function () {
-      this.getList()
+      this.reloadCollectionLoader()
     }, 1000),
     'filters.baseAsset': _.throttle(function () {
-      this.getList()
+      this.reloadCollectionLoader()
     }, 1000),
     'filtersDate.startDate' () {
-      this.filterByDate()
+      this.filterByDate(this.rawList)
     },
     'filtersDate.endDate' () {
-      this.filterByDate()
+      this.filterByDate(this.rawList)
     }
   }
 }

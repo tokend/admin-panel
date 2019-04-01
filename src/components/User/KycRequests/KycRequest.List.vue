@@ -30,6 +30,12 @@
 
           <input-field
             class="app-list-filters__field"
+            v-model.trim="filters.email"
+            label="Email"
+          />
+
+          <input-field
+            class="app-list-filters__field"
             v-model.trim="filters.address"
             label="Account ID"
           />
@@ -37,7 +43,7 @@
       </div>
 
       <div class="request-list__list-wrp">
-        <template v-if="list.data && list.data.length">
+        <template v-if="list && list.length">
           <div class="app-list">
             <div class="app-list__header">
               <span class="app-list__cell">Email</span>
@@ -47,7 +53,7 @@
             </div>
             <button
               class="app-list__li"
-              v-for="item in list.data"
+              v-for="item in list"
               :key="item.id"
               @click="toggleViewMode(item.requestor.id)"
             >
@@ -67,17 +73,6 @@
               </span>
             </button>
           </div>
-
-          <div class="app__more-btn-wrp">
-            <button
-              class="app__btn-secondary"
-              v-if="!isListEnded && list.data"
-              @click="onMoreClick"
-            >
-              More
-            </button>
-          </div>
-
         </template>
 
         <template v-else>
@@ -100,6 +95,14 @@
           </div>
         </template>
 
+        <div class="app__more-btn-wrp">
+          <collection-loader
+            :first-page-loader="loadList"
+            @first-page-load="setList"
+            @next-page-load="extendList"
+            ref="collectionLoaderBtn"
+          />
+        </div>
       </div>
     </template>
 
@@ -107,6 +110,7 @@
       v-if="view.mode === VIEW_MODES_VERBOSE.user"
       :id="view.userId"
       @back="toggleViewMode(null)"
+      @reviewed="loadList"
     />
 
   </div>
@@ -128,6 +132,7 @@ import config from '@/config'
 import { ApiCallerFactory } from '@/api-caller-factory'
 import { clearObject } from '@/utils/clearObject'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { CollectionLoader } from '@/components/common'
 
 const VIEW_MODES_VERBOSE = Object.freeze({
   index: 'index',
@@ -136,7 +141,7 @@ const VIEW_MODES_VERBOSE = Object.freeze({
 
 export default {
   name: 'kyc-request-list',
-  components: { UserView, EmailGetter, SelectField, InputField },
+  components: { UserView, EmailGetter, SelectField, InputField, CollectionLoader },
   provide () {
     const kycRequestsList = {}
     Object.defineProperty(kycRequestsList, 'updateAsk', {
@@ -149,8 +154,7 @@ export default {
   data () {
     return {
       isLoading: false,
-      isListEnded: false,
-      list: {},
+      list: [],
       view: {
         mode: VIEW_MODES_VERBOSE.index,
         userId: null,
@@ -158,6 +162,7 @@ export default {
       },
       filters: {
         state: 'pending',
+        email: '',
         address: '',
         type: ''
       },
@@ -178,22 +183,22 @@ export default {
     }
   },
 
-  created () {
-    this.loadList()
-  },
-
   methods: {
     snakeToCamelCase,
     async loadList () {
       this.isLoading = true
+      let response = {}
       try {
         let address = ''
         if (this.filters.address) {
           address = this.filters.address
+        } else if (this.filters.email) {
+          address = await this.getAccountIdByEmail()
         }
-        this.list = await ApiCallerFactory
+        response = await ApiCallerFactory
           .createCallerInstance()
           .getWithSignature('/v3/change_role_requests', {
+            page: { order: 'desc' },
             filter: clearObject({
               state: KYC_REQUEST_STATES[this.filters.state].state,
               requestor: address,
@@ -201,23 +206,19 @@ export default {
             }),
             include: ['request_details.account']
           })
-        this.isListEnded = !(this.list.data || []).length
       } catch (error) {
-        ErrorHandler.process(error)
+        ErrorHandler.processWithoutFeedback(error)
       }
       this.isLoading = false
+      return response
     },
 
-    async onMoreClick () {
-      try {
-        const oldLength = this.list.data.length
-        const chunk = await this.list.fetchNext()
-        this.list._data = this.list.data.concat(chunk.data)
-        this.list.fetchNext = chunk.fetchNext
-        this.isListEnded = oldLength === this.list.data.length
-      } catch (error) {
-        ErrorHandler.process(error)
-      }
+    setList (data) {
+      this.list = data
+    },
+
+    async extendList (data) {
+      this.list = this.list.concat(data)
     },
 
     toggleViewMode (id) {
@@ -234,12 +235,18 @@ export default {
         this.view.scrollPosition = 0
       })
     },
+
+    reloadCollectionLoader () {
+      this.$refs.collectionLoaderBtn.loadFirstPage()
+    },
     formatDate
   },
   watch: {
-    'filters.state' () { this.loadList() },
-    'filters.roleToSet' () { this.loadList() },
-    'filters.address': _.throttle(function () { this.loadList() }, 1000)
+    'filters.state' () { this.reloadCollectionLoader() },
+    'filters.roleToSet' () { this.reloadCollectionLoader() },
+    'filters.address': _.throttle(function () {
+      this.reloadCollectionLoader()
+    }, 1000)
   }
 }
 </script>

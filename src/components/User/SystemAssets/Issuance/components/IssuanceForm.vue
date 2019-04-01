@@ -9,6 +9,7 @@
             v-model="form.receiver"
             label="Receiver (email or address)"
             :disabled="isSubmitting"
+            autocomplete-type="email"
           />
         </div>
 

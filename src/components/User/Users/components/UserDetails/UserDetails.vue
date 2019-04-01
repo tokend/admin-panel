@@ -76,18 +76,17 @@
 
         </template>
 
-        <template v-if="requestToReview">
-          <div class="user-details__actions-wrp">
-            <section class="user-details__section">
-              <request-section
-                :user="user"
-                :requestToReview="requestToReview"
-                @update-request="getUpdatedUser"
-                update-request-event="update-request"
-              />
-            </section>
-          </div>
-        </template>
+
+        <div class="user-details__actions-wrp">
+          <section class="user-details__section">
+            <request-section
+              :user="user"
+              :requestToReview="requestToReview"
+              :latest-approved-request="prevApprovedRequest"
+              @reviewed="getUpdatedUser"
+            />
+          </section>
+        </div>
       </template>
 
       <template v-else-if="!isFailed">
@@ -121,6 +120,9 @@ import config from '@/config'
 
 const OPERATION_TYPE = {
   createKycRequest: '22'
+}
+const EVENTS = {
+  reviewed: 'reviewed'
 }
 
 export default {
@@ -183,6 +185,7 @@ export default {
           ApiCallerFactory
             .createCallerInstance()
             .getWithSignature('/v3/change_role_requests', {
+              page: { order: 'desc' },
               filter: { requestor: this.id },
               include: ['request_details']
             })
@@ -192,7 +195,10 @@ export default {
         this.requestToReview = this.requests.data
           .find(item => item.stateI === REQUEST_STATES.pending)
         this.prevApprovedRequest = this.requests.data
-          .find(item => item.stateI === REQUEST_STATES.approved)
+          .find(item => item.stateI === REQUEST_STATES.approved &&
+            item.requestDetails.accountRoleToSet !==
+              this.ACCOUNT_ROLES.notVerified
+          )
         this.isLoaded = true
       } catch (error) {
         ErrorHandler.process(error)
@@ -205,6 +211,7 @@ export default {
       this.isFailed = false
       setTimeout(async () => {
         await this.getUser()
+        this.$emit(EVENTS.reviewed)
       }, 1500)
     }
   }
