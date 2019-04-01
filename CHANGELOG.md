@@ -9,29 +9,25 @@ for further information about branching and tagging conventions.
 
 ## [Unreleased]
 ### Added
--  Added is_coinpayments checkbox on asset creation page
+- Added "Use coinpayments" checkbox on asset creation page
 - Reset account role to unverified action on user details
 
 ### Changed
+- Improved limits management page UI/UX:
+  - More user-friendly titles and labels
+  - Remove switcher elements from limit forms
+  - Added "Unlimited" placeholder instead of switches
+- Cleaner `<input-field>`:
+  - Set label default value to empty string
+  - Auto-hiding of placeholder if label provided
+  - Removed excess and unused `align` prop
+- Moved `ACCOUNT_ROLES_VERBOSE` constant to the component data on the limits
+  management page
 - Now order KYC request list by descending creation date
 
 ### Fixed
-- Loading user list after emitting reviewed event
-
-### Changed
-- Hide input placeholder only if label prop is not empty
-- Set input label prop default value to empty string
-- Show "Unlimited" placeholder if limits are set to max limit value
-- Titles & labels on limits management page
-- Moved ACCOUNT_ROLES_VERBOSE constant to the component data on the limits
-management page
-
-### Fixed
-- Typo in "$field-placeholder-color" color variable
-
-### Removed
-- Switch fields on limits management page
-- Unnecessary align prop from input field
+- Typo in `$field-placeholder-color` color variable
+- Loading user list after request reviewed
 
 ## [1.3.1] - 2019-03-14
 ### Added
