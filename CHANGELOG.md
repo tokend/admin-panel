@@ -48,3 +48,6 @@ for further information about branching and tagging conventions.
 [Unreleased]: https://github.com/tokend/admin-panel/compare/1.3.1...HEAD
 [1.3.1]: https://github.com/tokend/admin-panel/compare/1.3.0...1.3.1
 [1.3.0]: https://github.com/tokend/admin-panel/releases/tag/1.3.0
+
+### Changed
+- Added collection-loader component
