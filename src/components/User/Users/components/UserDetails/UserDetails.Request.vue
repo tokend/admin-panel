@@ -28,17 +28,53 @@
       </template>
     </template>
 
-    <template v-else-if="canRoleBeReset">
+    <template v-else-if="canResetToUnverified">
       <button
         class="app__btn
                app__btn--danger
                user-request__reset-to-unverified-btn"
-        @click="showRejectModal"
+        @click="showResetModal"
         :disabled="isPending"
       >
         Reset to unverified
       </button>
     </template>
+
+    <modal
+      class="user-request__reset-modal"
+      v-if="resetForm.isShown"
+      @close-request="hideResetModal()"
+      max-width="40rem"
+    >
+      <form
+        class="user-request__reset-form"
+        id="user-request-reset-form"
+        @submit.prevent="submitResetForm"
+      >
+        <div class="app__form-row">
+          <text-field
+            label="Reset reason"
+            :autofocus="true"
+            v-model="resetForm.reason"
+          />
+        </div>
+      </form>
+
+      <div class="app__form-actions">
+        <button
+          class="app__btn app__btn--danger"
+          form="user-request-reset-form"
+        >
+          Reset
+        </button>
+        <button
+          class="app__btn-secondary"
+          @click="hideResetModal"
+        >
+          Cancel
+        </button>
+      </div>
+    </modal>
 
     <modal
       class="user-request__reject-modal"
@@ -53,7 +89,7 @@
       >
         <div class="app__form-row">
           <text-field
-            :label="canRoleBeReset ? 'Reason' : 'Reject reason'"
+            label="Reject reason"
             :autofocus="true"
             v-model="rejectForm.reason"
           />
@@ -65,7 +101,7 @@
           class="app__btn app__btn--danger"
           form="user-request-reject-form"
         >
-          {{ canRoleBeReset ? 'Reset' : 'Reject' }}
+          Reject
         </button>
         <button
           class="app__btn-secondary"
@@ -129,8 +165,11 @@ export default {
       ACCOUNT_TYPES_VERBOSE,
       rejectForm: {
         reason: '' + EMPTY_REASON,
-        isShown: false,
-        isReset: false
+        isShown: false
+      },
+      resetForm: {
+        reason: '' + EMPTY_REASON,
+        isShown: false
       },
       isShownAdvanced: false,
       isPending: false
@@ -141,7 +180,7 @@ export default {
     isRequestPending () {
       return this.requestToReview.state === REQUEST_STATES_STR.pending
     },
-    canRoleBeReset () {
+    canResetToUnverified () {
       return this.user.role !== config.ACCOUNT_ROLES.notVerified
     }
   },
@@ -193,11 +232,11 @@ export default {
             destinationAccount: this.user.address,
             accountRoleToSet: config.ACCOUNT_ROLES.notVerified.toString(),
             creatorDetails: {
-              reason: this.rejectForm.reason,
-              previousAccountRole: String(safeGet(
+              resetReason: this.resetForm.reason,
+              previousAccountRole: safeGet(
                 this.latestApprovedRequest,
                 'requestDetails.accountRoleToSet'
-              )),
+              ),
               ...safeGet(
                 this.latestApprovedRequest,
                 'requestDetails.creatorDetails'
@@ -225,12 +264,21 @@ export default {
 
     async submitRejectForm () {
       this.hideRejectModal()
+      await this.reject()
+    },
 
-      if (this.canRoleBeReset) {
-        await this.resetToUnverified()
-      } else {
-        await this.reject()
-      }
+    showResetModal () {
+      this.resetForm.reason = '' + EMPTY_REASON
+      this.resetForm.isShown = true
+    },
+
+    hideResetModal () {
+      this.resetForm.isShown = false
+    },
+
+    async submitResetForm () {
+      this.hideResetModal()
+      await this.resetToUnverified()
     }
   }
 }
@@ -274,7 +322,7 @@ export default {
 }
 
 .user-request__reset-to-unverified-btn {
-  max-width: 23.5rem;
+  max-width: 15rem;
   width: 100%;
 }
 </style>
