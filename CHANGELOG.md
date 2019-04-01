@@ -12,8 +12,19 @@ for further information about branching and tagging conventions.
 -  Added is_coinpayments checkbox on asset creation page
 
 ### Changed
+- Hide input placeholder only if label prop is not empty
+- Set input label prop default value to empty string
+- Show "Unlimited" placeholder if limits are set to max limit value
+- Titles & labels on limits management page
 - Moved ACCOUNT_ROLES_VERBOSE constant to the component data on the limits
 management page
+
+### Fixed
+- Typo in "$field-placeholder-color" color variable
+
+### Removed
+- Switch fields on limits management page
+- Unnecessary align prop from input field
 
 ## [1.3.1] - 2019-03-14
 ### Added
@@ -52,3 +63,6 @@ management page
 [Unreleased]: https://github.com/tokend/admin-panel/compare/1.3.1...HEAD
 [1.3.1]: https://github.com/tokend/admin-panel/compare/1.3.0...1.3.1
 [1.3.0]: https://github.com/tokend/admin-panel/releases/tag/1.3.0
+
+### Changed
+- Added collection-loader component

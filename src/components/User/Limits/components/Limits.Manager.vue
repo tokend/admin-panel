@@ -74,21 +74,21 @@
       <div class="limits-manager__limits-list-wrp">
         <template v-if="limits.payment">
           <div class="limits-manager__limits-list">
-            <h3 class="limits-manager__content-title">Payment</h3>
+            <h3 class="limits-manager__content-title">Payment limits</h3>
             <div class="limits-manager__limits-list-inner">
               <template v-for="(type,i) in LIMITS_TYPES">
                 <div class="limits-manager__limit-row" :key="i">
                   <span class="limits-manager__limit-type">
-                    {{ type.replace('Out', '') }} limit
+                    {{ type.replace('Out', '') }}
                   </span>
                   <input-field
-                    v-model="limits.payment[type]"
+                    :value="normalizeLimitAmount(limits.payment[type])"
+                    @input="limits.payment[type] = $event || DEFAULT_MAX_AMOUNT"
                     class="limits-manager__limit-field"
                     :step="DEFAULT_INPUT_STEP"
-                    :label="' '"
+                    placeholder="Unlimited"
                     min="0"
                   />
-                  <switch-field v-model="switchValues.payment[type]" />
                 </div>
               </template>
             </div>
@@ -108,21 +108,21 @@
       <div class="limits-manager__limits-list-wrp">
         <template v-if="limits.withdrawal">
           <div class="limits-manager__limits-list">
-            <h3 class="limits-manager__content-title">Withdrawal</h3>
+            <h3 class="limits-manager__content-title">Withdrawal limits</h3>
             <div class="limits-manager__limits-list-inner">
               <template v-for="(type,i) in LIMITS_TYPES">
                 <div class="limits-manager__limit-row" :key="i">
                   <span class="limits-manager__limit-type">
-                    {{ type.replace('Out', '') }} limit
+                    {{ type.replace('Out', '') }}
                   </span>
                   <input-field
-                    v-model="limits.withdrawal[type]"
+                    :value="normalizeLimitAmount(limits.withdrawal[type])"
+                    @input="limits.withdrawal[type] = $event || DEFAULT_MAX_AMOUNT"
                     class="limits-manager__limit-field"
                     :step="DEFAULT_INPUT_STEP"
-                    :label="' '"
+                    placeholder="Unlimited"
                     min="0"
                   />
-                  <switch-field v-model="switchValues.withdrawal[type]" />
                 </div>
               </template>
             </div>
@@ -142,21 +142,21 @@
       <div class="limits-manager__limits-list-wrp">
         <template v-if="limits.deposit">
           <div class="limits-manager__limits-list">
-            <h3 class="limits-manager__content-title">Deposit</h3>
+            <h3 class="limits-manager__content-title">Deposit limits</h3>
             <div class="limits-manager__limits-list-inner">
               <template v-for="(type,i) in LIMITS_TYPES">
                 <div class="limits-manager__limit-row" :key="i">
                   <span class="limits-manager__limit-type">
-                    {{ type.replace('Out', '') }} limit
+                    {{ type.replace('Out', '') }}
                   </span>
                   <input-field
-                    v-model="limits.deposit[type]"
+                    :value="normalizeLimitAmount(limits.deposit[type])"
+                    @input="limits.deposit[type] = $event || DEFAULT_MAX_AMOUNT"
                     class="limits-manager__limit-field"
                     :step="DEFAULT_INPUT_STEP"
-                    :label="' '"
+                    placeholder="Unlimited"
                     min="0"
                   />
-                  <switch-field v-model="switchValues.deposit[type]" />
                 </div>
               </template>
             </div>
@@ -198,12 +198,6 @@
   import { STATS_OPERATION_TYPES, DEFAULT_MAX_AMOUNT } from '@/constants'
   import config from '@/config'
 
-  const LIMIT_OPS_STR = Object.freeze({
-    payment: 'paymentOut',
-    withdrawal: 'withdraw',
-    deposit: 'deposit'
-  })
-
   const LIMITS_TYPES = [
     'dailyOut',
     'weeklyOut',
@@ -233,29 +227,10 @@
         payment: null,
         deposit: null
       },
-      switchValues: {
-        payment: {
-          dailyOut: false,
-          weeklyOut: false,
-          monthlyOut: false,
-          annualOut: false
-        },
-        withdrawal: {
-          dailyOut: false,
-          weeklyOut: false,
-          monthlyOut: false,
-          annualOut: false
-        },
-        deposit: {
-          dailyOut: false,
-          weeklyOut: false,
-          monthlyOut: false,
-          annualOut: false
-        }
-      },
       assets: [],
       isPending: false,
       LIMITS_TYPES,
+      DEFAULT_MAX_AMOUNT,
       ACCOUNT_ROLES: config.ACCOUNT_ROLES,
       ACCOUNT_ROLES_VERBOSE: Object.freeze({
         [config.ACCOUNT_ROLES.notVerified]: 'Unverified user',
@@ -278,43 +253,6 @@
         this.limits.payment = paymentLimits
         this.limits.withdrawal = withdrawalLimits
         this.limits.deposit = depositLimits
-
-        const pickedPaymentLimits = pick(
-          this.limits.payment,
-          Object.keys(this.switchValues.payment)
-        )
-        const pickedWithdrawLimits = pick(
-          this.limits.withdrawal,
-          Object.keys(this.switchValues.withdrawal)
-        )
-        const pickedDepositLimits = pick(
-          this.limits.deposit,
-          Object.keys(this.switchValues.deposit)
-        )
-        this.switchValues.payment = Object.keys(this.switchValues.payment)
-          .reduce((newObj, key) => {
-            return {
-              ...newObj,
-              // If not equal to DEFAULT_MAX_AMOUNT, limits are enabled
-              [key]: pickedPaymentLimits[key] !== DEFAULT_MAX_AMOUNT
-            }
-          }, {})
-
-        this.switchValues.withdrawal = Object.keys(this.switchValues.withdrawal)
-          .reduce((newObj, key) => {
-            return {
-              ...newObj,
-              [key]: pickedWithdrawLimits[key] !== DEFAULT_MAX_AMOUNT
-            }
-          }, {})
-
-        this.switchValues.deposit = Object.keys(this.switchValues.deposit)
-          .reduce((newObj, key) => {
-            return {
-              ...newObj,
-              [key]: pickedDepositLimits[key] !== DEFAULT_MAX_AMOUNT
-            }
-          }, {})
 
         async function getLimit (statsOpType) {
           const { data } = await Sdk.horizon.limits.get({
@@ -340,20 +278,8 @@
 
       async updateLimits (limits) {
         this.isPending = true
-        const limitsStatsOpTypeStr = Object.keys(STATS_OPERATION_TYPES)
-          .find(key => STATS_OPERATION_TYPES[key] === limits.statsOpType)
-        const limitsOpStr = Object.keys(LIMIT_OPS_STR)
-          .find(key => LIMIT_OPS_STR[key] === limitsStatsOpTypeStr)
-        const disabledLimits = Object.keys(this.switchValues[limitsOpStr])
-          .filter(item => item)
-          .reduce((newObj, item) => {
-            return {
-              ...newObj,
-              [item]: this.switchValues[limitsOpStr][item] ? limits[item] : DEFAULT_MAX_AMOUNT
-            }
-          }, {})
 
-        if (!this.isValidLimits(disabledLimits)) {
+        if (!this.isValidLimits(limits)) {
           this.isPending = false
           return false
         }
@@ -369,7 +295,6 @@
           }
           const operation = Sdk.base.ManageLimitsBuilder.createLimits({
             ...limits,
-            ...disabledLimits,
             accountID
           })
           await Sdk.horizon.transactions.submitOperations(operation)
@@ -391,7 +316,7 @@
       },
       // it's a quick fix of the limits validation. Need to refactor it ASAP
       isValidLimits (limits) {
-        for (const limit of Object.values(limits)) {
+        for (const limit of Object.values(pick(limits, LIMITS_TYPES))) {
           if (!this.numericValueRegExp.test(limit)) {
             this.$store.dispatch('SET_ERROR', 'Only numeric value allowed')
             return false
@@ -427,6 +352,9 @@
             this.filters.address = this.specificUserAddress
           }
         }
+      },
+      normalizeLimitAmount (limit) {
+        return limit >= DEFAULT_MAX_AMOUNT ? '' : limit
       }
     },
     watch: {
@@ -487,7 +415,7 @@
   .limits-manager-filters,
   .limits-manager__limit-row {
     display: flex;
-    align-items: flex-end;
+    align-items: center;
   }
 
   .limits-manager-filters__field,
@@ -509,17 +437,14 @@
 
   .limits-manager__limit-type {
     margin-right: 1rem;
-    min-width: 7.5rem;
+    min-width: 5rem;
     font-size: 1.2rem;
     font-weight: 600;
+    padding: 1.7rem 0 0.6rem 0;
   }
 
   .limits-manager-filters__specific-user-field {
     margin-bottom: 5rem;
     width: 50%;
-  }
-
-  .limits-manager__limit-field {
-    margin-right: 1rem;
   }
 </style>
