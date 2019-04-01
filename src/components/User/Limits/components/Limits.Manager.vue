@@ -198,12 +198,6 @@
   import { STATS_OPERATION_TYPES, DEFAULT_MAX_AMOUNT } from '@/constants'
   import config from '@/config'
 
-  const ACCOUNT_ROLES_VERBOSE = Object.freeze({
-    [config.ACCOUNT_ROLES.notVerified]: 'Unverified user',
-    [config.ACCOUNT_ROLES.general]: 'General user',
-    [config.ACCOUNT_ROLES.corporate]: 'Corporate user'
-  })
-
   const LIMITS_TYPES = [
     'dailyOut',
     'weeklyOut',
@@ -238,7 +232,11 @@
       LIMITS_TYPES,
       DEFAULT_MAX_AMOUNT,
       ACCOUNT_ROLES: config.ACCOUNT_ROLES,
-      ACCOUNT_ROLES_VERBOSE,
+      ACCOUNT_ROLES_VERBOSE: Object.freeze({
+        [config.ACCOUNT_ROLES.notVerified]: 'Unverified user',
+        [config.ACCOUNT_ROLES.general]: 'General user',
+        [config.ACCOUNT_ROLES.corporate]: 'Corporate user'
+      }),
       numericValueRegExp: /^\d*\.?\d*$/
     }),
     async created () {

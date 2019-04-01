@@ -16,6 +16,8 @@ for further information about branching and tagging conventions.
 - Set input label prop default value to empty string
 - Show "Unlimited" placeholder if limits are set to max limit value
 - Titles & labels on limits management page
+- Moved ACCOUNT_ROLES_VERBOSE constant to the component data on the limits
+management page
 
 ### Fixed
 - Typo in "$field-placeholder-color" color variable
