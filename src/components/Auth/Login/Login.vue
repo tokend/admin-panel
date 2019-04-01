@@ -166,7 +166,7 @@ export default {
           if (r.enabledTFA) {
             this.loginParams = r.loginParams
             this.loginParams.username = this.credentials.username.toLowerCase().trim()
-            return this.showTfaForm(r.asset)
+            return this.showTfaForm(r.token)
           }
           this.state = 'tfa'
         }).catch(err => {
