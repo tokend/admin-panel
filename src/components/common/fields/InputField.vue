@@ -1,7 +1,11 @@
 <template>
-  <div class="input-field"
-    :class="{'input-field--error': errorMessage}">
-    <input class="input-field__input"
+  <div
+    class="input-field"
+    :class="{'input-field--error': errorMessage}"
+  >
+    <input
+      class="input-field__input"
+      :class="{ 'input-field__input--placeholder-auto-hidden': label }"
       :type="type"
       :placeholder="placeholder || ' '"
       :value="value"
@@ -14,7 +18,6 @@
       :step="step"
       :required="required"
       :readonly="readonly"
-      :class="'text-align-' + align"
       :title="title"
       :form="form"
       @input="onInput"
@@ -51,10 +54,9 @@ export default {
   },
 
   props: {
-    label: { type: String, default: 'Label' },
+    label: { type: String, default: '' },
     value: { type: [String, Number], default: undefined },
     errorMessage: { type: String, default: undefined },
-    align: { type: String, default: 'left' },
     autocompleteType: { type: String, default: '' },
     // proxies
     autocomplete: { type: String, default: 'off' },
