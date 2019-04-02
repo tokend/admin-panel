@@ -18,7 +18,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .asset-requests-index__list-wrp {
   max-width: 64rem;
 }

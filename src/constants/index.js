@@ -28,3 +28,4 @@ export {
   DEFAULT_INPUT_MIN
 } from './defaults'
 export { KEY_VALUE_ENTRY_TYPE } from './key-value'
+export { ASSET_REQUEST_TYPES } from './asset-request-types'

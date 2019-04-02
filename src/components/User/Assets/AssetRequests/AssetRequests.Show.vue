@@ -17,11 +17,11 @@
       v-else-if="assetRequest.id && !isRejecting"
     >
       <h2>
-        <template v-if="assetRequest.type === 'create_asset'">
+        <template v-if="assetRequest.type === ASSET_REQUEST_TYPES[createAsset]">
           Asset creation request
         </template>
 
-        <template v-else-if="assetRequest.type === 'update_asset'">
+        <template v-else-if="assetRequest.type === ASSET_REQUEST_TYPES.updateAsset">
           Asset update request
         </template>
 
@@ -64,7 +64,7 @@
 
       <div
         class="asset-requests-show__row"
-        v-if="assetRequest.type !== 'update_asset'"
+        v-if="assetRequest.type !== ASSET_REQUEST_TYPES.updateAsset"
       >
         <span class="asset-requests-show__key">
           Max issuance amount
@@ -76,7 +76,7 @@
 
       <div
         class="asset-requests-show__row"
-        v-if="assetRequest.type !== 'update_asset'"
+        v-if="assetRequest.type !== ASSET_REQUEST_TYPES.updateAsset"
       >
         <span class="asset-requests-show__key">
           Issued amount
@@ -88,7 +88,7 @@
 
       <div
         class="asset-requests-show__row"
-        v-if="assetRequest.type !== 'update_asset'"
+        v-if="assetRequest.type !== ASSET_REQUEST_TYPES.updateAsset"
       >
         <span class="asset-requests-show__key">
           Preissuance signer
@@ -110,7 +110,7 @@
 
       <div
         class="asset-requests-show__row"
-        v-if="assetRequest.type !== 'update_asset'"
+        v-if="assetRequest.type !== ASSET_REQUEST_TYPES.updateAsset"
       >
         <span class="asset-requests-show__key">
           Type
@@ -160,7 +160,7 @@
         />
       </div>
 
-      <template v-if="assetRequest.state !== 'pending'">
+      <template v-if="assetRequest.state !== CREATE_ASSET_REQUEST_STATES['pending'].codeVerbose">
         <div class="asset-requests-show__row">
           <span class="asset-requests-show__key">
             State
@@ -172,7 +172,7 @@
         </div>
       </template>
 
-      <template v-if="assetRequest.state === 'rejected'">
+      <template v-if="assetRequest.state === CREATE_ASSET_REQUEST_STATES['rejected'].codeVerbose">
         <div class="asset-requests-show__reject-reason-wrp">
           <text-field
             label="Reject reason"
@@ -184,7 +184,7 @@
 
       <div
         class="asset-requests-show__buttons"
-        v-if="assetRequest.state === 'pending'"
+        v-if="assetRequest.state === CREATE_ASSET_REQUEST_STATES['pending'].codeVerbose"
       >
         <button
           class="app__btn"
@@ -215,7 +215,7 @@
 <script>
 import { Sdk } from '@/sdk'
 import { ASSET_POLICIES_VERBOSE } from '@/constants'
-import { confirmAction } from '../../../../js/modals/confirmation_message'
+import { confirmAction } from '@/js/modals/confirmation_message'
 import AssetRequestRejectForm from './components/AssetRequestRejectForm'
 import localize from '@/utils/localize'
 import TextField from '@comcom/fields/TextField'
@@ -225,6 +225,10 @@ import { verbozify } from '@/utils/verbozify'
 import { AssetRequest } from '@/api/responseHandlers/requests/AssetRequest'
 import get from 'lodash/get'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import {
+  CREATE_ASSET_REQUEST_STATES,
+  ASSET_REQUEST_TYPES
+} from '@/constants'
 // TODO: extract to AssetRequestForm
 
 export default {
@@ -245,7 +249,9 @@ export default {
       isPending: false,
       isInitializing: false,
       isInitFailed: false,
-      ASSET_POLICIES_VERBOSE
+      ASSET_POLICIES_VERBOSE,
+      ASSET_REQUEST_TYPES,
+      CREATE_ASSET_REQUEST_STATES
     }
   },
 
@@ -266,7 +272,7 @@ export default {
   computed: {
     isCancellable () {
       const isPending =
-        this.assetRequest.state === 'pending'
+        this.assetRequest.state === CREATE_ASSET_REQUEST_STATES['pending'].codeVerbose
       const isCancellableRequestor =
         this.assetRequest.requestor === this.$store.getters.masterId
       return isPending && isCancellableRequestor
