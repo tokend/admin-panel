@@ -1,4 +1,3 @@
-import api from '@/api'
 import { Sdk } from '@/sdk'
 import localize from '@/utils/localize'
 import SelectField from '@comcom/fields/SelectField'
@@ -6,6 +5,7 @@ import Bus from '@/utils/EventBus'
 
 import { REQUEST_STATES, ASSET_POLICIES } from '@/constants'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import config from '@/config'
 
 export default {
   components: {
@@ -59,8 +59,14 @@ export default {
     async getList () {
       this.isLoaded = false
       try {
-        const filters = { ...this.filters }
-        this.list = await api.requests.getIssuanceRequests(filters)
+        // const some = await api.requests.getIssuanceRequests(filters)
+        console.log(this.filters)
+        this.list = await Sdk.horizon.request.getAllForIssuances({
+          order: 'asc',
+          reviewer: config.MASTER_ACCOUNT,
+          limit: 1000,
+          ...this.filters
+        })
         this.getListCounter()
         this.isNoMoreEntries = false
       } catch (error) {
