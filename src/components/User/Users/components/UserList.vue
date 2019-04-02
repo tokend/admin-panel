@@ -117,6 +117,7 @@
       v-if="view.mode === VIEW_MODES_VERBOSE.user"
       :id="view.userId"
       @back="toggleViewMode(null)"
+      @reviewed="getList"
     />
 
   </div>
