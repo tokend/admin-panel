@@ -18,6 +18,7 @@ for further information about branching and tagging conventions.
 - Titles & labels on limits management page
 - Moved ACCOUNT_ROLES_VERBOSE constant to the component data on the limits
 management page
+- Edit of filter options by asset policy of withdrawable
 
 ### Fixed
 - Typo in "$field-placeholder-color" color variable
