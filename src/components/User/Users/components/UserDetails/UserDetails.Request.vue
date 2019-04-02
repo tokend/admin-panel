@@ -1,30 +1,80 @@
 <template>
   <div class="user-request">
-    <h3>Latest request</h3>
-    <p class="user-request__block text">
-      Create a {{ requestToReview.requestDetails.accountRoleToSet | roleIdToString | lowerCase }} account:
-      {{ requestToReview.state }}
-    </p>
+    <template v-if="requestToReview.state">
+      <h3>Latest request</h3>
+      <p class="user-request__block text">
+        Create a {{ requestToReview.requestDetails.accountRoleToSet | roleIdToString | lowerCase }} account:
+        {{ requestToReview.state }}
+      </p>
 
-    <template v-if="isRequestPending">
-      <div class="app__form-actions user-details-request__form-actions">
-        <button
-          class="app__btn"
-          @click="approve"
-          :disabled="isPending"
-        >
-          Approve
-        </button>
+      <template v-if="isRequestPending">
+        <div class="app__form-actions user-details-request__form-actions">
+          <button
+            class="app__btn"
+            @click="approve"
+            :disabled="isPending"
+          >
+            Approve
+          </button>
 
+          <button
+            class="app__btn app__btn--danger"
+            @click="showRejectModal"
+            :disabled="isPending"
+          >
+            Reject
+          </button>
+        </div>
+      </template>
+    </template>
+
+    <template v-else-if="canResetToUnverified">
+      <button
+        class="app__btn
+               app__btn--danger
+               user-request__reset-to-unverified-btn"
+        @click="showResetModal"
+        :disabled="isPending"
+      >
+        Reset to unverified
+      </button>
+    </template>
+
+    <modal
+      class="user-request__reset-modal"
+      v-if="resetForm.isShown"
+      @close-request="hideResetModal()"
+      max-width="40rem"
+    >
+      <form
+        class="user-request__reset-form"
+        id="user-request-reset-form"
+        @submit.prevent="submitResetForm"
+      >
+        <div class="app__form-row">
+          <text-field
+            label="Reset reason"
+            :autofocus="true"
+            v-model="resetForm.reason"
+          />
+        </div>
+      </form>
+
+      <div class="app__form-actions">
         <button
           class="app__btn app__btn--danger"
-          @click="showRejectModal"
-          :disabled="isPending"
+          form="user-request-reset-form"
         >
-          Reject
+          Reset
+        </button>
+        <button
+          class="app__btn-secondary"
+          @click="hideResetModal"
+        >
+          Cancel
         </button>
       </div>
-    </template>
+    </modal>
 
     <modal
       class="user-request__reject-modal"
@@ -35,7 +85,7 @@
       <form
         class="user-request__reject-form"
         id="user-request-reject-form"
-        @submit.prevent="hideRejectModal() || reject()"
+        @submit.prevent="submitRejectForm"
       >
         <div class="app__form-row">
           <text-field
@@ -66,6 +116,10 @@
 
 <script>
 import api from '@/api'
+import { Sdk } from '@/sdk'
+
+import safeGet from 'lodash/get'
+
 import {
   USER_STATES_STR,
   USER_TYPES_STR,
@@ -81,6 +135,8 @@ import 'mdi-vue/ChevronUpIcon'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { confirmAction } from '@/js/modals/confirmation_message'
 
+import config from '@/config'
+
 const EMPTY_REASON = ''
 const EVENTS = {
   reviewed: 'reviewed'
@@ -94,6 +150,12 @@ export default {
     TickField
   },
 
+  props: {
+    requestToReview: { type: Object, default: _ => ({}) },
+    latestApprovedRequest: { type: Object, default: _ => ({}) },
+    user: { type: Object, default: _ => ({}) }
+  },
+
   data () {
     return {
       USER_STATES_STR,
@@ -103,19 +165,23 @@ export default {
       ACCOUNT_TYPES_VERBOSE,
       rejectForm: {
         reason: '' + EMPTY_REASON,
-        isShown: false,
-        isReset: false
+        isShown: false
+      },
+      resetForm: {
+        reason: '' + EMPTY_REASON,
+        isShown: false
       },
       isShownAdvanced: false,
       isPending: false
     }
   },
 
-  props: ['requestToReview'],
-
   computed: {
     isRequestPending () {
       return this.requestToReview.state === REQUEST_STATES_STR.pending
+    },
+    canResetToUnverified () {
+      return this.user.role !== config.ACCOUNT_ROLES.notVerified
     }
   },
 
@@ -154,6 +220,39 @@ export default {
       this.isPending = false
     },
 
+    async resetToUnverified () {
+      if (!await confirmAction('Are you sure? This action cannot be undone')) {
+        return
+      }
+      this.isPending = true
+      try {
+        const operation = Sdk.base.CreateChangeRoleRequestBuilder
+          .createChangeRoleRequest({
+            requestID: '0',
+            destinationAccount: this.user.address,
+            accountRoleToSet: config.ACCOUNT_ROLES.notVerified.toString(),
+            creatorDetails: {
+              resetReason: this.resetForm.reason,
+              previousAccountRole: safeGet(
+                this.latestApprovedRequest,
+                'requestDetails.accountRoleToSet'
+              ),
+              ...safeGet(
+                this.latestApprovedRequest,
+                'requestDetails.creatorDetails'
+              )
+            },
+            allTasks: 0
+          })
+        await Sdk.horizon.transactions.submitOperations(operation)
+        this.$store.dispatch('SET_INFO', 'The user account was reset to unverified')
+        this.$emit(EVENTS.reviewed)
+      } catch (error) {
+        ErrorHandler.process(error)
+      }
+      this.isPending = false
+    },
+
     showRejectModal () {
       this.rejectForm.reason = '' + EMPTY_REASON
       this.rejectForm.isShown = true
@@ -161,6 +260,25 @@ export default {
 
     hideRejectModal () {
       this.rejectForm.isShown = false
+    },
+
+    async submitRejectForm () {
+      this.hideRejectModal()
+      await this.reject()
+    },
+
+    showResetModal () {
+      this.resetForm.reason = '' + EMPTY_REASON
+      this.resetForm.isShown = true
+    },
+
+    hideResetModal () {
+      this.resetForm.isShown = false
+    },
+
+    async submitResetForm () {
+      this.hideResetModal()
+      await this.resetToUnverified()
     }
   }
 }
@@ -201,5 +319,10 @@ export default {
 
 .user-details-request__form-actions {
   max-width: 48rem;
+}
+
+.user-request__reset-to-unverified-btn {
+  max-width: 15rem;
+  width: 100%;
 }
 </style>

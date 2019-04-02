@@ -146,7 +146,7 @@ export default {
           await this.getIssuance(this.id)
           this.$store.dispatch('SET_INFO', 'Request fulfilled successfully.')
         } catch (error) {
-          ErrorHandler.process(error)
+          ErrorHandler.processWithoutFeedback(error)
         }
         this.isSubmitting = false
       } else {

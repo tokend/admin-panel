@@ -1,20 +1,21 @@
 import { Sdk } from '@/sdk'
 import localize from '@/utils/localize'
 import SelectField from '@comcom/fields/SelectField'
-import Bus from '@/utils/EventBus'
 
 import { REQUEST_STATES, ASSET_POLICIES } from '@/constants'
+import { CollectionLoader } from '@/components/common'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import config from '@/config'
 
 export default {
   components: {
-    SelectField
+    SelectField,
+    CollectionLoader
   },
   data () {
     return {
       REQUEST_STATES,
-      list: {},
+      list: [],
       listCounter: {
         pending: null,
         approved: null
@@ -36,8 +37,6 @@ export default {
 
   async created () {
     await this.getAssets()
-    Bus.$on('issuance:updateRequestList', _ => this.getList())
-    this.getList()
   },
 
   methods: {
@@ -58,43 +57,45 @@ export default {
 
     async getList () {
       this.isLoaded = false
+      let response = {}
       try {
-        this.list = await Sdk.horizon.request.getAllForIssuances({
+        response = await Sdk.horizon.request.getAllForIssuances({
           order: 'asc',
           reviewer: config.MASTER_ACCOUNT,
           limit: 1000,
           ...this.filters
         })
-        this.getListCounter()
+        this.getListCounter(response)
         this.isNoMoreEntries = false
       } catch (error) {
-        console.error(error)
-        this.$store.dispatch('SET_ERROR', 'Cannot load issuance request list.')
+        ErrorHandler.processWithoutFeedback(error)
       }
       this.isLoaded = true
+      return response
     },
 
-    getListCounter () {
-      if (this.list) {
-        this.listCounter.pending = this.list._rawResponse.data._embedded.meta.count.pending
-        this.listCounter.approved = this.list._rawResponse.data._embedded.meta.count.approved
+    getListCounter (response) {
+      if (response) {
+        this.listCounter.pending = response._rawResponse.data._embedded.meta.count.pending
+        this.listCounter.approved = response._rawResponse.data._embedded.meta.count.approved
       }
     },
-    async onMoreButtonClick () {
-      try {
-        const oldLength = this.list.data.length
-        const chunk = await this.list.fetchNext()
-        this.list._data = this.list.data.concat(chunk.data)
-        this.list.fetchNext = chunk.fetchNext
-        this.isNoMoreEntries = oldLength === this.list.data.length
-      } catch (error) {
-        ErrorHandler.process(error)
-      }
+
+    setList (data) {
+      this.list = data
+    },
+
+    async extendList (data) {
+      this.list = this.list.concat(data)
+    },
+
+    reloadCollectionLoader () {
+      this.$refs.collectionLoaderBtn.loadFirstPage()
     }
   },
 
   watch: {
-    'filters.state' () { this.getList() },
-    'filters.asset' () { this.getList() }
+    'filters.state' () { this.reloadCollectionLoader() },
+    'filters.asset' () { this.reloadCollectionLoader() }
   }
 }

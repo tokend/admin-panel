@@ -7,7 +7,6 @@
             <span class="user-limits__limit-type">{{ type.replace('Out', '') }} limit</span>
             <input-field  :value="userLimits[type]"
                           :label="' '"
-                          align="right"
                           :readonly="true"
             />
           </div>
