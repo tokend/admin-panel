@@ -17,7 +17,7 @@
       v-else-if="assetRequest.id && !isRejecting"
     >
       <h2>
-        <template v-if="assetRequest.type === ASSET_REQUEST_TYPES[createAsset]">
+        <template v-if="assetRequest.type === ASSET_REQUEST_TYPES.createAsset">
           Asset creation request
         </template>
 
