@@ -59,8 +59,6 @@ export default {
     async getList () {
       this.isLoaded = false
       try {
-        // const some = await api.requests.getIssuanceRequests(filters)
-        console.log(this.filters)
         this.list = await Sdk.horizon.request.getAllForIssuances({
           order: 'asc',
           reviewer: config.MASTER_ACCOUNT,

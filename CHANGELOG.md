@@ -40,6 +40,9 @@ for further information about branching and tagging conventions.
 - Show verification code in KYC request details
 - Displaying long sale description string on sale request manager tab
 
+### Changed
+- Issuance history list order changed to opposite
+
 ### Security
 - Resolve security issues in package.json
 
