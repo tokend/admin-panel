@@ -19,7 +19,7 @@
     </div>
 
     <div class="issuance-rl__list-wrp">
-      <template v-if="list.data && list.data.length">
+      <template v-if="list && list.length">
         <ul class="app-list">
           <div class="app-list__header issuance-rl__li-header">
             <span class="app-list__cell issuance-rl__id-max-width">
@@ -40,7 +40,7 @@
 
           </div>
           <li
-            v-for="item in list.data"
+            v-for="item in list"
             :key="item.id"
             class="issuance-rl__li"
           >
@@ -80,16 +80,6 @@
             </span>
           </li>
         </ul>
-
-        <div class="app__more-btn-wrp">
-          <button
-            class="app__btn-secondary"
-            v-if="!isNoMoreEntries && list.data"
-            @click="onMoreButtonClick"
-          >
-            More
-          </button>
-        </div>
       </template>
 
       <template v-else>
@@ -99,6 +89,15 @@
           </div>
         </div>
       </template>
+
+      <div class="app__more-btn-wrp">
+        <collection-loader
+          :first-page-loader="getList"
+          @first-page-load="setList"
+          @next-page-load="extendList"
+          ref="collectionLoaderBtn"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -106,10 +105,17 @@
 <script>
 import IssuanceMixin from './issuance.mixin'
 import { EmailGetter } from '@comcom/getters'
+import Bus from '@/utils/EventBus'
 
 export default {
   mixins: [IssuanceMixin],
-  components: { EmailGetter }
+  components: { EmailGetter },
+
+  async created () {
+    Bus.$on('issuance:updateRequestList', _ => {
+      this.reloadCollectionLoader()
+    })
+  }
 }
 </script>
 

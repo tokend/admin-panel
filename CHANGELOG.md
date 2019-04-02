@@ -7,9 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
-## [Unreleased]
+## [1.4.0-rc.0] - 2019-04-01
 ### Added
--  Added is_coinpayments checkbox on asset creation page
+- Added "Use coinpayments" checkbox on asset creation page
+- Reset account role to unverified action on user details
+
+### Changed
+- Improved limits management page UI/UX:
+  - More user-friendly titles and labels
+  - Remove switcher elements from limit forms
+  - Added "Unlimited" placeholder instead of switches
+- Cleaner `<input-field>`:
+  - Set label default value to empty string
+  - Auto-hiding of placeholder if label provided
+  - Removed excess and unused `align` prop
+- Moved `ACCOUNT_ROLES_VERBOSE` constant to the component data on the limits
+  management page
+- Now order KYC request list by descending creation date
+
+### Fixed
+- Typo in `$field-placeholder-color` color variable
+- Loading user list after request reviewed
 
 ## [1.3.1] - 2019-03-14
 ### Added
@@ -45,6 +63,10 @@ for further information about branching and tagging conventions.
 
 ## [1.3.0] - 2019-03-01
 
-[Unreleased]: https://github.com/tokend/admin-panel/compare/1.3.1...HEAD
+[Unreleased]: https://github.com/tokend/admin-panel/compare/1.4.0-rc.0...HEAD
+[1.4.0-rc.0]: https://github.com/tokend/admin-panel/compare/1.3.1...1.4.0-rc.0
 [1.3.1]: https://github.com/tokend/admin-panel/compare/1.3.0...1.3.1
 [1.3.0]: https://github.com/tokend/admin-panel/releases/tag/1.3.0
+
+### Changed
+- Added collection-loader component

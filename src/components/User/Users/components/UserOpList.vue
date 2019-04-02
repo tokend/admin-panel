@@ -59,9 +59,11 @@
     </template>
 
     <div class="app__more-btn-wrp">
-      <button class="app__btn-secondary" v-if="!isListEnded && records" @click="getNextPage">
-        More
-      </button>
+      <collection-loader
+        :first-page-loader="getList"
+        @first-page-load="setList"
+        @next-page-load="extendList"
+      />
     </div>
   </div>
 </template>
@@ -72,16 +74,18 @@ import { Sdk } from '@/sdk'
 import moment from 'moment'
 import { formatAssetAmount } from '@/utils/formatters'
 import { OperationCounterparty } from '@comcom/getters'
+import { CollectionLoader } from '@/components/common'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   components: {
-    OperationCounterparty
+    OperationCounterparty,
+    CollectionLoader
   },
   data () {
     return {
       formatAssetAmount,
-      list: undefined,
+      list: [],
       isListEnded: false,
       masterPubKey: Vue.params.MASTER_ACCOUNT,
       isLoading: false
@@ -93,35 +97,29 @@ export default {
   computed: {
     records () {
       if (!this.list) return undefined
-      return this.normalizeRecords(this.list.data)
+      return this.normalizeRecords(this.list)
     }
-  },
-
-  created () {
-    this.getList()
   },
 
   methods: {
     async getList () {
       this.isLoading = true
+      let response = {}
       try {
-        this.list = (await Sdk.horizon.account.getOperations(this.id))
+        response = await Sdk.horizon.account.getOperations(this.id)
       } catch (error) {
-        this.$store.dispatch('SET_ERROR', 'Cannot load transaction list')
+        ErrorHandler.processWithoutFeedback(error)
       }
       this.isLoading = false
+      return response
     },
 
-    async getNextPage () {
-      try {
-        const oldLength = this.list.data.length
-        const chunk = await this.list.fetchNext()
-        this.list._data = this.list.data.concat(chunk.data)
-        this.list.fetchNext = chunk.fetchNext
-        this.isListEnded = oldLength === this.list.data.length
-      } catch (error) {
-        ErrorHandler.process(error)
-      }
+    setList (data) {
+      this.list = data
+    },
+
+    async extendList (data) {
+      this.list = this.list.concat(data)
     },
 
     normalizeRecords (records) {
