@@ -8,9 +8,9 @@ Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
 ## [Unreleased]
-#### Changed
-- Added collection-loader component
-- Edit of filter options by asset policy of withdrawable
+#### Fixed
+- Options of "Asset" filter on "System assets" => "Withdraw requests" now
+  filtered correctly
 
 ## [1.4.0-rc.0] - 2019-04-01
 #### Added
