@@ -181,7 +181,7 @@
             </span>
 
             <span class="app-list__cell fee-list__cell">
-              <template v-if="!item.exists">
+              <template v-if="item.exists">
                 <button
                   class="app__btn app__btn--small"
                   :form="`fee-list-form-${id}`"
@@ -210,15 +210,6 @@
             </span>
           </li>
         </ul>
-        <div class="app__more-btn-wrp">
-          <button
-            class="app__btn-secondary"
-            v-if="!isListEnded && fees"
-            @click="onMoreClick"
-          >
-            More
-          </button>
-        </div>
       </template>
     </div>
   </div>
@@ -240,7 +231,6 @@
   } from '@/constants'
   import throttle from 'lodash/throttle'
   import 'mdi-vue/ArrowUpIcon'
-  import { ApiCallerFactory } from '@/api-caller-factory'
 
   import { confirmAction } from '@/js/modals/confirmation_message'
 
@@ -283,10 +273,7 @@
           accountAddress: '', // address will be inserted here
 
           paymentFeeSubtype: PAYMENT_FEE_TYPES.outgoing // every fee has a subtype, but we're interested only in payment's
-        },
-
-        rawFeesList: {},
-        isListEnded: false
+        }
       }
     },
 
@@ -318,6 +305,21 @@
             break
         }
         return result
+      },
+
+      feesByFilters () {
+        const isFeeListEmpty = !Object.keys(this.fees).length
+        const isInvalidAsset = !this.filters.assetCode
+        if (isFeeListEmpty || isInvalidAsset) return []
+        const type = +this.filters.feeType
+        const asset = this.filters.assetCode
+        const paymentFeeSubtype = +this.filters.paymentFeeSubtype
+        // TODO: fetch from /v3/fees/ instead
+        const filtered = Object.entries(this.fees)
+          .find(([key]) => key.toLowerCase() === asset.toLowerCase())
+        return filtered[1]
+          .filter((item) => item.feeType === type)
+          .filter((item) => type === FEE_TYPES.paymentFee ? item.subtype === paymentFeeSubtype : true)
       }
     },
 
@@ -391,7 +393,7 @@
           // snake_case because sdk wait for it
           result.account_id = filters.accountAddress
         }
-        result.page = { limit: 10 }
+
         return result
       },
 
@@ -409,14 +411,8 @@
       async getFees () {
         try {
           const filters = this.composeRequestFilters(this.filters)
-          const some = await ApiCallerFactory
-            .createCallerInstance()
-            .getWithSignature('/v3/fees', filters)
-          console.log(some)
           const response = await Sdk.horizon.fees.getAll(filters)
-          console.log(response.data)
-          this.rawFeesList = some
-          this.fees = some.data
+          this.fees = response.data.fees
         } catch (error) {
           ErrorHandler.process(error)
         }
@@ -467,18 +463,6 @@
         if (!await confirmAction({ title: 'Delete the fee rule?' })) return
         fee.isDelete = true
         return this.updateFee(Object.assign({}, fee, { isDelete: true }))
-      },
-
-      async onMoreClick () {
-        try {
-          const oldLength = this.fees.length
-          const chunk = await this.rawFeesList.fetchNext()
-          this.fees = this.fees.concat(chunk.data)
-          this.rawFeesList.fetchNext = chunk.fetchNext
-          this.isListEnded = oldLength === this.fees.length
-        } catch (error) {
-          ErrorHandler.process(error)
-        }
       }
     }
   }

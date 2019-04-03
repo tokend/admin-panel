@@ -49,14 +49,12 @@
         </template>
       </div>
     </template>
-    <div class="app__more-btn-wrp">
-      <button
-        class="app__btn-secondary"
-        v-if="!isListEnded && assets"
-        @click="onMoreClick"
-      >
-        More
-      </button>
+    <div class="app__more-btn-wrp app__more-btn-wrp--left">
+      <collection-loader
+        :first-page-loader="getAssets"
+        @first-page-load="setAssets"
+        @next-page-load="extendAssets"
+      />
     </div>
   </div>
 </template>
@@ -67,14 +65,17 @@ import { Sdk } from '@/sdk'
 import trim from 'lodash/trim'
 import { ApiCallerFactory } from '@/api-caller-factory'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { CollectionLoader } from '@/components/common'
 
 export default {
+  components: {
+    CollectionLoader
+  },
+
   data () {
     return {
       assets: [],
-      isLoading: false,
-      isListEnded: false,
-      rawAssetsList: {}
+      isLoading: false
     }
   },
 
@@ -92,25 +93,18 @@ export default {
     }
   },
 
-  created () {
-    this.getAssets()
-  },
-
   methods: {
     async getAssets () {
       this.assets = []
       this.$store.commit('OPEN_LOADER')
       this.isLoading = true
+      let response = {}
       try {
-        const response = await ApiCallerFactory
+        response = await ApiCallerFactory
           .createCallerInstance()
           .getWithSignature('/v3/assets', {
             filter: { owner: config.MASTER_ACCOUNT }
           })
-        this.rawAssetsList = response
-        console.log(response.data)
-        this.assets = this.addСreatorDetailsKeyToObjects(response)
-        console.log(this.assets)
         this.$store.commit('CLOSE_LOADER')
       } catch (err) {
         console.error('caught error', err)
@@ -118,24 +112,24 @@ export default {
         this.$store.dispatch('SET_ERROR', 'Something went wrong. Can\'t to load assets list')
       }
       this.isLoading = false
+      return response
     },
 
-    async onMoreClick () {
+    setAssets (data) {
+      this.assets = this.addСreatorDetailsKeyToObjects(data)
+    },
+
+    async extendAssets (data) {
       try {
-        const oldLength = this.assets.length
-        const chunk = await this.rawAssetsList.fetchNext()
-        const mapedChunk = this.addСreatorDetailsKeyToObjects(chunk)
-        this.assets = this.assets.concat(mapedChunk)
-        this.rawAssetsList.fetchNext = chunk.fetchNext
-        this.isListEnded = oldLength === this.assets.length
-        console.log(this.assets)
+        const mapedData = this.addСreatorDetailsKeyToObjects(data)
+        this.assets = this.assets.concat(mapedData)
       } catch (error) {
         ErrorHandler.process(error)
       }
     },
 
     addСreatorDetailsKeyToObjects (array) {
-      return array.data.map(item => {
+      return array.map(item => {
         const creatorDetails = item.details || item.creatorDetails
         return Object.assign(item, { creatorDetails })
       })
@@ -227,5 +221,11 @@ function convertPolicyToString (policy) {
   @extend %space-right;
   width: 10%;
   text-align: right;
+}
+
+.app__more-btn-wrp--left {
+  margin-right: auto;
+  margin-left: 0;
+  max-width: 64rem;
 }
 </style>

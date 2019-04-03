@@ -46,15 +46,6 @@
 
         </router-link>
       </ul>
-      <div class="app__more-btn-wrp">
-        <button
-          class="app__btn-secondary"
-          v-if="!isListEnded && list"
-          @click="onMoreClick"
-        >
-          More
-        </button>
-      </div>
     </template>
 
     <template v-else-if="isLoaded && !list.length">
@@ -80,6 +71,14 @@
         </div>
       </div>
     </template>
+
+    <div class="app__more-btn-wrp">
+      <collection-loader
+        :first-page-loader="getPairs"
+        @first-page-load="setPairs"
+        @next-page-load="extendPairs"
+      />
+    </div>
   </div>
 </template>
 
@@ -89,52 +88,48 @@ import { ASSET_PAIR_POLICIES_VERBOSE } from '@/constants'
 import 'mdi-vue/HelpCircleIcon'
 import { ApiCallerFactory } from '@/api-caller-factory'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { CollectionLoader } from '@/components/common'
 
 export default {
   components: {
-    AssetAmountFormatter
+    AssetAmountFormatter,
+    CollectionLoader
   },
 
   data () {
     return {
       list: [],
-      rawList: {},
       isLoaded: false,
       isFailed: false,
-      isListEnded: false,
 
       ASSET_PAIR_POLICIES_VERBOSE
     }
-  },
-
-  created () {
-    this.getPairs()
   },
 
   methods: {
     async getPairs () {
       this.isLoaded = false
       this.isFailed = false
+      let response = {}
       try {
-        const response = await ApiCallerFactory
+        response = await ApiCallerFactory
           .createCallerInstance()
           .getWithSignature('/v3/asset_pairs')
-        this.rawList = response
-        this.list = response.data
-        this.isLoaded = true
       } catch (error) {
         error.showMessage()
         this.isFailed = true
       }
+      this.isLoaded = true
+      return response
     },
 
-    async onMoreClick () {
+    setPairs (data) {
+      this.list = data
+    },
+
+    async extendPairs (data) {
       try {
-        const oldLength = this.list.length
-        const chunk = await this.rawList.fetchNext()
-        this.list = this.list.concat(chunk.data)
-        this.rawList.fetchNext = chunk.fetchNext
-        this.isListEnded = oldLength === this.list.length
+        this.list = this.list.concat(data)
       } catch (error) {
         ErrorHandler.process(error)
       }
