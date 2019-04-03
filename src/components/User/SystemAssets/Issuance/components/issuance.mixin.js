@@ -1,4 +1,3 @@
-import api from '@/api'
 import { Sdk } from '@/sdk'
 import localize from '@/utils/localize'
 import SelectField from '@comcom/fields/SelectField'
@@ -6,6 +5,7 @@ import SelectField from '@comcom/fields/SelectField'
 import { REQUEST_STATES, ASSET_POLICIES } from '@/constants'
 import { CollectionLoader } from '@/components/common'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import config from '@/config'
 
 export default {
   components: {
@@ -59,8 +59,12 @@ export default {
       this.isLoaded = false
       let response = {}
       try {
-        const filters = { ...this.filters }
-        response = await api.requests.getIssuanceRequests(filters)
+        response = await Sdk.horizon.request.getAllForIssuances({
+          order: 'asc',
+          reviewer: config.MASTER_ACCOUNT,
+          limit: 1000,
+          ...this.filters
+        })
         this.getListCounter(response)
         this.isNoMoreEntries = false
       } catch (error) {

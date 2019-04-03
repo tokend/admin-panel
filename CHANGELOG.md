@@ -8,6 +8,9 @@ Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
 ## [Unreleased]
+#### Changed
+- Issuance history list order reverted (now the oldest ones on top)
+
 #### Fixed
 - Options of "Asset" filter on "System assets" => "Withdraw requests" now
   filtered correctly
