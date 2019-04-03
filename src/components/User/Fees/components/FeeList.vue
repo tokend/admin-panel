@@ -311,9 +311,11 @@
         const isFeeListEmpty = !Object.keys(this.fees).length
         const isInvalidAsset = !this.filters.assetCode
         if (isFeeListEmpty || isInvalidAsset) return []
+
         const type = +this.filters.feeType
         const asset = this.filters.assetCode
         const paymentFeeSubtype = +this.filters.paymentFeeSubtype
+
         // TODO: fetch from /v3/fees/ instead
         const filtered = Object.entries(this.fees)
           .find(([key]) => key.toLowerCase() === asset.toLowerCase())
