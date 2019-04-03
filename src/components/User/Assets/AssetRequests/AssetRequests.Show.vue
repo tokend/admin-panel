@@ -160,7 +160,7 @@
         />
       </div>
 
-      <template v-if="assetRequest.state !== CREATE_ASSET_REQUEST_STATES['pending'].codeVerbose">
+      <template v-if="assetRequest.state !== CREATE_ASSET_REQUEST_STATES.pending.codeVerbose">
         <div class="asset-requests-show__row">
           <span class="asset-requests-show__key">
             State
@@ -172,7 +172,7 @@
         </div>
       </template>
 
-      <template v-if="assetRequest.state === CREATE_ASSET_REQUEST_STATES['rejected'].codeVerbose">
+      <template v-if="assetRequest.state === CREATE_ASSET_REQUEST_STATES.rejected.codeVerbose">
         <div class="asset-requests-show__reject-reason-wrp">
           <text-field
             label="Reject reason"
@@ -184,7 +184,7 @@
 
       <div
         class="asset-requests-show__buttons"
-        v-if="assetRequest.state === CREATE_ASSET_REQUEST_STATES['pending'].codeVerbose"
+        v-if="assetRequest.state === CREATE_ASSET_REQUEST_STATES.pending.codeVerbose"
       >
         <button
           class="app__btn"
@@ -272,7 +272,7 @@ export default {
   computed: {
     isCancellable () {
       const isPending =
-        this.assetRequest.state === CREATE_ASSET_REQUEST_STATES['pending'].codeVerbose
+        this.assetRequest.state === CREATE_ASSET_REQUEST_STATES.pending.codeVerbose
       const isCancellableRequestor =
         this.assetRequest.requestor === this.$store.getters.masterId
       return isPending && isCancellableRequestor
