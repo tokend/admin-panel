@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
+## [Unreleased]
+#### Changed
+- Issuance history list order reverted (now the oldest ones on top)
+
 ## [1.4.0-rc.0] - 2019-04-01
 ### Added
 - Added "Use coinpayments" checkbox on asset creation page
@@ -57,9 +61,6 @@ for further information about branching and tagging conventions.
 - Add missing quotes to `KEY_SERVER_ADMIN` of `config/default.env.js`
 - Show verification code in KYC request details
 - Displaying long sale description string on sale request manager tab
-
-### Changed
-- Issuance history list order changed to opposite
 
 ### Security
 - Resolve security issues in package.json
