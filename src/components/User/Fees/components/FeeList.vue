@@ -70,7 +70,7 @@
     </div>
 
     <div class="fee-list__list-wrp">
-      <template v-if="!fees.length">
+      <template v-if="!Object.keys(fees).length">
         <div class="app-list">
           <p class="app-list__li-like">
             Loading...
@@ -86,7 +86,7 @@
         </div>
       </template>
 
-      <template v-else-if="!fees.length">
+      <template v-else-if="!feesByFilters.length">
         <div class="app-list">
           <p class="app-list__li-like">
             No fees available for current filter settings
@@ -118,7 +118,7 @@
             <span class="app-list__cell"><!-- empty --></span>
           </div>
 
-          <li class="app-list__li" v-for="(item, id) in fees" :key="id">
+          <li class="app-list__li" v-for="(item, id) in feesByFilters" :key="id">
             <form
               class="fee-list__li--hidden-form"
               @submit.prevent="updateFee(item)"
@@ -131,7 +131,7 @@
                 min="0"
                 :step="DEFAULT_INPUT_STEP"
                 :form="`fee-list-form-${id}`"
-                :disabled="isSubmitting || !!item.id"
+                :disabled="isSubmitting || item.exists"
                 v-model="item.lowerBound"
               />
             </span>
@@ -143,13 +143,13 @@
                 :max="DEFAULT_MAX_AMOUNT"
                 :step="DEFAULT_INPUT_STEP"
                 :form="`fee-list-form-${id}`"
-                :disabled="isSubmitting  || !!item.id"
+                :disabled="isSubmitting  || item.exists"
                 v-model="item.upperBound"
               />
               <button
                 class="fee-list__btn-max"
                 @click="item.upperBound = DEFAULT_MAX_AMOUNT"
-                v-if="!item.id"
+                v-if="!item.exists"
                 :disabled="isSubmitting"
               >
                 <mdi-arrow-up-icon/>
@@ -181,7 +181,7 @@
             </span>
 
             <span class="app-list__cell fee-list__cell">
-              <template v-if="!!item.id">
+              <template v-if="!item.exists">
                 <button
                   class="app__btn app__btn--small"
                   :form="`fee-list-form-${id}`"
