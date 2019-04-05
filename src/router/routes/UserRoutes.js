@@ -389,15 +389,6 @@ export const UserRoutes = {
         }
       ]
     },
-
-    {
-      path: '/signing-rules',
-      name: 'signing-rules',
-      component: function (resolve) {
-        require(['../../components/User/SigningRules/SigningRules.vue'], resolve)
-      }
-    },
-
     {
       path: '/settings',
       name: 'settings',

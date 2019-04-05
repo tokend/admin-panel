@@ -11,6 +11,10 @@ for further information about branching and tagging conventions.
 #### Changed
 - Issuance history list order reverted (now the oldest ones on top)
 
+#### Removed
+- Thresholds code leftovers
+- Signing rules page
+
 ## [1.4.0] - 2019-04-05
 
 ## [1.4.0-rc.1] - 2019-04-04
