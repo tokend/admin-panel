@@ -13,7 +13,7 @@
 import config from '@/config'
 import 'mdi-vue/OpenInNewIcon'
 import { DOCUMENTS_POLICIES } from '@/constants'
-import { Sdk } from '@/sdk'
+import { ApiCallerFactory } from '@/api-caller-factory'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
@@ -35,12 +35,6 @@ export default {
       validator: function (value) {
         return Object.values(DOCUMENTS_POLICIES).includes(value)
       }
-    },
-    userAccountId: {
-      type: String,
-      // required in case when fileType === DOCUMENTS_POLICIES.private
-      required: false,
-      default: ''
     }
   },
 
@@ -59,9 +53,6 @@ export default {
   },
   created () {
     if (this.fileType === DOCUMENTS_POLICIES.private) {
-      if (!this.userAccountId) {
-        throw new Error("'userAccountId' prop is required to getting private user documents!")
-      }
       if (!this.fileUrl) {
         this.getPrivateDocumentUrl(this.fileKey)
       }
@@ -70,11 +61,10 @@ export default {
   methods: {
     async getPrivateDocumentUrl (key) {
       try {
-        const response = await Sdk.api.users.getUserDocumentByFileKey({
-          fileKey: key,
-          accountId: this.userAccountId
-        })
-        this.privateFileUrl = response.url
+        const { data } = await ApiCallerFactory
+          .createCallerInstance()
+          .getWithSignature(`/documents/${key}`)
+        this.privateFileUrl = data.url
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }

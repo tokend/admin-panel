@@ -22,7 +22,6 @@
             <doc-link-getter
               :fileKey="item.file.key"
               :fileType="DOCUMENTS_POLICIES.private"
-              :userAccountId="userAccountId"
             >
               Open
             </doc-link-getter>
