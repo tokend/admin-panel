@@ -1,7 +1,7 @@
 <template>
   <div class="limits-manager__wrapper">
-    <tabs>
-      <tab name="Specific account type">
+    <tabs @changed="tabChanged">
+      <tab :name="TAB_NAMES.accountType">
         <div class="limits-manager">
           <h2>Limits management</h2>
           <div class="limits-manager__inner">
@@ -41,7 +41,7 @@
           </div>
         </div>
       </tab>
-      <tab name="Specific account">
+      <tab :name="TAB_NAMES.account">
         <div class="limits-manager">
           <h2>Limits management</h2>
           <div class="limits-manager-filters">
@@ -205,6 +205,11 @@
     'annualOut'
   ]
 
+  const TAB_NAMES = {
+    accountType: 'Specific account type',
+    account: 'Specific account'
+  }
+
   export default {
     components: {
       SelectField,
@@ -230,6 +235,7 @@
       assets: [],
       isPending: false,
       LIMITS_TYPES,
+      TAB_NAMES,
       DEFAULT_MAX_AMOUNT,
       ACCOUNT_ROLES: config.ACCOUNT_ROLES,
       ACCOUNT_ROLES_VERBOSE: Object.freeze({
@@ -243,6 +249,11 @@
       await this.getAssets()
     },
     methods: {
+      async tabChanged (selectedTab) {
+        if (selectedTab.tab.name === TAB_NAMES.accountType) {
+          this.specificUserAddress = ''
+        }
+      },
       async getLimits () {
         if (!this.filters.asset) return
         const [paymentLimits, withdrawalLimits, depositLimits] = await Promise.all([
@@ -277,12 +288,11 @@
       },
 
       async updateLimits (limits) {
-        this.isPending = true
-
-        if (!this.isValidLimits(limits)) {
-          this.isPending = false
-          return false
+        if (!this.isValidLimits(limits) || !this.checkFilters()) {
+          return
         }
+
+        this.isPending = true
         try {
           if (limits.accountRole == null) {
             // managelimitbuilder somehow doesnt accept opts.accountRole NULL value
@@ -336,7 +346,15 @@
         }
         return true
       },
-      setFilters () {
+      checkFilters () {
+        if (this.filters.accountRole || this.filters.address) {
+          return true
+        } else {
+          this.$store.dispatch('SET_ERROR', 'Such account does not exist in the system')
+          return false
+        }
+      },
+      async setFilters () {
         if (!this.filters.asset) this.filters.asset = get(this.assets, '[0].code')
         if (!this.filters.accountRole) {
           this.filters.accountRole = config.ACCOUNT_ROLES.general + ''
@@ -347,7 +365,7 @@
           const emailRegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
           const idLength = 56
           if (emailRegExp.test(this.specificUserAddress)) {
-            this.getAccountIdByEmail(this.specificUserAddress)
+            await this.getAccountIdByEmail(this.specificUserAddress)
           } else if (this.specificUserAddress.length === idLength) {
             this.filters.address = this.specificUserAddress
           }
@@ -384,10 +402,9 @@
         immediate: true
       },
       'specificUserAddress': {
-        handler: throttle(function (value) {
-          if (!value) return
-          this.setFilters()
-          this.getLimits()
+        handler: throttle(async function (value) {
+          await this.setFilters()
+          await this.getLimits()
         }, 1000),
         immediate: true
       }

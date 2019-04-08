@@ -8,6 +8,9 @@ Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
 ## [Unreleased]
+#### Added
+- Validation of account field when setting limits for specific account
+
 #### Changed
 - Issuance history list order reverted (now the oldest ones on top)
 
@@ -94,4 +97,3 @@ for further information about branching and tagging conventions.
 [1.4.0-rc.0]: https://github.com/tokend/admin-panel/compare/1.3.1...1.4.0-rc.0
 [1.3.1]: https://github.com/tokend/admin-panel/compare/1.3.0...1.3.1
 [1.3.0]: https://github.com/tokend/admin-panel/releases/tag/1.3.0
-
