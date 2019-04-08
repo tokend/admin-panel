@@ -11,6 +11,9 @@ for further information about branching and tagging conventions.
 #### Changed
 - Issuance history list order reverted (now the oldest ones on top)
 
+#### Fixed
+- Filtering sales by their owner
+
 #### Removed
 - Thresholds code leftovers
 - Signing rules page
@@ -94,4 +97,3 @@ for further information about branching and tagging conventions.
 [1.4.0-rc.0]: https://github.com/tokend/admin-panel/compare/1.3.1...1.4.0-rc.0
 [1.3.1]: https://github.com/tokend/admin-panel/compare/1.3.0...1.3.1
 [1.3.0]: https://github.com/tokend/admin-panel/releases/tag/1.3.0
-
