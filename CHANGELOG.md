@@ -8,8 +8,12 @@ Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
 ## [Unreleased]
+#### Added
+- Added "Request type" select field on tokens requests page
+
 #### Changed
 - Issuance history list order reverted (now the oldest ones on top)
+- Get token requests list from API v3
 
 #### Removed
 - Thresholds code leftovers
