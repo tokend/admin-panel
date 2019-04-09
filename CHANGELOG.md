@@ -12,6 +12,7 @@ for further information about branching and tagging conventions.
 - Filter for displaying app version
 - Single opportunity approve
 - Add tradeable policy after opportunity approve
+- Added "Use coinpayments" checkbox on asset creation page
 
 ### Removed
 - Unused dependencies:
