@@ -3,6 +3,19 @@
     <div class="token-request-list__filters-wrp">
       <select-field
         class="arc-list__filter"
+        v-model="filters.requestType"
+        label="Request type"
+      >
+        <option
+          v-for="type in Object.keys(ASSET_REQUEST_TYPES)"
+          :value="ASSET_REQUEST_TYPES[type].value"
+          :key="type"
+        >
+          {{ ASSET_REQUEST_TYPES[type].text }}
+        </option>
+      </select-field>
+      <select-field
+        class="arc-list__filter"
         v-model="filters.state"
         label="State"
       >
@@ -54,20 +67,20 @@
           >
             <span
               class="app-list__cell app-list__cell--important"
-              :title="asset | deriveCode "
+              :title="asset.reference"
             >
-              {{ asset | deriveCode  }}
+              {{ asset.reference }}
             </span>
 
             <span
               class="app-list__cell"
-              :title="CREATE_TOKEN_REQUEST_STATES[snakeToCamelCase(asset.requestState)].text"
+              :title="CREATE_TOKEN_REQUEST_STATES[snakeToCamelCase(asset.state)].text"
             >
-              {{ CREATE_TOKEN_REQUEST_STATES[snakeToCamelCase(asset.requestState)].text }}
+              {{ CREATE_TOKEN_REQUEST_STATES[snakeToCamelCase(asset.state)].text }}
             </span>
 
-            <span class="app-list__cell" :title="asset.requestor">
-              {{asset.requestor}}
+            <span class="app-list__cell" :title="asset.requestor.id">
+              {{asset.requestor.id}}
             </span>
           </router-link>
         </ul>
@@ -103,9 +116,22 @@ import {
   REQUEST_STATES_STR
 } from '@/constants'
 import _ from 'lodash'
+import { ApiCallerFactory } from '@/api-caller-factory'
+import { clearObject } from '@/utils/clearObject'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { snakeToCamelCase } from '@/utils/un-camel-case'
 import { CollectionLoader } from '@/components/common'
+
+const ASSET_REQUEST_TYPES = Object.freeze({
+  create: {
+    value: 'create_asset_requests',
+    text: 'Create'
+  },
+  update: {
+    value: 'update_asset_requests',
+    text: 'Update'
+  }
+})
 
 export default {
   components: {
@@ -119,20 +145,14 @@ export default {
       list: [],
       isPending: false,
       filters: {
-        state: REQUEST_STATES_STR.pending,
+        requestType: ASSET_REQUEST_TYPES.create.value,
+        state: REQUEST_STATES_STR.approved,
         requestor: null,
         asset: null
       },
       CREATE_TOKEN_REQUEST_STATES,
-      REQUEST_STATES_STR
-    }
-  },
-
-  filters: {
-    deriveCode (record) {
-      const valuableRequestDetailsKey = Object.keys(record.details)
-        .find(item => !/request_type|requestType/gi.test(item))
-      return (record.details[valuableRequestDetailsKey] || {}).code
+      REQUEST_STATES_STR,
+      ASSET_REQUEST_TYPES
     }
   },
 
@@ -144,11 +164,16 @@ export default {
       let response = {}
       try {
         const requestor = await this.getRequestorAccountId(this.filters.requestor)
-        response = await api.requests.getAssetRequests({
-          state: CREATE_TOKEN_REQUEST_STATES[this.filters.state].code,
-          requestor: requestor,
-          code: this.filters.asset
-        })
+        response = await ApiCallerFactory
+          .createCallerInstance()
+          .getWithSignature(`/v3/${this.filters.requestType}`, {
+            page: { order: 'desc' },
+            filter: clearObject({
+              state: CREATE_TOKEN_REQUEST_STATES[this.filters.state].code,
+              requestor: requestor,
+              'request_details.asset': this.filters.asset
+            })
+          })
         this.isListEnded = !(this.list || []).length
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
@@ -182,6 +207,7 @@ export default {
     }
   },
   watch: {
+    'filters.requestType' () { this.reloadCollectionLoader() },
     'filters.state' () { this.reloadCollectionLoader() },
     'filters.requestor': _.throttle(function () {
       this.reloadCollectionLoader()
