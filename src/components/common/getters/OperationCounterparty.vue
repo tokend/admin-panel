@@ -12,7 +12,13 @@
     }),
     methods: {
       getCounterparty (operation) {
-        return operation.receiverAccount || this.noCounterpartyStr
+        if (operation.receiverAccount) {
+          return operation.receiverAccount
+        } else if (operation.accountTo) {
+          return operation.accountTo
+        } else {
+          return this.noCounterpartyStr
+        }
       }
     },
     created () {

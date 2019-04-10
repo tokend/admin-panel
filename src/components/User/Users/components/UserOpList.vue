@@ -117,7 +117,8 @@ export default {
           operationType: operationType.charAt(0).toUpperCase() + operationType.slice(1),
           ledgerCloseTime: moment(item.operation.appliedAt).format('DD MMM YYYY [at] hh:mm:ss'),
           sourceAccount: item.operation.source.id === this.masterPubKey ? 'Master' : item.operation.source.id,
-          receiverAccount: get(item, 'operation.details.receiverAccount.id')
+          receiverAccount: get(item, 'operation.details.receiverAccount.id'),
+          accountTo: get(item, 'operation.details.accountTo.id')
         })
       })
     }
