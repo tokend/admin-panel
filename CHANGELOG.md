@@ -13,6 +13,9 @@ for further information about branching and tagging conventions.
 
 #### Changed
 - Issuance history list order reverted (now the oldest ones on top)
+- Validate if value exist in DetailsReader
+- Get counterparty if receiverSource exist
+- Get operations list from v3/history
 - Renamed `Fund(s)` -> `Sale(s)` and `Token(s)` -> `Asset(s)`
 
 #### Fixed
