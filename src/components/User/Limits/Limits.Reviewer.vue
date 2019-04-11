@@ -231,16 +231,18 @@ import 'mdi-vue/CloseIcon'
 import 'mdi-vue/ChevronLeftIcon'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
+const MAX_LIMIT_INT64 = '9223372036854.775807'
+
 const DEFAULT_LIMIT_STRUCT = {
   'id': 0,
   'accountId': null,
   'statsOpType': null,
   'assetCode': null,
   'isConvertNeeded': false,
-  'dailyOut': '9223372036854.775807',
-  'weeklyOut': '9223372036854.775807',
-  'monthlyOut': '9223372036854.775807',
-  'annualOut': '9223372036854.775807'
+  'dailyOut': MAX_LIMIT_INT64,
+  'weeklyOut': MAX_LIMIT_INT64,
+  'monthlyOut': MAX_LIMIT_INT64,
+  'annualOut': MAX_LIMIT_INT64
 }
 
 const OPERATION_TYPES = {
@@ -290,8 +292,6 @@ export default {
   }),
   async created () {
     await this.getRequest()
-    const limitRequest = await api.requests.get(this.id)
-    this.desiredLimitDetails = limitRequest.details[snakeToCamelCase(limitRequest.details.requestType)].details || '{}'
   },
   computed: {
     currentLimits () {
@@ -326,6 +326,8 @@ export default {
       this.$store.commit('OPEN_LOADER')
       const request = await api.requests.get(this.id)
       const requestDetails = request.details[snakeToCamelCase(request.details.requestType)].details
+      this.desiredLimitDetails = requestDetails
+      this.desiredLimitDetails.limits = this.checkLimit(this.desiredLimitDetails.limits)
       const [account, limits] = await Promise.all([
         Sdk.horizon.account.get(request.requestor),
         Sdk.horizon.account.getLimits(request.requestor)
@@ -338,6 +340,14 @@ export default {
       this.limits = (get(limits, 'data.limits') || []).map(limit => limit.limit)
       this.isLoaded = true
       this.$store.commit('CLOSE_LOADER')
+    },
+    checkLimit (limit) {
+      return {
+        annualOut: limit.annualOut || MAX_LIMIT_INT64,
+        dailyOut: limit.dailyOut || MAX_LIMIT_INT64,
+        monthlyOut: limit.monthlyOut || MAX_LIMIT_INT64,
+        weeklyOut: limit.weeklyOut || MAX_LIMIT_INT64
+      }
     },
     async approveRequest () {
       this.isPending = true
