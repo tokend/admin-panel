@@ -66,7 +66,7 @@ export default {
         return false
       }
       this.submitButtonDisabled = true
-      return Vue.api.tfa.verifyTfaCode(this.verificationCode, this.$store.getters.tfaAsset)
+      return Vue.api.tfa.verifyTfaCode(this.verificationCode, this.$store.getters.tfaToken)
         .then(() => {
           this.submitButtonDisabled = false
           this.verificationCode = ''

@@ -203,12 +203,12 @@ export default {
       this.state = 'login'
     },
 
-    showTfaForm (asset) {
+    showTfaForm (tfaToken) {
       this.tfaDone = false
 
       this.$store.commit('OPEN_MODAL')
       this.$store.commit('REQUIRE_TFA', {
-        asset: asset,
+        tfaToken,
         initiator: 'login'
       })
     },
