@@ -22,5 +22,5 @@ export function GET_USER (state) {
 }
 
 export function GET_USER_ADDRESS (state) {
-  return get(state, 'user.keys.accountId', '')
+  return get(state, 'user.address', '')
 }

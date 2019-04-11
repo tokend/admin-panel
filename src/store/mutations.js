@@ -45,15 +45,14 @@ export const CLEAR_ALL_DATA = (state) => {
 
   // User
   state.user.name = ''
-  state.user.keys = { seed: '', accountId: '' }
+  state.user.address = ''
+  state.user.keys.seed = ''
+  state.user.keys.accountId = ''
   state.user.wallet = {}
-  state.user.accountCreator = false
-  state.user.admin = false
 
   // Status messages
-  state.message = {}
-  state.message.info = ''
-  state.message.error = ''
+  state.message.type = ''
+  state.message.text = ''
 
   location.reload()
 }
