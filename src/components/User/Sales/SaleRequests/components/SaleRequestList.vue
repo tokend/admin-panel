@@ -23,12 +23,13 @@
           label="Requestor"
           placeholder="Address (full match)"
           v-model="filters.requestor"
+          autocomplete-type="email"
         />
       </div>
     </div>
 
     <div class="sale-rl__list-wrp">
-      <template v-if="list.data && list.data.length">
+      <template v-if="list && list.length">
         <ul class="app-list">
           <div class="app-list__header">
             <span class="app-list__cell">
@@ -40,7 +41,7 @@
 
           <router-link
             class="app-list__li"
-            v-for="item in list.data"
+            v-for="item in list"
             :key="item.id"
             :to="{ name: 'sales.requests.show', params: { id: item.id }}"
           >
@@ -70,18 +71,6 @@
             </span>
           </router-link>
         </ul>
-
-        <div
-          class="app__more-btn-wrp"
-          v-if="!isNoMoreEntries"
-        >
-          <button
-            class="app__btn-secondary"
-            @click="getMoreEntries"
-          >
-            More
-          </button>
-        </div>
       </template>
 
       <template v-else>
@@ -92,6 +81,15 @@
           </li>
         </ul>
       </template>
+      
+      <div class="app__more-btn-wrp">
+        <collection-loader
+          :first-page-loader="getList"
+          @first-page-load="setList"
+          @next-page-load="extendList"
+          ref="collectionLoaderBtn"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -104,6 +102,7 @@ import InputField from '@comcom/fields/InputField'
 import { EmailGetter } from '@comcom/getters'
 import { AssetAmountFormatter } from '@comcom/formatters'
 import _ from 'lodash'
+import { CollectionLoader } from '@/components/common'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
@@ -111,64 +110,62 @@ export default {
     SelectField,
     InputField,
     EmailGetter,
-    AssetAmountFormatter
+    AssetAmountFormatter,
+    CollectionLoader
   },
 
   data () {
     return {
       REQUEST_STATES,
 
-      list: {},
+      list: [],
       filters: {
         state: REQUEST_STATES.pending,
         requestor: ''
       },
-      isLoaded: false,
-      isNoMoreEntries: false
+      isLoaded: false
     }
-  },
-
-  created () {
-    this.getList()
   },
 
   methods: {
     async getList () {
       this.isLoaded = false
-      this.isNoMoreEntries = false
-
+      let response = {}
       try {
         const filters = { ...this.filters }
-        this.list = await api.requests.getSaleRequests(filters)
+        response = await api.requests.getSaleRequests(filters)
       } catch (error) {
-        error.showMessage('Cannot get fund request list. Please try again later')
+        ErrorHandler.processWithoutFeedback(error)
       }
 
       this.isLoaded = true
+      return response
     },
 
-    async getMoreEntries () {
-      try {
-        const oldLength = (this.list.data || []).length
-        const chunk = await this.list.fetchNext()
-        this.list._data = this.list.data.concat(chunk.data)
-        this.list.fetchNext = chunk.fetchNext
-        this.isNoMoreEntries = oldLength === this.list.data.length
-      } catch (error) {
-        ErrorHandler.process(error)
-      }
+    setList (data) {
+      this.list = data
+    },
+
+    async extendList (data) {
+      this.list = this.list.concat(data)
     },
 
     extractDetails (record) {
       const valuableRequestDetailsKey = Object.keys(record.details)
         .find(item => !/request_type|requestType/gi.test(item))
       return record.details[valuableRequestDetailsKey] || {}
+    },
+
+    reloadCollectionLoader () {
+      this.$refs.collectionLoaderBtn.loadFirstPage()
     }
   },
 
   watch: {
-    'filters.state' () { this.getList() },
-    'filters.requestor': _.throttle(function () { this.getList() }, 1000)
+    'filters.state' () { this.reloadCollectionLoader() },
+    'filters.requestor': _.throttle(function () {
+      this.reloadCollectionLoader()
+    }, 1000)
   }
 }
 </script>

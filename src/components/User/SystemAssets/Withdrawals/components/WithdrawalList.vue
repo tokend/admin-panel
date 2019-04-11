@@ -53,7 +53,7 @@
         </ul>
 
         <div class="app__more-btn-wrp" v-if="!isNoMoreEntries">
-          <button class="app__btn-secondary" @click="getMoreEntries">
+          <button class="app__btn-secondary" @click="extendList">
             More
           </button>
         </div>
@@ -134,7 +134,7 @@ export default {
       try {
         const response = await Sdk.horizon.assets.getAll()
         this.assets = response.data
-          .filter(item => (item.policy & ASSET_POLICIES.baseAsset))
+          .filter(item => (item.policy & ASSET_POLICIES.withdrawable))
           .sort((assetA, assetB) => assetA.code > assetB.code ? 1 : -1)
       } catch (error) {
         this.$store.dispatch('SET_ERROR', 'Cannot get asset list. Please try again later')
@@ -155,7 +155,7 @@ export default {
       this.isLoaded = true
     },
 
-    async getMoreEntries () {
+    async extendList () {
       try {
         const oldLength = (this.list.data || []).length
         const chunk = await this.list.fetchNext()
