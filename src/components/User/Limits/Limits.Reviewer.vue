@@ -11,7 +11,9 @@
     </button>
     <template v-if="isLoaded && desiredLimitDetails">
       <div class="limits-reviewer__card">
-        <h3 class="limits-reviewer__heading">Request information</h3>
+        <h3 class="limits-reviewer__heading">
+          Request information
+        </h3>
         <div class="limits-reviewer__content-section">
           <detail
             label="Request date & time"
@@ -23,7 +25,7 @@
           />
           <detail
             label="Request type"
-            :value="LIMITS_REQUEST_STATES_STR[get(request, 'details.requestType')]"
+            :value="getRequestType"
           />
           <detail label="Account email">
             <email-getter
@@ -291,13 +293,19 @@ export default {
   async created () {
     await this.getRequest()
     const limitRequest = await api.requests.get(this.id)
-    this.desiredLimitDetails = limitRequest.details[snakeToCamelCase(limitRequest.details.requestType)].details || '{}'
+    this.desiredLimitDetails = limitRequest
+      .details[snakeToCamelCase(limitRequest.details.requestType)].details ||
+      '{}'
   },
   computed: {
     currentLimits () {
       if (!this.limits) return null
-      const limits = this.limits.filter(limit => limit.assetCode === this.assetCode)
-      const operationTypeLimits = limits.find(limit => limit.statsOpType === this.desiredLimitDetails.statsOpType)
+      const limits = this.limits
+        .filter(limit => limit.assetCode === this.assetCode)
+      const operationTypeLimits = limits
+        .find(limit => {
+          return limit.statsOpType === this.desiredLimitDetails.statsOpType
+        })
       return operationTypeLimits || {
         ...DEFAULT_LIMIT_STRUCT,
         accountId: this.request.requestor,
@@ -306,17 +314,29 @@ export default {
       }
     },
     newLimit () {
+      const requestDetails = this.desiredLimitDetails
+      const operationType = OPERATION_TYPES[requestDetails.operationType]
+      const limitsKeys = Object.keys(this.desiredLimitDetails.limits)
+      const limits = {}
+      limitsKeys.forEach(limit => {
+        const verifiableLimit = this.desiredLimitDetails.limits[limit]
+        const limitValue = verifiableLimit || DEFAULT_LIMIT_STRUCT[limit]
+        limits[limit] = limitValue
+      })
       return {
         ...DEFAULT_LIMIT_STRUCT,
-        ...this.desiredLimitDetails.limits,
+        ...limits,
         accountId: this.request.requestor,
         assetCode: this.assetCode,
-        statsOpType: STATS_OPERATION_TYPES[OPERATION_TYPES[this.desiredLimitDetails.operationType]]
+        statsOpType: STATS_OPERATION_TYPES[operationType]
       }
     },
     uploadedDocuments () {
       if (!this.desiredLimitDetails.documents) return
       return this.desiredLimitDetails.documents
+    },
+    getRequestType () {
+      return LIMITS_REQUEST_STATES_STR[get(this.request, 'details.requestType')]
     }
   },
   methods: {
@@ -325,7 +345,8 @@ export default {
     async getRequest () {
       this.$store.commit('OPEN_LOADER')
       const request = await api.requests.get(this.id)
-      const requestDetails = request.details[snakeToCamelCase(request.details.requestType)].details
+      const camelCaseByType = snakeToCamelCase(request.details.requestType)
+      const requestDetails = request.details[camelCaseByType].details
       const [account, limits] = await Promise.all([
         Sdk.horizon.account.get(request.requestor),
         Sdk.horizon.account.getLimits(request.requestor)
@@ -347,14 +368,19 @@ export default {
           newLimits.push(this.newLimit)
         }
         if (!newLimits.length) {
-          this.$store.dispatch('SET_ERROR', 'Please update user limits before approving request')
+          this.$store.dispatch(
+            'SET_ERROR',
+            'Please update user limits before approving request'
+          )
           this.isPending = false
           return
         }
+        const requestDetails = this.request.details.updateLimits.details
+        const operationType = OPERATION_TYPES[requestDetails.operationType]
         const oldLimits = this.limits
           .find(item => {
             return item.assetCode === this.request.asset &&
-              item.statsOpType === STATS_OPERATION_TYPES[OPERATION_TYPES[this.request.details.updateLimits.details.operationType]]
+              item.statsOpType === STATS_OPERATION_TYPES[operationType]
           })
         await api.requests.approveLimitsUpdate({
           request: this.request,
@@ -363,7 +389,10 @@ export default {
           accountId: this.request.requestor
         })
         this.$router.push({ name: 'limits.requests' })
-        this.$store.dispatch('SET_INFO', 'Request approved. Limits are changed')
+        this.$store.dispatch(
+          'SET_INFO',
+          'Request approved. Limits are changed'
+        )
       } catch (error) {
         ErrorHandler.process(error)
       }
@@ -381,7 +410,10 @@ export default {
           isPermanent: true
         }, this.request)
         this.$router.push({ name: 'limits.requests' })
-        this.$store.dispatch('SET_INFO', 'Request rejected. Limits are not changed')
+        this.$store.dispatch(
+          'SET_INFO',
+          'Request rejected. Limits are not changed'
+        )
       } catch (error) {
         this.isPending = false
         ErrorHandler.process(error)
@@ -403,7 +435,10 @@ export default {
           reason: requireDocsDetails,
           isPermanent: false
         })
-        this.$store.dispatch('SET_INFO', 'Upload additional documents requested.')
+        this.$store.dispatch(
+          'SET_INFO',
+          'Upload additional documents requested.'
+        )
         this.isRequiringDocs = false
       } catch (error) {
         this.isPending = false

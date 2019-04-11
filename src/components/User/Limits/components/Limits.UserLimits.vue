@@ -3,11 +3,19 @@
     <div class="user-limits__inner">
       <div class="user-limits__limits-list-wrp">
         <template v-for="(type,i) in LIMITS_TYPES">
-          <div class="user-limits__limit-row" :key="i">
-            <span class="user-limits__limit-type">{{ type.replace('Out', '') }} limit</span>
-            <input-field  :value="userLimits[type]"
-                          :label="' '"
-                          :readonly="true"
+          <div
+            class="user-limits__limit-row"
+            :key="i"
+          >
+            <span
+              class="user-limits__limit-type"
+            >
+              {{ type.replace('Out', '') }} limit
+            </span>
+            <input-field
+              :value="userLimits[type]"
+              :label="' '"
+              :readonly="true"
             />
           </div>
         </template>
@@ -46,7 +54,10 @@
       LIMITS_TYPES
     }),
     created () {
-      this.userLimits = _pick(this.limits, Object.keys(this.userLimits))
+      this.userLimits = _pick(
+        this.limits,
+        Object.keys(this.userLimits)
+      )
     },
     methods: {
     }
