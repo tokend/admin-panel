@@ -59,16 +59,16 @@
           </section>
         </template>
 
-        <template v-if="prevApprovedRequest">
+        <template v-if="previousUserRole !== ACCOUNT_ROLES.notVerified">
           <section class="user-details__section">
             <h2>Previous approved KYC Request</h2>
             <kyc-general-section
-              v-if="prevApprovedRequest.requestDetails.accountRoleToSet === ACCOUNT_ROLES.general"
+              v-if="previousUserRole === ACCOUNT_ROLES.general"
               :user="user"
               :blobId="prevApprovedRequest.requestDetails.creatorDetails.blobId"
             />
             <kyc-syndicate-section
-              v-if="prevApprovedRequest.requestDetails.accountRoleToSet === ACCOUNT_ROLES.corporate"
+              v-else-if="previousUserRole === ACCOUNT_ROLES.corporate"
               :user="user"
               :blobId="prevApprovedRequest.requestDetails.creatorDetails.blobId"
             />
@@ -77,7 +77,10 @@
         </template>
 
 
-        <div class="user-details__actions-wrp">
+        <div
+          v-if="!isUserBlocked"
+          class="user-details__actions-wrp"
+        >
           <section class="user-details__section">
             <request-section
               :user="user"
@@ -86,6 +89,14 @@
               @reviewed="getUpdatedUser"
             />
           </section>
+        </div>
+
+        <div class="user-details__block-section">
+          <block-section
+            :user="user"
+            :latest-approved-request="prevApprovedRequest"
+            @updated="getUpdatedUser"
+          />
         </div>
       </template>
 
@@ -117,6 +128,8 @@ import { unCamelCase } from '@/utils/un-camel-case'
 import { ApiCallerFactory } from '@/api-caller-factory'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import config from '@/config'
+
+import safeGet from 'lodash/get'
 
 const OPERATION_TYPE = {
   createKycRequest: '22'
@@ -168,6 +181,22 @@ export default {
         )
         .filter(value => value)
         .join('<br>')
+    },
+
+    isUserBlocked () {
+      return this.user.role === config.ACCOUNT_ROLES.blocked
+    },
+
+    previousUserRole () {
+      const resettedUserRole = safeGet(
+        this.prevApprovedRequest,
+        'requestDetails.creatorDetails.previousAccountRole'
+      )
+      const originalUserRole = safeGet(
+        this.prevApprovedRequest,
+        'requestDetails.accountRoleToSet'
+      )
+      return resettedUserRole || originalUserRole
     }
   },
 
@@ -195,10 +224,7 @@ export default {
         this.requestToReview = this.requests.data
           .find(item => item.stateI === REQUEST_STATES.pending)
         this.prevApprovedRequest = this.requests.data
-          .find(item => item.stateI === REQUEST_STATES.approved &&
-            item.requestDetails.accountRoleToSet !==
-              this.ACCOUNT_ROLES.notVerified
-          )
+          .find(item => item.stateI === REQUEST_STATES.approved)
         this.isLoaded = true
       } catch (error) {
         ErrorHandler.process(error)
@@ -238,6 +264,10 @@ export default {
   justify-content: space-between;
   align-items: flex-end;
   margin-top: 4rem;
+}
+
+.user-details__block-section {
+  margin-top: 2rem;
 }
 
 .user-details__heading {
