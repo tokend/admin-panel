@@ -160,7 +160,7 @@
             />
           </li>
 
-          <label class="data-caption">Prices (per asset) </label>
+          <label class="data-caption">Prices (per one) </label>
           <li
             v-for="(item, index) in saleDetails.quoteAssets"
             :key="index"
