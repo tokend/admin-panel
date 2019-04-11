@@ -15,6 +15,9 @@ for further information about branching and tagging conventions.
 - Thresholds code leftovers
 - Signing rules page
 
+#### Fixed
+- "You" label position in admin list
+
 ## [1.4.0] - 2019-04-05
 
 ## [1.4.0-rc.1] - 2019-04-04
