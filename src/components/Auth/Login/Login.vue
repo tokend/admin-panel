@@ -163,7 +163,6 @@ export default {
             this.$store.dispatch('SET_ERROR', r.message)
             return
           }
-
           if (r.enabledTFA) {
             this.loginParams = r.loginParams
             this.loginParams.username = this.credentials.username.toLowerCase().trim()
@@ -204,12 +203,12 @@ export default {
       this.state = 'login'
     },
 
-    showTfaForm (token) {
+    showTfaForm (tfaToken) {
       this.tfaDone = false
 
       this.$store.commit('OPEN_MODAL')
       this.$store.commit('REQUIRE_TFA', {
-        token: token,
+        tfaToken,
         initiator: 'login'
       })
     },

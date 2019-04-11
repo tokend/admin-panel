@@ -1,13 +1,13 @@
 <template>
-  <div class="token-request-list">
-    <div class="token-request-list__filters-wrp">
+  <div class="asset-request-list">
+    <div class="asset-request-list__filters-wrp">
       <select-field
         class="arc-list__filter"
         v-model="filters.state"
         label="State"
       >
         <option
-          v-for="stateObj in Object.values(CREATE_TOKEN_REQUEST_STATES)"
+          v-for="stateObj in Object.values(CREATE_ASSET_REQUEST_STATES)"
           :value="stateObj.codeVerbose"
           :key="stateObj.codeVerbose"
         >
@@ -25,11 +25,11 @@
       <input-field
         class="arc-list__filter"
         v-model="filters.asset"
-        label="Token code"
+        label="Asset code"
       />
     </div>
 
-    <div class="token-request-list__table-wrp">
+    <div class="asset-request-list__table-wrp">
       <template v-if="list && list.length">
         <ul class="app-list">
           <div class="app-list__header">
@@ -50,7 +50,7 @@
             class="app-list__li"
             v-for="(asset, i) in list"
             :key="i"
-            :to="{ name: 'tokens.requests.show', params: { id: asset.id }}"
+            :to="{ name: 'assets.requests.show', params: { id: asset.id }}"
           >
             <span
               class="app-list__cell app-list__cell--important"
@@ -61,9 +61,9 @@
 
             <span
               class="app-list__cell"
-              :title="CREATE_TOKEN_REQUEST_STATES[snakeToCamelCase(asset.requestState)].text"
+              :title="CREATE_ASSET_REQUEST_STATES[snakeToCamelCase(asset.requestState)].text"
             >
-              {{ CREATE_TOKEN_REQUEST_STATES[snakeToCamelCase(asset.requestState)].text }}
+              {{ CREATE_ASSET_REQUEST_STATES[snakeToCamelCase(asset.requestState)].text }}
             </span>
 
             <span class="app-list__cell" :title="asset.requestor">
@@ -99,7 +99,7 @@ import { Sdk } from '@/sdk'
 import InputField from '@comcom/fields/InputField'
 import SelectField from '@comcom/fields/SelectField'
 import {
-  CREATE_TOKEN_REQUEST_STATES,
+  CREATE_ASSET_REQUEST_STATES,
   REQUEST_STATES_STR
 } from '@/constants'
 import _ from 'lodash'
@@ -123,7 +123,7 @@ export default {
         requestor: null,
         asset: null
       },
-      CREATE_TOKEN_REQUEST_STATES,
+      CREATE_ASSET_REQUEST_STATES,
       REQUEST_STATES_STR
     }
   },
@@ -145,7 +145,7 @@ export default {
       try {
         const requestor = await this.getRequestorAccountId(this.filters.requestor)
         response = await api.requests.getAssetRequests({
-          state: CREATE_TOKEN_REQUEST_STATES[this.filters.state].code,
+          state: CREATE_ASSET_REQUEST_STATES[this.filters.state].code,
           requestor: requestor,
           code: this.filters.asset
         })
@@ -196,7 +196,7 @@ export default {
 <style lang="scss" scoped>
 @import "../../../../../assets/scss/colors";
 
-.token-request-list__filters-wrp {
+.asset-request-list__filters-wrp {
   background-color: $color-content-bg;
   border-radius: 0.3rem;
   box-shadow: 0.7px 0.7px 5.6px 0.4px rgba(170, 170, 170, 0.72);
@@ -213,7 +213,7 @@ export default {
   }
 }
 
-.token-request-list__name-cell {
+.asset-request-list__name-cell {
   flex: 1.5;
 }
 </style>

@@ -1,4 +1,4 @@
-export const CREATE_TOKEN_REQUEST_STATES = Object.freeze({
+export const CREATE_ASSET_REQUEST_STATES = Object.freeze({
   pending: {
     code: 1,
     codeVerbose: 'pending',
