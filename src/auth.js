@@ -38,8 +38,8 @@ export default {
       mainData: JSON.stringify(mainData),
       server: Vue.params.KEY_SERVER_ADMIN,
       keypair: signingKeys
-    }).then((response) => {
-      this._storeAsset(response, credentials.username)
+    }).then((wallet) => {
+      this._storeWallet(wallet, credentials.username)
 
       if (redirect) router.push({ name: redirect })
     }).catch((errorResponse) => {
@@ -47,16 +47,16 @@ export default {
     })
   },
 
-  login (creds) {
+  login (credentials) {
     const params = {
       server: Vue.params.KEY_SERVER_ADMIN,
-      username: creds.username.toLowerCase(),
-      password: creds.password
+      username: credentials.username.toLowerCase(),
+      password: credentials.password
     }
 
     return StellarWallet.getWallet(params)
       .then(wallet => {
-        this._storeAsset(wallet, creds.username)
+        this._storeWallet(wallet, credentials.username)
         return { ok: true, enabledTFA: false }
       }).catch(err => {
         if (err.status === 403 && err.tfaRequired) {
@@ -90,7 +90,7 @@ export default {
 
     return StellarWallet.showWallet(options)
       .then(wallet => {
-        this._storeAsset(wallet, params.username)
+        this._storeWallet(wallet, params.username)
         return { ok: true }
       }).catch(err => {
         return { ok: false, message: err.message, code: err.status }
@@ -118,23 +118,23 @@ export default {
     store.commit('UPDATE_AUTH', auth)
   },
 
-  async _storeAsset (credentials, username) {
+  async _storeWallet (wallet, username) {
     const auth = store.state.auth
     const user = store.state.user
     user.name = username
     user.keys = user.keys || {}
     user.keys.accountId = config.MASTER_ACCOUNT
-    user.keys.seed = JSON.parse(credentials.getKeychainData()).seed
-    const wallet = new Wallet(
+    user.keys.seed = JSON.parse(wallet.getKeychainData()).seed
+    const masterWallet = new Wallet(
       '',
       user.keys.seed,
       user.keys.accountId,
-      credentials.getWalletId()
+      wallet.getWalletId()
     )
-    Sdk.sdk.useWallet(wallet)
-    ApiCallerFactory.setDefaultWallet(wallet)
+    Sdk.sdk.useWallet(masterWallet)
+    ApiCallerFactory.setDefaultWallet(masterWallet)
     user.wallet = {
-      id: credentials.getWalletId()
+      id: wallet.getWalletId()
     }
 
     store.commit('UPDATE_USER', user)
