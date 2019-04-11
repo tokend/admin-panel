@@ -29,7 +29,7 @@
       />
     </div>
 
-    <div class="token-request-list__table-wrp">
+    <div class="asset-request-list__table-wrp">
       <template v-if="list && list.length">
         <ul class="app-list">
           <div class="app-list__header">
