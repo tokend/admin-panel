@@ -86,6 +86,9 @@ for further information about branching and tagging conventions.
 #### Security
 - Resolve security issues in package.json
 
+### Changed
+- Renamed `Fund(s)` -> `Sale(s)` and `Token(s)` -> `Asset(s)`
+
 ## [1.3.0] - 2019-03-01
 
 [Unreleased]: https://github.com/tokend/admin-panel/compare/1.4.0...HEAD

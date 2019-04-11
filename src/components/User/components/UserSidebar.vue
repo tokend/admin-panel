@@ -66,16 +66,16 @@
 
       <li class="user-sidebar__nav-li">
         <!-- NOTE: temporarily hidden -->
-        <router-link :to="{ name: 'tokens' }">
+        <router-link :to="{ name: 'assets' }">
           <mdi-coins-icon/>
-          <span>Tokens</span>
+          <span>Assets</span>
         </router-link>
       </li>
 
       <li class="user-sidebar__nav-li">
         <router-link :to="{ name: 'sales' }">
           <mdi-coins-icon/>
-          <span>Funds</span>
+          <span>Sales</span>
         </router-link>
       </li>
     </nav>
