@@ -15,6 +15,11 @@ for further information about branching and tagging conventions.
 - Thresholds code leftovers
 - Signing rules page
 
+#### Fixed
+- "You" label position in admin list
+- Dropdown of user account widget when you hover button below it now stays above
+  the button
+
 ## [1.4.0] - 2019-04-05
 
 ## [1.4.0-rc.1] - 2019-04-04
