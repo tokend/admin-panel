@@ -14,7 +14,7 @@ export default {
     return keyServer.patch(`/tfa/${id}`, { wallet_id: store.state.user.wallet.id, priority: 10 })
   },
 
-  verifyTfaCode (code, asset) {
-    return keyServer.get('/tfa/verify', { code: code, token: asset }, false)
+  verifyTfaCode (code, token) {
+    return keyServer.get('/tfa/verify', { code: code, token: token }, false)
   }
 }
