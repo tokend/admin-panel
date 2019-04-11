@@ -1,3 +1,5 @@
+// TODO: refactor this mess
+
 import Vue from 'vue'
 import store from './store'
 import router from './router'
@@ -100,42 +102,46 @@ export default {
   async seedLogin (seed) {
     const auth = store.state.auth || {}
     const user = store.state.user || {}
-    const keypair = Sdk.base.Keypair.fromSecret(seed)
+    const keyPair = Sdk.base.Keypair.fromSecret(seed)
 
     user.name = 'admin_demo'
+    user.address = keyPair.accountId()
     user.keys = user.keys || {}
     user.keys.accountId = config.MASTER_ACCOUNT
-    user.keys.seed = keypair.secret()
-    const wallet = new Wallet(
+    user.keys.seed = keyPair.secret()
+
+    const signingWallet = new Wallet(
       '',
       user.keys.seed,
       user.keys.accountId
     )
-    Sdk.sdk.useWallet(wallet)
-    ApiCallerFactory.setDefaultWallet(wallet)
+    Sdk.sdk.useWallet(signingWallet)
+    ApiCallerFactory.setDefaultWallet(signingWallet)
 
     store.commit('UPDATE_USER', user)
     store.commit('UPDATE_AUTH', auth)
   },
 
   async _storeWallet (wallet, username) {
-    const auth = store.state.auth
-    const user = store.state.user
+    const auth = store.state.auth || {}
+    const user = store.state.user || {}
+
     user.name = username
+    user.address = JSON.parse(wallet.getKeychainData()).accountId
     user.keys = user.keys || {}
     user.keys.accountId = config.MASTER_ACCOUNT
     user.keys.seed = JSON.parse(wallet.getKeychainData()).seed
-    const masterWallet = new Wallet(
+    user.wallet = user.wallet || {}
+    user.wallet.id = wallet.getWalletId()
+
+    const signingWallet = new Wallet(
       '',
       user.keys.seed,
       user.keys.accountId,
       wallet.getWalletId()
     )
-    Sdk.sdk.useWallet(masterWallet)
-    ApiCallerFactory.setDefaultWallet(masterWallet)
-    user.wallet = {
-      id: wallet.getWalletId()
-    }
+    Sdk.sdk.useWallet(signingWallet)
+    ApiCallerFactory.setDefaultWallet(signingWallet)
 
     store.commit('UPDATE_USER', user)
     store.commit('UPDATE_AUTH', auth)
