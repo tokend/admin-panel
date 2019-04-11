@@ -98,8 +98,7 @@ export default {
   },
 
   async seedLogin (seed) {
-    const auth = store.state.auth || {}
-    const user = store.state.user || {}
+    const user = {}
     const keypair = Sdk.base.Keypair.fromSecret(seed)
 
     user.name = 'admin_demo'
@@ -113,9 +112,14 @@ export default {
     )
     Sdk.sdk.useWallet(wallet)
     ApiCallerFactory.setDefaultWallet(wallet)
-
-    store.commit('UPDATE_USER', user)
-    store.commit('UPDATE_AUTH', auth)
+    const { data } = await ApiCallerFactory
+        .createCallerInstance()
+        .get(`/v3/accounts/${config.MASTER_ACCOUNT}/signers`)
+    if (!data.find(item => item.id === keypair.accountId())) {
+      throw Error('User undefined')
+    } else {
+      store.commit('UPDATE_USER', user)
+    }
   },
 
   async _storeToken (credentials, username) {
