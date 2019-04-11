@@ -133,6 +133,7 @@ export default {
   min-width: 12rem;
   padding: 0.5rem 0;
   box-shadow: 0.07rem 0.07rem 0.56rem 0.04rem rgba(170, 170, 170, 0.72);
+  z-index: 1;
 }
 
 .user-account-widget__action-btn {
