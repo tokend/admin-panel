@@ -33,7 +33,6 @@ const OpInvoiceBalanceMismatch = 'This account id has no such balance'
 const OpInvoiceAccountMismatch = 'This account id has no such balance'
 const OpInvoiceAlreadyPaid = 'Error. Invoice have already been paid'
 const OpTooManySigners = 'Error. Signers limit is exceeded'
-const OpThresholdOutOfRange = 'Threshold out of range'
 const OpBadSigner = 'Invalid signer'
 const OpTooManyTrustLines = 'Error. Too many trust lines'
 const OpInvalidReference = 'Error. Invalid Reference'
@@ -136,7 +135,6 @@ export const OpErrorCodes = new Map([
   ['op_invoice_account_mismatch', OpInvoiceAccountMismatch],
   ['op_invoice_already_paid', OpInvoiceAlreadyPaid],
   ['op_too_many_signers', OpTooManySigners],
-  ['op_threshold_out_of_range', OpThresholdOutOfRange],
   ['op_bad_signer', OpBadSigner],
   ['op_too_many_trust_lines', OpTooManyTrustLines],
   ['invalid_reference', OpInvalidReference],
