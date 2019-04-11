@@ -104,7 +104,7 @@ export default {
 
     user.name = 'admin_demo'
     user.keys = user.keys || {}
-    user.keys.accountId = keypair.accountId()
+    user.keys.accountId = config.MASTER_ACCOUNT
     user.keys.seed = keypair.secret()
     const wallet = new Wallet(
       '',
