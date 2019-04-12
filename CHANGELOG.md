@@ -13,6 +13,7 @@ for further information about branching and tagging conventions.
 
 #### Changed
 - Issuance history list order reverted (now the oldest ones on top)
+- Renamed `Fund(s)` -> `Sale(s)` and `Token(s)` -> `Asset(s)`
 
 #### Fixed
 - Getting private document URL on DocLinkGetter component
@@ -97,9 +98,6 @@ for further information about branching and tagging conventions.
 
 #### Security
 - Resolve security issues in package.json
-
-### Changed
-- Renamed `Fund(s)` -> `Sale(s)` and `Token(s)` -> `Asset(s)`
 
 ## [1.3.0] - 2019-03-01
 
