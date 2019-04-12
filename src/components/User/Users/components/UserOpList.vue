@@ -87,7 +87,6 @@ export default {
       formatAssetAmount,
       list: [],
       masterPubKey: Vue.params.MASTER_ACCOUNT,
-      isListEnded: false,
       isLoading: false
     }
   },

@@ -234,15 +234,19 @@ export default {
       return accepted ? 'Accepted' : 'Rejected'
     },
 
-    getRequests () {
+    async getRequests () {
       this.isLoading = true
-      return api.requests.getPreissuanceRequests(this.asset)
-        .then(r => {
-          this.requests = []
-          this.requests = r.records
-          this.pages = r
-          this.isLoading = false
-        })
+      let response
+      try {
+        response = await api.requests.getPreissuanceRequests(this.asset)
+        this.requests = []
+        this.requests = response.records
+        this.pages = response
+      } catch (error) {
+        ErrorHandler.process(error)
+      }
+      this.isLoading = false
+      return response
     },
 
     setReject (r) {

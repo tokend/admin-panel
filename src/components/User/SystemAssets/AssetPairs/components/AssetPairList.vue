@@ -74,9 +74,9 @@
 
     <div class="app__more-btn-wrp">
       <collection-loader
-        :first-page-loader="getPairs"
-        @first-page-load="setPairs"
-        @next-page-load="extendPairs"
+        :first-page-loader="getList"
+        @first-page-load="setList"
+        @next-page-load="extendList"
       />
     </div>
   </div>
@@ -107,7 +107,7 @@ export default {
   },
 
   methods: {
-    async getPairs () {
+    async getList () {
       this.isLoaded = false
       this.isFailed = false
       let response = {}
@@ -123,11 +123,11 @@ export default {
       return response
     },
 
-    setPairs (data) {
+    setList (data) {
       this.list = data
     },
 
-    async extendPairs (data) {
+    async extendList (data) {
       try {
         this.list = this.list.concat(data)
       } catch (error) {
