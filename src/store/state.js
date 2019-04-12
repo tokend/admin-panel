@@ -2,20 +2,20 @@ export const STORAGE_KEY = 'vuex'
 
 const initialState = () => {
   return {
-    'timestamp': null,
-    'auth': {
-      'isLoggedIn': false
+    timestamp: null,
+    auth: {
+      isLoggedIn: false
     },
-    'user': {
-      'name': null,
-      'keys': {
+    user: {
+      name: '',
+      address: '', // user address (accountId the user logged in with)
+      keys: { // signing keys
         seed: '',
         accountId: ''
       },
-      'wallet': {},
-      'accountCreator': false,
-      'admin': false,
-      'forfeitProvider': false
+      wallet: {
+        id: ''
+      }
     },
     message: {
       type: '', // info or error

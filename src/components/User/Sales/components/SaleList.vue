@@ -1,14 +1,14 @@
 <template>
   <div class="sale-list">
     <h2>
-      Fund list
+      Sale list
     </h2>
 
     <div class="sale-list__filters-wrp">
       <div class="app-list-filters sale-list__filters">
         <input-field
           class="app-list-filters__field sale-list__field"
-          label="Token code"
+          label="Asset code"
           v-model="filters.baseAsset"
         />
         <input-field

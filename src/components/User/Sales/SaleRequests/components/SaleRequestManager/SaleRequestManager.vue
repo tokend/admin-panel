@@ -1,6 +1,6 @@
 <template>
   <div class="sale-rm">
-    <h2>Manage fund request</h2>
+    <h2>Manage sale request</h2>
 
     <div class="app__block">
       <template v-if="request.isReady">
@@ -125,7 +125,7 @@ export default {
       REQUEST_STATES,
       request: {
         sale: {},
-        token: {},
+        asset: {},
         isReady: false,
         isFailed: false
       },
@@ -158,7 +158,7 @@ export default {
         this.request.sale = await this.getSaleRequest(id)
         const response = await Sdk.horizon.assets
           .get(this.getSaleDetails.baseAsset)
-        this.request.token = response.data
+        this.request.asset = response.data
         this.request.isReady = true
       } catch (error) {
         ErrorHandler.process(error)
@@ -185,7 +185,7 @@ export default {
       if (await confirmAction()) {
         try {
           await api.requests.approve(this.request.sale)
-          this.$store.dispatch('SET_INFO', 'Fund request approved.')
+          this.$store.dispatch('SET_INFO', 'Sale request approved.')
           this.$router.push({ name: 'sales.requests' })
         } catch (error) {
           ErrorHandler.process(error)
@@ -204,7 +204,7 @@ export default {
           },
           this.request.sale
         )
-        this.$store.dispatch('SET_INFO', 'Fund request rejected successfully.')
+        this.$store.dispatch('SET_INFO', 'Sale request rejected successfully.')
         this.$router.push({ name: 'sales.requests' })
       } catch (error) {
         ErrorHandler.process(error)

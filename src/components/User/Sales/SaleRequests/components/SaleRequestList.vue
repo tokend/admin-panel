@@ -1,7 +1,7 @@
 <template>
   <div class="sale-rl">
     <h2>
-      Fund request list
+      Sale request list
     </h2>
 
     <div class="sale-rl__filters-wrp">
@@ -81,7 +81,7 @@
           </li>
         </ul>
       </template>
-      
+
       <div class="app__more-btn-wrp">
         <collection-loader
           :first-page-loader="getList"
