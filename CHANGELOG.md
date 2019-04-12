@@ -16,6 +16,7 @@ for further information about branching and tagging conventions.
 
 #### Fixed
 - Getting private document URL on DocLinkGetter component
+- Filtering sales by their owner
 
 #### Removed
 - Thresholds code leftovers
