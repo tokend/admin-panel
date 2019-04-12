@@ -1,4 +1,4 @@
-# Changelog
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
@@ -10,14 +10,25 @@ for further information about branching and tagging conventions.
 ## [Unreleased]
 #### Added
 - Added "Request type" select field on tokens requests page
+- Validation for max amount on issuance form
 
 #### Changed
 - Issuance history list order reverted (now the oldest ones on top)
 - Get token requests list from API v3
+- Renamed `Fund(s)` -> `Sale(s)` and `Token(s)` -> `Asset(s)`
+
+#### Fixed
+- Getting private document URL on DocLinkGetter component
+- Filtering sales by their owner
 
 #### Removed
 - Thresholds code leftovers
 - Signing rules page
+
+#### Fixed
+- "You" label position in admin list
+- Dropdown of user account widget when you hover button below it now stays above
+  the button
 
 ## [1.4.0] - 2019-04-05
 
@@ -98,4 +109,3 @@ for further information about branching and tagging conventions.
 [1.4.0-rc.0]: https://github.com/tokend/admin-panel/compare/1.3.1...1.4.0-rc.0
 [1.3.1]: https://github.com/tokend/admin-panel/compare/1.3.0...1.3.1
 [1.3.0]: https://github.com/tokend/admin-panel/releases/tag/1.3.0
-
