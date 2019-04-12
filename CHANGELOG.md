@@ -8,6 +8,9 @@ Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
 ## [Unreleased]
+#### Added
+- Validation for max amount on issuance form
+
 #### Changed
 - Issuance history list order reverted (now the oldest ones on top)
 
