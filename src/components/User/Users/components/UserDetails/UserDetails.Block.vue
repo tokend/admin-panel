@@ -70,7 +70,8 @@ import { confirmAction } from '@/js/modals/confirmation_message'
 import config from '@/config'
 
 const EVENTS = {
-  updated: 'updated'
+  updated: 'updated',
+  updateIsPending: 'update:isPending'
 }
 
 export default {
@@ -82,7 +83,9 @@ export default {
 
   props: {
     latestApprovedRequest: { type: Object, default: _ => ({}) },
-    user: { type: Object, default: _ => ({}) }
+    verifiedRequest: { type: Object, default: _ => ({}) },
+    user: { type: Object, default: _ => ({}) },
+    isPending: { type: Boolean, default: false }
   },
 
   data () {
@@ -91,8 +94,7 @@ export default {
       blockForm: {
         reason: '',
         isShown: false
-      },
-      isPending: false
+      }
     }
   },
 
@@ -107,25 +109,16 @@ export default {
       if (!await confirmAction('Are you sure?')) {
         return
       }
-      this.isPending = true
+      this.$emit(EVENTS.updateIsPending, true)
       try {
-        const previousAccountRole = safeGet(
-          this.latestApprovedRequest,
-          'requestDetails.accountRoleToSet'
-        )
         const operation = Sdk.base.CreateChangeRoleRequestBuilder
           .createChangeRoleRequest({
             requestID: '0',
             destinationAccount: this.user.address,
             accountRoleToSet: config.ACCOUNT_ROLES.blocked.toString(),
             creatorDetails: {
-              ...safeGet(
-                this.latestApprovedRequest,
-                'requestDetails.creatorDetails'
-              ),
               blockReason: this.blockForm.reason,
-              previousAccountRole: previousAccountRole ||
-                config.ACCOUNT_ROLES.notVerified
+              latestApprovedRequestId: this.latestApprovedRequest.id || '0'
             },
             allTasks: 0
           })
@@ -136,29 +129,33 @@ export default {
       } catch (error) {
         ErrorHandler.process(error)
       }
-      this.isPending = false
+      this.$emit(EVENTS.updateIsPending, false)
     },
 
     async unblockUser () {
       if (!await confirmAction('Are you sure?')) {
         return
       }
-      this.isPending = true
+      this.$emit(EVENTS.updateIsPending, true)
       try {
         const previousAccountRole = safeGet(
-          this.latestApprovedRequest,
-          'requestDetails.creatorDetails.previousAccountRole'
+          this.verifiedRequest,
+          'requestDetails.accountRoleToSet'
         )
+        const latestCreatorDetails = safeGet(
+          this.verifiedRequest,
+          'requestDetails.creatorDetails'
+        )
+        const accountRoleToSet = previousAccountRole ||
+          config.ACCOUNT_ROLES.notVerified
+
         const operation = Sdk.base.CreateChangeRoleRequestBuilder
           .createChangeRoleRequest({
             requestID: '0',
             destinationAccount: this.user.address,
-            accountRoleToSet: previousAccountRole.toString(),
+            accountRoleToSet: accountRoleToSet.toString(),
             creatorDetails: {
-              ...safeGet(
-                this.latestApprovedRequest,
-                'requestDetails.creatorDetails'
-              )
+              ...latestCreatorDetails
             },
             allTasks: 0
           })
@@ -169,7 +166,7 @@ export default {
       } catch (error) {
         ErrorHandler.process(error)
       }
-      this.isPending = false
+      this.$emit(EVENTS.updateIsPending, false)
     },
 
     showBlockModal () {

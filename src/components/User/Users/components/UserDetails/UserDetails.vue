@@ -40,7 +40,11 @@
         </section>
 
         <section class="user-details__section">
-          <account-section :user="user" />
+          <account-section
+            :user="user"
+            :original-role="userRole"
+            :block-reason="blockReason"
+          />
         </section>
 
         <template v-if="requestToReview">
@@ -59,44 +63,63 @@
           </section>
         </template>
 
-        <template v-if="previousUserRole !== ACCOUNT_ROLES.notVerified">
+        <template v-if="previousUserRole !== ACCOUNT_ROLES.notVerified && !isUserBlocked">
           <section class="user-details__section">
             <h2>Previous approved KYC Request</h2>
             <kyc-general-section
               v-if="previousUserRole === ACCOUNT_ROLES.general"
               :user="user"
-              :blobId="prevApprovedRequest.requestDetails.creatorDetails.blobId"
+              :blobId="verifiedRequest.requestDetails.creatorDetails.blobId"
             />
             <kyc-syndicate-section
               v-else-if="previousUserRole === ACCOUNT_ROLES.corporate"
               :user="user"
-              :blobId="prevApprovedRequest.requestDetails.creatorDetails.blobId"
+              :blobId="verifiedRequest.requestDetails.creatorDetails.blobId"
             />
           </section>
 
+          <div
+            v-if="requestToReview"
+            class="user-details__latest-request"
+          >
+            <h3>Latest request</h3>
+            <p class="text">
+              Create a {{ requestToReview.requestDetails.accountRoleToSet | roleIdToString | lowerCase }} account:
+              {{ requestToReview.state }}
+            </p>
+          </div>
         </template>
 
-
-        <div
-          v-if="!isUserBlocked"
-          class="user-details__actions-wrp"
-        >
-          <section class="user-details__section">
-            <request-section
+        <div class="user-details__actions-wrp">
+          <template v-if="requestToReview">
+            <request-actions
+              class="user-details__actions"
               :user="user"
               :requestToReview="requestToReview"
-              :latest-approved-request="prevApprovedRequest"
+              :latest-approved-request="verifiedRequest"
               @reviewed="getUpdatedUser"
             />
-          </section>
-        </div>
+          </template>
 
-        <div class="user-details__block-section">
-          <block-section
-            :user="user"
-            :latest-approved-request="prevApprovedRequest"
-            @updated="getUpdatedUser"
-          />
+          <template v-else>
+            <block-actions
+              class="user-details__actions"
+              :user="user"
+              :latest-approved-request="latestApprovedRequest"
+              :verified-request="verifiedRequest"
+              :is-pending.sync="isPending"
+              @updated="getUpdatedUser"
+            />
+
+            <reset-actions
+              v-if="!isUserBlocked"
+              class="user-details__actions"
+              :user="user"
+              :verified-request="verifiedRequest"
+              :is-pending.sync="isPending"
+              @reset="getUpdatedUser"
+            />
+          </template>
         </div>
       </template>
 
@@ -112,24 +135,23 @@
 </template>
 
 <script>
-import {
-  USER_STATES_STR,
-  REQUEST_STATES,
-  REQUEST_STATES_STR
-} from '@/constants'
+import { REQUEST_STATES, REQUEST_STATES_STR } from '@/constants'
 import AccountSection from './UserDetails.Account'
 
 import KycGeneralSection from './UserDetails.Kyc'
 import KycSyndicateSection from '@/components/User/Sales/components/SaleManager/SaleManager.SyndicateTab'
 
-import RequestSection from './UserDetails.Request'
-import BlockSection from './UserDetails.Block'
+import RequestActions from './UserDetails.Request'
+import ResetActions from './UserDetails.Reset'
+import BlockActions from './UserDetails.Block'
+
 import { unCamelCase } from '@/utils/un-camel-case'
+import safeGet from 'lodash/get'
+
 import { ApiCallerFactory } from '@/api-caller-factory'
 import { ErrorHandler } from '@/utils/ErrorHandler'
-import config from '@/config'
 
-import safeGet from 'lodash/get'
+import config from '@/config'
 
 const OPERATION_TYPE = {
   createKycRequest: '22'
@@ -143,24 +165,23 @@ export default {
     AccountSection,
     KycGeneralSection,
     KycSyndicateSection,
-    RequestSection,
-    BlockSection
+    RequestActions,
+    ResetActions,
+    BlockActions
   },
 
   data () {
     return {
       ACCOUNT_ROLES: config.ACCOUNT_ROLES,
-      USER_STATES_STR,
       OPERATION_TYPE,
       isLoaded: false,
       isFailed: false,
+      isPending: false,
       isShownExternal: false,
       user: {},
-      account: {},
-      requestToReview: null,
       requests: [],
-      REQUEST_STATES_STR,
-      prevApprovedRequest: null
+      verifiedRequest: {},
+      REQUEST_STATES_STR
     }
   },
 
@@ -188,15 +209,60 @@ export default {
     },
 
     previousUserRole () {
-      const resettedUserRole = safeGet(
-        this.prevApprovedRequest,
-        'requestDetails.creatorDetails.previousAccountRole'
-      )
-      const originalUserRole = safeGet(
-        this.prevApprovedRequest,
+      return safeGet(
+        this.verifiedRequest,
         'requestDetails.accountRoleToSet'
       )
-      return resettedUserRole || originalUserRole
+    },
+
+    latestApprovedRequest () {
+      return this.requests
+        .find(item => item.stateI === REQUEST_STATES.approved)
+    },
+
+    latestNonBlockedRequest () {
+      return this.requests.find(item => {
+        const accountRoleToSet = safeGet(
+          item, 'requestDetails.accountRoleToSet'
+        )
+
+        return item.stateI === REQUEST_STATES.approved &&
+          accountRoleToSet !== config.ACCOUNT_ROLES.blocked
+      })
+    },
+
+    requestToReview () {
+      return this.requests
+        .find(item => {
+          return item.stateI === REQUEST_STATES.pending ||
+            item.stateI === REQUEST_STATES.rejected
+        })
+    },
+
+    latestBlockedRequest () {
+      return this.requests.find(item => {
+        const accountRoleToSet = safeGet(
+          item, 'requestDetails.accountRoleToSet'
+        )
+
+        return accountRoleToSet === config.ACCOUNT_ROLES.blocked
+      })
+    },
+
+    userRole () {
+      const accountRoleToSet = safeGet(
+        this.latestNonBlockedRequest,
+        'requestDetails.accountRoleToSet'
+      )
+
+      return String(accountRoleToSet || config.ACCOUNT_ROLES.notVerified)
+    },
+
+    blockReason () {
+      return safeGet(
+        this.latestBlockedRequest,
+        'requestDetails.creatorDetails.blockReason'
+      )
     }
   },
 
@@ -220,11 +286,8 @@ export default {
             })
         ])
         this.user = user.data[0]
-        this.requests = requests || []
-        this.requestToReview = this.requests.data
-          .find(item => item.stateI === REQUEST_STATES.pending)
-        this.prevApprovedRequest = this.requests.data
-          .find(item => item.stateI === REQUEST_STATES.approved)
+        this.requests = requests.data || []
+        await this.loadVerifiedRequest()
         this.isLoaded = true
       } catch (error) {
         ErrorHandler.process(error)
@@ -232,9 +295,30 @@ export default {
       }
     },
 
+    async loadVerifiedRequest () {
+      if (this.latestApprovedRequest) {
+        const requestId = safeGet(
+          this.latestApprovedRequest,
+          'requestDetails.creatorDetails.latestApprovedRequestId'
+        )
+
+        if (requestId > 0) {
+          const { data } = await ApiCallerFactory
+            .createCallerInstance()
+            .getWithSignature(`/v3/change_role_requests/${requestId}`, {
+              include: ['request_details']
+            })
+          this.verifiedRequest = data
+        } else if (requestId !== '0') {
+          this.verifiedRequest = this.latestApprovedRequest
+        }
+      }
+    },
+
     async getUpdatedUser () {
       this.isLoaded = false
       this.isFailed = false
+
       setTimeout(async () => {
         await this.getUser()
         this.$emit(EVENTS.reviewed)
@@ -245,7 +329,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../../../../assets/scss/colors";
+@import "~@/assets/scss/colors";
 
 .user-details__section {
   flex: 1;
@@ -261,13 +345,16 @@ export default {
 
 .user-details__actions-wrp {
   display: flex;
-  justify-content: space-between;
   align-items: flex-end;
   margin-top: 4rem;
 }
 
-.user-details__block-section {
-  margin-top: 2rem;
+.user-details__latest-request {
+  margin-top: 3.5rem;
+}
+
+.user-details__actions:not(:first-child) {
+  margin-left: 1rem;
 }
 
 .user-details__heading {
@@ -277,27 +364,6 @@ export default {
 
   span {
     margin-right: 1rem;
-  }
-}
-
-.user-details__blocked-msg {
-  font-size: 1.2rem;
-  margin-bottom: 1rem;
-  text-align: center;
-}
-
-.user-details__request-header {
-  font-weight: bold;
-  margin-bottom: 1.2rem;
-}
-
-.user-details__switch-view-btn {
-  cursor: pointer;
-  font-size: 1.4rem;
-  margin: 2rem 0;
-  color: $color-active;
-  &:hover {
-    opacity: 0.85;
   }
 }
 
