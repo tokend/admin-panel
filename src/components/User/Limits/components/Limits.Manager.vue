@@ -1,6 +1,6 @@
 <template>
   <div class="limits-manager__wrapper">
-    <tabs @changed="tabChanged">
+    <tabs @changed="onTabChange">
       <tab :name="TAB_NAMES.accountType">
         <div class="limits-manager">
           <h2>Limits management</h2>
@@ -226,6 +226,7 @@
         email: '',
         address: ''
       },
+      selectedTabName: '',
       specificUserAddress: '',
       limits: {
         withdrawal: null,
@@ -249,8 +250,10 @@
       await this.getAssets()
     },
     methods: {
-      async tabChanged (selectedTab) {
-        if (selectedTab.tab.name === TAB_NAMES.accountType) {
+      async onTabChange (selectedTab) {
+        this.selectedTabName = selectedTab.tab.name
+
+        if (this.selectedTabName === TAB_NAMES.accountType) {
           this.specificUserAddress = ''
         }
       },
@@ -288,7 +291,7 @@
       },
 
       async updateLimits (limits) {
-        if (!this.isValidLimits(limits) || !this.checkFilters()) {
+        if (!this.isValidLimits(limits) || !this.isAccountAddressValid()) {
           return
         }
 
@@ -346,12 +349,15 @@
         }
         return true
       },
-      checkFilters () {
-        if (this.filters.accountRole || this.filters.address) {
-          return true
-        } else {
+      isAccountAddressValid () {
+        const isAddressInvalid = !this.filters.address &&
+          this.selectedTabName === TAB_NAMES.account
+
+        if (isAddressInvalid) {
           this.$store.dispatch('SET_ERROR', 'Such account does not exist in the system')
           return false
+        } else {
+          return true
         }
       },
       async setFilters () {
