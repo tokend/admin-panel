@@ -6,7 +6,7 @@
       <template v-if="isLoaded">
         <section
           class="user-details__section"
-          v-if="requestToReview"
+          v-if="requestToReview.state"
         >
           <h3>
             Current request state
@@ -47,7 +47,7 @@
           />
         </section>
 
-        <template v-if="requestToReview">
+        <template v-if="requestToReview.state">
           <section class="user-details__section">
             <kyc-general-section
               v-if="requestToReview.accountRoleToSet === ACCOUNT_ROLES.general"
@@ -63,8 +63,11 @@
           </section>
         </template>
 
-        <template v-if="verifiedRequest.accountRoleToSet !== ACCOUNT_ROLES.notVerified && !isUserBlocked">
-          <section class="user-details__section">
+        <template v-if="verifiedRequest.state">
+          <section
+            v-if="verifiedRequest.accountRoleToSet !== ACCOUNT_ROLES.notVerified && !isUserBlocked"
+            class="user-details__section"
+          >
             <h2>Previous approved KYC Request</h2>
             <kyc-general-section
               v-if="verifiedRequest.accountRoleToSet === ACCOUNT_ROLES.general"
@@ -79,7 +82,7 @@
           </section>
 
           <div
-            v-if="requestToReview"
+            v-if="requestToReview.state"
             class="user-details__latest-request"
           >
             <h3>Latest request</h3>
@@ -91,7 +94,7 @@
         </template>
 
         <div class="user-details__actions-wrp">
-          <template v-if="requestToReview">
+          <template v-if="requestToReview.state">
             <request-actions
               class="user-details__actions"
               :user="user"
@@ -208,24 +211,27 @@ export default {
     },
 
     latestApprovedRequest () {
-      return this.requests.find(item => item.isApproved)
+      return this.requests.find(item => item.isApproved) ||
+        new ChangeRoleRequest({})
     },
 
     requestToReview () {
-      return this.requests.find(item => item.isPending || item.isRejected)
+      return this.requests
+        .find(item => item.isPending || item.isRejected) ||
+        new ChangeRoleRequest({})
     },
 
     latestBlockedRequest () {
       return this.requests.find(item => {
         return item.accountRoleToSet === config.ACCOUNT_ROLES.blocked
-      })
+      }) || new ChangeRoleRequest({})
     },
 
     latestNonBlockedRequest () {
       return this.requests.find(item => {
         return item.isApproved &&
           item.accountRoleToSet !== config.ACCOUNT_ROLES.blocked
-      })
+      }) || new ChangeRoleRequest({})
     },
 
     userRole () {
