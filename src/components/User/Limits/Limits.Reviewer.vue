@@ -327,7 +327,7 @@ export default {
       const request = await api.requests.get(this.id)
       const requestDetails = request.details[snakeToCamelCase(request.details.requestType)].details
       this.desiredLimitDetails = requestDetails
-      this.desiredLimitDetails.limits = this.checkLimit(this.desiredLimitDetails.limits)
+      this.desiredLimitDetails.limits = this.normalizeLimit(this.desiredLimitDetails.limits)
       const [account, limits] = await Promise.all([
         Sdk.horizon.account.get(request.requestor),
         Sdk.horizon.account.getLimits(request.requestor)
@@ -341,7 +341,7 @@ export default {
       this.isLoaded = true
       this.$store.commit('CLOSE_LOADER')
     },
-    checkLimit (limit) {
+    normalizeLimit (limit) {
       return {
         annualOut: limit.annualOut || MAX_LIMIT_INT64,
         dailyOut: limit.dailyOut || MAX_LIMIT_INT64,
