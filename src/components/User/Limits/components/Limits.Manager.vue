@@ -1,6 +1,6 @@
 <template>
   <div class="limits-manager__wrapper">
-    <tabs>
+    <tabs @changed="changeTabs">
       <tab name="Specific account type">
         <div class="limits-manager">
           <h2>Limits management</h2>
@@ -102,6 +102,14 @@
             >
               Update payment limits
             </button>
+
+            <button
+              class="limits-manager__remove-btn app__btn app__btn--danger"
+              :disabled="isPending"
+              @click="removeLimits(limits.payment)"
+            >
+              Remove payment limits
+            </button>
           </div>
         </template>
       </div>
@@ -136,6 +144,14 @@
             >
               Update withdrawal limits
             </button>
+
+            <button
+              class="limits-manager__remove-btn app__btn app__btn--danger"
+              :disabled="isPending"
+              @click="removeLimits(limits.withdrawal)"
+            >
+              Remove withdrawal limits
+            </button>
           </div>
         </template>
       </div>
@@ -169,6 +185,14 @@
               @click="updateLimits(limits.deposit)"
             >
               Update deposit limits
+            </button>
+
+            <button
+              class="limits-manager__remove-btn app__btn app__btn--danger"
+              :disabled="isPending"
+              @click="removeLimits(limits.deposit)"
+            >
+              Remove deposit limits
             </button>
           </div>
         </template>
@@ -205,6 +229,11 @@
     'annualOut'
   ]
 
+  const TAB_NAME = Object.freeze({
+    specificAccount: 'Specific account',
+    specificAccountType: 'Specific account type'
+  })
+
   export default {
     components: {
       SelectField,
@@ -237,7 +266,8 @@
         [config.ACCOUNT_ROLES.general]: 'General user',
         [config.ACCOUNT_ROLES.corporate]: 'Corporate user'
       }),
-      numericValueRegExp: /^\d*\.?\d*$/
+      numericValueRegExp: /^\d*\.?\d*$/,
+      activeTab: TAB_NAME.specificAccountType
     }),
     async created () {
       await this.getAssets()
@@ -306,7 +336,26 @@
         }
         this.isPending = false
       },
+      async removeLimits (limits) {
+        this.isPending = true
 
+        if (limits.id === 0) {
+          this.isPending = false
+          return false
+        }
+        try {
+          const operation = Sdk.base.ManageLimitsBuilder.removeLimits({
+            id: (limits.id).toString()
+          })
+          await Sdk.horizon.transactions.submitOperations(operation)
+          await this.getLimits()
+          this.$store.dispatch('SET_INFO', 'Limits removed')
+        } catch (e) {
+          console.error(e)
+          e.showMessage()
+        }
+        this.isPending = false
+      },
       async getAssets () {
         const response = await Sdk.horizon.assets.getAll()
         this.assets = response.data
@@ -355,6 +404,13 @@
       },
       normalizeLimitAmount (limit) {
         return limit >= DEFAULT_MAX_AMOUNT ? '' : limit
+      },
+      changeTabs (currentTab) {
+        if (currentTab.tab.name === TAB_NAME.specificAccount) {
+          this.activeTab = TAB_NAME.specificAccount
+        } else {
+          this.activeTab = TAB_NAME.specificAccountType
+        }
       }
     },
     watch: {
@@ -446,5 +502,9 @@
   .limits-manager-filters__specific-user-field {
     margin-bottom: 5rem;
     width: 50%;
+  }
+
+  .limits-manager__remove-btn {
+    margin-top: 1rem;
   }
 </style>
