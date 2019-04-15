@@ -71,10 +71,10 @@ export default {
       try {
         await this.assetRequest.reject(this.rejectReason, this.isPermanentReject)
         this.$store.dispatch('SET_INFO', 'Request successfully rejected')
-        this.$router.push({ name: 'tokens' })
+        this.$router.push({ name: 'assets' })
       } catch (err) {
         console.error(err)
-        this.$store.dispatch('SET_ERROR', 'Failed to reject token creation')
+        this.$store.dispatch('SET_ERROR', 'Failed to reject asset creation')
       }
       this.isPending = false
     }

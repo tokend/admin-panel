@@ -1,3 +1,5 @@
+// TODO: refactor this mess
+
 import Vue from 'vue'
 import store from './store'
 import router from './router'
@@ -38,8 +40,8 @@ export default {
       mainData: JSON.stringify(mainData),
       server: Vue.params.KEY_SERVER_ADMIN,
       keypair: signingKeys
-    }).then((response) => {
-      this._storeToken(response, credentials.username)
+    }).then((wallet) => {
+      this._storeWallet(wallet, credentials.username)
 
       if (redirect) router.push({ name: redirect })
     }).catch((errorResponse) => {
@@ -47,16 +49,16 @@ export default {
     })
   },
 
-  login (creds) {
+  login (credentials) {
     const params = {
       server: Vue.params.KEY_SERVER_ADMIN,
-      username: creds.username.toLowerCase(),
-      password: creds.password
+      username: credentials.username.toLowerCase(),
+      password: credentials.password
     }
 
     return StellarWallet.getWallet(params)
       .then(wallet => {
-        this._storeToken(wallet, creds.username)
+        this._storeWallet(wallet, credentials.username)
         return { ok: true, enabledTFA: false }
       }).catch(err => {
         if (err.status === 403 && err.tfaRequired) {
@@ -90,7 +92,7 @@ export default {
 
     return StellarWallet.showWallet(options)
       .then(wallet => {
-        this._storeToken(wallet, params.username)
+        this._storeWallet(wallet, params.username)
         return { ok: true }
       }).catch(err => {
         return { ok: false, message: err.message, code: err.status }
@@ -100,42 +102,46 @@ export default {
   async seedLogin (seed) {
     const auth = store.state.auth || {}
     const user = store.state.user || {}
-    const keypair = Sdk.base.Keypair.fromSecret(seed)
+    const keyPair = Sdk.base.Keypair.fromSecret(seed)
 
     user.name = 'admin_demo'
+    user.address = keyPair.accountId()
     user.keys = user.keys || {}
     user.keys.accountId = config.MASTER_ACCOUNT
-    user.keys.seed = keypair.secret()
-    const wallet = new Wallet(
+    user.keys.seed = keyPair.secret()
+
+    const signingWallet = new Wallet(
       '',
       user.keys.seed,
       user.keys.accountId
     )
-    Sdk.sdk.useWallet(wallet)
-    ApiCallerFactory.setDefaultWallet(wallet)
+    Sdk.sdk.useWallet(signingWallet)
+    ApiCallerFactory.setDefaultWallet(signingWallet)
 
     store.commit('UPDATE_USER', user)
     store.commit('UPDATE_AUTH', auth)
   },
 
-  async _storeToken (credentials, username) {
-    const auth = store.state.auth
-    const user = store.state.user
+  async _storeWallet (wallet, username) {
+    const auth = store.state.auth || {}
+    const user = store.state.user || {}
+
     user.name = username
+    user.address = JSON.parse(wallet.getKeychainData()).accountId
     user.keys = user.keys || {}
     user.keys.accountId = config.MASTER_ACCOUNT
-    user.keys.seed = JSON.parse(credentials.getKeychainData()).seed
-    const wallet = new Wallet(
+    user.keys.seed = JSON.parse(wallet.getKeychainData()).seed
+    user.wallet = user.wallet || {}
+    user.wallet.id = wallet.getWalletId()
+
+    const signingWallet = new Wallet(
       '',
       user.keys.seed,
       user.keys.accountId,
-      credentials.getWalletId()
+      wallet.getWalletId()
     )
-    Sdk.sdk.useWallet(wallet)
-    ApiCallerFactory.setDefaultWallet(wallet)
-    user.wallet = {
-      id: credentials.getWalletId()
-    }
+    Sdk.sdk.useWallet(signingWallet)
+    ApiCallerFactory.setDefaultWallet(signingWallet)
 
     store.commit('UPDATE_USER', user)
     store.commit('UPDATE_AUTH', auth)

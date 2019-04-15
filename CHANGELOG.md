@@ -10,13 +10,24 @@ for further information about branching and tagging conventions.
 ## [Unreleased]
 #### Added
 - Validation of account field when setting limits for specific account
+- Validation for max amount on issuance form
 
 #### Changed
 - Issuance history list order reverted (now the oldest ones on top)
+- Renamed `Fund(s)` -> `Sale(s)` and `Token(s)` -> `Asset(s)`
+
+#### Fixed
+- Getting private document URL on DocLinkGetter component
+- Filtering sales by their owner
 
 #### Removed
 - Thresholds code leftovers
 - Signing rules page
+
+#### Fixed
+- "You" label position in admin list
+- Dropdown of user account widget when you hover button below it now stays above
+  the button
 
 ## [1.4.0] - 2019-04-05
 

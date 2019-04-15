@@ -1,6 +1,6 @@
 import { ReviewableRequest } from './ReviewableRequest'
 
-export class TokenRequest extends ReviewableRequest {
+export class AssetRequest extends ReviewableRequest {
   get code () {
     return this.operationDetails.code
   }
