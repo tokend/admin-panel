@@ -1,6 +1,6 @@
 <template>
   <div class="limits-manager__wrapper">
-    <tabs @changed="changeTabs">
+    <tabs>
       <tab name="Specific account type">
         <div class="limits-manager">
           <h2>Limits management</h2>
@@ -229,11 +229,6 @@
     'annualOut'
   ]
 
-  const TAB_NAME = Object.freeze({
-    specificAccount: 'Specific account',
-    specificAccountType: 'Specific account type'
-  })
-
   export default {
     components: {
       SelectField,
@@ -266,8 +261,7 @@
         [config.ACCOUNT_ROLES.general]: 'General user',
         [config.ACCOUNT_ROLES.corporate]: 'Corporate user'
       }),
-      numericValueRegExp: /^\d*\.?\d*$/,
-      activeTab: TAB_NAME.specificAccountType
+      numericValueRegExp: /^\d*\.?\d*$/
     }),
     async created () {
       await this.getAssets()
@@ -404,13 +398,6 @@
       },
       normalizeLimitAmount (limit) {
         return limit >= DEFAULT_MAX_AMOUNT ? '' : limit
-      },
-      changeTabs (currentTab) {
-        if (currentTab.tab.name === TAB_NAME.specificAccount) {
-          this.activeTab = TAB_NAME.specificAccount
-        } else {
-          this.activeTab = TAB_NAME.specificAccountType
-        }
       }
     },
     watch: {
