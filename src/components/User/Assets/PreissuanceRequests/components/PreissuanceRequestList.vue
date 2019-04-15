@@ -44,7 +44,7 @@
     <div v-show="!requestSelected">
       <div
         class="full-width preissuance-request-list"
-        v-if="requestsLoaded"
+        v-if="filteredRequests && filteredRequests.length"
       >
         <table class="preissuance-request-list__table">
 
@@ -100,12 +100,21 @@
         </div>
       </div>
 
-      <p
-        class="loading"
-        v-else
-      >
-        Loading<span class="loading__dot">.</span><span class="loading__dot">.</span><span class="loading__dot">.</span>
-      </p>
+      <template v-else>
+        <div class="app-list__li-like">
+          <template v-if="isLoading">
+            <p>
+              Loading...
+            </p>
+          </template>
+
+          <template v-else>
+            <p>
+              Nothing here yet
+            </p>
+          </template>
+        </div>
+      </template>
     </div>
     <!--/ Request List -->
 
@@ -144,7 +153,7 @@ export default {
       loadNewPage: false,
       pageableLoadCompleted: false,
       requestSelected: false,
-      requestsLoaded: false,
+      isLoading: false,
 
       pages: {},
       requests: [],
@@ -225,14 +234,19 @@ export default {
       return accepted ? 'Accepted' : 'Rejected'
     },
 
-    getRequests () {
-      return api.requests.getPreissuanceRequests(this.asset)
-        .then(r => {
-          this.requests = []
-          this.requests = r.records
-          this.pages = r
-          this.requestsLoaded = true
-        })
+    async getRequests () {
+      this.isLoading = true
+      let response
+      try {
+        response = await api.requests.getPreissuanceRequests(this.asset)
+        this.requests = []
+        this.requests = response.records
+        this.pages = response
+      } catch (error) {
+        ErrorHandler.process(error)
+      }
+      this.isLoading = false
+      return response
     },
 
     setReject (r) {

@@ -25,7 +25,10 @@
       </span>
     </div>
 
-    <ul class="admin-list__ul">
+    <ul
+      class="admin-list__ul"
+      v-if="list && list.length"
+    >
       <li
         class="admin-list__li"
         v-for="item in list"
@@ -81,6 +84,21 @@
         </router-link>
       </li>
     </ul>
+    <template v-else>
+      <div class="app-list__li-like">
+        <template v-if="isLoading">
+          <p>
+            Loading...
+          </p>
+        </template>
+
+        <template v-else>
+          <p>
+            Nothing here yet
+          </p>
+        </template>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -96,7 +114,8 @@ export default {
     return {
       list: [],
       masterPubKey: Vue.params.MASTER_ACCOUNT,
-      signerRoles: []
+      signerRoles: [],
+      isLoading: false
     }
   },
 
@@ -134,10 +153,12 @@ export default {
     },
 
     async loadSignerList () {
+      this.isLoading = true
       const { data } = await ApiCallerFactory
         .createCallerInstance()
         .getWithSignature(`/v3/accounts/${this.masterPubKey}/signers`)
       this.list = data
+      this.isLoading = false
     }
   }
 }
