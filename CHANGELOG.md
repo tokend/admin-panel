@@ -9,6 +9,7 @@ for further information about branching and tagging conventions.
 
 ## [Unreleased]
 #### Added
+- Validation of account field when setting limits for specific account
 - Validation for max amount on issuance form
 
 #### Changed
