@@ -3,6 +3,7 @@ import { REQUEST_STATES } from '@/constants'
 
 export class ChangeRoleRequest {
   constructor (record) {
+    this._record = record
     this.id = record.id || '0'
 
     this.rejectReason = record.rejectReason
@@ -17,14 +18,18 @@ export class ChangeRoleRequest {
       record, 'requestDetails.creatorDetails.latestApprovedRequestId'
     )
 
-    this.creatorDetails = safeGet(record, 'requestDetails.creatorDetails')
-
+    this.accountRoleToSet = safeGet(record, 'requestDetails.accountRoleToSet')
     this.state = record.state
     this.stateI = record.stateI
 
-    this.accountRoleToSet = safeGet(record, 'requestDetails.accountRoleToSet')
+    this.creatorDetails = safeGet(record, 'requestDetails.creatorDetails')
     this.blobId = safeGet(record, 'requestDetails.creatorDetails.blobId')
+
     this.externalDetails = safeGet(record, 'externalDetails.data')
+  }
+
+  get record () {
+    return this._record
   }
 
   get isApproved () {

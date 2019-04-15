@@ -1,6 +1,6 @@
 <template>
   <div class="user-request">
-    <template v-if="isRequestPending">
+    <template v-if="requestToReview.isPending">
       <div class="app__form-actions user-details-request__form-actions">
         <button
           class="app__btn user-request__btn"
@@ -20,7 +20,7 @@
       </div>
     </template>
 
-    <template v-else-if="isRequestRejected">
+    <template v-else-if="requestToReview.isRejected">
       <button
         class="app__btn app__btn--danger user-request__btn"
         @click="reject(true)"
@@ -71,8 +71,6 @@
 <script>
 import api from '@/api'
 
-import { REQUEST_STATES_STR } from '@/constants'
-
 import { TextField } from '@comcom/fields'
 import Modal from '@comcom/modals/Modal'
 
@@ -112,23 +110,12 @@ export default {
 
   data () {
     return {
-      REQUEST_STATES_STR,
       rejectForm: {
         reason: '',
         isShown: false
       },
       isShownAdvanced: false,
       isPending: false
-    }
-  },
-
-  computed: {
-    isRequestPending () {
-      return this.requestToReview.state === REQUEST_STATES_STR.pending
-    },
-
-    isRequestRejected () {
-      return this.requestToReview.state === REQUEST_STATES_STR.rejected
     }
   },
 
@@ -139,7 +126,7 @@ export default {
       }
       this.isPending = true
       try {
-        await api.requests.approve(this.requestToReview)
+        await api.requests.approve(this.requestToReview.record)
         this.$store.dispatch('SET_INFO', 'Request approved successfully')
         this.$emit(EVENTS.reviewed)
       } catch (error) {
@@ -158,7 +145,7 @@ export default {
       try {
         await api.requests.reject(
           { reason: rejectReason, isPermanent },
-          { ...this.requestToReview, reviewDetails: { tasksToRemove: 0 }}
+          { ...this.requestToReview.record, reviewDetails: { tasksToRemove: 0 }}
         )
         this.$store.dispatch('SET_INFO', `Request rejected successfully`)
         this.$emit(EVENTS.reviewed)

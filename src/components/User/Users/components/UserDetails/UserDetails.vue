@@ -135,7 +135,6 @@
 </template>
 
 <script>
-import { REQUEST_STATES, REQUEST_STATES_STR } from '@/constants'
 import AccountSection from './UserDetails.Account'
 
 import KycGeneralSection from './UserDetails.Kyc'
@@ -181,8 +180,7 @@ export default {
       isShownExternal: false,
       user: {},
       requests: [],
-      verifiedRequest: {},
-      REQUEST_STATES_STR
+      verifiedRequest: {}
     }
   },
 

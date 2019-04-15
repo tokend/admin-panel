@@ -8,12 +8,25 @@ Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
 ## [Unreleased]
+#### Added
+- Change role request record
+- Blocked account role
+- Outlined button class
+
 #### Changed
 - Issuance history list order reverted (now the oldest ones on top)
+- Extracted reset account actions to a separate component
+- Now blocking the account using change role request created by admin
+- Now passing latest approved request ID in creator details
+  while resetting or blocking the account
 
 #### Removed
 - Thresholds code leftovers
 - Signing rules page
+- Unnecessary styles on user details page
+
+#### Fixed
+- Displaying user role & state on user details page
 
 ## [1.4.0] - 2019-04-05
 
@@ -94,4 +107,3 @@ for further information about branching and tagging conventions.
 [1.4.0-rc.0]: https://github.com/tokend/admin-panel/compare/1.3.1...1.4.0-rc.0
 [1.3.1]: https://github.com/tokend/admin-panel/compare/1.3.0...1.3.1
 [1.3.0]: https://github.com/tokend/admin-panel/releases/tag/1.3.0
-
