@@ -14,6 +14,7 @@ for further information about branching and tagging conventions.
 #### Changed
 - Issuance history list order reverted (now the oldest ones on top)
 - Renamed `Fund(s)` -> `Sale(s)` and `Token(s)` -> `Asset(s)`
+- "Loading", "No data" state handlers and "More" button added to all lists
 
 #### Fixed
 - Getting private document URL on DocLinkGetter component

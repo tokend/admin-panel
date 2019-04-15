@@ -17,23 +17,23 @@
         </div>
 
         <router-link class="app-list__li"
-          v-for="item in list" :key="`${item.base}/${item.quote}`"
-          :to="{ name: 'systemAssets.assetPairs.show', params: { base: item.base, quote: item.quote }}">
+          v-for="item in list" :key="`${item.baseAsset.id}/${item.quoteAsset.id}`"
+          :to="{ name: 'systemAssets.assetPairs.show', params: { base: item.baseAsset.id, quote: item.quoteAsset.id }}">
           <span class="app-list__cell app-list__cell--important">
-            {{`${item.base}/${item.quote}`}}
+            {{`${item.baseAsset.id}/${item.quoteAsset.id}`}}
           </span>
 
           <span class="app-list__cell app-list__cell--right">
-            <asset-amount-formatter :amount="item.physicalPrice" :asset="item.quote" />
+            <asset-amount-formatter :amount="item.price" :asset="item.quoteAsset.id" />
           </span>
 
           <span class="app-list__cell app-list__cell--policy app-list__cell--right">
-            {{ item.policy }}
+            {{ item.policies.value }}
             <span class="asset-pair__policy-tip">
               <mdi-help-circle-icon class="asset-pairs__tip-icon"/>
               <span class="asset-pairs__policies-list">
                 <span class="asset-pairs__policies-list-item"
-                      v-for="(policy, i) in item.policies" :key="i"
+                      v-for="(policy, i) in item.policies.flags" :key="i"
                 >
                   {{ ASSET_PAIR_POLICIES_VERBOSE[policy.value] }}
                 </span>
@@ -71,18 +71,29 @@
         </div>
       </div>
     </template>
+
+    <div class="app__more-btn-wrp">
+      <collection-loader
+        :first-page-loader="getList"
+        @first-page-load="setList"
+        @next-page-load="extendList"
+      />
+    </div>
   </div>
 </template>
 
 <script>
-import { Sdk } from '@/sdk'
 import { AssetAmountFormatter } from '@comcom/formatters'
 import { ASSET_PAIR_POLICIES_VERBOSE } from '@/constants'
 import 'mdi-vue/HelpCircleIcon'
+import { ApiCallerFactory } from '@/api-caller-factory'
+import { ErrorHandler } from '@/utils/ErrorHandler'
+import { CollectionLoader } from '@/components/common'
 
 export default {
   components: {
-    AssetAmountFormatter
+    AssetAmountFormatter,
+    CollectionLoader
   },
 
   data () {
@@ -95,21 +106,32 @@ export default {
     }
   },
 
-  created () {
-    this.getPairs()
-  },
-
   methods: {
-    async getPairs () {
+    async getList () {
       this.isLoaded = false
       this.isFailed = false
+      let response = {}
       try {
-        const response = await Sdk.horizon.assetPairs.getAll()
-        this.list = response.data
-        this.isLoaded = true
+        response = await ApiCallerFactory
+          .createCallerInstance()
+          .getWithSignature('/v3/asset_pairs')
       } catch (error) {
         error.showMessage()
         this.isFailed = true
+      }
+      this.isLoaded = true
+      return response
+    },
+
+    setList (data) {
+      this.list = data
+    },
+
+    async extendList (data) {
+      try {
+        this.list = this.list.concat(data)
+      } catch (error) {
+        ErrorHandler.process(error)
       }
     }
   }

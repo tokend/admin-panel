@@ -13,24 +13,49 @@
       </span>
     </div>
 
-    <ul class="asset-list__ul">
+    <ul
+      class="asset-list__ul"
+      v-if="assets && assets.length"
+    >
       <li class="asset-list__li" v-for="(asset, i) in parsedAssets" :key="i">
         <router-link class="asset-list__li-a"
-          :to="{ name: 'systemAssets.show', params: { asset: asset.code }}">
+          :to="{ name: 'systemAssets.show', params: { asset: asset.id }}">
           <span class="asset-list__li-name" :title="asset.creatorDetails.name">
             {{ asset.creatorDetails.name }}
           </span>
 
-          <span class="asset-list__li-code" :title="asset.code">
-            {{ asset.code }}
+          <span class="asset-list__li-code" :title="asset.id">
+            {{ asset.id }}
           </span>
 
-          <span class="asset-list__li-policy" :title="asset.policy">
-            {{ asset.policy }}
+          <span class="asset-list__li-policy" :title="asset.policies.value">
+            {{ asset.policies.value }}
           </span>
         </router-link>
       </li>
     </ul>
+    <template v-else>
+      <div class="app-list__li-like">
+        <template v-if="isLoading">
+          <p>
+            Loading...
+          </p>
+        </template>
+
+        <template v-else>
+          <p>
+            Nothing here yet
+          </p>
+        </template>
+      </div>
+    </template>
+    <div class="app__more-btn-wrp app__more-btn-wrp--left">
+      <collection-loader
+        :first-page-loader="getAssets"
+        @first-page-load="setAssets"
+        @next-page-load="extendAssets"
+      />
+    </div>
   </div>
 </template>
 
@@ -38,11 +63,19 @@
 import config from '@/config'
 import { Sdk } from '@/sdk'
 import trim from 'lodash/trim'
+import { ApiCallerFactory } from '@/api-caller-factory'
+import { ErrorHandler } from '@/utils/ErrorHandler'
+import { CollectionLoader } from '@/components/common'
 
 export default {
+  components: {
+    CollectionLoader
+  },
+
   data () {
     return {
-      assets: []
+      assets: [],
+      isLoading: false
     }
   },
 
@@ -60,28 +93,46 @@ export default {
     }
   },
 
-  created () {
-    this.getAssets()
-  },
-
   methods: {
     async getAssets () {
       this.assets = []
       this.$store.commit('OPEN_LOADER')
+      this.isLoading = true
+      let response = {}
       try {
-        const response = await Sdk.horizon.assets.getAll({
-          owner: config.MASTER_ACCOUNT
-        })
-        this.assets = response.data.map(item => {
-          const creatorDetails = item.details || item.creatorDetails
-          return Object.assign(item, { creatorDetails })
-        })
+        response = await ApiCallerFactory
+          .createCallerInstance()
+          .getWithSignature('/v3/assets', {
+            filter: { owner: config.MASTER_ACCOUNT }
+          })
         this.$store.commit('CLOSE_LOADER')
       } catch (err) {
         console.error('caught error', err)
         this.$store.commit('CLOSE_LOADER')
         this.$store.dispatch('SET_ERROR', 'Something went wrong. Can\'t to load assets list')
       }
+      this.isLoading = false
+      return response
+    },
+
+    setAssets (data) {
+      this.assets = this.addСreatorDetailsKeyToObjects(data)
+    },
+
+    async extendAssets (data) {
+      try {
+        const mapedData = this.addСreatorDetailsKeyToObjects(data)
+        this.assets = this.assets.concat(mapedData)
+      } catch (error) {
+        ErrorHandler.process(error)
+      }
+    },
+
+    addСreatorDetailsKeyToObjects (array) {
+      return array.map(item => {
+        const creatorDetails = item.details || item.creatorDetails
+        return Object.assign(item, { creatorDetails })
+      })
     }
   }
 }
@@ -170,5 +221,11 @@ function convertPolicyToString (policy) {
   @extend %space-right;
   width: 10%;
   text-align: right;
+}
+
+.app__more-btn-wrp--left {
+  margin-right: auto;
+  margin-left: 0;
+  max-width: 64rem;
 }
 </style>
