@@ -1,5 +1,5 @@
 <template>
-  <div class="token-requests">
+  <div class="asset-requests">
     <router-view/>
   </div>
 </template>

@@ -233,33 +233,33 @@ export const UserRoutes = {
     },
 
     {
-      path: '/tokens',
-      name: 'tokens',
-      redirect: { name: 'tokens.requests' },
+      path: '/assets',
+      name: 'assets',
+      redirect: { name: 'assets.requests' },
       component: function (resolve) {
-        require(['../../components/User/Tokens/Tokens.vue'], resolve)
+        require(['../../components/User/Assets/Assets.vue'], resolve)
       },
       children: [
         {
           path: 'requests',
-          name: 'tokens.requests',
-          redirect: { name: 'tokens.requests.index' },
+          name: 'assets.requests',
+          redirect: { name: 'assets.requests.index' },
           component: function (resolve) {
-            require(['../../components/User/Tokens/TokenRequests/TokenRequests.vue'], resolve)
+            require(['../../components/User/Assets/AssetRequests/AssetRequests.vue'], resolve)
           },
           children: [
             {
               path: '',
-              name: 'tokens.requests.index',
+              name: 'assets.requests.index',
               component: function (resolve) {
-                require(['../../components/User/Tokens/TokenRequests/TokenRequests.Index.vue'], resolve)
+                require(['../../components/User/Assets/AssetRequests/AssetRequests.Index.vue'], resolve)
               }
             },
             {
               path: ':id',
-              name: 'tokens.requests.show',
+              name: 'assets.requests.show',
               component: function (resolve) {
-                require(['../../components/User/Tokens/TokenRequests/TokenRequests.Show.vue'], resolve)
+                require(['../../components/User/Assets/AssetRequests/AssetRequests.Show.vue'], resolve)
               },
               props: true
             }
@@ -267,17 +267,17 @@ export const UserRoutes = {
         },
         {
           path: 'preissuance-requests',
-          name: 'tokens.preissuanceRequests',
-          redirect: { name: 'tokens.preissuanceRequests.index' },
+          name: 'assets.preissuanceRequests',
+          redirect: { name: 'assets.preissuanceRequests.index' },
           component: function (resolve) {
-            require(['../../components/User/Tokens/PreissuanceRequests/PreissuanceRequests.vue'], resolve)
+            require(['../../components/User/Assets/PreissuanceRequests/PreissuanceRequests.vue'], resolve)
           },
           children: [
             {
               path: '',
-              name: 'tokens.preissuanceRequests.index',
+              name: 'assets.preissuanceRequests.index',
               component: function (resolve) {
-                require(['../../components/User/Tokens/PreissuanceRequests/PreissuanceRequests.Index.vue'], resolve)
+                require(['../../components/User/Assets/PreissuanceRequests/PreissuanceRequests.Index.vue'], resolve)
               }
             }
           ]

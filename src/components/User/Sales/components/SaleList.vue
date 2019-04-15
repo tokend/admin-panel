@@ -1,14 +1,14 @@
 <template>
   <div class="sale-list">
     <h2>
-      Fund list
+      Sale list
     </h2>
 
     <div class="sale-list__filters-wrp">
       <div class="app-list-filters sale-list__filters">
         <input-field
           class="app-list-filters__field sale-list__field"
-          label="Token code"
+          label="Asset code"
           v-model="filters.baseAsset"
         />
         <input-field
@@ -159,14 +159,13 @@ export default {
 
   methods: {
     async getOwner () {
+      let owner
       const emailRegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-      if (Sdk.base.Keypair.isValidPublicKey(this.owner)) {
-        this.filters.owner = this.owner
-      } else if (emailRegExp.test(this.owner)) {
-        this.filters.owner = await api.users.getAccountIdByEmail(this.owner)
-      } else {
-        this.filters.owner = this.owner
+      if (emailRegExp.test(this.owner)) {
+        owner = await api.users.getAccountIdByEmail(this.owner)
       }
+
+      return owner || this.owner
     },
 
     async getList () {
@@ -222,8 +221,8 @@ export default {
     'filters.openOnly' () {
       this.reloadCollectionLoader()
     },
-    'owner': _.throttle(function () {
-      this.getOwner()
+    'owner': _.throttle(async function () {
+      this.filters.owner = await this.getOwner()
       this.reloadCollectionLoader()
     }, 1000),
     'filters.name': _.throttle(function () {

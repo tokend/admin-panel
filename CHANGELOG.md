@@ -9,24 +9,31 @@ for further information about branching and tagging conventions.
 
 ## [Unreleased]
 #### Added
+- Validation for max amount on issuance form
 - Change role request record
 - Blocked account role
 - Outlined button class
 
 #### Changed
 - Issuance history list order reverted (now the oldest ones on top)
+- Renamed `Fund(s)` -> `Sale(s)` and `Token(s)` -> `Asset(s)`
 - Extracted reset account actions to a separate component
 - Now blocking the account using change role request created by admin
 - Now passing latest approved request ID in creator details
   while resetting or blocking the account
 
+#### Fixed
+- "You" label position in admin list
+- Dropdown of user account widget when you hover button below it now stays above
+  the button
+- Getting private document URL on DocLinkGetter component
+- Filtering sales by their owner
+- Displaying user role & state on user details page
+
 #### Removed
 - Thresholds code leftovers
 - Signing rules page
 - Unnecessary styles on user details page
-
-#### Fixed
-- Displaying user role & state on user details page
 
 ## [1.4.0] - 2019-04-05
 
