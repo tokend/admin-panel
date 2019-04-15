@@ -16,13 +16,13 @@
             {{ requestToReview.state }}
           </p>
 
-          <p v-if="requestToReview.state === REQUEST_STATES_STR.rejected">
+          <p v-if="requestToReview.isRejected">
             Reason: {{ requestToReview.rejectReason }}
           </p>
 
           <p
             class="user-details__heading"
-            v-if="requestToReview.state === REQUEST_STATES_STR.rejected"
+            v-if="requestToReview.isRejected"
           >
             <span>External rejection details</span>
             <button
@@ -43,38 +43,38 @@
           <account-section
             :user="user"
             :original-role="userRole"
-            :block-reason="blockReason"
+            :block-reason="latestBlockedRequest.blockReason"
           />
         </section>
 
         <template v-if="requestToReview">
           <section class="user-details__section">
             <kyc-general-section
-              v-if="requestToReview.requestDetails.accountRoleToSet === ACCOUNT_ROLES.general"
+              v-if="requestToReview.accountRoleToSet === ACCOUNT_ROLES.general"
               :user="user"
-              :blobId="requestToReview.requestDetails.creatorDetails.blobId"
+              :blobId="requestToReview.blobId"
             />
 
             <kyc-syndicate-section
-              v-if="requestToReview.requestDetails.accountRoleToSet === ACCOUNT_ROLES.corporate"
+              v-if="requestToReview.accountRoleToSet === ACCOUNT_ROLES.corporate"
               :user="user"
-              :blobId="requestToReview.requestDetails.creatorDetails.blobId"
+              :blobId="requestToReview.blobId"
             />
           </section>
         </template>
 
-        <template v-if="previousUserRole !== ACCOUNT_ROLES.notVerified && !isUserBlocked">
+        <template v-if="verifiedRequest.accountRoleToSet !== ACCOUNT_ROLES.notVerified && !isUserBlocked">
           <section class="user-details__section">
             <h2>Previous approved KYC Request</h2>
             <kyc-general-section
-              v-if="previousUserRole === ACCOUNT_ROLES.general"
+              v-if="verifiedRequest.accountRoleToSet === ACCOUNT_ROLES.general"
               :user="user"
-              :blobId="verifiedRequest.requestDetails.creatorDetails.blobId"
+              :blobId="verifiedRequest.blobId"
             />
             <kyc-syndicate-section
-              v-else-if="previousUserRole === ACCOUNT_ROLES.corporate"
+              v-else-if="verifiedRequest.accountRoleToSet === ACCOUNT_ROLES.corporate"
               :user="user"
-              :blobId="verifiedRequest.requestDetails.creatorDetails.blobId"
+              :blobId="verifiedRequest.blobId"
             />
           </section>
 
@@ -84,7 +84,7 @@
           >
             <h3>Latest request</h3>
             <p class="text">
-              Create a {{ requestToReview.requestDetails.accountRoleToSet | roleIdToString | lowerCase }} account:
+              Create a {{ requestToReview.accountRoleToSet | roleIdToString | lowerCase }} account:
               {{ requestToReview.state }}
             </p>
           </div>
@@ -146,10 +146,11 @@ import ResetActions from './UserDetails.Reset'
 import BlockActions from './UserDetails.Block'
 
 import { unCamelCase } from '@/utils/un-camel-case'
-import safeGet from 'lodash/get'
 
 import { ApiCallerFactory } from '@/api-caller-factory'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+
+import { ChangeRoleRequest } from '@/api/responseHandlers/requests/ChangeRoleRequest'
 
 import config from '@/config'
 
@@ -208,60 +209,31 @@ export default {
       return this.user.role === config.ACCOUNT_ROLES.blocked
     },
 
-    previousUserRole () {
-      return safeGet(
-        this.verifiedRequest,
-        'requestDetails.accountRoleToSet'
-      )
-    },
-
     latestApprovedRequest () {
-      return this.requests
-        .find(item => item.stateI === REQUEST_STATES.approved)
-    },
-
-    latestNonBlockedRequest () {
-      return this.requests.find(item => {
-        const accountRoleToSet = safeGet(
-          item, 'requestDetails.accountRoleToSet'
-        )
-
-        return item.stateI === REQUEST_STATES.approved &&
-          accountRoleToSet !== config.ACCOUNT_ROLES.blocked
-      })
+      return this.requests.find(item => item.isApproved)
     },
 
     requestToReview () {
-      return this.requests
-        .find(item => {
-          return item.stateI === REQUEST_STATES.pending ||
-            item.stateI === REQUEST_STATES.rejected
-        })
+      return this.requests.find(item => item.isPending || item.isRejected)
     },
 
     latestBlockedRequest () {
       return this.requests.find(item => {
-        const accountRoleToSet = safeGet(
-          item, 'requestDetails.accountRoleToSet'
-        )
+        return item.accountRoleToSet === config.ACCOUNT_ROLES.blocked
+      })
+    },
 
-        return accountRoleToSet === config.ACCOUNT_ROLES.blocked
+    latestNonBlockedRequest () {
+      return this.requests.find(item => {
+        return item.isApproved &&
+          item.accountRoleToSet !== config.ACCOUNT_ROLES.blocked
       })
     },
 
     userRole () {
-      const accountRoleToSet = safeGet(
-        this.latestNonBlockedRequest,
-        'requestDetails.accountRoleToSet'
-      )
-
-      return String(accountRoleToSet || config.ACCOUNT_ROLES.notVerified)
-    },
-
-    blockReason () {
-      return safeGet(
-        this.latestBlockedRequest,
-        'requestDetails.creatorDetails.blockReason'
+      return String(
+        this.latestNonBlockedRequest.accountRoleToSet ||
+        config.ACCOUNT_ROLES.notVerified
       )
     }
   },
@@ -286,7 +258,9 @@ export default {
             })
         ])
         this.user = user.data[0]
-        this.requests = requests.data || []
+        this.requests = requests.data
+          ? requests.data.map(item => new ChangeRoleRequest(item))
+          : []
         await this.loadVerifiedRequest()
         this.isLoaded = true
       } catch (error) {
@@ -297,19 +271,16 @@ export default {
 
     async loadVerifiedRequest () {
       if (this.latestApprovedRequest) {
-        const requestId = safeGet(
-          this.latestApprovedRequest,
-          'requestDetails.creatorDetails.latestApprovedRequestId'
-        )
+        const requestId = this.latestApprovedRequest.relatedRequestId
 
-        if (requestId > 0) {
+        if (requestId && requestId !== '0') {
           const { data } = await ApiCallerFactory
             .createCallerInstance()
             .getWithSignature(`/v3/change_role_requests/${requestId}`, {
               include: ['request_details']
             })
-          this.verifiedRequest = data
-        } else if (requestId !== '0') {
+          this.verifiedRequest = new ChangeRoleRequest(data)
+        } else if (!requestId) {
           this.verifiedRequest = this.latestApprovedRequest
         }
       }
@@ -370,14 +341,8 @@ export default {
 .user-details__state-info {
   text-transform: capitalize;
 
-  &--approved {
-    color: $color-success;
-  }
-  &--pending {
-    color: $color-active;
-  }
-  &--rejected {
-    color: $color-danger;
-  }
+  &--approved { color: $color-success; }
+  &--pending { color: $color-active; }
+  &--rejected { color: $color-danger; }
 }
 </style>

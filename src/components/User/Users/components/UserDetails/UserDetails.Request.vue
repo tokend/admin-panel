@@ -82,6 +82,8 @@ import 'mdi-vue/ChevronUpIcon'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { confirmAction } from '@/js/modals/confirmation_message'
 
+import { ChangeRoleRequest } from '@/api/responseHandlers/requests/ChangeRoleRequest'
+
 const EVENTS = {
   reviewed: 'reviewed'
 }
@@ -94,9 +96,18 @@ export default {
   },
 
   props: {
-    requestToReview: { type: Object, default: _ => ({}) },
-    latestApprovedRequest: { type: Object, default: _ => ({}) },
-    user: { type: Object, default: _ => ({}) }
+    requestToReview: {
+      type: ChangeRoleRequest,
+      default: _ => new ChangeRoleRequest({})
+    },
+    latestApprovedRequest: {
+      type: ChangeRoleRequest,
+      default: _ => new ChangeRoleRequest({})
+    },
+    user: {
+      type: Object,
+      default: _ => ({})
+    }
   },
 
   data () {

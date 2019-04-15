@@ -59,13 +59,13 @@
 <script>
 import { Sdk } from '@/sdk'
 
-import safeGet from 'lodash/get'
-
 import { TextField } from '@comcom/fields'
 import Modal from '@comcom/modals/Modal'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { confirmAction } from '@/js/modals/confirmation_message'
+
+import { ChangeRoleRequest } from '@/api/responseHandlers/requests/ChangeRoleRequest'
 
 import config from '@/config'
 
@@ -82,10 +82,22 @@ export default {
   },
 
   props: {
-    latestApprovedRequest: { type: Object, default: _ => ({}) },
-    verifiedRequest: { type: Object, default: _ => ({}) },
-    user: { type: Object, default: _ => ({}) },
-    isPending: { type: Boolean, default: false }
+    latestApprovedRequest: {
+      type: ChangeRoleRequest,
+      default: _ => new ChangeRoleRequest({})
+    },
+    verifiedRequest: {
+      type: ChangeRoleRequest,
+      default: _ => new ChangeRoleRequest({})
+    },
+    user: {
+      type: Object,
+      default: _ => ({})
+    },
+    isPending: {
+      type: Boolean,
+      default: false
+    }
   },
 
   data () {
@@ -118,7 +130,7 @@ export default {
             accountRoleToSet: config.ACCOUNT_ROLES.blocked.toString(),
             creatorDetails: {
               blockReason: this.blockForm.reason,
-              latestApprovedRequestId: this.latestApprovedRequest.id || '0'
+              latestApprovedRequestId: this.latestApprovedRequest.id
             },
             allTasks: 0
           })
@@ -138,15 +150,7 @@ export default {
       }
       this.$emit(EVENTS.updateIsPending, true)
       try {
-        const previousAccountRole = safeGet(
-          this.verifiedRequest,
-          'requestDetails.accountRoleToSet'
-        )
-        const latestCreatorDetails = safeGet(
-          this.verifiedRequest,
-          'requestDetails.creatorDetails'
-        )
-        const accountRoleToSet = previousAccountRole ||
+        const accountRoleToSet = this.verifiedRequest.accountRoleToSet ||
           config.ACCOUNT_ROLES.notVerified
 
         const operation = Sdk.base.CreateChangeRoleRequestBuilder
@@ -155,7 +159,7 @@ export default {
             destinationAccount: this.user.address,
             accountRoleToSet: accountRoleToSet.toString(),
             creatorDetails: {
-              ...latestCreatorDetails
+              ...this.verifiedRequest.creatorDetails
             },
             allTasks: 0
           })

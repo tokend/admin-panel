@@ -61,6 +61,8 @@ import Modal from '@comcom/modals/Modal'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { confirmAction } from '@/js/modals/confirmation_message'
 
+import { ChangeRoleRequest } from '@/api/responseHandlers/requests/ChangeRoleRequest'
+
 import config from '@/config'
 
 const EVENTS = {
@@ -76,9 +78,18 @@ export default {
   },
 
   props: {
-    user: { type: Object, default: _ => ({}) },
-    verifiedRequest: { type: Object, default: _ => ({}) },
-    isPending: { type: Boolean, default: false }
+    user: {
+      type: Object,
+      default: _ => ({})
+    },
+    verifiedRequest: {
+      type: ChangeRoleRequest,
+      default: _ => new ChangeRoleRequest({})
+    },
+    isPending: {
+      type: Boolean,
+      default: false
+    }
   },
 
   data () {
