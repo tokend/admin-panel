@@ -38,7 +38,7 @@
           </tr>
         </template>
 
-        <template v-else>
+        <template v-else-if="value">
           <tr class="details-reader__row" :key="`${_uid}-${key}`">
             <td class="details-reader__cell">
               <span class="details-reader__label">

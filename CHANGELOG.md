@@ -18,6 +18,8 @@ for further information about branching and tagging conventions.
 - Get token requests list from API v3
 - Renamed `Fund(s)` -> `Sale(s)` and `Token(s)` -> `Asset(s)`
 - "Loading", "No data" state handlers and "More" button added to all lists
+- Value existing validation in DetailsReader
+- Migrate operation history to /v3/history
 
 #### Fixed
 - Getting private document URL on DocLinkGetter component
