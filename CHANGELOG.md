@@ -13,7 +13,7 @@ for further information about branching and tagging conventions.
 - Single opportunity approve
 - Add tradeable policy after opportunity approve
 - Added "Use coinpayments" checkbox on asset creation page
-- Limit change forms validation
+- Limit change forms normalization
 
 ### Removed
 - Unused dependencies:
