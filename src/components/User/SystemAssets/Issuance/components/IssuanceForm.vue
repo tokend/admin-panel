@@ -23,7 +23,10 @@
 
         <div class="app__form-row">
           <input-field class="app__form-field"
-            type="number" :step="DEFAULT_INPUT_STEP" :min="DEFAULT_INPUT_MIN"
+            type="number"
+            :step="DEFAULT_INPUT_STEP"
+            :min="DEFAULT_INPUT_MIN"
+            :max="availableForIssuance"
             v-model="form.amount"
             label="Amount"
             :disabled="isSubmitting"
@@ -42,14 +45,18 @@
         </div>
 
         <div class="issuance-form__asset-info app__form-row" v-if="form.asset">
-          <p class="text">
+          <p v-if="isIssuanceAllowed" class="text">
             <span>Available:</span>
             <asset-amount-formatter :amount="availableForIssuance" :asset="form.asset"/>
+          </p>
+
+          <p v-else class="text">
+            No available assets left
           </p>
         </div>
 
         <div class="issuance-form__form-actions app__form-actions">
-          <button class="app__btn" :disabled="isSubmitting">
+          <button class="app__btn" :disabled="isSubmitting || !isIssuanceAllowed">
             Issue
           </button>
         </div>
@@ -106,6 +113,10 @@ export default {
     availableForIssuance () {
       const asset = this.assets.find(item => item.code === this.form.asset)
       return asset.availableForIssuance
+    },
+
+    isIssuanceAllowed () {
+      return this.availableForIssuance > 0
     }
   },
   methods: {
