@@ -18,6 +18,7 @@ for further information about branching and tagging conventions.
 #### Fixed
 - Getting private document URL on DocLinkGetter component
 - Filtering sales by their owner
+- Default box-shadow for invalid fields on Firefox
 
 #### Removed
 - Thresholds code leftovers
