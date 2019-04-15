@@ -9,14 +9,17 @@ for further information about branching and tagging conventions.
 
 ## [Unreleased]
 #### Added
+- Added "Request type" select field on tokens requests page
+- Validation of account field when setting limits for specific account
 - Validation for max amount on issuance form
 
 #### Changed
 - Issuance history list order reverted (now the oldest ones on top)
-- Validate if value exist in DetailsReader
-- Get counterparty if receiverSource or sendTo exist
-- Get operations list from v3/history
+- Get token requests list from API v3
 - Renamed `Fund(s)` -> `Sale(s)` and `Token(s)` -> `Asset(s)`
+- "Loading", "No data" state handlers and "More" button added to all lists
+- Value existing validation in DetailsReader
+- Migrate operation history to /v3/history
 
 #### Fixed
 - Getting private document URL on DocLinkGetter component

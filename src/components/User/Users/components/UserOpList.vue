@@ -4,7 +4,10 @@
       Operations
     </h2>
 
-    <ul class="app-list">
+    <ul
+      class="app-list"
+      v-if="records && records.length"
+    >
       <div class="app-list__header">
         <span class="app-list__cell">
           Type
@@ -39,6 +42,22 @@
       </button>
     </ul>
 
+    <template v-else>
+      <div class="app-list__li-like">
+        <template v-if="isLoading">
+          <p>
+            Loading...
+          </p>
+        </template>
+
+        <template v-else>
+          <p>
+            Nothing here yet
+          </p>
+        </template>
+      </div>
+    </template>
+
     <div class="app__more-btn-wrp">
       <collection-loader
         :first-page-loader="getList"
@@ -69,7 +88,8 @@ export default {
     return {
       formatAssetAmount,
       list: [],
-      masterPubKey: Vue.params.MASTER_ACCOUNT
+      masterPubKey: Vue.params.MASTER_ACCOUNT,
+      isLoading: false
     }
   },
 
@@ -84,6 +104,7 @@ export default {
 
   methods: {
     async getList () {
+      this.isLoading = true
       let response = {}
       try {
         response = await ApiCallerFactory
@@ -98,6 +119,7 @@ export default {
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }
+      this.isLoading = false
       return response
     },
 
