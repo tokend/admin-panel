@@ -18,7 +18,7 @@
 
         <router-link class="app-list__li"
           v-for="item in list" :key="`${item.baseAsset.id}/${item.quoteAsset.id}`"
-          :to="{ name: 'systemAssets.assetPairs.show', params: { base: item.baseAsset.id, quote: item.quoteAsset.id }}">
+          :to="{ name: 'assets.assetPairs.show', params: { base: item.baseAsset.id, quote: item.quoteAsset.id }}">
           <span class="app-list__cell app-list__cell--important">
             {{`${item.baseAsset.id}/${item.quoteAsset.id}`}}
           </span>

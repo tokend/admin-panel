@@ -121,113 +121,43 @@ export const UserRoutes = {
     },
 
     {
-      path: '/system-assets',
-      name: 'systemAssets',
-      redirect: { name: 'systemAssets.index' },
+      path: '/offline-operations',
+      name: 'offlineOperations',
+      redirect: { name: 'offlineOperations.preIssuance' },
       component: function (resolve) {
-        require(['../../components/User/SystemAssets/SystemAssets.vue'], resolve)
+        require(['../../components/User/OfflineOperations/OfflineOperations.vue'], resolve)
       },
       children: [
         {
-          path: 'issuance',
-          name: 'systemAssets.issuance',
+          path: 'pre-issuance',
+          name: 'offlineOperations.preIssuance',
           component: function (resolve) {
-            require(['../../components/User/SystemAssets/Issuance/Issuance.vue'], resolve)
+            require(['../../components/User/OfflineOperations/Preissuance/Preissuance.vue'], resolve)
           }
         },
         {
-          path: 'issuance/:id',
-          name: 'systemAssets.issuance.props',
+          path: 'change-asset-issuer',
+          name: 'offlineOperations.changeAssetIssuer',
           component: function (resolve) {
-            require(['../../components/User/SystemAssets/Issuance/IssuanceDetails.vue'], resolve)
-          },
-          props: true
-        },
-        {
-          path: 'preissuance',
-          name: 'systemAssets.preissuance',
-          component: function (resolve) {
-            require(['../../components/User/SystemAssets/Preissuance/Preissuance.vue'], resolve)
+            require(['../../components/User/OfflineOperations/ChangeAssetIssuer/ChangeAssetIssuer.vue'], resolve)
           }
         },
         {
-          path: '/change-asset-issuer',
-          name: 'systemAssets.change-asset-issuer',
+          path: 'pre-issuance-requests',
+          name: 'offlineOperations.preIssuanceRequests',
+          redirect: { name: 'offlineOperations.preIssuanceRequests.index' },
           component: function (resolve) {
-            require(['../../components/User/SystemAssets/ChangeAssetIssuer/ChangeAssetIssuer.vue'], resolve)
-          }
-        },
-        {
-          path: 'withdrawals',
-          name: 'systemAssets.withdrawals',
-          redirect: { name: 'systemAssets.withdrawals.index' },
-          component: function (resolve) {
-            require(['../../components/User/SystemAssets/Withdrawals/Withdrawals.vue'], resolve)
+            require(['../../components/User/OfflineOperations/PreIssuanceRequests/PreIssuanceRequests.vue'], resolve)
           },
           children: [
             {
               path: '',
-              name: 'systemAssets.withdrawals.index',
+              name: 'offlineOperations.preIssuanceRequests.index',
               component: function (resolve) {
-                require(['../../components/User/SystemAssets/Withdrawals/Withdrawals.Index.vue'], resolve)
+                require(['../../components/User/OfflineOperations/PreIssuanceRequests/PreIssuanceRequests.Index.vue'], resolve)
               }
             }
           ]
-        },
-        {
-          path: 'pairs',
-          name: 'systemAssets.assetPairs',
-          redirect: { name: 'systemAssets.assetPairs.index' },
-          component: function (resolve) {
-            require(['../../components/User/SystemAssets/AssetPairs/AssetPairs.vue'], resolve)
-          },
-          children: [
-            {
-              path: '',
-              name: 'systemAssets.assetPairs.index',
-              component: function (resolve) {
-                require(['../../components/User/SystemAssets/AssetPairs/AssetPairs.Index.vue'], resolve)
-              }
-            },
-            {
-              path: ':base-:quote',
-              name: 'systemAssets.assetPairs.show',
-              component: function (resolve) {
-                require(['../../components/User/SystemAssets/AssetPairs/AssetPairs.Show.vue'], resolve)
-              },
-              props: true
-            },
-            {
-              path: 'new',
-              name: 'systemAssets.assetPairs.new',
-              component: function (resolve) {
-                require(['../../components/User/SystemAssets/AssetPairs/AssetPairs.New.vue'], resolve)
-              },
-              props: true
-            }
-          ]
-        },
-        {
-          path: 'new',
-          name: 'systemAssets.new',
-          component: function (resolve) {
-            require(['../../components/User/SystemAssets/SystemAssets.New.vue'], resolve)
-          }
-        },
-        {
-          path: '',
-          name: 'systemAssets.index',
-          component: function (resolve) {
-            require(['../../components/User/SystemAssets/SystemAssets.Index.vue'], resolve)
-          }
-        },
-        {
-          path: ':asset',
-          name: 'systemAssets.show',
-          component: function (resolve) {
-            require(['../../components/User/SystemAssets/SystemAssets.Show.vue'], resolve)
-          },
-          props: true
         }
       ]
     },
@@ -235,14 +165,111 @@ export const UserRoutes = {
     {
       path: '/assets',
       name: 'assets',
-      redirect: { name: 'assets.requests' },
+      redirect: { name: 'assets.masterAssets' },
       component: function (resolve) {
         require(['../../components/User/Assets/Assets.vue'], resolve)
       },
       children: [
         {
+          path: 'issuance',
+          name: 'assets.issuance',
+          component: function (resolve) {
+            require(['../../components/User/Assets/Issuance/Issuance.vue'], resolve)
+          }
+        },
+        {
+          path: 'issuance/:id',
+          name: 'assets.issuance.props',
+          component: function (resolve) {
+            require(['../../components/User/Assets/Issuance/IssuanceDetails.vue'], resolve)
+          },
+          props: true
+        },
+        {
+          path: 'withdrawals',
+          name: 'assets.withdrawals',
+          redirect: { name: 'assets.withdrawals.index' },
+          component: function (resolve) {
+            require(['../../components/User/Assets/Withdrawals/Withdrawals.vue'], resolve)
+          },
+          children: [
+            {
+              path: '',
+              name: 'assets.withdrawals.index',
+              component: function (resolve) {
+                require(['../../components/User/Assets/Withdrawals/Withdrawals.Index.vue'], resolve)
+              }
+            }
+          ]
+        },
+        {
+          path: 'pairs',
+          name: 'assets.assetPairs',
+          redirect: { name: 'assets.assetPairs.index' },
+          component: function (resolve) {
+            require(['../../components/User/Assets/AssetPairs/AssetPairs.vue'], resolve)
+          },
+          children: [
+            {
+              path: '',
+              name: 'assets.assetPairs.index',
+              component: function (resolve) {
+                require(['../../components/User/Assets/AssetPairs/AssetPairs.Index.vue'], resolve)
+              }
+            },
+            {
+              path: ':base-:quote',
+              name: 'assets.assetPairs.show',
+              component: function (resolve) {
+                require(['../../components/User/Assets/AssetPairs/AssetPairs.Show.vue'], resolve)
+              },
+              props: true
+            },
+            {
+              path: 'new',
+              name: 'assets.assetPairs.new',
+              component: function (resolve) {
+                require(['../../components/User/Assets/AssetPairs/AssetPairs.New.vue'], resolve)
+              },
+              props: true
+            }
+          ]
+        },
+        {
+          path: 'master-assets',
+          name: 'assets.masterAssets',
+          redirect: { name: 'assets.masterAssets.index' },
+          component: function (resolve) {
+            require(['../../components/User/Assets/MasterAssets/MasterAssets.vue'], resolve)
+          },
+          children: [
+            {
+              path: '',
+              name: 'assets.masterAssets.index',
+              component: function (resolve) {
+                require(['../../components/User/Assets/MasterAssets/MasterAssets.Index.vue'], resolve)
+              }
+            },
+            {
+              path: 'new',
+              name: 'assets.masterAssets.new',
+              component: function (resolve) {
+                require(['../../components/User/Assets/MasterAssets/MasterAssets.New.vue'], resolve)
+              }
+            },
+            {
+              path: ':asset',
+              name: 'assets.masterAssets.show',
+              component: function (resolve) {
+                require(['../../components/User/Assets/MasterAssets/MasterAssets.Show.vue'], resolve)
+              },
+              props: true
+            }
+          ]
+        },
+        {
           path: 'requests',
-          name: 'assets.requests',
+          name: 'assets.assetRequests',
           redirect: { name: 'assets.requests.index' },
           component: function (resolve) {
             require(['../../components/User/Assets/AssetRequests/AssetRequests.vue'], resolve)
@@ -262,23 +289,6 @@ export const UserRoutes = {
                 require(['../../components/User/Assets/AssetRequests/AssetRequests.Show.vue'], resolve)
               },
               props: true
-            }
-          ]
-        },
-        {
-          path: 'preissuance-requests',
-          name: 'assets.preissuanceRequests',
-          redirect: { name: 'assets.preissuanceRequests.index' },
-          component: function (resolve) {
-            require(['../../components/User/Assets/PreissuanceRequests/PreissuanceRequests.vue'], resolve)
-          },
-          children: [
-            {
-              path: '',
-              name: 'assets.preissuanceRequests.index',
-              component: function (resolve) {
-                require(['../../components/User/Assets/PreissuanceRequests/PreissuanceRequests.Index.vue'], resolve)
-              }
             }
           ]
         }

@@ -5,7 +5,7 @@
 
       <div class="assets-pairs-index__actions">
         <router-link class="assets-pairs-index__create-btn app__btn app__btn--iconed"
-                     :to="{ name: 'systemAssets.assetPairs.new' }">
+                     :to="{ name: 'assets.assetPairs.new' }">
           <mdi-plus-icon/> Create pair
         </router-link>
       </div>

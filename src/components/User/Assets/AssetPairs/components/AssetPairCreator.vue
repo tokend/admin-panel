@@ -115,7 +115,7 @@
             policies: this.form.policies.reduce((sum, policy) => sum | policy, 0)
           })
           this.$store.dispatch('SET_INFO', 'Pair has been created.')
-          this.$router.push({ name: 'systemAssets.assetPairs.index' })
+          this.$router.push({ name: 'assets.assetPairs.index' })
         } catch (error) {
           console.error(error)
           error.showMessage()

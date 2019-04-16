@@ -19,7 +19,11 @@ for further information about branching and tagging conventions.
 - Now blocking the account using change role request created by admin
 - Now passing latest approved request ID in creator details
   while resetting or blocking the account
- 
+- Extracted pre-issuance, change asset issuer, and pre-issuance requests pages
+  to the separate menu item "Offline operations"
+- Merged "System assets" menu item into "Assets" one
+- Renamed "System assets" -> "Master assets"
+
 #### Fixed
 - Displaying user role & state on user details page
 
