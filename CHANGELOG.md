@@ -12,6 +12,7 @@ for further information about branching and tagging conventions.
 - Change role request record
 - Blocked account role
 - Outlined button class
+- Displaying of avatar image on user's KYC details page
 
 #### Changed
 - Extracted reset account actions to a separate component
