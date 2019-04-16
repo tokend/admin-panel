@@ -98,9 +98,8 @@ export default {
   },
 
   async seedLogin (seed) {
-    const user = {}
+    const user = store.state.user || {}
     const keypair = Sdk.base.Keypair.fromSecret(seed)
-
     user.name = 'admin_demo'
     user.keys = user.keys || {}
     user.keys.accountId = config.MASTER_ACCOUNT
