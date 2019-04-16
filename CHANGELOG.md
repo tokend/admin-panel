@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
+## [Unreleased]
+#### Added
+- Change role request record
+- Blocked account role
+- Outlined button class
+
+#### Changed
+- Extracted reset account actions to a separate component
+- Now blocking the account using change role request created by admin
+- Now passing latest approved request ID in creator details
+  while resetting or blocking the account
+ 
+#### Fixed
+- Displaying user role & state on user details page
+
+#### Removed
+- Unnecessary styles on user details page
+
 ## [1.5.0-rc.0] - 2019-04-16
 #### Added
 - "Request type" select field on assets requests page
