@@ -143,7 +143,7 @@ export default {
       try {
         await api.assets.updatePair({ ...this.pair, ...action })
         this.$store.dispatch('SET_INFO', 'Pair has been updated.')
-        this.$router.push({ name: 'systemAssets.assetPairs.index' })
+        this.$router.push({ name: 'assets.assetPairs.index' })
       } catch (error) {
         console.error(error)
         error.showMessage()

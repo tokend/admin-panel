@@ -5,7 +5,7 @@
 
       <div class="system-assets-index__actions">
         <router-link class="system-assets-index__create-btn app__btn app__btn--iconed"
-          :to="{ name: 'systemAssets.new' }">
+          :to="{ name: 'assets.systemAssets.new' }">
           <mdi-plus-icon/> Create asset
         </router-link>
       </div>

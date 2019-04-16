@@ -19,9 +19,16 @@
       </li>
 
       <li class="user-sidebar__nav-li">
-        <router-link :to="{ name: 'systemAssets' }">
+        <router-link :to="{ name: 'assets' }">
           <mdi-coin-icon/>
-          <span>System Assets</span>
+          <span>Assets</span>
+        </router-link>
+      </li>
+
+      <li class="user-sidebar__nav-li">
+        <router-link :to="{ name: 'offlineOperations' }">
+          <mdi-sync-off-icon/>
+          <span>Offline operations</span>
         </router-link>
       </li>
 
@@ -65,14 +72,6 @@
       </div>
 
       <li class="user-sidebar__nav-li">
-        <!-- NOTE: temporarily hidden -->
-        <router-link :to="{ name: 'assets' }">
-          <mdi-coins-icon/>
-          <span>Assets</span>
-        </router-link>
-      </li>
-
-      <li class="user-sidebar__nav-li">
         <router-link :to="{ name: 'sales' }">
           <mdi-coins-icon/>
           <span>Sales</span>
@@ -103,6 +102,7 @@ import 'mdi-vue/ChartLineVariantIcon'
 import 'mdi-vue/AccountPlusIcon'
 import 'mdi-vue/ChartBarIcon'
 import 'mdi-vue/TableIcon'
+import 'mdi-vue/SyncOffIcon'
 
 import '@/assets/mdi/AccountStarIcon'
 import config from '@/config'
