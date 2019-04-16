@@ -165,7 +165,7 @@ export const UserRoutes = {
     {
       path: '/assets',
       name: 'assets',
-      redirect: { name: 'assets.systemAssets' },
+      redirect: { name: 'assets.masterAssets' },
       component: function (resolve) {
         require(['../../components/User/Assets/Assets.vue'], resolve)
       },
@@ -236,32 +236,32 @@ export const UserRoutes = {
           ]
         },
         {
-          path: 'system',
-          name: 'assets.systemAssets',
-          redirect: { name: 'assets.systemAssets.index' },
+          path: 'master-assets',
+          name: 'assets.masterAssets',
+          redirect: { name: 'assets.masterAssets.index' },
           component: function (resolve) {
-            require(['../../components/User/Assets/SystemAssets/SystemAssets.vue'], resolve)
+            require(['../../components/User/Assets/MasterAssets/MasterAssets.vue'], resolve)
           },
           children: [
             {
               path: '',
-              name: 'assets.systemAssets.index',
+              name: 'assets.masterAssets.index',
               component: function (resolve) {
-                require(['../../components/User/Assets/SystemAssets/SystemAssets.Index.vue'], resolve)
+                require(['../../components/User/Assets/MasterAssets/MasterAssets.Index.vue'], resolve)
               }
             },
             {
               path: 'new',
-              name: 'assets.systemAssets.new',
+              name: 'assets.masterAssets.new',
               component: function (resolve) {
-                require(['../../components/User/Assets/SystemAssets/SystemAssets.New.vue'], resolve)
+                require(['../../components/User/Assets/MasterAssets/MasterAssets.New.vue'], resolve)
               }
             },
             {
               path: ':asset',
-              name: 'assets.systemAssets.show',
+              name: 'assets.masterAssets.show',
               component: function (resolve) {
-                require(['../../components/User/Assets/SystemAssets/SystemAssets.Show.vue'], resolve)
+                require(['../../components/User/Assets/MasterAssets/MasterAssets.Show.vue'], resolve)
               },
               props: true
             }

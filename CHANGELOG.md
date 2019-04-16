@@ -20,6 +20,10 @@ for further information about branching and tagging conventions.
 - "Loading", "No data" state handlers and "More" button added to all lists
 - Value existing validation in DetailsReader
 - Migrate operation history to /v3/history
+- Extracted pre-issuance, change asset issuer, and pre-issuance requests pages
+  to the separate menu item "Offline operations"
+- Merged "System assets" menu item into "Assets" one
+- Renamed "System assets" -> "Master assets"
 
 #### Fixed
 - Getting private document URL on DocLinkGetter component

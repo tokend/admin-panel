@@ -26,6 +26,13 @@
       </li>
 
       <li class="user-sidebar__nav-li">
+        <router-link :to="{ name: 'sales' }">
+          <mdi-coins-icon/>
+          <span>Sales</span>
+        </router-link>
+      </li>
+
+      <li class="user-sidebar__nav-li">
         <router-link :to="{ name: 'offlineOperations' }">
           <mdi-sync-off-icon/>
           <span>Offline operations</span>
@@ -64,17 +71,6 @@
         <router-link :to="{ name: 'keyValue' }">
           <mdi-table-icon/>
           <span>Key Value</span>
-        </router-link>
-      </li>
-
-      <div class="user-sidebar__nav-section-heading">
-        CORPORATE
-      </div>
-
-      <li class="user-sidebar__nav-li">
-        <router-link :to="{ name: 'sales' }">
-          <mdi-coins-icon/>
-          <span>Sales</span>
         </router-link>
       </li>
     </nav>

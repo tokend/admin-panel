@@ -439,7 +439,7 @@ export default {
         await Sdk.horizon.transactions.submitOperations(operation)
         Bus.$emit('recheckConfig')
         this.$store.dispatch('SET_INFO', 'Submitted successfully.')
-        this.$router.push({ name: 'assets.systemAssets.index' })
+        this.$router.push({ name: 'assets.masterAssets.index' })
       } catch (error) {
         ErrorHandler.process(error)
       }
