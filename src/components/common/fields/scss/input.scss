@@ -14,6 +14,11 @@
   padding: $field-input-padding;
   @include material-border($field-color-focused);
   @include text-font-sizes;
+
+  // HACK: Do not show default box-shadow for invalid fields on Firefox
+  &:invalid {
+    box-shadow: none;
+  }
 }
 
 .input-field__input {

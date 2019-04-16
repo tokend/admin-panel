@@ -9,31 +9,53 @@ for further information about branching and tagging conventions.
 
 ## [Unreleased]
 #### Added
-- Validation for max amount on issuance form
 - Change role request record
 - Blocked account role
 - Outlined button class
 
 #### Changed
-- Issuance history list order reverted (now the oldest ones on top)
-- Renamed `Fund(s)` -> `Sale(s)` and `Token(s)` -> `Asset(s)`
 - Extracted reset account actions to a separate component
 - Now blocking the account using change role request created by admin
 - Now passing latest approved request ID in creator details
   while resetting or blocking the account
-
+ 
 #### Fixed
-- "You" label position in admin list
-- Dropdown of user account widget when you hover button below it now stays above
-  the button
-- Getting private document URL on DocLinkGetter component
-- Filtering sales by their owner
 - Displaying user role & state on user details page
 
 #### Removed
-- Thresholds code leftovers
-- Signing rules page
 - Unnecessary styles on user details page
+
+## [1.5.0-rc.0] - 2019-04-16
+#### Added
+- "Request type" select field on assets requests page
+- Missing "Loading" and "No data" state handlers and "More" buttons to all lists
+- Validation of account field when setting limits for specific account
+- Validation of max amount on issuance form
+
+#### Changed
+- Now handling value absenting in `DetailsReader`
+- Reverted issuance history list (now the oldest ones on top)
+- Renamed "Fund(s)" to "Sale(s)" and "Token(s)" to "Asset(s)"
+
+#### Fixed
+- Fixed filtering of sales by owner
+- Fixed "You" label position in admin list
+- Fixed dropdown of user account widget when you hover button below. Now the
+  dropdown stays above the hovered button
+- Hide invalid fields’ error box-shadow in Firefox
+
+### "Under the hood changes"
+#### Changed
+- Now using @tokend/js-sdk@1.4.4
+- Now getting asset requests from API v3
+- Now getting operation history from API v3
+
+#### Fixed
+- Fixed getting of private document URL in `DocLinkGetter` component
+
+#### Removed
+- Removed thresholds code leftovers
+- Removed signing rules page
 
 ## [1.4.0] - 2019-04-05
 
@@ -108,7 +130,8 @@ for further information about branching and tagging conventions.
 
 ## [1.3.0] - 2019-03-01
 
-[Unreleased]: https://github.com/tokend/admin-panel/compare/1.4.0...HEAD
+[Unreleased]: https://github.com/tokend/admin-panel/compare/1.5.0-rc.0...HEAD
+[1.5.0-rc.0]: https://github.com/tokend/admin-panel/compare/1.4.0...1.5.0-rc.0
 [1.4.0]: https://github.com/tokend/admin-panel/compare/1.4.0-rc.1...1.4.0
 [1.4.0-rc.1]: https://github.com/tokend/admin-panel/compare/1.4.0-rc.0...1.4.0-rc.1
 [1.4.0-rc.0]: https://github.com/tokend/admin-panel/compare/1.3.1...1.4.0-rc.0
