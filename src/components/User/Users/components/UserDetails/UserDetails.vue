@@ -6,7 +6,7 @@
       <template v-if="isLoaded">
         <section
           class="user-details__section"
-          v-if="requestToReview"
+          v-if="requestToReview.state"
         >
           <h3>
             Current request state
@@ -16,13 +16,13 @@
             {{ requestToReview.state }}
           </p>
 
-          <p v-if="requestToReview.state === REQUEST_STATES_STR.rejected">
+          <p v-if="requestToReview.isRejected">
             Reason: {{ requestToReview.rejectReason }}
           </p>
 
           <p
             class="user-details__heading"
-            v-if="requestToReview.state === REQUEST_STATES_STR.rejected"
+            v-if="requestToReview.isRejected"
           >
             <span>External rejection details</span>
             <button
@@ -40,52 +40,89 @@
         </section>
 
         <section class="user-details__section">
-          <account-section :user="user" />
+          <account-section
+            :user="user"
+            :original-role="userRole"
+            :block-reason="latestBlockedRequest.blockReason"
+          />
         </section>
 
-        <template v-if="requestToReview">
+        <template v-if="requestToReview.state">
           <section class="user-details__section">
             <kyc-general-section
-              v-if="requestToReview.requestDetails.accountRoleToSet === ACCOUNT_ROLES.general"
+              v-if="requestToReview.accountRoleToSet === ACCOUNT_ROLES.general"
               :user="user"
-              :blobId="requestToReview.requestDetails.creatorDetails.blobId"
+              :blobId="requestToReview.blobId"
             />
 
             <kyc-syndicate-section
-              v-if="requestToReview.requestDetails.accountRoleToSet === ACCOUNT_ROLES.corporate"
+              v-if="requestToReview.accountRoleToSet === ACCOUNT_ROLES.corporate"
               :user="user"
-              :blobId="requestToReview.requestDetails.creatorDetails.blobId"
+              :blobId="requestToReview.blobId"
             />
           </section>
         </template>
 
-        <template v-if="prevApprovedRequest">
-          <section class="user-details__section">
+        <template v-if="verifiedRequest.state">
+          <section
+            v-if="verifiedRequest.accountRoleToSet !== ACCOUNT_ROLES.notVerified && !isUserBlocked"
+            class="user-details__section"
+          >
             <h2>Previous approved KYC Request</h2>
             <kyc-general-section
-              v-if="prevApprovedRequest.requestDetails.accountRoleToSet === ACCOUNT_ROLES.general"
+              v-if="verifiedRequest.accountRoleToSet === ACCOUNT_ROLES.general"
               :user="user"
-              :blobId="prevApprovedRequest.requestDetails.creatorDetails.blobId"
+              :blobId="verifiedRequest.blobId"
             />
             <kyc-syndicate-section
-              v-if="prevApprovedRequest.requestDetails.accountRoleToSet === ACCOUNT_ROLES.corporate"
+              v-else-if="verifiedRequest.accountRoleToSet === ACCOUNT_ROLES.corporate"
               :user="user"
-              :blobId="prevApprovedRequest.requestDetails.creatorDetails.blobId"
+              :blobId="verifiedRequest.blobId"
             />
           </section>
 
+          <div
+            v-if="requestToReview.state"
+            class="user-details__latest-request"
+          >
+            <h3>Latest request</h3>
+            <p class="text">
+              Create a {{ requestToReview.accountRoleToSet | roleIdToString | lowerCase }} account:
+              {{ requestToReview.state }}
+            </p>
+          </div>
         </template>
 
-
         <div class="user-details__actions-wrp">
-          <section class="user-details__section">
-            <request-section
+          <template v-if="requestToReview.state">
+            <request-actions
+              class="user-details__actions"
               :user="user"
               :requestToReview="requestToReview"
-              :latest-approved-request="prevApprovedRequest"
+              :latest-approved-request="verifiedRequest"
               @reviewed="getUpdatedUser"
             />
-          </section>
+          </template>
+
+          <template v-else>
+            <block-actions
+              class="user-details__actions"
+              :user="user"
+              :latest-approved-request="latestApprovedRequest"
+              :verified-request="verifiedRequest"
+              :is-pending.sync="isPending"
+              @updated="getUpdatedUser"
+            />
+
+            <reset-actions
+              v-if="!isUserBlocked"
+              class="user-details__actions"
+              :user="user"
+              :verified-request="verifiedRequest"
+              :is-pending.sync="isPending"
+              @reset="getUpdatedUser"
+            />
+          </template>
         </div>
       </template>
 
@@ -101,21 +138,22 @@
 </template>
 
 <script>
-import {
-  USER_STATES_STR,
-  REQUEST_STATES,
-  REQUEST_STATES_STR
-} from '@/constants'
 import AccountSection from './UserDetails.Account'
 
 import KycGeneralSection from './UserDetails.Kyc'
 import KycSyndicateSection from '@/components/User/Sales/components/SaleManager/SaleManager.SyndicateTab'
 
-import RequestSection from './UserDetails.Request'
-import BlockSection from './UserDetails.Block'
+import RequestActions from './UserDetails.Request'
+import ResetActions from './UserDetails.Reset'
+import BlockActions from './UserDetails.Block'
+
 import { unCamelCase } from '@/utils/un-camel-case'
+
 import { ApiCallerFactory } from '@/api-caller-factory'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+
+import { ChangeRoleRequest } from '@/api/responseHandlers/requests/ChangeRoleRequest'
+
 import config from '@/config'
 
 const OPERATION_TYPE = {
@@ -130,24 +168,22 @@ export default {
     AccountSection,
     KycGeneralSection,
     KycSyndicateSection,
-    RequestSection,
-    BlockSection
+    RequestActions,
+    ResetActions,
+    BlockActions
   },
 
   data () {
     return {
       ACCOUNT_ROLES: config.ACCOUNT_ROLES,
-      USER_STATES_STR,
       OPERATION_TYPE,
       isLoaded: false,
       isFailed: false,
+      isPending: false,
       isShownExternal: false,
       user: {},
-      account: {},
-      requestToReview: null,
       requests: [],
-      REQUEST_STATES_STR,
-      prevApprovedRequest: null
+      verifiedRequest: {}
     }
   },
 
@@ -168,6 +204,41 @@ export default {
         )
         .filter(value => value)
         .join('<br>')
+    },
+
+    isUserBlocked () {
+      return this.user.role === config.ACCOUNT_ROLES.blocked
+    },
+
+    latestApprovedRequest () {
+      return this.requests.find(item => item.isApproved) ||
+        new ChangeRoleRequest({})
+    },
+
+    requestToReview () {
+      return this.requests
+        .find(item => item.isPending || item.isRejected) ||
+        new ChangeRoleRequest({})
+    },
+
+    latestBlockedRequest () {
+      return this.requests.find(item => {
+        return item.accountRoleToSet === config.ACCOUNT_ROLES.blocked
+      }) || new ChangeRoleRequest({})
+    },
+
+    latestNonBlockedRequest () {
+      return this.requests.find(item => {
+        return item.isApproved &&
+          item.accountRoleToSet !== config.ACCOUNT_ROLES.blocked
+      }) || new ChangeRoleRequest({})
+    },
+
+    userRole () {
+      return String(
+        this.latestNonBlockedRequest.accountRoleToSet ||
+        config.ACCOUNT_ROLES.notVerified
+      )
     }
   },
 
@@ -191,14 +262,10 @@ export default {
             })
         ])
         this.user = user.data[0]
-        this.requests = requests || []
-        this.requestToReview = this.requests.data
-          .find(item => item.stateI === REQUEST_STATES.pending)
-        this.prevApprovedRequest = this.requests.data
-          .find(item => item.stateI === REQUEST_STATES.approved &&
-            item.requestDetails.accountRoleToSet !==
-              this.ACCOUNT_ROLES.notVerified
-          )
+        this.requests = requests.data
+          ? requests.data.map(item => new ChangeRoleRequest(item))
+          : []
+        await this.loadVerifiedRequest()
         this.isLoaded = true
       } catch (error) {
         ErrorHandler.process(error)
@@ -206,9 +273,27 @@ export default {
       }
     },
 
+    async loadVerifiedRequest () {
+      if (this.latestApprovedRequest) {
+        const requestId = this.latestApprovedRequest.relatedRequestId
+
+        if (requestId && requestId !== '0') {
+          const { data } = await ApiCallerFactory
+            .createCallerInstance()
+            .getWithSignature(`/v3/change_role_requests/${requestId}`, {
+              include: ['request_details']
+            })
+          this.verifiedRequest = new ChangeRoleRequest(data)
+        } else if (!requestId) {
+          this.verifiedRequest = this.latestApprovedRequest
+        }
+      }
+    },
+
     async getUpdatedUser () {
       this.isLoaded = false
       this.isFailed = false
+
       setTimeout(async () => {
         await this.getUser()
         this.$emit(EVENTS.reviewed)
@@ -219,7 +304,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../../../../assets/scss/colors";
+@import "~@/assets/scss/colors";
 
 .user-details__section {
   flex: 1;
@@ -235,9 +320,16 @@ export default {
 
 .user-details__actions-wrp {
   display: flex;
-  justify-content: space-between;
   align-items: flex-end;
   margin-top: 4rem;
+}
+
+.user-details__latest-request {
+  margin-top: 3.5rem;
+}
+
+.user-details__actions:not(:first-child) {
+  margin-left: 1rem;
 }
 
 .user-details__heading {
@@ -250,38 +342,11 @@ export default {
   }
 }
 
-.user-details__blocked-msg {
-  font-size: 1.2rem;
-  margin-bottom: 1rem;
-  text-align: center;
-}
-
-.user-details__request-header {
-  font-weight: bold;
-  margin-bottom: 1.2rem;
-}
-
-.user-details__switch-view-btn {
-  cursor: pointer;
-  font-size: 1.4rem;
-  margin: 2rem 0;
-  color: $color-active;
-  &:hover {
-    opacity: 0.85;
-  }
-}
-
 .user-details__state-info {
   text-transform: capitalize;
 
-  &--approved {
-    color: $color-success;
-  }
-  &--pending {
-    color: $color-active;
-  }
-  &--rejected {
-    color: $color-danger;
-  }
+  &--approved { color: $color-success; }
+  &--pending { color: $color-active; }
+  &--rejected { color: $color-danger; }
 }
 </style>
