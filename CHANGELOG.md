@@ -12,6 +12,7 @@ for further information about branching and tagging conventions.
 - Added "Request type" select field on tokens requests page
 - Validation of account field when setting limits for specific account
 - Validation for max amount on issuance form
+- Displaying avatar image on user's KYC details page
 
 #### Changed
 - Issuance history list order reverted (now the oldest ones on top)

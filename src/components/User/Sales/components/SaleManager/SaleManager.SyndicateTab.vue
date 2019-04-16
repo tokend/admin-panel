@@ -12,6 +12,14 @@
             <span>Headquarters</span>
             <span>{{corporate.headquarters}}</span>
           </li>
+          <li v-if="kycAvatarKey">
+            <span>Avatar</span>
+            <span>
+              <user-doc-link-getter :file-key="kycAvatarKey">
+                Open file
+              </user-doc-link-getter>
+            </span>
+          </li>
           <li>
             <span>Homepage</span>
             <span>{{corporate.homepage}}</span>
@@ -27,6 +35,15 @@
           <li>
             <span>Company</span>
             <span>{{corporate.company}}</span>
+          </li>
+          <li v-if="kycAvatarKey">
+            <div class="sale-manager-corporate-tab__doc-view-wrp">
+              <h3>Avatar</h3>
+              <user-doc-getter
+                class="sale-manager-corporate-tab__doc-view"
+                :file-key="kycAvatarKey"
+              />
+            </div>
           </li>
         </ul>
       </div>
@@ -47,6 +64,7 @@
 </template>
 
 <script>
+import { UserDocLinkGetter, UserDocGetter } from '@comcom/getters'
 import { Sdk } from '@/sdk'
 import { DateFormatter } from '@comcom/formatters'
 import SyndicateMember from '@comcom/SyndicateMember'
@@ -59,6 +77,8 @@ export default {
   components: {
     DateFormatter,
     SyndicateMember,
+    UserDocLinkGetter,
+    UserDocGetter,
     SocialLinks
   },
 
@@ -71,6 +91,13 @@ export default {
       isFailed: false
     }
   },
+
+  computed: {
+    kycAvatarKey () {
+      return _get(this.corporate, 'documents.kyc_avatar.key')
+    }
+  },
+
   created () {
     this.getCorporate({
       ownerId: _get(this.sale, 'ownerId') ||

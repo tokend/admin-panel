@@ -32,6 +32,16 @@
             :file-key="kyc.documents.bravo || kyc.documents.kycSelfie"
           />
         </div>
+        <div
+          v-if="kyc.documents.kycAvatar"
+          class="user-details-account__doc-view-wrp"
+        >
+          <h3>Avatar</h3>
+          <user-doc-getter
+            class="user-details-account__doc-view"
+            :file-key="kyc.documents.kycAvatar"
+          />
+        </div>
       </div>
 
       <ul class="key-value-list">
@@ -53,6 +63,14 @@
             <user-doc-link-getter
               :file-key="kyc.documents.kycIdDocument"
             >
+              Open file
+            </user-doc-link-getter>
+          </span>
+        </li>
+        <li v-if="kyc.documents.kycAvatar">
+          <span>Avatar</span>
+          <span>
+            <user-doc-link-getter :file-key="kyc.documents.kycAvatar">
               Open file
             </user-doc-link-getter>
           </span>
@@ -188,8 +206,8 @@ export default {
 .user-details-account__doc-view-wrp {
   width: 100%;
 
-  &:first-child {
-    margin-bottom: 3rem;
+  &:not(:first-child) {
+    margin-top: 3rem;
   }
 }
 
