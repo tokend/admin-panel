@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
-## [Unreleased]
+## [1.5.0-reitrc.0] - 2019-04-16
 ### Added
 - Filter for displaying app version
 - Single opportunity approve
@@ -31,5 +31,6 @@ for further information about branching and tagging conventions.
 
 ## [1.3.0] - 2019-03-01
 
-[Unreleased]: https://github.com/tokend/admin-panel/compare/1.3.0...HEAD
+[Unreleased]: https://github.com/tokend/admin-panel/compare/1.5.0-reitrc.0...HEAD
+[1.5.0-reitrc.0]: https://github.com/tokend/admin-panel/compare/1.3.0...1.5.0-reitrc.0
 [1.3.0]: https://github.com/tokend/admin-panel/releases/tag/1.3.0
