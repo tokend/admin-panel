@@ -7,28 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
-## [Unreleased]
+## [1.5.0-rc.1] - 2019-04-17
 #### Added
-- Change role request record
-- Blocked account role
-- Outlined button class
+- User blocking functionality
 - Displaying of avatar image on user's KYC details page
 
 #### Changed
-- Extracted reset account actions to a separate component
 - Now blocking the account using change role request created by admin
-- Now passing latest approved request ID in creator details
-  while resetting or blocking the account
-- Extracted pre-issuance, change asset issuer, and pre-issuance requests pages
-  to the separate menu item "Offline operations"
-- Merged "System assets" menu item into "Assets" one
-- Renamed "System assets" -> "Master assets"
+- Menu reorganization:
+  - Added new "Offline operations" menu item that contains pre-issuance,
+    change asset issuer and pre-issuance requests pages
+  - Merged "System assets" and "Assets" (formerly "Tokens") pages into "Assets"
+  - Renamed "System assets" -> "Master assets"
 
 #### Fixed
 - Displaying user role & state on user details page
 
+### "Under the hood" changes
+#### Added
+- Change role request record
+- Outlined button class
+
+#### Changed
+- Extracted reset account actions to a separate component
+- Now passing latest approved request ID in creator details
+  while resetting or blocking the account
+
 #### Removed
-- Unnecessary styles on user details page
+- Unused styles on user details page
 
 ## [1.5.0-rc.0] - 2019-04-16
 #### Added
@@ -49,7 +55,7 @@ for further information about branching and tagging conventions.
   dropdown stays above the hovered button
 - Hide invalid fields’ error box-shadow in Firefox
 
-### "Under the hood changes"
+### "Under the hood" changes
 #### Changed
 - Now using @tokend/js-sdk@1.4.4
 - Now getting asset requests from API v3
@@ -135,7 +141,8 @@ for further information about branching and tagging conventions.
 
 ## [1.3.0] - 2019-03-01
 
-[Unreleased]: https://github.com/tokend/admin-panel/compare/1.5.0-rc.0...HEAD
+[Unreleased]: https://github.com/tokend/admin-panel/compare/1.5.0-rc.1...HEAD
+[1.5.0-rc.1]: https://github.com/tokend/admin-panel/compare/1.5.0-rc.0...1.5.0-rc.1
 [1.5.0-rc.0]: https://github.com/tokend/admin-panel/compare/1.4.0...1.5.0-rc.0
 [1.4.0]: https://github.com/tokend/admin-panel/compare/1.4.0-rc.1...1.4.0
 [1.4.0-rc.1]: https://github.com/tokend/admin-panel/compare/1.4.0-rc.0...1.4.0-rc.1
