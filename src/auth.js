@@ -98,7 +98,7 @@ export default {
   },
 
   async seedLogin (seed) {
-    const user = store.state.user || {}
+    const user = {}
     const keypair = Sdk.base.Keypair.fromSecret(seed)
     user.name = 'admin_demo'
     user.keys = user.keys || {}
@@ -117,6 +117,7 @@ export default {
     if (!data.find(item => item.id === keypair.accountId())) {
       throw Error('User undefined')
     } else {
+      user.wallet = wallet
       store.commit('UPDATE_USER', user)
     }
   },
