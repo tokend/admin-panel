@@ -15,6 +15,10 @@ for further information about branching and tagging conventions.
 - Thresholds code leftovers
 - Signing rules page
 
+#### Added
+- Show all the limits in one screen, "Not set" and "Unlimited" labels and 
+  ability to remove limits
+
 ## [1.4.0] - 2019-04-05
 
 ## [1.4.0-rc.1] - 2019-04-04

@@ -1,75 +1,55 @@
 <template>
   <div class="limits-manager__wrapper">
-    <tabs>
-      <tab name="Specific account type">
-        <div class="limits-manager">
-          <h2>Limits management</h2>
-          <div class="limits-manager__inner">
-            <div class="limits-manager__limits-list-wrp">
-              <select-field
-                v-model="filters.accountRole"
-                class="limits-manager__filter"
-                label="Account type"
-              >
-                <option
-                  v-for="type in Object.values(ACCOUNT_ROLES)"
-                  v-show="ACCOUNT_ROLES_VERBOSE[type]"
-                  :key="type"
-                  :value="type"
-                  :selected="type === +filters.accountRole"
-                >
-                  {{ ACCOUNT_ROLES_VERBOSE[type] }}
-                </option>
-              </select-field>
-            </div>
-            <div class="limits-manager__limits-list-wrp">
-              <select-field
-                v-model="filters.asset"
-                class="limits-manager__filter"
-                label="Asset"
-              >
-                <option
-                  v-for="item in assets"
-                  :key="item.code"
-                  :value="item.code"
-                  :selected="item.code === filters.asset"
-                >
-                  {{ item.details.name }} ({{ item.code }})
-                </option>
-              </select-field>
-            </div>
-          </div>
-        </div>
-      </tab>
-      <tab name="Specific account">
-        <div class="limits-manager">
-          <h2>Limits management</h2>
-          <div class="limits-manager-filters">
-            <input-field
-              class="limits-manager-filters__field
-                    limits-manager-filters__specific-user-field"
-              v-model.trim="specificUserAddress"
-              label="Email or Account ID"
-              autocomplete-type="email"
-            />
-
-            <select-field v-model="filters.asset"
-              class="limits-manager-filters__specific-user-field"
-              label="Asset"
+    <div class="limits-manager">
+      <h2>Limits management</h2>
+      <div class="limits-manager-filters">
+          <select-field
+            class="limits-manager__filter"
+            label="Scope"
+            v-model="filters.scope"
+          >
+            <option :value="SCOPE_TYPES.accountRole">Account type</option>
+            <option :value="SCOPE_TYPES.account">Account</option>
+          </select-field>
+          <select-field
+            v-model="filters.asset"
+            class="limits-manager__filter"
+            label="Asset"
+          >
+            <option
+              v-for="item in assets"
+              :key="item.code"
+              :value="item.code"
+              :selected="item.code === filters.asset"
             >
-              <option
-                v-for="item in assets"
-                :key="item.code"
-                :value="item.code"
-                :selected="item.code === filters.asset"
-              >
-                {{ item.details.name }} ({{ item.code }})
-              </option>
-            </select-field>
-          </div>
-        </div>
-      </tab>
-    </tabs>
+              {{ item.details.name }} ({{ item.code }})
+            </option>
+          </select-field>
+          <select-field
+            v-model="filters.accountRole"
+            class="limits-manager__filter"
+            label="Account type"
+            v-if="filters.scope === SCOPE_TYPES.accountRole"
+          >
+            <option
+              v-for="type in Object.values(ACCOUNT_ROLES)"
+              v-show="ACCOUNT_ROLES_VERBOSE[type]"
+              :key="type"
+              :value="type"
+              :selected="type === +filters.accountRole"
+            >
+              {{ ACCOUNT_ROLES_VERBOSE[type] }}
+            </option>
+          </select-field>
+          <input-field
+            class="limits-manager__filter"
+            v-model.trim="specificUserAddress"
+            label="Email or Account ID"
+            autocomplete-type="email"
+            v-if="filters.scope === SCOPE_TYPES.account"
+          />
+      </div>
+    </div>
     <div class="limits-manager__inner">
       <div class="limits-manager__limits-list-wrp">
         <template v-if="limits.payment">
@@ -86,7 +66,7 @@
                     @input="limits.payment[type] = $event || DEFAULT_MAX_AMOUNT"
                     class="limits-manager__limit-field"
                     :step="DEFAULT_INPUT_STEP"
-                    placeholder="Unlimited"
+                    :placeholder="getLimitLable(limits.payment, type)"
                     min="0"
                   />
                 </div>
@@ -128,7 +108,7 @@
                     @input="limits.withdrawal[type] = $event || DEFAULT_MAX_AMOUNT"
                     class="limits-manager__limit-field"
                     :step="DEFAULT_INPUT_STEP"
-                    placeholder="Unlimited"
+                    :placeholder="getLimitLable(limits.withdrawal, type)"
                     min="0"
                   />
                 </div>
@@ -170,7 +150,7 @@
                     @input="limits.deposit[type] = $event || DEFAULT_MAX_AMOUNT"
                     class="limits-manager__limit-field"
                     :step="DEFAULT_INPUT_STEP"
-                    placeholder="Unlimited"
+                    :placeholder="getLimitLable(limits.deposit, type)"
                     min="0"
                   />
                 </div>
@@ -221,6 +201,7 @@
 
   import { STATS_OPERATION_TYPES, DEFAULT_MAX_AMOUNT } from '@/constants'
   import config from '@/config'
+  import { confirmAction } from '@/js/modals/confirmation_message'
 
   const LIMITS_TYPES = [
     'dailyOut',
@@ -228,6 +209,11 @@
     'monthlyOut',
     'annualOut'
   ]
+
+  const SCOPE_TYPES = Object.freeze({ // non-xdr values, internal use only
+    account: 'USER',
+    accountRole: 'ACCOUNT_TYPE'
+  })
 
   export default {
     components: {
@@ -243,7 +229,8 @@
         asset: '',
         accountRole: '',
         email: '',
-        address: ''
+        address: '',
+        scope: SCOPE_TYPES.accountRole
       },
       specificUserAddress: '',
       limits: {
@@ -261,7 +248,8 @@
         [config.ACCOUNT_ROLES.general]: 'General user',
         [config.ACCOUNT_ROLES.corporate]: 'Corporate user'
       }),
-      numericValueRegExp: /^\d*\.?\d*$/
+      numericValueRegExp: /^\d*\.?\d*$/,
+      SCOPE_TYPES
     }),
     async created () {
       await this.getAssets()
@@ -337,6 +325,7 @@
           this.isPending = false
           return false
         }
+        if (!await confirmAction({ title: 'Delete the limits?' })) return
         try {
           const operation = Sdk.base.ManageLimitsBuilder.removeLimits({
             id: (limits.id).toString()
@@ -398,6 +387,12 @@
       },
       normalizeLimitAmount (limit) {
         return limit >= DEFAULT_MAX_AMOUNT ? '' : limit
+      },
+      getLimitLable (limit, type) {
+        const notSetLimitId = 0
+        return limit.id === notSetLimitId && limit[type] === DEFAULT_MAX_AMOUNT
+          ? 'Not set'
+          : 'Unlimited'
       }
     },
     watch: {
@@ -433,6 +428,13 @@
           this.getLimits()
         }, 1000),
         immediate: true
+      },
+      'filters.scope': function (value) {
+        if (!value) return
+        this.filters.accountRole = config.ACCOUNT_ROLES.general
+        this.specificUserAddress = ''
+        this.setFilters()
+        this.getLimits()
       }
     }
   }
@@ -444,34 +446,29 @@
     margin-top: 2rem;
   }
 
-  .limits-manager__filters,
   .limits-manager__inner {
     display: flex;
   }
 
   .limits-manager__filter {
-    margin-bottom: 5rem;
-    width: 100%;
-    &:first-child { margin-right: 2rem }
+    width: calc(33.333333% - 3.4rem);
+    margin-bottom: 1rem;
+    &:not(:last-child) {
+      margin-right: 5rem;
+    }
   }
 
-  .limits-manager-filters,
   .limits-manager__limit-row {
     display: flex;
     align-items: center;
   }
 
-  .limits-manager-filters__field,
   .limits-manager__limits-list-wrp {
     &:first-child:not(:only-child),
     &:not(:last-child) {
       margin-right: 5rem;
     }
     width: 100%;
-  }
-
-  .limits-manager-filters__field {
-    margin-bottom: 5rem;
   }
 
   .limits-manager__limits-list {
@@ -486,12 +483,13 @@
     padding: 1.7rem 0 0.6rem 0;
   }
 
-  .limits-manager-filters__specific-user-field {
-    margin-bottom: 5rem;
-    width: 50%;
-  }
-
   .limits-manager__remove-btn {
     margin-top: 1rem;
+  }
+
+  .limits-manager-filters {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
   }
 </style>
