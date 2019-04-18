@@ -314,7 +314,6 @@
         this.isPending = false
       },
       async removeLimits (limits, type) {
-        console.log(type)
         if (limits.id === 0) {
           return false
         }
