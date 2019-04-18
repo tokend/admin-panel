@@ -227,7 +227,7 @@
     data: _ => ({
       filters: {
         asset: '',
-        accountRole: '',
+        accountRole: config.ACCOUNT_ROLES.general,
         email: '',
         address: '',
         scope: SCOPE_TYPES.accountRole
@@ -344,7 +344,13 @@
         this.assets = response.data
       },
       async getAccountIdByEmail (email) {
-        this.filters.address = await api.users.getAccountIdByEmail(email)
+        let address = ''
+        try {
+          address = await api.users.getAccountIdByEmail(email)
+        } catch (error) {
+          address = ''
+        }
+        this.filters.address = address
       },
       // it's a quick fix of the limits validation. Need to refactor it ASAP
       isValidLimits (limits) {
@@ -370,18 +376,12 @@
       },
       setFilters () {
         if (!this.filters.asset) this.filters.asset = get(this.assets, '[0].code')
-        if (!this.filters.accountRole) {
-          this.filters.accountRole = config.ACCOUNT_ROLES.general + ''
-        }
         if (this.specificUserAddress) {
           // Both accountRole and accountId cant be requested at same time
-          this.filters.accountRole = ''
-          const emailRegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-          const idLength = 56
-          if (emailRegExp.test(this.specificUserAddress)) {
-            this.getAccountIdByEmail(this.specificUserAddress)
-          } else if (this.specificUserAddress.length === idLength) {
+          if (Sdk.base.Keypair.isValidPublicKey(this.specificUserAddress)) {
             this.filters.address = this.specificUserAddress
+          } else {
+            this.getAccountIdByEmail(this.specificUserAddress)
           }
         }
       },
@@ -425,16 +425,22 @@
         handler: throttle(function (value) {
           if (!value) return
           this.setFilters()
-          this.getLimits()
         }, 1000),
         immediate: true
       },
       'filters.scope': function (value) {
         if (!value) return
-        this.filters.accountRole = config.ACCOUNT_ROLES.general
+        value === SCOPE_TYPES.accountRole
+          ? this.filters.accountRole = config.ACCOUNT_ROLES.general
+          : this.filters.accountRole = ''
         this.specificUserAddress = ''
         this.setFilters()
         this.getLimits()
+      },
+      'filters.address': function (value) {
+        if (value) {
+          this.getLimits()
+        }
       }
     }
   }
@@ -452,7 +458,6 @@
 
   .limits-manager__filter {
     width: calc(33.333333% - 3.4rem);
-    margin-bottom: 1rem;
     &:not(:last-child) {
       margin-right: 5rem;
     }
@@ -491,5 +496,6 @@
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
+    margin-bottom: 5rem;
   }
 </style>
