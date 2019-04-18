@@ -84,7 +84,7 @@
           class="code-details"
           v-if="kyc.documents.bravo || kyc.documents.kycSelfie"
         >
-          Code: {{ user.id.slice(1, 6) }}
+          Code: {{ user.address.slice(1, 6) }}
         </li>
       </ul>
       <div class="user-details-account__info">
