@@ -51,6 +51,9 @@
         </li>
       </ul>
     </template>
+
+    <!-- TODO: add 'More' button (when migrating to v3 endpoints)-->
+
   </div>
 </template>
 

@@ -194,11 +194,6 @@
     TickField
   } from '@comcom/fields'
 
-  import {
-    Tabs,
-    Tab
-  } from '@comcom/Tabs'
-
   import { STATS_OPERATION_TYPES, DEFAULT_MAX_AMOUNT } from '@/constants'
   import config from '@/config'
   import { confirmAction } from '@/js/modals/confirmation_message'
@@ -220,9 +215,7 @@
       SelectField,
       SwitchField,
       InputField,
-      TickField,
-      Tabs,
-      Tab
+      TickField
     },
     data: _ => ({
       filters: {
@@ -289,12 +282,11 @@
       },
 
       async updateLimits (limits) {
-        this.isPending = true
-
-        if (!this.isValidLimits(limits)) {
-          this.isPending = false
-          return false
+        if (!this.isValidLimits(limits) || !this.isAccountAddressValid()) {
+          return
         }
+
+        this.isPending = true
         try {
           if (limits.accountRole == null) {
             // managelimitbuilder somehow doesnt accept opts.accountRole NULL value
@@ -374,7 +366,18 @@
         }
         return true
       },
-      setFilters () {
+      isAccountAddressValid () {
+        const isAddressInvalid = !this.filters.address &&
+          this.filters.scope === SCOPE_TYPES.account
+
+        if (isAddressInvalid) {
+          this.$store.dispatch('SET_ERROR', 'Such account does not exist in the system')
+          return false
+        } else {
+          return true
+        }
+      },
+      async setFilters () {
         if (!this.filters.asset) this.filters.asset = get(this.assets, '[0].code')
         if (this.specificUserAddress) {
           // Both accountRole and accountId cant be requested at same time
