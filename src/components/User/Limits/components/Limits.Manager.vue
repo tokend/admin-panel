@@ -4,14 +4,6 @@
       <h2>Limits management</h2>
       <div class="limits-manager-filters">
           <select-field
-            class="limits-manager__filter"
-            label="Scope"
-            v-model="filters.scope"
-          >
-            <option :value="SCOPE_TYPES.accountRole">Account type</option>
-            <option :value="SCOPE_TYPES.account">Account</option>
-          </select-field>
-          <select-field
             v-model="filters.asset"
             class="limits-manager__filter"
             label="Asset"
@@ -24,6 +16,14 @@
             >
               {{ item.details.name }} ({{ item.code }})
             </option>
+          </select-field>
+          <select-field
+            class="limits-manager__filter"
+            label="Scope"
+            v-model="filters.scope"
+          >
+            <option :value="SCOPE_TYPES.accountRole">Account type</option>
+            <option :value="SCOPE_TYPES.account">Account</option>
           </select-field>
           <select-field
             v-model="filters.accountRole"
@@ -76,19 +76,19 @@
 
           <div class="limits-manager__limits-action">
             <button
-              class="limits-manager__update-btn app__btn"
+              class="limits-manager__update-btn app__btn app__btn-outline"
               :disabled="isPending"
               @click="updateLimits(limits.payment)"
             >
-              Update payment limits
+              Update
             </button>
 
             <button
-              class="limits-manager__remove-btn app__btn app__btn--danger"
-              :disabled="isPending"
-              @click="removeLimits(limits.payment)"
+              class="limits-manager__remove-btn app__btn app__btn-outline app__btn-outline--danger"
+              :disabled="isPending || limits.payment.id === 0"
+              @click="removeLimits(limits.payment, 'payment')"
             >
-              Remove payment limits
+              Remove
             </button>
           </div>
         </template>
@@ -118,19 +118,19 @@
 
           <div class="limits-manager__limits-action">
             <button
-              class="limits-manager__update-btn app__btn"
+              class="limits-manager__update-btn app__btn app__btn-outline"
               :disabled="isPending"
               @click="updateLimits(limits.withdrawal)"
             >
-              Update withdrawal limits
+              Update
             </button>
 
             <button
-              class="limits-manager__remove-btn app__btn app__btn--danger"
-              :disabled="isPending"
-              @click="removeLimits(limits.withdrawal)"
+              class="limits-manager__remove-btn app__btn app__btn-outline app__btn-outline--danger"
+              :disabled="isPending || limits.withdrawal.id === 0"
+              @click="removeLimits(limits.withdrawal, 'withdrawal')"
             >
-              Remove withdrawal limits
+              Remove
             </button>
           </div>
         </template>
@@ -160,19 +160,19 @@
 
           <div class="limits-manager__limits-action">
             <button
-              class="limits-manager__update-btn app__btn"
+              class="limits-manager__update-btn app__btn app__btn-outline"
               :disabled="isPending"
               @click="updateLimits(limits.deposit)"
             >
-              Update deposit limits
+              Update
             </button>
 
             <button
-              class="limits-manager__remove-btn app__btn app__btn--danger"
-              :disabled="isPending"
-              @click="removeLimits(limits.deposit)"
+              class="limits-manager__remove-btn app__btn app__btn-outline app__btn-outline--danger"
+              :disabled="isPending || limits.deposit.id === 0"
+              @click="removeLimits(limits.deposit, 'deposit')"
             >
-              Remove deposit limits
+              Remove
             </button>
           </div>
         </template>
@@ -197,6 +197,8 @@
   import { STATS_OPERATION_TYPES, DEFAULT_MAX_AMOUNT } from '@/constants'
   import config from '@/config'
   import { confirmAction } from '@/js/modals/confirmation_message'
+  import { ErrorHandler } from '@/utils/ErrorHandler'
+  import { ApiCallerFactory } from '@/api-caller-factory'
 
   const LIMITS_TYPES = [
     'dailyOut',
@@ -301,41 +303,50 @@
             ...limits,
             accountID
           })
-          await Sdk.horizon.transactions.submitOperations(operation)
+          await ApiCallerFactory
+            .createCallerInstance()
+            .postOperations(operation)
           await this.getAssets()
           this.$store.dispatch('SET_INFO', 'Limits update saved')
         } catch (e) {
-          console.error(e)
-          e.showMessage()
+          ErrorHandler.process(e)
         }
         this.isPending = false
       },
-      async removeLimits (limits) {
-        this.isPending = true
-
+      async removeLimits (limits, type) {
+        console.log(type)
         if (limits.id === 0) {
-          this.isPending = false
           return false
         }
-        if (!await confirmAction({ title: 'Delete the limits?' })) return
+        if (!await confirmAction({ title: this.getTitleConfirmAction(type) })) return
+        this.isPending = true
         try {
           const operation = Sdk.base.ManageLimitsBuilder.removeLimits({
             id: (limits.id).toString()
           })
-          await Sdk.horizon.transactions.submitOperations(operation)
+          await ApiCallerFactory
+            .createCallerInstance()
+            .postOperations(operation)
           await this.getLimits()
           this.$store.dispatch('SET_INFO', 'Limits removed')
         } catch (e) {
-          console.error(e)
-          e.showMessage()
+          ErrorHandler.process(e)
         }
         this.isPending = false
+      },
+      getTitleConfirmAction (type) {
+        if (this.filters.scope === SCOPE_TYPES.accountRole) {
+          const accountRole = this.ACCOUNT_ROLES_VERBOSE[this.filters.accountRole].toLowerCase()
+          return `Delete ${accountRole} ${type} limits?`
+        } else {
+          return `Delete ${this.specificUserAddress} ${type} limits?`
+        }
       },
       async getAssets () {
         const response = await Sdk.horizon.assets.getAll()
         this.assets = response.data
       },
-      async getAccountIdByEmail (email) {
+      async loadAccountIdByEmail (email) {
         let address = ''
         try {
           address = await api.users.getAccountIdByEmail(email)
@@ -384,7 +395,7 @@
           if (Sdk.base.Keypair.isValidPublicKey(this.specificUserAddress)) {
             this.filters.address = this.specificUserAddress
           } else {
-            this.getAccountIdByEmail(this.specificUserAddress)
+            this.loadAccountIdByEmail(this.specificUserAddress)
           }
         }
       },
@@ -433,9 +444,9 @@
       },
       'filters.scope': function (value) {
         if (!value) return
-        value === SCOPE_TYPES.accountRole
-          ? this.filters.accountRole = config.ACCOUNT_ROLES.general
-          : this.filters.accountRole = ''
+        this.filters.accountRole = value === SCOPE_TYPES.accountRole
+          ? config.ACCOUNT_ROLES.general
+          : ''
         this.specificUserAddress = ''
         this.setFilters()
         this.getLimits()
@@ -480,7 +491,7 @@
   }
 
   .limits-manager__limits-list {
-    margin-bottom: 4rem;
+    margin-bottom: 1.7rem;
   }
 
   .limits-manager__limit-type {
@@ -492,7 +503,7 @@
   }
 
   .limits-manager__remove-btn {
-    margin-top: 1rem;
+    margin-left: 0.5rem;
   }
 
   .limits-manager-filters {
@@ -500,5 +511,15 @@
     justify-content: space-between;
     flex-wrap: wrap;
     margin-bottom: 5rem;
+  }
+
+  .limits-manager__limits-action {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .limits-manager__update-btn,
+  .limits-manager__remove-btn {
+    min-width: 9rem;
   }
 </style>
