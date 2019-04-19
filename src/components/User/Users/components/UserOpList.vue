@@ -43,19 +43,11 @@
     </ul>
 
     <template v-else>
-      <div class="app-list__li-like">
-        <template v-if="isLoading">
-          <p>
-            Loading...
-          </p>
-        </template>
-
-        <template v-else>
-          <p>
-            Nothing here yet
-          </p>
-        </template>
-      </div>
+      <ul class="app-list">
+        <li class="app-list__li-like">
+          {{ isPending ? 'Loading...' : 'Nothing here yet' }}
+        </li>
+      </ul>
     </template>
 
     <div class="app__more-btn-wrp">

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
+## [Unreleased]
+#### Fixed
+- Fixed operation empty and loading list displaying of a user
+
 ## [1.5.0-rc.3] - 2019-04-19
 ### "Under the hood" changes
 #### Changed

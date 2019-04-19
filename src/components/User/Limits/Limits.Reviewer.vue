@@ -26,11 +26,7 @@
             :value="LIMITS_REQUEST_STATES_STR[get(request, 'details.requestType')]"
           />
           <detail label="Account email">
-            <email-getter
-              class="app-list__cell app-list__cell--important"
-              :account-id="account.id"
-              is-titled
-            />
+            <email-getter :account-id="account.id" />
           </detail>
           <detail
             label="Account ID"
