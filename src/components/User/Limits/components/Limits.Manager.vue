@@ -63,7 +63,7 @@
                   </span>
                   <input-field
                     :value="normalizeLimitAmount(limits.payment[type])"
-                    @input="limits.payment[type] = $event || DEFAULT_MAX_AMOUNT"
+                    @input="limits.payment[type] = setLimitValue($event)"
                     class="limits-manager__limit-field"
                     :step="DEFAULT_INPUT_STEP"
                     :placeholder="getLimitLable(limits.payment, type)"
@@ -105,7 +105,7 @@
                   </span>
                   <input-field
                     :value="normalizeLimitAmount(limits.withdrawal[type])"
-                    @input="limits.withdrawal[type] = $event || DEFAULT_MAX_AMOUNT"
+                    @input="limits.withdrawal[type] = setLimitValue($event)"
                     class="limits-manager__limit-field"
                     :step="DEFAULT_INPUT_STEP"
                     :placeholder="getLimitLable(limits.withdrawal, type)"
@@ -147,7 +147,7 @@
                   </span>
                   <input-field
                     :value="normalizeLimitAmount(limits.deposit[type])"
-                    @input="limits.deposit[type] = $event || DEFAULT_MAX_AMOUNT"
+                    @input="limits.deposit[type] = setLimitValue($event)"
                     class="limits-manager__limit-field"
                     :step="DEFAULT_INPUT_STEP"
                     :placeholder="getLimitLable(limits.deposit, type)"
@@ -228,6 +228,7 @@
         scope: SCOPE_TYPES.accountRole
       },
       specificUserAddress: '',
+      userEmail: '',
       limits: {
         withdrawal: null,
         payment: null,
@@ -338,7 +339,7 @@
           const accountRole = this.ACCOUNT_ROLES_VERBOSE[this.filters.accountRole].toLowerCase()
           return `Delete ${accountRole} ${type} limits?`
         } else {
-          return `Delete ${this.specificUserAddress} ${type} limits?`
+          return `Delete ${this.userEmail} ${type} limits?`
         }
       },
       async getAssets () {
@@ -389,13 +390,17 @@
       },
       async setFilters () {
         if (!this.filters.asset) this.filters.asset = get(this.assets, '[0].code')
+        const emailRegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
         if (this.specificUserAddress) {
-          // Both accountRole and accountId cant be requested at same time
           if (Sdk.base.Keypair.isValidPublicKey(this.specificUserAddress)) {
             this.filters.address = this.specificUserAddress
-          } else {
-            this.loadAccountIdByEmail(this.specificUserAddress)
+            this.userEmail = await api.users.getEmailByAccountId(this.filters.address)
+          } else if (emailRegExp.test(this.specificUserAddress)) {
+            await this.loadAccountIdByEmail(this.specificUserAddress)
+            this.userEmail = this.specificUserAddress
           }
+        } else {
+          this.filters.address = ''
         }
       },
       normalizeLimitAmount (limit) {
@@ -406,6 +411,11 @@
         return limit.id === notSetLimitId && limit[type] === DEFAULT_MAX_AMOUNT
           ? 'Not set'
           : 'Unlimited'
+      },
+      setLimitValue (value) {
+        return +value >= +DEFAULT_MAX_AMOUNT
+          ? DEFAULT_MAX_AMOUNT
+          : value
       }
     },
     watch: {
@@ -435,8 +445,7 @@
         immediate: true
       },
       'specificUserAddress': {
-        handler: throttle(function (value) {
-          if (!value) return
+        handler: throttle(function () {
           this.setFilters()
         }, 1000),
         immediate: true
@@ -450,10 +459,8 @@
         this.setFilters()
         this.getLimits()
       },
-      'filters.address': function (value) {
-        if (value) {
-          this.getLimits()
-        }
+      'filters.address': function () {
+        this.getLimits()
       }
     }
   }
