@@ -11,6 +11,9 @@ for further information about branching and tagging conventions.
 #### Fixed
 - Fixed operation empty and loading list displaying of a user
 
+#### Added
+- "Invest" fee type
+
 ## [1.5.0] - 2019-04-19
 ### "Under the hood" changes
 #### Changed

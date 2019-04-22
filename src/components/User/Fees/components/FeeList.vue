@@ -13,6 +13,7 @@
           <option :value="FEE_TYPES.offerFee">Order Match</option>
           <option :value="FEE_TYPES.withdrawalFee">Withdrawal</option>
           <option :value="FEE_TYPES.issuanceFee">Issuance</option>
+          <option :value="FEE_TYPES.investFee">Invest</option>
         </select-field>
 
         <select-field
@@ -300,6 +301,10 @@
             result = this.assets.filter(item => +item.policy & ASSET_POLICIES.withdrawable)
             break
 
+          case FEE_TYPES.investFee:
+            result = this.assets.filter(item => +item.policy & ASSET_POLICIES.withdrawable)
+            break
+
           default:
             result = this.assets
             break
@@ -326,6 +331,10 @@
     },
 
     watch: {
+      'assets': function () {
+        console.log(this.assets)
+      },
+
       'assetsByType': function () {
         const isSelectedAssetInRange = this.assetsByType
           .filter(item => item.code === this.filters.assetCode)
