@@ -15,6 +15,7 @@ for further information about branching and tagging conventions.
 ### "Under the hood" changes
 #### Changed
 - Now using @tokend/js-sdk@1.5.0
+- Make unchangeable adminId input field
 
 ## [1.5.0-rc.3] - 2019-04-19
 ### "Under the hood" changes
