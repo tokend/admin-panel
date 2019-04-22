@@ -16,7 +16,7 @@
               label="Account ID"
               v-model="form.accountId"
               :error-message="formErrors.accountId.message"
-              :disabled="(isMaster && !this.addNew) || isPending"
+              :disabled="!addNew || isPending"
             />
           </div>
 
