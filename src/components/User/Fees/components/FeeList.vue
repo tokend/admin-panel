@@ -326,11 +326,6 @@
       }
     },
 
-    watch: {
-      'assets': function () {
-        console.log(this.assets)
-      },
-
       'assetsByType': function () {
         const isSelectedAssetInRange = this.assetsByType
           .filter(item => item.code === this.filters.assetCode)
