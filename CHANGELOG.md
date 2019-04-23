@@ -19,6 +19,9 @@ for further information about branching and tagging conventions.
 - Now blocking the account using change role request created by admin
 - Now passing latest approved request ID in creator details
   while resetting or blocking the account
+- Updated `package.json` dependencies
+- Updated webpack build config
+- Now using "qrcode.vue" package instead of "v-qrcode"
  
 #### Fixed
 - Displaying user role & state on user details page
