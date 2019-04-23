@@ -24,7 +24,8 @@ export default {
   name: CLASS_NAME,
   data () {
     return {
-      assetCode: ''
+      assetCode: '',
+      svg: ''
     }
   },
 
@@ -32,7 +33,7 @@ export default {
 
   watch: {
     'priceHistory' () { this.render() },
-    'scale' () { this.render() },
+    'scale' () { this.update() },
     'assetPair' () { this.render() }
   },
 
@@ -224,7 +225,7 @@ export default {
 
       const viewWidth = width + margin.right + margin.left
       const viewHeight = height + margin.top + margin.bottom
-      const svg = d3.select(this.$el)
+      this.svg = d3.select(this.$el)
         .append('svg')
         .attr('width', '100%')
         .attr('viewBox', `0 0 ${viewWidth} ${viewHeight}`)
@@ -249,7 +250,7 @@ export default {
         .tickSize(8)
         .tickPadding(4)
 
-      svg.append('g')
+      this.svg.append('g')
         .attr('class', `${CLASS_NAME}__x-axis`)
         .attr('transform', `translate(0, ${height})`)
         .call(xAxis)
@@ -262,7 +263,7 @@ export default {
         .tickSizeOuter(0)
         .tickPadding(25)
 
-      svg.append('g')
+      this.svg.append('g')
         .attr('class', `${CLASS_NAME}__y-axis`)
         .call(yAxis)
         .selectAll('line')
@@ -273,7 +274,7 @@ export default {
         .y((d) => y(d.value))
         .curve(d3.curveStepAfter)
 
-      const path = svg.append('path')
+      const path = this.svg.append('path')
         .attr('class', `${CLASS_NAME}__line`)
         .attr('d', line(data))
 
@@ -288,7 +289,7 @@ export default {
         .attr('stroke-dashoffset', 0)
 
       // Render Tip
-      const tip = svg.append('g')
+      const tip = this.svg.append('g')
         .attr('class', `${CLASS_NAME}__tip`)
 
       tip.append('line')
@@ -323,7 +324,7 @@ export default {
         .attr('text-anchor', 'middle')
         .attr('y', 5)
 
-      const motionCaptureArea = svg.append('rect')
+      const motionCaptureArea = this.svg.append('rect')
         .attr('class', `${CLASS_NAME}__tip-motion-capture-area`)
         .attr('width', width)
         .attr('height', height)
@@ -334,7 +335,7 @@ export default {
 
       function moveTip () {
         tip.classed(`${CLASS_NAME}__tip--hidden`, false)
-        const x0 = x.invert(d3.mouse(svg.node())[0])
+        const x0 = x.invert(d3.mouse(this.svg.node())[0])
         const bisectDate = d3.bisector(d => d.time).left
         const bisectIndex = bisectDate(data, x0, 1)
         const d0 = data[bisectIndex - 1]
@@ -363,6 +364,84 @@ export default {
       motionCaptureArea.on('touchend', () => hideTip.call(this))
 
       tip.classed(`${CLASS_NAME}__tip--hidden`, true)
+    },
+
+    update () {
+      this.assetCode = this.extractQuoteAsset(this.assetPair)
+
+      // Setup the data
+      const scale = this.scale
+      const data = this.normalizeData(this.priceHistory[scale])
+
+      if (!data || !data[0]) return
+
+      // Render the line
+      const line = d3.line()
+        .x((d) => x(d.time))
+        .y((d) => y(d.value))
+        .curve(d3.curveStepAfter)
+
+      // Setup svg
+      const margin = {
+        top: 20,
+        right: 5,
+        bottom: 30,
+        left: this.genYMaxTickWidth(data)
+      }
+      const dimensions = this.getDimensions(this.$el)
+      const width = dimensions.width - margin.right - margin.left
+      const height = dimensions.height - margin.top - margin.bottom
+
+      // Define domains
+      const y = d3.scaleLinear()
+        .range([height, 0])
+        .domain(this.genYDomain(data))
+
+      const x = d3.scaleTime()
+        .range([0, width])
+        .domain(this.genXDomain(data))
+
+      // Render x-axis
+      const xAxis = d3.axisBottom(x)
+        .tickValues(this.genXTickValues(data, width))
+        .tickFormat(this.genXAxisFormatter(data))
+        .tickSize(8)
+        .tickPadding(4)
+
+      this.svg.selectAll('.myXaxis')
+        .transition()
+        .duration(3000)
+        .call(xAxis)
+
+      // Render y-axis
+      const yAxis = d3.axisLeft(y)
+        .tickValues(this.genYTickValues(data))
+        .tickFormat((d) => this.formatMoney(d))
+        .tickSizeInner(-(width + margin.right))
+        .tickSizeOuter(0)
+        .tickPadding(25)
+
+      this.svg.selectAll('.myYaxis')
+          .transition()
+          .duration(3000)
+          .call(yAxis)
+
+      // Create a update selection: bind to the new data
+      var u = this.svg.selectAll('.price-chart__line')
+        .data([data], function (d) { return d })
+
+      // Updata the line
+      u
+        .enter()
+        .append('path')
+        .attr('class', 'lineTest')
+        .merge(u)
+        .transition()
+        .duration(3000)
+        .attr('d', line(data))
+          .attr('fill', 'none')
+          .attr('stroke', 'steelblue')
+          .attr('stroke-width', 2.5)
     }
   }
 }
