@@ -13,6 +13,7 @@ for further information about branching and tagging conventions.
 
 #### Added
 - "Invest" fee type
+- Merged email field with account ID field for user address filter
 
 ## [1.5.0] - 2019-04-19
 ### "Under the hood" changes

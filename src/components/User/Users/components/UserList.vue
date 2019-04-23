@@ -16,16 +16,9 @@
 
           <input-field
             class="app-list-filters__field"
-            v-model.trim="filters.email"
-            label="Email"
+            v-model.trim="specificUserAddress"
+            label="Email or Account ID"
             autocomplete-type="email"
-          />
-
-          <input-field
-            class="app-list-filters__field"
-            v-model.trim="filters.address"
-            label="Account ID"
-            autocomplete-type="address"
           />
         </div>
       </div>
@@ -109,7 +102,7 @@
           ref="collectionLoaderBtn"
         />
       </div>
-        
+
       </div>
     </template>
 
@@ -164,6 +157,7 @@ export default {
         userId: null,
         scrollPosition: 0
       },
+      specificUserAddress: '',
       list: [],
       isLoading: false,
 
@@ -195,6 +189,21 @@ export default {
     setList (data) {
       this.list = data
       this.isLoaded = true
+    },
+
+    async setFilters () {
+      if (this.specificUserAddress) {
+        const idLength = 56
+        if (this.specificUserAddress.length === idLength) {
+          this.filters.address = this.specificUserAddress
+          this.filters.email = ''
+        } else {
+          this.filters.email = this.specificUserAddress
+          this.filters.address = ''
+        }
+      } else {
+        this.filters.address = this.filters.email = ''
+      }
     },
 
     extendList (data) {
@@ -233,6 +242,9 @@ export default {
     }, 1000),
     'filters.address': _.throttle(function () {
       this.reloadCollectionLoader()
+    }, 1000),
+    'specificUserAddress': _.throttle(function () {
+      this.setFilters()
     }, 1000)
   }
 }

@@ -30,14 +30,9 @@
 
           <input-field
             class="app-list-filters__field"
-            v-model.trim="filters.email"
-            label="Email"
-          />
-
-          <input-field
-            class="app-list-filters__field"
-            v-model.trim="filters.address"
-            label="Account ID"
+            v-model.trim="specificUserAddress"
+            label="Email or Account ID"
+            autocomplete-type="email"
           />
         </div>
       </div>
@@ -121,6 +116,7 @@ import { EmailGetter } from '@comcom/getters'
 import { formatDate } from '@/utils/formatters'
 import Vue from 'vue'
 import UserView from '../Users/Users.Show'
+import api from '@/api'
 
 import SelectField from '@comcom/fields/SelectField'
 import InputField from '@comcom/fields/InputField'
@@ -166,6 +162,7 @@ export default {
         address: '',
         type: ''
       },
+      specificUserAddress: '',
       VIEW_MODES_VERBOSE,
       REQUEST_STATES,
       KYC_REQUEST_STATES,
@@ -217,6 +214,20 @@ export default {
       this.list = data
     },
 
+    async setFilters () {
+      if (this.specificUserAddress) {
+        const emailRegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        const idLength = 56
+        if (emailRegExp.test(this.specificUserAddress)) {
+          this.filters.address = await api.users.getAccountIdByEmail(this.specificUserAddress)
+        } else if (this.specificUserAddress.length === idLength) {
+          this.filters.address = this.specificUserAddress
+        }
+      } else {
+        this.filters.address = ''
+      }
+    },
+
     async extendList (data) {
       this.list = this.list.concat(data)
     },
@@ -246,6 +257,9 @@ export default {
     'filters.roleToSet' () { this.reloadCollectionLoader() },
     'filters.address': _.throttle(function () {
       this.reloadCollectionLoader()
+    }, 1000),
+    'specificUserAddress': _.throttle(function () {
+      this.setFilters()
     }, 1000)
   }
 }
