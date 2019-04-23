@@ -10,6 +10,7 @@ for further information about branching and tagging conventions.
 ## [Unreleased]
 #### Fixed
 - Fixed operation empty and loading list displaying of a user
+- Add validation in reviewLimitsUpdateRequest when parsing limits values
 
 ## [1.5.0] - 2019-04-19
 ### "Under the hood" changes
