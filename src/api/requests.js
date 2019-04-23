@@ -4,7 +4,7 @@ import { Sdk } from '@/sdk'
 import { REQUEST_TYPES } from '@/constants'
 
 import { CreatePreIssuanceRequest } from './responseHandlers/requests/CreatePreIssuanceRequest'
-import { TokenRequest } from './responseHandlers/requests/TokenRequest'
+import { AssetRequest } from './responseHandlers/requests/AssetRequest'
 import { IssuanceCreateRequest } from './responseHandlers/requests/IssuanceCreateRequest'
 import { clearObject } from '@/utils/clearObject'
 import _get from 'lodash/get'
@@ -238,7 +238,7 @@ function mapRequests (records) {
     switch (type) {
       case REQUEST_TYPES.createAsset:
       case REQUEST_TYPES.updateAsset:
-        return new TokenRequest(record)
+        return new AssetRequest(record)
       case REQUEST_TYPES.createIssuance:
         return new IssuanceCreateRequest(record)
       case REQUEST_TYPES.createPreIssuance:

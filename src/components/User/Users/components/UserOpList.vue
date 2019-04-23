@@ -4,7 +4,10 @@
       Operations
     </h2>
 
-    <ul class="app-list">
+    <ul
+      class="app-list"
+      v-if="records && records.length"
+    >
       <div class="app-list__header">
         <span class="app-list__cell">
           Type
@@ -24,20 +27,28 @@
       </div>
 
       <button class="app-list__li" v-for="item in records" :key="item.id" @click="$emit('op-select', item)">
-        <span class="app-list__cell" :title="item.type">
-          {{item.type}}
+        <span class="app-list__cell" :title="item.operationType">
+          {{ item.operationType }}
         </span>
-        <span class="app-list__cell" :title="item.ledger_close_time">
-          {{item.ledgerCloseTime}}
+        <span class="app-list__cell" :title="item.ledgerCloseTime">
+          {{ item.ledgerCloseTime }}
         </span>
-        <span class="app-list__cell" :title="item.source_account">
-          {{item.sourceAccount}}
+        <span class="app-list__cell" :title="item.sourceAccount">
+          {{ item.sourceAccount }}
         </span>
         <span class="app-list__cell">
           <operation-counterparty :operation="item" />
         </span>
       </button>
     </ul>
+
+    <template v-else>
+      <ul class="app-list">
+        <li class="app-list__li-like">
+          {{ isPending ? 'Loading...' : 'Nothing here yet' }}
+        </li>
+      </ul>
+    </template>
 
     <div class="app__more-btn-wrp">
       <collection-loader
@@ -51,12 +62,14 @@
 
 <script>
 import Vue from 'vue'
-import { Sdk } from '@/sdk'
 import moment from 'moment'
+import get from 'lodash/get'
 import { formatAssetAmount } from '@/utils/formatters'
 import { OperationCounterparty } from '@comcom/getters'
 import { CollectionLoader } from '@/components/common'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { ApiCallerFactory } from '@/api-caller-factory'
+import { clearObject } from '@/utils/clearObject'
 
 export default {
   components: {
@@ -67,7 +80,8 @@ export default {
     return {
       formatAssetAmount,
       list: [],
-      masterPubKey: Vue.params.MASTER_ACCOUNT
+      masterPubKey: Vue.params.MASTER_ACCOUNT,
+      isLoading: false
     }
   },
 
@@ -82,12 +96,22 @@ export default {
 
   methods: {
     async getList () {
+      this.isLoading = true
       let response = {}
       try {
-        response = await Sdk.horizon.account.getOperations(this.id)
+        response = await ApiCallerFactory
+          .createCallerInstance()
+          .getWithSignature('/v3/history', {
+            page: { order: 'desc' },
+            filter: clearObject({
+              account: this.id
+            }),
+            include: ['operation.details']
+          })
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }
+      this.isLoading = false
       return response
     },
 
@@ -101,12 +125,14 @@ export default {
 
     normalizeRecords (records) {
       return records.map((item) => {
+        const operationType = item.operation.details.type.replace(/operations-/g, '').split('-').join(' ')
         return Object.assign({}, item, {
-          // Capitalize and remove underscores
-          type: item.type.charAt(0).toUpperCase() + item.type.split('_').join(' ').slice(1),
-
-          ledgerCloseTime: moment(item.ledgerCloseTime).format('DD MMM YYYY [at] hh:mm:ss'),
-          sourceAccount: item.sourceAccount === this.masterPubKey ? 'Master' : item.sourceAccount
+          // Capitalize and remove dashes
+          operationType: operationType.charAt(0).toUpperCase() + operationType.slice(1),
+          ledgerCloseTime: moment(item.operation.appliedAt).format('DD MMM YYYY [at] hh:mm:ss'),
+          sourceAccount: item.operation.source.id === this.masterPubKey ? 'Master' : item.operation.source.id,
+          receiverAccount: get(item, 'operation.details.receiverAccount.id'),
+          accountTo: get(item, 'operation.details.accountTo.id')
         })
       })
     }

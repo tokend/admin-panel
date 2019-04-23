@@ -21,10 +21,10 @@
       </li>
       <li>
         <span>
-          Account type
+          Account role
         </span>
-        <span :title="user.role | roleIdToString">
-          {{ user.role | roleIdToString }}
+        <span :title="originalRole | roleIdToString">
+          {{ originalRole | roleIdToString }}
         </span>
       </li>
 
@@ -32,16 +32,15 @@
         <span>
           Account state
         </span>
-        <account-state-getter
-          class="app-list__cell"
-          :accountId="user.address"
-        />
+        <span>
+          {{ accountState }}
+        </span>
       </li>
 
-      <template v-if="user.state === USER_STATES_STR.rejected">
-        <label class="data-caption">Reject reason</label>
+      <template v-if="isUserBlocked && blockReason">
+        <label class="data-caption">Block reason</label>
         <p class="text">
-          {{user.rejectReason}}
+          {{ blockReason }}
         </p>
       </template>
     </ul>
@@ -50,29 +49,34 @@
 </template>
 
 <script>
-import { USER_STATES_STR } from '@/constants'
-import { AccountStateGetter } from '@comcom/getters'
+import config from '@/config'
 
 export default {
-  components: {
-    AccountStateGetter
-  },
-  data () {
-    return {
-      USER_STATES_STR
-    }
-  },
-
   props: {
     user: {
       type: Object,
       default () {
         return {}
       }
+    },
+    originalRole: {
+      type: String,
+      default: ''
+    },
+    blockReason: {
+      type: String,
+      default: ''
+    }
+  },
+
+  computed: {
+    isUserBlocked () {
+      return this.user.role === config.ACCOUNT_ROLES.blocked
+    },
+
+    accountState () {
+      return this.isUserBlocked ? 'Blocked' : 'Active'
     }
   }
 }
 </script>
-
-<style scoped>
-</style>

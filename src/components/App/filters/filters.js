@@ -29,7 +29,8 @@ export function roleIdToString (roleId) {
   return {
     [+config.ACCOUNT_ROLES.notVerified]: 'Unverified',
     [+config.ACCOUNT_ROLES.general]: 'General',
-    [+config.ACCOUNT_ROLES.corporate]: 'Corporate'
+    [+config.ACCOUNT_ROLES.corporate]: 'Corporate',
+    [+config.ACCOUNT_ROLES.blocked]: 'Blocked'
   }[+roleId]
 }
 
