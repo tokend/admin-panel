@@ -1,5 +1,36 @@
 {
-  "presets": ["es2015", "stage-2"],
-  "plugins": ["transform-runtime"],
-  "comments": false
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "node": "current",
+          "browsers": [
+            "> 1%",
+            "last 2 versions",
+            "not ie <= 8"
+          ]
+        },
+        "modules": "cjs"
+      }
+    ]
+  ],
+  "plugins": [
+    [
+      "@babel/plugin-transform-runtime",
+      {
+        "corejs": 2
+      }
+    ],
+    [
+      "babel-plugin-transform-builtin-extend",
+      {
+        "globals": [
+          "Error",
+          "Array"
+        ]
+      }
+    ],
+    ["@babel/plugin-syntax-dynamic-import"]
+  ]
 }
