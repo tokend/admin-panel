@@ -301,10 +301,6 @@
             result = this.assets.filter(item => +item.policy & ASSET_POLICIES.withdrawable)
             break
 
-          case FEE_TYPES.investFee:
-            result = this.assets.filter(item => +item.policy & ASSET_POLICIES.withdrawable)
-            break
-
           default:
             result = this.assets
             break
