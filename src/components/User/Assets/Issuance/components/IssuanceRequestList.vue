@@ -54,7 +54,7 @@
           <li v-for="item in list" :key="item.id" class="issuance-rl__li">
             <router-link
               class="issuance-rl__li-a"
-              :to="{ name: 'systemAssets.issuance.props', params: { id: item.id } }"
+              :to="{ name: 'assets.issuance.props', params: { id: item.id } }"
             >
             <span
               class="app-list__cell app-list__cell--important"

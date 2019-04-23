@@ -13,6 +13,7 @@
           <option :value="FEE_TYPES.offerFee">Order Match</option>
           <option :value="FEE_TYPES.withdrawalFee">Withdrawal</option>
           <option :value="FEE_TYPES.issuanceFee">Issuance</option>
+          <option :value="FEE_TYPES.investFee">Invest</option>
         </select-field>
 
         <select-field

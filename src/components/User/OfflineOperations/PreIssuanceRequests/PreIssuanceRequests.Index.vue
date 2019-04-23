@@ -11,7 +11,7 @@
         </option>
       </select-field>
 
-      <preissuance-request-list :asset="asset"
+      <pre-issuance-request-list :asset="asset"
         :availableAmount="availableAmount"
         @need-to-update="getAssets"
         v-if="assetsLoaded"
@@ -21,13 +21,13 @@
 </template>
 
 <script>
-import PreissuanceRequestList from './components/PreissuanceRequestList.vue'
+import PreIssuanceRequestList from './components/PreIssuanceRequestList.vue'
 import SelectField from '@comcom/fields/SelectField'
 import { Sdk } from '@/sdk'
 
 export default {
   components: {
-    PreissuanceRequestList,
+    PreIssuanceRequestList,
     SelectField
   },
 

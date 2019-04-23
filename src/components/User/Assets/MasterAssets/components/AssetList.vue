@@ -19,7 +19,7 @@
     >
       <li class="asset-list__li" v-for="(asset, i) in parsedAssets" :key="i">
         <router-link class="asset-list__li-a"
-          :to="{ name: 'systemAssets.show', params: { asset: asset.id }}">
+          :to="{ name: 'assets.masterAssets.show', params: { asset: asset.id }}">
           <span class="asset-list__li-name" :title="asset.creatorDetails.name">
             {{ asset.creatorDetails.name }}
           </span>
@@ -152,7 +152,7 @@ function convertPolicyToString (policy) {
 </script>
 
 <style lang="scss" scoped>
-@import "../../../../assets/scss/colors";
+@import "~@/assets/scss/colors";
 
 .asset-list__table-header,
 .asset-list__ul {

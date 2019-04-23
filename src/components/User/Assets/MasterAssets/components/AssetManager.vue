@@ -277,17 +277,17 @@
 import api from '@/api'
 import { Sdk } from '@/sdk'
 import safeGet from 'lodash/get'
-import config from '../../../../config'
+import config from '@/config'
 import Bus from '@/utils/EventBus'
 
 import { ImageField, TickField, InputField, SelectField } from '@comcom/fields'
 import { ASSET_POLICIES, DEFAULT_INPUT_STEP, DOCUMENT_TYPES, ASSET_POLICIES_VERBOSE } from '@/constants'
-import { fileReader } from '../../../../utils/file-reader'
+import { fileReader } from '@/utils/file-reader'
 
 import 'mdi-vue/ChevronDownIcon'
 import 'mdi-vue/ChevronUpIcon'
 
-import { confirmAction } from '../../../../js/modals/confirmation_message'
+import { confirmAction } from '@/js/modals/confirmation_message'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
@@ -439,7 +439,7 @@ export default {
         await Sdk.horizon.transactions.submitOperations(operation)
         Bus.$emit('recheckConfig')
         this.$store.dispatch('SET_INFO', 'Submitted successfully.')
-        this.$router.push({ name: 'systemAssets.index' })
+        this.$router.push({ name: 'assets.masterAssets.index' })
       } catch (error) {
         ErrorHandler.process(error)
       }
@@ -480,7 +480,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../../../assets/scss/colors";
+@import "~@/assets/scss/colors";
 .asset-manager {
   position: relative;
   padding-top: 3rem;

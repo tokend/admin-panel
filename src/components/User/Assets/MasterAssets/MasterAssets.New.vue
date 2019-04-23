@@ -1,9 +1,9 @@
 <template>
-  <div class="assets-new">
-    <div class="app__block assets-new__block">
+  <div class="master-assets-new">
+    <div class="app__block master-assets-new__block">
       <h2>Create asset</h2>
 
-      <div class="assets-new__manager-wrp">
+      <div class="master-assets-new__manager-wrp">
         <asset-manager/>
       </div>
     </div>
@@ -21,7 +21,7 @@ export default {
 </script>
 
 <style scoped>
-.assets-new__block.app__block {
+.master-assets-new__block.app__block {
   max-width: 64rem;
 }
 </style>
