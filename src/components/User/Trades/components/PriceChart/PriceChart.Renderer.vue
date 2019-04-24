@@ -1,5 +1,5 @@
 <template>
-  <div class="price-chart"></div>
+  <div class='price-chart'></div>
 </template>
 
 <script>
@@ -25,7 +25,15 @@ export default {
   data () {
     return {
       assetCode: '',
-      svg: ''
+      margin: '',
+      x: '',
+      y: '',
+      valueline: '',
+      div: '',
+      svg: '',
+      xAxis: '',
+      yAxis: '',
+      data: ''
     }
   },
 
@@ -38,12 +46,12 @@ export default {
   },
 
   mounted (...args) {
-    this.render()
-    window.addEventListener('resize', this.render)
+    this.init()
+    window.addEventListener('resize', this.init)
   },
 
   beforeDestroy () {
-    window.removeEventListener('resize', this.render)
+    window.removeEventListener('resize', this.init)
   },
 
   computed: {
@@ -202,29 +210,215 @@ export default {
 
     // render
 
-    render () {
+    // render () {
+    //   this.clear(this.$el)
+    //   this.assetCode = this.extractQuoteAsset(this.assetPair)
+
+    //   // Setup the data
+    //   const scale = this.scale
+    //   const data = this.normalizeData(this.priceHistory[scale])
+
+    //   if (!data || !data[0]) return
+
+    //   // Setup svg
+    //   const margin = {
+    //     top: 20,
+    //     right: 5,
+    //     bottom: 30,
+    //     left: this.genYMaxTickWidth(data)
+    //   }
+    //   const dimensions = this.getDimensions(this.$el)
+    //   const width = dimensions.width - margin.right - margin.left
+    //   const height = dimensions.height - margin.top - margin.bottom
+
+    //   const viewWidth = width + margin.right + margin.left
+    //   const viewHeight = height + margin.top + margin.bottom
+    //   this.svg = d3.select(this.$el)
+    //     .append('svg')
+    //     .attr('width', '100%')
+    //     .attr('viewBox', `0 0 ${viewWidth} ${viewHeight}`)
+    //     .attr('preserveAspectRatio', 'xMinYMin')
+    //     .attr('class', CLASS_NAME)
+    //     .append('g')
+    //     .attr('transform', `translate(${margin.left}, ${margin.top})`)
+
+    //   // Define domains
+    //   const y = d3.scaleLinear()
+    //     .range([height, 0])
+    //     .domain(this.genYDomain(data))
+
+    //   const x = d3.scaleTime()
+    //     .range([0, width])
+    //     .domain(this.genXDomain(data))
+
+    //   // Render x-axis
+    //   const xAxis = d3.axisBottom(x)
+    //     .tickValues(this.genXTickValues(data, width))
+    //     .tickFormat(this.genXAxisFormatter(data))
+    //     .tickSize(8)
+    //     .tickPadding(4)
+
+    //   this.svg.append('g')
+    //     .attr('class', `${CLASS_NAME}__x-axis`)
+    //     .attr('transform', `translate(0, ${height})`)
+    //     .call(xAxis)
+
+    //   // Render y-axis
+    //   const yAxis = d3.axisLeft(y)
+    //     .tickValues(this.genYTickValues(data))
+    //     .tickFormat((d) => this.formatMoney(d))
+    //     .tickSizeInner(-(width + margin.right))
+    //     .tickSizeOuter(0)
+    //     .tickPadding(25)
+
+    //   this.svg.append('g')
+    //     .attr('class', `${CLASS_NAME}__y-axis`)
+    //     .call(yAxis)
+    //     .selectAll('line')
+
+    //   // Render the line
+    //   const line = d3.line()
+    //     .x((d) => x(d.time))
+    //     .y((d) => y(d.value))
+    //     .curve(d3.curveStepAfter)
+
+    //   const path = this.svg.append('path')
+    //     .attr('class', `${CLASS_NAME}__line`)
+    //     .attr('d', line(data))
+
+    //   const totalLength = path.node().getTotalLength()
+
+    //   path
+    //     .attr('stroke-dasharray', totalLength + ' ' + totalLength)
+    //     .attr('stroke-dashoffset', totalLength)
+    //     .transition()
+    //     .duration(500)
+    //     .ease(d3.easeLinear)
+    //     .attr('stroke-dashoffset', 0)
+
+    //   // Render Tip
+    //   const tip = this.svg.append('g')
+    //     .attr('class', `${CLASS_NAME}__tip`)
+
+    //   tip.append('line')
+    //     .attr('class', `${CLASS_NAME}__tip-line`)
+    //     .attr('x1', 0)
+    //     .attr('y1', 15)
+    //     .attr('x2', 0)
+    //     .attr('y2', height)
+
+    //   const tipCircle = tip.append('circle')
+    //     .attr('class', `${CLASS_NAME}__tip-circle`)
+    //     .attr('cx', 0)
+    //     .attr('r', 5)
+
+    //   const tipTextBox = tip.append('g')
+
+    //   tipTextBox.append('rect')
+    //     .attr('class', `${CLASS_NAME}__tip-text-box`)
+    //     .attr('width', 120)
+    //     .attr('height', 55)
+    //     .attr('transform', 'translate(-60, -38)')
+    //     .attr('rx', 3)
+    //     .attr('ry', 3)
+
+    //   const tipPriceText = tipTextBox.append('text')
+    //     .attr('class', `${CLASS_NAME}__tip-text-price`)
+    //     .attr('text-anchor', 'middle')
+    //     .attr('y', -15)
+
+    //   const tipTimeText = tipTextBox.append('text')
+    //     .attr('class', `${CLASS_NAME}__tip-text-time`)
+    //     .attr('text-anchor', 'middle')
+    //     .attr('y', 5)
+
+    //   const motionCaptureArea = this.svg.append('rect')
+    //     .attr('class', `${CLASS_NAME}__tip-motion-capture-area`)
+    //     .attr('width', width)
+    //     .attr('height', height)
+
+    //   function showTip () {
+    //     tip.classed(`${CLASS_NAME}__tip--show`, true)
+    //   }
+
+    //   function moveTip () {
+    //     tip.classed(`${CLASS_NAME}__tip--hidden`, false)
+    //     const x0 = x.invert(d3.mouse(this.svg.node())[0])
+    //     const bisectDate = d3.bisector(d => d.time).left
+    //     const bisectIndex = bisectDate(data, x0, 1)
+    //     const d0 = data[bisectIndex - 1]
+    //     const d1 = data[bisectIndex]
+    //     const nearestPoint = x0 - d0.time > d1.time - x0 ? d1 : d0
+    //     // Change text of the tooltip
+    //     tipPriceText.text(this.formatMoney(nearestPoint.value))
+    //     tipTimeText.text(moment(nearestPoint.time).format('MM/DD/YYYY hh:mm a'))
+
+    //     // Change X position of the tip
+    //     tip.attr('transform', `translate(${x(nearestPoint.time)})`)
+
+    //     // Change Y position of the circle
+    //     tipCircle.attr('cy', y(nearestPoint.value))
+    //   }
+
+    //   function hideTip () {
+    //     tip.classed(`${CLASS_NAME}__tip--show`, false)
+    //   }
+
+    //   motionCaptureArea.on('mouseenter', () => showTip.call(this))
+    //   motionCaptureArea.on('touchstart', () => showTip.call(this))
+    //   motionCaptureArea.on('mousemove', () => moveTip.call(this))
+    //   motionCaptureArea.on('touchmove', () => moveTip.call(this))
+    //   motionCaptureArea.on('mouseout', () => hideTip.call(this))
+    //   motionCaptureArea.on('touchend', () => hideTip.call(this))
+
+    //   tip.classed(`${CLASS_NAME}__tip--hidden`, true)
+    // },
+
+    init () {
+      // set the dimensions and margins of the graph
       this.clear(this.$el)
-      this.assetCode = this.extractQuoteAsset(this.assetPair)
 
-      // Setup the data
       const scale = this.scale
-      const data = this.normalizeData(this.priceHistory[scale])
+      this.data = this.normalizeData(this.priceHistory[scale])
 
-      if (!data || !data[0]) return
+      if (!this.data || !this.data[0]) return
 
-      // Setup svg
-      const margin = {
+      this.margin = {
         top: 20,
         right: 5,
         bottom: 30,
-        left: this.genYMaxTickWidth(data)
+        left: this.genYMaxTickWidth(this.data)
       }
       const dimensions = this.getDimensions(this.$el)
-      const width = dimensions.width - margin.right - margin.left
-      const height = dimensions.height - margin.top - margin.bottom
+      this.width = dimensions.width - this.margin.right - this.margin.left
+      this.height = dimensions.height - this.margin.top - this.margin.bottom
+      const viewWidth = this.width + this.margin.right + this.margin.left
+      const viewHeight = this.height + this.margin.top + this.margin.bottom
 
-      const viewWidth = width + margin.right + margin.left
-      const viewHeight = height + margin.top + margin.bottom
+      // set the ranges
+      this.x = d3.scaleTime().range([0, this.width])
+      this.y = d3.scaleTime().range([this.height, 0])
+
+      this.xAxis = d3.axisBottom(this.x)
+        .tickValues(this.genXTickValues(this.data, this.width))
+        .tickFormat(this.genXAxisFormatter(this.data))
+        .tickSize(8)
+        .tickPadding(4)
+      this.yAxis = d3.axisLeft(this.y)
+        .tickValues(this.genYTickValues(this.data))
+        .tickFormat((d) => this.formatMoney(d))
+        .tickSizeInner(-(this.width + this.margin.right))
+        .tickSizeOuter(0)
+        .tickPadding(25)
+
+      this.valueline = d3.line()
+        .x((d) => this.x(d.time))
+        .y((d) => this.y(d.value))
+        .curve(d3.curveStepAfter)
+
+      // append the svg obgect to the body of the page
+      // appends a 'group' element to 'svg'
+      // moves the 'group' element to the top left margin
       this.svg = d3.select(this.$el)
         .append('svg')
         .attr('width', '100%')
@@ -232,223 +426,60 @@ export default {
         .attr('preserveAspectRatio', 'xMinYMin')
         .attr('class', CLASS_NAME)
         .append('g')
-        .attr('transform', `translate(${margin.left}, ${margin.top})`)
-
-      // Define domains
-      const y = d3.scaleLinear()
-        .range([height, 0])
-        .domain(this.genYDomain(data))
-
-      const x = d3.scaleTime()
-        .range([0, width])
-        .domain(this.genXDomain(data))
-
-      // Render x-axis
-      const xAxis = d3.axisBottom(x)
-        .tickValues(this.genXTickValues(data, width))
-        .tickFormat(this.genXAxisFormatter(data))
-        .tickSize(8)
-        .tickPadding(4)
+        .attr('transform', `translate(${this.margin.left}, ${this.margin.top})`)
 
       this.svg.append('g')
         .attr('class', `${CLASS_NAME}__x-axis`)
-        .attr('transform', `translate(0, ${height})`)
-        .call(xAxis)
-
-      // Render y-axis
-      const yAxis = d3.axisLeft(y)
-        .tickValues(this.genYTickValues(data))
-        .tickFormat((d) => this.formatMoney(d))
-        .tickSizeInner(-(width + margin.right))
-        .tickSizeOuter(0)
-        .tickPadding(25)
+        .attr('transform', `translate(0, ${this.height})`)
 
       this.svg.append('g')
         .attr('class', `${CLASS_NAME}__y-axis`)
-        .call(yAxis)
-        .selectAll('line')
 
-      // Render the line
-      const line = d3.line()
-        .x((d) => x(d.time))
-        .y((d) => y(d.value))
-        .curve(d3.curveStepAfter)
-
-      const path = this.svg.append('path')
-        .attr('class', `${CLASS_NAME}__line`)
-        .attr('d', line(data))
-
-      const totalLength = path.node().getTotalLength()
-
-      path
-        .attr('stroke-dasharray', totalLength + ' ' + totalLength)
-        .attr('stroke-dashoffset', totalLength)
-        .transition()
-        .duration(500)
-        .ease(d3.easeLinear)
-        .attr('stroke-dashoffset', 0)
-
-      // Render Tip
-      const tip = this.svg.append('g')
-        .attr('class', `${CLASS_NAME}__tip`)
-
-      tip.append('line')
-        .attr('class', `${CLASS_NAME}__tip-line`)
-        .attr('x1', 0)
-        .attr('y1', 15)
-        .attr('x2', 0)
-        .attr('y2', height)
-
-      const tipCircle = tip.append('circle')
-        .attr('class', `${CLASS_NAME}__tip-circle`)
-        .attr('cx', 0)
-        .attr('r', 5)
-
-      const tipTextBox = tip.append('g')
-
-      tipTextBox.append('rect')
-        .attr('class', `${CLASS_NAME}__tip-text-box`)
-        .attr('width', 120)
-        .attr('height', 55)
-        .attr('transform', 'translate(-60, -38)')
-        .attr('rx', 3)
-        .attr('ry', 3)
-
-      const tipPriceText = tipTextBox.append('text')
-        .attr('class', `${CLASS_NAME}__tip-text-price`)
-        .attr('text-anchor', 'middle')
-        .attr('y', -15)
-
-      const tipTimeText = tipTextBox.append('text')
-        .attr('class', `${CLASS_NAME}__tip-text-time`)
-        .attr('text-anchor', 'middle')
-        .attr('y', 5)
-
-      const motionCaptureArea = this.svg.append('rect')
-        .attr('class', `${CLASS_NAME}__tip-motion-capture-area`)
-        .attr('width', width)
-        .attr('height', height)
-
-      function showTip () {
-        tip.classed(`${CLASS_NAME}__tip--show`, true)
-      }
-
-      function moveTip () {
-        tip.classed(`${CLASS_NAME}__tip--hidden`, false)
-        const x0 = x.invert(d3.mouse(this.svg.node())[0])
-        const bisectDate = d3.bisector(d => d.time).left
-        const bisectIndex = bisectDate(data, x0, 1)
-        const d0 = data[bisectIndex - 1]
-        const d1 = data[bisectIndex]
-        const nearestPoint = x0 - d0.time > d1.time - x0 ? d1 : d0
-        // Change text of the tooltip
-        tipPriceText.text(this.formatMoney(nearestPoint.value))
-        tipTimeText.text(moment(nearestPoint.time).format('MM/DD/YYYY hh:mm a'))
-
-        // Change X position of the tip
-        tip.attr('transform', `translate(${x(nearestPoint.time)})`)
-
-        // Change Y position of the circle
-        tipCircle.attr('cy', y(nearestPoint.value))
-      }
-
-      function hideTip () {
-        tip.classed(`${CLASS_NAME}__tip--show`, false)
-      }
-
-      motionCaptureArea.on('mouseenter', () => showTip.call(this))
-      motionCaptureArea.on('touchstart', () => showTip.call(this))
-      motionCaptureArea.on('mousemove', () => moveTip.call(this))
-      motionCaptureArea.on('touchmove', () => moveTip.call(this))
-      motionCaptureArea.on('mouseout', () => hideTip.call(this))
-      motionCaptureArea.on('touchend', () => hideTip.call(this))
-
-      tip.classed(`${CLASS_NAME}__tip--hidden`, true)
+      this.update()
     },
 
     update () {
-      this.assetCode = this.extractQuoteAsset(this.assetPair)
-
-      // Setup the data
       const scale = this.scale
-      const data = this.normalizeData(this.priceHistory[scale])
+      var durations = 750
 
-      if (!data || !data[0]) return
+      this.data = this.normalizeData(this.priceHistory[scale])
 
-      // Render the line
-      const line = d3.line()
-        .x((d) => x(d.time))
-        .y((d) => y(d.value))
-        .curve(d3.curveStepAfter)
+      if (!this.data || !this.data[0]) return
 
-      // Setup svg
-      const margin = {
-        top: 20,
-        right: 5,
-        bottom: 30,
-        left: this.genYMaxTickWidth(data)
-      }
-      const dimensions = this.getDimensions(this.$el)
-      const width = dimensions.width - margin.right - margin.left
-      const height = dimensions.height - margin.top - margin.bottom
+      // Scale the range of the data
+      this.x.domain(this.genXDomain(this.data))
 
-      // Define domains
-      const y = d3.scaleLinear()
-        .range([height, 0])
-        .domain(this.genYDomain(data))
+      this.y.domain(this.genYDomain(this.data))
 
-      const x = d3.scaleTime()
-        .range([0, width])
-        .domain(this.genXDomain(data))
+      // Call the X axis
+      this.svg.selectAll(`.${CLASS_NAME}__x-axis`).transition()
+        .duration(durations)
+        .call(this.xAxis)
 
-      // Render x-axis
-      const xAxis = d3.axisBottom(x)
-        .tickValues(this.genXTickValues(data, width))
-        .tickFormat(this.genXAxisFormatter(data))
-        .tickSize(8)
-        .tickPadding(4)
+      // Call the Y axis
+      this.svg.selectAll(`.${CLASS_NAME}__y-axis`).transition()
+        .duration(durations)
+        .call(this.yAxis)
 
-      this.svg.selectAll('.myXaxis')
-        .transition()
-        .duration(3000)
-        .call(xAxis)
+      var line = this.svg.selectAll(`.${CLASS_NAME}__line`)
+        .data([this.data], (d) => d.time)
 
-      // Render y-axis
-      const yAxis = d3.axisLeft(y)
-        .tickValues(this.genYTickValues(data))
-        .tickFormat((d) => this.formatMoney(d))
-        .tickSizeInner(-(width + margin.right))
-        .tickSizeOuter(0)
-        .tickPadding(25)
-
-      this.svg.selectAll('.myYaxis')
-          .transition()
-          .duration(3000)
-          .call(yAxis)
-
-      // Create a update selection: bind to the new data
-      var u = this.svg.selectAll('.price-chart__line')
-        .data([data], function (d) { return d })
-
-      // Updata the line
-      u
+      line = line
         .enter()
         .append('path')
-        .attr('class', 'lineTest')
-        .merge(u)
-        .transition()
-        .duration(3000)
-        .attr('d', line(data))
-          .attr('fill', 'none')
-          .attr('stroke', 'steelblue')
-          .attr('stroke-width', 2.5)
+        .attr('class', `${CLASS_NAME}__line`)
+        .merge(line)
+
+      line.transition()
+        .duration(durations)
+        .attr('d', this.valueline)
     }
   }
 }
 </script>
 
-<style lang="scss">
-@import "../../../../../assets/scss/colors";
+<style lang='scss'>
+@import '../../../../../assets/scss/colors';
 
 $color-line: $color-active;
 $color-ticks: $color-text;
