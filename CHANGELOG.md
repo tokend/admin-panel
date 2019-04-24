@@ -14,6 +14,12 @@ for further information about branching and tagging conventions.
 #### Added
 - "Invest" fee type
 
+#### Changed
+- Now using ErrorHandler instead of `error.showMessage()`,
+  `$store.dispatch('SET_ERROR')`, `console.error`
+- Replaced `ErrorHandler.process` by `ErrorHandler.processWithoutFeedback`
+  in components' created hook
+
 ## [1.5.0] - 2019-04-19
 ### "Under the hood" changes
 #### Changed
