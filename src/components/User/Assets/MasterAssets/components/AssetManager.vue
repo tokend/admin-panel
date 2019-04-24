@@ -367,7 +367,7 @@ export default {
         data.creatorDetails = data.creatorDetails || data.details
         Object.assign(this.asset, data)
       } catch (error) {
-        ErrorHandler.process(error)
+        ErrorHandler.processWithoutFeedback(error)
       }
     },
 
@@ -448,11 +448,11 @@ export default {
 
     isValid () {
       if (this.errors.errors.lenght) {
-        this.$store.dispatch('SET_ERROR', 'Some field is invalid')
+        ErrorHandler.process('Some field is invalid')
         return false
       }
       if (!Sdk.base.Keypair.isValidPublicKey(this.asset.preissuedAssetSigner)) {
-        this.$store.dispatch('SET_ERROR', 'Issuer public key is invalid')
+        ErrorHandler.process('Issuer public key is invalid')
         return false
       }
       return true

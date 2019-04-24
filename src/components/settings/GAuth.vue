@@ -34,6 +34,8 @@ import Qrcode from 'qrcode.vue'
 import 'mdi-vue/AppleIcon'
 import 'mdi-vue/AndroidIcon'
 
+import { ErrorHandler } from '@/utils/ErrorHandler'
+
 export default {
   components: { Qrcode },
 
@@ -95,13 +97,12 @@ export default {
 
           this.$store.commit('CLOSE_LOADER')
         }).catch(err => {
-          console.error(err)
           this.$store.commit('CLOSE_LOADER')
 
           if (err.status === 409) {
-            this.$store.dispatch('SET_ERROR', 'TFA already created. Just re-login')
+            ErrorHandler.process('TFA already created. Just re-login')
           } else {
-            this.$store.dispatch('SET_ERROR', 'Unable to add TFA. Try to re-login')
+            ErrorHandler.process('Unable to add TFA. Try to re-login')
           }
         })
     },
@@ -119,7 +120,7 @@ export default {
           if (err.response.status === 403 && err.response.data.extras) {
             return this.showTfaForm(err.response.data.extras.token)
           } else {
-            this.$store.dispatch('SET_ERROR', 'Something went wrong. Try again later')
+            ErrorHandler.process('Something went wrong. Try again later')
           }
         })
     },

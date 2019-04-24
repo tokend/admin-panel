@@ -285,9 +285,15 @@ export default {
     }
   }),
   async created () {
-    await this.getRequest()
-    const limitRequest = await api.requests.get(this.id)
-    this.desiredLimitDetails = limitRequest.details[snakeToCamelCase(limitRequest.details.requestType)].details || '{}'
+    try {
+      await this.getRequest()
+      const limitRequest = await api.requests.get(this.id)
+      this.desiredLimitDetails = limitRequest.details[
+        snakeToCamelCase(limitRequest.details.requestType)
+      ].details || '{}'
+    } catch (e) {
+      ErrorHandler.processWithoutFeedback(e)
+    }
   },
   computed: {
     currentLimits () {
@@ -343,7 +349,7 @@ export default {
           newLimits.push(this.newLimit)
         }
         if (!newLimits.length) {
-          this.$store.dispatch('SET_ERROR', 'Please update user limits before approving request')
+          ErrorHandler.process('Please update user limits before approving request')
           this.isPending = false
           return
         }

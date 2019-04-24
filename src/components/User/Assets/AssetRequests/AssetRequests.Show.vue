@@ -262,7 +262,7 @@ export default {
       const response = await Sdk.horizon.request.get(this.id)
       this.assetRequest = new AssetRequest(response.data)
     } catch (error) {
-      ErrorHandler.process(error)
+      ErrorHandler.processWithoutFeedback(error)
       this.isInitFailed = true
     }
 

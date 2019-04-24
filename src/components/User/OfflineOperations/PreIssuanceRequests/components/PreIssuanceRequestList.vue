@@ -209,7 +209,7 @@ export default {
 
           this.loadNewPage = false
         }).catch((err) => {
-          console.error(err)
+          ErrorHandler.processWithoutFeedback(err)
           this.loadNewPage = false
           this.pageableLoadCompleted = true
         })
@@ -243,7 +243,7 @@ export default {
         this.requests = response.records
         this.pages = response
       } catch (error) {
-        ErrorHandler.process(error)
+        ErrorHandler.processWithoutFeedback(error)
       }
       this.isLoading = false
       return response
@@ -256,7 +256,7 @@ export default {
 
     reject (request) {
       if (!this.rejectReason) {
-        this.$store.dispatch('SET_ERROR', 'Enter reject reason before continue')
+        ErrorHandler.process('Enter reject reason before continue')
         return
       }
 
@@ -280,7 +280,6 @@ export default {
           this.$emit('need-to-update')
           return this.getRequests()
         }).catch(error => {
-          console.error('error', error)
           this.clear()
           ErrorHandler.process(error)
         })

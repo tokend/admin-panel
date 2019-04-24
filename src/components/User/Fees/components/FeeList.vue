@@ -407,7 +407,7 @@
           const assetsResponse = await Sdk.horizon.assetPairs.getAll()
           this.assetPairs = assetsResponse.data
         } catch (error) {
-          ErrorHandler.process(error)
+          ErrorHandler.processWithoutFeedback(error)
         }
       },
 
@@ -417,7 +417,7 @@
           const response = await Sdk.horizon.fees.getAll(filters)
           this.fees = response.data.fees
         } catch (error) {
-          ErrorHandler.process(error)
+          ErrorHandler.processWithoutFeedback(error)
         }
       },
 
@@ -427,7 +427,7 @@
         const additionalParams = this.composeRequestFilters(this.filters)
 
         if (+fees.lowerBound > +fees.upperBound) {
-          this.$store.dispatch('SET_ERROR', 'Lower bound should be less or equal to Upper bound')
+          ErrorHandler.process('Lower bound should be less or equal to Upper bound')
           return false
         }
 

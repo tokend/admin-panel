@@ -139,7 +139,7 @@ export default {
       await this.loadSignerRoles()
       await this.loadSignerList()
     } catch (error) {
-      ErrorHandler.process(error)
+      ErrorHandler.processWithoutFeedback(error)
     }
     this.$store.commit('CLOSE_LOADER')
   },

@@ -161,7 +161,7 @@ export default {
         this.request.asset = response.data
         this.request.isReady = true
       } catch (error) {
-        ErrorHandler.process(error)
+        ErrorHandler.processWithoutFeedback(error)
         this.request.isFailed = true
       }
     },
