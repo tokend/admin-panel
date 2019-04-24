@@ -108,6 +108,8 @@ import Modal from '@comcom/modals/Modal'
 import TextField from '@comcom/fields/TextField'
 import { ASSET_POLICIES } from '@/constants'
 
+import { ErrorHandler } from '@/utils/ErrorHandler'
+
 export default {
   components: {
     EmailGetter,
@@ -145,8 +147,7 @@ export default {
         this.$store.dispatch('SET_INFO', 'Request fulfilled succesfully.')
         this.$emit('close-request')
       } catch (error) {
-        console.error(error)
-        error.showMessage()
+        ErrorHandler.process(error)
       }
       this.isSubmitting = false
     },
@@ -162,8 +163,7 @@ export default {
         this.$store.dispatch('SET_INFO', 'Request rejected succesfully.')
         this.$emit('close-request')
       } catch (error) {
-        console.error(error)
-        error.showMessage()
+        ErrorHandler.process(error)
       }
       this.isSubmitting = false
     },

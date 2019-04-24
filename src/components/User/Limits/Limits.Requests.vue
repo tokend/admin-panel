@@ -15,40 +15,41 @@
 </template>
 
 <script>
-  import LimitsList from './components/Limits.RequestList'
-  import api from '@/api'
-  import {
-    REQUEST_STATES
-  } from '@/constants'
+import LimitsList from './components/Limits.RequestList'
+import api from '@/api'
+import {
+  REQUEST_STATES
+} from '@/constants'
+import { ErrorHandler } from '@/utils/ErrorHandler'
 
-  export default {
-    components: { LimitsList },
-    data: _ => ({
-      list: {},
-      accountTypeList: {},
-      isLoading: false
-    }),
-    async created () {
-      await this.getList()
-    },
+export default {
+  components: { LimitsList },
+  data: _ => ({
+    list: {},
+    accountTypeList: {},
+    isLoading: false
+  }),
+  async created () {
+    await this.getList()
+  },
 
-    computed: {
-    },
+  computed: {
+  },
 
-    methods: {
-      async getList () {
-        this.isLoading = true
-        try {
-          this.list = await api.requests.getLimitsUpdateRequests({
-            state: REQUEST_STATES.pending
-          })
-        } catch (error) {
-          error.showMessage('Cannot load user list')
-        }
-        this.isLoading = false
+  methods: {
+    async getList () {
+      this.isLoading = true
+      try {
+        this.list = await api.requests.getLimitsUpdateRequests({
+          state: REQUEST_STATES.pending
+        })
+      } catch (error) {
+        ErrorHandler.processWithoutFeedback(error)
       }
+      this.isLoading = false
     }
   }
+}
 </script>
 
 <style lang="scss" scoped>

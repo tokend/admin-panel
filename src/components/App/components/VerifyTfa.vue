@@ -42,6 +42,8 @@
 import Vue from 'vue'
 import { InputField } from '@comcom/fields'
 
+import { ErrorHandler } from '@/utils/ErrorHandler'
+
 export default {
   name: 'verify-tfa',
   components: { InputField },
@@ -62,7 +64,7 @@ export default {
   methods: {
     verifyTFACode () {
       if (this.verificationCode === '') {
-        this.$store.dispatch('SET_ERROR', 'Enter a verification code')
+        ErrorHandler.process('Enter a verification code')
         return false
       }
       this.submitButtonDisabled = true
@@ -73,14 +75,13 @@ export default {
           this.$store.commit('TFA_FORM_DONE')
           this.$store.dispatch('CLOSE_TFA')
         }).catch(err => {
-          console.error(err)
           this.submitButtonDisabled = false
           this.verificationCode = ''
 
           if (err.status !== 400) {
-            this.$store.dispatch('SET_ERROR', 'Verification failed')
+            ErrorHandler.process('Verification failed')
           } else {
-            this.$store.dispatch('SET_ERROR', 'Verification code mismatched')
+            ErrorHandler.process('Verification code mismatched')
             this.$store.commit('TFA_FORM_FALSE')
           }
         })

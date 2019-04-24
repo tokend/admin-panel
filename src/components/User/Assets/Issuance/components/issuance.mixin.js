@@ -51,7 +51,7 @@ export default {
             .map(asset => asset.code)
         )
       } catch (error) {
-        this.$store.dispatch('SET_ERROR', 'Cannot get asset list. Please try again later')
+        ErrorHandler.processWithoutFeedback(error)
       }
     },
 

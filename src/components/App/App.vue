@@ -138,7 +138,7 @@ export default {
         await this.loadAssetTypesConfigs()
       } catch (error) {
         this.isConfigLoadingFailed = true
-        ErrorHandler.process(error)
+        ErrorHandler.processWithoutFeedback(error)
       }
     },
 

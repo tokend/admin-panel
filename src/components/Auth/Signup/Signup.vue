@@ -169,16 +169,16 @@ export default {
           return Vue.auth.login(this.credentials)
         }).then(res => {
           if (!res.ok || res.enabledTFA) {
-            this.$store.dispatch('SET_ERROR', 'Can not automatically log into the system. Try to log yourself')
+            ErrorHandler.process('Can not automatically log into the system. Try to log yourself')
             this.state = 'signup'
             return
           }
 
           this.state = 'tfa'
         }).catch((err) => {
-          console.error(err)
+          ErrorHandler.processWithoutFeedback(err)
           if (!walletCreated) {
-            this.$store.dispatch('SET_ERROR', 'You are not registered, try again to register with the secret key later')
+            ErrorHandler.process('You are not registered, try again to register with the secret key later')
             this.state = 'signup'
           }
         })
@@ -201,7 +201,7 @@ export default {
           return { success: true }
         }
       }).catch(err => {
-        console.error(err)
+        ErrorHandler.processWithoutFeedback(err)
         return { success: false, error: 'Server error' }
       })
     },
@@ -217,7 +217,7 @@ export default {
           this.isSigner()
         }
       }).catch(err => {
-        console.error(err)
+        ErrorHandler.processWithoutFeedback(err)
         this.$store.commit('CLOSE_LOADER')
       })
     },

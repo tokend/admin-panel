@@ -181,7 +181,7 @@ export default {
         await this.loadSigner()
       }
     } catch (error) {
-      ErrorHandler.process(error)
+      ErrorHandler.processWithoutFeedback(error)
     }
   },
 
