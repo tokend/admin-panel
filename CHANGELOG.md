@@ -15,6 +15,9 @@ for further information about branching and tagging conventions.
 - "Invest" fee type
 - Merged email field with account ID field for user address filter
 
+### Removed
+- Autocomplete for account ID filter on assets requests page
+
 ## [1.5.0] - 2019-04-19
 ### "Under the hood" changes
 #### Changed
