@@ -53,13 +53,24 @@
 
         <template v-if="requestToReview.state">
           <section class="user-details__section">
-            <kyc-general-section
+            <general-kyc-viewer
               v-if="requestToReview.accountRoleToSet === ACCOUNT_ROLES.general"
+              :kyc="kyc"
               :user="user"
-              :blob-id="requestToReview.blobId"
-            />
-
-            <!-- eslint-disable max-len -->
+              :isKycLoaded="isKycLoaded"
+              :isKycLoadFailed ="isKycLoadFailed" />
+            <verified-kyc-viewer
+              v-if="requestToReview.accountRoleToSet === ACCOUNT_ROLES.us_verified"
+              :kyc="kyc"
+              :user="user"
+              :isKycLoaded="isKycLoaded"
+              :isKycLoadFailed ="isKycLoadFailed" />
+            <accredited-kyc-viewer
+              v-if="requestToReview.accountRoleToSet === ACCOUNT_ROLES.us_accredited"
+              :kyc="kyc"
+              :user="user"
+              :isKycLoaded="isKycLoaded"
+              :isKycLoadFailed ="isKycLoadFailed" />
             <kyc-syndicate-section
               v-if="requestToReview.accountRoleToSet === ACCOUNT_ROLES.corporate"
               :user="user"
@@ -76,11 +87,24 @@
             class="user-details__section"
           >
             <h2>Previous approved KYC Request</h2>
-            <kyc-general-section
+            <general-kyc-viewer
               v-if="verifiedRequest.accountRoleToSet === ACCOUNT_ROLES.general"
+              :kyc="kyc"
               :user="user"
-              :blob-id="verifiedRequest.blobId"
-            />
+              :isKycLoaded="isKycLoaded"
+              :isKycLoadFailed ="isKycLoadFailed" />
+            <verified-kyc-viewer
+              v-if="verifiedRequest.accountRoleToSet === ACCOUNT_ROLES.us_verified"
+              :kyc="kyc"
+              :user="user"
+              :isKycLoaded="isKycLoaded"
+              :isKycLoadFailed ="isKycLoadFailed" />
+            <accredited-kyc-viewer
+              v-if="verifiedRequest.accountRoleToSet === ACCOUNT_ROLES.us_accredited"
+              :kyc="kyc"
+              :user="user"
+              :isKycLoaded="isKycLoaded"
+              :isKycLoadFailed ="isKycLoadFailed" />
             <kyc-syndicate-section
               v-else-if="verifiedRequest.accountRoleToSet === ACCOUNT_ROLES.corporate"
               :user="user"
@@ -152,19 +176,26 @@
 <script>
 import AccountSection from './UserDetails.Account'
 
-import KycGeneralSection from './UserDetails.Kyc'
 import KycSyndicateSection from '@/components/User/Sales/components/SaleManager/SaleManager.SyndicateTab'
+
+import GeneralKycViewer from './UserDetails.GeneralKycViewer'
+import VerifiedKycViewer from './UserDetails.VerifiedKycViewer'
+import AccreditedKycViewer from './UserDetails.AccreditedKycViewer'
 
 import RequestActions from './UserDetails.Request'
 import ResetActions from './UserDetails.Reset'
 import BlockActions from './UserDetails.Block'
 
+import { UserDocLinkGetter } from '@comcom/getters'
 import { unCamelCase } from '@/utils/un-camel-case'
 
 import { ApiCallerFactory } from '@/api-caller-factory'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 import { ChangeRoleRequest } from '@/api/responseHandlers/requests/ChangeRoleRequest'
+import { fromKycTemplate } from '../../../../../utils/kyc-tempater'
+import deepCamelCase from 'camelcase-keys-deep'
+import { Sdk } from '@/sdk'
 
 import config from '@/config'
 
@@ -178,11 +209,14 @@ const EVENTS = {
 export default {
   components: {
     AccountSection,
-    KycGeneralSection,
     KycSyndicateSection,
     RequestActions,
     ResetActions,
     BlockActions,
+    AccreditedKycViewer,
+    VerifiedKycViewer,
+    GeneralKycViewer,
+    UserDocLinkGetter
   },
 
   props: {
@@ -197,9 +231,23 @@ export default {
       isFailed: false,
       isPending: false,
       isShownExternal: false,
+      isKycLoaded: false,
+      isKycLoadFailed: false,
       user: {},
       requests: [],
-      verifiedRequest: new ChangeRoleRequest({}),
+      verifiedRequest: {},
+      kyc: {}
+    }
+  },
+
+  props: ['id'],
+
+  async created () {
+    await this.getUser()
+    if (this.requestToReview.state) {
+      await this.getKyc(this.requestToReview.blobId)
+    } else if (this.verifiedRequest.state) {
+      await this.getKyc(this.verifiedRequest.blobId)
     }
   },
 
@@ -311,9 +359,24 @@ export default {
       setTimeout(async () => {
         await this.getUser()
         this.$emit(EVENTS.reviewed)
-      }, 3000)
+      }, 1500)
     },
-  },
+
+    async getKyc (blodId) {
+      this.isKycLoaded = false
+      this.isKycLoadFailed = false
+
+      try {
+        const response = await Sdk.api.blobs.get(blodId, this.user.address)
+        const kycFormResponse = response.data
+        this.kyc = deepCamelCase(fromKycTemplate(JSON.parse(kycFormResponse.value)))
+        this.isKycLoaded = true
+      } catch (error) {
+        ErrorHandler.process(error)
+        this.isKycLoadFailed = true
+      }
+    }
+  }
 }
 </script>
 
