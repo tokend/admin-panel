@@ -49,6 +49,8 @@
 import TextField from '@comcom/fields/TextField'
 import TickField from '@comcom/fields/TickField'
 
+import { ErrorHandler } from '@/utils/ErrorHandler'
+
 export default {
   components: {
     TextField,
@@ -74,7 +76,7 @@ export default {
         this.$router.push({ name: 'assets' })
       } catch (err) {
         console.error(err)
-        this.$store.dispatch('SET_ERROR', 'Failed to reject asset creation')
+        ErrorHandler.process('Failed to reject asset creation')
       }
       this.isPending = false
     }

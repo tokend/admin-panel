@@ -129,7 +129,7 @@ export default {
       try {
         this.issuance = await api.requests.get(id)
       } catch (error) {
-        this.$store.dispatch('SET_ERROR', 'Cannot load issuance request list.')
+        ErrorHandler.process('Cannot load issuance request list.')
       }
     },
     async fulfill (issuance) {

@@ -332,20 +332,20 @@ export default {
     isValidLimits (limits) {
       for (const limit of Object.values(pick(limits, LIMITS_TYPES))) {
         if (!this.numericValueRegExp.test(limit)) {
-          this.$store.dispatch('SET_ERROR', 'Only numeric value allowed')
+          ErrorHandler.process('Only numeric value allowed')
           return false
         }
       }
       if (+limits.weeklyOut < +limits.dailyOut) {
-        this.$store.dispatch('SET_ERROR', 'Weekly out limits should be more or equal to daily out')
+        ErrorHandler.process('Weekly out limits should be more or equal to daily out')
         return false
       }
       if (+limits.monthlyOut < +limits.dailyOut || +limits.monthlyOut < +limits.weeklyOut) {
-        this.$store.dispatch('SET_ERROR', 'Monthly out limits should be more or equal to daily and/or weekly out')
+        ErrorHandler.process('Monthly out limits should be more or equal to daily and/or weekly out')
         return false
       }
       if (+limits.annualOut < +limits.dailyOut || +limits.annualOut < +limits.weeklyOut || +limits.annualOut < +limits.monthlyOut) {
-        this.$store.dispatch('SET_ERROR', 'Annual out limits should be more or equal to daily, weekly and/or monthly out')
+        ErrorHandler.process('Annual out limits should be more or equal to daily, weekly and/or monthly out')
         return false
       }
       return true
@@ -355,7 +355,7 @@ export default {
         this.selectedTabName === TAB_NAMES.account
 
       if (isAddressInvalid) {
-        this.$store.dispatch('SET_ERROR', 'Such account does not exist in the system')
+        ErrorHandler.process('Such account does not exist in the system')
         return false
       } else {
         return true

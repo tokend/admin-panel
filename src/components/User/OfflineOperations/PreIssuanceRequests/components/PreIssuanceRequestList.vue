@@ -256,7 +256,7 @@ export default {
 
     reject (request) {
       if (!this.rejectReason) {
-        this.$store.dispatch('SET_ERROR', 'Enter reject reason before continue')
+        ErrorHandler.process('Enter reject reason before continue')
         return
       }
 

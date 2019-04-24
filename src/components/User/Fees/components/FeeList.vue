@@ -427,7 +427,7 @@
         const additionalParams = this.composeRequestFilters(this.filters)
 
         if (+fees.lowerBound > +fees.upperBound) {
-          this.$store.dispatch('SET_ERROR', 'Lower bound should be less or equal to Upper bound')
+          ErrorHandler.process('Lower bound should be less or equal to Upper bound')
           return false
         }
 

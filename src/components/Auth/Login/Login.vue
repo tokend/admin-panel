@@ -70,11 +70,12 @@
 <script>
 import Vue from 'vue'
 
-import store from '@/store/index'
 import GAuth from '../../settings/GAuth.vue'
 
 import InputField from '@comcom/fields/InputField'
 import config from '@/config'
+
+import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   name: 'login',
@@ -160,7 +161,7 @@ export default {
           this.$store.commit('CLOSE_LOADER')
           if (!r.ok) {
             this.credentials.password = ''
-            this.$store.dispatch('SET_ERROR', r.message)
+            ErrorHandler.process(r.message)
             return
           }
           if (r.enabledTFA) {
@@ -181,7 +182,7 @@ export default {
         .then(r => {
           this.$store.commit('CLOSE_LOADER')
           if (!r.ok) {
-            this.$store.dispatch('SET_ERROR', r.message)
+            ErrorHandler.process(r.message)
           }
           this.redirect()
         }).catch(err => {
@@ -216,11 +217,11 @@ export default {
     validate () {
       this.error = ''
       if (this.credentials.username === '') {
-        store.dispatch('SET_ERROR', 'Username should not be empty')
+        ErrorHandler.process('Username should not be empty')
         return false
       }
       if (this.credentials.password === '') {
-        store.dispatch('SET_ERROR', 'Password should not be empty')
+        ErrorHandler.process('Password should not be empty')
         return false
       }
       return true

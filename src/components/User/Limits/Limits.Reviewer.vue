@@ -343,7 +343,7 @@ export default {
           newLimits.push(this.newLimit)
         }
         if (!newLimits.length) {
-          this.$store.dispatch('SET_ERROR', 'Please update user limits before approving request')
+          ErrorHandler.process('Please update user limits before approving request')
           this.isPending = false
           return
         }

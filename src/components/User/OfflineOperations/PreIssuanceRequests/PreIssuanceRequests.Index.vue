@@ -25,6 +25,8 @@ import PreIssuanceRequestList from './components/PreIssuanceRequestList.vue'
 import SelectField from '@comcom/fields/SelectField'
 import { Sdk } from '@/sdk'
 
+import { ErrorHandler } from '@/utils/ErrorHandler'
+
 export default {
   components: {
     PreIssuanceRequestList,
@@ -70,9 +72,8 @@ export default {
 
         this.$store.commit('CLOSE_LOADER')
       } catch (err) {
-        console.error('caught error', err)
         this.$store.commit('CLOSE_LOADER')
-        this.$store.dispatch('SET_ERROR', 'Can not to load assets list')
+        ErrorHandler.process('Can not to load assets list')
       }
     }
   }

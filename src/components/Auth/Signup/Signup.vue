@@ -169,7 +169,7 @@ export default {
           return Vue.auth.login(this.credentials)
         }).then(res => {
           if (!res.ok || res.enabledTFA) {
-            this.$store.dispatch('SET_ERROR', 'Can not automatically log into the system. Try to log yourself')
+            ErrorHandler.process('Can not automatically log into the system. Try to log yourself')
             this.state = 'signup'
             return
           }
@@ -178,7 +178,7 @@ export default {
         }).catch((err) => {
           console.error(err)
           if (!walletCreated) {
-            this.$store.dispatch('SET_ERROR', 'You are not registered, try again to register with the secret key later')
+            ErrorHandler.process('You are not registered, try again to register with the secret key later')
             this.state = 'signup'
           }
         })

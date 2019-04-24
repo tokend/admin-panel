@@ -137,7 +137,7 @@ export default {
           .filter(item => (item.policy & ASSET_POLICIES.withdrawable))
           .sort((assetA, assetB) => assetA.code > assetB.code ? 1 : -1)
       } catch (error) {
-        this.$store.dispatch('SET_ERROR', 'Cannot get asset list. Please try again later')
+        ErrorHandler.process('Cannot get asset list. Please try again later')
       }
     },
 
