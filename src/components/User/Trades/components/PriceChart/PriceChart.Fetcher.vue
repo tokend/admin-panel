@@ -65,7 +65,39 @@ export default {
         const pair = new AssetPair(this.filters.pair)
         Sdk.horizon.charts.get(`${pair.base}-${pair.quote}`)
         const response = await Sdk.horizon.charts.get(`${pair.base}-${pair.quote}`)
+
         this.priceHistory = response.data
+        let val1 = 1
+        let ddd1 = 0.05
+        this.priceHistory.hour.forEach(element => {
+          val1 += ddd1
+          if (val1 >= 2) {
+            ddd1 = -0.1
+          }
+          if (val1 <= 0) {
+            ddd1 = 0.06
+          }
+
+          element.value = val1
+        })
+        let val = 1
+        let ddd = 0.05
+        this.priceHistory.day.forEach(element => {
+          val += ddd
+          if (val >= 2) {
+            if (Math.random() * 1 > 0.5) {
+              ddd = Math.random() * -0.5
+            } else {
+              ddd = Math.random() * 0.1
+            }
+          }
+          if (val <= 0) {
+            ddd = Math.random() * 1
+          }
+
+          element.value = val
+        })
+        console.log(this.priceHistory)
         this.isLoaded = true
       } catch (error) {
         console.error(error)

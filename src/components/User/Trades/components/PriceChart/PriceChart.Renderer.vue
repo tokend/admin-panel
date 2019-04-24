@@ -208,8 +208,6 @@ export default {
       return this.genXTickValues(data)
     },
 
-    // render
-
     // render () {
     //   this.clear(this.$el)
     //   this.assetCode = this.extractQuoteAsset(this.assetPair)
@@ -397,16 +395,13 @@ export default {
 
       // set the ranges
       this.x = d3.scaleTime().range([0, this.width])
-      this.y = d3.scaleTime().range([this.height, 0])
+      this.y = d3.scaleLinear().range([this.height, 0])
 
       this.xAxis = d3.axisBottom(this.x)
-        .tickValues(this.genXTickValues(this.data, this.width))
-        .tickFormat(this.genXAxisFormatter(this.data))
         .tickSize(8)
         .tickPadding(4)
+
       this.yAxis = d3.axisLeft(this.y)
-        .tickValues(this.genYTickValues(this.data))
-        .tickFormat((d) => this.formatMoney(d))
         .tickSizeInner(-(this.width + this.margin.right))
         .tickSizeOuter(0)
         .tickPadding(25)
@@ -446,9 +441,16 @@ export default {
 
       if (!this.data || !this.data[0]) return
 
+      this.xAxis
+        .tickValues(this.genXTickValues(this.data, this.width))
+        .tickFormat(this.genXAxisFormatter(this.data))
+
+      this.yAxis
+        .tickValues(this.genYTickValues(this.data))
+        .tickFormat((d) => this.formatMoney(d))
+
       // Scale the range of the data
       this.x.domain(this.genXDomain(this.data))
-
       this.y.domain(this.genYDomain(this.data))
 
       // Call the X axis
@@ -473,6 +475,83 @@ export default {
       line.transition()
         .duration(durations)
         .attr('d', this.valueline)
+
+      // Render Tip
+      const tip = this.svg.append('g')
+        .attr('class', `${CLASS_NAME}__tip`)
+
+      tip.append('line')
+        .attr('class', `${CLASS_NAME}__tip-line`)
+        .attr('x1', 0)
+        .attr('y1', 15)
+        .attr('x2', 0)
+        .attr('y2', this.height)
+
+      const tipCircle = tip.append('circle')
+        .attr('class', `${CLASS_NAME}__tip-circle`)
+        .attr('cx', 0)
+        .attr('r', 5)
+
+      const tipTextBox = tip.append('g')
+
+      tipTextBox.append('rect')
+        .attr('class', `${CLASS_NAME}__tip-text-box`)
+        .attr('width', 120)
+        .attr('height', 55)
+        .attr('transform', 'translate(-60, -38)')
+        .attr('rx', 3)
+        .attr('ry', 3)
+
+      const tipPriceText = tipTextBox.append('text')
+        .attr('class', `${CLASS_NAME}__tip-text-price`)
+        .attr('text-anchor', 'middle')
+        .attr('y', -15)
+
+      const tipTimeText = tipTextBox.append('text')
+        .attr('class', `${CLASS_NAME}__tip-text-time`)
+        .attr('text-anchor', 'middle')
+        .attr('y', 5)
+
+      const motionCaptureArea = this.svg.append('rect')
+        .attr('class', `${CLASS_NAME}__tip-motion-capture-area`)
+        .attr('width', this.width)
+        .attr('height', this.height)
+
+      function showTip () {
+        tip.classed(`${CLASS_NAME}__tip--show`, true)
+      }
+
+      function moveTip () {
+        tip.classed(`${CLASS_NAME}__tip--hidden`, false)
+        const x0 = this.x.invert(d3.mouse(this.svg.node())[0])
+        const bisectDate = d3.bisector(d => d.time).left
+        const bisectIndex = bisectDate(this.data, x0, 1)
+        const d0 = this.data[bisectIndex - 1]
+        const d1 = this.data[bisectIndex]
+        const nearestPoint = x0 - d0.time > d1.time - x0 ? d1 : d0
+        // Change text of the tooltip
+        tipPriceText.text(this.formatMoney(nearestPoint.value))
+        tipTimeText.text(moment(nearestPoint.time).format('MM/DD/YYYY hh:mm a'))
+
+        // Change X position of the tip
+        tip.attr('transform', `translate(${this.x(nearestPoint.time)})`)
+
+        // Change Y position of the circle
+        tipCircle.attr('cy', this.y(nearestPoint.value))
+      }
+
+      function hideTip () {
+        tip.classed(`${CLASS_NAME}__tip--show`, false)
+      }
+
+      motionCaptureArea.on('mouseenter', () => showTip.call(this))
+      motionCaptureArea.on('touchstart', () => showTip.call(this))
+      motionCaptureArea.on('mousemove', () => moveTip.call(this))
+      motionCaptureArea.on('touchmove', () => moveTip.call(this))
+      motionCaptureArea.on('mouseout', () => hideTip.call(this))
+      motionCaptureArea.on('touchend', () => hideTip.call(this))
+
+      tip.classed(`${CLASS_NAME}__tip--hidden`, true)
     }
   }
 }
