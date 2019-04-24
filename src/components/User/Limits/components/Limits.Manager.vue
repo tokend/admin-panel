@@ -322,8 +322,12 @@ export default {
     },
 
     async getAssets () {
-      const response = await Sdk.horizon.assets.getAll()
-      this.assets = response.data
+      try {
+        const response = await Sdk.horizon.assets.getAll()
+        this.assets = response.data
+      } catch (e) {
+        ErrorHandler.processWithoutFeedback(e)
+      }
     },
     async getAccountIdByEmail (email) {
       this.filters.address = await api.users.getAccountIdByEmail(email)

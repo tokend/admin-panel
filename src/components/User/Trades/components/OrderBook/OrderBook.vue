@@ -79,7 +79,7 @@ export default {
         this.book.history = tradesResponse.data
         this.isLoaded = true
       } catch (error) {
-        ErrorHandler.process('Failed to get order book. Please try again later')
+        ErrorHandler.processWithoutFeedback(error)
         this.isFailed = true
       }
     }

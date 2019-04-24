@@ -129,7 +129,7 @@ export default {
         this.assets = issuableAssets
         this.form.asset = this.form.asset || (issuableAssets[0] || {}).code
       } catch (error) {
-        ErrorHandler.process(error)
+        ErrorHandler.processWithoutFeedback(error)
       }
     },
 

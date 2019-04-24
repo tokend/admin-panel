@@ -129,7 +129,7 @@ export default {
         })
         this.assets = response.data
       } catch (error) {
-        ErrorHandler.process('Cannot load asset list. Please reload the page')
+        ErrorHandler.processWithoutFeedback(error)
       }
 
       this.$store.commit('CLOSE_LOADER')

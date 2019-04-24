@@ -120,18 +120,22 @@ export default {
       this.isPending = false
     },
     async getList () {
-      const response = await Sdk.horizon.keyValue.getAll()
-      this.list = response.data
+      try {
+        const response = await Sdk.horizon.keyValue.getAll()
+        this.list = response.data
 
-      if (!this.list.length) {
-        return
-      }
+        if (!this.list.length) {
+          return
+        }
 
-      if (!this.updateForm.key) {
-        const item = this.list[0]
+        if (!this.updateForm.key) {
+          const item = this.list[0]
 
-        this.updateForm.key = item.key
-        this.updateForm.value = item[`${item.type.name}Value`]
+          this.updateForm.key = item.key
+          this.updateForm.value = item[`${item.type.name}Value`]
+        }
+      } catch (e) {
+        ErrorHandler.processWithoutFeedback(e)
       }
     }
   },

@@ -44,7 +44,7 @@ export default {
           state: REQUEST_STATES.pending
         })
       } catch (error) {
-        ErrorHandler.process('Cannot load user list')
+        ErrorHandler.processWithoutFeedback(error)
       }
       this.isLoading = false
     }

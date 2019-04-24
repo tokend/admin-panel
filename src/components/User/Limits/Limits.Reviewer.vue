@@ -285,9 +285,15 @@ export default {
     }
   }),
   async created () {
-    await this.getRequest()
-    const limitRequest = await api.requests.get(this.id)
-    this.desiredLimitDetails = limitRequest.details[snakeToCamelCase(limitRequest.details.requestType)].details || '{}'
+    try {
+      await this.getRequest()
+      const limitRequest = await api.requests.get(this.id)
+      this.desiredLimitDetails = limitRequest.details[
+        snakeToCamelCase(limitRequest.details.requestType)
+      ].details || '{}'
+    } catch (e) {
+      ErrorHandler.processWithoutFeedback(e)
+    }
   },
   computed: {
     currentLimits () {

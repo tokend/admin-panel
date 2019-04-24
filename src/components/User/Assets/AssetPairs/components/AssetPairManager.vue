@@ -124,7 +124,7 @@ export default {
           .find(({ base, quote }) => base === this.base && quote === this.quote)
         this.isLoaded = true
       } catch (error) {
-        ErrorHandler.process(error)
+        ErrorHandler.processWithoutFeedback(error)
       }
     },
 

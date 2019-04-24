@@ -268,7 +268,7 @@ export default {
         await this.loadVerifiedRequest()
         this.isLoaded = true
       } catch (error) {
-        ErrorHandler.process(error)
+        ErrorHandler.processWithoutFeedback(error)
         this.isFailed = true
       }
     },

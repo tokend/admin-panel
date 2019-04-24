@@ -84,7 +84,7 @@ export default {
         this.sale = response.data
         this.isLoaded = true
       } catch (error) {
-        ErrorHandler.process(error)
+        ErrorHandler.processWithoutFeedback(error)
         this.isFailed = true
       }
     }

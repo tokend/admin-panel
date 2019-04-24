@@ -367,7 +367,7 @@ export default {
         data.creatorDetails = data.creatorDetails || data.details
         Object.assign(this.asset, data)
       } catch (error) {
-        ErrorHandler.process(error)
+        ErrorHandler.processWithoutFeedback(error)
       }
     },
 

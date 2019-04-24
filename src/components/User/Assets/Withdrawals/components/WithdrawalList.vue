@@ -137,7 +137,7 @@ export default {
           .filter(item => (item.policy & ASSET_POLICIES.withdrawable))
           .sort((assetA, assetB) => assetA.code > assetB.code ? 1 : -1)
       } catch (error) {
-        ErrorHandler.process('Cannot get asset list. Please try again later')
+        ErrorHandler.processWithoutFeedback(error)
       }
     },
 
@@ -149,7 +149,7 @@ export default {
         const filters = { ...this.filters }
         this.list = await api.requests.getWithdrawalRequests(filters)
       } catch (error) {
-        ErrorHandler.process('Cannot get withdrawal request list. Please try again later')
+        ErrorHandler.processWithoutFeedback(error)
       }
 
       this.isLoaded = true
@@ -163,7 +163,7 @@ export default {
         this.list.fetchNext = chunk.fetchNext
         this.isNoMoreEntries = oldLength === this.list.data.length
       } catch (error) {
-        ErrorHandler.process(error)
+        ErrorHandler.processWithoutFeedback(error)
       }
     },
 

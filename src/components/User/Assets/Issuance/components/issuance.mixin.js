@@ -51,7 +51,7 @@ export default {
             .map(asset => asset.code)
         )
       } catch (error) {
-        ErrorHandler.process('Cannot get asset list. Please try again later')
+        ErrorHandler.processWithoutFeedback(error)
       }
     },
 

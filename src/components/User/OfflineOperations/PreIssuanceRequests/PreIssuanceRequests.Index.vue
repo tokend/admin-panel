@@ -73,7 +73,7 @@ export default {
         this.$store.commit('CLOSE_LOADER')
       } catch (err) {
         this.$store.commit('CLOSE_LOADER')
-        ErrorHandler.process('Can not to load assets list')
+        ErrorHandler.processWithoutFeedback(err)
       }
     }
   }

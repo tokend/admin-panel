@@ -243,7 +243,7 @@ export default {
         this.requests = response.records
         this.pages = response
       } catch (error) {
-        ErrorHandler.process(error)
+        ErrorHandler.processWithoutFeedback(error)
       }
       this.isLoading = false
       return response

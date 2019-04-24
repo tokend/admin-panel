@@ -407,7 +407,7 @@
           const assetsResponse = await Sdk.horizon.assetPairs.getAll()
           this.assetPairs = assetsResponse.data
         } catch (error) {
-          ErrorHandler.process(error)
+          ErrorHandler.processWithoutFeedback(error)
         }
       },
 
@@ -417,7 +417,7 @@
           const response = await Sdk.horizon.fees.getAll(filters)
           this.fees = response.data.fees
         } catch (error) {
-          ErrorHandler.process(error)
+          ErrorHandler.processWithoutFeedback(error)
         }
       },
 
