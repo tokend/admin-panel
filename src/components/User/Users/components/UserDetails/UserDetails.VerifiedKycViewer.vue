@@ -3,8 +3,6 @@
     <kyc-general-section
       :kyc="kyc"
       :user="user"
-      :isKycLoaded="isKycLoaded"
-      :isKycLoadFailed ="isKycLoadFailed" />
     />
   </div>
 </template>
@@ -15,7 +13,7 @@ export default {
   components: {
     KycGeneralSection
   },
-  props: ['kyc', 'user', 'isKycLoaded', 'isKycLoadFailed']
+  props: ['kyc', 'user']
 }
 </script>
 
