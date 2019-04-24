@@ -101,7 +101,7 @@
 
 <script>
 import Vue from 'vue'
-import Qrcode from 'v-qrcode'
+import Qrcode from 'qrcode.vue'
 import StellarWallet from 'tokend-wallet-js-sdk'
 import { Sdk } from '@/sdk'
 import { ApiCallerFactory } from '@/api-caller-factory'
@@ -317,6 +317,7 @@ export default {
 }
 
 .signup__account-id {
+  margin-top: 1rem;
   text-align: center;
   word-wrap: break-word;
   width: 100%;

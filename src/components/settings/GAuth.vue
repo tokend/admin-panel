@@ -30,7 +30,7 @@
 
 <script>
 import Vue from 'vue'
-import Qrcode from 'v-qrcode'
+import Qrcode from 'qrcode.vue'
 import 'mdi-vue/AppleIcon'
 import 'mdi-vue/AndroidIcon'
 
@@ -176,6 +176,7 @@ export default {
 }
 
 .g-auth__secret {
+  margin-top: 1rem;
   font-size: 2rem;
   align-self: stretch;
   text-align: center;

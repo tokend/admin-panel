@@ -19,6 +19,9 @@ for further information about branching and tagging conventions.
   `$store.dispatch('SET_ERROR')`, `console.error`
 - Replaced `ErrorHandler.process` by `ErrorHandler.processWithoutFeedback`
   in components' created hook
+- Updated `package.json` dependencies
+- Updated webpack build config
+- Now using "qrcode.vue" package instead of "v-qrcode"
 
 ## [1.5.0] - 2019-04-19
 ### "Under the hood" changes
