@@ -40,7 +40,9 @@ export default Object.assign(
       notVerified: '',
       general: '',
       corporate: '',
-      blocked: ''
+      blocked: '',
+      us_accredited: '',
+      us_verified: ''
     },
 
     SIGNER_ROLES: {
