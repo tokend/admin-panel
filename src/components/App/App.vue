@@ -167,10 +167,10 @@ export default {
       config.ACCOUNT_ROLES.general = roles
         .find(item => item.key === 'account_role:general')
         .uint32_value
-      config.ACCOUNT_ROLES.us_accredited = roles
+      config.ACCOUNT_ROLES.usAccredited = roles
         .find(item => item.key === 'account_role:us_accredited')
         .uint32_value
-      config.ACCOUNT_ROLES.us_verified = roles
+      config.ACCOUNT_ROLES.usVerified = roles
         .find(item => item.key === 'account_role:us_verified')
         .uint32_value
       config.ACCOUNT_ROLES.corporate = roles

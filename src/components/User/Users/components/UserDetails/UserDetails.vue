@@ -53,24 +53,26 @@
 
         <template v-if="requestToReview.state">
           <section class="user-details__section">
-            <general-kyc-viewer
-              v-if="requestToReview.accountRoleToSet === ACCOUNT_ROLES.general"
-              :kyc="kyc"
-              :user="user"
-              :isKycLoaded="isKycLoaded"
-              :isKycLoadFailed ="isKycLoadFailed" />
-            <verified-kyc-viewer
-              v-if="requestToReview.accountRoleToSet === ACCOUNT_ROLES.us_verified"
-              :kyc="kyc"
-              :user="user"
-              :isKycLoaded="isKycLoaded"
-              :isKycLoadFailed ="isKycLoadFailed" />
-            <accredited-kyc-viewer
-              v-if="requestToReview.accountRoleToSet === ACCOUNT_ROLES.us_accredited"
-              :kyc="kyc"
-              :user="user"
-              :isKycLoaded="isKycLoaded"
-              :isKycLoadFailed ="isKycLoadFailed" />
+            <template v-if="isKycLoaded">
+              <general-kyc-viewer
+                v-if="requestToReview.accountRoleToSet === ACCOUNT_ROLES.general"
+                :kyc="kyc"
+                :user="user" />
+              <verified-kyc-viewer
+                v-if="requestToReview.accountRoleToSet === ACCOUNT_ROLES.usVerified"
+                :kyc="kyc"
+                :user="user" />
+              <accredited-kyc-viewer
+                v-if="requestToReview.accountRoleToSet === ACCOUNT_ROLES.usAccredited"
+                :kyc="kyc"
+                :user="user" />
+            </template>
+            <template v-else-if="isKycLoadFailed">
+              <p class="danger">An error occurred. Please try again later.</p>
+            </template>
+            <template v-else>
+              <p>Loading...</p>
+            </template>
             <kyc-syndicate-section
               v-if="requestToReview.accountRoleToSet === ACCOUNT_ROLES.corporate"
               :user="user"

@@ -1,15 +1,18 @@
 <template>
   <div class="user-details-accredited-kyc-viewer">
-    <h2>Current user is applyied for Accredited KYC</h2>
-    <user-doc-getter 
+    <div class="user-details-accredited-kyc-viewer__header">
+      <h2 class="user-details-accredited-kyc-viewer__header-title">
+        Current user is applied for Accredited KYC, please ensure user has a valid proof document
+      </h2>
+    </div>
+    <user-doc-getter
       class="user-details-accredited__doc-view"
+      name="user-details-accredited__doc-view"
       :file-key="kyc.documents.kycProofInvestor"
     />
     <kyc-general-section
       :kyc="kyc"
       :user="user"
-      :isKycLoaded="isKycLoaded"
-      :isKycLoadFailed ="isKycLoadFailed" />
     />
   </div>
 </template>
@@ -22,9 +25,20 @@ export default {
     KycGeneralSection,
     UserDocGetter
   },
-  props: ['kyc', 'user', 'isKycLoaded', 'isKycLoadFailed']
+  props: ['kyc', 'user']
 }
 </script>
 
 <style lang="scss" scoped>
+@import "../../../../../assets/scss/_colors.scss";
+
+.user-details-accredited-kyc-viewer__header-title {
+  color: $color-text-inverse;
+  font-weight: bold;
+  padding: 1rem;
+}
+
+.user-details-accredited-kyc-viewer__header {
+  background-color: $color-banner-bg;
+}
 </style>
