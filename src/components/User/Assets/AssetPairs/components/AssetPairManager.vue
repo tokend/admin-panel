@@ -83,6 +83,8 @@ import TickField from '@comcom/fields/TickField'
 import { DEFAULT_INPUT_STEP } from '@/constants'
 import { ASSET_PAIR_POLICIES } from '@/constants/'
 
+import { ErrorHandler } from '@/utils/ErrorHandler'
+
 import { confirmAction } from '@/js/modals/confirmation_message'
 
 export default {
@@ -122,7 +124,7 @@ export default {
           .find(({ base, quote }) => base === this.base && quote === this.quote)
         this.isLoaded = true
       } catch (error) {
-        error.showMessage()
+        ErrorHandler.process(error)
       }
     },
 
@@ -145,8 +147,7 @@ export default {
         this.$store.dispatch('SET_INFO', 'Pair has been updated.')
         this.$router.push({ name: 'assets.assetPairs.index' })
       } catch (error) {
-        console.error(error)
-        error.showMessage()
+        ErrorHandler.process(error)
       }
       this.isSubmitting = false
     }

@@ -80,6 +80,7 @@ import {
   InputField
 } from '@comcom/fields'
 import { KEY_VALUE_ENTRY_TYPE } from '../../../constants'
+import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   components: {
@@ -114,12 +115,7 @@ export default {
 
         this.$store.dispatch('SET_INFO', 'Submitted successfully')
       } catch (error) {
-        console.error(error)
-        if (error.showMessage) {
-          error.showMessage()
-        } else {
-          this.$store.dispatch('SET_ERROR', 'Failed to submit operation')
-        }
+        ErrorHandler.process('Failed to submit operation')
       }
       this.isPending = false
     },

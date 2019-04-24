@@ -149,7 +149,7 @@ export default {
         const filters = { ...this.filters }
         this.list = await api.requests.getWithdrawalRequests(filters)
       } catch (error) {
-        error.showMessage('Cannot get withdrawal request list. Please try again later')
+        ErrorHandler.process('Cannot get withdrawal request list. Please try again later')
       }
 
       this.isLoaded = true

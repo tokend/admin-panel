@@ -178,244 +178,245 @@
 </template>
 
 <script>
-  import api from '@/api'
-  import { Sdk } from '@/sdk'
-  import get from 'lodash/get'
-  import throttle from 'lodash/throttle'
-  import pick from 'lodash/pick'
-  import {
-    SelectField,
-    InputField,
-    SwitchField,
-    TickField
-  } from '@comcom/fields'
+import api from '@/api'
+import { Sdk } from '@/sdk'
+import get from 'lodash/get'
+import throttle from 'lodash/throttle'
+import pick from 'lodash/pick'
+import {
+  SelectField,
+  InputField,
+  SwitchField,
+  TickField
+} from '@comcom/fields'
 
-  import {
+import {
+  Tabs,
+  Tab
+} from '@comcom/Tabs'
+
+import { STATS_OPERATION_TYPES, DEFAULT_MAX_AMOUNT } from '@/constants'
+import config from '@/config'
+
+import { ErrorHandler } from '@/utils/ErrorHandler'
+
+const LIMITS_TYPES = [
+  'dailyOut',
+  'weeklyOut',
+  'monthlyOut',
+  'annualOut'
+]
+
+const TAB_NAMES = {
+  accountType: 'Specific account type',
+  account: 'Specific account'
+}
+
+export default {
+  components: {
+    SelectField,
+    SwitchField,
+    InputField,
+    TickField,
     Tabs,
     Tab
-  } from '@comcom/Tabs'
-
-  import { STATS_OPERATION_TYPES, DEFAULT_MAX_AMOUNT } from '@/constants'
-  import config from '@/config'
-
-  const LIMITS_TYPES = [
-    'dailyOut',
-    'weeklyOut',
-    'monthlyOut',
-    'annualOut'
-  ]
-
-  const TAB_NAMES = {
-    accountType: 'Specific account type',
-    account: 'Specific account'
-  }
-
-  export default {
-    components: {
-      SelectField,
-      SwitchField,
-      InputField,
-      TickField,
-      Tabs,
-      Tab
+  },
+  data: _ => ({
+    filters: {
+      asset: '',
+      accountRole: '',
+      email: '',
+      address: ''
     },
-    data: _ => ({
-      filters: {
-        asset: '',
-        accountRole: '',
-        email: '',
-        address: ''
-      },
-      selectedTabName: '',
-      specificUserAddress: '',
-      limits: {
-        withdrawal: null,
-        payment: null,
-        deposit: null
-      },
-      assets: [],
-      isPending: false,
-      LIMITS_TYPES,
-      TAB_NAMES,
-      DEFAULT_MAX_AMOUNT,
-      ACCOUNT_ROLES: config.ACCOUNT_ROLES,
-      ACCOUNT_ROLES_VERBOSE: Object.freeze({
-        [config.ACCOUNT_ROLES.notVerified]: 'Unverified user',
-        [config.ACCOUNT_ROLES.general]: 'General user',
-        [config.ACCOUNT_ROLES.corporate]: 'Corporate user'
-      }),
-      numericValueRegExp: /^\d*\.?\d*$/
+    selectedTabName: '',
+    specificUserAddress: '',
+    limits: {
+      withdrawal: null,
+      payment: null,
+      deposit: null
+    },
+    assets: [],
+    isPending: false,
+    LIMITS_TYPES,
+    TAB_NAMES,
+    DEFAULT_MAX_AMOUNT,
+    ACCOUNT_ROLES: config.ACCOUNT_ROLES,
+    ACCOUNT_ROLES_VERBOSE: Object.freeze({
+      [config.ACCOUNT_ROLES.notVerified]: 'Unverified user',
+      [config.ACCOUNT_ROLES.general]: 'General user',
+      [config.ACCOUNT_ROLES.corporate]: 'Corporate user'
     }),
-    async created () {
-      await this.getAssets()
+    numericValueRegExp: /^\d*\.?\d*$/
+  }),
+  async created () {
+    await this.getAssets()
+  },
+  methods: {
+    async onTabChange (selectedTab) {
+      this.selectedTabName = selectedTab.tab.name
+
+      if (this.selectedTabName === TAB_NAMES.accountType) {
+        this.specificUserAddress = ''
+      }
     },
-    methods: {
-      async onTabChange (selectedTab) {
-        this.selectedTabName = selectedTab.tab.name
+    async getLimits () {
+      if (!this.filters.asset) return
+      const [paymentLimits, withdrawalLimits, depositLimits] = await Promise.all([
+        getLimit.apply(this, [STATS_OPERATION_TYPES.paymentOut]),
+        getLimit.apply(this, [STATS_OPERATION_TYPES.withdraw]),
+        getLimit.apply(this, [STATS_OPERATION_TYPES.deposit])
+      ])
+      this.limits.payment = paymentLimits
+      this.limits.withdrawal = withdrawalLimits
+      this.limits.deposit = depositLimits
 
-        if (this.selectedTabName === TAB_NAMES.accountType) {
-          this.specificUserAddress = ''
-        }
-      },
-      async getLimits () {
-        if (!this.filters.asset) return
-        const [paymentLimits, withdrawalLimits, depositLimits] = await Promise.all([
-          getLimit.apply(this, [STATS_OPERATION_TYPES.paymentOut]),
-          getLimit.apply(this, [STATS_OPERATION_TYPES.withdraw]),
-          getLimit.apply(this, [STATS_OPERATION_TYPES.deposit])
-        ])
-        this.limits.payment = paymentLimits
-        this.limits.withdrawal = withdrawalLimits
-        this.limits.deposit = depositLimits
+      async function getLimit (statsOpType) {
+        const { data } = await Sdk.horizon.limits.get({
+          account_id: this.filters.address,
+          account_type: this.filters.accountRole,
+          stats_op_type: statsOpType,
+          asset: this.filters.asset,
+          email: this.filters.email
+        })
 
-        async function getLimit (statsOpType) {
-          const { data } = await Sdk.horizon.limits.get({
-            account_id: this.filters.address,
-            account_type: this.filters.accountRole,
-            stats_op_type: statsOpType,
-            asset: this.filters.asset,
-            email: this.filters.email
-          })
-
-          // TODO: remove legacy consistency fix
-          if (data.accountType || data.accountType === null) {
-            const role = data.accountType === null
-              ? null
-              : String(data.accountType)
-            data.accountRole = role
-            delete data.accountType
-          }
-
-          return data
-        }
-      },
-
-      async updateLimits (limits) {
-        if (!this.isValidLimits(limits) || !this.isAccountAddressValid()) {
-          return
+        // TODO: remove legacy consistency fix
+        if (data.accountType || data.accountType === null) {
+          const role = data.accountType === null
+            ? null
+            : String(data.accountType)
+          data.accountRole = role
+          delete data.accountType
         }
 
-        this.isPending = true
-        try {
-          if (limits.accountRole == null) {
-            // managelimitbuilder somehow doesnt accept opts.accountRole NULL value
-            delete limits.accountRole
-          }
-          let accountID
-          // managelimitbuilder somehow doesnt accept opts.accountId NULL value
-          if (limits.accountId) {
-            accountID = limits.accountId
-          }
-          const operation = Sdk.base.ManageLimitsBuilder.createLimits({
-            ...limits,
-            accountID
-          })
-          await Sdk.horizon.transactions.submitOperations(operation)
-          await this.getAssets()
-          this.$store.dispatch('SET_INFO', 'Limits update saved')
-        } catch (e) {
-          console.error(e)
-          e.showMessage()
-        }
-        this.isPending = false
-      },
+        return data
+      }
+    },
 
-      async getAssets () {
-        const response = await Sdk.horizon.assets.getAll()
-        this.assets = response.data
-      },
-      async getAccountIdByEmail (email) {
-        this.filters.address = await api.users.getAccountIdByEmail(email)
-      },
-      // it's a quick fix of the limits validation. Need to refactor it ASAP
-      isValidLimits (limits) {
-        for (const limit of Object.values(pick(limits, LIMITS_TYPES))) {
-          if (!this.numericValueRegExp.test(limit)) {
-            this.$store.dispatch('SET_ERROR', 'Only numeric value allowed')
-            return false
-          }
+    async updateLimits (limits) {
+      if (!this.isValidLimits(limits) || !this.isAccountAddressValid()) {
+        return
+      }
+
+      this.isPending = true
+      try {
+        if (limits.accountRole == null) {
+          // managelimitbuilder somehow doesnt accept opts.accountRole NULL value
+          delete limits.accountRole
         }
-        if (+limits.weeklyOut < +limits.dailyOut) {
-          this.$store.dispatch('SET_ERROR', 'Weekly out limits should be more or equal to daily out')
+        let accountID
+        // managelimitbuilder somehow doesnt accept opts.accountId NULL value
+        if (limits.accountId) {
+          accountID = limits.accountId
+        }
+        const operation = Sdk.base.ManageLimitsBuilder.createLimits({
+          ...limits,
+          accountID
+        })
+        await Sdk.horizon.transactions.submitOperations(operation)
+        await this.getAssets()
+        this.$store.dispatch('SET_INFO', 'Limits update saved')
+      } catch (e) {
+        ErrorHandler.process(e)
+      }
+      this.isPending = false
+    },
+
+    async getAssets () {
+      const response = await Sdk.horizon.assets.getAll()
+      this.assets = response.data
+    },
+    async getAccountIdByEmail (email) {
+      this.filters.address = await api.users.getAccountIdByEmail(email)
+    },
+    // it's a quick fix of the limits validation. Need to refactor it ASAP
+    isValidLimits (limits) {
+      for (const limit of Object.values(pick(limits, LIMITS_TYPES))) {
+        if (!this.numericValueRegExp.test(limit)) {
+          this.$store.dispatch('SET_ERROR', 'Only numeric value allowed')
           return false
         }
-        if (+limits.monthlyOut < +limits.dailyOut || +limits.monthlyOut < +limits.weeklyOut) {
-          this.$store.dispatch('SET_ERROR', 'Monthly out limits should be more or equal to daily and/or weekly out')
-          return false
-        }
-        if (+limits.annualOut < +limits.dailyOut || +limits.annualOut < +limits.weeklyOut || +limits.annualOut < +limits.monthlyOut) {
-          this.$store.dispatch('SET_ERROR', 'Annual out limits should be more or equal to daily, weekly and/or monthly out')
-          return false
-        }
+      }
+      if (+limits.weeklyOut < +limits.dailyOut) {
+        this.$store.dispatch('SET_ERROR', 'Weekly out limits should be more or equal to daily out')
+        return false
+      }
+      if (+limits.monthlyOut < +limits.dailyOut || +limits.monthlyOut < +limits.weeklyOut) {
+        this.$store.dispatch('SET_ERROR', 'Monthly out limits should be more or equal to daily and/or weekly out')
+        return false
+      }
+      if (+limits.annualOut < +limits.dailyOut || +limits.annualOut < +limits.weeklyOut || +limits.annualOut < +limits.monthlyOut) {
+        this.$store.dispatch('SET_ERROR', 'Annual out limits should be more or equal to daily, weekly and/or monthly out')
+        return false
+      }
+      return true
+    },
+    isAccountAddressValid () {
+      const isAddressInvalid = !this.filters.address &&
+        this.selectedTabName === TAB_NAMES.account
+
+      if (isAddressInvalid) {
+        this.$store.dispatch('SET_ERROR', 'Such account does not exist in the system')
+        return false
+      } else {
         return true
-      },
-      isAccountAddressValid () {
-        const isAddressInvalid = !this.filters.address &&
-          this.selectedTabName === TAB_NAMES.account
-
-        if (isAddressInvalid) {
-          this.$store.dispatch('SET_ERROR', 'Such account does not exist in the system')
-          return false
-        } else {
-          return true
-        }
-      },
-      async setFilters () {
-        if (!this.filters.asset) this.filters.asset = get(this.assets, '[0].code')
-        if (!this.filters.accountRole) {
-          this.filters.accountRole = config.ACCOUNT_ROLES.general + ''
-        }
-        if (this.specificUserAddress) {
-          // Both accountRole and accountId cant be requested at same time
-          this.filters.accountRole = ''
-          const emailRegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-          const idLength = 56
-          if (emailRegExp.test(this.specificUserAddress)) {
-            await this.getAccountIdByEmail(this.specificUserAddress)
-          } else if (this.specificUserAddress.length === idLength) {
-            this.filters.address = this.specificUserAddress
-          }
-        }
-      },
-      normalizeLimitAmount (limit) {
-        return limit >= DEFAULT_MAX_AMOUNT ? '' : limit
       }
     },
-    watch: {
-      assets: {
-        handler: function () {
-          this.setFilters()
-          this.getLimits()
-        },
-        immediate: true
-      },
-      'filters.accountRole': {
-        handler: function (value) {
-          if (value) {
-            this.specificUserAddress = ''
-            this.filters.address = ''
-          }
-          this.setFilters()
-          this.getLimits()
-        },
-        immediate: true
-      },
-      'filters.asset': {
-        handler: function () {
-          this.setFilters()
-          this.getLimits()
-        },
-        immediate: true
-      },
-      'specificUserAddress': {
-        handler: throttle(async function (value) {
-          await this.setFilters()
-          await this.getLimits()
-        }, 1000),
-        immediate: true
+    async setFilters () {
+      if (!this.filters.asset) this.filters.asset = get(this.assets, '[0].code')
+      if (!this.filters.accountRole) {
+        this.filters.accountRole = config.ACCOUNT_ROLES.general + ''
       }
+      if (this.specificUserAddress) {
+        // Both accountRole and accountId cant be requested at same time
+        this.filters.accountRole = ''
+        const emailRegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        const idLength = 56
+        if (emailRegExp.test(this.specificUserAddress)) {
+          await this.getAccountIdByEmail(this.specificUserAddress)
+        } else if (this.specificUserAddress.length === idLength) {
+          this.filters.address = this.specificUserAddress
+        }
+      }
+    },
+    normalizeLimitAmount (limit) {
+      return limit >= DEFAULT_MAX_AMOUNT ? '' : limit
+    }
+  },
+  watch: {
+    assets: {
+      handler: function () {
+        this.setFilters()
+        this.getLimits()
+      },
+      immediate: true
+    },
+    'filters.accountRole': {
+      handler: function (value) {
+        if (value) {
+          this.specificUserAddress = ''
+          this.filters.address = ''
+        }
+        this.setFilters()
+        this.getLimits()
+      },
+      immediate: true
+    },
+    'filters.asset': {
+      handler: function () {
+        this.setFilters()
+        this.getLimits()
+      },
+      immediate: true
+    },
+    'specificUserAddress': {
+      handler: throttle(async function (value) {
+        await this.setFilters()
+        await this.getLimits()
+      }, 1000),
+      immediate: true
     }
   }
+}
 </script>
 
 <style lang="scss">
