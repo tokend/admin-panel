@@ -41,8 +41,8 @@ export default Object.assign(
       general: '',
       corporate: '',
       blocked: '',
-      us_accredited: '',
-      us_verified: ''
+      usAccredited: '',
+      usVerified: ''
     },
 
     SIGNER_ROLES: {

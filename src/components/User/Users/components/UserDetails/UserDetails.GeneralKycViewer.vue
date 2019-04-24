@@ -3,25 +3,21 @@
     <kyc-general-section
       :kyc="kyc"
       :user="user"
-      :isKycLoaded="isKycLoaded"
-      :isKycLoadFailed ="isKycLoadFailed"
     />
   </div>
 </template>
 
 <script>
 import KycGeneralSection from './UserDetails.Kyc'
+import UserDocGetter from '@comcom/getters'
 export default {
   components: {
-    KycGeneralSection
+    KycGeneralSection,
+    UserDocGetter
   },
-  props: ['kyc', 'user', 'isKycLoaded', 'isKycLoadFailed']
+  props: ['kyc', 'user']
 }
 </script>
 
 <style lang="scss" scoped>
-@import "../../../../../assets/scss/_colors.scss";
- .user-details-general-kyc-viewer__header {
-   color: $color-info;
- }
 </style>
