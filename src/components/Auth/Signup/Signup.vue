@@ -176,7 +176,7 @@ export default {
 
           this.state = 'tfa'
         }).catch((err) => {
-          console.error(err)
+          ErrorHandler.processWithoutFeedback(err)
           if (!walletCreated) {
             ErrorHandler.process('You are not registered, try again to register with the secret key later')
             this.state = 'signup'
@@ -201,7 +201,7 @@ export default {
           return { success: true }
         }
       }).catch(err => {
-        console.error(err)
+        ErrorHandler.processWithoutFeedback(err)
         return { success: false, error: 'Server error' }
       })
     },
@@ -217,7 +217,7 @@ export default {
           this.isSigner()
         }
       }).catch(err => {
-        console.error(err)
+        ErrorHandler.processWithoutFeedback(err)
         this.$store.commit('CLOSE_LOADER')
       })
     },

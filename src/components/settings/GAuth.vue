@@ -97,7 +97,6 @@ export default {
 
           this.$store.commit('CLOSE_LOADER')
         }).catch(err => {
-          console.error(err)
           this.$store.commit('CLOSE_LOADER')
 
           if (err.status === 409) {

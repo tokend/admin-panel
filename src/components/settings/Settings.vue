@@ -28,6 +28,7 @@
 import tfa from '@/api/tfa'
 import GAuth from './GAuth.vue'
 import UserHeader from '@/components/User/components/UserHeader'
+import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   name: 'security',
@@ -58,7 +59,7 @@ export default {
         this.isTfaPending = false
       })
       .catch(err => {
-        console.error(err)
+        ErrorHandler.processWithoutFeedback(err)
       })
   }
 }

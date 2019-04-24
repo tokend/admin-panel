@@ -107,7 +107,6 @@ export default {
           })
         this.$store.commit('CLOSE_LOADER')
       } catch (err) {
-        console.error('caught error', err)
         this.$store.commit('CLOSE_LOADER')
         ErrorHandler.process('Something went wrong. Can\'t to load assets list')
       }

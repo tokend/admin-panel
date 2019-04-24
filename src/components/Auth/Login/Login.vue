@@ -171,7 +171,7 @@ export default {
           }
           this.state = 'tfa'
         }).catch(err => {
-          console.error(err)
+          ErrorHandler.processWithoutFeedback(err)
           this.$store.commit('CLOSE_LOADER')
         })
     },
@@ -186,7 +186,7 @@ export default {
           }
           this.redirect()
         }).catch(err => {
-          console.error(err)
+          ErrorHandler.processWithoutFeedback(err)
           this.$store.commit('CLOSE_LOADER')
         })
     },

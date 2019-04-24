@@ -209,7 +209,7 @@ export default {
 
           this.loadNewPage = false
         }).catch((err) => {
-          console.error(err)
+          ErrorHandler.processWithoutFeedback(err)
           this.loadNewPage = false
           this.pageableLoadCompleted = true
         })
@@ -280,7 +280,6 @@ export default {
           this.$emit('need-to-update')
           return this.getRequests()
         }).catch(error => {
-          console.error('error', error)
           this.clear()
           ErrorHandler.process(error)
         })

@@ -75,7 +75,6 @@ export default {
         this.$store.dispatch('SET_INFO', 'Request successfully rejected')
         this.$router.push({ name: 'assets' })
       } catch (err) {
-        console.error(err)
         ErrorHandler.process('Failed to reject asset creation')
       }
       this.isPending = false
