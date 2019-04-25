@@ -424,6 +424,7 @@ $fs-tip: 1.2rem;
     min-height: 200px;
   }
   transition: 0.2s;
+  overflow: hidden;
 }
 
 svg.price-chart {
