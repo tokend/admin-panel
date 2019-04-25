@@ -22,8 +22,7 @@
             <h3>
               Role to set
             </h3>
-            <p :class="`user-details__state-info
-                      user-details__state-info--${requestToReview.state}`">
+            <p :class="user-details__role-info">
               {{ ROLE_TYPE_VERBOSE[requestToReview.accountRoleToSet || verifiedRequest.accountRoleToSet] }}
             </p>
           </li>
