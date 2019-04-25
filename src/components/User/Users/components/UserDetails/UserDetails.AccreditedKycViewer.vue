@@ -2,9 +2,13 @@
   <div class="user-details-accredited-kyc-viewer">
     <div class="user-details-accredited-kyc-viewer__header">
       <h2 class="user-details-accredited-kyc-viewer__header-title">
-        Current user is applied for Accredited KYC, please ensure user has a valid proof document
+        Current user is applied for Accredited KYC
       </h2>
+      <h3 class="user-details-accredited-kyc-viewer__header-subtitle">
+        Please ensure user has a valid proof document
+      </h3>
     </div>
+    <h3 class="user-details-accredited__doc-title">Proof of invest</h3>
     <user-doc-getter
       class="user-details-accredited__doc-view"
       name="user-details-accredited__doc-view"
@@ -19,7 +23,7 @@
 
 <script>
 import KycGeneralSection from './UserDetails.Kyc'
-import UserDocGetter from '@comcom/getters'
+import { UserDocGetter } from '@comcom/getters'
 export default {
   components: {
     KycGeneralSection,
@@ -35,10 +39,19 @@ export default {
 .user-details-accredited-kyc-viewer__header-title {
   color: $color-text-inverse;
   font-weight: bold;
-  padding: 1rem;
+  margin-bottom: 0;
+}
+
+.user-details-accredited-kyc-viewer__header-subtitle {
+  color: $color-text-inverse;
 }
 
 .user-details-accredited-kyc-viewer__header {
   background-color: $color-banner-bg;
+  padding: 1rem;
+}
+
+.user-details-accredited__doc-title {
+  margin-top: 1rem;
 }
 </style>
