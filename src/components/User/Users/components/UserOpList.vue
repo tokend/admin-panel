@@ -81,7 +81,10 @@ export default {
     CollectionLoader,
   },
 
-  props: ['id'],
+  props: {
+    id: { type: String, required: true },
+  },
+
   data () {
     return {
       formatAssetAmount,
@@ -129,10 +132,13 @@ export default {
 
     normalizeRecords (records) {
       return records.map((item) => {
-        const operationType = item.operation.details.type.replace(/operations-/g, '').split('-').join(' ')
+        const operationType = item.operation.details.type
+          .replace(/operations-/g, '').split('-').join(' ')
+
         return Object.assign({}, item, {
           // Capitalize and remove dashes
-          operationType: operationType.charAt(0).toUpperCase() + operationType.slice(1),
+          operationType: operationType.charAt(0).toUpperCase() +
+            operationType.slice(1),
           ledgerCloseTime: moment(item.operation.appliedAt).format('DD MMM YYYY [at] hh:mm:ss'),
           sourceAccount: item.operation.source.id === this.masterPubKey ? 'Master' : item.operation.source.id,
           receiverAccount: get(item, 'operation.details.receiverAccount.id'),

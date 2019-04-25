@@ -14,7 +14,17 @@ import * as d3Ease from 'd3-ease'
 import * as d3Format from 'd3-format'
 
 import moment from 'moment'
-const d3 = Object.assign({}, d3Array, d3Selection, d3Axis, d3Shape, d3Scale, d3Transition, d3Ease, d3Format)
+const d3 = Object.assign(
+  {},
+  d3Array,
+  d3Selection,
+  d3Axis,
+  d3Shape,
+  d3Scale,
+  d3Transition,
+  d3Ease,
+  d3Format
+)
 
 const CLASS_NAME = 'price-chart'
 const DECIMAL_PRECISION = 4
@@ -23,15 +33,16 @@ const LARGE_NUMBER_PRECISION = 2
 export default {
   name: CLASS_NAME,
 
-  props: ['priceHistory', 'scale', 'assetPair'],
+  props: {
+    priceHistory: { type: Object, required: true },
+    scale: { type: String, required: true },
+    assetPair: { type: Object, required: true },
+  },
+
   data () {
     return {
       assetCode: '',
     }
-  },
-
-  computed: {
-
   },
 
   watch: {
@@ -72,8 +83,11 @@ export default {
     },
 
     getMaxAndMinDates (data) {
-      const max = data.reduce((acc, { time: cur }) => cur > acc ? cur : acc, 0)
-      const min = data.reduce((acc, { time: cur }) => cur < acc ? cur : acc, max)
+      const max = data
+        .reduce((acc, { time: cur }) => cur > acc ? cur : acc, 0)
+      const min = data
+        .reduce((acc, { time: cur }) => cur < acc ? cur : acc, max)
+
       return { max, min }
     },
 

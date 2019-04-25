@@ -32,11 +32,12 @@
 export default {
   props: {
     label: { type: String, default: 'Label' },
-    value: { default: false },
+    value: { type: [String, Number, Array, Boolean], default: false },
 
     // proxies
     name: { type: String, default: undefined },
     disabled: { type: Boolean, default: false },
+    // eslint-disable-next-line vue/require-prop-types
     cbValue: { default: undefined },
     title: { type: [String, Number], default: undefined },
     required: { type: Boolean, default: false },

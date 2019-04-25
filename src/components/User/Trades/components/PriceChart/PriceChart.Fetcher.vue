@@ -21,7 +21,10 @@
 
     <template v-else-if="isFailed">
       <div class="app__block price-chart__empty">
-        <p>An error occurred while fetching chart data. Please try again later</p>
+        <p>
+          An error occurred while fetching chart data.
+          Please try again later
+        </p>
       </div>
     </template>
 
@@ -41,12 +44,14 @@ import ScalePicker from './PriceChart.ScalePicker'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
-
   components: {
     PriceChart,
     ScalePicker,
   },
-  props: ['filters'],
+
+  props: {
+    filters: { type: Object, required: true },
+  },
 
   data () {
     return {

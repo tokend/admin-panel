@@ -39,7 +39,7 @@
     <button
       class="app__btn"
       :disabled="buttonDisabled"
-      @click="enableGAuth()">
+      @click="enableGAuth">
       Enable
     </button>
   </div>
@@ -72,7 +72,7 @@ export default {
     },
   },
 
-  created () {
+  async created () {
     let isDone = false
     this.$store.subscribe((mutation) => {
       if (this.$store.getters.tfaInitiator !== 'g_auth') {
@@ -93,7 +93,8 @@ export default {
         }
       }
     })
-    this.addGAuth()
+
+    await this.addGAuth()
   },
 
   methods: {
@@ -103,42 +104,47 @@ export default {
       this.wantResend = false
     },
 
-    addGAuth () {
+    async addGAuth () {
       this.$store.commit('OPEN_LOADER')
-      return Vue.api.tfa.addGAuth()
-        .then(response => {
-          this.gAuthLink = response.details.secret
-          this.secret = response.details.secret_seed
-          this.id = response.id
 
-          this.$store.commit('CLOSE_LOADER')
-        }).catch(err => {
-          this.$store.commit('CLOSE_LOADER')
+      try {
+        const response = await Vue.api.tfa.addGAuth()
 
-          if (err.status === 409) {
-            ErrorHandler.process('TFA already created. Just re-login')
-          } else {
-            ErrorHandler.process('Unable to add TFA. Try to re-login')
-          }
-        })
+        this.gAuthLink = response.details.secret
+        this.secret = response.details.secret_seed
+        this.id = response.id
+
+        this.$store.commit('CLOSE_LOADER')
+      } catch (err) {
+        this.$store.commit('CLOSE_LOADER')
+
+        if (err.status === 409) {
+          ErrorHandler.process('TFA already created. Just re-login')
+        } else {
+          ErrorHandler.process('Unable to add TFA. Try to re-login')
+        }
+      }
     },
 
-    enableGAuth () {
+    async enableGAuth () {
       this.$store.commit('OPEN_LOADER')
-      return Vue.api.tfa.enableGAuth(this.id)
-        .then(() => {
-          this.$store.commit('CLOSE_LOADER')
-          this.$store.dispatch('SET_INFO', 'Two-factor Authentication enabled')
 
-          this.$emit('tfa-done')
-        }).catch((err) => {
-          this.$store.commit('CLOSE_LOADER')
-          if (err.response.status === 403 && err.response.data.extras) {
-            return this.showTfaForm(err.response.data.extras.token)
-          } else {
-            ErrorHandler.process('Something went wrong. Try again later')
-          }
-        })
+      try {
+        await Vue.api.tfa.enableGAuth(this.id)
+
+        this.$store.commit('CLOSE_LOADER')
+        this.$store.dispatch('SET_INFO', 'Two-factor Authentication enabled')
+
+        this.$emit('tfa-done')
+      } catch (err) {
+        this.$store.commit('CLOSE_LOADER')
+
+        if (err.response.status === 403 && err.response.data.extras) {
+          return this.showTfaForm(err.response.data.extras.token)
+        } else {
+          ErrorHandler.process('Something went wrong. Try again later')
+        }
+      }
     },
 
     showTfaForm (tfaToken) {

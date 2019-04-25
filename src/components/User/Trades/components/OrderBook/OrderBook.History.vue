@@ -21,11 +21,25 @@
                 tabindex="0"
                 @click="showItemDetails(item)"
                 @keyup.enter.stop.prevent="showItemDetails(item)"
-                @keyup.space.stop.prevent="showItemDetails(item)">
-                <td><asset-amount-formatter :amount="item.price" /></td>
-                <td><asset-amount-formatter :amount="item.baseAmount" /></td>
-                <td><asset-amount-formatter :amount="item.price * item.baseAmount" /></td>
-                <td><date-formatter :date="item.createdAt" format="DD MMM YYYY [at] HH:mm:ss" /></td>
+                @keyup.space.stop.prevent="showItemDetails(item)"
+              >
+                <td>
+                  <asset-amount-formatter :amount="item.price" />
+                </td>
+                <td>
+                  <asset-amount-formatter :amount="item.baseAmount" />
+                </td>
+                <td>
+                  <asset-amount-formatter
+                    :amount="item.price * item.baseAmount"
+                  />
+                </td>
+                <td>
+                  <date-formatter
+                    :date="item.createdAt"
+                    format="DD MMM YYYY [at] HH:mm:ss"
+                  />
+                </td>
               </tr>
             </tbody>
           </table>
@@ -53,15 +67,24 @@
         </li>
         <li>
           <span>Amount</span>
-          <asset-amount-formatter :amount="itemDetails.baseAmount" :asset="itemDetails.baseAsset" />
+          <asset-amount-formatter
+            :amount="itemDetails.baseAmount"
+            :asset="itemDetails.baseAsset"
+          />
         </li>
         <li>
           <span>Price</span>
-          <asset-amount-formatter :amount="itemDetails.price" :asset="quoteAsset" />
+          <asset-amount-formatter
+            :amount="itemDetails.price"
+            :asset="quoteAsset"
+          />
         </li>
         <li>
           <span>Date</span>
-          <date-formatter :date="itemDetails.createdAt" format="DD MMM YYYY [at] HH:mm:ss" />
+          <date-formatter
+            :date="itemDetails.createdAt"
+            format="DD MMM YYYY [at] HH:mm:ss"
+          />
         </li>
       </ul>
     </modal>
@@ -70,8 +93,7 @@
 
 <script>
 import { AssetPair } from '../../models/AssetPair'
-import { AssetAmountFormatter } from '@comcom/formatters'
-import { DateFormatter } from '@comcom/formatters'
+import { DateFormatter, AssetAmountFormatter } from '@comcom/formatters'
 import Modal from '@comcom/modals/Modal'
 
 const EMPTY_DETAILS = Object.freeze({})
@@ -83,7 +105,10 @@ export default {
     Modal,
   },
 
-  props: ['list', 'pair'],
+  props: {
+    list: { type: Array, required: true },
+    pair: { type: Object, required: true },
+  },
 
   data () {
     return {

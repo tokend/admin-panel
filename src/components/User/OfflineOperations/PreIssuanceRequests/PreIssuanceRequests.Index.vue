@@ -48,7 +48,8 @@ export default {
 
   computed: {
     assetInfo () {
-      const selectedAsset = this.assets.filter(asset => asset.code === this.asset)[0]
+      const selectedAsset = this.assets
+        .filter(asset => asset.code === this.asset)[0]
       return selectedAsset || {}
     },
 

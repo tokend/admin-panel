@@ -54,7 +54,10 @@
         <div class="issuance-form__asset-info app__form-row" v-if="form.asset">
           <p v-if="isIssuanceAllowed" class="text">
             <span>Available:</span>
-            <asset-amount-formatter :amount="availableForIssuance" :asset="form.asset" />
+            <asset-amount-formatter
+              :amount="availableForIssuance"
+              :asset="form.asset"
+            />
           </p>
 
           <p v-else class="text">
@@ -63,7 +66,10 @@
         </div>
 
         <div class="issuance-form__form-actions app__form-actions">
-          <button class="app__btn" :disabled="isSubmitting || !isIssuanceAllowed">
+          <button
+            class="app__btn"
+            :disabled="isSubmitting || !isIssuanceAllowed"
+          >
             Issue
           </button>
         </div>
@@ -148,11 +154,12 @@ export default {
         address = await api.users.getAccountIdByEmail(this.form.receiver)
       }
       if (!address) {
-        return Promise.reject(`Account doesn't exists in the systen`)
+        throw new Error(`Account doesn't exists in the systen`)
       }
       const response = await Sdk.horizon.account.get(address)
       let account = response.data
-      const balance = account.balances.find(item => item.asset === this.form.asset)
+      const balance = account.balances
+        .find(item => item.asset === this.form.asset)
 
       if (!balance) {
         try {
@@ -167,7 +174,8 @@ export default {
         }
         const response = await Sdk.horizon.account.get(address)
         account = response.data
-        return account.balances.find(item => item.asset === this.form.asset).balanceId
+        return account.balances
+          .find(item => item.asset === this.form.asset).balanceId
       } else {
         return balance.balanceId
       }
@@ -175,17 +183,18 @@ export default {
 
     async sendManualIssuance (receiver) {
       if (receiver === '') {
-        return Promise.reject(`The receiver has no ${this.form.asset} balance.`)
+        throw new Error(`The receiver has no ${this.form.asset} balance.`)
       }
-      const operation = Sdk.base.CreateIssuanceRequestBuilder.createIssuanceRequest({
-        asset: this.form.asset,
-        amount: this.form.amount,
-        receiver: receiver,
-        reference: this.form.reference,
-        source: config.MASTER_ACCOUNT,
-        creatorDetails: {},
-        allTasks: 0,
-      })
+      const operation = Sdk.base.CreateIssuanceRequestBuilder
+        .createIssuanceRequest({
+          asset: this.form.asset,
+          amount: this.form.amount,
+          receiver: receiver,
+          reference: this.form.reference,
+          source: config.MASTER_ACCOUNT,
+          creatorDetails: {},
+          allTasks: 0,
+        })
       await Sdk.horizon.transactions.submitOperations(operation)
       this.form.amount = null
       this.form.receiver = null
@@ -199,19 +208,18 @@ export default {
       if (!await confirmAction()) return
 
       this.isSubmitting = true
-      return this.$validator.validateAll()
-        .then(this.getBalanceId)
-        .then(this.sendManualIssuance)
-        .then(_ => {
-          Bus.$emit('issuance:updateRequestList')
-          return this.getAssets()
-        })
-        .catch((error) => {
-          ErrorHandler.process(error)
-        })
-        .finally(() => {
-          this.isSubmitting = false
-        })
+      try {
+        await this.$validator.validateAll()
+
+        const balanceId = await this.getBalanceId()
+        await this.sendManualIssuance(balanceId)
+
+        Bus.$emit('issuance:updateRequestList')
+        await this.getAssets()
+      } catch (error) {
+        ErrorHandler.process(error)
+      }
+      this.isSubmitting = false
     },
   },
 }

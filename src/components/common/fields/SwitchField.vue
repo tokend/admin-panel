@@ -22,11 +22,13 @@ export default {
   },
   props: {
     label: { type: String, default: 'Label' },
+    // eslint-disable-next-line vue/require-prop-types
     value: { default: false },
 
     // proxies
     name: { type: String, default: undefined },
     disabled: { type: Boolean, default: false },
+    // eslint-disable-next-line vue/require-prop-types
     cbValue: { default: undefined },
     title: { type: [String, Number], default: undefined },
     required: { type: Boolean, default: false },

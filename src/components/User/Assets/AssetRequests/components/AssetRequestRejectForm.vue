@@ -1,7 +1,8 @@
 <template>
   <div class="trrf">
     <h2>
-      Reject {{ assetRequest.code }} {{ assetRequest.type === 'create_asset' ? 'create' : 'update' }} request
+      Reject {{ assetRequest.code }}
+      {{ assetRequest.type === 'create_asset' ? 'create' : 'update' }} request
     </h2>
 
     <form
@@ -57,7 +58,9 @@ export default {
     TickField,
   },
 
-  props: ['assetRequest'],
+  props: {
+    assetRequest: { type: Object, required: true },
+  },
 
   data () {
     return {
@@ -71,7 +74,8 @@ export default {
     async reject () {
       this.isPending = true
       try {
-        await this.assetRequest.reject(this.rejectReason, this.isPermanentReject)
+        await this.assetRequest
+          .reject(this.rejectReason, this.isPermanentReject)
         this.$store.dispatch('SET_INFO', 'Request successfully rejected')
         this.$router.push({ name: 'assets' })
       } catch (err) {

@@ -201,28 +201,29 @@ export default {
     verbozify,
     localize,
 
-    nextPageLoader () {
+    async nextPageLoader () {
       this.loadNewPage = true
-      return this.pages
-        .fetchNext(this.$store.getters.keypair)
-        .then((response) => {
-          if (response.data.length > 0) {
-            const mappedRequests = api.requests.mapRequests(response.data)
-            this.requests = this.requests.concat(mappedRequests)
-            this.pages = response
-            return
-          }
 
-          if (response.data.length < 10) {
-            this.pageableLoadCompleted = true
-          }
+      try {
+        const response = await this.pages.fetchNext(this.$store.getters.keypair)
 
-          this.loadNewPage = false
-        }).catch((err) => {
-          ErrorHandler.processWithoutFeedback(err)
-          this.loadNewPage = false
+        if (response.data.length > 0) {
+          const mappedRequests = api.requests.mapRequests(response.data)
+          this.requests = this.requests.concat(mappedRequests)
+          this.pages = response
+          return
+        }
+
+        if (response.data.length < 10) {
           this.pageableLoadCompleted = true
-        })
+        }
+
+        this.loadNewPage = false
+      } catch (err) {
+        ErrorHandler.processWithoutFeedback(err)
+        this.loadNewPage = false
+        this.pageableLoadCompleted = true
+      }
     },
 
     formatDate (date) {
@@ -264,35 +265,42 @@ export default {
       this.requestSelected = true
     },
 
-    reject (request) {
+    async reject (request) {
       if (!this.rejectReason) {
         ErrorHandler.process('Enter reject reason before continue')
         return
       }
 
       this.$store.commit('OPEN_LOADER')
-      return request.reject(this.rejectReason, true).then(r => {
+
+      try {
+        await request.reject(this.rejectReason, true)
+
         this.clear()
         this.$store.dispatch('SET_INFO', 'Pending transaction for rejected request submitted')
-        return this.getRequests()
-      }).catch(error => {
+
+        await this.getRequests()
+      } catch (error) {
         this.clear()
         ErrorHandler.process(error)
-      })
+      }
     },
 
-    fulfill (request) {
+    async fulfill (request) {
       this.$store.commit('OPEN_LOADER')
-      return request.fulfill()
-        .then(() => {
-          this.$store.commit('CLOSE_LOADER')
-          this.$store.dispatch('SET_INFO', 'Pending transaction for fulfill request submitted')
-          this.$emit('need-to-update')
-          return this.getRequests()
-        }).catch(error => {
-          this.clear()
-          ErrorHandler.process(error)
-        })
+
+      try {
+        await request.fulfill()
+
+        this.$store.commit('CLOSE_LOADER')
+        this.$store.dispatch('SET_INFO', 'Pending transaction for fulfill request submitted')
+        this.$emit('need-to-update')
+
+        await this.getRequests()
+      } catch (error) {
+        this.clear()
+        ErrorHandler.process(error)
+      }
     },
   },
 }

@@ -13,7 +13,10 @@
         <div class="settings__row">
           <span>Two-factor Authentication </span>
           <span>
-            <template class="info-block__data" v-if="!(isTfaPending || hasGAuth)">
+            <template
+              v-if="!(isTfaPending || hasGAuth)"
+              class="info-block__data"
+            >
               <router-link :to="{ name: 'settings.tfa' }">
                 Change
               </router-link>
@@ -30,14 +33,12 @@
 
 <script>
 import tfa from '@/api/tfa'
-import GAuth from './GAuth.vue'
 import UserHeader from '@/components/User/components/UserHeader'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   name: 'security',
   components: {
-    GAuth,
     UserHeader,
   },
 
@@ -50,21 +51,21 @@ export default {
     }
   },
 
-  created () {
-    tfa.getTfaBackends()
-      .then(response => {
-        if (response.backends && response.backends.length > 0) {
-          response.backends.forEach(b => {
-            if (b.priority === 10) {
-              this.hasGAuth = true
-            }
-          })
-        }
-        this.isTfaPending = false
-      })
-      .catch(err => {
-        ErrorHandler.processWithoutFeedback(err)
-      })
+  async created () {
+    try {
+      const response = await tfa.getTfaBackends()
+
+      if (response.backends && response.backends.length > 0) {
+        response.backends.forEach(b => {
+          if (b.priority === 10) {
+            this.hasGAuth = true
+          }
+        })
+      }
+      this.isTfaPending = false
+    } catch (error) {
+      ErrorHandler.processWithoutFeedback(error)
+    }
   },
 }
 </script>

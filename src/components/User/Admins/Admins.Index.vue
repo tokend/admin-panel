@@ -21,14 +21,12 @@
 <script>
 import 'mdi-vue/PlusIcon'
 import AdminList from './components/AdminList'
-import InputField from '@comcom/fields/InputField'
 
 export default {
   name: 'admins',
 
   components: {
     AdminList,
-    InputField,
   },
 }
 </script>

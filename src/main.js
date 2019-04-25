@@ -4,10 +4,6 @@ import router from './router'
 import store from './store'
 import VueResource from 'vue-resource'
 
-import Raven from 'raven-js'
-import RavenVue from 'raven-js/plugins/vue'
-import ravenConfig from './raven_config'
-
 /* App sass */
 import './assets/style/app.scss'
 
@@ -16,13 +12,12 @@ import App from './components/App/App.vue'
 
 import moment from 'moment'
 import { Sdk } from '@/sdk'
-import { Validator } from 'vee-validate'
 
 /* Vue plugins */
 import Auth from './auth'
 import api from './api'
 import params from './config'
-import VeeValidate from 'vee-validate'
+import VeeValidate, { Validator } from 'vee-validate'
 
 /* Vue filters */
 
@@ -47,20 +42,6 @@ if (process.env.NODE_ENV === 'production') {
   Vue.config.debug = false
   Vue.config.silent = true
   Vue.config.productionTip = false
-}
-
-// NOTE: temporarily disabled
-// Sentry integration
-if (false && process.env.SENTRY_DSN) {
-  Raven.config(process.env.SENTRY_DSN, ravenConfig)
-    .addPlugin(RavenVue, Vue)
-    .install()
-  // wrap console.error to capture exceptions
-  const logger = console.error
-  console.error = (...args) => {
-    Raven.captureException(...args)
-    logger(...args)
-  }
 }
 
 Object.isEmpty = function (obj) {

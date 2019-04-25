@@ -40,7 +40,10 @@ export const KYC_REQUEST_STATES = Object.freeze(
       label: 'Request processed by IDMind',
     },
   })
-    .filter(([key]) => Object.values(config.FEATURES.KYC_REQUEST_STATES).includes(key))
+    .filter(([key]) => {
+      return Object.values(config.FEATURES.KYC_REQUEST_STATES)
+        .includes(key)
+    })
     .reduce((res, [key, value]) => {
       res[key] = value
       return res

@@ -2,8 +2,12 @@
 
 import { authorizedGuard } from '../helpers/navigationGuards'
 
-// Each of these routes are loaded asynchronously, when a user first navigates to each corresponding endpoint.
-// The route will load once into memory, the first time it's called, and no more on future calls.
+// Each of these routes are loaded asynchronously,
+// when a user first navigates to each corresponding endpoint.
+//
+// The route will load once into memory, the first time it's called,
+// and no more on future calls.
+//
 // This behavior can be observed on the network tab of your browser dev tools.
 
 export const UserRoutes = {

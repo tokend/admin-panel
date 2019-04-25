@@ -50,12 +50,14 @@
               {{ item.id }}
             </span>
 
+            <!-- eslint-disable max-len -->
             <span
               class="app-list__cell app-list__cell--right app-list__cell--important"
               :title="`${localize(item.details.createIssuance.amount)} ${item.details.createIssuance.asset}`"
             >
               {{ localize(item.details.createIssuance.amount) }} {{ item.details.createIssuance.asset }}
             </span>
+            <!-- eslint-enable max-len -->
 
             <span
               class="app-list__cell app-list__cell--right "
@@ -68,7 +70,9 @@
               class="app-list__cell app-list__cell--right "
               :title="item.details.createIssuance.receiver"
             >
-              <email-getter :balance-id="item.details.createIssuance.receiver" />
+              <email-getter
+                :balance-id="item.details.createIssuance.receiver"
+              />
             </span>
 
             <span

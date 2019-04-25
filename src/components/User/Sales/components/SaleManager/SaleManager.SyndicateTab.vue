@@ -68,23 +68,22 @@
 <script>
 import { UserDocLinkGetter, UserDocGetter } from '@comcom/getters'
 import { Sdk } from '@/sdk'
-import { DateFormatter } from '@comcom/formatters'
-import SyndicateMember from '@comcom/SyndicateMember'
-import SocialLinks from '@comcom/SocialLinks'
 
 import _get from 'lodash/get'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   components: {
-    DateFormatter,
-    SyndicateMember,
     UserDocLinkGetter,
     UserDocGetter,
-    SocialLinks,
   },
 
-  props: ['sale', 'saleRequest', 'user', 'blobId'],
+  props: {
+    sale: { type: Object, default: _ => ({}) },
+    saleRequest: { type: Object, default: _ => ({}) },
+    user: { type: Object, default: _ => ({}) },
+    blobId: { type: String, default: '' },
+  },
 
   data () {
     return {

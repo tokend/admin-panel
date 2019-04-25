@@ -38,7 +38,11 @@ export default {
   components: {
     InputField,
   },
-  props: ['docItem'],
+
+  props: {
+    docItem: { type: Object, required: true },
+  },
+
   data: _ => ({
     searchValue: '',
     isShowingList: false,
@@ -48,7 +52,10 @@ export default {
   computed: {
     filteredList () {
       const nonUnderscoreList = Object.values(DOCUMENT_TYPES_STR).map(item => item.replace(/_/g, ' '))
-      return nonUnderscoreList.filter(item => item.toLowerCase().includes(this.docItem.label.toLowerCase()))
+      return nonUnderscoreList.filter(item => {
+        return item.toLowerCase()
+          .includes(this.docItem.label.toLowerCase())
+      })
     },
   },
   watch: {

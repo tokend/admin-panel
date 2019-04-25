@@ -148,6 +148,13 @@ export default {
     }
   },
 
+  watch: {
+    'filters.state' () { this.reloadCollectionLoader() },
+    'filters.requestor': _.throttle(function () {
+      this.reloadCollectionLoader()
+    }, 1000),
+  },
+
   methods: {
     async getList () {
       this.isLoaded = false
@@ -180,13 +187,6 @@ export default {
     reloadCollectionLoader () {
       this.$refs.collectionLoaderBtn.loadFirstPage()
     },
-  },
-
-  watch: {
-    'filters.state' () { this.reloadCollectionLoader() },
-    'filters.requestor': _.throttle(function () {
-      this.reloadCollectionLoader()
-    }, 1000),
   },
 }
 </script>

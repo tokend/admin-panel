@@ -20,15 +20,23 @@
           class="app-list__li"
           v-for="item in list"
           :key="`${item.baseAsset.id}/${item.quoteAsset.id}`"
-          :to="{ name: 'assets.assetPairs.show', params: { base: item.baseAsset.id, quote: item.quoteAsset.id }}">
+          :to="{
+            name: 'assets.assetPairs.show',
+            params: { base: item.baseAsset.id, quote: item.quoteAsset.id }
+          }"
+        >
           <span class="app-list__cell app-list__cell--important">
             {{ `${item.baseAsset.id}/${item.quoteAsset.id}` }}
           </span>
 
           <span class="app-list__cell app-list__cell--right">
-            <asset-amount-formatter :amount="item.price" :asset="item.quoteAsset.id" />
+            <asset-amount-formatter
+              :amount="item.price"
+              :asset="item.quoteAsset.id"
+            />
           </span>
 
+          <!-- eslint-disable-next-line max-len -->
           <span class="app-list__cell app-list__cell--policy app-list__cell--right">
             {{ item.policies.value }}
             <span class="asset-pair__policy-tip">
@@ -41,7 +49,10 @@
                 >
                   {{ ASSET_PAIR_POLICIES_VERBOSE[policy.value] }}
                 </span>
-                <span class="asset-pairs__policies-list-item" v-if="!item.policies || !item.policies.length">
+                <span
+                  v-if="!item.policies || !item.policies.length"
+                  class="asset-pairs__policies-list-item"
+                >
                   No policies for this pair
                 </span>
               </span>

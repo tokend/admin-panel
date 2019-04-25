@@ -8,15 +8,14 @@
 
 <script>
 import SaleRequestManager from './components/SaleRequestManager'
+
 export default {
   components: {
     SaleRequestManager,
   },
 
-  props: ['id'],
+  props: {
+    id: { type: String, required: true },
+  },
 }
 </script>
-
-<style scoped>
-
-</style>

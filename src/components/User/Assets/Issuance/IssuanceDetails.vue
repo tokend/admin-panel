@@ -31,11 +31,14 @@
           </li>
           <li class="issuance-details__list-item">
             <span>State</span>
-            <span>{{ issuance.requestState | localizeIssuanceRequestState }}</span>
+            <span>
+              {{ issuance.requestState | localizeIssuanceRequestState }}
+            </span>
           </li>
         </ul>
         <template v-if="issuance.requestStateI === REQUEST_STATES.pending">
           <div class="issuance-details__action-btns">
+            <!-- eslint-disable max-len -->
             <button
               class="app__btn issuance-details__action-btn"
               @click="fulfill(issuance)"
@@ -51,6 +54,7 @@
             >
               Reject
             </button>
+            <!-- eslint-enable max-len -->
           </div>
         </template>
       </template>
@@ -113,7 +117,11 @@ export default {
     Modal,
     TextField,
   },
-  props: ['id'],
+
+  props: {
+    id: { type: String, required: true },
+  },
+
   data: _ => ({
     REQUEST_STATES,
     issuance: null,

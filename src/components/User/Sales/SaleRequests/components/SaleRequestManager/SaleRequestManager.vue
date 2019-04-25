@@ -126,7 +126,9 @@ export default {
     SyndicateTab,
   },
 
-  props: ['id'],
+  props: {
+    id: { type: String, required: true },
+  },
 
   data () {
     return {

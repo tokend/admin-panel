@@ -35,7 +35,11 @@ export default {
   components: {
     InputField,
   },
-  props: ['limits'],
+
+  props: {
+    limits: { type: Object, required: true },
+  },
+
   data: _ => ({
     userLimits: {
       dailyOut: '',
@@ -55,37 +59,35 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.user-limits__inner {
+  display: flex;
+  flex-direction: column;
+}
 
-  .user-limits__inner {
-    display: flex;
-    flex-direction: column;
+.user-limits__reason-wrp {
+  margin-top: 4rem;
+}
+
+.user-limits__limit-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  max-width: 40rem;
+}
+
+.user-limits__limits-list-wrp {
+  &:first-child:not(:only-child) {
+    margin-right: 5rem;
   }
 
-  .user-limits__reason-wrp {
-    margin-top: 4rem;
-  }
+  max-width: 28rem;
+  width: 100%;
+}
 
-  .user-limits__limit-row {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    max-width: 40rem;
-  }
-
-  .user-limits__limits-list-wrp {
-    &:first-child:not(:only-child) {
-      margin-right: 5rem;
-    }
-
-    max-width: 28rem;
-    width: 100%;
-  }
-
-  .user-limits__limit-type {
-    margin-right: 1rem;
-    min-width: 7.5rem;
-    font-size: 1.2rem;
-    font-weight: 600;
-  }
-
+.user-limits__limit-type {
+  margin-right: 1rem;
+  min-width: 7.5rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
 </style>

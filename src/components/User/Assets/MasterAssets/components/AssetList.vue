@@ -23,7 +23,11 @@
         :key="i">
         <router-link
           class="asset-list__li-a"
-          :to="{ name: 'assets.masterAssets.show', params: { asset: asset.id }}">
+          :to="{
+            name: 'assets.masterAssets.show',
+            params: { asset: asset.id }
+          }"
+        >
           <span class="asset-list__li-name" :title="asset.creatorDetails.name">
             {{ asset.creatorDetails.name }}
           </span>

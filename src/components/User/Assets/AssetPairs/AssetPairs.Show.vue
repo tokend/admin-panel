@@ -14,7 +14,10 @@ export default {
     AssetPairManager,
   },
 
-  props: ['base', 'quote'],
+  props: {
+    base: { type: String, required: true },
+    quote: { type: String, required: true },
+  },
 }
 </script>
 

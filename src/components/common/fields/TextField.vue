@@ -5,7 +5,10 @@
       'text-field--error': errorMessage,
       'text-field--disabled': disabled
     }">
-    <span class="text-field__label" :class="{'text-field__label--hidden': isNoLabel}">
+    <span
+      class="text-field__label"
+      :class="{'text-field__label--hidden': isNoLabel}"
+    >
       {{ label }}
     </span>
 

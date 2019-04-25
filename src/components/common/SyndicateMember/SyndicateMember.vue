@@ -19,12 +19,16 @@
 <script>
 import { ImgGetter } from '@comcom/getters'
 import SocialLinks from '@comcom/SocialLinks'
+
 export default {
   components: {
     ImgGetter,
     SocialLinks,
   },
-  props: ['info'],
+
+  props: {
+    info: { type: Object, required: true },
+  },
 }
 </script>
 

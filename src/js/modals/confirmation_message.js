@@ -31,6 +31,7 @@ export function confirmAction (opts = {}) {
   const container = document.createElement('div')
   document.querySelector('#app').appendChild(container)
 
+  // eslint-disable-next-line promise/avoid-new
   return new Promise((resolve, reject) => {
     const confirmMessage = new Vue({
       components: { Modal },

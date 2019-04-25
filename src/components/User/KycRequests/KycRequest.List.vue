@@ -143,6 +143,8 @@ import { clearObject } from '@/utils/clearObject'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { CollectionLoader } from '@/components/common'
 
+import throttle from 'lodash/throttle'
+
 const VIEW_MODES_VERBOSE = Object.freeze({
   index: 'index',
   user: 'user',
@@ -150,7 +152,14 @@ const VIEW_MODES_VERBOSE = Object.freeze({
 
 export default {
   name: 'kyc-request-list',
-  components: { UserView, EmailGetter, SelectField, InputField, CollectionLoader },
+  components: {
+    UserView,
+    EmailGetter,
+    SelectField,
+    InputField,
+    CollectionLoader,
+  },
+
   provide () {
     const kycRequestsList = {}
     Object.defineProperty(kycRequestsList, 'updateAsk', {
@@ -190,6 +199,14 @@ export default {
       KYC_REQUEST_STATES,
       ACCOUNT_ROLES: config.ACCOUNT_ROLES,
     }
+  },
+
+  watch: {
+    'filters.state' () { this.reloadCollectionLoader() },
+    'filters.roleToSet' () { this.reloadCollectionLoader() },
+    'filters.address': throttle(function () {
+      this.reloadCollectionLoader()
+    }, 1000),
   },
 
   methods: {
@@ -249,13 +266,6 @@ export default {
       this.$refs.collectionLoaderBtn.loadFirstPage()
     },
     formatDate,
-  },
-  watch: {
-    'filters.state' () { this.reloadCollectionLoader() },
-    'filters.roleToSet' () { this.reloadCollectionLoader() },
-    'filters.address': _.throttle(function () {
-      this.reloadCollectionLoader()
-    }, 1000),
   },
 }
 </script>

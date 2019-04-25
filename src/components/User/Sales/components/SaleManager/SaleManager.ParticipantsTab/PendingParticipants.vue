@@ -38,7 +38,12 @@
         <tbody>
           <tr v-for="(participant, index) in participants" :key="index">
             <td><email-getter :account-id="participant.ownerId" /></td>
-            <td><date-formatter :date="participant.createdAt" format="DD MMM YYYY HH:mm:ss" /></td>
+            <td>
+              <date-formatter
+                :date="participant.createdAt"
+                format="DD MMM YYYY HH:mm:ss"
+              />
+            </td>
             <td>{{ participant.quoteAmount }}</td>
             <td>{{ participant.baseAmount }}</td>
           </tr>
@@ -81,7 +86,10 @@ export default {
     SelectField,
   },
 
-  props: ['sale'],
+  props: {
+    sale: { type: Object, required: true },
+  },
+
   data () {
     return {
       participants: [],

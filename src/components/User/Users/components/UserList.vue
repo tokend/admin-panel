@@ -175,6 +175,21 @@ export default {
     }
   },
 
+  watch: {
+    'filters.state' () {
+      this.reloadCollectionLoader()
+    },
+    'filters.role' () {
+      this.reloadCollectionLoader()
+    },
+    'filters.email': _.throttle(function () {
+      this.reloadCollectionLoader()
+    }, 1000),
+    'filters.address': _.throttle(function () {
+      this.reloadCollectionLoader()
+    }, 1000),
+  },
+
   methods: {
     async getList () {
       this.isLoading = true
@@ -223,21 +238,6 @@ export default {
     reloadCollectionLoader () {
       this.$refs.collectionLoaderBtn.loadFirstPage()
     },
-  },
-
-  watch: {
-    'filters.state' () {
-      this.reloadCollectionLoader()
-    },
-    'filters.role' () {
-      this.reloadCollectionLoader()
-    },
-    'filters.email': _.throttle(function () {
-      this.reloadCollectionLoader()
-    }, 1000),
-    'filters.address': _.throttle(function () {
-      this.reloadCollectionLoader()
-    }, 1000),
   },
 }
 </script>

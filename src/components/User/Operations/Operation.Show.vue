@@ -32,21 +32,31 @@ import { verbozify } from '@/utils/verbozify'
 
 export default {
   name: 'operation-show',
-  props: ['operation', 'userId'],
+
+  props: {
+    operation: { type: Object, required: true },
+  },
+
   data () {
     return {
       operationInfo: [],
       dictionary: {},
     }
   },
+
   created () {
     this.getOperationInfoTest(this.operation)
   },
+
   methods: {
     verbozify,
+
     getOperationInfoTest (operation) {
-      this.operationInfo = Array.from(this.flattenObjectToMap(this.flattenObject(operation)))
+      this.operationInfo = Array.from(
+        this.flattenObjectToMap(this.flattenObject(operation))
+      )
     },
+
     flattenObject (obj) {
       const toReturn = {}
 
@@ -66,6 +76,7 @@ export default {
 
       return toReturn
     },
+
     flattenObjectToMap (obj) {
       const map = new Map()
       for (const i in obj) {

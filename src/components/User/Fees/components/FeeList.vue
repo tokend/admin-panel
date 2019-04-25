@@ -111,7 +111,10 @@
         </div>
       </template>
 
-      <template v-else-if="filters.scope === SCOPE_TYPES.account && !filters.accountAddress">
+      <template
+        v-else-if="filters.scope === SCOPE_TYPES.account &&
+          !filters.accountAddress"
+      >
         <div class="app-list">
           <p class="app-list__li-like">
             Please specify account
@@ -311,7 +314,8 @@ export default {
         accountAlias: '', // address or email
         accountAddress: '', // address will be inserted here
 
-        paymentFeeSubtype: PAYMENT_FEE_TYPES.outgoing, // every fee has a subtype, but we're interested only in payment's
+        // every fee has a subtype, but we're interested only in payment's
+        paymentFeeSubtype: PAYMENT_FEE_TYPES.outgoing,
       },
     }
   },
@@ -321,7 +325,8 @@ export default {
       let result
       switch (+this.filters.feeType) {
         case FEE_TYPES.paymentFee:
-          result = this.assets.filter(item => item.policy & ASSET_POLICIES.transferable)
+          result = this.assets
+            .filter(item => item.policy & ASSET_POLICIES.transferable)
           break
 
         case FEE_TYPES.offerFee:
@@ -336,7 +341,8 @@ export default {
           break
 
         case FEE_TYPES.withdrawalFee:
-          result = this.assets.filter(item => +item.policy & ASSET_POLICIES.withdrawable)
+          result = this.assets
+            .filter(item => +item.policy & ASSET_POLICIES.withdrawable)
           break
 
         default:
@@ -360,7 +366,11 @@ export default {
         .find(([key]) => key.toLowerCase() === asset.toLowerCase())
       return filtered[1]
         .filter((item) => item.feeType === type)
-        .filter((item) => type === FEE_TYPES.paymentFee ? item.subtype === paymentFeeSubtype : true)
+        .filter((item) => {
+          return type === FEE_TYPES.paymentFee
+            ? item.subtype === paymentFeeSubtype
+            : true
+        })
     },
   },
 

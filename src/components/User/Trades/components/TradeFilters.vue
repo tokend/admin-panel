@@ -1,7 +1,10 @@
 <template>
   <div class="trade-filters">
     <div class="app-list-filters">
-      <select-field class="app-list-filters__field trade-filters__asset-selector" v-model="filters.pair">
+      <select-field
+        class="app-list-filters__field trade-filters__asset-selector"
+        v-model="filters.pair"
+      >
         <template v-if="isLoaded && pairs.length">
           <option
             v-for="(pair, index) in pairs"
@@ -42,7 +45,9 @@ export default {
     SelectField,
   },
 
-  props: ['value'],
+  props: {
+    value: { type: Object, required: true },
+  },
 
   data () {
     return {

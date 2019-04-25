@@ -6,11 +6,13 @@
     <span class="detail-row__value">
       <template>
         <slot v-if="$slots.default" />
+        <!-- eslint-disable vue/no-v-html -->
         <span
           v-else
           v-html="value || '—'"
           class="detail-row__value-text"
         />
+        <!-- eslint-enable vue/no-v-html -->
       </template>
     </span>
   </p>
@@ -18,7 +20,11 @@
 
 <script>
 export default {
-  props: ['label', 'value'],
+  props: {
+    label: { type: String, default: '' },
+    // eslint-disable-next-line vue/require-prop-types
+    value: { default: false },
+  },
 }
 </script>
 

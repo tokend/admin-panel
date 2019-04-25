@@ -16,59 +16,42 @@ const sdkServer = () => {
   })
 }
 
-const get = (path, data = null, isSigned) => {
+const get = async (path, data = null, isSigned) => {
   if (isSigned) {
     const wallet = new Wallet(
       '',
       store.getters.GET_USER.keys.seed,
       store.getters.GET_USER.keys.accountId
     )
-    return sdkServer()
-      .getWithSignature(path, data, wallet)
-      .then(r => {
-        return r.data
-      }).catch(err => {
-        return Promise.reject(err)
-      })
+
+    const response = await sdkServer().getWithSignature(path, data, wallet)
+    return response.data
   } else {
-    return sdkServer()
-      .get(path, data)
-      .then(r => {
-        return r.data
-      }).catch(err => {
-        return Promise.reject(err)
-      })
+    const response = await sdkServer().get(path, data)
+    return response.data
   }
 }
 
-const patch = (path, data = {}) => {
+const patch = async (path, data = {}) => {
   const wallet = new Wallet(
     '',
     store.getters.GET_USER.keys.seed,
     store.getters.GET_USER.keys.accountId
   )
-  return sdkServer()
-    .patchWithSignature(path, data, wallet)
-    .then(r => {
-      return r.data
-    }).catch(err => {
-      return Promise.reject(err)
-    })
+
+  const response = await sdkServer().patchWithSignature(path, data, wallet)
+  return response.data
 }
 
-const post = (path, data = {}) => {
+const post = async (path, data = {}) => {
   const wallet = new Wallet(
     '',
     store.getters.GET_USER.keys.seed,
     store.getters.GET_USER.keys.accountId
   )
-  return sdkServer()
-    .postWithSignature(path, data, wallet)
-    .then(r => {
-      return r.data
-    }).catch(err => {
-      return Promise.reject(err)
-    })
+
+  const response = await sdkServer().postWithSignature(path, data, wallet)
+  return response.data
 }
 
 export default {

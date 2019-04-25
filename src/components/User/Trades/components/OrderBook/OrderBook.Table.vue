@@ -80,7 +80,10 @@
         </li>
         <li>
           <span>Offered at</span>
-          <date-formatter :date="itemDetails.createdAt" format="DD MMM YYYY [at] HH:mm:ss" />
+          <date-formatter
+            :date="itemDetails.createdAt"
+            format="DD MMM YYYY [at] HH:mm:ss"
+          />
         </li>
         <li>
           <span>Offerer</span>
@@ -88,15 +91,24 @@
         </li>
         <li>
           <span>Offered amount</span>
-          <asset-amount-formatter :amount="itemDetails.baseAmount" :asset="itemDetails.baseAssetCode" />
+          <asset-amount-formatter
+            :amount="itemDetails.baseAmount"
+            :asset="itemDetails.baseAssetCode"
+          />
         </li>
         <li>
           <span>Price per {{ itemDetails.baseAssetCode }}</span>
-          <asset-amount-formatter :amount="itemDetails.price" :asset="itemDetails.quoteAssetCode" />
+          <asset-amount-formatter
+            :amount="itemDetails.price"
+            :asset="itemDetails.quoteAssetCode"
+          />
         </li>
         <li>
           <span>Total price</span>
-          <asset-amount-formatter :amount="itemDetails.quoteAmount" :asset="itemDetails.quoteAssetCode" />
+          <asset-amount-formatter
+            :amount="itemDetails.quoteAmount"
+            :asset="itemDetails.quoteAssetCode"
+          />
         </li>
       </ul>
     </modal>
@@ -119,7 +131,12 @@ export default {
     Modal,
   },
 
-  props: ['list', 'pair', 'isBids', 'isRtl'],
+  props: {
+    list: { type: Array, required: true },
+    pair: { type: Object, required: true },
+    isBids: { type: Boolean, default: false },
+    isRtl: { type: Boolean, default: false },
+  },
 
   data () {
     return {

@@ -5,14 +5,19 @@
 </template>
 <script>
 export default {
-  props: ['operation'],
+  props: {
+    operation: { type: Object, required: true },
+  },
+
   data: _ => ({
     counterparty: 'counterparty',
     noCounterpartyStr: '-',
   }),
+
   created () {
     this.counterparty = this.getCounterparty(this.operation)
   },
+
   methods: {
     getCounterparty (operation) {
       if (operation.receiverAccount) {

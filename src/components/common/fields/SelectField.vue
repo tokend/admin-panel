@@ -41,6 +41,7 @@
 export default {
   props: {
     label: { type: String, default: 'Label' },
+    // eslint-disable-next-line vue/require-prop-types
     value: { default: false },
     errorMessage: { type: String, default: undefined },
     emptyText: { type: [String, Number], default: undefined },
@@ -85,7 +86,9 @@ export default {
 
 .select-field__arrow {
   position: absolute;
-  bottom: calc(50% - #{$field-input-padding-top} + #{$field-input-padding-bottom});
+  bottom: calc(
+    50% - #{$field-input-padding-top} + #{$field-input-padding-bottom}
+  );
   right: $field-input-padding-bottom / 2;
   width: .6rem;
   height: .6rem;

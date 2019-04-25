@@ -1,5 +1,8 @@
 <template>
-  <div class="image-input" :class="{ 'image-input--ready-to-drop': flags.isReadyToDrop }">
+  <div
+    class="image-input"
+    :class="{ 'image-input--ready-to-drop': flags.isReadyToDrop }"
+  >
     <div class="image-input__image-preview" v-if="imgUrl">
       <img :src="imgUrl">
     </div>

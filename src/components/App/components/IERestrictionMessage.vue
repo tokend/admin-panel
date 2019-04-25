@@ -1,7 +1,8 @@
 <template>
   <div class="no-support-message">
     <div class="msg">
-      The browser you're using doesn't support all the needed features. Please consider installing one of the following browsers.
+      The browser you're using doesn't support all the needed features.
+      Please consider installing one of the following browsers.
       <div class="browser-icons">
         <span class="download">
           Download:

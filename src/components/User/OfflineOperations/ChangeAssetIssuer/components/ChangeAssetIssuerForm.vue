@@ -1,7 +1,8 @@
 <template>
   <div class="change-asset-issuer-form">
     <p class="change-asset-issuer-form__hint">
-      Select file(s) with change issuer transaction and click <strong>Upload</strong>.<br>
+      Select file(s) with change issuer transaction and click
+      <strong>Upload</strong>.<br>
     </p>
 
     <div class="change-asset-issuer-form__upload-wrp">
@@ -89,6 +90,7 @@ export default {
       this.source = fileData.source
     },
     readFile (file) {
+      // eslint-disable-next-line promise/avoid-new
       return new Promise(function (resolve) {
         const reader = new FileReader()
 
@@ -123,7 +125,7 @@ export default {
     async sendTx () {
       const transaction = new Sdk.base.Transaction(this.transaction)
       transaction.sign(this.$store.getters.keypair)
-      return await Sdk.horizon.transactions.submit(transaction)
+      await Sdk.horizon.transactions.submit(transaction)
     },
   },
 }

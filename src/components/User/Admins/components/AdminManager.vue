@@ -75,7 +75,10 @@
               <template v-if="form.signerRoleId">
                 <p
                   class="admin-manager__role-description"
-                  :class="{ 'admin-manager__role-description--grayscale': isMaster || isPending }"
+                  :class="{
+                    'admin-manager__role-description--grayscale':
+                      isMaster || isPending
+                  }"
                 >
                   {{ form.signerRoleId | deriveRoleDescription(signerRoles) }}
                 </p>
@@ -134,7 +137,7 @@ export default {
   },
 
   props: {
-    id: 
+    id: { type: String, default: '' },
   },
 
   data () {

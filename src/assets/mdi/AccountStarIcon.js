@@ -2,7 +2,10 @@ import Vue from 'vue'
 
 export default Vue.component('mdi-account-star-icon', {
   props: {
-    className: [Object, Array, String],
+    className: {
+      type: [Object, Array, String],
+      default: 'mdi-account-star-icon',
+    },
     width: {
       type: Number,
       default: 24,

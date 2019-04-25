@@ -56,7 +56,9 @@ export default {
     OpDetails,
   },
 
-  props: ['id'],
+  props: {
+    id: { type: String, required: true },
+  },
 
   data: _ => ({
     view: {

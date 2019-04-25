@@ -80,7 +80,11 @@ import {
 
 export default {
   components: { EmailGetter },
-  props: ['list'],
+
+  props: {
+    list: { type: Array, required: true },
+  },
+
   data () {
     return {
       isLoading: false,

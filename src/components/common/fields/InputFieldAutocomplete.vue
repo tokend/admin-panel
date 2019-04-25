@@ -45,6 +45,18 @@ export default {
     }
   },
 
+  watch: {
+    'inputValue': debounce(function () {
+      this.getList()
+    }, 400),
+
+    'isInputFocused' () {
+      if (this.isInputFocused) {
+        this.openDropdown()
+      }
+    },
+  },
+
   methods: {
     async getList () {
       let response = []
@@ -146,17 +158,6 @@ export default {
       window.addEventListener('keydown', this.onKeyDown)
       window.addEventListener('click', this.onClick)
       this.isDropdownShown = true
-    },
-  },
-  watch: {
-    'inputValue': debounce(function () {
-      this.getList()
-    }, 400),
-
-    'isInputFocused' () {
-      if (this.isInputFocused) {
-        this.openDropdown()
-      }
     },
   },
 }

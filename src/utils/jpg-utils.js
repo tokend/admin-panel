@@ -64,7 +64,8 @@ function getImageOrientation (arrayBuffer) {
       offset += 2
 
       for (let i = 0; i < tags; i++) {
-        if (view.getUint16(offset + (i * 12), little) === jpegBytes.orientationTag) {
+        const orientationTag = view.getUint16(offset + (i * 12), little)
+        if (orientationTag === jpegBytes.orientationTag) {
           return view.getUint16(offset + (i * 12) + 8, little)
         }
       }

@@ -7,7 +7,10 @@
 <script>
 import { formatDate } from '@/utils/formatters'
 export default {
-  props: ['date', 'format'],
+  props: {
+    date: { type: String, required: true },
+    format: { type: String, required: true },
+  },
 
   methods: {
     formatDate,

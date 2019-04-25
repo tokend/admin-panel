@@ -1,6 +1,7 @@
 <template>
   <header class="auth-header">
     <div class="auth-header__container app__container">
+      <!-- eslint-disable-next-line max-len -->
       <div class="auth-header__header-group auth-header__header-group--vertical">
         <span class="auth-header__admin-logo">
           TokenD

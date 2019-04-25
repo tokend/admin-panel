@@ -6,7 +6,9 @@
 
 <script>
 export default {
-  props: ['string'],
+  props: {
+    string: { type: String, required: true },
+  },
 
   computed: {
     converted () {

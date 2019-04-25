@@ -6,7 +6,10 @@
     <date-formatter
       :date="date"
       format="DD MMM YYYY HH:mm:ss"
-      class="timeline-item__date" />
+      class="timeline-item__date"
+    />
+
+    <!-- eslint-disable-next-line vue/no-v-html -->
     <p class="timeline-item__message" v-html="linkify(message)" />
   </div>
 </template>
@@ -19,7 +22,12 @@ export default {
     DateFormatter,
   },
 
-  props: ['title', 'message', 'date'],
+  props: {
+    title: { type: String, required: true },
+    message: { type: String, required: true },
+    date: { type: String, required: true },
+  },
+
   methods: {
     linkify (text) {
       /*eslint-disable*/

@@ -16,10 +16,8 @@ export default {
   components: {
     DetailsReader,
   },
-  props: ['operation', 'userId'],
+  props: {
+    operation: { type: Object, required: true },
+  },
 }
 </script>
-
-<style scoped>
-
-</style>

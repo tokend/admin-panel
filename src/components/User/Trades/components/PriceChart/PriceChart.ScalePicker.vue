@@ -40,7 +40,10 @@
 
 <script>
 export default {
-  props: ['value', 'isPending'],
+  props: {
+    value: { type: String, required: true },
+    isPending: { type: Boolean, default: false },
+  },
 
   data () {
     return {

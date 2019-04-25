@@ -6,12 +6,15 @@
           <span class="limit-uploaded-docs__list-cell app-list__cell">
             Description
           </span>
+          <!-- eslint-disable-next-line max-len -->
           <span class="limit-uploaded-docs__list-cell app-list__cell app-list__cell--center">
             File extension
           </span>
+          <!-- eslint-disable-next-line max-len -->
           <span class="limit-uploaded-docs__list-cell app-list__cell app-list__cell--center">
             Uploading date
           </span>
+          <!-- eslint-disable-next-line max-len -->
           <span class="limit-uploaded-docs__list-cell app-list__cell app-list__cell--center">
             <!-- view file btn -->
           </span>
@@ -63,7 +66,11 @@ import { DOCUMENTS_POLICIES } from '@/constants'
 
 export default {
   components: { DocLinkGetter },
-  props: ['list', 'uploadDate', 'userAccountId'],
+  props: {
+    list: { type: Array, required: true },
+    uploadDate: { type: String, required: true },
+  },
+
   data () {
     return {
       isLoading: false,

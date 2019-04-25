@@ -9,7 +9,10 @@
 
 <script>
 export default {
-  props: ['state', 'isColored'],
+  props: {
+    state: { type: String, required: true },
+    isColored: { type: Boolean, default: false },
+  },
 
   methods: {
     format (str) {

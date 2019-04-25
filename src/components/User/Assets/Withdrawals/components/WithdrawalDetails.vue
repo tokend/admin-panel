@@ -41,24 +41,37 @@
       </template>
       <li>
         <span>Source amount</span>
-        <asset-amount-formatter :amount="request.details.withdraw.amount" :asset="request.details.withdraw.destAssetCode" />
+        <asset-amount-formatter
+          :amount="request.details.withdraw.amount"
+          :asset="request.details.withdraw.destAssetCode"
+        />
       </li>
       <li>
         <span>Destination amount</span>
-        <asset-amount-formatter :amount="request.details.withdraw.destAssetAmount" :asset="request.details.withdraw.destAssetCode" />
+        <asset-amount-formatter
+          :amount="request.details.withdraw.destAssetAmount"
+          :asset="request.details.withdraw.destAssetCode"
+        />
       </li>
       <li>
         <span>Fixed fee</span>
-        <asset-amount-formatter :amount="request.details.withdraw.fixedFee" :asset="request.details.withdraw.destAssetCode" />
+        <asset-amount-formatter
+          :amount="request.details.withdraw.fixedFee"
+          :asset="request.details.withdraw.destAssetCode"
+        />
       </li>
       <li>
         <span>Percent fee</span>
-        <asset-amount-formatter :amount="request.details.withdraw.percentFee" :asset="request.details.withdraw.destAssetCode" />
+        <asset-amount-formatter
+          :amount="request.details.withdraw.percentFee"
+          :asset="request.details.withdraw.destAssetCode"
+        />
       </li>
       <li>
         <span>Total fee</span>
         <asset-amount-formatter
-          :amount="Number(request.details.withdraw.fixedFee) + Number(request.details.withdraw.percentFee)"
+          :amount="Number(request.details.withdraw.fixedFee) +
+            Number(request.details.withdraw.percentFee)"
           :asset="request.details.withdraw.destAssetCode"
         />
       </li>
@@ -128,7 +141,10 @@ export default {
     Modal,
     TextField,
   },
-  props: ['request', 'assets'],
+  props: {
+    request: { type: Object, required: true },
+    assets: { type: Array, required: true },
+  },
 
   data () {
     return {

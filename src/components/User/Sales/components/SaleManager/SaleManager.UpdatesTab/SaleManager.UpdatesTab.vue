@@ -44,7 +44,9 @@ export default {
     TimelineItem,
   },
 
-  props: ['sale'],
+  props: {
+    sale: { type: Object, required: true },
+  },
 
   data () {
     return {

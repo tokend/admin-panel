@@ -56,7 +56,9 @@ export default {
     MarkdownFormatter,
   },
 
-  props: ['saleRequest'],
+  props: {
+    saleRequest: { type: Object, required: true },
+  },
 
   data () {
     return {

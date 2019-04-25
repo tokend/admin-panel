@@ -5,8 +5,8 @@
         class="order-book__table"
         :list="book.bids"
         :pair="filters.pair"
-        is-rtl="true"
-        is-bids="true"
+        :is-rtl="true"
+        :is-bids="true"
       />
 
       <order-table
@@ -35,7 +35,9 @@ export default {
     HistoryTable,
   },
 
-  props: ['filters'],
+  props: {
+    filters: { type: Object, required: true },
+  },
 
   data () {
     return {

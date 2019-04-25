@@ -30,9 +30,12 @@
 import 'mdi-vue/FacebookBoxIcon'
 import 'mdi-vue/LinkedinBoxIcon'
 import 'mdi-vue/TwitterBoxIcon'
-export default {
 
-  props: ['links'],
+export default {
+  props: {
+    links: { type: String, required: true },
+  },
+
   data () {
     return {
       socials: [],

@@ -1,5 +1,9 @@
-
-export default function localize (value, digits = 6, deleteZeros = false, needConvert = false) {
+export default function localize (
+  value,
+  digits = 6,
+  deleteZeros = false,
+  needConvert = false
+) {
   if (value === '') return ''
   if (typeof value !== 'string' && typeof value !== 'number') {
     return ''

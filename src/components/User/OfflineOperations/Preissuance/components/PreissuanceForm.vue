@@ -161,6 +161,7 @@ export default {
     },
 
     readFile (file) {
+      // eslint-disable-next-line promise/avoid-new
       return new Promise(function (resolve) {
         const reader = new FileReader()
 
@@ -215,9 +216,8 @@ export default {
       try {
         const preIssuances = this.fileInfo.map(item => item.issuance.xdr)
         const operations = preIssuances.map(item => {
-          return Sdk.base.PreIssuanceRequestOpBuilder.createPreIssuanceRequestOp({
-            request: item,
-          })
+          return Sdk.base.PreIssuanceRequestOpBuilder
+            .createPreIssuanceRequestOp({ request: item })
         })
         await Sdk.horizon.transactions.submitOperations(...operations)
         this.fileInfo = []

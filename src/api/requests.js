@@ -76,7 +76,8 @@ export const requests = {
   },
 
   /**
-   * Approves limit request without changes, then submits ManageLimits op to all limit changes
+   * Approves limit request without changes, then submits
+   * ManageLimits op to all limit changes
    * @param {Object} params.request
    * @param {Object} params.oldLimits
    * @param {Array} params.newLimits
@@ -93,7 +94,8 @@ export const requests = {
     const operations = []
     operations.push(Sdk.base.ReviewRequestBuilder.reviewLimitsUpdateRequest({
       requestHash: params.request.hash,
-      requestType: params.request.details.request_type_i || params.request.details.requestTypeI,
+      requestType: params.request.details.request_type_i ||
+        params.request.details.requestTypeI,
       action: Sdk.xdr.ReviewRequestOpAction.approve().value,
       reason: '',
       requestID: params.request.id,
@@ -111,7 +113,8 @@ export const requests = {
           Sdk.base.ManageLimitsBuilder.createLimits(limits)
         )
       })
-    const response = await Sdk.horizon.transactions.submitOperations(...operations)
+    const response = await Sdk.horizon.transactions
+      .submitOperations(...operations)
     return response.data
   },
 
@@ -141,14 +144,20 @@ export const requests = {
     const action = isPermanent
       ? Sdk.xdr.ReviewRequestOpAction.permanentReject().value
       : Sdk.xdr.ReviewRequestOpAction.reject().value
-    return (await this._review({ action, reason }, ...requests)).data
+
+    const response = await this._review({ action, reason }, ...requests)
+    return response.data
   },
 
   async rejectWithdraw ({ reason, isPermanent = false }, ...requests) {
     const action = isPermanent
       ? Sdk.xdr.ReviewRequestOpAction.permanentReject().value
       : Sdk.xdr.ReviewRequestOpAction.reject().value
-    return (await this._reviewWithdraw({ action, reason }, ...requests)).data
+
+    const response = await this._reviewWithdraw(
+      { action, reason }, ...requests
+    )
+    return response.data
   },
 
   async get (id) {
@@ -160,12 +169,14 @@ export const requests = {
     const filters = {}
     if (state) filters.state = state
     if (asset) filters.asset = asset
-    return (await Sdk.horizon.request.getAllForIssuances({
+
+    const response = await Sdk.horizon.request.getAllForIssuances({
       order: 'desc',
       reviewer: config.MASTER_ACCOUNT,
       limit: 1000,
       ...filters,
-    }))
+    })
+    return response
   },
 
   async getWithdrawalRequests ({ asset, state, requestor }) {
@@ -173,22 +184,26 @@ export const requests = {
     if (asset) filters.dest_asset_code = asset
     if (state) filters.state = state
     if (requestor) filters.requestor = requestor
-    return (await Sdk.horizon.request.getAllForWithdrawals({
+
+    const response = await Sdk.horizon.request.getAllForWithdrawals({
       order: 'desc',
       limit: 1000,
       ...filters,
-    }))
+    })
+    return response
   },
 
   async getSaleRequests ({ state, requestor }) {
     const filters = {}
     if (state) filters.state = state
     if (requestor) filters.requestor = requestor
-    return (await Sdk.horizon.request.getAllForSales({
+
+    const response = await Sdk.horizon.request.getAllForSales({
       order: 'desc',
       limit: 1000,
       ...filters,
-    }))
+    })
+    return response
   },
 
   async getAssetRequests (filters) {
@@ -200,7 +215,9 @@ export const requests = {
       order: 'desc',
       limit: 1000,
     })
-    return (await Sdk.horizon.request.getAllForAssets(params))
+
+    const response = await Sdk.horizon.request.getAllForAssets(params)
+    return response
   },
 
   async getLimitsUpdateRequests ({ asset, state, requestor }) {
@@ -208,11 +225,13 @@ export const requests = {
     if (asset) filters.dest_asset_code = asset
     if (state) filters.state = state
     if (requestor) filters.requestor = requestor
-    return (await Sdk.horizon.request.getAllForLimitsUpdates({
+
+    const response = await Sdk.horizon.request.getAllForLimitsUpdates({
       order: 'desc',
       limit: 1000,
       ...filters,
-    }))
+    })
+    return response
   },
 
   async getPreissuanceRequests (asset) {

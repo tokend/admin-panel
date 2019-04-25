@@ -8,15 +8,13 @@
 
 <script>
 import SaleManager from './components/SaleManager'
-export default {
 
+export default {
   components: {
     SaleManager,
   },
-  props: ['id'],
+  props: {
+    id: { type: String, required: true },
+  },
 }
 </script>
-
-<style scoped>
-
-</style>

@@ -11,7 +11,8 @@
         - Valid National ID card;
       </p><p />
       <p>
-        - In all cases handwritten documents or those in a foreign script that cannot be read, i.e Arabic or Cyrillic
+        - In all cases handwritten documents or those in a foreign script
+        that cannot be read, i.e Arabic or Cyrillic
         will not be accepted unless translated and notarized.
       </p>
     </div>
@@ -140,7 +141,7 @@
 </template>
 
 <script>
-import { UserDocGetter, UserDocLinkGetter, ImgGetter } from '@comcom/getters'
+import { UserDocGetter, UserDocLinkGetter } from '@comcom/getters'
 import { fromKycTemplate } from '../../../../../utils/kyc-tempater'
 import deepCamelCase from 'camelcase-keys-deep'
 import config from '@/config'
@@ -158,10 +159,12 @@ export default {
   components: {
     UserDocGetter,
     UserDocLinkGetter,
-    ImgGetter,
   },
 
-  props: ['user', 'blobId'],
+  props: {
+    user: { type: Object, required: true },
+    blobId: { type: String, required: true },
+  },
 
   data () {
     return {
@@ -189,7 +192,9 @@ export default {
       try {
         const response = await Sdk.api.blobs.get(this.blobId, this.user.address)
         const kycFormResponse = response.data
-        this.kyc = deepCamelCase(fromKycTemplate(JSON.parse(kycFormResponse.value)))
+        this.kyc = deepCamelCase(
+          fromKycTemplate(JSON.parse(kycFormResponse.value))
+        )
         this.isLoaded = true
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)

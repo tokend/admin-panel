@@ -105,7 +105,10 @@
           :error-message="errors.first('max-assets')"
         />
 
-        <!-- the field is disabled due to omitted testing session of trailingDigitsCount -->
+        <!--
+          the field is disabled due to omitted testing
+          session of trailingDigitsCount
+        -->
         <input-field
           class="app__form-field app__form-field--halved"
           type="number"
@@ -217,6 +220,7 @@
         />
       </div>
 
+      <!-- eslint-disable max-len -->
       <div class="app__form-row">
         <tick-field
           class="app__form-field"
@@ -226,6 +230,7 @@
           :disabled="isPending"
         />
       </div>
+      <!-- eslint-enable max-len -->
 
       <div class="app__form-row">
         <tick-field
@@ -310,7 +315,9 @@ export default {
     ImageField,
   },
 
-  props: ['assetCode'],
+  props: {
+    assetCode: { type: String, required: true },
+  },
 
   data () {
     return {
@@ -414,7 +421,8 @@ export default {
             creatorDetails: {
               name: this.asset.creatorDetails.name,
               isFiat: this.asset.creatorDetails.isFiat,
-              external_system_type: this.asset.creatorDetails.externalSystemType,
+              external_system_type: this.asset
+                .creatorDetails.externalSystemType,
               is_coinpayments: this.asset.creatorDetails.isCoinpayments,
               logo,
               terms,
@@ -434,7 +442,8 @@ export default {
             creatorDetails: {
               name: this.asset.creatorDetails.name,
               isFiat: this.asset.creatorDetails.isFiat,
-              external_system_type: this.asset.creatorDetails.externalSystemType,
+              external_system_type: this.asset
+                .creatorDetails.externalSystemType,
               is_coinpayments: this.asset.creatorDetails.isCoinpayments,
               logo: {
                 key: this.asset.creatorDetails.logo.key,

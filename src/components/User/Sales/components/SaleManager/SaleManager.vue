@@ -63,7 +63,9 @@ export default {
     UpdatesTab,
   },
 
-  props: ['id'],
+  props: {
+    id: { type: String, required: true },
+  },
 
   data () {
     return {

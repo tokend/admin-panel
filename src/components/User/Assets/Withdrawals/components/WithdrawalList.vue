@@ -62,12 +62,20 @@
             v-for="item in list.data"
             :key="item.id"
             @click="requestToShow = item">
-            <span class="app-list__cell" :title="`${localize(item.details.withdraw.amount)} ${item.details.withdraw.destAssetCode}`">
+            <!-- eslint-disable max-len -->
+            <span
+              class="app-list__cell"
+              :title="`${localize(item.details.withdraw.amount)} ${item.details.withdraw.destAssetCode}`"
+            >
               {{ localize(item.details.withdraw.amount) }}&nbsp;{{ item.details.withdraw.destAssetCode }}
             </span>
-            <span class="app-list__cell" :title="`${localize(item.destAssetAmount)} ${item.destAssetCode}`">
+            <span
+              class="app-list__cell"
+              :title="`${localize(item.destAssetAmount)} ${item.destAssetCode}`"
+            >
               {{ localize(item.details.withdraw.destAssetAmount) }}&nbsp;{{ item.details.withdraw.destAssetCode }}
             </span>
+            <!-- eslint-enable max-len -->
             <span class="app-list__cell" :title="verbozify(item.requestState)">
               {{ verbozify(item.requestState) }}
             </span>
@@ -152,6 +160,12 @@ export default {
     }
   },
 
+  watch: {
+    'filters.state' () { this.getList() },
+    'filters.asset' () { this.getList() },
+    'filters.requestor': _.throttle(function () { this.getList() }, 1000),
+  },
+
   created () {
     this.getAssets()
     this.getList()
@@ -202,12 +216,6 @@ export default {
       this.getList()
       this.requestToShow = null
     },
-  },
-
-  watch: {
-    'filters.state' () { this.getList() },
-    'filters.asset' () { this.getList() },
-    'filters.requestor': _.throttle(function () { this.getList() }, 1000),
   },
 }
 </script>

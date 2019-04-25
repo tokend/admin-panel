@@ -1,5 +1,4 @@
-import { ApiCaller } from '@tokend/js-sdk'
-import { Wallet } from '@tokend/js-sdk'
+import { Wallet, ApiCaller } from '@tokend/js-sdk'
 
 let defaultHorizonUrl
 let defaultWallet
@@ -116,7 +115,8 @@ export class ApiCallerFactory {
       throw new Error('ApiCallerFactory.createCallerInstance(): neither opts.networkPassphrase nor ApiCallerFactory.defaultNetworkPassphrase provided')
     }
 
-    const networkPassphrase = opts.networkPassphrase || ApiCallerFactory.defaultNetworkPassphrase
+    const networkPassphrase = opts.networkPassphrase ||
+      ApiCallerFactory.defaultNetworkPassphrase
     callerInstance.usePassphrase(networkPassphrase)
 
     return callerInstance

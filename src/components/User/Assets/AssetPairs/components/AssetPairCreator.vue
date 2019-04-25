@@ -63,6 +63,7 @@
           :cb-value="ASSET_PAIR_POLICIES.tradeableSecondaryMarket"
         />
 
+        <!-- eslint-disable max-len -->
         <tick-field
           class="asset-pair-creator__checkbox"
           v-model="form.policies"
@@ -82,6 +83,7 @@
           title="If set, then price for new offers must be in interval of (1 +- maxPriceStep)*currentPrice"
           :cb-value="ASSET_PAIR_POLICIES.currentPriceRestriction"
         />
+        <!-- eslint-enable max-len -->
       </div>
 
       <div class="app__form-actions">

@@ -72,12 +72,14 @@
               {{ asset.reference }}
             </span>
 
+            <!-- eslint-disable max-len -->
             <span
               class="app-list__cell"
               :title="CREATE_ASSET_REQUEST_STATES[snakeToCamelCase(asset.state)].text"
             >
               {{ CREATE_ASSET_REQUEST_STATES[snakeToCamelCase(asset.state)].text }}
             </span>
+            <!-- eslint-enable max-len -->
 
             <span class="app-list__cell" :title="asset.requestor.id">
               {{ asset.requestor.id }}
@@ -156,13 +158,26 @@ export default {
     }
   },
 
+  watch: {
+    'filters.requestType' () { this.reloadCollectionLoader() },
+    'filters.state' () { this.reloadCollectionLoader() },
+    'filters.requestor': _.throttle(function () {
+      this.reloadCollectionLoader()
+    }, 1000),
+    'filters.asset': _.throttle(function () {
+      this.reloadCollectionLoader()
+    }, 1000),
+  },
+
   methods: {
     snakeToCamelCase,
     async getList () {
       this.isPending = true
       let response = {}
       try {
-        const requestor = await this.getRequestorAccountId(this.filters.requestor)
+        const requestor = await this.getRequestorAccountId(
+          this.filters.requestor
+        )
         response = await ApiCallerFactory
           .createCallerInstance()
           .getWithSignature(`/v3/${this.filters.requestType}`, {
@@ -203,16 +218,6 @@ export default {
     reloadCollectionLoader () {
       this.$refs.collectionLoaderBtn.loadFirstPage()
     },
-  },
-  watch: {
-    'filters.requestType' () { this.reloadCollectionLoader() },
-    'filters.state' () { this.reloadCollectionLoader() },
-    'filters.requestor': _.throttle(function () {
-      this.reloadCollectionLoader()
-    }, 1000),
-    'filters.asset': _.throttle(function () {
-      this.reloadCollectionLoader()
-    }, 1000),
   },
 }
 </script>

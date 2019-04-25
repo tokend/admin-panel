@@ -1,6 +1,9 @@
 <template>
   <div class="modal" @click="onClick">
-    <div class="modal__content" :style="{ maxWidth: maxWidth, minWidth: minWidth }">
+    <div
+      class="modal__content"
+      :style="{ maxWidth: maxWidth, minWidth: minWidth }"
+    >
       <slot />
     </div>
   </div>
@@ -8,7 +11,10 @@
 
 <script>
 export default {
-  props: ['maxWidth', 'minWidth'],
+  props: {
+    minWidth: { type: String, default: '' },
+    maxWidth: { type: String, default: '' },
+  },
 
   created () {
     document.addEventListener('keydown', this.onDocumentKeyDown, false)

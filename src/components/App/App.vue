@@ -207,7 +207,9 @@ export default {
             break
           }
           default: {
-            if (this.$store.state.auth.isLoggedIn && this.$store.getters.logoutTimer === null) {
+            const shouldIdleBeStarted = this.$store.state.auth.isLoggedIn &&
+              this.$store.getters.logoutTimer === null
+            if (shouldIdleBeStarted) {
               this.$store.dispatch('START_IDLE')
             }
           }

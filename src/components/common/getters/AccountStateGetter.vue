@@ -13,19 +13,25 @@
 import { Sdk } from '@/sdk'
 
 export default {
-  props: ['accountId'],
+  props: {
+    accountId: { type: String, required: true },
+  },
+
   data: _ => ({
     account: null,
   }),
+
   computed: {
     accountState () {
       if (!this.account) return null
       return this.account.isBlocked ? 'Blocked' : 'Active'
     },
   },
+
   async created () {
     await this.getAccount()
   },
+
   methods: {
     async getAccount () {
       const response = await Sdk.horizon.account.get(this.accountId)
@@ -34,6 +40,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss" scoped>
-</style>

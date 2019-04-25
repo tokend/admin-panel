@@ -14,8 +14,11 @@
 <script>
 import { ASSET_POLICIES } from '@/constants'
 export default {
+  props: {
+    policies: { type: Array, default: null },
+    policyMask: { type: [String, Number], default: null },
+  },
 
-  props: ['policies', 'policyMask'],
   data () {
     return {
       ASSET_POLICIES,

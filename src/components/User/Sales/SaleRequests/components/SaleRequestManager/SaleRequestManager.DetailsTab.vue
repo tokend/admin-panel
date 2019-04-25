@@ -228,7 +228,6 @@ import {
 import get from 'lodash/get'
 
 export default {
-
   components: {
     EmailGetter,
     ImgGetter,
@@ -238,7 +237,11 @@ export default {
     AssetPoliciesFormatter,
     RequestStateFormatter,
   },
-  props: ['request'],
+
+  props: {
+    request: { type: Object, required: true },
+  },
+
   computed: {
     saleDetails () {
       return this.request.sale.details[this.request.sale.details.requestType]

@@ -145,7 +145,10 @@ export default {
       try {
         await api.requests.reject(
           { reason: rejectReason, isPermanent },
-          { ...this.requestToReview.record, reviewDetails: { tasksToRemove: 0 } }
+          {
+            ...this.requestToReview.record,
+            reviewDetails: { tasksToRemove: 0 },
+          }
         )
         this.$store.dispatch('SET_INFO', `Request rejected successfully`)
         this.$emit(EVENTS.reviewed)

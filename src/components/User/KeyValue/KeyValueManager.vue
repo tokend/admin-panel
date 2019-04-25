@@ -71,7 +71,11 @@
                       app__btn--small
                       key-value-manager__btn"
           :disabled="isPending"
-          @click="setKeyValue(createForm.key, createForm.value, createForm.entryType)"
+          @click="setKeyValue(
+            createForm.key,
+            createForm.value,
+            createForm.entryType
+          )"
         >
           Add
         </button>
@@ -121,7 +125,8 @@ export default {
     async setKeyValue (key, value, entryType) {
       this.isPending = true
       try {
-        const operation = Sdk.base.ManageKeyValueBuilder.putKeyValue({ key, value, entryType })
+        const operation = Sdk.base.ManageKeyValueBuilder
+          .putKeyValue({ key, value, entryType })
         await Sdk.horizon.transactions.submitOperations(operation)
         await this.getList()
 

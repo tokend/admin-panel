@@ -120,6 +120,7 @@
                   <span class="limits-manager__limit-type">
                     {{ type.replace('Out', '') }}
                   </span>
+                  <!-- eslint-disable max-len -->
                   <input-field
                     :value="normalizeLimitAmount(limits.withdrawal[type])"
                     @input="limits.withdrawal[type] = $event || DEFAULT_MAX_AMOUNT"
@@ -128,6 +129,7 @@
                     placeholder="Unlimited"
                     min="0"
                   />
+                  <!-- eslint-enable max-len -->
                 </div>
               </template>
             </div>
@@ -190,12 +192,7 @@ import { Sdk } from '@/sdk'
 import get from 'lodash/get'
 import throttle from 'lodash/throttle'
 import pick from 'lodash/pick'
-import {
-  SelectField,
-  InputField,
-  SwitchField,
-  TickField,
-} from '@comcom/fields'
+import { SelectField, InputField } from '@comcom/fields'
 
 import {
   Tabs,
@@ -222,9 +219,7 @@ const TAB_NAMES = {
 export default {
   components: {
     SelectField,
-    SwitchField,
     InputField,
-    TickField,
     Tabs,
     Tab,
   },
@@ -255,6 +250,40 @@ export default {
     }),
     numericValueRegExp: /^\d*\.?\d*$/,
   }),
+  watch: {
+    assets: {
+      handler: function () {
+        this.setFilters()
+        this.getLimits()
+      },
+      immediate: true,
+    },
+    'filters.accountRole': {
+      handler: function (value) {
+        if (value) {
+          this.specificUserAddress = ''
+          this.filters.address = ''
+        }
+        this.setFilters()
+        this.getLimits()
+      },
+      immediate: true,
+    },
+    'filters.asset': {
+      handler: function () {
+        this.setFilters()
+        this.getLimits()
+      },
+      immediate: true,
+    },
+    'specificUserAddress': {
+      handler: throttle(async function (value) {
+        await this.setFilters()
+        await this.getLimits()
+      }, 1000),
+      immediate: true,
+    },
+  },
   async created () {
     await this.getAssets()
   },
@@ -268,7 +297,11 @@ export default {
     },
     async getLimits () {
       if (!this.filters.asset) return
-      const [paymentLimits, withdrawalLimits, depositLimits] = await Promise.all([
+      const [
+        paymentLimits,
+        withdrawalLimits,
+        depositLimits,
+      ] = await Promise.all([
         getLimit.apply(this, [STATS_OPERATION_TYPES.paymentOut]),
         getLimit.apply(this, [STATS_OPERATION_TYPES.withdraw]),
         getLimit.apply(this, [STATS_OPERATION_TYPES.deposit]),
@@ -307,7 +340,8 @@ export default {
       this.isPending = true
       try {
         if (limits.accountRole == null) {
-          // managelimitbuilder somehow doesnt accept opts.accountRole NULL value
+          // managelimitbuilder somehow doesnt accept
+          // opts.accountRole NULL value
           delete limits.accountRole
         }
         let accountID
@@ -351,11 +385,18 @@ export default {
         ErrorHandler.process('Weekly out limits should be more or equal to daily out')
         return false
       }
-      if (+limits.monthlyOut < +limits.dailyOut || +limits.monthlyOut < +limits.weeklyOut) {
+
+      const isMonthlyLimitsValid = +limits.monthlyOut < +limits.dailyOut ||
+        +limits.monthlyOut < +limits.weeklyOut
+      if (isMonthlyLimitsValid) {
         ErrorHandler.process('Monthly out limits should be more or equal to daily and/or weekly out')
         return false
       }
-      if (+limits.annualOut < +limits.dailyOut || +limits.annualOut < +limits.weeklyOut || +limits.annualOut < +limits.monthlyOut) {
+
+      const isAnnualLimitsValid = +limits.annualOut < +limits.dailyOut ||
+        +limits.annualOut < +limits.weeklyOut ||
+        +limits.annualOut < +limits.monthlyOut
+      if (isAnnualLimitsValid) {
         ErrorHandler.process('Annual out limits should be more or equal to daily, weekly and/or monthly out')
         return false
       }
@@ -391,40 +432,6 @@ export default {
     },
     normalizeLimitAmount (limit) {
       return limit >= DEFAULT_MAX_AMOUNT ? '' : limit
-    },
-  },
-  watch: {
-    assets: {
-      handler: function () {
-        this.setFilters()
-        this.getLimits()
-      },
-      immediate: true,
-    },
-    'filters.accountRole': {
-      handler: function (value) {
-        if (value) {
-          this.specificUserAddress = ''
-          this.filters.address = ''
-        }
-        this.setFilters()
-        this.getLimits()
-      },
-      immediate: true,
-    },
-    'filters.asset': {
-      handler: function () {
-        this.setFilters()
-        this.getLimits()
-      },
-      immediate: true,
-    },
-    'specificUserAddress': {
-      handler: throttle(async function (value) {
-        await this.setFilters()
-        await this.getLimits()
-      }, 1000),
-      immediate: true,
     },
   },
 }

@@ -34,10 +34,13 @@
               <mdi-chevron-down-icon v-else />
             </button>
           </p>
+
+          <!-- eslint-disable vue/no-v-html -->
           <p
             v-if="isShownExternal"
             v-html="externalDetails"
           />
+          <!-- eslint-enable vue/no-v-html -->
         </section>
 
         <section class="user-details__section">
@@ -56,15 +59,18 @@
               :blob-id="requestToReview.blobId"
             />
 
+            <!-- eslint-disable max-len -->
             <kyc-syndicate-section
               v-if="requestToReview.accountRoleToSet === ACCOUNT_ROLES.corporate"
               :user="user"
               :blob-id="requestToReview.blobId"
             />
           </section>
+          <!-- eslint-enable max-len -->
         </template>
 
         <template v-if="verifiedRequest.state">
+          <!-- eslint-disable max-len -->
           <section
             v-if="verifiedRequest.accountRoleToSet !== ACCOUNT_ROLES.notVerified && !isUserBlocked"
             class="user-details__section"
@@ -81,16 +87,19 @@
               :blob-id="verifiedRequest.blobId"
             />
           </section>
+          <!-- eslint-enable max-len -->
 
           <div
             v-if="requestToReview.state"
             class="user-details__latest-request"
           >
             <h3>Latest request</h3>
+            <!-- eslint-disable max-len -->
             <p class="text">
               Create a {{ requestToReview.accountRoleToSet | roleIdToString | lowerCase }} account:
               {{ requestToReview.state }}
             </p>
+            <!-- eslint-enable max-len -->
           </div>
         </template>
 
@@ -176,7 +185,9 @@ export default {
     BlockActions,
   },
 
-  props: ['id'],
+  props: {
+    id: { type: String, required: true },
+  },
 
   data () {
     return {

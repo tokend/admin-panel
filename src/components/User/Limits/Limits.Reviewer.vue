@@ -23,10 +23,12 @@
             label="Account role"
             :value="account.roleId | roleIdToString"
           />
+          <!-- eslint-disable max-len -->
           <detail
             label="Request type"
             :value="LIMITS_REQUEST_STATES_STR[get(request, 'details.requestType')]"
           />
+          <!-- eslint-enable max-len -->
           <detail label="Account email">
             <email-getter :account-id="account.id" />
           </detail>
@@ -78,6 +80,7 @@
             Uploaded documents
           </h3>
           <uploaded-docs-list
+            v-if="uploadedDocuments"
             :list="uploadedDocuments"
             :upload-date="request.updatedAt"
             :user-account-id="account.id"
@@ -214,9 +217,7 @@ import UserLimits from './components/Limits.UserLimits'
 import DatalistField from './components/Datalist'
 import UploadedDocsList from './components/Limits.UploadedDocsList'
 
-import { UserDocLinkGetter } from '@comcom/getters'
-import { DateFormatter } from '@comcom/formatters'
-import { InputField, TextField } from '@comcom/fields'
+import { TextField } from '@comcom/fields'
 import Modal from '@comcom/modals/Modal'
 import { Sdk } from '@/sdk'
 import { snakeToCamelCase } from '@/utils/un-camel-case'
@@ -258,16 +259,17 @@ export default {
     Detail,
     Modal,
     TextField,
-    InputField,
     DatalistField,
     UserDetails,
     UserLimits,
-    DateFormatter,
-    UserDocLinkGetter,
     UploadedDocsList,
     EmailGetter,
   },
-  props: ['id'],
+
+  props: {
+    id: { type: String, required: true },
+  },
+
   data: _ => ({
     request: null,
     account: null,
@@ -295,8 +297,12 @@ export default {
   computed: {
     currentLimits () {
       if (!this.limits) return null
-      const limits = this.limits.filter(limit => limit.assetCode === this.assetCode)
-      const operationTypeLimits = limits.find(limit => limit.statsOpType === this.desiredLimitDetails.statsOpType)
+      const limits = this.limits
+        .filter(limit => limit.assetCode === this.assetCode)
+      const operationTypeLimits = limits.find(limit => {
+        return limit.statsOpType === this.desiredLimitDetails.statsOpType
+      })
+
       return operationTypeLimits || {
         ...DEFAULT_LIMIT_STRUCT,
         accountId: this.request.requestor,
@@ -305,12 +311,14 @@ export default {
       }
     },
     newLimit () {
+      const opType = OPERATION_TYPES[this.desiredLimitDetails.operationType]
+
       return {
         ...DEFAULT_LIMIT_STRUCT,
         ...this.desiredLimitDetails.limits,
         accountId: this.request.requestor,
         assetCode: this.assetCode,
-        statsOpType: STATS_OPERATION_TYPES[OPERATION_TYPES[this.desiredLimitDetails.operationType]],
+        statsOpType: STATS_OPERATION_TYPES[opType],
       }
     },
     uploadedDocuments () {
@@ -322,9 +330,9 @@ export default {
     try {
       await this.getRequest()
       const limitRequest = await api.requests.get(this.id)
-      this.desiredLimitDetails = limitRequest.details[
-        snakeToCamelCase(limitRequest.details.requestType)
-      ].details || '{}'
+      const requestType = snakeToCamelCase(limitRequest.details.requestType)
+      this.desiredLimitDetails = limitRequest
+        .details[requestType].details || '{}'
     } catch (e) {
       ErrorHandler.processWithoutFeedback(e)
     }
@@ -335,7 +343,8 @@ export default {
     async getRequest () {
       this.$store.commit('OPEN_LOADER')
       const request = await api.requests.get(this.id)
-      const requestDetails = request.details[snakeToCamelCase(request.details.requestType)].details
+      const requestType = snakeToCamelCase(request.details.requestType)
+      const requestDetails = request.details[requestType].details
       const [account, limits] = await Promise.all([
         Sdk.horizon.account.get(request.requestor),
         Sdk.horizon.account.getLimits(request.requestor),
@@ -345,7 +354,8 @@ export default {
       this.request.asset = requestDetails.asset
       this.assetCode = requestDetails.asset
       this.account = account.data
-      this.limits = (get(limits, 'data.limits') || []).map(limit => limit.limit)
+      this.limits = (get(limits, 'data.limits') || [])
+        .map(limit => limit.limit)
       this.isLoaded = true
       this.$store.commit('CLOSE_LOADER')
     },
@@ -363,8 +373,12 @@ export default {
         }
         const oldLimits = this.limits
           .find(item => {
+            const requestOpType = this.request.details.updateLimits
+              .details.operationType
+            const limitsOpType = OPERATION_TYPES[requestOpType]
+
             return item.assetCode === this.request.asset &&
-              item.statsOpType === STATS_OPERATION_TYPES[OPERATION_TYPES[this.request.details.updateLimits.details.operationType]]
+              item.statsOpType === STATS_OPERATION_TYPES[limitsOpType]
           })
         await api.requests.approveLimitsUpdate({
           request: this.request,

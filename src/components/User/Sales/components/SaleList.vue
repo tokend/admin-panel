@@ -29,6 +29,7 @@
           :enable-time="false"
           v-model="filtersDate.startDate"
         />
+        <!-- eslint-disable max-len -->
         <input-date-field
           label="End date"
           class="sale-list__field sale-list__field-margin-left sale-list__field-margin-top"
@@ -40,6 +41,7 @@
           label="Open only"
           v-model="filters.openOnly"
         />
+        <!-- eslint-enable max-len -->
       </div>
     </div>
 
@@ -126,7 +128,6 @@
 
 <script>
 import api from '@/api'
-import { AssetAmountFormatter } from '@comcom/formatters'
 import { SALE_STATES } from '@/constants'
 import { InputField, TickField, InputDateField } from '@comcom/fields'
 import { EmailGetter } from '@comcom/getters'
@@ -138,7 +139,6 @@ import { CollectionLoader } from '@/components/common'
 
 export default {
   components: {
-    AssetAmountFormatter,
     InputField,
     TickField,
     EmailGetter,
@@ -165,6 +165,28 @@ export default {
         endDate: '',
       },
     }
+  },
+
+  watch: {
+    'filters.openOnly' () {
+      this.reloadCollectionLoader()
+    },
+    'owner': _.throttle(async function () {
+      this.filters.owner = await this.getOwner()
+      this.reloadCollectionLoader()
+    }, 1000),
+    'filters.name': _.throttle(function () {
+      this.reloadCollectionLoader()
+    }, 1000),
+    'filters.baseAsset': _.throttle(function () {
+      this.reloadCollectionLoader()
+    }, 1000),
+    'filtersDate.startDate' () {
+      this.filterByDate(this.rawList)
+    },
+    'filtersDate.endDate' () {
+      this.filterByDate(this.rawList)
+    },
   },
 
   methods: {
@@ -205,10 +227,16 @@ export default {
     filterByDate (filteredList) {
       let sortedList = filteredList
       if (this.filtersDate.startDate) {
-        sortedList = sortedList.filter(sale => +new Date(sale.startTime) >= +new Date(this.filtersDate.startDate))
+        sortedList = sortedList.filter(sale => {
+          return +new Date(sale.startTime) >=
+            +new Date(this.filtersDate.startDate)
+        })
       }
       if (this.filtersDate.endDate) {
-        sortedList = sortedList.filter(sale => +new Date(sale.endTime) <= +new Date(this.filtersDate.endDate))
+        sortedList = sortedList.filter(sale => {
+          return +new Date(sale.endTime) <=
+            +new Date(this.filtersDate.endDate)
+        })
       }
       this.list = sortedList
     },
@@ -224,28 +252,6 @@ export default {
 
     reloadCollectionLoader () {
       this.$refs.collectionLoaderBtn.loadFirstPage()
-    },
-  },
-
-  watch: {
-    'filters.openOnly' () {
-      this.reloadCollectionLoader()
-    },
-    'owner': _.throttle(async function () {
-      this.filters.owner = await this.getOwner()
-      this.reloadCollectionLoader()
-    }, 1000),
-    'filters.name': _.throttle(function () {
-      this.reloadCollectionLoader()
-    }, 1000),
-    'filters.baseAsset': _.throttle(function () {
-      this.reloadCollectionLoader()
-    }, 1000),
-    'filtersDate.startDate' () {
-      this.filterByDate(this.rawList)
-    },
-    'filtersDate.endDate' () {
-      this.filterByDate(this.rawList)
     },
   },
 }

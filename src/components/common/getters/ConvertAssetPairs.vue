@@ -9,14 +9,20 @@ import { formatFiatAmount } from '@/utils/formatters'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
-  props: ['amount', 'sourceAsset'],
+  props: {
+    amount: { type: String, required: true },
+    sourceAsset: { type: String, required: true },
+  },
+
   data: _ => ({
     destAsset: 'USD',
     convertedAmount: '',
   }),
+
   created: function () {
     this.convertAssetPairs()
   },
+
   methods: {
     async convertAssetPairs () {
       if (this.amount && this.sourceAsset) {
@@ -26,7 +32,9 @@ export default {
             'dest_asset': this.destAsset,
             'amount': this.amount,
           })
-          this.convertedAmount = formatFiatAmount(+convertedAmount.data.amount, this.destAsset)
+          this.convertedAmount = formatFiatAmount(
+            +convertedAmount.data.amount, this.destAsset
+          )
         } catch (error) {
           ErrorHandler.processWithoutFeedback(error)
         }
@@ -35,5 +43,3 @@ export default {
   },
 }
 </script>
-<style scoped lang="scss">
-</style>

@@ -17,7 +17,9 @@ export default {
   components: {
     AssetManager,
   },
-  props: ['asset'],
+  props: {
+    asset: { type: String, required: true },
+  },
 }
 </script>
 

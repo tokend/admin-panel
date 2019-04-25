@@ -8,15 +8,14 @@
 
 <script>
 import AdminManager from './components/AdminManager'
-export default {
 
+export default {
   components: {
     AdminManager,
   },
-  props: ['id'],
+
+  props: {
+    id: { type: String, required: true },
+  },
 }
 </script>
-
-<style scoped>
-
-</style>

@@ -5,7 +5,9 @@
 <script>
 import config from '@/config'
 export default {
-  props: ['fileKey'],
+  props: {
+    fileKey: { type: String, required: true },
+  },
 
   computed: {
     src () {

@@ -19,7 +19,9 @@ export default {
     ClosedParticipants,
   },
 
-  props: ['sale'],
+  props: {
+    sale: { type: Object, required: true },
+  },
 }
 </script>
 

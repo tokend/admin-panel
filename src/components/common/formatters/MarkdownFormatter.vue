@@ -9,15 +9,15 @@
 
 <script>
 import VueMarkdown from 'vue-markdown'
+
 export default {
   components: {
     VueMarkdown,
   },
 
-  props: [
-    // proxies
-    'source',
-  ],
+  props: {
+    source: { type: String, required: true },
+  },
 
   methods: {
     prerender (str) {

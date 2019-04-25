@@ -76,8 +76,10 @@ export default {
 
     getListCounter (response) {
       if (response) {
-        this.listCounter.pending = response._rawResponse.data._embedded.meta.count.pending
-        this.listCounter.approved = response._rawResponse.data._embedded.meta.count.approved
+        this.listCounter.pending = response._rawResponse.data
+          ._embedded.meta.count.pending
+        this.listCounter.approved = response._rawResponse.data
+          ._embedded.meta.count.approved
       }
     },
 

@@ -1,7 +1,10 @@
 <template>
   <div class="asset-pair-manager">
     <template v-if="isLoaded">
-      <form @submit.prevent="updatePrice" class="asset-pair-manager__form app__block">
+      <form
+        @submit.prevent="updatePrice"
+        class="asset-pair-manager__form app__block"
+      >
         <h2>Update {{ base }}/{{ quote }} pair price</h2>
 
         <div class="asset-pair-manager__form-row app__form-row">
@@ -27,7 +30,10 @@
     </template>
 
     <template v-if="isLoaded">
-      <form @submit.prevent="updatePolicy" class="asset-pair-manager__form app__block">
+      <form
+        @submit.prevent="updatePolicy"
+        class="asset-pair-manager__form app__block"
+      >
         <h2>Update {{ base }}/{{ quote }} pair policies</h2>
 
         <div class="asset-pair-manager__checkboxes">
@@ -40,6 +46,7 @@
             title="Allowed to trade this pair on secondary market"
             :cb-value="ASSET_PAIR_POLICIES.tradeableSecondaryMarket"
           />
+          <!-- eslint-disable max-len -->
           <tick-field
             class="asset-pair-manager__checkbox"
             v-model="form.policies"
@@ -58,6 +65,7 @@
             title="If set, then price for new offers must be in interval of (1 +- maxPriceStep)*currentPrice"
             :cb-value="ASSET_PAIR_POLICIES.currentPriceRestriction"
           />
+          <!-- eslint-enable max-len -->
         </div>
 
         <button
@@ -95,7 +103,11 @@ export default {
     InputField,
     TickField,
   },
-  props: ['base', 'quote'],
+
+  props: {
+    base: { type: String, required: true },
+    quote: { type: String, required: true },
+  },
 
   data () {
     return {
@@ -123,7 +135,9 @@ export default {
       try {
         const response = await Sdk.horizon.assetPairs.getAll()
         this.pair = response.data
-          .find(({ base, quote }) => base === this.base && quote === this.quote)
+          .find(({ base, quote }) => {
+            return base === this.base && quote === this.quote
+          })
         this.isLoaded = true
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
@@ -132,12 +146,14 @@ export default {
 
     async updatePrice () {
       this.pair.physicalPrice = this.form.price
-      this.pair.policies = this.form.policies.reduce((sum, policy) => sum | policy, 0)
+      this.pair.policies = this.form.policies
+        .reduce((sum, policy) => sum | policy, 0)
       this.submit({ updatePrice: true })
     },
 
     async updatePolicy () {
-      this.pair.policies = this.form.policies.reduce((sum, policy) => sum | policy, 0)
+      this.pair.policies = this.form.policies
+        .reduce((sum, policy) => sum | policy, 0)
       this.submit({ updatePolicy: true })
     },
 
