@@ -7,6 +7,9 @@ export class ChangeRoleRequest {
     this.id = record.id || '0'
 
     this.rejectReason = record.rejectReason
+    this.pendingTasks = record.pendingTasks
+    this.allTasks = record.allTasks
+
     this.resetReason = safeGet(
       record, 'requestDetails.creatorDetails.resetReason'
     )
