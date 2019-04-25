@@ -1,5 +1,5 @@
 <template>
-  <div class='price-chart'></div>
+  <div class="price-chart"></div>
 </template>
 
 <script>
@@ -266,7 +266,7 @@ export default {
     },
 
     update () {
-      const valueline = d3.line()
+      const line = d3.line()
         .x((d) => this.x(d.time))
         .y((d) => this.y(d.value))
         .curve(d3.curveStepAfter)
@@ -281,13 +281,13 @@ export default {
       this.yAxis
         .tickValues(this.genYTickValues(this.data))
 
-      // Call the X axis
+      // Update the X axis
       this.svg.selectAll(`.${CLASS_NAME}__x-axis`)
         .transition()
         .duration(this.animationDuration)
         .call(this.xAxis)
 
-      // Call the Y axis
+      // Update the Y axis
       this.svg.selectAll(`.${CLASS_NAME}__y-axis`)
         .transition()
         .duration(this.animationDuration)
@@ -296,7 +296,7 @@ export default {
       if (this.isFirstRender) {
         const path = this.svg.append('path')
           .attr('class', `${CLASS_NAME}__line`)
-          .attr('d', valueline(this.data))
+          .attr('d', line(this.data))
 
         const totalLength = path.node().getTotalLength()
 
@@ -325,7 +325,7 @@ export default {
 
         path.transition()
           .duration(this.animationDuration)
-          .attr('d', valueline)
+          .attr('d', line)
       }
 
       // Render Tip
@@ -409,8 +409,8 @@ export default {
 }
 </script>
 
-<style lang='scss'>
-@import '../../../../../assets/scss/colors';
+<style lang="scss">
+@import "../../../../../assets/scss/colors";
 
 $color-line: $color-active;
 $color-ticks: $color-text;
