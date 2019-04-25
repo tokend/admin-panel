@@ -16,8 +16,22 @@
             v-for="(item, id) in value"
             :key="`${_uid}-${id}-${key}`"
           >
-            <div class="details-reader__cell" colspan="2">
-              <details-reader class="details-reader__nested" :details="item" />
+            <div class="details-reader__cell">
+              <template v-if="isArray(item) || isObject(item)">
+                <div class="details-reader__row">
+                  <div class="details-reader__cell">
+                    <details-reader class="details-reader__nested" :details="item" />
+                  </div>
+                </div>
+              </template>
+
+              <template v-else>
+                <div class="details-reader__nested">
+                  <div class="details-reader__cell">
+                    <span>{{ item }}</span>
+                  </div>
+                </div>
+              </template>
             </div>
           </div>
         </template>
@@ -32,7 +46,7 @@
           </div>
 
           <div class="details-reader__row" :key="`${_uid}-${key}-nested`">
-            <div class="details-reader__cell" colspan="2">
+            <div class="details-reader__cell">
               <details-reader class="details-reader__nested" :details="value" />
             </div>
           </div>
@@ -137,7 +151,11 @@ export default {
   padding: 0.1rem 0;
   color: $color-text;
 
-  & > .details-reader {
+  & > .details-reader__value {
+    word-break: break-word;
+  }
+
+  & > .details-reader__nested {
     padding-left: 2rem;
     position: relative;
 
