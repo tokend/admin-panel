@@ -9,7 +9,7 @@
           v-if="requestToReview.state"
         >
         <ul class="key-value-list">
-          <li> 
+          <li>
             <h3>
               Current request state
             </h3>
@@ -34,9 +34,9 @@
 
           <p
             class="user-details__heading"
-            v-if="requestToReview.isRejected"
+            v-if="externalDetails"
           >
-            <span>External rejection details</span>
+            <span>External details</span>
             <button
               class="app__btn-secondary app__btn-secondary--iconed"
               @click="isShownExternal = !isShownExternal"
