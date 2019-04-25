@@ -111,7 +111,6 @@ export default {
     humanize (value) {
       // convert 'camelCaseValue' to 'camel case value'
       const spacedValue = value.replace(/([A-Z])/g, ' $1').toLowerCase()
-
       return verbozify(spacedValue)
     }
   },
