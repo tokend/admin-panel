@@ -19,21 +19,21 @@ export const AuthRoutes = {
       name: 'login',
       component: function (resolve) {
         require(['../../components/Auth/Login/Login.vue'], resolve)
-      }
+      },
     },
     {
       path: '/sign-up',
       name: 'signup',
       component: function (resolve) {
         require(['../../components/Auth/Signup/Signup.vue'], resolve)
-      }
+      },
     },
     ...(config.FEATURES.SEED_AUTH ? [{
       path: '/seed-login',
       name: 'seed-login',
       component: function (resolve) {
         require(['../../components/Auth/Login/SeedLogin.vue'], resolve)
-      }
-    }] : [])
-  ]
+      },
+    }] : []),
+  ],
 }

@@ -8,10 +8,16 @@
             label="Role"
             v-model="filters.role"
           >
-            <option :value="''"></option>
-            <option :value="ACCOUNT_ROLES.notVerified">Unverified</option>
-            <option :value="ACCOUNT_ROLES.general">General</option>
-            <option :value="ACCOUNT_ROLES.corporate">Сorporate</option>
+            <option :value="''" />
+            <option :value="ACCOUNT_ROLES.notVerified">
+              Unverified
+            </option>
+            <option :value="ACCOUNT_ROLES.general">
+              General
+            </option>
+            <option :value="ACCOUNT_ROLES.corporate">
+              Сorporate
+            </option>
           </select-field>
 
           <input-field
@@ -79,7 +85,7 @@
 
               <account-state-getter
                 class="app-list__cell app-list__cell--right"
-                :accountId="item.address"
+                :account-id="item.address"
               />
             </button>
           </template>
@@ -101,15 +107,14 @@
           </template>
         </div>
 
-      <div class="app__more-btn-wrp">
-        <collection-loader
-          :first-page-loader="getList"
-          @first-page-load="setList"
-          @next-page-load="extendList"
-          ref="collectionLoaderBtn"
-        />
-      </div>
-        
+        <div class="app__more-btn-wrp">
+          <collection-loader
+            :first-page-loader="getList"
+            @first-page-load="setList"
+            @next-page-load="extendList"
+            ref="collectionLoaderBtn"
+          />
+        </div>
       </div>
     </template>
 
@@ -119,7 +124,6 @@
       @back="toggleViewMode(null)"
       @reviewed="getList"
     />
-
   </div>
 </template>
 
@@ -139,7 +143,7 @@ import { CollectionLoader } from '@/components/common'
 
 const VIEW_MODES_VERBOSE = Object.freeze({
   index: 'index',
-  user: 'user'
+  user: 'user',
 })
 
 export default {
@@ -148,7 +152,7 @@ export default {
     InputField,
     UserView,
     AccountStateGetter,
-    CollectionLoader
+    CollectionLoader,
   },
 
   data () {
@@ -157,17 +161,17 @@ export default {
       filters: {
         email: '',
         address: '',
-        role: ''
+        role: '',
       },
       view: {
         mode: VIEW_MODES_VERBOSE.index,
         userId: null,
-        scrollPosition: 0
+        scrollPosition: 0,
       },
       list: [],
       isLoading: false,
 
-      ACCOUNT_ROLES: config.ACCOUNT_ROLES
+      ACCOUNT_ROLES: config.ACCOUNT_ROLES,
     }
   },
 
@@ -182,8 +186,8 @@ export default {
             filter: clearObject({
               email: this.filters.email,
               role: this.filters.role,
-              address: this.filters.address
-            })
+              address: this.filters.address,
+            }),
           })
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
@@ -218,7 +222,7 @@ export default {
 
     reloadCollectionLoader () {
       this.$refs.collectionLoaderBtn.loadFirstPage()
-    }
+    },
   },
 
   watch: {
@@ -233,8 +237,8 @@ export default {
     }, 1000),
     'filters.address': _.throttle(function () {
       this.reloadCollectionLoader()
-    }, 1000)
-  }
+    }, 1000),
+  },
 }
 </script>
 

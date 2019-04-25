@@ -5,7 +5,7 @@ export const REQUEST_STATES = Object.freeze({
   cancelled: 2,
   approved: 3,
   rejected: 4,
-  permanentlyRejected: 5
+  permanentlyRejected: 5,
 })
 
 export const REQUEST_STATES_STR = Object.freeze({
@@ -14,35 +14,35 @@ export const REQUEST_STATES_STR = Object.freeze({
   approved: 'approved',
   rejected: 'rejected',
   permanentlyRejected: 'permanentlyRejected',
-  waitingForAutoReview: 'waitingForAutoReview'
+  waitingForAutoReview: 'waitingForAutoReview',
 })
 
 export const KYC_REQUEST_STATES = Object.freeze(
   Object.entries({
     approved: {
       state: REQUEST_STATES.approved,
-      label: 'Approved'
+      label: 'Approved',
     },
     rejected: {
       state: REQUEST_STATES.rejected,
-      label: 'Rejected'
+      label: 'Rejected',
     },
     pending: {
       state: REQUEST_STATES.pending,
-      label: 'Waiting for review'
+      label: 'Waiting for review',
     },
     waitingForAutoReview: {
       state: REQUEST_STATES.pending,
-      label: 'Request sent to IDMind'
+      label: 'Request sent to IDMind',
     },
     processedAutoReview: {
       state: REQUEST_STATES.pending,
-      label: 'Request processed by IDMind'
-    }
+      label: 'Request processed by IDMind',
+    },
   })
-  .filter(([key]) => Object.values(config.FEATURES.KYC_REQUEST_STATES).includes(key))
-  .reduce((res, [key, value]) => {
-    res[key] = value
-    return res
-  }, {})
+    .filter(([key]) => Object.values(config.FEATURES.KYC_REQUEST_STATES).includes(key))
+    .reduce((res, [key, value]) => {
+      res[key] = value
+      return res
+    }, {})
 )

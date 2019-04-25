@@ -50,7 +50,9 @@
             </template>
 
             <template v-if="item.id === userAddress">
-              <span class="secondary">(you)</span>
+              <span class="secondary">
+                (you)
+              </span>
             </template>
           </span>
 
@@ -110,14 +112,6 @@ import { ApiCallerFactory } from '@/api-caller-factory'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
-  data () {
-    return {
-      list: [],
-      masterPubKey: Vue.params.MASTER_ACCOUNT,
-      signerRoles: [],
-      isLoading: false
-    }
-  },
 
   filters: {
     deriveRoleName (roleId, signerRoles = []) {
@@ -126,11 +120,19 @@ export default {
       }
       const role = signerRoles.find(item => item.id === roleId) || {}
       return (role.details || {}).name || `Unnamed (${roleId})`
+    },
+  },
+  data () {
+    return {
+      list: [],
+      masterPubKey: Vue.params.MASTER_ACCOUNT,
+      signerRoles: [],
+      isLoading: false,
     }
   },
 
   computed: {
-    ...mapGetters({ userAddress: getters.GET_USER_ADDRESS })
+    ...mapGetters({ userAddress: getters.GET_USER_ADDRESS }),
   },
 
   async created () {
@@ -159,8 +161,8 @@ export default {
         .getWithSignature(`/v3/accounts/${this.masterPubKey}/signers`)
       this.list = data
       this.isLoading = false
-    }
-  }
+    },
+  },
 }
 </script>
 

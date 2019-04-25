@@ -2,18 +2,26 @@
   <header class="auth-header">
     <div class="auth-header__container app__container">
       <div class="auth-header__header-group auth-header__header-group--vertical">
-        <span class="auth-header__admin-logo">TokenD</span>
-        <span class="auth-header__admin-badge">ADMIN PANEL</span>
+        <span class="auth-header__admin-logo">
+          TokenD
+        </span>
+        <span class="auth-header__admin-badge">
+          ADMIN PANEL
+        </span>
       </div>
 
       <div class="auth-header__header-group">
         <nav class="auth-header__nav">
           <li class="auth-header__nav-li">
-            <router-link :to="{name: 'signup' }">Sign Up</router-link>
+            <router-link :to="{name: 'signup' }">
+              Sign Up
+            </router-link>
           </li>
 
           <li class="auth-header__nav-li">
-            <router-link :to="{name: 'login' }">Sign In</router-link>
+            <router-link :to="{name: 'login' }">
+              Sign In
+            </router-link>
           </li>
         </nav>
       </div>
@@ -27,9 +35,9 @@ import 'mdi-vue/OpenInNewIcon'
 export default {
   data () {
     return {
-      config
+      config,
     }
-  }
+  },
 }
 </script>
 

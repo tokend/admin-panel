@@ -51,8 +51,8 @@ export default {
     return {
       form: {
         seed: '',
-        pending: false
-      }
+        pending: false,
+      },
     }
   },
 
@@ -74,8 +74,8 @@ export default {
       }
 
       this.form.pending = false
-    }
-  }
+    },
+  },
 }
 </script>
 

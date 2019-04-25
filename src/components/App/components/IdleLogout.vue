@@ -8,7 +8,7 @@
           The session is about to expire due to long inactivity.<br>
           Click <strong>Continue</strong> to extend the session.<br>
           <br>
-          Session expires in {{timeLeft || '...'}}<br>
+          Session expires in {{ timeLeft || '...' }}<br>
         </p>
 
         <div class="idle-logout__actions">
@@ -27,14 +27,20 @@
 <script>
 import moment from 'moment'
 export default {
-  name: 'IdleLogout',
+  name: 'idle-logout',
 
   data () {
     return {
       timeLeft: null,
       warnEndTimestamp: null,
-      countdownInterval: null
+      countdownInterval: null,
     }
+  },
+
+  computed: {
+    showIdleForm () {
+      return this.$store.getters.showIdleForm
+    },
   },
 
   created () {
@@ -50,12 +56,6 @@ export default {
         }
       }
     })
-  },
-
-  computed: {
-    showIdleForm () {
-      return this.$store.getters.showIdleForm
-    }
   },
 
   methods: {
@@ -85,8 +85,8 @@ export default {
       this.$store.dispatch('LOG_OUT')
       this.$router.push({ name: 'login' })
       location.reload()
-    }
-  }
+    },
+  },
 }
 </script>
 

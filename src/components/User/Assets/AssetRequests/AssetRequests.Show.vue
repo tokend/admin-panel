@@ -128,7 +128,7 @@
           <div class="asset-requests-show__policies-wrapper">
             <template v-for="policy in assetRequest.operationDetails.policies">
               <span
-                :key='policy.value'
+                :key="policy.value"
                 class="asset-requests-show__key asset-requests-show__key--informative"
               >
                 {{ ASSET_POLICIES_VERBOSE[policy.value] }}
@@ -167,7 +167,7 @@
           </span>
 
           <span class="asset-requests-show__value">
-            {{verbozify(assetRequest.state)}}
+            {{ verbozify(assetRequest.state) }}
           </span>
         </div>
       </template>
@@ -206,7 +206,7 @@
 
     <asset-request-reject-form
       @close="isRejecting = false"
-      :assetRequest="assetRequest"
+      :asset-request="assetRequest"
       v-else-if="isRejecting"
     />
   </div>
@@ -227,7 +227,7 @@ import get from 'lodash/get'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import {
   CREATE_ASSET_REQUEST_STATES,
-  ASSET_REQUEST_TYPES
+  ASSET_REQUEST_TYPES,
 } from '@/constants'
 // TODO: extract to AssetRequestForm
 
@@ -237,7 +237,7 @@ export default {
     TextField,
     ImgGetter,
     EmailGetter,
-    DateFormatter
+    DateFormatter,
   },
 
   props: ['id'],
@@ -251,8 +251,18 @@ export default {
       isInitFailed: false,
       ASSET_POLICIES_VERBOSE,
       ASSET_REQUEST_TYPES,
-      CREATE_ASSET_REQUEST_STATES
+      CREATE_ASSET_REQUEST_STATES,
     }
+  },
+
+  computed: {
+    isCancellable () {
+      const isPending =
+        this.assetRequest.state === CREATE_ASSET_REQUEST_STATES.pending.codeVerbose
+      const isCancellableRequestor =
+        this.assetRequest.requestor === this.$store.getters.masterId
+      return isPending && isCancellableRequestor
+    },
   },
 
   async created () {
@@ -267,16 +277,6 @@ export default {
     }
 
     this.isInitializing = false
-  },
-
-  computed: {
-    isCancellable () {
-      const isPending =
-        this.assetRequest.state === CREATE_ASSET_REQUEST_STATES.pending.codeVerbose
-      const isCancellableRequestor =
-        this.assetRequest.requestor === this.$store.getters.masterId
-      return isPending && isCancellableRequestor
-    }
   },
 
   methods: {
@@ -296,8 +296,8 @@ export default {
       this.isPending = false
     },
 
-    localizeAmount: localize
-  }
+    localizeAmount: localize,
+  },
 }
 </script>
 

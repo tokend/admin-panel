@@ -1,87 +1,97 @@
 <template>
   <div class="asset-pair-creator">
-
     <form @submit.prevent="submit" class="asset-pair-creator__form app__block">
-        <h2>Create asset pair</h2>
+      <h2>Create asset pair</h2>
 
-        <div class="asset-pair-creator__form-row app__form-row">
-          <input-field class="app__form-field"
-                       label="Base"
-                       v-model="form.base"
-                       :disabled="isPending"
-          />
+      <div class="asset-pair-creator__form-row app__form-row">
+        <input-field
+          class="app__form-field"
+          label="Base"
+          v-model="form.base"
+          :disabled="isPending"
+        />
 
-          <input-field class="app__form-field"
-                       label="Quote"
-                       v-model="form.quote"
-                       :disabled="isPending"
-          />
-        </div>
+        <input-field
+          class="app__form-field"
+          label="Quote"
+          v-model="form.quote"
+          :disabled="isPending"
+        />
+      </div>
 
+      <div class="asset-pair-creator__form-row app__form-row">
+        <input-field
+          class="app__form-field"
+          label="Price"
+          type="number"
+          min="0"
+          :step="DEFAULT_INPUT_STEP"
+          v-model="form.physicalPrice"
+          :disabled="isPending"
+        />
+      </div>
 
-        <div class="asset-pair-creator__form-row app__form-row">
-          <input-field class="app__form-field"
-                       label="Price"
-                       type="number" min="0" :step="DEFAULT_INPUT_STEP"
-                       v-model="form.physicalPrice"
-                       :disabled="isPending"
-          />
-        </div>
+      <div class="asset-pair-creator__form-row app__form-row">
+        <input-field
+          class="app__form-field"
+          label="Physical price correction"
+          type="number"
+          min="0"
+          :step="DEFAULT_INPUT_STEP"
+          v-model="form.physicalPriceCorrection"
+          :disabled="isPending"
+        />
+        <input-field
+          class="app__form-field"
+          label="Max price step"
+          type="number"
+          min="0"
+          :step="DEFAULT_INPUT_STEP"
+          v-model="form.maxPriceStep"
+          :disabled="isPending"
+        />
+      </div>
 
-        <div class="asset-pair-creator__form-row app__form-row">
-          <input-field class="app__form-field"
-                       label="Physical price correction"
-                       type="number" min="0" :step="DEFAULT_INPUT_STEP"
-                       v-model="form.physicalPriceCorrection"
-                       :disabled="isPending"
-          />
-          <input-field class="app__form-field"
-                       label="Max price step"
-                       type="number" min="0" :step="DEFAULT_INPUT_STEP"
-                       v-model="form.maxPriceStep"
-                       :disabled="isPending"
-          />
-        </div>
+      <div class="asset-pair-creator__checkboxes">
+        <tick-field
+          class="asset-pair-creator__checkbox"
+          v-model="form.policies"
+          :disabled="isPending"
+          :required="false"
+          label="Is tradable"
+          title="Allowed to trade this pair on secondary market"
+          :cb-value="ASSET_PAIR_POLICIES.tradeableSecondaryMarket"
+        />
 
-        <div class="asset-pair-creator__checkboxes">
+        <tick-field
+          class="asset-pair-creator__checkbox"
+          v-model="form.policies"
+          :disabled="isPending"
+          :required="false"
+          label="Physical price restriction"
+          title="If set, then prices for new offers must be greater then physical price with correction"
+          :cb-value="ASSET_PAIR_POLICIES.physicalPriceRestriction"
+        />
 
-          <tick-field class="asset-pair-creator__checkbox"
-                      v-model="form.policies"
-                      :disabled="isPending"
-                      :required="false"
-                      label="Is tradable"
-                      title="Allowed to trade this pair on secondary market"
-                      :cb-value="ASSET_PAIR_POLICIES.tradeableSecondaryMarket"
-          />
+        <tick-field
+          class="asset-pair-creator__checkbox"
+          v-model="form.policies"
+          :disabled="isPending"
+          :required="false"
+          label="Current price restriction"
+          title="If set, then price for new offers must be in interval of (1 +- maxPriceStep)*currentPrice"
+          :cb-value="ASSET_PAIR_POLICIES.currentPriceRestriction"
+        />
+      </div>
 
-          <tick-field class="asset-pair-creator__checkbox"
-                      v-model="form.policies"
-                      :disabled="isPending"
-                      :required="false"
-                      label="Physical price restriction"
-                      title="If set, then prices for new offers must be greater then physical price with correction"
-                      :cb-value="ASSET_PAIR_POLICIES.physicalPriceRestriction"
-          />
-
-          <tick-field class="asset-pair-creator__checkbox"
-                      v-model="form.policies"
-                      :disabled="isPending"
-                      :required="false"
-                      label="Current price restriction"
-                      title="If set, then price for new offers must be in interval of (1 +- maxPriceStep)*currentPrice"
-                      :cb-value="ASSET_PAIR_POLICIES.currentPriceRestriction"
-          />
-
-        </div>
-
-        <div class="app__form-actions">
-          <button class="asset-pair-creator__submit-btn app__btn"
-                  :disabled="isPending">
-            Create
-          </button>
-        </div>
-      </form>
-
+      <div class="app__form-actions">
+        <button
+          class="asset-pair-creator__submit-btn app__btn"
+          :disabled="isPending">
+          Create
+        </button>
+      </div>
+    </form>
   </div>
 </template>
 
@@ -100,11 +110,11 @@ export default {
       policies: [],
       maxPriceStep: '',
       physicalPrice: '',
-      physicalPriceCorrection: ''
+      physicalPriceCorrection: '',
     },
     isPending: false,
     ASSET_PAIR_POLICIES,
-    DEFAULT_INPUT_STEP
+    DEFAULT_INPUT_STEP,
   }),
   methods: {
     async submit () {
@@ -113,7 +123,7 @@ export default {
       try {
         await api.assets.createPair({
           ...this.form,
-          policies: this.form.policies.reduce((sum, policy) => sum | policy, 0)
+          policies: this.form.policies.reduce((sum, policy) => sum | policy, 0),
         })
         this.$store.dispatch('SET_INFO', 'Pair has been created.')
         this.$router.push({ name: 'assets.assetPairs.index' })
@@ -121,8 +131,8 @@ export default {
         ErrorHandler.process(error)
       }
       this.isPending = false
-    }
-  }
+    },
+  },
 }
 </script>
 

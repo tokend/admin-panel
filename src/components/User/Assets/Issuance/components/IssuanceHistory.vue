@@ -37,7 +37,6 @@
             <span class="app-list__cell app-list__cell--right">
               Date
             </span>
-
           </div>
           <li
             v-for="item in list"
@@ -55,7 +54,7 @@
               class="app-list__cell app-list__cell--right app-list__cell--important"
               :title="`${localize(item.details.createIssuance.amount)} ${item.details.createIssuance.asset}`"
             >
-              {{ localize(item.details.createIssuance.amount) }} {{item.details.createIssuance.asset }}
+              {{ localize(item.details.createIssuance.amount) }} {{ item.details.createIssuance.asset }}
             </span>
 
             <span
@@ -85,7 +84,7 @@
       <template v-else>
         <div class="app-list">
           <div class="app-list__li-like app-list__li--no-shadow">
-            <p>{{isLoaded ? 'Nothing here yet' : 'Loading...'}}</p>
+            <p>{{ isLoaded ? 'Nothing here yet' : 'Loading...' }}</p>
           </div>
         </div>
       </template>
@@ -108,14 +107,14 @@ import { EmailGetter } from '@comcom/getters'
 import Bus from '@/utils/EventBus'
 
 export default {
-  mixins: [IssuanceMixin],
   components: { EmailGetter },
+  mixins: [IssuanceMixin],
 
   async created () {
     Bus.$on('issuance:updateRequestList', _ => {
       this.reloadCollectionLoader()
     })
-  }
+  },
 }
 </script>
 

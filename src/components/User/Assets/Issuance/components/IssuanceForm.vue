@@ -3,7 +3,8 @@
     <template v-if="assets && assets.length">
       <form @submit.prevent="submit">
         <div class="app__form-row">
-          <input-field class="app__form-field"
+          <input-field
+            class="app__form-field"
             type="text"
             placeholder="email@example.com or GAAQ..."
             v-model="form.receiver"
@@ -14,7 +15,8 @@
         </div>
 
         <div class="app__form-row">
-          <input-field class="app__form-field"
+          <input-field
+            class="app__form-field"
             v-model="form.reference"
             label="Reference"
             :disabled="isSubmitting"
@@ -22,7 +24,8 @@
         </div>
 
         <div class="app__form-row">
-          <input-field class="app__form-field"
+          <input-field
+            class="app__form-field"
             type="number"
             :step="DEFAULT_INPUT_STEP"
             :min="DEFAULT_INPUT_MIN"
@@ -33,12 +36,16 @@
           />
 
           <div class="issuance-form__asset-field app__form-field">
-            <select-field class="issuance-form__asset-select"
+            <select-field
+              class="issuance-form__asset-select"
               v-model="form.asset"
               label="Asset"
               :disabled="isSubmitting">
-              <option v-for="item in assets" :value="item.code" :key="item.code">
-                {{item.code}}
+              <option
+                v-for="item in assets"
+                :value="item.code"
+                :key="item.code">
+                {{ item.code }}
               </option>
             </select-field>
           </div>
@@ -47,7 +54,7 @@
         <div class="issuance-form__asset-info app__form-row" v-if="form.asset">
           <p v-if="isIssuanceAllowed" class="text">
             <span>Available:</span>
-            <asset-amount-formatter :amount="availableForIssuance" :asset="form.asset"/>
+            <asset-amount-formatter :amount="availableForIssuance" :asset="form.asset" />
           </p>
 
           <p v-else class="text">
@@ -86,12 +93,7 @@ export default {
   components: {
     InputField,
     SelectField,
-    AssetAmountFormatter
-  },
-
-  created () {
-    Bus.$on('issuance:updateAssets', _ => this.getAssets())
-    this.getAssets()
+    AssetAmountFormatter,
   },
 
   data () {
@@ -102,10 +104,10 @@ export default {
         amount: '',
         receiver: '',
         reference: '',
-        asset: ''
+        asset: '',
       },
       assets: [],
-      isSubmitting: false
+      isSubmitting: false,
     }
   },
 
@@ -117,7 +119,12 @@ export default {
 
     isIssuanceAllowed () {
       return this.availableForIssuance > 0
-    }
+    },
+  },
+
+  created () {
+    Bus.$on('issuance:updateAssets', _ => this.getAssets())
+    this.getAssets()
   },
   methods: {
     async getAssets () {
@@ -152,7 +159,7 @@ export default {
           const operation = Sdk.base.Operation.manageBalance({
             asset: this.form.asset,
             action: Sdk.xdr.ManageBalanceAction.createUnique(),
-            destination: address
+            destination: address,
           })
           await Sdk.horizon.transactions.submitOperations(operation)
         } catch (error) {
@@ -177,7 +184,7 @@ export default {
         reference: this.form.reference,
         source: config.MASTER_ACCOUNT,
         creatorDetails: {},
-        allTasks: 0
+        allTasks: 0,
       })
       await Sdk.horizon.transactions.submitOperations(operation)
       this.form.amount = null
@@ -205,11 +212,10 @@ export default {
         .finally(() => {
           this.isSubmitting = false
         })
-    }
-  }
+    },
+  },
 }
 </script>
-
 
 <style scoped>
 .issuance-form__asset-field.app__form-field {

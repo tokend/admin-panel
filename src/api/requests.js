@@ -24,16 +24,16 @@ export const requests = {
           tasksToRemove: _get(item, 'reviewDetails.tasksToRemove',
             item.pendingTasks
           ),
-          externalDetails: '{}'
+          externalDetails: '{}',
         },
         action,
-        reason
+        reason,
       }
       return Sdk.base.ReviewRequestBuilder.reviewRequest({
         ...opts,
 
         // TODO: remove. added due to a bug in the @tokend/js-sdk
-        requestDetails: opts
+        requestDetails: opts,
       })
     })
     return Sdk.horizon.transactions.submitOperations(...operations)
@@ -48,16 +48,16 @@ export const requests = {
         reviewDetails: {
           tasksToAdd: 0,
           tasksToRemove: item.pendingTasks || item.pending_tasks,
-          externalDetails: '{}'
+          externalDetails: '{}',
         },
         action,
-        reason
+        reason,
       }
       return Sdk.base.ReviewRequestBuilder.reviewWithdrawRequest({
         ...opts,
 
         // TODO: remove. added due to a bug in the @tokend/js-sdk
-        requestDetails: opts
+        requestDetails: opts,
       })
     })
     return Sdk.horizon.transactions.submitOperations(...operations)
@@ -88,7 +88,7 @@ export const requests = {
         ...limits,
         id: '' + limits.id,
         accountID: params.accountId,
-        accountRole: undefined
+        accountRole: undefined,
       }))
     const operations = []
     operations.push(Sdk.base.ReviewRequestBuilder.reviewLimitsUpdateRequest({
@@ -102,8 +102,8 @@ export const requests = {
         tasksToAdd: 0,
         tasksToRemove: params.request.pendingTasks ||
           params.request.pending_tasks,
-        externalDetails: '{}'
-      }
+        externalDetails: '{}',
+      },
     }))
     newLimits
       .forEach(limits => {
@@ -121,7 +121,7 @@ export const requests = {
         ...limits,
         id: '' + limits.id,
         accountID: params.accountId,
-        accountType: undefined
+        accountType: undefined,
       }))
     const operation = Sdk.base.ReviewRequestBuilder.reviewLimitsUpdateRequest({
       requestHash: params.request.hash,
@@ -131,7 +131,7 @@ export const requests = {
         : Sdk.xdr.ReviewRequestOpAction.reject().value,
       reason: params.reason,
       requestID: params.request.id,
-      newLimits: newLimits[0]
+      newLimits: newLimits[0],
     })
     const response = await Sdk.horizon.transactions.submitOperations(operation)
     return response.data
@@ -164,7 +164,7 @@ export const requests = {
       order: 'desc',
       reviewer: config.MASTER_ACCOUNT,
       limit: 1000,
-      ...filters
+      ...filters,
     }))
   },
 
@@ -176,7 +176,7 @@ export const requests = {
     return (await Sdk.horizon.request.getAllForWithdrawals({
       order: 'desc',
       limit: 1000,
-      ...filters
+      ...filters,
     }))
   },
 
@@ -187,7 +187,7 @@ export const requests = {
     return (await Sdk.horizon.request.getAllForSales({
       order: 'desc',
       limit: 1000,
-      ...filters
+      ...filters,
     }))
   },
 
@@ -198,7 +198,7 @@ export const requests = {
       state: filters.state,
       reviewer: filters.reviewer,
       order: 'desc',
-      limit: 1000
+      limit: 1000,
     })
     return (await Sdk.horizon.request.getAllForAssets(params))
   },
@@ -211,7 +211,7 @@ export const requests = {
     return (await Sdk.horizon.request.getAllForLimitsUpdates({
       order: 'desc',
       limit: 1000,
-      ...filters
+      ...filters,
     }))
   },
 
@@ -223,13 +223,13 @@ export const requests = {
       asset: asset,
       order: 'desc',
       limit: 1000,
-      reviewer: config.MASTER_ACCOUNT
+      reviewer: config.MASTER_ACCOUNT,
     })
     response.records = mapRequests(response.data)
     return response
   },
 
-  mapRequests
+  mapRequests,
 }
 
 function mapRequests (records) {

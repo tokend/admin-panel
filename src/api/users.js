@@ -10,7 +10,7 @@ export default {
         .createCallerInstance()
         .get('/identities', {
           filter: { email },
-          page: { limit: 1 }
+          page: { limit: 1 },
         })
       return ((data || [])[0] || {}).address
     } catch (error) {
@@ -20,5 +20,5 @@ export default {
         throw error
       }
     }
-  }
+  },
 }

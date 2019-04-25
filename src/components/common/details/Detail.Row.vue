@@ -1,6 +1,8 @@
 <template>
   <p class="detail-row">
-    <span class="detail-row__key">{{ label }}</span>
+    <span class="detail-row__key">
+      {{ label }}
+    </span>
     <span class="detail-row__value">
       <template>
         <slot v-if="$slots.default" />
@@ -15,9 +17,9 @@
 </template>
 
 <script>
-  export default {
-    props: ['label', 'value']
-  }
+export default {
+  props: ['label', 'value'],
+}
 </script>
 
 <style lang="scss" scoped>
@@ -44,7 +46,7 @@
 
   .detail-row__value-text {
     display: block;
-    // max-width: 30rem; 
+    // max-width: 30rem;
     overflow: hidden;
     text-overflow: ellipsis;
   }

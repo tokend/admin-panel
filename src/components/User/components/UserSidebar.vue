@@ -1,75 +1,79 @@
 <template>
   <aside class="user-sidebar">
-    <span class="user-sidebar__admin-logo">TokenD</span>
-    <span class="user-sidebar__admin-badge">ADMIN PANEL</span>
+    <span class="user-sidebar__admin-logo">
+      TokenD
+    </span>
+    <span class="user-sidebar__admin-badge">
+      ADMIN PANEL
+    </span>
 
     <nav class="user-sidebar__nav user-sidebar__nav--full-height">
       <li class="user-sidebar__nav-li">
         <router-link :to="{ name: 'users' }">
-          <mdi-account-icon/>
+          <mdi-account-icon />
           <span>Users</span>
         </router-link>
       </li>
 
       <li class="user-sidebar__nav-li">
         <router-link :to="{ name: 'admins' }">
-          <mdi-account-star-icon/>
+          <mdi-account-star-icon />
           <span>Admins</span>
         </router-link>
       </li>
 
       <li class="user-sidebar__nav-li">
         <router-link :to="{ name: 'assets' }">
-          <mdi-coin-icon/>
+          <mdi-coin-icon />
           <span>Assets</span>
         </router-link>
       </li>
 
       <li class="user-sidebar__nav-li">
         <router-link :to="{ name: 'sales' }">
-          <mdi-coins-icon/>
+          <mdi-coins-icon />
           <span>Sales</span>
         </router-link>
       </li>
 
       <li class="user-sidebar__nav-li">
         <router-link :to="{ name: 'offlineOperations' }">
-          <mdi-sync-off-icon/>
+          <mdi-sync-off-icon />
           <span>Offline operations</span>
         </router-link>
       </li>
 
       <li class="user-sidebar__nav-li">
         <router-link :to="{ name: 'kycRequests' }">
-          <mdi-account-plus-icon/>
+          <mdi-account-plus-icon />
           <span>KYC Requests</span>
         </router-link>
       </li>
 
       <li class="user-sidebar__nav-li">
         <router-link :to="{ name: 'limits' }">
-          <mdi-chart-bar-icon/>
+          <mdi-chart-bar-icon />
           <span>Limits</span>
         </router-link>
       </li>
 
       <li class="user-sidebar__nav-li">
         <router-link :to="{ name: 'trades' }">
-          <mdi-chart-line-variant-icon/>
+          <mdi-chart-line-variant-icon />
           <span>Trades</span>
         </router-link>
       </li>
 
       <li class="user-sidebar__nav-li">
         <router-link :to="{ name: 'fees' }">
-          <mdi-percent-icon/>
+          <mdi-percent-icon />
           <span>Fees</span>
         </router-link>
       </li>
 
       <li class="user-sidebar__nav-li">
         <router-link :to="{ name: 'keyValue' }">
-          <mdi-table-icon/>
+          <mdi-table-icon />
           <span>Key Value</span>
         </router-link>
       </li>
@@ -78,7 +82,7 @@
     <nav class="user-sidebar__nav">
       <li class="user-sidebar__nav-li">
         <router-link :to="{ name: 'settings' }">
-          <mdi-settings-icon/>
+          <mdi-settings-icon />
           <span>Settings</span>
         </router-link>
       </li>
@@ -105,9 +109,9 @@ import config from '@/config'
 export default {
   data () {
     return {
-      config
+      config,
     }
-  }
+  },
 }
 </script>
 

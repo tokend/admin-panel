@@ -1,14 +1,16 @@
 <template>
   <div class="order-book">
     <div class="order-book__orders-wrp">
-      <order-table class="order-book__table"
+      <order-table
+        class="order-book__table"
         :list="book.bids"
         :pair="filters.pair"
         is-rtl="true"
         is-bids="true"
       />
 
-      <order-table class="order-book__table"
+      <order-table
+        class="order-book__table"
         :list="book.asks"
         :pair="filters.pair"
       />
@@ -30,29 +32,29 @@ import { ErrorHandler } from '@/utils/ErrorHandler'
 export default {
   components: {
     OrderTable,
-    HistoryTable
+    HistoryTable,
   },
+
+  props: ['filters'],
 
   data () {
     return {
       book: {
         bids: [],
         asks: [],
-        history: []
+        history: [],
       },
       isLoaded: false,
-      isFailed: false
+      isFailed: false,
     }
   },
 
-  props: ['filters'],
+  watch: {
+    'filters.pair' () { this.getBook() },
+  },
 
   created () {
     this.getBook()
-  },
-
-  watch: {
-    'filters.pair' () { this.getBook() }
   },
 
   methods: {
@@ -62,17 +64,17 @@ export default {
       const params = {
         order_book_id: 0,
         base_asset: pair.base,
-        quote_asset: pair.quote
+        quote_asset: pair.quote,
       }
       try {
         const response = await Sdk.horizon.orderBook.getAll({
           ...params,
-          is_buy: true
+          is_buy: true,
         })
         this.book.bids = response.data
         const orderBookResponse = await Sdk.horizon.orderBook.getAll({
           ...params,
-          is_buy: false
+          is_buy: false,
         })
         this.book.asks = orderBookResponse.data
         const tradesResponse = await Sdk.horizon.trades.getPage(params)
@@ -82,8 +84,8 @@ export default {
         ErrorHandler.processWithoutFeedback(error)
         this.isFailed = true
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

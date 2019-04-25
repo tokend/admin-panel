@@ -3,15 +3,26 @@
     <div class="msg">
       The browser you're using doesn't support all the needed features. Please consider installing one of the following browsers.
       <div class="browser-icons">
-        <span class="download">Download: </span>
+        <span class="download">
+          Download:
+        </span>
         <a href="https://www.google.com/chrome/browser/desktop/index.html" target="_blank">
-          <img src="../../../assets/ico/chrome-32png.png" alt="" class="browser-icon">
+          <img
+            src="../../../assets/ico/chrome-32png.png"
+            alt=""
+            class="browser-icon">
         </a>
         <a href="http://www.opera.com/download" target="_blank">
-          <img src="../../../assets/ico/opera32.png" alt="" class="browser-icon">
+          <img
+            src="../../../assets/ico/opera32.png"
+            alt=""
+            class="browser-icon">
         </a>
         <a href="https://www.mozilla.org/en-US/firefox/new/" target="_blank">
-          <img src="../../../assets/ico/firefox32.png" alt="" class="browser-icon">
+          <img
+            src="../../../assets/ico/firefox32.png"
+            alt=""
+            class="browser-icon">
         </a>
       </div>
     </div>
@@ -34,17 +45,17 @@ export default {
     }
   },
 
-  created () {
-    // created
-  },
-
   computed: {
     // computed
   },
 
+  created () {
+    // created
+  },
+
   methods: {
     // methods
-  }
+  },
 }
 </script>
 

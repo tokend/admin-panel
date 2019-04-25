@@ -18,7 +18,7 @@ export class StubbornApiCaller {
   async stubbornGet (endpoint, query, signNeeded = false) {
     const list = await this._apiCaller.get(
       endpoint,
-      { ...query, page: { limit: this._pageLimit }},
+      { ...query, page: { limit: this._pageLimit } },
       signNeeded
     )
 
@@ -57,7 +57,7 @@ export class ApiCallerFactory {
    * @param {Wallet} wallet
    */
   static setDefaultWallet (wallet) {
-    if (!wallet instanceof Wallet) {
+    if (!(wallet instanceof Wallet)) {
       throw new Error('ApiCallerFactory.setDefaultWallet(): wallet should be instance of Wallet')
     }
     defaultWallet = wallet
@@ -138,4 +138,3 @@ export class ApiCallerFactory {
     return callerInstance
   }
 }
-

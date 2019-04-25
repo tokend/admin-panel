@@ -3,18 +3,24 @@
     <h2>Pending deals</h2>
 
     <div class="pending-participants__filters">
-      <select-field class="pending-participants__filter"
+      <select-field
+        class="pending-participants__filter"
         v-model="filters.quoteAsset"
         label="Quote asset">
         <template v-if="get(sale, 'quoteAssets.quoteAssets', []).length">
-          <option :value="item.asset"
+          <option
+            :value="item.asset"
             v-for="(item, index) in sale.quoteAssets.quoteAssets"
             :key="index"
-          >{{item.asset}}</option>
+          >
+            {{ item.asset }}
+          </option>
         </template>
 
         <template v-else>
-          <option disabled>No options</option>
+          <option disabled>
+            No options
+          </option>
         </template>
       </select-field>
     </div>
@@ -25,16 +31,16 @@
           <tr>
             <th>Investor</th>
             <th>Invested at</th>
-            <th>{{filters.quoteAsset}} invested</th>
-            <th>{{sale.baseAsset}} acquired</th>
+            <th>{{ filters.quoteAsset }} invested</th>
+            <th>{{ sale.baseAsset }} acquired</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(participant, index) in participants" :key="index">
             <td><email-getter :account-id="participant.ownerId" /></td>
             <td><date-formatter :date="participant.createdAt" format="DD MMM YYYY HH:mm:ss" /></td>
-            <td>{{participant.quoteAmount}}</td>
-            <td>{{participant.baseAmount}}</td>
+            <td>{{ participant.quoteAmount }}</td>
+            <td>{{ participant.baseAmount }}</td>
           </tr>
         </tbody>
       </table>
@@ -68,31 +74,31 @@ import { SelectField } from '@comcom/fields'
 import get from 'lodash/get'
 
 export default {
-  data () {
-    return {
-      participants: [],
-      filters: {
-        quoteAsset: get(this, 'sale.quoteAssets.quoteAssets[0].asset', '')
-      },
-      isLoaded: false,
-      isFailed: false
-    }
-  },
 
   components: {
     DateFormatter,
     EmailGetter,
-    SelectField
+    SelectField,
   },
 
   props: ['sale'],
-
-  created () {
-    this.getParticipants()
+  data () {
+    return {
+      participants: [],
+      filters: {
+        quoteAsset: get(this, 'sale.quoteAssets.quoteAssets[0].asset', ''),
+      },
+      isLoaded: false,
+      isFailed: false,
+    }
   },
 
   watch: {
-    'filters.quoteAsset' () { this.getParticipants() }
+    'filters.quoteAsset' () { this.getParticipants() },
+  },
+
+  created () {
+    this.getParticipants()
   },
 
   methods: {
@@ -110,15 +116,15 @@ export default {
           order_book_id: id,
           base_asset: baseAsset,
           quote_asset: quoteAsset,
-          is_buy: true
+          is_buy: true,
         })
         this.participants = response.data
         this.isLoaded = true
       } catch (error) {
         this.isFailed = true
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

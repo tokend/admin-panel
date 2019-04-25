@@ -1,6 +1,6 @@
 <template>
   <span class="date-formatter">
-    {{formatDate(date, format)}}
+    {{ formatDate(date, format) }}
   </span>
 </template>
 
@@ -10,8 +10,8 @@ export default {
   props: ['date', 'format'],
 
   methods: {
-    formatDate
-  }
+    formatDate,
+  },
 }
 </script>
 

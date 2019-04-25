@@ -1,28 +1,45 @@
 <template>
   <div class="g-auth">
-    <h2 class="g-auth__heading">Two-factor authentication</h2>
+    <h2 class="g-auth__heading">
+      Two-factor authentication
+    </h2>
 
-    <p class="text">You have to set up 2FA to proceed.</p>
-    <p class="text">Please install Google Authenticator to your device:</p>
+    <p class="text">
+      You have to set up 2FA to proceed.
+    </p>
+    <p class="text">
+      Please install Google Authenticator to your device:
+    </p>
     <br class="text small">
     <p class="g-auth__app-links">
       <a target="_blank" href="https://itunes.apple.com/app/google-authenticator/id388497605?mt=8">
-        <mdi-apple-icon/><span>iOS</span>
+        <mdi-apple-icon /><span>iOS</span>
       </a>
       <a target="_blank" href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">
-        <mdi-android-icon/><span>Android</span>
+        <mdi-android-icon /><span>Android</span>
       </a>
     </p>
 
     <br class="text">
-    <p class="text"> Scan the QR-code or enter the code manually using Google Authenticator </p>
+    <p class="text">
+      Scan the QR-code or enter the code manually using Google Authenticator
+    </p>
     <br class="text small">
     <div class="g-auth__qr-wrap">
-      <qrcode class="g-auth__qr" :size="240" foreground="#3f4244" :value="gAuthLink"></qrcode>
-      <p class="g-auth__secret">{{secret}}</p>
+      <qrcode
+        class="g-auth__qr"
+        :size="240"
+        foreground="#3f4244"
+        :value="gAuthLink" />
+      <p class="g-auth__secret">
+        {{ secret }}
+      </p>
       <br class="text">
     </div>
-    <button class="app__btn" :disabled="buttonDisabled" @click="enableGAuth()">
+    <button
+      class="app__btn"
+      :disabled="buttonDisabled"
+      @click="enableGAuth()">
       Enable
     </button>
   </div>
@@ -39,20 +56,20 @@ import { ErrorHandler } from '@/utils/ErrorHandler'
 export default {
   components: { Qrcode },
 
-  computed: {
-    buttonDisabled () {
-      return this.$store.getters.showLoader
-    }
-  },
-
   data () {
     return {
       ready: false,
       submitButtonDisabled: false,
       gAuthLink: '',
       secret: '',
-      id: ''
+      id: '',
     }
+  },
+
+  computed: {
+    buttonDisabled () {
+      return this.$store.getters.showLoader
+    },
   },
 
   created () {
@@ -74,7 +91,6 @@ export default {
           this.clear()
           break
         }
-
       }
     })
     this.addGAuth()
@@ -132,11 +148,11 @@ export default {
       this.$store.commit('REQUIRE_TFA', {
         tfaToken,
         phone: '',
-        initiator: 'g_auth'
+        initiator: 'g_auth',
       })
       this.submitButtonDisabled = false
-    }
-  }
+    },
+  },
 }
 </script>
 

@@ -1,21 +1,24 @@
 <template>
   <div class="asset-pair-manager">
-
     <template v-if="isLoaded">
       <form @submit.prevent="updatePrice" class="asset-pair-manager__form app__block">
-        <h2>Update {{base}}/{{quote}} pair price</h2>
+        <h2>Update {{ base }}/{{ quote }} pair price</h2>
 
         <div class="asset-pair-manager__form-row app__form-row">
-          <input-field class="app__form-field"
+          <input-field
+            class="app__form-field"
             :label="`Price (${pair.quote})`"
-            type="number" min="0" :step="DEFAULT_INPUT_STEP"
+            type="number"
+            min="0"
+            :step="DEFAULT_INPUT_STEP"
             v-model="form.price"
             :disabled="isSubmitting"
           />
         </div>
 
         <div class="app__form-actions">
-          <button class="asset-pair-manager__submit-btn app__btn"
+          <button
+            class="asset-pair-manager__submit-btn app__btn"
             :disabled="isSubmitting">
             Update
           </button>
@@ -25,8 +28,7 @@
 
     <template v-if="isLoaded">
       <form @submit.prevent="updatePolicy" class="asset-pair-manager__form app__block">
-        <h2>Update {{base}}/{{quote}} pair policies</h2>
-
+        <h2>Update {{ base }}/{{ quote }} pair policies</h2>
 
         <div class="asset-pair-manager__checkboxes">
           <tick-field
@@ -88,12 +90,12 @@ import { ErrorHandler } from '@/utils/ErrorHandler'
 import { confirmAction } from '@/js/modals/confirmation_message'
 
 export default {
-  props: ['base', 'quote'],
 
   components: {
     InputField,
-    TickField
+    TickField,
   },
+  props: ['base', 'quote'],
 
   data () {
     return {
@@ -102,10 +104,10 @@ export default {
       pair: {},
       form: {
         price: '',
-        policies: []
+        policies: [],
       },
       isLoaded: false,
-      isSubmitting: false
+      isSubmitting: false,
     }
   },
 
@@ -150,8 +152,8 @@ export default {
         ErrorHandler.process(error)
       }
       this.isSubmitting = false
-    }
-  }
+    },
+  },
 }
 </script>
 

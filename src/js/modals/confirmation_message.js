@@ -33,14 +33,22 @@ export function confirmAction (opts = {}) {
 
   return new Promise((resolve, reject) => {
     const confirmMessage = new Vue({
-      template,
-      store,
-      mixins: [FormBlockingModalMixin],
       components: { Modal },
+      mixins: [FormBlockingModalMixin],
       data () {
         return {
-          title
+          title,
         }
+      },
+      watch: {
+        isOpened (val) {
+          if (!val) {
+            if (!this.isResolved) {
+              this.resolvers.resolve(false)
+            }
+            this.removeElement()
+          }
+        },
       },
       created () {
         this.setResolvers(resolve, reject)
@@ -55,18 +63,10 @@ export function confirmAction (opts = {}) {
           this.resetResolvers()
           this.removeElement()
           return this.resolvers.resolve(false)
-        }
+        },
       },
-      watch: {
-        isOpened (val) {
-          if (!val) {
-            if (!this.isResolved) {
-              this.resolvers.resolve(false)
-            }
-            this.removeElement()
-          }
-        }
-      }
+      template,
+      store,
     })
     confirmMessage.$mount(container)
   })

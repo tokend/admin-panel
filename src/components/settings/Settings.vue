@@ -1,7 +1,9 @@
 <template>
   <div class="settings">
     <user-header>
-      <router-link :to="{ name: 'settings' }" slot="nav">Settings</router-link>
+      <router-link :to="{ name: 'settings' }" slot="nav">
+        Settings
+      </router-link>
     </user-header>
 
     <div class="app__user-container">
@@ -12,7 +14,9 @@
           <span>Two-factor Authentication </span>
           <span>
             <template class="info-block__data" v-if="!(isTfaPending || hasGAuth)">
-              <router-link :to="{ name: 'settings.tfa' }"> Change </router-link>
+              <router-link :to="{ name: 'settings.tfa' }">
+                Change
+              </router-link>
             </template>
             <template class="info-block__data" v-else>
               <strong>Enabled</strong>
@@ -34,7 +38,7 @@ export default {
   name: 'security',
   components: {
     GAuth,
-    UserHeader
+    UserHeader,
   },
 
   data () {
@@ -42,7 +46,7 @@ export default {
       hasGAuth: false,
       showTfa: false,
       showPass: false,
-      isTfaPending: true
+      isTfaPending: true,
     }
   },
 
@@ -61,7 +65,7 @@ export default {
       .catch(err => {
         ErrorHandler.processWithoutFeedback(err)
       })
-  }
+  },
 }
 </script>
 

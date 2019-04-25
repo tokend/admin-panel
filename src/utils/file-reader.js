@@ -27,5 +27,5 @@ export const fileReader = {
       }
       reader.readAsArrayBuffer(file)
     })
-  }
+  },
 }

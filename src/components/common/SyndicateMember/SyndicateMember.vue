@@ -7,7 +7,7 @@
       <div class="corporate-member__row-item">
         <div class="corporate-member__details-wrp">
           <p class="corporate-member__name">
-            {{info.name}}
+            {{ info.name }}
           </p>
           <social-links :links="info.social" />
         </div>
@@ -22,9 +22,9 @@ import SocialLinks from '@comcom/SocialLinks'
 export default {
   components: {
     ImgGetter,
-    SocialLinks
+    SocialLinks,
   },
-  props: ['info']
+  props: ['info'],
 }
 </script>
 

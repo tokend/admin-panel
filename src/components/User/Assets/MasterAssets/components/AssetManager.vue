@@ -6,21 +6,31 @@
     >
       <div class="asset-manager__current-issuance-details">
         <span class="available">
-          <span class="highlight amount text">{{ asset.availableForIssuance }}&nbsp;•&nbsp;</span>
-          <label class="label">available for issuance</label>
+          <span class="highlight amount text">
+            {{ asset.availableForIssuance }}&nbsp;•&nbsp;
+          </span>
+          <label class="label">
+            available for issuance
+          </label>
         </span>
         <span class="issued">
-          <span class="highlight amount text">{{ asset.issued }}&nbsp;•&nbsp;</span>
-          <label class="label">issued</label>
+          <span class="highlight amount text">
+            {{ asset.issued }}&nbsp;•&nbsp;
+          </span>
+          <label class="label">
+            issued
+          </label>
         </span>
       </div>
     </div>
 
     <form @submit.prevent="submit">
       <div class="asset-manager__image-field-wrp">
-        <label class="asset-manager__image-lbl">Upload asset logo</label>
+        <label class="asset-manager__image-lbl">
+          Upload asset logo
+        </label>
         <image-field
-          :fileKey="safeGet(asset, `creatorDetails.logo.key`)"
+          :file-key="safeGet(asset, `creatorDetails.logo.key`)"
           @change="onFileChange($event, DOCUMENT_TYPES.assetLogo)"
         />
       </div>
@@ -33,7 +43,7 @@
           :disabled="isPending"
           v-validate="'required|max:255'"
           name="asset-name"
-          :errorMessage="errors.first('asset-name')"
+          :error-message="errors.first('asset-name')"
         />
 
         <input-field
@@ -43,7 +53,7 @@
           :disabled="isExistingAsset || isPending"
           v-validate="'required|alpha_num|max:16'"
           name="asset-code"
-          :errorMessage="errors.first('asset-code')"
+          :error-message="errors.first('asset-code')"
         />
       </div>
 
@@ -55,7 +65,7 @@
           :disabled="isExistingAsset || isPending"
           v-validate="'required|alpha_num'"
           name="issuer-key"
-          :errorMessage="errors.first('issuer-key')"
+          :error-message="errors.first('issuer-key')"
         />
 
         <input-field
@@ -66,7 +76,7 @@
           :disabled="isExistingAsset || isPending"
           v-validate="'required|decimal'"
           name="initial-preissued"
-          :errorMessage="errors.first('initial-preissued')"
+          :error-message="errors.first('initial-preissued')"
         />
 
         <input-field
@@ -77,7 +87,7 @@
           :disabled="true"
           v-validate="'required|decimal'"
           name="available-issuance"
-          :errorMessage="errors.first('available-issuance')"
+          :error-message="errors.first('available-issuance')"
         />
       </div>
 
@@ -92,7 +102,7 @@
           :disabled="isExistingAsset || isPending"
           v-validate="'required|decimal'"
           name="max-assets"
-          :errorMessage="errors.first('max-assets')"
+          :error-message="errors.first('max-assets')"
         />
 
         <!-- the field is disabled due to omitted testing session of trailingDigitsCount -->
@@ -106,7 +116,7 @@
           :disabled="true || isExistingAsset || isPending"
           v-validate="'required|numeric|max_value:6'"
           name="trailing-digits-count"
-          :errorMessage="errors.first('trailing-digits-count')"
+          :error-message="errors.first('trailing-digits-count')"
         />
       </div>
 
@@ -118,10 +128,14 @@
           :disabled="isExistingAsset || isPending"
           name="asset-type"
           v-validate="'required'"
-          :errorMessage="errors.first('asset-type')"
+          :error-message="errors.first('asset-type')"
         >
-          <option :value="ASSET_TYPES.default">Default</option>
-          <option :value="ASSET_TYPES.kycRequired">KYC required</option>
+          <option :value="ASSET_TYPES.default">
+            Default
+          </option>
+          <option :value="ASSET_TYPES.kycRequired">
+            KYC required
+          </option>
         </select-field>
       </div>
 
@@ -140,7 +154,7 @@
             type="file"
             accept="application/pdf, image/*"
             @change="onFileChange($event, DOCUMENT_TYPES.assetTerms)"
-          />
+          >
           <span
             v-if="safeGet(asset, 'creatorDetails.terms.name')"
             class="asset-manager__file-name"
@@ -267,9 +281,7 @@
           {{ isExistingAsset ? 'Update asset' : 'Create asset' }}
         </button>
       </div>
-
     </form>
-
   </div>
 </template>
 
@@ -295,7 +307,7 @@ export default {
     InputField,
     SelectField,
     TickField,
-    ImageField
+    ImageField,
   },
 
   props: ['assetCode'],
@@ -320,30 +332,24 @@ export default {
           logo: {},
           terms: {},
           externalSystemType: '',
-          isCoinpayments: false
-        }
+          isCoinpayments: false,
+        },
       },
 
       [DOCUMENT_TYPES.assetTerms]: {
         file: null,
         mime: null,
-        name: null
+        name: null,
       },
 
       [DOCUMENT_TYPES.assetLogo]: {
         file: null,
         mime: null,
-        name: null
+        name: null,
       },
 
       isPending: false,
-      DOCUMENT_TYPES
-    }
-  },
-
-  created () {
-    if (this.isExistingAsset) {
-      this.getAsset()
+      DOCUMENT_TYPES,
     }
   },
 
@@ -356,6 +362,12 @@ export default {
         return `${config.FILE_STORAGE}/${safeGet(this.asset, 'creatorDetails.terms.key')}`
       }
       return ''
+    },
+  },
+
+  created () {
+    if (this.isExistingAsset) {
+      this.getAsset()
     }
   },
 
@@ -379,7 +391,7 @@ export default {
       try {
         await Promise.all([
           this.uploadFile(DOCUMENT_TYPES.assetTerms),
-          this.uploadFile(DOCUMENT_TYPES.assetLogo)
+          this.uploadFile(DOCUMENT_TYPES.assetLogo),
         ])
         let operation
         if (this.isExistingAsset) {
@@ -405,8 +417,8 @@ export default {
               external_system_type: this.asset.creatorDetails.externalSystemType,
               is_coinpayments: this.asset.creatorDetails.isCoinpayments,
               logo,
-              terms
-            }
+              terms,
+            },
           })
         } else {
           operation = Sdk.base.ManageAssetBuilder.assetCreationRequest({
@@ -426,14 +438,14 @@ export default {
               is_coinpayments: this.asset.creatorDetails.isCoinpayments,
               logo: {
                 key: this.asset.creatorDetails.logo.key,
-                type: this.asset.creatorDetails.logo.type
+                type: this.asset.creatorDetails.logo.type,
               },
               terms: {
                 key: this.asset.creatorDetails.terms.key,
                 type: this.asset.creatorDetails.terms.type,
-                name: this.asset.creatorDetails.terms.name
-              }
-            }
+                name: this.asset.creatorDetails.terms.name,
+              },
+            },
           })
         }
         await Sdk.horizon.transactions.submitOperations(operation)
@@ -472,10 +484,10 @@ export default {
       this.asset.creatorDetails[type === DOCUMENT_TYPES.assetTerms ? 'terms' : 'logo'] = {
         key: config.formData.key,
         name: this[type].name,
-        type: this[type].mime
+        type: this[type].mime,
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

@@ -1,12 +1,14 @@
 <template>
   <div class="sale-manager-description-tab">
-    <label class="data-caption">Sale video</label>
+    <label class="data-caption">
+      Sale video
+    </label>
     <template v-if="sale.details.youtubeVideoId">
       <iframe
         class="sale-manager-description-tab__video"
         :src="`https://www.youtube.com/embed/${sale.details.youtubeVideoId}`"
         allowfullscreen="true"
-      ></iframe>
+      />
     </template>
 
     <template v-else>
@@ -15,7 +17,9 @@
       </p>
     </template>
 
-    <label class="data-caption">Sale description</label>
+    <label class="data-caption">
+      Sale description
+    </label>
     <template v-if="isLoaded">
       <div class="sale-manager-description-tab__description-wrp">
         <markdown-formatter :source="description" />
@@ -41,7 +45,7 @@ import { MarkdownFormatter } from '@comcom/formatters'
 import { Sdk } from '@/sdk'
 export default {
   components: {
-    MarkdownFormatter
+    MarkdownFormatter,
   },
 
   props: ['sale'],
@@ -50,7 +54,7 @@ export default {
     return {
       description: '',
       isLoaded: false,
-      isFailed: false
+      isFailed: false,
     }
   },
 
@@ -69,8 +73,8 @@ export default {
       } catch (error) {
         this.isFailed = true
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

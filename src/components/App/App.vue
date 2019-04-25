@@ -13,18 +13,18 @@
             class="modal-background"
             v-if="isModalOpen"
             @click="$store.commit('WANT_CLOSE_MODAL')"
-          > </div>
+          />
         </transition>
 
         <transition name="fade">
           <loading-screen v-if="showLoader" />
         </transition>
 
-        <verify-tfa></verify-tfa>
+        <verify-tfa />
 
-        <idle-logout></idle-logout>
+        <idle-logout />
 
-        <router-view></router-view>
+        <router-view />
       </template>
     </template>
 
@@ -76,7 +76,16 @@ export default {
     VerifyTfa,
     StatusMessage,
     IdleLogout,
-    NoSupportMessage
+    NoSupportMessage,
+  },
+
+  data () {
+    return {
+      sessionKeeperInterval: null,
+      isGoodBrowser: true,
+      isAppInitialized: false,
+      isConfigLoadingFailed: false,
+    }
   },
 
   computed: {
@@ -90,16 +99,7 @@ export default {
 
     isLoggedIn () {
       return this.$store.state.auth.isLoggedIn
-    }
-  },
-
-  data () {
-    return {
-      sessionKeeperInterval: null,
-      isGoodBrowser: true,
-      isAppInitialized: false,
-      isConfigLoadingFailed: false
-    }
+    },
   },
 
   async created () {
@@ -220,11 +220,10 @@ export default {
       this.sessionKeeperInterval = setInterval(() => {
         this.$store.commit('KEEP_SESSION')
       }, 10 * 1000)
-    }
-  }
+    },
+  },
 }
 </script>
-
 
 <style lang="scss">
 @import "../../assets/scss/colors";

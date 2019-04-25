@@ -41,15 +41,15 @@ const CHECK_LIST = [
       return (response.data || [])
         .filter(item => item && item.policy & ASSET_POLICIES.statsQuoteAsset)
         .length !== 1
-    }
-  }
+    },
+  },
 ]
 
 export default {
   data () {
     return {
       isPaneActive: false,
-      foundIssues: []
+      foundIssues: [],
     }
   },
 
@@ -82,8 +82,8 @@ export default {
         document.removeEventListener('click', listener)
       }
       document.addEventListener('click', listener)
-    }
-  }
+    },
+  },
 }
 </script>
 

@@ -1,7 +1,7 @@
 <template>
   <div class="asset-pairs-show">
     <div class="asset-pairs-show__mgr-wrp">
-      <asset-pair-manager :base="base" :quote="quote"/>
+      <asset-pair-manager :base="base" :quote="quote" />
     </div>
   </div>
 </template>
@@ -11,10 +11,10 @@ import AssetPairManager from './components/AssetPairManager'
 
 export default {
   components: {
-    AssetPairManager
+    AssetPairManager,
   },
 
-  props: ['base', 'quote']
+  props: ['base', 'quote'],
 }
 </script>
 

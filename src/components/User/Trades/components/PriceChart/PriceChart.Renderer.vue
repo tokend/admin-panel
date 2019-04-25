@@ -1,5 +1,5 @@
 <template>
-  <div class="price-chart"></div>
+  <div class="price-chart" />
 </template>
 
 <script>
@@ -22,18 +22,22 @@ const LARGE_NUMBER_PRECISION = 2
 
 export default {
   name: CLASS_NAME,
+
+  props: ['priceHistory', 'scale', 'assetPair'],
   data () {
     return {
-      assetCode: ''
+      assetCode: '',
     }
   },
 
-  props: ['priceHistory', 'scale', 'assetPair'],
+  computed: {
+
+  },
 
   watch: {
     'priceHistory' () { this.render() },
     'scale' () { this.render() },
-    'assetPair' () { this.render() }
+    'assetPair' () { this.render() },
   },
 
   mounted (...args) {
@@ -43,10 +47,6 @@ export default {
 
   beforeDestroy () {
     window.removeEventListener('resize', this.render)
-  },
-
-  computed: {
-
   },
 
   methods: {
@@ -60,7 +60,7 @@ export default {
         width: parentElement.clientWidth,
         height: parentElement.clientHeight < 250
           ? 250
-          : parentElement.clientHeight
+          : parentElement.clientHeight,
       }
     },
 
@@ -87,11 +87,11 @@ export default {
 
     formatMoney (amount) {
       const symbol = ({
-        'USD': '$'
+        'USD': '$',
       })[this.assetCode]
 
       const moneyFormats = {
-        'en': ({ value, symbol }) => `${value} ${this.assetCode}`
+        'en': ({ value, symbol }) => `${value} ${this.assetCode}`,
       }
 
       return moneyFormats['en']({ value: this.prettifyNumber(amount), symbol })
@@ -101,7 +101,7 @@ export default {
       return data
         .map(item => ({
           time: moment(item.timestamp).toDate(),
-          value: +item.value
+          value: +item.value,
         }))
         .sort(function (a, b) { return a.time - b.time })
     },
@@ -120,7 +120,7 @@ export default {
       return [
         average - gap,
         average,
-        average + gap
+        average + gap,
       ]
     },
 
@@ -158,12 +158,12 @@ export default {
           new Date(average - gap * 3),
           new Date(average - gap),
           new Date(average + gap),
-          new Date(average + gap * 3)
+          new Date(average + gap * 3),
         ]
       } else {
         result = [
           new Date(average - gap * 3),
-          new Date(average + gap * 3)
+          new Date(average + gap * 3),
         ]
       }
 
@@ -216,7 +216,7 @@ export default {
         top: 20,
         right: 5,
         bottom: 30,
-        left: this.genYMaxTickWidth(data)
+        left: this.genYMaxTickWidth(data),
       }
       const dimensions = this.getDimensions(this.$el)
       const width = dimensions.width - margin.right - margin.left
@@ -363,8 +363,8 @@ export default {
       motionCaptureArea.on('touchend', () => hideTip.call(this))
 
       tip.classed(`${CLASS_NAME}__tip--hidden`, true)
-    }
-  }
+    },
+  },
 }
 </script>
 

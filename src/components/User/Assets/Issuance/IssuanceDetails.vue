@@ -31,7 +31,7 @@
           </li>
           <li class="issuance-details__list-item">
             <span>State</span>
-            <span>{{issuance.requestState | localizeIssuanceRequestState}}</span>
+            <span>{{ issuance.requestState | localizeIssuanceRequestState }}</span>
           </li>
         </ul>
         <template v-if="issuance.requestStateI === REQUEST_STATES.pending">
@@ -55,7 +55,9 @@
         </template>
       </template>
       <template v-else>
-        <span class="issuance-details__list-item">Loading...</span>
+        <span class="issuance-details__list-item">
+          Loading...
+        </span>
       </template>
       <modal
         v-if="itemToReject"
@@ -109,7 +111,7 @@ export default {
   components: {
     EmailGetter,
     Modal,
-    TextField
+    TextField,
   },
   props: ['id'],
   data: _ => ({
@@ -120,9 +122,13 @@ export default {
     isSubmitting: false,
     isLoaded: false,
     rejectForm: {
-      reason: ''
-    }
+      reason: '',
+    },
   }),
+  async created () {
+    await this.getIssuance(this.id)
+    this.isLoaded = true
+  },
   methods: {
     localize,
     async getIssuance (id) {
@@ -141,7 +147,7 @@ export default {
           if (tasksToRemove & 4) tasksToRemove = tasksToRemove - 4
           await api.requests.approve({
             ...issuance,
-            reviewDetails: { tasksToRemove }
+            reviewDetails: { tasksToRemove },
           })
           await this.getIssuance(this.id)
           this.$store.dispatch('SET_INFO', 'Request fulfilled successfully.')
@@ -167,7 +173,7 @@ export default {
           { reason: this.rejectForm.reason, isPermanent: true },
           {
             ...issuance,
-            reviewDetails: { tasksToRemove }
+            reviewDetails: { tasksToRemove },
           }
         )
         await this.getIssuance(this.id)
@@ -179,12 +185,8 @@ export default {
     },
     clearRejectionSelection () {
       this.itemToReject = null
-    }
+    },
   },
-  async created () {
-    await this.getIssuance(this.id)
-    this.isLoaded = true
-  }
 }
 </script>
 

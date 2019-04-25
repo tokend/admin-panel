@@ -3,7 +3,7 @@
     <h2>Withdrawal list</h2>
 
     <div class="withdrawals-index__list-wrp">
-      <withdrawal-list/>
+      <withdrawal-list />
     </div>
   </div>
 </template>
@@ -12,8 +12,8 @@
 import WithdrawalList from './components/WithdrawalList'
 export default {
   components: {
-    WithdrawalList
-  }
+    WithdrawalList,
+  },
 }
 </script>
 

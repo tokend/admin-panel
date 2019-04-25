@@ -9,31 +9,37 @@
         Enter your verification code to proceed.
       </p>
 
-      <form class="verify-tfa__form" id="verify-tfa-form" @submit.prevent="verifyTFACode">
+      <form
+        class="verify-tfa__form"
+        id="verify-tfa-form"
+        @submit.prevent="verifyTFACode">
         <div class="app__form-row">
-          <input-field class="app__form-field"
-                       :disabled="submitButtonDisabled"
-                       v-model.trim="verificationCode"
-                       label="Verification Code"
-                       autofocus
+          <input-field
+            class="app__form-field"
+            :disabled="submitButtonDisabled"
+            v-model.trim="verificationCode"
+            label="Verification Code"
+            autofocus
           />
         </div>
 
         <div class="verify-tfa__form-actions app__form-actions">
-          <button class="app__btn-secondary app__btn-secondary--danger" type="button" @click="close()">
+          <button
+            class="app__btn-secondary app__btn-secondary--danger"
+            type="button"
+            @click="close()">
             Cancel
           </button>
-          <button class="verify-tfa__btn-wide app__btn"
-                  form="verify-tfa-form"
-                  :disabled="submitButtonDisabled"
-                  type="submit"
+          <button
+            class="verify-tfa__btn-wide app__btn"
+            form="verify-tfa-form"
+            :disabled="submitButtonDisabled"
+            type="submit"
           >
             Submit
           </button>
         </div>
-
       </form>
-
     </div>
   </div>
 </template>
@@ -51,14 +57,14 @@ export default {
   data () {
     return {
       submitButtonDisabled: false,
-      verificationCode: ''
+      verificationCode: '',
     }
   },
 
   computed: {
     isRequired () {
       return this.$store.getters.tfaIsRequired
-    }
+    },
   },
 
   methods: {
@@ -95,8 +101,8 @@ export default {
     close () {
       this.verificationCode = ''
       this.$store.dispatch('CLOSE_TFA')
-    }
-  }
+    },
+  },
 }
 </script>
 

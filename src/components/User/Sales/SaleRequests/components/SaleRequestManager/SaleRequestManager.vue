@@ -41,8 +41,12 @@
 
       <template v-else>
         <p>
-          <template v-if="request.isFailed">An error occurred</template>
-          <template v-else>Loading...</template>
+          <template v-if="request.isFailed">
+            An error occurred
+          </template>
+          <template v-else>
+            Loading...
+          </template>
         </p>
       </template>
     </div>
@@ -52,7 +56,9 @@
       @close-request="hideRejectForm"
       max-width="40rem"
     >
-      <p class="text">Reject reason</p>
+      <p class="text">
+        Reject reason
+      </p>
 
       <form
         class="sale-rm__reject-form"
@@ -117,8 +123,10 @@ export default {
     Modal,
     DetailsTab,
     DescriptionTab,
-    SyndicateTab
+    SyndicateTab,
   },
+
+  props: ['id'],
 
   data () {
     return {
@@ -127,22 +135,20 @@ export default {
         sale: {},
         asset: {},
         isReady: false,
-        isFailed: false
+        isFailed: false,
       },
       rejectForm: {
         reason: '',
         isShown: false,
-        isPermanentReject: false
+        isPermanentReject: false,
       },
-      isSubmitting: false
+      isSubmitting: false,
     }
   },
-
-  props: ['id'],
   computed: {
     getSaleDetails () {
       return this.request.sale.details[this.request.sale.details.requestType]
-    }
+    },
   },
   created () {
     if (this.id) {
@@ -200,7 +206,7 @@ export default {
         await api.requests.reject(
           {
             reason: this.rejectForm.reason,
-            isPermanent: this.rejectForm.isPermanentReject
+            isPermanent: this.rejectForm.isPermanentReject,
           },
           this.request.sale
         )
@@ -224,8 +230,8 @@ export default {
         record.details[valuableRequestDetailsKey] || {}
 
       return newRecord
-    }
-  }
+    },
+  },
 }
 </script>
 

@@ -1,84 +1,91 @@
 <template>
   <div class="image-input" :class="{ 'image-input--ready-to-drop': flags.isReadyToDrop }">
-
     <div class="image-input__image-preview" v-if="imgUrl">
       <img :src="imgUrl">
     </div>
 
     <div class="image-input__input-inner">
-
       <div class="image-input__text">
-        <p class="title">{{ title }}</p>
+        <p class="title">
+          {{ title }}
+        </p>
 
         <div class="notes">
-          <p class="image-input__note" v-for="(note, key) in notes" :key="key">{{ note }}</p>
+          <p
+            class="image-input__note"
+            v-for="(note, key) in notes"
+            :key="key">
+            {{ note }}
+          </p>
         </div>
       </div>
 
-      <input type="file" @change="handleImageUpload" accept="image/*">
-
+      <input
+        type="file"
+        @change="handleImageUpload"
+        accept="image/*">
     </div>
   </div>
 </template>
 <script>
-  import { fileReader } from '../../../utils/file-reader'
-  import config from '../../../config'
-  export default {
-    name: 'image-input',
+import { fileReader } from '../../../utils/file-reader'
+import config from '../../../config'
+export default {
+  name: 'image-input',
 
-    props: {
-      fileKey: {
-        type: String,
-        default: ''
+  props: {
+    fileKey: {
+      type: String,
+      default: '',
+    },
+    title: {
+      type: String,
+      default: 'Choose an image from your PC',
+    },
+    notes: {
+      type: Array,
+      default: () => [
+        'JPEG, PNG or BMP',
+        'no more than 5mb',
+        'not less than 1024x576, 1:1',
+      ],
+    },
+  },
+
+  data () {
+    return {
+      imageDataUrl: null,
+      flags: {
+        isReadyToDrop: false,
       },
-      title: {
-        type: String,
-        default: 'Choose an image from your PC'
-      },
-      notes: {
-        type: Array,
-        default: () => [
-          'JPEG, PNG or BMP',
-          'no more than 5mb',
-          'not less than 1024x576, 1:1'
-        ]
-      }
-    },
-
-    data () {
-      return {
-        imageDataUrl: null,
-        flags: {
-          isReadyToDrop: false
-        }
-      }
-    },
-
-    mounted () {
-      this.attachHandlers()
-    },
-
-    computed: {
-      imgUrl () {
-        return this.imageDataUrl || (this.fileKey ? `${config.FILE_STORAGE}/${this.fileKey}` : '')
-      }
-    },
-
-    methods: {
-      async handleImageUpload (event) {
-        const image = fileReader.deriveFileFromChangeEvent(event)
-        const dataURL = await fileReader.readFileAsDataUrl(image)
-        this.imageDataUrl = dataURL
-        this.$emit('change', event)
-      },
-      attachHandlers () {
-        const holder = this.$el
-        holder.ondragenter = () => { this.flags.isReadyToDrop = true }
-        holder.ondrop = () => { this.flags.isReadyToDrop = false }
-        holder.ondragleave = () => { this.flags.isReadyToDrop = false }
-      }
     }
-  }
+  },
+
+  computed: {
+    imgUrl () {
+      return this.imageDataUrl || (this.fileKey ? `${config.FILE_STORAGE}/${this.fileKey}` : '')
+    },
+  },
+
+  mounted () {
+    this.attachHandlers()
+  },
+
+  methods: {
+    async handleImageUpload (event) {
+      const image = fileReader.deriveFileFromChangeEvent(event)
+      const dataURL = await fileReader.readFileAsDataUrl(image)
+      this.imageDataUrl = dataURL
+      this.$emit('change', event)
+    },
+    attachHandlers () {
+      const holder = this.$el
+      holder.ondragenter = () => { this.flags.isReadyToDrop = true }
+      holder.ondrop = () => { this.flags.isReadyToDrop = false }
+      holder.ondragleave = () => { this.flags.isReadyToDrop = false }
+    },
+  },
+}
 </script>
 
 <style lang="scss" scoped>

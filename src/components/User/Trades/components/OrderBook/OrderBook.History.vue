@@ -7,15 +7,18 @@
           <table class="order-book-history__table">
             <thead>
               <tr>
-                <th>Price ({{quoteAsset}})</th>
-                <th>Amount ({{baseAsset}})</th>
-                <th>Total cost ({{quoteAsset}})</th>
+                <th>Price ({{ quoteAsset }})</th>
+                <th>Amount ({{ baseAsset }})</th>
+                <th>Total cost ({{ quoteAsset }})</th>
                 <th>Date</th>
               </tr>
             </thead>
 
             <tbody>
-              <tr v-for="(item, index) in list" :key="index" tabindex="0"
+              <tr
+                v-for="(item, index) in list"
+                :key="index"
+                tabindex="0"
                 @click="showItemDetails(item)"
                 @keyup.enter.stop.prevent="showItemDetails(item)"
                 @keyup.space.stop.prevent="showItemDetails(item)">
@@ -36,7 +39,8 @@
       </template>
     </div>
 
-    <modal class="order-book-history__modal"
+    <modal
+      class="order-book-history__modal"
       v-if="isDetailsShown"
       @close-request="hideItemDetails()"
       max-width="40rem">
@@ -45,7 +49,7 @@
       <ul class="key-value-list">
         <li>
           <span>Deal ID</span>
-          <span>{{itemDetails.id}}</span>
+          <span>{{ itemDetails.id }}</span>
         </li>
         <li>
           <span>Amount</span>
@@ -76,19 +80,19 @@ export default {
   components: {
     AssetAmountFormatter,
     DateFormatter,
-    Modal
+    Modal,
   },
+
+  props: ['list', 'pair'],
 
   data () {
     return {
       quoteAsset: '',
       baseAsset: '',
       isDetailsShown: false,
-      itemDetails: Object.assign({}, EMPTY_DETAILS)
+      itemDetails: Object.assign({}, EMPTY_DETAILS),
     }
   },
-
-  props: ['list', 'pair'],
 
   created () {
     this.parsePair()
@@ -108,8 +112,8 @@ export default {
 
     hideItemDetails (item) {
       this.isDetailsShown = false
-    }
-  }
+    },
+  },
 }
 </script>
 

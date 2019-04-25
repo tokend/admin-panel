@@ -4,10 +4,13 @@
       <div class="user-limits__limits-list-wrp">
         <template v-for="(type,i) in LIMITS_TYPES">
           <div class="user-limits__limit-row" :key="i">
-            <span class="user-limits__limit-type">{{ type.replace('Out', '') }} limit</span>
-            <input-field  :value="userLimits[type]"
-                          :label="' '"
-                          :readonly="true"
+            <span class="user-limits__limit-type">
+              {{ type.replace('Out', '') }} limit
+            </span>
+            <input-field
+              :value="userLimits[type]"
+              :label="' '"
+              :readonly="true"
             />
           </div>
         </template>
@@ -16,41 +19,40 @@
   </div>
 </template>
 
-
 <script>
-  import { InputField } from '@comcom/fields'
-  import _pick from 'lodash/pick'
+import { InputField } from '@comcom/fields'
+import _pick from 'lodash/pick'
 
-  const LIMITS_TYPES = [
-    'dailyOut',
-    'weeklyOut',
-    'monthlyOut',
-    'annualOut'
-  ]
+const LIMITS_TYPES = [
+  'dailyOut',
+  'weeklyOut',
+  'monthlyOut',
+  'annualOut',
+]
 
-  export default {
-    name: 'LimitsUserLimits',
-    props: ['limits'],
-    components: {
-      InputField
+export default {
+  name: 'limits-user-limits',
+  components: {
+    InputField,
+  },
+  props: ['limits'],
+  data: _ => ({
+    userLimits: {
+      dailyOut: '',
+      weeklyOut: '',
+      monthlyOut: '',
+      annualOut: '',
     },
-    data: _ => ({
-      userLimits: {
-        dailyOut: '',
-        weeklyOut: '',
-        monthlyOut: '',
-        annualOut: ''
-      },
-      isPending: false,
-      rejectReason: '',
-      LIMITS_TYPES
-    }),
-    created () {
-      this.userLimits = _pick(this.limits, Object.keys(this.userLimits))
-    },
-    methods: {
-    }
-  }
+    isPending: false,
+    rejectReason: '',
+    LIMITS_TYPES,
+  }),
+  created () {
+    this.userLimits = _pick(this.limits, Object.keys(this.userLimits))
+  },
+  methods: {
+  },
+}
 </script>
 <style lang="scss" scoped>
 

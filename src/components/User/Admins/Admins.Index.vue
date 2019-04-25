@@ -4,15 +4,16 @@
       <h2>Admin list</h2>
 
       <div class="admins-index__actions">
-        <router-link class="admins-index__create-btn app__btn app__btn--iconed"
+        <router-link
+          class="admins-index__create-btn app__btn app__btn--iconed"
           :to="{ name: 'admins.new' }">
-          <mdi-plus-icon/> New admin
+          <mdi-plus-icon /> New admin
         </router-link>
       </div>
     </div>
 
     <div class="admins-index__list-wrap">
-      <admin-list/>
+      <admin-list />
     </div>
   </div>
 </template>
@@ -27,8 +28,8 @@ export default {
 
   components: {
     AdminList,
-    InputField
-  }
+    InputField,
+  },
 }
 </script>
 

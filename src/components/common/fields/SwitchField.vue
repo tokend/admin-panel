@@ -1,116 +1,116 @@
 <template>
   <label class="switch-field">
-    <input class="switch-field__input"
-            type="checkbox"
-            :checked="checked"
-            :disabled="disabled"
-            :name="name"
-            :id="id"
-            :value="cbValue"
-            :required="required"
-            :autofocus="autofocus"
-            @change="onChange">
-    <span class="switch-field__slider"></span>
+    <input
+      class="switch-field__input"
+      type="checkbox"
+      :checked="checked"
+      :disabled="disabled"
+      :name="name"
+      :id="id"
+      :value="cbValue"
+      :required="required"
+      :autofocus="autofocus"
+      @change="onChange">
+    <span class="switch-field__slider" />
   </label>
 </template>
 
-
 <script>
-  export default {
-    name: 'Switch-field',
-    props: {
-      label: { type: String, default: 'Label' },
-      value: { default: false },
+export default {
+  name: 'switch-field',
+  components: {
+  },
+  props: {
+    label: { type: String, default: 'Label' },
+    value: { default: false },
 
-      // proxies
-      name: { type: String, default: undefined },
-      disabled: { type: Boolean, default: false },
-      cbValue: { default: undefined },
-      title: { type: [String, Number], default: undefined },
-      required: { type: Boolean, default: false },
-      autofocus: { type: Boolean, default: false }
+    // proxies
+    name: { type: String, default: undefined },
+    disabled: { type: Boolean, default: false },
+    cbValue: { default: undefined },
+    title: { type: [String, Number], default: undefined },
+    required: { type: Boolean, default: false },
+    autofocus: { type: Boolean, default: false },
+  },
+  data: _ => ({
+  }),
+  computed: {
+    id () {
+      return `tick-field-${this._uid}`
     },
-    components: {
+    checked () {
+      const model = this.value
+      const value = this.cbValue
+      if (typeof value === 'undefined') {
+        return model
+      }
+
+      let result
+      switch (this.typeof(model)) {
+        case 'number':
+          result = model & +value
+          break
+
+        case 'array':
+          result = ~model.findIndex((item) => item === value)
+          break
+
+        default:
+          result = model
+          break
+      }
+      return result
     },
-    data: _ => ({
-    }),
-    created () {
-    },
-    computed: {
-      id () {
-        return `tick-field-${this._uid}`
-      },
-      checked () {
-        const model = this.value
-        const value = this.cbValue
-        if (typeof value === 'undefined') {
-          return model
-        }
+  },
+  watch: {
+  },
+  created () {
+  },
+  methods: {
+    onChange (event) {
+      const isChecked = event.target.checked
+      const model = this.value
+      const value = this.cbValue || isChecked
 
-        let result
-        switch (this.typeof(model)) {
-          case 'number':
-            result = model & +value
-            break
+      if (typeof value === 'undefined') {
+        return this.$emit('input', isChecked)
+      }
 
-          case 'array':
-            result = ~model.findIndex((item) => item === value)
-            break
+      switch (this.typeof(model)) {
+        case 'number':
+          this.$emit('input', isChecked ? model + +value : model - value)
+          break
 
-          default:
-            result = model
-            break
-        }
-        return result
+        case 'array':
+          this.$emit('input', isChecked
+            ? model.concat(value)
+            : model.filter((item) => item !== value)
+          )
+          break
+
+        default:
+          this.$emit('input', isChecked)
+          break
       }
     },
-    methods: {
-      onChange (event) {
-        const isChecked = event.target.checked
-        const model = this.value
-        const value = this.cbValue || isChecked
+    typeof (value) {
+      const type = typeof value
 
-        if (typeof value === 'undefined') {
-          return this.$emit('input', isChecked)
-        }
+      let result
+      switch (type) {
+        case 'object':
+          if (Array.isArray(value)) result = 'array'
+          if (value === null) result = 'null'
+          break
 
-        switch (this.typeof(model)) {
-          case 'number':
-            this.$emit('input', isChecked ? model + +value : model - value)
-            break
-
-          case 'array':
-            this.$emit('input', isChecked
-              ? model.concat(value)
-              : model.filter((item) => item !== value)
-            )
-            break
-
-          default:
-            this.$emit('input', isChecked)
-            break
-        }
-      },
-      typeof (value) {
-        const type = typeof value
-
-        let result
-        switch (type) {
-          case 'object':
-            if (Array.isArray(value)) result = 'array'
-            if (value === null) result = 'null'
-            break
-
-          default:
-            result = type
-            break
-        }
-        return result
+        default:
+          result = type
+          break
       }
+      return result
     },
-    watch: {
-    }
-  }
+  },
+}
 </script>
 <style lang="scss" scoped>
   @import "../../../assets/scss/colors";

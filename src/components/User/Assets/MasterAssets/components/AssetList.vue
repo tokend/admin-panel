@@ -17,8 +17,12 @@
       class="asset-list__ul"
       v-if="assets && assets.length"
     >
-      <li class="asset-list__li" v-for="(asset, i) in parsedAssets" :key="i">
-        <router-link class="asset-list__li-a"
+      <li
+        class="asset-list__li"
+        v-for="(asset, i) in parsedAssets"
+        :key="i">
+        <router-link
+          class="asset-list__li-a"
           :to="{ name: 'assets.masterAssets.show', params: { asset: asset.id }}">
           <span class="asset-list__li-name" :title="asset.creatorDetails.name">
             {{ asset.creatorDetails.name }}
@@ -69,13 +73,13 @@ import { CollectionLoader } from '@/components/common'
 
 export default {
   components: {
-    CollectionLoader
+    CollectionLoader,
   },
 
   data () {
     return {
       assets: [],
-      isLoading: false
+      isLoading: false,
     }
   },
 
@@ -87,10 +91,10 @@ export default {
       return this.assets.map(asset => {
         return {
           ...asset,
-          policiesStr: convertPolicyToString(asset.policy)
+          policiesStr: convertPolicyToString(asset.policy),
         }
       })
-    }
+    },
   },
 
   methods: {
@@ -103,7 +107,7 @@ export default {
         response = await ApiCallerFactory
           .createCallerInstance()
           .getWithSignature('/v3/assets', {
-            filter: { owner: config.MASTER_ACCOUNT }
+            filter: { owner: config.MASTER_ACCOUNT },
           })
         this.$store.commit('CLOSE_LOADER')
       } catch (err) {
@@ -132,8 +136,8 @@ export default {
         const creatorDetails = item.details || item.creatorDetails
         return Object.assign(item, { creatorDetails })
       })
-    }
-  }
+    },
+  },
 }
 
 function decamelize (str, prefixForRemove = '') {

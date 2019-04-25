@@ -6,7 +6,10 @@
           <scale-picker v-model="scale" />
         </div>
 
-        <price-chart :price-history="priceHistory" :scale="scale" :asset-pair="filters.pair" />
+        <price-chart
+          :price-history="priceHistory"
+          :scale="scale"
+          :asset-pair="filters.pair" />
       </div>
     </template>
 
@@ -38,20 +41,24 @@ import ScalePicker from './PriceChart.ScalePicker'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
-  props: ['filters'],
 
   components: {
     PriceChart,
-    ScalePicker
+    ScalePicker,
   },
+  props: ['filters'],
 
   data () {
     return {
       priceHistory: {},
       scale: 'day',
       isLoaded: [],
-      isFailed: []
+      isFailed: [],
     }
+  },
+
+  watch: {
+    'filters.pair' () { this.getPriceHistory() },
   },
 
   created () {
@@ -78,12 +85,8 @@ export default {
           this.isFailed = true
         }
       }
-    }
+    },
   },
-
-  watch: {
-    'filters.pair' () { this.getPriceHistory() }
-  }
 }
 </script>
 

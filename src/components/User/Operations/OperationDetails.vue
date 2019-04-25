@@ -10,14 +10,14 @@
 </template>
 
 <script>
-  import DetailsReader from '../../common/details/DetailsReader'
+import DetailsReader from '../../common/details/DetailsReader'
 
-  export default {
-    components: {
-      DetailsReader
-    },
-    props: ['operation', 'user-id']
-  }
+export default {
+  components: {
+    DetailsReader,
+  },
+  props: ['operation', 'userId'],
+}
 </script>
 
 <style scoped>

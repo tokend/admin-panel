@@ -6,7 +6,7 @@ export default {
       href: '',
       isLoaded: false,
       isFailed: false,
-      isNoFile: false
+      isNoFile: false,
     }
   },
 
@@ -17,7 +17,7 @@ export default {
   },
 
   watch: {
-    fileKey () { this.getHref() }
+    fileKey () { this.getHref() },
   },
 
   methods: {
@@ -36,6 +36,6 @@ export default {
       } catch (error) {
         this.isFailed = true
       }
-    }
-  }
+    },
+  },
 }

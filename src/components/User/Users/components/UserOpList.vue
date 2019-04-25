@@ -26,7 +26,11 @@
         </span>
       </div>
 
-      <button class="app-list__li" v-for="item in records" :key="item.id" @click="$emit('op-select', item)">
+      <button
+        class="app-list__li"
+        v-for="item in records"
+        :key="item.id"
+        @click="$emit('op-select', item)">
         <span class="app-list__cell" :title="item.operationType">
           {{ item.operationType }}
         </span>
@@ -74,24 +78,24 @@ import { clearObject } from '@/utils/clearObject'
 export default {
   components: {
     OperationCounterparty,
-    CollectionLoader
+    CollectionLoader,
   },
+
+  props: ['id'],
   data () {
     return {
       formatAssetAmount,
       list: [],
       masterPubKey: Vue.params.MASTER_ACCOUNT,
-      isLoading: false
+      isLoading: false,
     }
   },
-
-  props: ['id'],
 
   computed: {
     records () {
       if (!this.list) return undefined
       return this.normalizeRecords(this.list)
-    }
+    },
   },
 
   methods: {
@@ -104,9 +108,9 @@ export default {
           .getWithSignature('/v3/history', {
             page: { order: 'desc' },
             filter: clearObject({
-              account: this.id
+              account: this.id,
             }),
-            include: ['operation.details']
+            include: ['operation.details'],
           })
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
@@ -132,11 +136,11 @@ export default {
           ledgerCloseTime: moment(item.operation.appliedAt).format('DD MMM YYYY [at] hh:mm:ss'),
           sourceAccount: item.operation.source.id === this.masterPubKey ? 'Master' : item.operation.source.id,
           receiverAccount: get(item, 'operation.details.receiverAccount.id'),
-          accountTo: get(item, 'operation.details.accountTo.id')
+          accountTo: get(item, 'operation.details.accountTo.id'),
         })
       })
-    }
-  }
+    },
+  },
 }
 </script>
 

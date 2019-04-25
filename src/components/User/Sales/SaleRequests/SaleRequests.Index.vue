@@ -1,7 +1,7 @@
 <template>
   <div class="sales-requests-index">
     <div class="sales-requests-index__list-wrp">
-      <sale-request-list/>
+      <sale-request-list />
     </div>
   </div>
 </template>
@@ -10,8 +10,8 @@
 import SaleRequestList from './components/SaleRequestList'
 export default {
   components: {
-    SaleRequestList
-  }
+    SaleRequestList,
+  },
 }
 </script>
 

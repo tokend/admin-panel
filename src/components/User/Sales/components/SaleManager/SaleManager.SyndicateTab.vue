@@ -2,15 +2,17 @@
   <div class="sale-manager-corporate-tab">
     <template v-if="isLoaded">
       <div class="sale-manager-corporate-tab__details-wrp">
-        <label class="data-caption">Corporate user details</label>
+        <label class="data-caption">
+          Corporate user details
+        </label>
         <ul class="key-value-list">
           <li>
             <span>Name</span>
-            <span>{{corporate.name}}</span>
+            <span>{{ corporate.name }}</span>
           </li>
           <li>
             <span>Headquarters</span>
-            <span>{{corporate.headquarters}}</span>
+            <span>{{ corporate.headquarters }}</span>
           </li>
           <li v-if="kycAvatarKey">
             <span>Avatar</span>
@@ -22,19 +24,19 @@
           </li>
           <li>
             <span>Homepage</span>
-            <span>{{corporate.homepage}}</span>
+            <span>{{ corporate.homepage }}</span>
           </li>
           <li>
             <span>Industry</span>
-            <span>{{corporate.industry}}</span>
+            <span>{{ corporate.industry }}</span>
           </li>
           <li>
             <span>Team size</span>
-            <span>{{corporate.team_size}}</span>
+            <span>{{ corporate.team_size }}</span>
           </li>
           <li>
             <span>Company</span>
-            <span>{{corporate.company}}</span>
+            <span>{{ corporate.company }}</span>
           </li>
           <li v-if="kycAvatarKey">
             <div class="sale-manager-corporate-tab__doc-view-wrp">
@@ -79,7 +81,7 @@ export default {
     SyndicateMember,
     UserDocLinkGetter,
     UserDocGetter,
-    SocialLinks
+    SocialLinks,
   },
 
   props: ['sale', 'saleRequest', 'user', 'blobId'],
@@ -88,14 +90,14 @@ export default {
     return {
       corporate: {},
       isLoaded: false,
-      isFailed: false
+      isFailed: false,
     }
   },
 
   computed: {
     kycAvatarKey () {
       return _get(this.corporate, 'documents.kyc_avatar.key')
-    }
+    },
   },
 
   created () {
@@ -103,7 +105,7 @@ export default {
       ownerId: _get(this.sale, 'ownerId') ||
         _get(this.saleRequest, 'requestor') ||
         _get(this.user, 'address'),
-      blobId: this.blobId
+      blobId: this.blobId,
     })
   },
 
@@ -123,8 +125,8 @@ export default {
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

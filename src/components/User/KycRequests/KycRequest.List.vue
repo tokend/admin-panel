@@ -1,8 +1,6 @@
 <template>
   <div class="request-list">
-
     <template v-if="view.mode === VIEW_MODES_VERBOSE.index">
-
       <div class="request-list__filters-wrp">
         <div class="app-list-filters">
           <select-field
@@ -10,9 +8,13 @@
             label="Role to set"
             v-model="filters.roleToSet"
           >
-            <option :value="''"></option>
-            <option :value="ACCOUNT_ROLES.general">General</option>
-            <option :value="ACCOUNT_ROLES.corporate">Сorporate</option>
+            <option :value="''" />
+            <option :value="ACCOUNT_ROLES.general">
+              General
+            </option>
+            <option :value="ACCOUNT_ROLES.corporate">
+              Сorporate
+            </option>
           </select-field>
           <select-field
             class="app-list-filters__field"
@@ -46,10 +48,18 @@
         <template v-if="list && list.length">
           <div class="app-list">
             <div class="app-list__header">
-              <span class="app-list__cell">Email</span>
-              <span class="app-list__cell app-list__cell--right">State</span>
-              <span class="app-list__cell app-list__cell--right">Last updated</span>
-              <span class="app-list__cell app-list__cell--right">Role to set</span>
+              <span class="app-list__cell">
+                Email
+              </span>
+              <span class="app-list__cell app-list__cell--right">
+                State
+              </span>
+              <span class="app-list__cell app-list__cell--right">
+                Last updated
+              </span>
+              <span class="app-list__cell app-list__cell--right">
+                Role to set
+              </span>
             </div>
             <button
               class="app-list__li"
@@ -112,7 +122,6 @@
       @back="toggleViewMode(null)"
       @reviewed="loadList"
     />
-
   </div>
 </template>
 
@@ -136,7 +145,7 @@ import { CollectionLoader } from '@/components/common'
 
 const VIEW_MODES_VERBOSE = Object.freeze({
   index: 'index',
-  user: 'user'
+  user: 'user',
 })
 
 export default {
@@ -147,9 +156,19 @@ export default {
     Object.defineProperty(kycRequestsList, 'updateAsk', {
       enumerable: true,
       get: () => false,
-      set: () => this.loadList()
+      set: () => this.loadList(),
     })
     return { kycRequestsList }
+  },
+
+  filters: {
+    deriveRoleToSet (item) {
+      return {
+        [config.ACCOUNT_ROLES.notVerified]: 'Unverified',
+        [config.ACCOUNT_ROLES.general]: 'General',
+        [config.ACCOUNT_ROLES.corporate]: 'Corporate',
+      }[item.requestDetails.accountRoleToSet]
+    },
   },
   data () {
     return {
@@ -158,28 +177,18 @@ export default {
       view: {
         mode: VIEW_MODES_VERBOSE.index,
         userId: null,
-        scrollPosition: 0
+        scrollPosition: 0,
       },
       filters: {
         state: 'pending',
         email: '',
         address: '',
-        type: ''
+        type: '',
       },
       VIEW_MODES_VERBOSE,
       REQUEST_STATES,
       KYC_REQUEST_STATES,
-      ACCOUNT_ROLES: config.ACCOUNT_ROLES
-    }
-  },
-
-  filters: {
-    deriveRoleToSet (item) {
-      return {
-        [config.ACCOUNT_ROLES.notVerified]: 'Unverified',
-        [config.ACCOUNT_ROLES.general]: 'General',
-        [config.ACCOUNT_ROLES.corporate]: 'Corporate'
-      }[item.requestDetails.accountRoleToSet]
+      ACCOUNT_ROLES: config.ACCOUNT_ROLES,
     }
   },
 
@@ -202,9 +211,9 @@ export default {
             filter: clearObject({
               state: KYC_REQUEST_STATES[this.filters.state].state,
               requestor: address,
-              'request_details.account_role_to_set': this.filters.roleToSet
+              'request_details.account_role_to_set': this.filters.roleToSet,
             }),
-            include: ['request_details.account']
+            include: ['request_details.account'],
           })
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
@@ -239,15 +248,15 @@ export default {
     reloadCollectionLoader () {
       this.$refs.collectionLoaderBtn.loadFirstPage()
     },
-    formatDate
+    formatDate,
   },
   watch: {
     'filters.state' () { this.reloadCollectionLoader() },
     'filters.roleToSet' () { this.reloadCollectionLoader() },
     'filters.address': _.throttle(function () {
       this.reloadCollectionLoader()
-    }, 1000)
-  }
+    }, 1000),
+  },
 }
 </script>
 

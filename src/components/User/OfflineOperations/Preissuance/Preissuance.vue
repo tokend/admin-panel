@@ -6,7 +6,7 @@
       </h2>
 
       <div class="preissuance__form-wrp">
-        <preissuance-form/>
+        <preissuance-form />
       </div>
     </div>
   </div>
@@ -17,8 +17,8 @@ import PreissuanceForm from './components/PreissuanceForm.vue'
 
 export default {
   components: {
-    PreissuanceForm
-  }
+    PreissuanceForm,
+  },
 }
 </script>
 

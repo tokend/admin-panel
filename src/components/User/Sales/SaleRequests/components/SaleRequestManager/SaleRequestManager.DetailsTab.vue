@@ -2,7 +2,9 @@
   <div class="sale-rm-details-tab">
     <div class="sale-rm-details-tab__row">
       <div class="sale-rm-details-tab__row-item">
-        <label class="data-caption">Request details</label>
+        <label class="data-caption">
+          Request details
+        </label>
         <ul class="key-value-list">
           <li>
             <span>Requestor</span>
@@ -29,25 +31,29 @@
         </ul>
 
         <template v-if="request.sale.rejectReason">
-          <label class="data-caption danger">Reject reason</label>
+          <label class="data-caption danger">
+            Reject reason
+          </label>
           <p class="text">
-            {{request.sale.rejectReason}}
+            {{ request.sale.rejectReason }}
           </p>
         </template>
       </div>
 
-      <div class="sale-rm-details-tab__row-item"></div>
+      <div class="sale-rm-details-tab__row-item" />
     </div>
 
     <div class="sale-rm-details-tab__row">
       <div class="sale-rm-details-tab__row-item">
-        <label class="data-caption">Asset details</label>
+        <label class="data-caption">
+          Asset details
+        </label>
         <ul class="key-value-list">
           <li>
             <span>Name</span>
             <span>
               <template v-if="safeGet(request, 'asset.details.name')">
-                {{request.asset.details.name}}
+                {{ request.asset.details.name }}
               </template>
               <template v-else>
                 &mdash;
@@ -56,7 +62,7 @@
           </li>
           <li>
             <span>Code</span>
-            <span>{{request.asset.code}}</span>
+            <span>{{ request.asset.code }}</span>
           </li>
           <li>
             <span>Initial preissued amount</span>
@@ -95,7 +101,9 @@
       </div>
 
       <div class="sale-rm-details-tab__row-item">
-        <label class="data-caption">Asset logo</label>
+        <label class="data-caption">
+          Asset logo
+        </label>
         <template v-if="safeGet(request, 'asset.details.logo.key')">
           <img-getter
             class="sale-rm-details-tab__asset-logo"
@@ -111,13 +119,15 @@
 
     <div class="sale-rm-details-tab__row">
       <div class="sale-rm-details-tab__row-item">
-        <label class="data-caption">Sale details</label>
+        <label class="data-caption">
+          Sale details
+        </label>
         <ul class="key-value-list">
           <li>
             <span>Name</span>
             <span>
               <template v-if="safeGet(saleDetails, 'details.name')">
-                {{saleDetails.details.name}}
+                {{ saleDetails.details.name }}
               </template>
               <template v-else>
                 (Not provided yet)
@@ -160,23 +170,27 @@
             />
           </li>
 
-          <label class="data-caption">Prices (per one) </label>
+          <label class="data-caption">
+            Prices (per one)
+          </label>
           <li
             v-for="(item, index) in saleDetails.quoteAssets"
             :key="index"
           >
-            <span>{{item.quoteAsset}}</span>
-            <span>{{item.price}}</span>
+            <span>{{ item.quoteAsset }}</span>
+            <span>{{ item.price }}</span>
           </li>
         </ul>
 
-        <label class="data-caption">Short description</label>
+        <label class="data-caption">
+          Short description
+        </label>
         <p
           class="text sale-rm-details-tab__short-description"
           :title="safeGet(saleDetails, 'details.shortDescription')"
         >
           <template v-if="safeGet(saleDetails, 'details.shortDescription')">
-            {{saleDetails.details.shortDescription}}
+            {{ saleDetails.details.shortDescription }}
           </template>
           <template v-else>
             (Not provided yet)
@@ -185,7 +199,9 @@
       </div>
 
       <div class="sale-rm-details-tab__row-item">
-        <label class="data-caption">Sale logo</label>
+        <label class="data-caption">
+          Sale logo
+        </label>
         <template v-if="safeGet(saleDetails, 'details.logo.key')">
           <img-getter
             class="sale-rm-details-tab__sale-logo"
@@ -207,12 +223,11 @@ import {
   AssetAmountFormatter,
   DateFormatter,
   AssetPoliciesFormatter,
-  RequestStateFormatter
+  RequestStateFormatter,
 } from '@comcom/formatters'
 import get from 'lodash/get'
 
 export default {
-  props: ['request'],
 
   components: {
     EmailGetter,
@@ -221,16 +236,17 @@ export default {
     AssetAmountFormatter,
     DateFormatter,
     AssetPoliciesFormatter,
-    RequestStateFormatter
+    RequestStateFormatter,
   },
+  props: ['request'],
   computed: {
     saleDetails () {
       return this.request.sale.details[this.request.sale.details.requestType]
-    }
+    },
   },
   methods: {
-    safeGet: get
-  }
+    safeGet: get,
+  },
 }
 </script>
 

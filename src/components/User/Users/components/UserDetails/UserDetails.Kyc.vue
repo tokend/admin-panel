@@ -1,14 +1,19 @@
 <template>
   <div class="user-details-account">
-    <h3 class="user-details-account__title">KYC information</h3>
+    <h3 class="user-details-account__title">
+      KYC information
+    </h3>
     <div class="user-details-account__info">
       <p>Can be uploaded one of the documents:</p>
       <p> - Valid passport;</p>
       <p>- Driving license - full, not provisional, with a color photograph;</p>
-      <p> - Valid National ID card;
-        <p />
-        <p>- In all cases handwritten documents or those in a foreign script that cannot be read, i.e Arabic or Cyrillic
-          will not be accepted unless translated and notarized.</p>
+      <p>
+        - Valid National ID card;
+      </p><p />
+      <p>
+        - In all cases handwritten documents or those in a foreign script that cannot be read, i.e Arabic or Cyrillic
+        will not be accepted unless translated and notarized.
+      </p>
     </div>
 
     <template v-if="isLoaded">
@@ -47,15 +52,21 @@
       <ul class="key-value-list">
         <li>
           <span>First name</span>
-          <span :title="kyc.firstName">{{kyc.firstName}}</span>
+          <span :title="kyc.firstName">
+            {{ kyc.firstName }}
+          </span>
         </li>
         <li>
           <span>Last name</span>
-          <span :title="kyc.lastName">{{kyc.lastName}}</span>
+          <span :title="kyc.lastName">
+            {{ kyc.lastName }}
+          </span>
         </li>
         <li>
           <span>ID Document type</span>
-          <span :title="ID_DOCUMENTS_VERBOSE[kyc.idDocumentType]">{{ID_DOCUMENTS_VERBOSE[kyc.idDocumentType]}}</span>
+          <span :title="ID_DOCUMENTS_VERBOSE[kyc.idDocumentType]">
+            {{ ID_DOCUMENTS_VERBOSE[kyc.idDocumentType] }}
+          </span>
         </li>
         <li>
           <span>ID Document</span>
@@ -106,16 +117,20 @@
         <p>Can be uploaded one of the documents:</p>
         <p> - Driving license if not already uploaded on the previous step;</p>
         <p>- Recent utility bill (not older than 6 months old);</p>
-        <p> - Bank statement or credit card statement (not older than 6 months);
-          <p />
-          <p> - Bank reference letter (not older than 6 months);
-            <p />
-            <p>- Signed Tenancy/Rental Agreement.</p>
+        <p>
+          - Bank statement or credit card statement (not older than 6 months);
+        </p><p />
+        <p>
+          - Bank reference letter (not older than 6 months);
+        </p><p />
+        <p>- Signed Tenancy/Rental Agreement.</p>
       </div>
     </template>
 
     <template v-else-if="isFailed">
-      <p class="danger">An error occurred. Please try again later.</p>
+      <p class="danger">
+        An error occurred. Please try again later.
+      </p>
     </template>
 
     <template v-else>
@@ -136,15 +151,17 @@ const ID_DOCUMENTS_VERBOSE = {
   passport: 'Passport',
   identity_card: 'Identity card',
   driving_license: 'Driving license',
-  residence_permit: 'Residence permit'
+  residence_permit: 'Residence permit',
 }
 
 export default {
   components: {
     UserDocGetter,
     UserDocLinkGetter,
-    ImgGetter
+    ImgGetter,
   },
+
+  props: ['user', 'blobId'],
 
   data () {
     return {
@@ -152,11 +169,13 @@ export default {
       isLoaded: false,
       isFailed: false,
       config,
-      ID_DOCUMENTS_VERBOSE
+      ID_DOCUMENTS_VERBOSE,
     }
   },
-
-  props: ['user', 'blobId'],
+  watch: {
+    user () { this.getKyc() },
+    blobId () { this.getKyc() },
+  },
 
   created () {
     this.getKyc()
@@ -176,12 +195,8 @@ export default {
         ErrorHandler.processWithoutFeedback(error)
         this.isFailed = true
       }
-    }
+    },
   },
-  watch: {
-    user () { this.getKyc() },
-    blobId () { this.getKyc() }
-  }
 }
 </script>
 

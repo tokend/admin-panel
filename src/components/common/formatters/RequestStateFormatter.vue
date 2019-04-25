@@ -1,6 +1,9 @@
 <template>
-  <span class="request-state-formatter capitalized" :is-colored="isColored" :data-code="state">
-    {{format(state)}}
+  <span
+    class="request-state-formatter capitalized"
+    :is-colored="isColored"
+    :data-code="state">
+    {{ format(state) }}
   </span>
 </template>
 
@@ -11,8 +14,8 @@ export default {
   methods: {
     format (str) {
       return str.split('_').join(' ')
-    }
-  }
+    },
+  },
 }
 </script>
 

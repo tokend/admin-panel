@@ -56,7 +56,9 @@
       </template>
     </template>
   </table>
-  <p :title="details" v-else>{{ details }}</p>
+  <p :title="details" v-else>
+    {{ details }}
+  </p>
 </template>
 
 <script>
@@ -64,21 +66,21 @@ import { verbozify } from '@/utils/verbozify'
 
 export default {
   name: 'details-reader',
+  filters: {
+    humanize (value) {
+      return verbozify(value)
+    },
+  },
   props: {
     details: {
       type: [Object, Number, Array, String],
       required: true,
-      default: () => { }
-    }
+      default: () => { },
+    },
   },
   data () {
     return {
-      dictionary: {}
-    }
-  },
-  filters: {
-    humanize (value) {
-      return verbozify(value)
+      dictionary: {},
     }
   },
   methods: {
@@ -99,8 +101,8 @@ export default {
 
     isObject (value) {
       return value && typeof value === 'object'
-    }
-  }
+    },
+  },
 }
 </script>
 

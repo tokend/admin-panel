@@ -3,7 +3,7 @@
     <h2>Manage assets</h2>
 
     <div class="asset-requests-index__list-wrp">
-      <asset-request-list :state="state"/>
+      <asset-request-list :state="state" />
     </div>
   </div>
 </template>
@@ -13,8 +13,8 @@ import AssetRequestList from './components/AssetRequestList'
 
 export default {
   components: {
-    AssetRequestList
-  }
+    AssetRequestList,
+  },
 }
 </script>
 

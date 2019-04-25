@@ -3,23 +3,25 @@
     <template v-if="list.length">
       <div class="key-value-manager__card">
         <div class="key-value-manager__form">
-          <select-field class="key-value-manager__input"
-                        v-model="updateForm.key"
-                        label="Key"
+          <select-field
+            class="key-value-manager__input"
+            v-model="updateForm.key"
+            label="Key"
           >
             <option
               v-for="item in list"
               :value="item.key"
               :key="item.key"
             >
-              {{item.key}}
+              {{ item.key }}
             </option>
           </select-field>
 
-          <input-field v-model="updateForm.value"
-                       class="key-value-manager__input"
-                       label="Value"
-                       placeholder="Enter new value"
+          <input-field
+            v-model="updateForm.value"
+            class="key-value-manager__input"
+            label="Value"
+            placeholder="Enter new value"
           />
 
           <button
@@ -37,20 +39,23 @@
 
     <div class="key-value-manager__card">
       <div class="key-value-manager__form">
-        <input-field v-model="createForm.key"
-                     class="key-value-manager__input"
-                     label="Key"
-                     placeholder="Enter new key"
+        <input-field
+          v-model="createForm.key"
+          class="key-value-manager__input"
+          label="Key"
+          placeholder="Enter new key"
         />
-        <input-field v-model="createForm.value"
-                     class="key-value-manager__input"
-                     label="Value"
-                     placeholder="Enter new value"
+        <input-field
+          v-model="createForm.value"
+          class="key-value-manager__input"
+          label="Value"
+          placeholder="Enter new value"
         />
 
-        <select-field v-model.number="createForm.entryType"
-                      class="key-value-manager__input"
-                      label="Entry type"
+        <select-field
+          v-model.number="createForm.entryType"
+          class="key-value-manager__input"
+          label="Entry type"
         >
           <option
             v-for="(value, lbl) in KEY_VALUE_ENTRY_TYPE"
@@ -61,11 +66,12 @@
           </option>
         </select-field>
 
-        <button class="app__btn
+        <button
+          class="app__btn
                       app__btn--small
                       key-value-manager__btn"
-                :disabled="isPending"
-                @click="setKeyValue(createForm.key, createForm.value, createForm.entryType)"
+          :disabled="isPending"
+          @click="setKeyValue(createForm.key, createForm.value, createForm.entryType)"
         >
           Add
         </button>
@@ -77,7 +83,7 @@
 import { Sdk } from '@/sdk'
 import {
   SelectField,
-  InputField
+  InputField,
 } from '@comcom/fields'
 import { KEY_VALUE_ENTRY_TYPE } from '../../../constants'
 import { ErrorHandler } from '@/utils/ErrorHandler'
@@ -85,23 +91,29 @@ import { ErrorHandler } from '@/utils/ErrorHandler'
 export default {
   components: {
     SelectField,
-    InputField
+    InputField,
   },
   data: _ => ({
     createForm: {
       key: '',
       value: '',
-      entryType: KEY_VALUE_ENTRY_TYPE.uint32
+      entryType: KEY_VALUE_ENTRY_TYPE.uint32,
     },
     updateForm: {
       key: '',
-      value: ''
+      value: '',
     },
 
     list: [],
     isPending: false,
-    KEY_VALUE_ENTRY_TYPE
+    KEY_VALUE_ENTRY_TYPE,
   }),
+  watch: {
+    'updateForm.key' (key) {
+      const item = this.list.find(elem => elem.key === key)
+      this.updateForm.value = item[`${item.type.name}Value`]
+    },
+  },
   created () {
     this.getList()
   },
@@ -137,14 +149,8 @@ export default {
       } catch (e) {
         ErrorHandler.processWithoutFeedback(e)
       }
-    }
+    },
   },
-  watch: {
-    'updateForm.key' (key) {
-      const item = this.list.find(elem => elem.key === key)
-      this.updateForm.value = item[`${item.type.name}Value`]
-    }
-  }
 }
 </script>
 <style scoped lang="scss">

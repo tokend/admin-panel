@@ -47,13 +47,24 @@
         v-if="filteredRequests && filteredRequests.length"
       >
         <table class="preissuance-request-list__table">
-
           <thead>
             <tr>
-              <th><span class="secondary">Amount</span></th>
-              <th><span class="secondary">Asset</span></th>
-              <th><span class="secondary">Status</span></th>
-              <th></th>
+              <th>
+                <span class="secondary">
+                  Amount
+                </span>
+              </th>
+              <th>
+                <span class="secondary">
+                  Asset
+                </span>
+              </th>
+              <th>
+                <span class="secondary">
+                  Status
+                </span>
+              </th>
+              <th />
             </tr>
           </thead>
 
@@ -117,7 +128,6 @@
       </template>
     </div>
     <!--/ Request List -->
-
   </div>
 </template>
 
@@ -133,19 +143,19 @@ import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   components: {
-    InputField
+    InputField,
   },
 
   props: {
     asset: {
       type: String,
-      default: 'All'
+      default: 'All',
     },
 
     availableAmount: {
       type: Number,
-      default: 0
-    }
+      default: 0,
+    },
   },
 
   data () {
@@ -158,7 +168,7 @@ export default {
       pages: {},
       requests: [],
       rejectReason: '',
-      currentRequest: {}
+      currentRequest: {},
     }
   },
 
@@ -174,17 +184,17 @@ export default {
       return this.asset === 'All'
         ? filteredByType
         : filteredByType.filter(request => request.asset() === this.asset)
-    }
-  },
-
-  mounted () {
-    this.getRequests()
+    },
   },
 
   watch: {
     asset: function () {
       this.getRequests()
-    }
+    },
+  },
+
+  mounted () {
+    this.getRequests()
   },
 
   methods: {
@@ -218,7 +228,7 @@ export default {
     formatDate (date) {
       return moment(date).calendar(null, {
         lastWeek: 'DD MMM LT',
-        sameElse: 'DD MMM LT'
+        sameElse: 'DD MMM LT',
       })
     },
 
@@ -283,8 +293,8 @@ export default {
           this.clear()
           ErrorHandler.process(error)
         })
-    }
-  }
+    },
+  },
 }
 </script>
 

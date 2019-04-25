@@ -8,22 +8,25 @@
             <thead>
               <tr>
                 <template v-if="isRtl">
-                  <th>Summary ({{quoteAsset}})</th>
-                  <th>Volume ({{quoteAsset}})</th>
-                  <th>Amount ({{baseAsset}})</th>
-                  <th>Price ({{quoteAsset}})</th>
+                  <th>Summary ({{ quoteAsset }})</th>
+                  <th>Volume ({{ quoteAsset }})</th>
+                  <th>Amount ({{ baseAsset }})</th>
+                  <th>Price ({{ quoteAsset }})</th>
                 </template>
                 <template v-else>
-                  <th>Price ({{quoteAsset}})</th>
-                  <th>Amount ({{baseAsset}})</th>
-                  <th>Volume ({{quoteAsset}})</th>
-                  <th>Summary ({{quoteAsset}})</th>
+                  <th>Price ({{ quoteAsset }})</th>
+                  <th>Amount ({{ baseAsset }})</th>
+                  <th>Volume ({{ quoteAsset }})</th>
+                  <th>Summary ({{ quoteAsset }})</th>
                 </template>
               </tr>
             </thead>
 
             <tbody>
-            <tr v-for="(item, index) in summedList" :key="index" tabindex="0"
+              <tr
+                v-for="(item, index) in summedList"
+                :key="index"
+                tabindex="0"
                 @click="showItemDetails(item)"
                 @keyup.enter.stop.prevent="showItemDetails(item)"
                 @keyup.space.stop.prevent="showItemDetails(item)">
@@ -52,7 +55,8 @@
       </template>
     </div>
 
-    <modal class="order-book-table__modal"
+    <modal
+      class="order-book-table__modal"
       v-if="isDetailsShown"
       @close-request="hideItemDetails()"
       max-width="45rem">
@@ -61,13 +65,17 @@
       <ul class="key-value-list">
         <li>
           <span>ID</span>
-          <span>{{itemDetails.offerId}}</span>
+          <span>{{ itemDetails.offerId }}</span>
         </li>
         <li>
           <span>Type</span>
           <span>
-            <template v-if="itemDetails.isBuy">Bid</template>
-            <template v-else>Ask</template>
+            <template v-if="itemDetails.isBuy">
+              Bid
+            </template>
+            <template v-else>
+              Ask
+            </template>
           </span>
         </li>
         <li>
@@ -83,7 +91,7 @@
           <asset-amount-formatter :amount="itemDetails.baseAmount" :asset="itemDetails.baseAssetCode" />
         </li>
         <li>
-          <span>Price per {{itemDetails.baseAssetCode}}</span>
+          <span>Price per {{ itemDetails.baseAssetCode }}</span>
           <asset-amount-formatter :amount="itemDetails.price" :asset="itemDetails.quoteAssetCode" />
         </li>
         <li>
@@ -108,8 +116,10 @@ export default {
     AssetAmountFormatter,
     DateFormatter,
     EmailGetter,
-    Modal
+    Modal,
   },
+
+  props: ['list', 'pair', 'isBids', 'isRtl'],
 
   data () {
     return {
@@ -117,11 +127,13 @@ export default {
       baseAsset: '',
       summedList: [],
       isDetailsShown: false,
-      itemDetails: Object.assign({}, EMPTY_DETAILS)
+      itemDetails: Object.assign({}, EMPTY_DETAILS),
     }
   },
 
-  props: ['list', 'pair', 'is-bids', 'is-rtl'],
+  watch: {
+    list () { this.calcSummedList() },
+  },
 
   created () {
     this.parsePair()
@@ -150,12 +162,8 @@ export default {
 
     hideItemDetails (item) {
       this.isDetailsShown = false
-    }
+    },
   },
-
-  watch: {
-    list () { this.calcSummedList() }
-  }
 }
 </script>
 

@@ -1,15 +1,15 @@
 <template>
   <div class="limits">
-    <limits-manager/>
+    <limits-manager />
   </div>
 </template>
 
 <script>
-  import LimitsManager from './components/Limits.Manager'
+import LimitsManager from './components/Limits.Manager'
 
-  export default {
-    components: { LimitsManager }
-  }
+export default {
+  components: { LimitsManager },
+}
 </script>
 
 <style lang="scss" scoped>

@@ -53,7 +53,8 @@
               autocomplete-type="email"
             />
 
-            <select-field v-model="filters.asset"
+            <select-field
+              v-model="filters.asset"
               class="limits-manager-filters__specific-user-field"
               label="Asset"
             >
@@ -74,7 +75,9 @@
       <div class="limits-manager__limits-list-wrp">
         <template v-if="limits.payment">
           <div class="limits-manager__limits-list">
-            <h3 class="limits-manager__content-title">Payment limits</h3>
+            <h3 class="limits-manager__content-title">
+              Payment limits
+            </h3>
             <div class="limits-manager__limits-list-inner">
               <template v-for="(type,i) in LIMITS_TYPES">
                 <div class="limits-manager__limit-row" :key="i">
@@ -108,7 +111,9 @@
       <div class="limits-manager__limits-list-wrp">
         <template v-if="limits.withdrawal">
           <div class="limits-manager__limits-list">
-            <h3 class="limits-manager__content-title">Withdrawal limits</h3>
+            <h3 class="limits-manager__content-title">
+              Withdrawal limits
+            </h3>
             <div class="limits-manager__limits-list-inner">
               <template v-for="(type,i) in LIMITS_TYPES">
                 <div class="limits-manager__limit-row" :key="i">
@@ -142,7 +147,9 @@
       <div class="limits-manager__limits-list-wrp">
         <template v-if="limits.deposit">
           <div class="limits-manager__limits-list">
-            <h3 class="limits-manager__content-title">Deposit limits</h3>
+            <h3 class="limits-manager__content-title">
+              Deposit limits
+            </h3>
             <div class="limits-manager__limits-list-inner">
               <template v-for="(type,i) in LIMITS_TYPES">
                 <div class="limits-manager__limit-row" :key="i">
@@ -187,12 +194,12 @@ import {
   SelectField,
   InputField,
   SwitchField,
-  TickField
+  TickField,
 } from '@comcom/fields'
 
 import {
   Tabs,
-  Tab
+  Tab,
 } from '@comcom/Tabs'
 
 import { STATS_OPERATION_TYPES, DEFAULT_MAX_AMOUNT } from '@/constants'
@@ -204,12 +211,12 @@ const LIMITS_TYPES = [
   'dailyOut',
   'weeklyOut',
   'monthlyOut',
-  'annualOut'
+  'annualOut',
 ]
 
 const TAB_NAMES = {
   accountType: 'Specific account type',
-  account: 'Specific account'
+  account: 'Specific account',
 }
 
 export default {
@@ -219,21 +226,21 @@ export default {
     InputField,
     TickField,
     Tabs,
-    Tab
+    Tab,
   },
   data: _ => ({
     filters: {
       asset: '',
       accountRole: '',
       email: '',
-      address: ''
+      address: '',
     },
     selectedTabName: '',
     specificUserAddress: '',
     limits: {
       withdrawal: null,
       payment: null,
-      deposit: null
+      deposit: null,
     },
     assets: [],
     isPending: false,
@@ -244,9 +251,9 @@ export default {
     ACCOUNT_ROLES_VERBOSE: Object.freeze({
       [config.ACCOUNT_ROLES.notVerified]: 'Unverified user',
       [config.ACCOUNT_ROLES.general]: 'General user',
-      [config.ACCOUNT_ROLES.corporate]: 'Corporate user'
+      [config.ACCOUNT_ROLES.corporate]: 'Corporate user',
     }),
-    numericValueRegExp: /^\d*\.?\d*$/
+    numericValueRegExp: /^\d*\.?\d*$/,
   }),
   async created () {
     await this.getAssets()
@@ -264,7 +271,7 @@ export default {
       const [paymentLimits, withdrawalLimits, depositLimits] = await Promise.all([
         getLimit.apply(this, [STATS_OPERATION_TYPES.paymentOut]),
         getLimit.apply(this, [STATS_OPERATION_TYPES.withdraw]),
-        getLimit.apply(this, [STATS_OPERATION_TYPES.deposit])
+        getLimit.apply(this, [STATS_OPERATION_TYPES.deposit]),
       ])
       this.limits.payment = paymentLimits
       this.limits.withdrawal = withdrawalLimits
@@ -276,7 +283,7 @@ export default {
           account_type: this.filters.accountRole,
           stats_op_type: statsOpType,
           asset: this.filters.asset,
-          email: this.filters.email
+          email: this.filters.email,
         })
 
         // TODO: remove legacy consistency fix
@@ -310,7 +317,7 @@ export default {
         }
         const operation = Sdk.base.ManageLimitsBuilder.createLimits({
           ...limits,
-          accountID
+          accountID,
         })
         await Sdk.horizon.transactions.submitOperations(operation)
         await this.getAssets()
@@ -384,7 +391,7 @@ export default {
     },
     normalizeLimitAmount (limit) {
       return limit >= DEFAULT_MAX_AMOUNT ? '' : limit
-    }
+    },
   },
   watch: {
     assets: {
@@ -392,7 +399,7 @@ export default {
         this.setFilters()
         this.getLimits()
       },
-      immediate: true
+      immediate: true,
     },
     'filters.accountRole': {
       handler: function (value) {
@@ -403,23 +410,23 @@ export default {
         this.setFilters()
         this.getLimits()
       },
-      immediate: true
+      immediate: true,
     },
     'filters.asset': {
       handler: function () {
         this.setFilters()
         this.getLimits()
       },
-      immediate: true
+      immediate: true,
     },
     'specificUserAddress': {
       handler: throttle(async function (value) {
         await this.setFilters()
         await this.getLimits()
       }, 1000),
-      immediate: true
-    }
-  }
+      immediate: true,
+    },
+  },
 }
 </script>
 

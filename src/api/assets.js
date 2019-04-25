@@ -9,7 +9,7 @@ export default {
       policies: +params.policies,
       physicalPrice: '' + params.physicalPrice,
       physicalPriceCorrection: '' + params.physicalPriceCorrection,
-      maxPriceStep: '' + params.maxPriceStep
+      maxPriceStep: '' + params.maxPriceStep,
     })
     const response = await Sdk.horizon.transactions.submitOperations(operation)
     return response.data
@@ -34,9 +34,9 @@ export default {
       policies: +params.policies,
       physicalPrice: '' + params.physicalPrice,
       physicalPriceCorrection: '' + params.physicalPriceCorrection,
-      maxPriceStep: '' + params.maxPriceStep
+      maxPriceStep: '' + params.maxPriceStep,
     })
     const response = await Sdk.horizon.transactions.submitOperations(operation)
     return response.data
-  }
+  },
 }

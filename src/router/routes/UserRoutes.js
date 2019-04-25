@@ -26,7 +26,7 @@ export const UserRoutes = {
           name: 'users.index',
           component: function (resolve) {
             require(['../../components/User/Users/Users.Index.vue'], resolve)
-          }
+          },
         },
         {
           path: ':id',
@@ -34,9 +34,9 @@ export const UserRoutes = {
           component: function (resolve) {
             require(['../../components/User/Users/Users.Show.vue'], resolve)
           },
-          props: true
-        }
-      ]
+          props: true,
+        },
+      ],
     },
     {
       path: '/kyc-requests',
@@ -51,9 +51,9 @@ export const UserRoutes = {
           name: 'kycRequests.index',
           component: function (resolve) {
             require(['../../components/User/KycRequests/KycRequests.Index.vue'], resolve)
-          }
-        }
-      ]
+          },
+        },
+      ],
     },
     {
       path: '/limits',
@@ -68,14 +68,14 @@ export const UserRoutes = {
           name: 'limits.index',
           component: function (resolve) {
             require(['../../components/User/Limits/Limits.Index.vue'], resolve)
-          }
+          },
         },
         {
           path: 'requests',
           name: 'limits.requests',
           component: function (resolve) {
             require(['../../components/User/Limits/Limits.Requests.vue'], resolve)
-          }
+          },
         },
         {
           path: 'requests/:id',
@@ -83,9 +83,9 @@ export const UserRoutes = {
           component: function (resolve) {
             require(['../../components/User/Limits/Limits.Reviewer.vue'], resolve)
           },
-          props: true
-        }
-      ]
+          props: true,
+        },
+      ],
     },
     {
       path: '/admins',
@@ -100,14 +100,14 @@ export const UserRoutes = {
           name: 'admins.new',
           component: function (resolve) {
             require(['../../components/User/Admins/Admins.New.vue'], resolve)
-          }
+          },
         },
         {
           path: '',
           name: 'admins.index',
           component: function (resolve) {
             require(['../../components/User/Admins/Admins.Index.vue'], resolve)
-          }
+          },
         },
         {
           path: ':id',
@@ -115,9 +115,9 @@ export const UserRoutes = {
           component: function (resolve) {
             require(['../../components/User/Admins/Admins.Show.vue'], resolve)
           },
-          props: true
-        }
-      ]
+          props: true,
+        },
+      ],
     },
 
     {
@@ -133,14 +133,14 @@ export const UserRoutes = {
           name: 'offlineOperations.preIssuance',
           component: function (resolve) {
             require(['../../components/User/OfflineOperations/Preissuance/Preissuance.vue'], resolve)
-          }
+          },
         },
         {
           path: 'change-asset-issuer',
           name: 'offlineOperations.changeAssetIssuer',
           component: function (resolve) {
             require(['../../components/User/OfflineOperations/ChangeAssetIssuer/ChangeAssetIssuer.vue'], resolve)
-          }
+          },
         },
         {
           path: 'pre-issuance-requests',
@@ -155,11 +155,11 @@ export const UserRoutes = {
               name: 'offlineOperations.preIssuanceRequests.index',
               component: function (resolve) {
                 require(['../../components/User/OfflineOperations/PreIssuanceRequests/PreIssuanceRequests.Index.vue'], resolve)
-              }
-            }
-          ]
-        }
-      ]
+              },
+            },
+          ],
+        },
+      ],
     },
 
     {
@@ -175,7 +175,7 @@ export const UserRoutes = {
           name: 'assets.issuance',
           component: function (resolve) {
             require(['../../components/User/Assets/Issuance/Issuance.vue'], resolve)
-          }
+          },
         },
         {
           path: 'issuance/:id',
@@ -183,7 +183,7 @@ export const UserRoutes = {
           component: function (resolve) {
             require(['../../components/User/Assets/Issuance/IssuanceDetails.vue'], resolve)
           },
-          props: true
+          props: true,
         },
         {
           path: 'withdrawals',
@@ -198,9 +198,9 @@ export const UserRoutes = {
               name: 'assets.withdrawals.index',
               component: function (resolve) {
                 require(['../../components/User/Assets/Withdrawals/Withdrawals.Index.vue'], resolve)
-              }
-            }
-          ]
+              },
+            },
+          ],
         },
         {
           path: 'pairs',
@@ -215,7 +215,7 @@ export const UserRoutes = {
               name: 'assets.assetPairs.index',
               component: function (resolve) {
                 require(['../../components/User/Assets/AssetPairs/AssetPairs.Index.vue'], resolve)
-              }
+              },
             },
             {
               path: ':base-:quote',
@@ -223,7 +223,7 @@ export const UserRoutes = {
               component: function (resolve) {
                 require(['../../components/User/Assets/AssetPairs/AssetPairs.Show.vue'], resolve)
               },
-              props: true
+              props: true,
             },
             {
               path: 'new',
@@ -231,9 +231,9 @@ export const UserRoutes = {
               component: function (resolve) {
                 require(['../../components/User/Assets/AssetPairs/AssetPairs.New.vue'], resolve)
               },
-              props: true
-            }
-          ]
+              props: true,
+            },
+          ],
         },
         {
           path: 'master-assets',
@@ -248,14 +248,14 @@ export const UserRoutes = {
               name: 'assets.masterAssets.index',
               component: function (resolve) {
                 require(['../../components/User/Assets/MasterAssets/MasterAssets.Index.vue'], resolve)
-              }
+              },
             },
             {
               path: 'new',
               name: 'assets.masterAssets.new',
               component: function (resolve) {
                 require(['../../components/User/Assets/MasterAssets/MasterAssets.New.vue'], resolve)
-              }
+              },
             },
             {
               path: ':asset',
@@ -263,9 +263,9 @@ export const UserRoutes = {
               component: function (resolve) {
                 require(['../../components/User/Assets/MasterAssets/MasterAssets.Show.vue'], resolve)
               },
-              props: true
-            }
-          ]
+              props: true,
+            },
+          ],
         },
         {
           path: 'requests',
@@ -280,7 +280,7 @@ export const UserRoutes = {
               name: 'assets.requests.index',
               component: function (resolve) {
                 require(['../../components/User/Assets/AssetRequests/AssetRequests.Index.vue'], resolve)
-              }
+              },
             },
             {
               path: ':id',
@@ -288,11 +288,11 @@ export const UserRoutes = {
               component: function (resolve) {
                 require(['../../components/User/Assets/AssetRequests/AssetRequests.Show.vue'], resolve)
               },
-              props: true
-            }
-          ]
-        }
-      ]
+              props: true,
+            },
+          ],
+        },
+      ],
     },
 
     {
@@ -316,7 +316,7 @@ export const UserRoutes = {
               name: 'sales.requests.index',
               component: function (resolve) {
                 require(['../../components/User/Sales/SaleRequests/SaleRequests.Index.vue'], resolve)
-              }
+              },
             },
             {
               path: ':id',
@@ -324,16 +324,16 @@ export const UserRoutes = {
               component: function (resolve) {
                 require(['../../components/User/Sales/SaleRequests/SaleRequests.Show.vue'], resolve)
               },
-              props: true
-            }
-          ]
+              props: true,
+            },
+          ],
         },
         {
           path: '',
           name: 'sales.index',
           component: function (resolve) {
             require(['../../components/User/Sales/Sales.Index.vue'], resolve)
-          }
+          },
         },
         {
           path: ':id',
@@ -341,9 +341,9 @@ export const UserRoutes = {
           component: function (resolve) {
             require(['../../components/User/Sales/Sales.Show.vue'], resolve)
           },
-          props: true
-        }
-      ]
+          props: true,
+        },
+      ],
     },
 
     {
@@ -359,9 +359,9 @@ export const UserRoutes = {
           name: 'keyValue.index',
           component: function (resolve) {
             require(['../../components/User/KeyValue/KeyValue.Index.vue'], resolve)
-          }
-        }
-      ]
+          },
+        },
+      ],
     },
 
     {
@@ -377,9 +377,9 @@ export const UserRoutes = {
           name: 'fees.index',
           component: function (resolve) {
             require(['../../components/User/Fees/Fees.Index.vue'], resolve)
-          }
-        }
-      ]
+          },
+        },
+      ],
     },
 
     {
@@ -395,23 +395,23 @@ export const UserRoutes = {
           name: 'trades.index',
           component: function (resolve) {
             require(['../../components/User/Trades/Trades.Index.vue'], resolve)
-          }
-        }
-      ]
+          },
+        },
+      ],
     },
     {
       path: '/settings',
       name: 'settings',
       component: function (resolve) {
         require(['../../components/settings/Settings.vue'], resolve)
-      }
+      },
     },
     {
       path: '/settings/tfa',
       name: 'settings.tfa',
       component: function (resolve) {
         require(['../../components/settings/GAuth.vue'], resolve)
-      }
-    }
-  ]
+      },
+    },
+  ],
 }

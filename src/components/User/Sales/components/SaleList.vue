@@ -26,13 +26,13 @@
         <input-date-field
           label="Start date"
           class="sale-list__field sale-list__field-margin-top"
-          :enableTime="false"
+          :enable-time="false"
           v-model="filtersDate.startDate"
         />
         <input-date-field
           label="End date"
           class="sale-list__field sale-list__field-margin-left sale-list__field-margin-top"
-          :enableTime="false"
+          :enable-time="false"
           v-model="filtersDate.endDate"
         />
         <tick-field
@@ -50,9 +50,15 @@
             <span class="app-list__cell">
               <!-- empty -->
             </span>
-            <span class="app-list__cell">Name</span>
-            <span class="app-list__cell">State</span>
-            <span class="app-list__cell">Owner</span>
+            <span class="app-list__cell">
+              Name
+            </span>
+            <span class="app-list__cell">
+              State
+            </span>
+            <span class="app-list__cell">
+              Owner
+            </span>
           </div>
 
           <router-link
@@ -97,8 +103,12 @@
       <template v-else>
         <ul class="app-list">
           <li class="app-list__li-like">
-            <template v-if="isLoaded">Nothing here yet</template>
-            <template v-else>Loading...</template>
+            <template v-if="isLoaded">
+              Nothing here yet
+            </template>
+            <template v-else>
+              Loading...
+            </template>
           </li>
         </ul>
       </template>
@@ -133,7 +143,7 @@ export default {
     TickField,
     EmailGetter,
     InputDateField,
-    CollectionLoader
+    CollectionLoader,
   },
 
   data () {
@@ -148,12 +158,12 @@ export default {
         baseAsset: '',
         owner: '',
         openOnly: false,
-        name: ''
+        name: '',
       },
       filtersDate: {
         startDate: '',
-        endDate: ''
-      }
+        endDate: '',
+      },
     }
   },
 
@@ -178,7 +188,7 @@ export default {
           open_only: this.filters.openOnly,
           name: this.filters.name,
           order: this.filters.order || 'desc',
-          limit: this.filters.limit || config.PAGE_LIMIT
+          limit: this.filters.limit || config.PAGE_LIMIT,
         })
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
@@ -214,7 +224,7 @@ export default {
 
     reloadCollectionLoader () {
       this.$refs.collectionLoaderBtn.loadFirstPage()
-    }
+    },
   },
 
   watch: {
@@ -236,8 +246,8 @@ export default {
     },
     'filtersDate.endDate' () {
       this.filterByDate(this.rawList)
-    }
-  }
+    },
+  },
 }
 </script>
 

@@ -1,10 +1,11 @@
 <template>
-  <a class="doc-link-getter doc-link-getter__link"
+  <a
+    class="doc-link-getter doc-link-getter__link"
     target="_blank"
     rel="noopener"
     :href="href"
   >
-    <slot/>
+    <slot />
     <mdi-open-in-new-icon class="doc-link-getter__ico" />
   </a>
 </template>
@@ -21,12 +22,12 @@ export default {
     fileKey: {
       type: String,
       required: false,
-      default: ''
+      default: '',
     },
     fileUrl: {
       type: String,
       required: false,
-      default: ''
+      default: '',
     },
     fileType: {
       type: String,
@@ -34,12 +35,12 @@ export default {
       default: DOCUMENTS_POLICIES.public,
       validator: function (value) {
         return Object.values(DOCUMENTS_POLICIES).includes(value)
-      }
-    }
+      },
+    },
   },
 
   data: () => ({
-    privateFileUrl: null
+    privateFileUrl: null,
   }),
 
   computed: {
@@ -49,7 +50,7 @@ export default {
       } else {
         return this.fileUrl || this.privateFileUrl
       }
-    }
+    },
   },
   created () {
     if (this.fileType === DOCUMENTS_POLICIES.private) {
@@ -68,8 +69,8 @@ export default {
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

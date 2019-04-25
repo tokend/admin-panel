@@ -56,12 +56,12 @@
       class="login__block app__block"
       v-else-if="state === 'tfa'"
     >
-      <g-auth @tfa-done="redirect"></g-auth>
+      <g-auth @tfa-done="redirect" />
     </div>
 
     <template v-if="buildVersion">
       <p class="login__version">
-        {{ buildVersion | formatVersion}}
+        {{ buildVersion | formatVersion }}
       </p>
     </template>
   </div>
@@ -89,13 +89,13 @@ export default {
 
       credentials: {
         username: '',
-        password: ''
+        password: '',
       },
       error: '',
 
       unsubscribe: null,
 
-      buildVersion: config.BUILD_VERSION
+      buildVersion: config.BUILD_VERSION,
     }
   },
 
@@ -105,7 +105,7 @@ export default {
     },
     seedLoginEnabled () {
       return config.FEATURES.SEED_AUTH
-    }
+    },
   },
 
   created () {
@@ -153,7 +153,7 @@ export default {
 
       const params = {
         username: this.credentials.username.toLowerCase(),
-        password: this.credentials.password
+        password: this.credentials.password,
       }
 
       return Vue.auth.login(params)
@@ -210,7 +210,7 @@ export default {
       this.$store.commit('OPEN_MODAL')
       this.$store.commit('REQUIRE_TFA', {
         tfaToken,
-        initiator: 'login'
+        initiator: 'login',
       })
     },
 
@@ -225,8 +225,8 @@ export default {
         return false
       }
       return true
-    }
-  }
+    },
+  },
 }
 </script>
 

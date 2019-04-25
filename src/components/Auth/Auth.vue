@@ -8,7 +8,7 @@
 <script>
 import AuthHeader from './components/AuthHeader'
 export default {
-  components: { AuthHeader }
+  components: { AuthHeader },
 }
 </script>
 

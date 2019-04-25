@@ -17,11 +17,11 @@ const router = new Router({
         return isLoggedIn()
           ? { name: UserRoutes.name }
           : { name: AuthRoutes.name }
-      }
+      },
     },
     AuthRoutes,
-    UserRoutes
-  ]
+    UserRoutes,
+  ],
 })
 
 export default router

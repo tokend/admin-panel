@@ -80,7 +80,7 @@
             </span>
 
             <span class="app-list__cell" :title="asset.requestor.id">
-              {{asset.requestor.id}}
+              {{ asset.requestor.id }}
             </span>
           </router-link>
         </ul>
@@ -113,7 +113,7 @@ import InputField from '@comcom/fields/InputField'
 import SelectField from '@comcom/fields/SelectField'
 import {
   CREATE_ASSET_REQUEST_STATES,
-  REQUEST_STATES_STR
+  REQUEST_STATES_STR,
 } from '@/constants'
 import _ from 'lodash'
 import { ErrorHandler } from '@/utils/ErrorHandler'
@@ -125,19 +125,19 @@ import { clearObject } from '@/utils/clearObject'
 const ASSET_REQUEST_TYPES = Object.freeze({
   create: {
     value: 'create_asset_requests',
-    text: 'Create'
+    text: 'Create',
   },
   update: {
     value: 'update_asset_requests',
-    text: 'Update'
-  }
+    text: 'Update',
+  },
 })
 
 export default {
   components: {
     InputField,
     SelectField,
-    CollectionLoader
+    CollectionLoader,
   },
 
   data () {
@@ -148,11 +148,11 @@ export default {
         requestType: ASSET_REQUEST_TYPES.create.value,
         state: REQUEST_STATES_STR.pending,
         requestor: null,
-        asset: null
+        asset: null,
       },
       CREATE_ASSET_REQUEST_STATES,
       REQUEST_STATES_STR,
-      ASSET_REQUEST_TYPES
+      ASSET_REQUEST_TYPES,
     }
   },
 
@@ -170,8 +170,8 @@ export default {
             filter: clearObject({
               state: CREATE_ASSET_REQUEST_STATES[this.filters.state].code,
               requestor: requestor,
-              'request_details.asset': this.filters.asset
-            })
+              'request_details.asset': this.filters.asset,
+            }),
           })
         this.isListEnded = !(this.list || []).length
       } catch (error) {
@@ -202,7 +202,7 @@ export default {
 
     reloadCollectionLoader () {
       this.$refs.collectionLoaderBtn.loadFirstPage()
-    }
+    },
   },
   watch: {
     'filters.requestType' () { this.reloadCollectionLoader() },
@@ -212,8 +212,8 @@ export default {
     }, 1000),
     'filters.asset': _.throttle(function () {
       this.reloadCollectionLoader()
-    }, 1000)
-  }
+    }, 1000),
+  },
 }
 </script>
 

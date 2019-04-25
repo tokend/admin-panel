@@ -55,7 +55,7 @@ function convertBigNumber (number, digits = 4) {
     { value: 1E12, symbol: 'T' },
     { value: 1E9, symbol: 'G' },
     { value: 1E6, symbol: 'M' },
-    { value: 1E3, symbol: 'k' }
+    { value: 1E3, symbol: 'k' },
   ]
   const rx = /\.0+$|(\.[0-9]*[1-9])0+$/
   let i

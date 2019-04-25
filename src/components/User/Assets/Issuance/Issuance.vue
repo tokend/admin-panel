@@ -4,7 +4,7 @@
       <div class="app__block">
         <h2>Issuance</h2>
         <div class="issuance__form-wrp">
-          <issuance-form/>
+          <issuance-form />
         </div>
       </div>
     </section>
@@ -13,11 +13,11 @@
       <div class="app__block">
         <tabs>
           <tab name="History">
-            <issuance-history/>
+            <issuance-history />
           </tab>
 
           <tab name="Requests">
-            <issuance-request-list/>
+            <issuance-request-list />
           </tab>
         </tabs>
       </div>
@@ -37,8 +37,8 @@ export default {
     IssuanceRequestList,
     IssuanceHistory,
     Tabs,
-    Tab
-  }
+    Tab,
+  },
 }
 </script>
 

@@ -10,7 +10,7 @@ import config from '@/config'
 export default {
   components: {
     SelectField,
-    CollectionLoader
+    CollectionLoader,
   },
   data () {
     return {
@@ -18,7 +18,7 @@ export default {
       list: [],
       listCounter: {
         pending: null,
-        approved: null
+        approved: null,
       },
       assets: [''],
       isNoMoreEntries: false,
@@ -26,12 +26,12 @@ export default {
       isRejectionModalShown: false,
       itemToReject: null,
       rejectForm: {
-        reason: ''
+        reason: '',
       },
       filters: {
         state: REQUEST_STATES.approved,
-        asset: ''
-      }
+        asset: '',
+      },
     }
   },
 
@@ -63,7 +63,7 @@ export default {
           order: 'asc',
           reviewer: config.MASTER_ACCOUNT,
           limit: 1000,
-          ...this.filters
+          ...this.filters,
         })
         this.getListCounter(response)
         this.isNoMoreEntries = false
@@ -91,11 +91,11 @@ export default {
 
     reloadCollectionLoader () {
       this.$refs.collectionLoaderBtn.loadFirstPage()
-    }
+    },
   },
 
   watch: {
     'filters.state' () { this.reloadCollectionLoader() },
-    'filters.asset' () { this.reloadCollectionLoader() }
-  }
+    'filters.asset' () { this.reloadCollectionLoader() },
+  },
 }

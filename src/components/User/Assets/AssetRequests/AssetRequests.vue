@@ -1,6 +1,6 @@
 <template>
   <div class="asset-requests">
-    <router-view/>
+    <router-view />
   </div>
 </template>
 

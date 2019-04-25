@@ -1,6 +1,6 @@
 <template>
   <div class="asset-pairs">
-    <router-view/>
+    <router-view />
   </div>
 </template>
 

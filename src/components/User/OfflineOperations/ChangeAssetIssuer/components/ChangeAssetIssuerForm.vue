@@ -1,7 +1,7 @@
 <template>
   <div class="change-asset-issuer-form">
     <p class="change-asset-issuer-form__hint">
-      Select file(s) with change issuer transaction and click <strong>Upload</strong>.<br />
+      Select file(s) with change issuer transaction and click <strong>Upload</strong>.<br>
     </p>
 
     <div class="change-asset-issuer-form__upload-wrp">
@@ -19,7 +19,7 @@
           type="file"
           accept=".tx"
           @change="onFileChange"
-        />
+        >
       </template>
     </div>
 
@@ -27,9 +27,15 @@
       class="change-asset-issuer-form__details"
       v-if="asset && accountId"
     >
-      <p class="text">Signer will change on asset: {{ asset }}</p>
-      <p class="text">New signer will be: {{ accountId }}</p>
-      <p class="text">Transaction source: {{ source }}</p>
+      <p class="text">
+        Signer will change on asset: {{ asset }}
+      </p>
+      <p class="text">
+        New signer will be: {{ accountId }}
+      </p>
+      <p class="text">
+        Transaction source: {{ source }}
+      </p>
     </div>
 
     <p class="change-asset-issuer-form__expiration-date-note text">
@@ -68,7 +74,7 @@ export default {
       asset: '',
       transaction: '',
       source: '',
-      uploadBtnDisable: false
+      uploadBtnDisable: false,
     }
   },
   methods: {
@@ -118,11 +124,10 @@ export default {
       const transaction = new Sdk.base.Transaction(this.transaction)
       transaction.sign(this.$store.getters.keypair)
       return await Sdk.horizon.transactions.submit(transaction)
-    }
-  }
+    },
+  },
 }
 </script>
-
 
 <style lang="scss" scoped>
 .change-asset-issuer-form__upload-btn.app__btn {

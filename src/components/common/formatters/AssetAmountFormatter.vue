@@ -1,6 +1,6 @@
 <template>
   <span class="asset-amount-formatter">
-    {{formatAssetAmount(amount, asset)}}
+    {{ formatAssetAmount(amount, asset) }}
   </span>
 </template>
 
@@ -10,8 +10,8 @@ export default {
   props: ['amount', 'asset'],
 
   methods: {
-    formatAssetAmount
-  }
+    formatAssetAmount,
+  },
 }
 </script>
 

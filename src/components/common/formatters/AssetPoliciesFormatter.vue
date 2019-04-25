@@ -14,14 +14,14 @@
 <script>
 import { ASSET_POLICIES } from '@/constants'
 export default {
+
+  props: ['policies', 'policyMask'],
   data () {
     return {
       ASSET_POLICIES,
-      mask: 0
+      mask: 0,
     }
   },
-
-  props: ['policies', 'policyMask'],
 
   created () {
     if (this.policies) {
@@ -38,8 +38,8 @@ export default {
   methods: {
     calcMask (policies) {
       return policies.reduce((acc, cur) => acc + cur.value, 0)
-    }
-  }
+    },
+  },
 }
 </script>
 

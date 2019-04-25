@@ -1,7 +1,9 @@
 <template>
-  <div class="select-field"
+  <div
+    class="select-field"
     :class="{'select-field--error': errorMessage}">
-    <select class="select-field__select"
+    <select
+      class="select-field__select"
       :class="{'select-field__select--empty': !(value || emptyText)}"
       :disabled="disabled"
       :name="name"
@@ -9,13 +11,14 @@
       :required="required"
       :autofocus="autofocus"
       @change="onChange">
-      <option class="select-field__default-option"
+      <option
+        class="select-field__default-option"
         :selected="!value"
         v-if="emptyText"
         disabled>
-        {{emptyText}}
+        {{ emptyText }}
       </option>
-      <slot/>
+      <slot />
     </select>
 
     <div class="select-field__arrow">
@@ -23,12 +26,12 @@
     </div>
 
     <span class="select-field__label">
-      {{label}}
+      {{ label }}
     </span>
 
     <transition name="select-field__err-transition">
       <p class="select-field__err-mes" v-if="errorMessage">
-        {{errorMessage}}
+        {{ errorMessage }}
       </p>
     </transition>
   </div>
@@ -47,7 +50,7 @@ export default {
     autofocus: { type: Boolean, default: false },
     disabled: { type: Boolean, default: false },
     title: { type: [String, Number], default: undefined },
-    required: { type: Boolean, default: true }
+    required: { type: Boolean, default: true },
   },
 
   data () {
@@ -56,19 +59,19 @@ export default {
     }
   },
 
-  created () {
-    // created
-  },
-
   computed: {
     // computed
+  },
+
+  created () {
+    // created
   },
 
   methods: {
     onChange (event) {
       this.$emit('input', event.target.value)
-    }
-  }
+    },
+  },
 }
 </script>
 

@@ -1,6 +1,6 @@
 <template>
   <div class="preissuance-requests">
-    <router-view/>
+    <router-view />
   </div>
 </template>
 

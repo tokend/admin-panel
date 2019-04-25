@@ -11,7 +11,7 @@ import { ApiCallerFactory } from '@/api-caller-factory'
 
 const server = {
   'trusted': true,
-  'websocket_ssl': false
+  'websocket_ssl': false,
 }
 
 export default {
@@ -39,7 +39,7 @@ export default {
       keychainData: JSON.stringify(keychainData),
       mainData: JSON.stringify(mainData),
       server: Vue.params.KEY_SERVER_ADMIN,
-      keypair: signingKeys
+      keypair: signingKeys,
     }).then((wallet) => {
       this._storeWallet(wallet, credentials.username)
 
@@ -53,7 +53,7 @@ export default {
     const params = {
       server: Vue.params.KEY_SERVER_ADMIN,
       username: credentials.username.toLowerCase(),
-      password: credentials.password
+      password: credentials.password,
     }
 
     return StellarWallet.getWallet(params)
@@ -71,8 +71,8 @@ export default {
               walletId: err.walletId,
               rawMasterKey: err.rawMasterKey,
               rawWalletId: err.rawWalletId,
-              rawWalletKey: err.rawWalletKey
-            }
+              rawWalletKey: err.rawWalletKey,
+            },
           }
         }
 
@@ -87,7 +87,7 @@ export default {
       walletId: params.walletId,
       rawMasterKey: params.rawMasterKey,
       rawWalletId: params.rawWalletId,
-      rawWalletKey: params.rawWalletKey
+      rawWalletKey: params.rawWalletKey,
     }
 
     return StellarWallet.showWallet(options)
@@ -145,5 +145,5 @@ export default {
 
     store.commit('UPDATE_USER', user)
     store.commit('UPDATE_AUTH', auth)
-  }
+  },
 }

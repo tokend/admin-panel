@@ -4,15 +4,16 @@
       <h2>Asset pairs</h2>
 
       <div class="assets-pairs-index__actions">
-        <router-link class="assets-pairs-index__create-btn app__btn app__btn--iconed"
-                     :to="{ name: 'assets.assetPairs.new' }">
-          <mdi-plus-icon/> Create pair
+        <router-link
+          class="assets-pairs-index__create-btn app__btn app__btn--iconed"
+          :to="{ name: 'assets.assetPairs.new' }">
+          <mdi-plus-icon /> Create pair
         </router-link>
       </div>
     </div>
 
     <div class="assets-pairs-index__list-wrp">
-      <asset-pair-list/>
+      <asset-pair-list />
     </div>
   </div>
 </template>
@@ -23,8 +24,8 @@ import 'mdi-vue/PlusIcon'
 
 export default {
   components: {
-    AssetPairList
-  }
+    AssetPairList,
+  },
 }
 </script>
 

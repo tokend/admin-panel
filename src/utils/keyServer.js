@@ -6,13 +6,13 @@ import config from '../config'
 
 const sdkServer = () => {
   const sdkInstance = new TokenD(config.KEY_SERVER_ADMIN, {
-    allowHttp: true
+    allowHttp: true,
   }) // true for use http, only localhost
   return new KeyServerCaller({
     axios: axios.create({
-      baseURL: config.KEY_SERVER_ADMIN
+      baseURL: config.KEY_SERVER_ADMIN,
     }),
-    sdk: sdkInstance
+    sdk: sdkInstance,
   })
 }
 
@@ -75,5 +75,5 @@ export default {
   sdkServer: sdkServer(),
   get,
   patch,
-  post
+  post,
 }

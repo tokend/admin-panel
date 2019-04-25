@@ -1,7 +1,7 @@
 <template>
   <div class="trrf">
     <h2>
-      Reject {{assetRequest.code}} {{assetRequest.type === 'create_asset' ? 'create' : 'update'}} request
+      Reject {{ assetRequest.code }} {{ assetRequest.type === 'create_asset' ? 'create' : 'update' }} request
     </h2>
 
     <form
@@ -54,7 +54,7 @@ import { ErrorHandler } from '@/utils/ErrorHandler'
 export default {
   components: {
     TextField,
-    TickField
+    TickField,
   },
 
   props: ['assetRequest'],
@@ -63,7 +63,7 @@ export default {
     return {
       isPending: false,
       rejectReason: '',
-      isPermanentReject: false
+      isPermanentReject: false,
     }
   },
 
@@ -78,8 +78,8 @@ export default {
         ErrorHandler.process('Failed to reject asset creation')
       }
       this.isPending = false
-    }
-  }
+    },
+  },
 }
 </script>
 

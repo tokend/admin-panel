@@ -2,26 +2,35 @@
   <div class="user-doc-getter">
     <div class="user-doc-getter__inner">
       <div class="user-doc-getter__link" v-if="file && isLoaded">
-        <a :href="href" target="_blank" rel="noopener">
+        <a
+          :href="href"
+          target="_blank"
+          rel="noopener">
           Open file <mdi-open-in-new-icon class="user-doc-getter__ico" />
         </a>
       </div>
       <div v-if="href && isLoaded">
         <img :src="href">
       </div>
-      <span v-else-if="isNoFile" class="danger">No file found</span>
-      <span v-else-if="isFailed" class="danger">(Error)</span>
-      <span v-else>Loading...</span>
+      <span v-else-if="isNoFile" class="danger">
+        No file found
+      </span>
+      <span v-else-if="isFailed" class="danger">
+        (Error)
+      </span>
+      <span v-else>
+        Loading...
+      </span>
     </div>
   </div>
 </template>
 
 <script>
-  import LinkGetterMixin from './link_getter.mixin'
+import LinkGetterMixin from './link_getter.mixin'
 
-  export default {
-    mixins: [LinkGetterMixin]
-  }
+export default {
+  mixins: [LinkGetterMixin],
+}
 </script>
 
 <style lang="scss" scoped>

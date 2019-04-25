@@ -1,7 +1,7 @@
 <template>
   <div class="modal" @click="onClick">
     <div class="modal__content" :style="{ maxWidth: maxWidth, minWidth: minWidth }">
-      <slot/>
+      <slot />
     </div>
   </div>
 </template>
@@ -44,8 +44,8 @@ export default {
 
     emitCloseRequest () {
       this.$emit('close-request')
-    }
-  }
+    },
+  },
 }
 </script>
 

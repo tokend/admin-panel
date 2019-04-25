@@ -60,18 +60,18 @@ export default {
     DescriptionTab,
     ParticipantsTab,
     SyndicateTab,
-    UpdatesTab
+    UpdatesTab,
   },
+
+  props: ['id'],
 
   data () {
     return {
       sale: {},
       isLoaded: false,
-      isFailed: false
+      isFailed: false,
     }
   },
-
-  props: ['id'],
 
   created () {
     this.getSale(this.id)
@@ -87,8 +87,8 @@ export default {
         ErrorHandler.processWithoutFeedback(error)
         this.isFailed = true
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

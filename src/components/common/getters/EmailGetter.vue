@@ -35,22 +35,22 @@ export default {
   props: {
     accountId: {
       type: String,
-      default: ''
+      default: '',
     },
     balanceId: {
       type: String,
-      default: ''
+      default: '',
     },
     isTitled: {
       type: Boolean,
-      default: true
-    }
+      default: true,
+    },
   },
 
   data: _ => ({
     email: '',
     isMasterAccount: false,
-    isLoading: false
+    isLoading: false,
   }),
 
   async created () {
@@ -78,7 +78,7 @@ export default {
           .createCallerInstance()
           .getWithSignature('/identities', {
             filter: { address: accountId },
-            page: { limit: 1 }
+            page: { limit: 1 },
           })
         this.email = ((data || [])[0] || {}).email || this.email
       } catch (error) {
@@ -95,8 +95,8 @@ export default {
       } else {
         return ''
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

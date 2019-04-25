@@ -41,7 +41,7 @@ import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   components: {
-    TimelineItem
+    TimelineItem,
   },
 
   props: ['sale'],
@@ -50,12 +50,12 @@ export default {
     return {
       updates: {},
       isLoaded: false,
-      isFailed: false
+      isFailed: false,
     }
   },
   created () {
     this.getUpdates({
-      ownerId: _get(this.sale, 'ownerId')
+      ownerId: _get(this.sale, 'ownerId'),
     })
   },
 
@@ -64,7 +64,7 @@ export default {
       try {
         const response = await Sdk.api.blobs.getAll({
           fund_id: this.sale.id,
-          type: BLOB_TYPES.saleUpdate
+          type: BLOB_TYPES.saleUpdate,
         }, owner)
         this.updates = response.data.map(attr => JSON.parse(attr.value))
         this.isLoaded = true
@@ -72,8 +72,8 @@ export default {
         ErrorHandler.processWithoutFeedback(e)
         this.isFailed = true
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

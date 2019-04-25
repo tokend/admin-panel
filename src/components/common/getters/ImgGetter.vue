@@ -1,5 +1,5 @@
 <template>
-  <img :src="src" />
+  <img :src="src">
 </template>
 
 <script>
@@ -10,8 +10,8 @@ export default {
   computed: {
     src () {
       return `${config.FILE_STORAGE}/${this.fileKey}`
-    }
-  }
+    },
+  },
 }
 </script>
 

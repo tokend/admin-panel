@@ -1,7 +1,7 @@
 <template>
   <div class="admins-new">
     <div class="admins-new__manager-wrp">
-      <admin-manager/>
+      <admin-manager />
     </div>
   </div>
 </template>
@@ -10,8 +10,8 @@
 import AdminManager from './components/AdminManager'
 export default {
   components: {
-    AdminManager
-  }
+    AdminManager,
+  },
 }
 </script>
 

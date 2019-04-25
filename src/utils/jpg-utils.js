@@ -7,7 +7,7 @@ const rotateAngles = [
   { y: 180, z: -90 },
   { y: 0, z: -90 },
   { y: 180, z: 90 },
-  { y: 0, z: 90 }
+  { y: 0, z: 90 },
 ]
 
 function getRotationAngle (newOrientation, oldOrientation) {
@@ -30,7 +30,7 @@ const jpegBytes = {
   applicationMarker: 0xFFE1,
   exifHeader: 0x45786966,
   byteAlign: 0x4949, // 'Intel'
-  orientationTag: 0x0112
+  orientationTag: 0x0112,
 }
 
 /**
@@ -92,7 +92,7 @@ export default {
     const orientation = getImageOrientation(buffer)
     return {
       urlEncodedImage: url,
-      orientation: orientation
+      orientation: orientation,
     }
   },
   getRotationAngle: getRotationAngle,
@@ -111,5 +111,5 @@ export default {
     }
 
     return { transform: transform, translateNeeded: translateNeeded }
-  }
+  },
 }

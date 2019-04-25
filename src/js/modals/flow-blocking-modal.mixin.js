@@ -5,10 +5,10 @@ export default {
     },
     resolvers: {
       resolve: () => {},
-      reject: () => {}
+      reject: () => {},
     },
     isOpened: true,
-    isResolved: false
+    isResolved: false,
   }),
   methods: {
     setResolvers (resolve, reject) {
@@ -28,6 +28,6 @@ export default {
       if (this.$el.parentNode) {
         this.$el.parentNode.removeChild(this.$el)
       }
-    }
-  }
+    },
+  },
 }

@@ -7,7 +7,7 @@ const defaultFeatures = {
   SEED_AUTH: true,
 
   PHOTO_VERIFICATION: true,
-  KYC_REQUEST_STATES: ['approved', 'rejected', 'pending']
+  KYC_REQUEST_STATES: ['approved', 'rejected', 'pending'],
 }
 
 export default Object.assign(
@@ -40,19 +40,19 @@ export default Object.assign(
       notVerified: '',
       general: '',
       corporate: '',
-      blocked: ''
+      blocked: '',
     },
 
     SIGNER_ROLES: {
       // Will be updated on init
-      default: ''
+      default: '',
     },
 
     ASSET_TYPES: {
       // Will be updated on init
       default: '0',
-      kycRequired: '1'
-    }
+      kycRequired: '1',
+    },
   },
   process.env,
   document.ENV

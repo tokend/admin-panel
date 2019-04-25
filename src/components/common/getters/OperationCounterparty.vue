@@ -4,27 +4,27 @@
   </div>
 </template>
 <script>
-  export default {
-    props: ['operation'],
-    data: _ => ({
-      counterparty: 'counterparty',
-      noCounterpartyStr: '-'
-    }),
-    methods: {
-      getCounterparty (operation) {
-        if (operation.receiverAccount) {
-          return operation.receiverAccount
-        } else if (operation.accountTo) {
-          return operation.accountTo
-        } else {
-          return this.noCounterpartyStr
-        }
+export default {
+  props: ['operation'],
+  data: _ => ({
+    counterparty: 'counterparty',
+    noCounterpartyStr: '-',
+  }),
+  created () {
+    this.counterparty = this.getCounterparty(this.operation)
+  },
+  methods: {
+    getCounterparty (operation) {
+      if (operation.receiverAccount) {
+        return operation.receiverAccount
+      } else if (operation.accountTo) {
+        return operation.accountTo
+      } else {
+        return this.noCounterpartyStr
       }
     },
-    created () {
-      this.counterparty = this.getCounterparty(this.operation)
-    }
-  }
+  },
+}
 </script>
 <style scoped lang="scss">
   .operation-counterparty {

@@ -1,28 +1,40 @@
 <template>
   <div class="scale-picker">
-    <button class="scale-picker__btn"
+    <button
+      class="scale-picker__btn"
       @click="$emit('input', tabs.hour)"
       :class="{ selected: value === tabs.hour }"
       :disabled="isPending"
-    >Hour</button>
+    >
+      Hour
+    </button>
 
-    <button class="scale-picker__btn"
+    <button
+      class="scale-picker__btn"
       @click="$emit('input', tabs.day)"
       :class="{ selected: value === tabs.day }"
       :disabled="isPending"
-    >Day</button>
+    >
+      Day
+    </button>
 
-    <button class="scale-picker__btn"
+    <button
+      class="scale-picker__btn"
       @click="$emit('input', tabs.month)"
       :class="{ selected: value === tabs.month }"
       :disabled="isPending"
-    >Month</button>
+    >
+      Month
+    </button>
 
-    <button class="scale-picker__btn"
+    <button
+      class="scale-picker__btn"
       @click="$emit('input', tabs.year)"
       :class="{ selected: value === tabs.year }"
       :disabled="isPending"
-    >Year</button>
+    >
+      Year
+    </button>
   </div>
 </template>
 
@@ -38,10 +50,10 @@ export default {
         week: 'week',
         month: 'month',
         year: 'year',
-        all: 'all'
-      }
+        all: 'all',
+      },
     }
-  }
+  },
 }
 </script>
 

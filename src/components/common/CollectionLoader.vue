@@ -34,7 +34,7 @@ import { ErrorHandler } from '@/utils/ErrorHandler'
 const EVENTS = {
   firstPageLoad: 'first-page-load',
   nextPageLoad: 'next-page-load',
-  error: 'error'
+  error: 'error',
 }
 const DEFAULT_PAGE_LIMIT = 10
 
@@ -43,22 +43,22 @@ export default {
   props: {
     firstPageLoader: {
       type: Function,
-      required: true
+      required: true,
     },
     pageLimit: {
       type: Number,
-      default: DEFAULT_PAGE_LIMIT
-    }
+      default: DEFAULT_PAGE_LIMIT,
+    },
   },
   data: _ => ({
     nextPageLoader: () => {},
-    isCollectionFetched: false
+    isCollectionFetched: false,
   }),
   watch: {
     firstPageLoader: {
       immediate: true,
-      handler: 'loadFirstPage'
-    }
+      handler: 'loadFirstPage',
+    },
   },
   methods: {
     loadFirstPage () {
@@ -77,8 +77,7 @@ export default {
         this.$emit(EVENTS.error, e)
         ErrorHandler.processWithoutFeedback(e)
       }
-    }
-  }
+    },
+  },
 }
 </script>
-

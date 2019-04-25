@@ -1,10 +1,10 @@
 <template>
   <div class="master-assets-show">
     <div class="master-assets-show__block app__block">
-      <h2>Manage {{asset}}</h2>
+      <h2>Manage {{ asset }}</h2>
 
       <div class="master-assets-show__manager-wrp">
-        <asset-manager :asset-code="asset"/>
+        <asset-manager :asset-code="asset" />
       </div>
     </div>
   </div>
@@ -15,9 +15,9 @@ import AssetManager from './components/AssetManager'
 
 export default {
   components: {
-    AssetManager
+    AssetManager,
   },
-  props: ['asset']
+  props: ['asset'],
 }
 </script>
 

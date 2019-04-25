@@ -9,11 +9,11 @@ export default {
     'fb_xd_fragment',
     'bmi_SafeAddOnload',
     'EBCallBackMessageReceived',
-    '/[Vue warn]:.*'
+    '/[Vue warn]:.*',
   ],
   ignoreUrls: [
     // Chrome extensions
     /extensions\//i,
-    /^chrome:\/\//i
-  ]
+    /^chrome:\/\//i,
+  ],
 }

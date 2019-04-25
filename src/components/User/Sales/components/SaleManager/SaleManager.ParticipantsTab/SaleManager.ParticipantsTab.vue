@@ -16,10 +16,10 @@ import ClosedParticipants from './ClosedParticipants'
 export default {
   components: {
     PendingParticipants,
-    ClosedParticipants
+    ClosedParticipants,
   },
 
-  props: ['sale']
+  props: ['sale'],
 }
 </script>
 

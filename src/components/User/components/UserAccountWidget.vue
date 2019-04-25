@@ -3,14 +3,14 @@
     <button class="user-account-widget__btn" @click="togglePane()">
       <span class="user-account-widget__btn-content">
         <span class="user-account-widget__initials">
-          {{initials}}
+          {{ initials }}
         </span>
 
         <p class="user-account-widget__name">
-          {{fullName}}
+          {{ fullName }}
         </p>
 
-        <span class="user-account-widget__expand-art"></span>
+        <span class="user-account-widget__expand-art" />
       </span>
     </button>
 
@@ -33,19 +33,19 @@ import { getters } from '@store/types'
 export default {
   data () {
     return {
-      isPaneActive: false
+      isPaneActive: false,
     }
   },
   computed: {
     ...mapGetters({
-      user: getters.GET_USER
+      user: getters.GET_USER,
     }),
     initials () {
       return `${this.user.name.charAt(0).toUpperCase()}`
     },
     fullName () {
       return `${this.user.name}`
-    }
+    },
   },
   methods: {
     togglePane () {
@@ -63,8 +63,8 @@ export default {
         document.removeEventListener('click', listener)
       }
       document.addEventListener('click', listener)
-    }
-  }
+    },
+  },
 }
 </script>
 

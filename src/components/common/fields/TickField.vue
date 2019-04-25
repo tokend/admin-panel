@@ -1,6 +1,7 @@
 <template>
   <div class="tick-field">
-    <input class="tick-field__input"
+    <input
+      class="tick-field__input"
       type="checkbox"
       :checked="checked"
       :disabled="disabled"
@@ -11,14 +12,19 @@
       :autofocus="autofocus"
       @change="onChange">
 
-    <label class="tick-field__label" :for="id" :title="title">
+    <label
+      class="tick-field__label"
+      :for="id"
+      :title="title">
       {{ label }}
     </label>
 
-    <span class="tick-field__tick" :for="id" :title="title">
+    <span
+      class="tick-field__tick"
+      :for="id"
+      :title="title">
       <!-- css art -->
     </span>
-
   </div>
 </template>
 
@@ -34,17 +40,13 @@ export default {
     cbValue: { default: undefined },
     title: { type: [String, Number], default: undefined },
     required: { type: Boolean, default: false },
-    autofocus: { type: Boolean, default: false }
+    autofocus: { type: Boolean, default: false },
   },
 
   data () {
     return {
       // data
     }
-  },
-
-  created () {
-    // created
   },
 
   computed: {
@@ -73,7 +75,11 @@ export default {
           break
       }
       return result
-    }
+    },
+  },
+
+  created () {
+    // created
   },
 
   methods: {
@@ -118,8 +124,8 @@ export default {
           break
       }
       return result
-    }
-  }
+    },
+  },
 }
 </script>
 

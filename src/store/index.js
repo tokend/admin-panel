@@ -23,8 +23,8 @@ const store = new Vuex.Store({
     idleHandler,
     loader,
     tfa,
-    emailBooks
-  }
+    emailBooks,
+  },
 })
 
 export default store

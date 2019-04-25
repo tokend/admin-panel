@@ -16,11 +16,13 @@
           </span>
         </div>
 
-        <router-link class="app-list__li"
-          v-for="item in list" :key="`${item.baseAsset.id}/${item.quoteAsset.id}`"
+        <router-link
+          class="app-list__li"
+          v-for="item in list"
+          :key="`${item.baseAsset.id}/${item.quoteAsset.id}`"
           :to="{ name: 'assets.assetPairs.show', params: { base: item.baseAsset.id, quote: item.quoteAsset.id }}">
           <span class="app-list__cell app-list__cell--important">
-            {{`${item.baseAsset.id}/${item.quoteAsset.id}`}}
+            {{ `${item.baseAsset.id}/${item.quoteAsset.id}` }}
           </span>
 
           <span class="app-list__cell app-list__cell--right">
@@ -30,10 +32,12 @@
           <span class="app-list__cell app-list__cell--policy app-list__cell--right">
             {{ item.policies.value }}
             <span class="asset-pair__policy-tip">
-              <mdi-help-circle-icon class="asset-pairs__tip-icon"/>
+              <mdi-help-circle-icon class="asset-pairs__tip-icon" />
               <span class="asset-pairs__policies-list">
-                <span class="asset-pairs__policies-list-item"
-                      v-for="(policy, i) in item.policies.flags" :key="i"
+                <span
+                  class="asset-pairs__policies-list-item"
+                  v-for="(policy, i) in item.policies.flags"
+                  :key="i"
                 >
                   {{ ASSET_PAIR_POLICIES_VERBOSE[policy.value] }}
                 </span>
@@ -43,7 +47,6 @@
               </span>
             </span>
           </span>
-
         </router-link>
       </ul>
     </template>
@@ -59,7 +62,9 @@
     <template v-else-if="isFailed">
       <div class="app-list">
         <div class="app-list__li-like">
-          <p class="danger">An error occurred. Please try again later</p>
+          <p class="danger">
+            An error occurred. Please try again later
+          </p>
         </div>
       </div>
     </template>
@@ -93,7 +98,7 @@ import { CollectionLoader } from '@/components/common'
 export default {
   components: {
     AssetAmountFormatter,
-    CollectionLoader
+    CollectionLoader,
   },
 
   data () {
@@ -102,7 +107,7 @@ export default {
       isLoaded: false,
       isFailed: false,
 
-      ASSET_PAIR_POLICIES_VERBOSE
+      ASSET_PAIR_POLICIES_VERBOSE,
     }
   },
 
@@ -129,8 +134,8 @@ export default {
 
     extendList (data) {
       this.list = this.list.concat(data)
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -175,6 +180,5 @@ export default {
     padding: .5rem;
     width: 2.6rem;
   }
-
 
 </style>

@@ -5,7 +5,7 @@
     <ul class="key-value-list">
       <li>
         <span>Request ID</span>
-        <span>{{request.id}}</span>
+        <span>{{ request.id }}</span>
       </li>
       <li>
         <span>Request state</span>
@@ -21,16 +21,22 @@
       </li>
       <li>
         <span>Receiver address</span>
-        <span :title="request.details.withdraw.creatorDetails.address">{{request.details.withdraw.creatorDetails.address}}</span>
+        <span :title="request.details.withdraw.creatorDetails.address">
+          {{ request.details.withdraw.creatorDetails.address }}
+        </span>
       </li>
       <template v-if="request.details.withdraw.reviewerDetails">
         <li>
           <span>Hash</span>
-          <span :title="request.details.withdraw.reviewerDetails.hash">{{request.details.withdraw.reviewerDetails.hash}}</span>
+          <span :title="request.details.withdraw.reviewerDetails.hash">
+            {{ request.details.withdraw.reviewerDetails.hash }}
+          </span>
         </li>
         <li>
           <span>Transaction</span>
-          <span :title="request.details.withdraw.reviewerDetails.tx">{{request.details.withdraw.reviewerDetails.tx}}</span>
+          <span :title="request.details.withdraw.reviewerDetails.tx">
+            {{ request.details.withdraw.reviewerDetails.tx }}
+          </span>
         </li>
       </template>
       <li>
@@ -58,26 +64,30 @@
       </li>
     </ul>
     <div class="withdrawal-details__action-btns" v-if="reviewAllowed">
-      <button class="app__btn withdrawal-details__action-btn"
-              @click="fulfill(request)"
-              :disabled="isSubmitting">
+      <button
+        class="app__btn withdrawal-details__action-btn"
+        @click="fulfill(request)"
+        :disabled="isSubmitting">
         Fulfill
       </button>
 
-      <button class="app__btn app__btn--danger withdrawal-details__action-btn"
-              @click="selectForRejection(request)"
-              :disabled="isSubmitting">
+      <button
+        class="app__btn app__btn--danger withdrawal-details__action-btn"
+        @click="selectForRejection(request)"
+        :disabled="isSubmitting">
         Reject
       </button>
     </div>
 
-    <modal v-if="itemToReject"
-            @close-request="clearRejectionSelection()"
-            max-width="40rem">
-      <form id="withdrawal-details-reject-form"
-            @submit.prevent="reject(itemToReject) && clearRejectionSelection()">
+    <modal
+      v-if="itemToReject"
+      @close-request="clearRejectionSelection()"
+      max-width="40rem">
+      <form
+        id="withdrawal-details-reject-form"
+        @submit.prevent="reject(itemToReject) && clearRejectionSelection()">
         <div class="app__form-row">
-          <text-field label="Enter reject reason" v-model="rejectForm.reason"/>
+          <text-field label="Enter reject reason" v-model="rejectForm.reason" />
         </div>
       </form>
 
@@ -116,26 +126,26 @@ export default {
     VerboseFormatter,
     AssetAmountFormatter,
     Modal,
-    TextField
+    TextField,
   },
+  props: ['request', 'assets'],
 
   data () {
     return {
       isSubmitting: false,
       itemToReject: null,
       rejectForm: {
-        reason: ''
+        reason: '',
       },
-      ASSET_POLICIES
+      ASSET_POLICIES,
     }
   },
-  props: ['request', 'assets'],
   computed: {
     reviewAllowed () {
       return this.assets
         .find(item => item.code === this.request.details.withdraw.destAssetCode)
         .policy & ASSET_POLICIES.withdrawable
-    }
+    },
   },
   methods: {
     async fulfill (request) {
@@ -157,7 +167,7 @@ export default {
       try {
         await api.requests.rejectWithdraw({
           reason: this.rejectForm.reason,
-          isPermanent: true
+          isPermanent: true,
         },
         request)
         this.$store.dispatch('SET_INFO', 'Request rejected succesfully.')
@@ -173,8 +183,8 @@ export default {
     },
     clearRejectionSelection () {
       this.itemToReject = null
-    }
-  }
+    },
+  },
 }
 </script>
 

@@ -42,18 +42,18 @@ import 'mdi-vue/ChevronLeftIcon'
 
 const VIEW_MODES_VERBOSE = {
   user: 'user',
-  operation: 'operation'
+  operation: 'operation',
 }
 const EVENTS = {
   reviewed: 'reviewed',
-  back: 'back'
+  back: 'back',
 }
 
 export default {
   components: {
     UserOpList,
     UserDetails,
-    OpDetails
+    OpDetails,
   },
 
   props: ['id'],
@@ -61,10 +61,10 @@ export default {
   data: _ => ({
     view: {
       mode: VIEW_MODES_VERBOSE.user,
-      operation: null
+      operation: null,
     },
     VIEW_MODES_VERBOSE,
-    EVENTS
+    EVENTS,
   }),
 
   methods: {
@@ -83,8 +83,8 @@ export default {
         return
       }
       this.view.mode = VIEW_MODES_VERBOSE.user
-    }
-  }
+    },
+  },
 }
 </script>
 

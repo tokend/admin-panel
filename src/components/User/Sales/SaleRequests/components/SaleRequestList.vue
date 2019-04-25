@@ -11,11 +11,21 @@
           label="State"
           v-model="filters.state"
         >
-          <option :value="REQUEST_STATES.pending">Pending</option>
-          <option :value="REQUEST_STATES.cancelled">Cancelled</option>
-          <option :value="REQUEST_STATES.approved">Approved</option>
-          <option :value="REQUEST_STATES.rejected">Rejected</option>
-          <option :value="REQUEST_STATES.permanentlyRejected">Permanently rejected</option>
+          <option :value="REQUEST_STATES.pending">
+            Pending
+          </option>
+          <option :value="REQUEST_STATES.cancelled">
+            Cancelled
+          </option>
+          <option :value="REQUEST_STATES.approved">
+            Approved
+          </option>
+          <option :value="REQUEST_STATES.rejected">
+            Rejected
+          </option>
+          <option :value="REQUEST_STATES.permanentlyRejected">
+            Permanently rejected
+          </option>
         </select-field>
 
         <input-field
@@ -33,10 +43,17 @@
         <ul class="app-list">
           <div class="app-list__header">
             <span class="app-list__cell">
-              <!-- empty --></span>
-            <span class="app-list__cell">Name</span>
-            <span class="app-list__cell">Hard cap</span>
-            <span class="app-list__cell">Requestor</span>
+              <!-- empty -->
+            </span>
+            <span class="app-list__cell">
+              Name
+            </span>
+            <span class="app-list__cell">
+              Hard cap
+            </span>
+            <span class="app-list__cell">
+              Requestor
+            </span>
           </div>
 
           <router-link
@@ -55,7 +72,7 @@
               class="app-list__cell"
               :title="extractDetails(item).details.name"
             >
-              {{extractDetails(item).details.name}}
+              {{ extractDetails(item).details.name }}
             </span>
             <span class="app-list__cell">
               <asset-amount-formatter
@@ -76,8 +93,12 @@
       <template v-else>
         <ul class="app-list">
           <li class="app-list__li-like">
-            <template v-if="isLoaded">Nothing here yet</template>
-            <template v-else>Loading...</template>
+            <template v-if="isLoaded">
+              Nothing here yet
+            </template>
+            <template v-else>
+              Loading...
+            </template>
           </li>
         </ul>
       </template>
@@ -111,7 +132,7 @@ export default {
     InputField,
     EmailGetter,
     AssetAmountFormatter,
-    CollectionLoader
+    CollectionLoader,
   },
 
   data () {
@@ -121,9 +142,9 @@ export default {
       list: [],
       filters: {
         state: REQUEST_STATES.pending,
-        requestor: ''
+        requestor: '',
       },
-      isLoaded: false
+      isLoaded: false,
     }
   },
 
@@ -158,15 +179,15 @@ export default {
 
     reloadCollectionLoader () {
       this.$refs.collectionLoaderBtn.loadFirstPage()
-    }
+    },
   },
 
   watch: {
     'filters.state' () { this.reloadCollectionLoader() },
     'filters.requestor': _.throttle(function () {
       this.reloadCollectionLoader()
-    }, 1000)
-  }
+    }, 1000),
+  },
 }
 </script>
 

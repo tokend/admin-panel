@@ -4,15 +4,16 @@
       <h2>Assets owned by master</h2>
 
       <div class="master-assets-index__actions">
-        <router-link class="master-assets-index__create-btn app__btn app__btn--iconed"
+        <router-link
+          class="master-assets-index__create-btn app__btn app__btn--iconed"
           :to="{ name: 'assets.masterAssets.new' }">
-          <mdi-plus-icon/> Create asset
+          <mdi-plus-icon /> Create asset
         </router-link>
       </div>
     </div>
 
     <div class="master-assets-index__list-wrp">
-      <asset-list/>
+      <asset-list />
     </div>
   </div>
 </template>
@@ -23,7 +24,7 @@ import 'mdi-vue/PlusIcon'
 import AssetList from './components/AssetList'
 
 export default {
-  components: { AssetList }
+  components: { AssetList },
 }
 </script>
 
