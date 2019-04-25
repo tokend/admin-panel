@@ -30,8 +30,8 @@
         <span class="app-list__cell" :title="item.operationType">
           {{ getOperationType(item) }}
         </span>
-        <span class="app-list__cell" :title="item.ledgerCloseTime">
-          {{ item.ledgerCloseTime }}
+        <span class="app-list__cell" :title="item.appliedAt">
+          {{ item.appliedAt }}
         </span>
         <span class="app-list__cell" :title="item.sourceAccount">
           {{ item.sourceAccount }}
@@ -45,7 +45,7 @@
     <template v-else>
       <ul class="app-list">
         <li class="app-list__li-like">
-          {{ isPending ? 'Loading...' : 'Nothing here yet' }}
+          {{ isLoading ? 'Loading...' : 'Nothing here yet' }}
         </li>
       </ul>
     </template>
@@ -132,18 +132,21 @@ export default {
       const roleToSet = safeGet(
         record, 'operation.details.roleToSet.id'
       )
-      const isBlocked = +roleToSet === config.ACCOUNT_ROLES.blocked
+      const isBlocked = Number(roleToSet) === config.ACCOUNT_ROLES.blocked
       const isReset = safeGet(
         record, 'operation.details.creatorDetails.resetReason'
       )
 
+      let operationType
       if (isBlocked) {
-        return 'Block'
+        operationType = 'Block'
       } else if (isReset) {
-        return 'Reset to unverified'
+        operationType = 'Reset to unverified'
       } else {
-        return 'Change role'
+        operationType = 'Change role'
       }
+
+      return operationType
     },
 
     setList (data) {
@@ -160,7 +163,7 @@ export default {
         return Object.assign({}, item, {
           // Capitalize and remove dashes
           operationType: operationType.charAt(0).toUpperCase() + operationType.slice(1),
-          ledgerCloseTime: moment(item.operation.appliedAt).format('DD MMM YYYY [at] hh:mm:ss'),
+          appliedAt: moment(item.operation.appliedAt).format('DD MMM YYYY [at] hh:mm:ss'),
           sourceAccount: item.operation.source.id === this.masterPubKey ? 'Master' : item.operation.source.id,
           receiverAccount: safeGet(item, 'operation.details.receiverAccount.id'),
           accountTo: safeGet(item, 'operation.details.accountTo.id')
@@ -170,6 +173,3 @@ export default {
   }
 }
 </script>
-
-<style scoped lang="scss">
-</style>
