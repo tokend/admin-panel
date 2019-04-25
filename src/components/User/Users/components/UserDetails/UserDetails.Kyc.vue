@@ -10,7 +10,7 @@
       <p> - Valid Residence permit;</p>
       <p> - Driving license - full, not provisional, with a color photograph;</p>
     </div>
-    <ul class="key-value-list">
+    <ul class="user-details-account__key-value-list key-value-list">
       <li>
         <span>First name</span>
         <span :title="kyc.firstName">{{kyc.firstName}}</span>
@@ -37,7 +37,7 @@
       </li>
       <li>
         <span>Country</span>
-        <span :title="kyc.address.country">{{kyc.address.country}}</span>
+        <span :title="country">{{country}}</span>
       </li>
       <li>
         <span>State</span>
@@ -48,25 +48,25 @@
         <span :title="ID_DOCUMENTS_VERBOSE[kyc.idDocumentType]">{{ID_DOCUMENTS_VERBOSE[kyc.idDocumentType]}}</span>
       </li>
       <li>
-        <span>ID Document</span>
+        <span v-if="kyc.documents.kycIdDocument.back">ID Document front side: </span>
+        <span v-else>ID Document</span>
         <span>
-          <span v-if="kyc.documents.kycIdDocument.back">Front:</span>
           <user-doc-link-getter
             :file-key="kyc.documents.kycIdDocument.face"
           >
             Open file
           </user-doc-link-getter>
         </span>
-        <template v-if="kyc.documents.kycIdDocument.back">
-          <span>
-            <span>Back:</span>
-            <user-doc-link-getter
-              :file-key="kyc.documents.kycIdDocument.back"
-            >
-              Open file
-            </user-doc-link-getter>
-          </span>
-        </template>
+      </li>
+      <li v-if="kyc.documents.kycIdDocument.back">
+        <span>ID Document back side: </span>
+        <span>
+          <user-doc-link-getter
+            :file-key="kyc.documents.kycIdDocument.back"
+          >
+            Open file
+          </user-doc-link-getter>
+        </span>
       </li>
       <li v-if="kyc.documents.kycAvatar">
         <span>Avatar</span>
@@ -98,6 +98,7 @@
 
 <script>
 import { UserDocLinkGetter, ImgGetter } from '@comcom/getters'
+import { byAlpha2 } from 'iso-country-codes'
 
 const ID_DOCUMENTS_VERBOSE = {
   passport: 'Passport',
@@ -140,6 +141,13 @@ export default {
     },
   },
   watch: {
+  },
+
+  computed: {
+    country () {
+      const country = Object.keys(byAlpha2).find(country => country === this.kyc.address.country)
+      return byAlpha2[country].name
+    }
   }
 }
 </script>
@@ -172,6 +180,11 @@ export default {
 
 .user-details-account__info {
   margin-bottom: 3rem;
+}
+
+.user-details-account__key-value-list-id-document {
+  display: flex;
+  flex-direction: column;
 }
 
 </style>

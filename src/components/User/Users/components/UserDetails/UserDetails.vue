@@ -8,14 +8,26 @@
           class="user-details__section"
           v-if="requestToReview.state"
         >
-          <h3>
-            Current request state
-          </h3>
-          <p
-            :class="`user-details__state-info
+        <ul class="key-value-list">
+          <li> 
+            <h3>
+              Current request state
+            </h3>
+            <p :class="`user-details__state-info
                       user-details__state-info--${requestToReview.state}`">
-            {{ requestToReview.state }}
-          </p>
+              {{ requestToReview.state }}
+            </p>
+          </li>
+          <li>
+            <h3>
+              Role to set
+            </h3>
+            <p :class="`user-details__state-info
+                      user-details__state-info--${requestToReview.state}`">
+              {{ ROLE_TYPE_VERBOSE[requestToReview.accountRoleToSet || verifiedRequest.accountRoleToSet] }}
+            </p>
+          </li>
+        </ul>
 
           <p v-if="requestToReview.isRejected">
             Reason: {{ requestToReview.rejectReason }}
@@ -88,27 +100,31 @@
             v-if="verifiedRequest.accountRoleToSet !== ACCOUNT_ROLES.notVerified && !isUserBlocked"
             class="user-details__section"
           >
-            <h2>Previous approved KYC Request</h2>
-            <general-kyc-viewer
-              v-if="verifiedRequest.accountRoleToSet === ACCOUNT_ROLES.general"
-              :kyc="kyc"
-              :user="user"
-              :isKycLoaded="isKycLoaded"
-              :isKycLoadFailed ="isKycLoadFailed" />
-            <verified-kyc-viewer
-              v-if="verifiedRequest.accountRoleToSet === ACCOUNT_ROLES.us_verified"
-              :kyc="kyc"
-              :user="user"
-              :isKycLoaded="isKycLoaded"
-              :isKycLoadFailed ="isKycLoadFailed" />
-            <accredited-kyc-viewer
-              v-if="verifiedRequest.accountRoleToSet === ACCOUNT_ROLES.us_accredited"
-              :kyc="kyc"
-              :user="user"
-              :isKycLoaded="isKycLoaded"
-              :isKycLoadFailed ="isKycLoadFailed" />
+            <template v-if="isKycLoaded">
+              {{verifiedRequest.accountRoleToSet}}
+              {{ACCOUNT_ROLES}}
+              <h2>Previous approved KYC Request</h2>
+              <general-kyc-viewer
+                v-if="verifiedRequest.accountRoleToSet === ACCOUNT_ROLES.general"
+                :kyc="kyc"
+                :user="user" />
+              <verified-kyc-viewer
+                v-if="verifiedRequest.accountRoleToSet === ACCOUNT_ROLES.usVerified"
+                :kyc="kyc"
+                :user="user" />
+              <accredited-kyc-viewer
+                v-if="verifiedRequest.accountRoleToSet === ACCOUNT_ROLES.usAccredited"
+                :kyc="kyc"
+                :user="user" />
+            </template>
+            <template v-else-if="isKycLoadFailed">
+              <p class="danger">An error occurred. Please try again later.</p>
+            </template>
+            <template v-else>
+              <p>Loading...</p>
+            </template>
             <kyc-syndicate-section
-              v-else-if="verifiedRequest.accountRoleToSet === ACCOUNT_ROLES.corporate"
+              v-if="verifiedRequest.accountRoleToSet === ACCOUNT_ROLES.corporate"
               :user="user"
               :blob-id="verifiedRequest.blobId"
             />
@@ -201,6 +217,14 @@ import { Sdk } from '@/sdk'
 
 import config from '@/config'
 
+const ROLE_TYPE_VERBOSE = {
+  [ config.ACCOUNT_ROLES.general ]: 'General',
+  [ config.ACCOUNT_ROLES.usVerified ]: 'US Verified',
+  [ config.ACCOUNT_ROLES.usAccredited ]: 'US Accredited',
+  [ config.ACCOUNT_ROLES.corporate ]: 'Corporate',
+  [ config.ACCOUNT_ROLES.notVerified ]: 'Not Verified'
+}
+
 const OPERATION_TYPE = {
   createKycRequest: '22',
 }
@@ -238,7 +262,8 @@ export default {
       user: {},
       requests: [],
       verifiedRequest: {},
-      kyc: {}
+      kyc: {},
+      ROLE_TYPE_VERBOSE
     }
   },
 
