@@ -173,7 +173,7 @@ export default {
         this.kyc = deepCamelCase(fromKycTemplate(JSON.parse(kycFormResponse.value)))
         this.isLoaded = true
       } catch (error) {
-        ErrorHandler.process(error)
+        ErrorHandler.processWithoutFeedback(error)
         this.isFailed = true
       }
     }

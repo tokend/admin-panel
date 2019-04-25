@@ -80,6 +80,7 @@ import {
   InputField
 } from '@comcom/fields'
 import { KEY_VALUE_ENTRY_TYPE } from '../../../constants'
+import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   components: {
@@ -114,28 +115,27 @@ export default {
 
         this.$store.dispatch('SET_INFO', 'Submitted successfully')
       } catch (error) {
-        console.error(error)
-        if (error.showMessage) {
-          error.showMessage()
-        } else {
-          this.$store.dispatch('SET_ERROR', 'Failed to submit operation')
-        }
+        ErrorHandler.process('Failed to submit operation')
       }
       this.isPending = false
     },
     async getList () {
-      const response = await Sdk.horizon.keyValue.getAll()
-      this.list = response.data
+      try {
+        const response = await Sdk.horizon.keyValue.getAll()
+        this.list = response.data
 
-      if (!this.list.length) {
-        return
-      }
+        if (!this.list.length) {
+          return
+        }
 
-      if (!this.updateForm.key) {
-        const item = this.list[0]
+        if (!this.updateForm.key) {
+          const item = this.list[0]
 
-        this.updateForm.key = item.key
-        this.updateForm.value = item[`${item.type.name}Value`]
+          this.updateForm.key = item.key
+          this.updateForm.value = item[`${item.type.name}Value`]
+        }
+      } catch (e) {
+        ErrorHandler.processWithoutFeedback(e)
       }
     }
   },

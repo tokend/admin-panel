@@ -25,6 +25,7 @@ import { Sdk } from '@/sdk'
 import OrderTable from './OrderBook.Table'
 import HistoryTable from './OrderBook.History'
 import { AssetPair } from '../../models/AssetPair'
+import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   components: {
@@ -78,7 +79,7 @@ export default {
         this.book.history = tradesResponse.data
         this.isLoaded = true
       } catch (error) {
-        error.showMessage('Failed to get order book. Please try again later')
+        ErrorHandler.processWithoutFeedback(error)
         this.isFailed = true
       }
     }

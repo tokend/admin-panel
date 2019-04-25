@@ -37,6 +37,8 @@ import { Sdk } from '@/sdk'
 import { BLOB_TYPES } from '@/constants'
 import _get from 'lodash/get'
 import TimelineItem from './TimelineItem'
+import { ErrorHandler } from '@/utils/ErrorHandler'
+
 export default {
   components: {
     TimelineItem
@@ -67,7 +69,7 @@ export default {
         this.updates = response.data.map(attr => JSON.parse(attr.value))
         this.isLoaded = true
       } catch (e) {
-        console.error(e)
+        ErrorHandler.processWithoutFeedback(e)
         this.isFailed = true
       }
     }

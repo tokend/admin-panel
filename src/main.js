@@ -4,8 +4,6 @@ import router from './router'
 import store from './store'
 import VueResource from 'vue-resource'
 Vue.use(VueResource)
-import { Crypto } from 'webcrypto-liner/src/crypto.ts'
-import asmCrypto from 'asmcrypto.js'
 
 import Raven from 'raven-js'
 import RavenVue from 'raven-js/plugins/vue'
@@ -30,14 +28,6 @@ if (false && process.env.SENTRY_DSN) {
     Raven.captureException(...args)
     logger(...args)
   }
-}
-
-/* adding polyfill to allow encryption on safari */
-if (window.crypto && !window.crypto.subtle) {
-  window.polyCrypto = new Crypto()
-  window.asmCrypto = asmCrypto
-} else if (!window.crypto) {
-  window.crypto = new Crypto()
 }
 
 Object.isEmpty = function (obj) {

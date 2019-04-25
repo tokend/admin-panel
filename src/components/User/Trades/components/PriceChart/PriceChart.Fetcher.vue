@@ -35,6 +35,8 @@ import { Sdk } from '@/sdk'
 import { AssetPair } from '../../models/AssetPair'
 import PriceChart from './PriceChart.Renderer'
 import ScalePicker from './PriceChart.ScalePicker'
+import { ErrorHandler } from '@/utils/ErrorHandler'
+
 export default {
   props: ['filters'],
 
@@ -68,7 +70,8 @@ export default {
         this.priceHistory = response.data
         this.isLoaded = true
       } catch (error) {
-        console.error(error)
+        ErrorHandler.processWithoutFeedback(error)
+
         if (error.status === 404) {
           this.isLoaded = true
         } else {

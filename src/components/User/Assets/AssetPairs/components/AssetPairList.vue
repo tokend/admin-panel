@@ -116,7 +116,7 @@ export default {
           .createCallerInstance()
           .getWithSignature('/v3/asset_pairs')
       } catch (error) {
-        error.showMessage()
+        ErrorHandler.processWithoutFeedback(error)
         this.isFailed = true
       }
       this.isLoaded = true
@@ -127,12 +127,8 @@ export default {
       this.list = data
     },
 
-    async extendList (data) {
-      try {
-        this.list = this.list.concat(data)
-      } catch (error) {
-        ErrorHandler.process(error)
-      }
+    extendList (data) {
+      this.list = this.list.concat(data)
     }
   }
 }
