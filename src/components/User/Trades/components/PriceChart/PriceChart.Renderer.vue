@@ -31,7 +31,8 @@ export default {
       svg: '',
       xAxis: '',
       yAxis: '',
-      animationDuration: 500
+      animationDuration: 500,
+      isAnimating: false
     }
   },
 
@@ -266,12 +267,13 @@ export default {
     },
 
     update () {
+      this.isAnimating = true
       const line = d3.line()
         .x((d) => this.x(d.time))
         .y((d) => this.y(d.value))
         .curve(d3.curveStepAfter)
-
-      d3.select(`svg.${CLASS_NAME}`).classed(`${CLASS_NAME}--hidden`, true)
+      const priceChartSvg = d3.select(`svg.${CLASS_NAME}`)
+      priceChartSvg.classed(`${CLASS_NAME}--overflow-hidden`, true)
       // Define domains
       this.y.domain(this.genYDomain(this.data))
       this.x.domain(this.genXDomain(this.data))
@@ -375,7 +377,9 @@ export default {
       }
 
       function moveTip () {
-        tip.classed(`${CLASS_NAME}__tip--hidden`, false)
+        if (!this.isAnimating) {
+          tip.classed(`${CLASS_NAME}__tip--hidden`, false)
+        }
         const x0 = this.x.invert(d3.mouse(this.svg.node())[0])
         const bisectDate = d3.bisector(d => d.time).left
         const bisectIndex = bisectDate(this.data, x0, 1)
@@ -406,7 +410,8 @@ export default {
 
       tip.classed(`${CLASS_NAME}__tip--hidden`, true)
       setTimeout(() => {
-        d3.select(`svg.${CLASS_NAME}`).classed(`${CLASS_NAME}--hidden`, false)
+        this.isAnimating = false
+        priceChartSvg.classed(`${CLASS_NAME}--overflow-hidden`, false)
       }, this.animationDuration)
     }
   }
@@ -442,7 +447,7 @@ svg.price-chart {
     overflow: hidden;
   }
 
-  &--hidden {
+  &--overflow-hidden {
     overflow: hidden;
   }
 }
