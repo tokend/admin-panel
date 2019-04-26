@@ -2,6 +2,7 @@ import api from '@/api/index'
 
 export class ReviewableRequest {
   constructor (record) {
+    console.log(record)
     this._rawRequest = { ...record }
     this.record = { ...record, ...record.details }
     delete this.record.details

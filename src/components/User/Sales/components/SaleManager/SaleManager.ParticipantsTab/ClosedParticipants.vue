@@ -8,7 +8,7 @@
           <tr>
             <th>Investor</th>
             <th>Invested at</th>
-            <th>{{sale.baseAsset}} acquired</th>
+            <th>{{sale.baseAsset.id}} acquired</th>
           </tr>
         </thead>
         <tbody>
@@ -66,7 +66,7 @@ export default {
   methods: {
     async getList ({ baseAsset }) {
       try {
-        const response = await Sdk.horizon.assets.getHolders(baseAsset)
+        const response = await Sdk.horizon.assets.getHolders(baseAsset.id)
         this.list = response.data
         this.isLoaded = true
       } catch (error) {

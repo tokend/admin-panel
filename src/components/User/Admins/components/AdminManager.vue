@@ -269,7 +269,9 @@ export default {
       try {
         const opts = this.buildManageSignerOperationOpts()
         const operation = operationConstructor(opts)
-        await Sdk.horizon.transactions.submitOperations(operation)
+        await ApiCallerFactory
+          .createCallerInstance()
+          .postOperations(operation)
 
         this.$store.dispatch('SET_INFO', 'Successfully submitted')
         this.$router.push({ name: 'admins' })

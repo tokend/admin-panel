@@ -8,6 +8,7 @@ import { AssetRequest } from './responseHandlers/requests/AssetRequest'
 import { IssuanceCreateRequest } from './responseHandlers/requests/IssuanceCreateRequest'
 import { clearObject } from '@/utils/clearObject'
 import _get from 'lodash/get'
+import { ApiCallerFactory } from '@/api-caller-factory'
 
 export const requests = {
   _review ({ action, reason = '' }, ...requests) {
@@ -36,7 +37,9 @@ export const requests = {
         requestDetails: opts
       })
     })
-    return Sdk.horizon.transactions.submitOperations(...operations)
+    return ApiCallerFactory
+      .createCallerInstance()
+      .postOperations(...operations)
   },
 
   _reviewWithdraw ({ action, reason = '' }, ...requests) {
@@ -60,7 +63,9 @@ export const requests = {
         requestDetails: opts
       })
     })
-    return Sdk.horizon.transactions.submitOperations(...operations)
+    return ApiCallerFactory
+      .createCallerInstance()
+      .postOperations(...operations)
   },
 
   async approve (...requests) {
@@ -111,7 +116,9 @@ export const requests = {
           Sdk.base.ManageLimitsBuilder.createLimits(limits)
         )
       })
-    const response = await Sdk.horizon.transactions.submitOperations(...operations)
+    const response = await ApiCallerFactory
+      .createCallerInstance()
+      .postOperations(...operations)
     return response.data
   },
 
@@ -133,7 +140,9 @@ export const requests = {
       requestID: params.request.id,
       newLimits: newLimits[0]
     })
-    const response = await Sdk.horizon.transactions.submitOperations(operation)
+    const response = await ApiCallerFactory
+      .createCallerInstance()
+      .postOperations(operation)
     return response.data
   },
 

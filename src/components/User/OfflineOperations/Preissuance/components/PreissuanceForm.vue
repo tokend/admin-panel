@@ -100,7 +100,8 @@
   import config from '@/config'
 
   import localize from '@/utils/localize'
-import { ErrorHandler } from '@/utils/ErrorHandler'
+  import { ErrorHandler } from '@/utils/ErrorHandler'
+  import { ApiCallerFactory } from '@/api-caller-factory'
 
   export default {
     data () {
@@ -206,7 +207,9 @@ import { ErrorHandler } from '@/utils/ErrorHandler'
               request: item
             })
           })
-          await Sdk.horizon.transactions.submitOperations(...operations)
+          await ApiCallerFactory
+            .createCallerInstance()
+            .postOperations(...operations)
           this.fileInfo = []
           this.$store.dispatch('SET_INFO', 'Successfully submitted')
         } catch (error) {

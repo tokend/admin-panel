@@ -235,6 +235,7 @@
   import { confirmAction } from '@/js/modals/confirmation_message'
 
   import config from '@/config'
+  import { ApiCallerFactory } from '@/api-caller-factory'
 
   const SCOPE_TYPES = Object.freeze({ // non-xdr values, internal use only
     account: 'USER',
@@ -451,7 +452,9 @@
 
           const operation = Sdk.base.Operation.setFees(opts)
 
-          await Sdk.horizon.transactions.submitOperations(operation)
+          await ApiCallerFactory
+            .createCallerInstance()
+            .postOperations(operation)
           await this.getFees()
           this.$store.dispatch('SET_INFO', 'Submitted successfully')
         } catch (error) {

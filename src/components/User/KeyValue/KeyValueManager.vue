@@ -79,7 +79,8 @@ import {
   SelectField,
   InputField
 } from '@comcom/fields'
-import { KEY_VALUE_ENTRY_TYPE } from '../../../constants'
+import { KEY_VALUE_ENTRY_TYPE } from '@/constants'
+import { ApiCallerFactory } from '@/api-caller-factory'
 
 export default {
   components: {
@@ -109,7 +110,9 @@ export default {
       this.isPending = true
       try {
         const operation = Sdk.base.ManageKeyValueBuilder.putKeyValue({ key, value, entryType })
-        await Sdk.horizon.transactions.submitOperations(operation)
+        await ApiCallerFactory
+          .createCallerInstance()
+          .postOperations(operation)
         await this.getList()
 
         this.$store.dispatch('SET_INFO', 'Submitted successfully')

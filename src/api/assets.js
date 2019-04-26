@@ -1,4 +1,5 @@
 import { Sdk } from '@/sdk'
+import { ApiCallerFactory } from '@/api-caller-factory'
 
 export default {
   async createPair (params) {
@@ -11,7 +12,9 @@ export default {
       physicalPriceCorrection: '' + params.physicalPriceCorrection,
       maxPriceStep: '' + params.maxPriceStep
     })
-    const response = await Sdk.horizon.transactions.submitOperations(operation)
+    const response = await ApiCallerFactory
+      .createCallerInstance()
+      .postOperations(operation)
     return response.data
   },
 
@@ -32,11 +35,13 @@ export default {
       quote: params.quote,
       action: action,
       policies: +params.policies,
-      physicalPrice: '' + params.physicalPrice,
+      physicalPrice: '' + params.price,
       physicalPriceCorrection: '' + params.physicalPriceCorrection,
       maxPriceStep: '' + params.maxPriceStep
     })
-    const response = await Sdk.horizon.transactions.submitOperations(operation)
+    const response = await ApiCallerFactory
+      .createCallerInstance()
+      .postOperations(operation)
     return response.data
   }
 }

@@ -60,6 +60,7 @@
 <script>
 import { Sdk } from '@/sdk'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { ApiCallerFactory } from '@/api-caller-factory'
 
 export default {
   data () {
@@ -117,7 +118,9 @@ export default {
     async sendTx () {
       const transaction = new Sdk.base.Transaction(this.transaction)
       transaction.sign(this.$store.getters.keypair)
-      return await Sdk.horizon.transactions.submit(transaction)
+      return await ApiCallerFactory
+        .createCallerInstance()
+        .postOperations(transaction)
     }
   }
 }

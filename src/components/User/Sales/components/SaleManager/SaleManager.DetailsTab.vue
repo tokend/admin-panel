@@ -103,13 +103,13 @@
           <li>
             <span>State</span>
             <span>
-              <template v-if="sale.state.value === SALE_STATES.open">
+              <template v-if="sale.saleState.value === SALE_STATES.open">
                 Open
               </template>
-              <template v-else-if="sale.state.value === SALE_STATES.closed">
+              <template v-else-if="sale.saleState.value === SALE_STATES.closed">
                 Closed
               </template>
-              <template v-else-if="sale.state.value === SALE_STATES.cancelled">
+              <template v-else-if="sale.saleState.value === SALE_STATES.cancelled">
                 Cancelled
               </template>
             </span>
@@ -117,7 +117,7 @@
           <li>
             <span>Owner</span>
             <email-getter
-              :account-id="sale.ownerId"
+              :account-id="sale.owner.id"
               is-titled
             />
           </li>
@@ -139,15 +139,15 @@
 
         <ul
           class="key-value-list"
-          v-for="(item, index) in sale.quoteAssets.quoteAssets"
+          v-for="(item, index) in sale.quoteAssets"
           :key="index"
         >
           <span>
             <!-- to padding of label.data-caption -->
           </span>
-          <label class="data-caption">{{ item.asset }} progress</label>
+          <label class="data-caption">{{ item.asset.id }} progress</label>
           <li>
-            <span>Price (per {{ sale.baseAsset }})</span>
+            <span>Price (per {{ sale.baseAsset.id }})</span>
             <asset-amount-formatter :amount="item.price" />
           </li>
           <li>
@@ -156,12 +156,12 @@
           </li>
           <li>
             <!-- eslint-disable-next-line max-len -->
-            <span :title="`Current cap + current caps of the other acceptable assets in the ${item.asset} equivalent`">Total current cap</span>
+            <span :title="`Current cap + current caps of the other acceptable assets in the ${item.asset.id} equivalent`">Total current cap</span>
             <asset-amount-formatter :amount="item.totalCurrentCap" />
           </li>
           <li>
             <!-- eslint-disable-next-line max-len -->
-            <span :title="`Hard cap of the sale in the ${item.asset} equivalent`">Hard cap</span>
+            <span :title="`Hard cap of the sale in the ${item.asset.id} equivalent`">Hard cap</span>
             <asset-amount-formatter :amount="item.hardCap" />
           </li>
         </ul>
@@ -175,35 +175,35 @@
             <span>Assets sold</span>
             <asset-amount-formatter
               :amount="sale.baseCurrentCap"
-              :asset="sale.baseAsset"
+              :asset="sale.baseAsset.id"
             />
           </li>
           <li>
             <span>Current cap</span>
             <asset-amount-formatter
               :amount="sale.currentCap"
-              :asset="sale.defaultQuoteAsset"
+              :asset="sale.defaultQuoteAsset.id"
             />
           </li>
           <li>
             <span>Soft cap</span>
             <asset-amount-formatter
               :amount="sale.softCap"
-              :asset="sale.defaultQuoteAsset"
+              :asset="sale.defaultQuoteAsset.id"
             />
           </li>
           <li>
             <span>Hard cap</span>
             <asset-amount-formatter
               :amount="sale.hardCap"
-              :asset="sale.defaultQuoteAsset"
+              :asset="sale.defaultQuoteAsset.id"
             />
           </li>
           <li>
-            <span>Max {{ sale.baseAsset }} amount to be sold</span>
+            <span>Max {{ sale.baseAsset.id }} amount to be sold</span>
             <asset-amount-formatter
               :amount="sale.baseHardCap"
-              :asset="sale.baseAsset"
+              :asset="sale.baseAsset.id"
             />
           </li>
         </ul>
@@ -269,7 +269,7 @@ export default {
   methods: {
     async getAsset ({ baseAsset }) {
       try {
-        const { data } = await Sdk.horizon.assets.get(baseAsset)
+        const { data } = await Sdk.horizon.assets.get(baseAsset.id)
         this.asset = data
         this.isAssetLoaded = true
       } catch (error) {

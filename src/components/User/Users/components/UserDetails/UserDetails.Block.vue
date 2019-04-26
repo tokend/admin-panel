@@ -68,6 +68,7 @@ import { confirmAction } from '@/js/modals/confirmation_message'
 import { ChangeRoleRequest } from '@/api/responseHandlers/requests/ChangeRoleRequest'
 
 import config from '@/config'
+import { ApiCallerFactory } from '@/api-caller-factory'
 
 const EVENTS = {
   updated: 'updated',
@@ -134,7 +135,9 @@ export default {
             },
             allTasks: 0
           })
-        await Sdk.horizon.transactions.submitOperations(operation)
+        await ApiCallerFactory
+          .createCallerInstance()
+          .postOperations(operation)
 
         this.$store.dispatch('SET_INFO', 'The user account was blocked')
         this.$emit(EVENTS.updated)
@@ -163,7 +166,9 @@ export default {
             },
             allTasks: 0
           })
-        await Sdk.horizon.transactions.submitOperations(operation)
+        await ApiCallerFactory
+          .createCallerInstance()
+          .postOperations(operation)
 
         this.$store.dispatch('SET_INFO', 'The user account was unblocked')
         this.$emit(EVENTS.updated)

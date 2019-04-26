@@ -81,6 +81,7 @@ import { DEFAULT_INPUT_STEP, DEFAULT_INPUT_MIN } from '@/constants'
 
 import { confirmAction } from '../../../../../js/modals/confirmation_message'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { ApiCallerFactory } from '@/api-caller-factory'
 
 export default {
   components: {
@@ -154,7 +155,9 @@ export default {
             action: Sdk.xdr.ManageBalanceAction.createUnique(),
             destination: address
           })
-          await Sdk.horizon.transactions.submitOperations(operation)
+          await ApiCallerFactory
+            .createCallerInstance()
+            .postOperations(operation)
         } catch (error) {
           ErrorHandler.process(error)
         }
@@ -179,7 +182,9 @@ export default {
         creatorDetails: {},
         allTasks: 0
       })
-      await Sdk.horizon.transactions.submitOperations(operation)
+      await ApiCallerFactory
+        .createCallerInstance()
+        .postOperations(operation)
       this.form.amount = null
       this.form.receiver = null
       this.form.reference = null

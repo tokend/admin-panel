@@ -43,7 +43,6 @@
 </template>
 
 <script>
-import { Sdk } from '@/sdk'
 import { Tabs, Tab } from '@comcom/Tabs'
 import DetailsTab from './SaleManager.DetailsTab'
 import DescriptionTab from './SaleManager.DescriptionTab'
@@ -51,6 +50,7 @@ import ParticipantsTab from './SaleManager.ParticipantsTab'
 import SyndicateTab from './SaleManager.SyndicateTab'
 import UpdatesTab from './SaleManager.UpdatesTab'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { ApiCallerFactory } from '@/api-caller-factory'
 
 export default {
   components: {
@@ -80,8 +80,12 @@ export default {
   methods: {
     async getSale (id) {
       try {
-        const response = await Sdk.horizon.sales.get(id)
-        this.sale = response.data
+        const { data } = await ApiCallerFactory
+          .createCallerInstance()
+          .get(`/v3/sales/${id}`, {
+            include: ['base_asset', 'default_quote_asset']
+          })
+        this.sale = data
         this.isLoaded = true
       } catch (error) {
         ErrorHandler.process(error)

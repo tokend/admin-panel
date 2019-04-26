@@ -13,7 +13,7 @@
     >
       Reset to unverified
     </button>
-  
+
     <modal
       class="user-reset__modal"
       v-if="resetForm.isShown"
@@ -64,6 +64,7 @@ import { confirmAction } from '@/js/modals/confirmation_message'
 import { ChangeRoleRequest } from '@/api/responseHandlers/requests/ChangeRoleRequest'
 
 import config from '@/config'
+import { ApiCallerFactory } from '@/api-caller-factory'
 
 const EVENTS = {
   reset: 'reset',
@@ -125,7 +126,9 @@ export default {
             },
             allTasks: 0
           })
-        await Sdk.horizon.transactions.submitOperations(operation)
+        await ApiCallerFactory
+          .createCallerInstance()
+          .postOperations(operation)
         this.$store.dispatch('SET_INFO', 'The user account was reset to unverified')
         this.$emit(EVENTS.reset)
       } catch (error) {

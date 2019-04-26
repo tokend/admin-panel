@@ -6,11 +6,11 @@
       <select-field class="pending-participants__filter"
         v-model="filters.quoteAsset"
         label="Quote asset">
-        <template v-if="get(sale, 'quoteAssets.quoteAssets', []).length">
-          <option :value="item.asset"
-            v-for="(item, index) in sale.quoteAssets.quoteAssets"
+        <template v-if="get(sale, 'quoteAssets', []).length">
+          <option :value="item.asset.id"
+            v-for="(item, index) in sale.quoteAssets"
             :key="index"
-          >{{item.asset}}</option>
+          >{{item.asset.id}}</option>
         </template>
 
         <template v-else>
@@ -26,7 +26,7 @@
             <th>Investor</th>
             <th>Invested at</th>
             <th>{{filters.quoteAsset}} invested</th>
-            <th>{{sale.baseAsset}} acquired</th>
+            <th>{{sale.baseAsset.id}} acquired</th>
           </tr>
         </thead>
         <tbody>
@@ -72,7 +72,7 @@ export default {
     return {
       participants: [],
       filters: {
-        quoteAsset: get(this, 'sale.quoteAssets.quoteAssets[0].asset', '')
+        quoteAsset: get(this, 'sale.quoteAssets[0].asset.id', '')
       },
       isLoaded: false,
       isFailed: false

@@ -197,6 +197,7 @@
 
   import { STATS_OPERATION_TYPES, DEFAULT_MAX_AMOUNT } from '@/constants'
   import config from '@/config'
+  import { ApiCallerFactory } from '@/api-caller-factory'
 
   const LIMITS_TYPES = [
     'dailyOut',
@@ -310,7 +311,9 @@
             ...limits,
             accountID
           })
-          await Sdk.horizon.transactions.submitOperations(operation)
+          await ApiCallerFactory
+            .createCallerInstance()
+            .postOperations(operation)
           await this.getAssets()
           this.$store.dispatch('SET_INFO', 'Limits update saved')
         } catch (e) {

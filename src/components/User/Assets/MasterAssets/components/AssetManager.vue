@@ -289,6 +289,7 @@ import 'mdi-vue/ChevronUpIcon'
 
 import { confirmAction } from '@/js/modals/confirmation_message'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { ApiCallerFactory } from '@/api-caller-factory'
 
 export default {
   components: {
@@ -436,7 +437,9 @@ export default {
             }
           })
         }
-        await Sdk.horizon.transactions.submitOperations(operation)
+        await ApiCallerFactory
+          .createCallerInstance()
+          .postOperations(operation)
         Bus.$emit('recheckConfig')
         this.$store.dispatch('SET_INFO', 'Submitted successfully.')
         this.$router.push({ name: 'assets.masterAssets.index' })
