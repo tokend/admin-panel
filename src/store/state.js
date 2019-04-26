@@ -4,24 +4,24 @@ const initialState = () => {
   return {
     timestamp: null,
     auth: {
-      isLoggedIn: false
+      isLoggedIn: false,
     },
     user: {
       name: '',
       address: '', // user address (accountId the user logged in with)
       keys: { // signing keys
         seed: '',
-        accountId: ''
+        accountId: '',
       },
       wallet: {
-        id: ''
-      }
+        id: '',
+      },
     },
     message: {
       type: '', // info or error
-      text: ''
+      text: '',
     },
-    isModalOpen: false
+    isModalOpen: false,
   }
 }
 

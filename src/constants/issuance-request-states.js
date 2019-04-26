@@ -3,5 +3,5 @@ export const ISSUANCE_REQUEST_STATES = Object.freeze({
   cancelled: 2,
   approved: 3,
   rejected: 4,
-  permanentlyRejected: 5
+  permanentlyRejected: 5,
 })

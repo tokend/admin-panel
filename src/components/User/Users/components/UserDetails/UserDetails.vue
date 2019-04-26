@@ -11,7 +11,8 @@
           <h3>
             Current request state
           </h3>
-          <p :class="`user-details__state-info
+          <p
+            :class="`user-details__state-info
                       user-details__state-info--${requestToReview.state}`">
             {{ requestToReview.state }}
           </p>
@@ -33,10 +34,13 @@
               <mdi-chevron-down-icon v-else />
             </button>
           </p>
+
+          <!-- eslint-disable vue/no-v-html -->
           <p
             v-if="isShownExternal"
             v-html="externalDetails"
           />
+          <!-- eslint-enable vue/no-v-html -->
         </section>
 
         <section class="user-details__section">
@@ -52,18 +56,21 @@
             <kyc-general-section
               v-if="requestToReview.accountRoleToSet === ACCOUNT_ROLES.general"
               :user="user"
-              :blobId="requestToReview.blobId"
+              :blob-id="requestToReview.blobId"
             />
 
+            <!-- eslint-disable max-len -->
             <kyc-syndicate-section
               v-if="requestToReview.accountRoleToSet === ACCOUNT_ROLES.corporate"
               :user="user"
-              :blobId="requestToReview.blobId"
+              :blob-id="requestToReview.blobId"
             />
           </section>
+          <!-- eslint-enable max-len -->
         </template>
 
         <template v-if="verifiedRequest.state">
+          <!-- eslint-disable max-len -->
           <section
             v-if="verifiedRequest.accountRoleToSet !== ACCOUNT_ROLES.notVerified && !isUserBlocked"
             class="user-details__section"
@@ -72,24 +79,27 @@
             <kyc-general-section
               v-if="verifiedRequest.accountRoleToSet === ACCOUNT_ROLES.general"
               :user="user"
-              :blobId="verifiedRequest.blobId"
+              :blob-id="verifiedRequest.blobId"
             />
             <kyc-syndicate-section
               v-else-if="verifiedRequest.accountRoleToSet === ACCOUNT_ROLES.corporate"
               :user="user"
-              :blobId="verifiedRequest.blobId"
+              :blob-id="verifiedRequest.blobId"
             />
           </section>
+          <!-- eslint-enable max-len -->
 
           <div
             v-if="requestToReview.state"
             class="user-details__latest-request"
           >
             <h3>Latest request</h3>
+            <!-- eslint-disable max-len -->
             <p class="text">
               Create a {{ requestToReview.accountRoleToSet | roleIdToString | lowerCase }} account:
               {{ requestToReview.state }}
             </p>
+            <!-- eslint-enable max-len -->
           </div>
         </template>
 
@@ -98,7 +108,7 @@
             <request-actions
               class="user-details__actions"
               :user="user"
-              :requestToReview="requestToReview"
+              :request-to-review="requestToReview"
               :latest-approved-request="verifiedRequest"
               @reviewed="getUpdatedUser"
             />
@@ -131,7 +141,9 @@
       </template>
 
       <template v-else>
-        <p class="danger">An error occurred. Please try again later.</p>
+        <p class="danger">
+          An error occurred. Please try again later.
+        </p>
       </template>
     </div>
   </div>
@@ -157,10 +169,10 @@ import { ChangeRoleRequest } from '@/api/responseHandlers/requests/ChangeRoleReq
 import config from '@/config'
 
 const OPERATION_TYPE = {
-  createKycRequest: '22'
+  createKycRequest: '22',
 }
 const EVENTS = {
-  reviewed: 'reviewed'
+  reviewed: 'reviewed',
 }
 
 export default {
@@ -170,7 +182,11 @@ export default {
     KycSyndicateSection,
     RequestActions,
     ResetActions,
-    BlockActions
+    BlockActions,
+  },
+
+  props: {
+    id: { type: String, required: true },
   },
 
   data () {
@@ -183,14 +199,8 @@ export default {
       isShownExternal: false,
       user: {},
       requests: [],
-      verifiedRequest: {}
+      verifiedRequest: new ChangeRoleRequest({}),
     }
-  },
-
-  props: ['id'],
-
-  async created () {
-    await this.getUser()
   },
 
   computed: {
@@ -239,7 +249,11 @@ export default {
         this.latestNonBlockedRequest.accountRoleToSet ||
         config.ACCOUNT_ROLES.notVerified
       )
-    }
+    },
+  },
+
+  async created () {
+    await this.getUser()
   },
 
   methods: {
@@ -251,15 +265,15 @@ export default {
           ApiCallerFactory
             .createCallerInstance()
             .getWithSignature('/identities', {
-              filter: { address: this.id }
+              filter: { address: this.id },
             }),
           ApiCallerFactory
             .createCallerInstance()
             .getWithSignature('/v3/change_role_requests', {
               page: { order: 'desc' },
               filter: { requestor: this.id },
-              include: ['request_details']
-            })
+              include: ['request_details'],
+            }),
         ])
         this.user = user.data[0]
         this.requests = requests.data
@@ -268,7 +282,7 @@ export default {
         await this.loadVerifiedRequest()
         this.isLoaded = true
       } catch (error) {
-        ErrorHandler.process(error)
+        ErrorHandler.processWithoutFeedback(error)
         this.isFailed = true
       }
     },
@@ -281,7 +295,7 @@ export default {
           const { data } = await ApiCallerFactory
             .createCallerInstance()
             .getWithSignature(`/v3/change_role_requests/${requestId}`, {
-              include: ['request_details']
+              include: ['request_details'],
             })
           this.verifiedRequest = new ChangeRoleRequest(data)
         } else if (!requestId) {
@@ -297,9 +311,9 @@ export default {
       setTimeout(async () => {
         await this.getUser()
         this.$emit(EVENTS.reviewed)
-      }, 1500)
-    }
-  }
+      }, 3000)
+    },
+  },
 }
 </script>
 

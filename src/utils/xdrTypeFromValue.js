@@ -8,7 +8,6 @@ export function xdrTypeFromValue (xdrEnum, value) {
   try {
     return xdrEnum.values().filter(item => item.value === value)[0]
   } catch (error) {
-    console.error(error)
     throw new Error(`xdrEnumToConstant: Cannot get values from provided xdrEnum (${xdrEnum})`)
   }
 }

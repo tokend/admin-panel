@@ -75,7 +75,10 @@
               <template v-if="form.signerRoleId">
                 <p
                   class="admin-manager__role-description"
-                  :class="{ 'admin-manager__role-description--grayscale': isMaster || isPending }"
+                  :class="{
+                    'admin-manager__role-description--grayscale':
+                      isMaster || isPending
+                  }"
                 >
                   {{ form.signerRoleId | deriveRoleDescription(signerRoles) }}
                 </p>
@@ -91,7 +94,7 @@
           form="admin-manager-form"
           :disabled="isPending"
         >
-          {{addNew ? 'Add' : 'Update'}}
+          {{ addNew ? 'Add' : 'Update' }}
         </button>
 
         <button
@@ -109,12 +112,15 @@
 
 <script>
 import Vue from 'vue'
+
 import InputField from '@comcom/fields/InputField'
 import SelectField from '@comcom/fields/SelectField'
 
 import { confirmAction } from '@/js/modals/confirmation_message'
+
 import { Sdk } from '@/sdk'
 import { ApiCallerFactory } from '@/api-caller-factory'
+
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 const MASTER_ROLE_ID = 1
@@ -124,7 +130,17 @@ export default {
 
   components: {
     InputField,
-    SelectField
+    SelectField,
+  },
+
+  filters: {
+    deriveRoleDescription (roleId, signerRoles = []) {
+      return (signerRoles.find(item => +item.id === +roleId) || {}).description
+    },
+  },
+
+  props: {
+    id: { type: String, default: '' },
   },
 
   data () {
@@ -134,33 +150,23 @@ export default {
         name: '',
         weight: '',
         identity: '',
-        signerRoleId: ''
+        signerRoleId: '',
       },
 
       signer: {
         account: {},
-        role: {}
+        role: {},
       },
 
       signerRoles: [],
 
       formErrors: {
-        accountId: { error: false, message: '' }
+        accountId: { error: false, message: '' },
       },
 
       masterPubKey: Vue.params.MASTER_ACCOUNT,
       MASTER_ROLE_ID,
-      isPending: false
-    }
-  },
-
-  props: {
-    id: ''
-  },
-
-  filters: {
-    deriveRoleDescription (roleId, signerRoles = []) {
-      return (signerRoles.find(item => +item.id === +roleId) || {}).description
+      isPending: false,
     }
   },
 
@@ -171,7 +177,7 @@ export default {
 
     isMaster () {
       return this.signer.id === this.masterPubKey
-    }
+    },
   },
 
   async created () {
@@ -181,7 +187,7 @@ export default {
         await this.loadSigner()
       }
     } catch (error) {
-      ErrorHandler.process(error)
+      ErrorHandler.processWithoutFeedback(error)
     }
   },
 
@@ -206,16 +212,17 @@ export default {
             return {
               id: item.id,
               name: 'Master',
-              description: 'The root admin of the system'
+              description: 'The root admin of the system',
             }
           }
 
           return {
             id: item.id,
             name: (item.details || {}).name || `Unnamed (${item.id})`,
-            description: (item.details || {}).description || '(No description)'
+            description: (item.details || {}).description || '(No description)',
           }
         })
+
       this.form.signerRoleId = this.form.signerRoleId ||
         this.signerRoles.find(item => item.name !== 'Master').id
     },
@@ -232,7 +239,7 @@ export default {
         signerRoleId: String(signer.role.id),
         name: signer.id === this.masterPubKey
           ? 'Master'
-          : signer.details.name
+          : signer.details.name,
       }
 
       this.$store.commit('CLOSE_LOADER')
@@ -287,7 +294,7 @@ export default {
         roleID: String(this.form.signerRoleId || this.signer.role.id),
         weight: this.form.weight,
         identity: this.form.identity,
-        details: { name: this.form.name }
+        details: { name: this.form.name },
       }
     },
 
@@ -301,8 +308,8 @@ export default {
       }
 
       return valid
-    }
-  }
+    },
+  },
 }
 </script>
 

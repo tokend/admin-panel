@@ -9,9 +9,9 @@ export function fromKycTemplate (template) {
       kycAvatar: get(template, 'documents.kyc_avatar.key'),
       kycSelfie: template.documents.kyc_selfie
         ? get(template, 'documents.kyc_selfie.front.key') || get(template, 'documents.kyc_selfie.key')
-        : get(template, 'documents.bravo.front.key') || get(template, 'documents.bravo.key')
+        : get(template, 'documents.bravo.front.key') || get(template, 'documents.bravo.key'),
     },
     first_name: template.first_name,
-    last_name: template.last_name
+    last_name: template.last_name,
   }
 }

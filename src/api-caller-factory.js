@@ -1,5 +1,4 @@
-import { ApiCaller } from '@tokend/js-sdk'
-import { Wallet } from '@tokend/js-sdk'
+import { Wallet, ApiCaller } from '@tokend/js-sdk'
 
 let defaultHorizonUrl
 let defaultWallet
@@ -18,7 +17,7 @@ export class StubbornApiCaller {
   async stubbornGet (endpoint, query, signNeeded = false) {
     const list = await this._apiCaller.get(
       endpoint,
-      { ...query, page: { limit: this._pageLimit }},
+      { ...query, page: { limit: this._pageLimit } },
       signNeeded
     )
 
@@ -57,7 +56,7 @@ export class ApiCallerFactory {
    * @param {Wallet} wallet
    */
   static setDefaultWallet (wallet) {
-    if (!wallet instanceof Wallet) {
+    if (!(wallet instanceof Wallet)) {
       throw new Error('ApiCallerFactory.setDefaultWallet(): wallet should be instance of Wallet')
     }
     defaultWallet = wallet
@@ -116,7 +115,8 @@ export class ApiCallerFactory {
       throw new Error('ApiCallerFactory.createCallerInstance(): neither opts.networkPassphrase nor ApiCallerFactory.defaultNetworkPassphrase provided')
     }
 
-    const networkPassphrase = opts.networkPassphrase || ApiCallerFactory.defaultNetworkPassphrase
+    const networkPassphrase = opts.networkPassphrase ||
+      ApiCallerFactory.defaultNetworkPassphrase
     callerInstance.usePassphrase(networkPassphrase)
 
     return callerInstance
@@ -138,4 +138,3 @@ export class ApiCallerFactory {
     return callerInstance
   }
 }
-

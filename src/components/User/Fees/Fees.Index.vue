@@ -5,18 +5,15 @@
     </h2>
 
     <div class="fees-index__list-wrp">
-      <fee-list/>
+      <fee-list />
     </div>
   </div>
 </template>
 
 <script>
 import FeeList from './components/FeeList'
+
 export default {
-  components: { FeeList }
+  components: { FeeList },
 }
 </script>
-
-<style scoped>
-
-</style>

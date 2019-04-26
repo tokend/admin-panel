@@ -16,5 +16,5 @@ export default {
 
   verifyTfaCode (code, tfaToken) {
     return keyServer.get('/tfa/verify', { code: code, token: tfaToken }, false)
-  }
+  },
 }

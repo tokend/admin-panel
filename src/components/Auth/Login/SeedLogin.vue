@@ -37,47 +37,43 @@
 
 <script>
 import Vue from 'vue'
+
 import { InputField } from '@comcom/fields'
+
 import { Sdk } from '@/sdk'
+import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   name: 'seed-login',
-
   components: { InputField },
 
   data () {
     return {
       form: {
         seed: '',
-        pending: false
-      }
+        pending: false,
+      },
     }
   },
 
   methods: {
     async seedLogin () {
       if (!Sdk.base.Keypair.isValidSecretKey(this.form.seed)) {
-        this.$store.dispatch('SET_ERROR', 'Invalid seed')
+        ErrorHandler.process('Invalid seed')
         return
       }
 
       this.form.pending = true
-
       try {
         await Vue.auth.seedLogin(this.form.seed)
         this.$store.dispatch('LOG_IN')
         setTimeout(() => this.$router.push({ name: 'users' }), 100)
       } catch (error) {
-        console.error(error)
-        this.$store.dispatch(
-          'SET_ERROR',
-          'An error occurred, please try again later'
-        )
+        ErrorHandler.process('An error occurred, please try again later')
       }
-
       this.form.pending = false
-    }
-  }
+    },
+  },
 }
 </script>
 

@@ -1,6 +1,7 @@
 <template>
   <div class="tick-field">
-    <input class="tick-field__input"
+    <input
+      class="tick-field__input"
       type="checkbox"
       :checked="checked"
       :disabled="disabled"
@@ -11,14 +12,19 @@
       :autofocus="autofocus"
       @change="onChange">
 
-    <label class="tick-field__label" :for="id" :title="title">
+    <label
+      class="tick-field__label"
+      :for="id"
+      :title="title">
       {{ label }}
     </label>
 
-    <span class="tick-field__tick" :for="id" :title="title">
+    <span
+      class="tick-field__tick"
+      :for="id"
+      :title="title">
       <!-- css art -->
     </span>
-
   </div>
 </template>
 
@@ -26,31 +32,23 @@
 export default {
   props: {
     label: { type: String, default: 'Label' },
-    value: { default: false },
+    value: { type: [String, Number, Array, Boolean], default: false },
 
     // proxies
     name: { type: String, default: undefined },
     disabled: { type: Boolean, default: false },
+    // eslint-disable-next-line vue/require-prop-types
     cbValue: { default: undefined },
     title: { type: [String, Number], default: undefined },
     required: { type: Boolean, default: false },
-    autofocus: { type: Boolean, default: false }
-  },
-
-  data () {
-    return {
-      // data
-    }
-  },
-
-  created () {
-    // created
+    autofocus: { type: Boolean, default: false },
   },
 
   computed: {
     id () {
       return `tick-field-${this._uid}`
     },
+
     checked () {
       const model = this.value
       const value = this.cbValue
@@ -73,7 +71,7 @@ export default {
           break
       }
       return result
-    }
+    },
   },
 
   methods: {
@@ -103,6 +101,7 @@ export default {
           break
       }
     },
+
     typeof (value) {
       const type = typeof value
 
@@ -118,8 +117,8 @@ export default {
           break
       }
       return result
-    }
-  }
+    },
+  },
 }
 </script>
 

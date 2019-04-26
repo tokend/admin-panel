@@ -10,10 +10,29 @@ for further information about branching and tagging conventions.
 ## [Unreleased]
 #### Fixed
 - Fixed operation empty and loading list displaying of a user
+- Updating user details after KYC change
+- Error after blocking the user without verified KYC request
 
 #### Added
 - "Invest" fee type
 - Re-render chart animation
+
+#### Changed
+- Now using ErrorHandler instead of `error.showMessage()`,
+  `$store.dispatch('SET_ERROR')`, `console.error`
+- Replaced `ErrorHandler.process` by `ErrorHandler.processWithoutFeedback`
+  in components' created hook
+- Updated `package.json` dependencies
+- Updated webpack build config
+- Now using "qrcode.vue" package instead of "v-qrcode"
+- Renamed "Create change role request" in the list to "Block" and
+  "Reset to unverified" if it was blocked or reset
+- Operation details formatting
+- Now using custom ESLint rules
+- Formatted & cleaned up code
+
+#### Removed
+- Unnecessary "build" folder, containing old webpack config
 
 ## [1.5.0] - 2019-04-19
 ### "Under the hood" changes

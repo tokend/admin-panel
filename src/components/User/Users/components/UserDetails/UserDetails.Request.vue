@@ -83,39 +83,39 @@ import { confirmAction } from '@/js/modals/confirmation_message'
 import { ChangeRoleRequest } from '@/api/responseHandlers/requests/ChangeRoleRequest'
 
 const EVENTS = {
-  reviewed: 'reviewed'
+  reviewed: 'reviewed',
 }
 
 export default {
   name: 'user-details-request',
   components: {
     Modal,
-    TextField
+    TextField,
   },
 
   props: {
     requestToReview: {
       type: ChangeRoleRequest,
-      default: _ => new ChangeRoleRequest({})
+      default: _ => new ChangeRoleRequest({}),
     },
     latestApprovedRequest: {
       type: ChangeRoleRequest,
-      default: _ => new ChangeRoleRequest({})
+      default: _ => new ChangeRoleRequest({}),
     },
     user: {
       type: Object,
-      default: _ => ({})
-    }
+      default: _ => ({}),
+    },
   },
 
   data () {
     return {
       rejectForm: {
         reason: '',
-        isShown: false
+        isShown: false,
       },
       isShownAdvanced: false,
-      isPending: false
+      isPending: false,
     }
   },
 
@@ -145,7 +145,10 @@ export default {
       try {
         await api.requests.reject(
           { reason: rejectReason, isPermanent },
-          { ...this.requestToReview.record, reviewDetails: { tasksToRemove: 0 }}
+          {
+            ...this.requestToReview.record,
+            reviewDetails: { tasksToRemove: 0 },
+          }
         )
         this.$store.dispatch('SET_INFO', `Request rejected successfully`)
         this.$emit(EVENTS.reviewed)
@@ -168,8 +171,8 @@ export default {
     async submitRejectForm () {
       this.hideRejectModal()
       await this.reject()
-    }
-  }
+    },
+  },
 }
 </script>
 

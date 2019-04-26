@@ -10,13 +10,10 @@
 
 <script>
 import KeyValueManager from './KeyValueManager'
+
 export default {
   components: {
-    KeyValueManager
-  }
+    KeyValueManager,
+  },
 }
 </script>
-
-<style scoped>
-
-</style>

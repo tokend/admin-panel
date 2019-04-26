@@ -7,7 +7,7 @@ const rotateAngles = [
   { y: 180, z: -90 },
   { y: 0, z: -90 },
   { y: 180, z: 90 },
-  { y: 0, z: 90 }
+  { y: 0, z: 90 },
 ]
 
 function getRotationAngle (newOrientation, oldOrientation) {
@@ -30,7 +30,7 @@ const jpegBytes = {
   applicationMarker: 0xFFE1,
   exifHeader: 0x45786966,
   byteAlign: 0x4949, // 'Intel'
-  orientationTag: 0x0112
+  orientationTag: 0x0112,
 }
 
 /**
@@ -64,7 +64,8 @@ function getImageOrientation (arrayBuffer) {
       offset += 2
 
       for (let i = 0; i < tags; i++) {
-        if (view.getUint16(offset + (i * 12), little) === jpegBytes.orientationTag) {
+        const orientationTag = view.getUint16(offset + (i * 12), little)
+        if (orientationTag === jpegBytes.orientationTag) {
           return view.getUint16(offset + (i * 12) + 8, little)
         }
       }
@@ -92,7 +93,7 @@ export default {
     const orientation = getImageOrientation(buffer)
     return {
       urlEncodedImage: url,
-      orientation: orientation
+      orientation: orientation,
     }
   },
   getRotationAngle: getRotationAngle,
@@ -111,5 +112,5 @@ export default {
     }
 
     return { transform: transform, translateNeeded: translateNeeded }
-  }
+  },
 }
