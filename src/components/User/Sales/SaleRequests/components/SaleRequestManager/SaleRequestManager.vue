@@ -41,8 +41,12 @@
 
       <template v-else>
         <p>
-          <template v-if="request.isFailed">An error occurred</template>
-          <template v-else>Loading...</template>
+          <template v-if="request.isFailed">
+            An error occurred
+          </template>
+          <template v-else>
+            Loading...
+          </template>
         </p>
       </template>
     </div>
@@ -52,7 +56,9 @@
       @close-request="hideRejectForm"
       max-width="40rem"
     >
-      <p class="text">Reject reason</p>
+      <p class="text">
+        Reject reason
+      </p>
 
       <form
         class="sale-rm__reject-form"
@@ -93,17 +99,22 @@
 </template>
 
 <script>
-import { Sdk } from '@/sdk'
-import api from '@/api'
 import TextField from '@comcom/fields/TextField'
 import TickField from '@comcom/fields/TickField'
+
 import Modal from '@comcom/modals/Modal'
-import { REQUEST_STATES } from '@/constants'
+import { Tabs, Tab } from '@comcom/Tabs'
+import { confirmAction } from '../../../../../../js/modals/confirmation_message'
+
 import DetailsTab from './SaleRequestManager.DetailsTab'
 import DescriptionTab from './SaleRequestManager.DescriptionTab'
-import { confirmAction } from '../../../../../../js/modals/confirmation_message'
 import SyndicateTab from '../../../components/SaleManager/SaleManager.SyndicateTab'
-import { Tabs, Tab } from '@comcom/Tabs'
+
+import { Sdk } from '@/sdk'
+import api from '@/api'
+
+import { REQUEST_STATES } from '@/constants'
+
 import cloneDeep from 'lodash/cloneDeep'
 import { snakeToCamelCase } from '@/utils/un-camel-case'
 import { ErrorHandler } from '@/utils/ErrorHandler'
@@ -117,7 +128,11 @@ export default {
     Modal,
     DetailsTab,
     DescriptionTab,
-    SyndicateTab
+    SyndicateTab,
+  },
+
+  props: {
+    id: { type: String, required: true },
   },
 
   data () {
@@ -127,23 +142,23 @@ export default {
         sale: {},
         asset: {},
         isReady: false,
-        isFailed: false
+        isFailed: false,
       },
       rejectForm: {
         reason: '',
         isShown: false,
-        isPermanentReject: false
+        isPermanentReject: false,
       },
-      isSubmitting: false
+      isSubmitting: false,
     }
   },
 
-  props: ['id'],
   computed: {
     getSaleDetails () {
       return this.request.sale.details[this.request.sale.details.requestType]
-    }
+    },
   },
+
   created () {
     if (this.id) {
       this.getRequest(this.id)
@@ -200,7 +215,7 @@ export default {
         await api.requests.reject(
           {
             reason: this.rejectForm.reason,
-            isPermanent: this.rejectForm.isPermanentReject
+            isPermanent: this.rejectForm.isPermanentReject,
           },
           this.request.sale
         )
@@ -224,8 +239,8 @@ export default {
         record.details[valuableRequestDetailsKey] || {}
 
       return newRecord
-    }
-  }
+    },
+  },
 }
 </script>
 

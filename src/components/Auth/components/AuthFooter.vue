@@ -1,7 +1,7 @@
 <template>
   <footer class="auth-footer">
     <span class="small">
-      TokenD © {{currentYear}}
+      TokenD © {{ currentYear }}
     </span>
   </footer>
 </template>
@@ -11,8 +11,8 @@ export default {
   computed: {
     currentYear () {
       return new Date().getFullYear()
-    }
-  }
+    },
+  },
 }
 </script>
 

@@ -4,7 +4,9 @@ export const fileReader = {
     if (!files.length) return
     return files[0]
   },
+
   async readFileAsDataUrl (file) {
+    // eslint-disable-next-line promise/avoid-new
     return new Promise((resolve, reject) => {
       const reader = new FileReader()
       reader.onload = () => {
@@ -16,7 +18,9 @@ export const fileReader = {
       reader.readAsDataURL(file)
     })
   },
+
   async readFileAsArrayBuffer (file) {
+    // eslint-disable-next-line promise/avoid-new
     return new Promise((resolve, reject) => {
       const reader = new FileReader()
       reader.onload = () => {
@@ -27,5 +31,5 @@ export const fileReader = {
       }
       reader.readAsArrayBuffer(file)
     })
-  }
+  },
 }

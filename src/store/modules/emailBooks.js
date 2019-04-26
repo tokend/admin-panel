@@ -4,7 +4,7 @@ import { Sdk } from '@/sdk'
 const emailBooks = {
   state: {
     addressBook: {},
-    busyAddresses: new Set()
+    busyAddresses: new Set(),
   },
 
   actions: {
@@ -24,20 +24,20 @@ const emailBooks = {
         throw error
       }
       state.busyAddresses.delete(address)
-    }
+    },
   },
 
   mutations: {
     [mutations.PUSH_EMAIL_TO_ADDRESS_BOOK] (state, payload) {
       state.addressBook[payload.address] = payload.email
-    }
+    },
   },
 
   getters: {
     [getters.GET_EMAIL_ADDRESS_BOOK] (state) {
       return state.addressBook
-    }
-  }
+    },
+  },
 }
 
 export { emailBooks }

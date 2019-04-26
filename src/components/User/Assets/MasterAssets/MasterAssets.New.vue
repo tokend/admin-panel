@@ -4,7 +4,7 @@
       <h2>Create asset</h2>
 
       <div class="master-assets-new__manager-wrp">
-        <asset-manager/>
+        <asset-manager />
       </div>
     </div>
   </div>
@@ -15,8 +15,8 @@ import AssetManager from './components/AssetManager'
 
 export default {
   components: {
-    AssetManager
-  }
+    AssetManager,
+  },
 }
 </script>
 

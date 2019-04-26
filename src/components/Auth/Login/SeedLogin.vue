@@ -37,22 +37,22 @@
 
 <script>
 import Vue from 'vue'
-import { InputField } from '@comcom/fields'
-import { Sdk } from '@/sdk'
 
+import { InputField } from '@comcom/fields'
+
+import { Sdk } from '@/sdk'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   name: 'seed-login',
-
   components: { InputField },
 
   data () {
     return {
       form: {
         seed: '',
-        pending: false
-      }
+        pending: false,
+      },
     }
   },
 
@@ -64,7 +64,6 @@ export default {
       }
 
       this.form.pending = true
-
       try {
         await Vue.auth.seedLogin(this.form.seed)
         this.$store.dispatch('LOG_IN')
@@ -72,10 +71,9 @@ export default {
       } catch (error) {
         ErrorHandler.process('An error occurred, please try again later')
       }
-
       this.form.pending = false
-    }
-  }
+    },
+  },
 }
 </script>
 

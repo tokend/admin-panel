@@ -56,12 +56,12 @@
       class="login__block app__block"
       v-else-if="state === 'tfa'"
     >
-      <g-auth @tfa-done="redirect"></g-auth>
+      <g-auth @tfa-done="redirect" />
     </div>
 
     <template v-if="buildVersion">
       <p class="login__version">
-        {{ buildVersion | formatVersion}}
+        {{ buildVersion | formatVersion }}
       </p>
     </template>
   </div>
@@ -89,13 +89,13 @@ export default {
 
       credentials: {
         username: '',
-        password: ''
+        password: '',
       },
       error: '',
 
       unsubscribe: null,
 
-      buildVersion: config.BUILD_VERSION
+      buildVersion: config.BUILD_VERSION,
     }
   },
 
@@ -103,27 +103,30 @@ export default {
     buttonsDisabled () {
       return this.$store.getters.showLoader
     },
+
     seedLoginEnabled () {
       return config.FEATURES.SEED_AUTH
-    }
+    },
   },
 
-  created () {
+  async created () {
     this.tfaDone = false
-    this.unsubscribe = this.$store.subscribe((mutation) => {
+    this.unsubscribe = this.$store.subscribe(async (mutation) => {
       if (this.$store.getters.tfaInitiator !== 'login') {
         return
       }
 
       switch (mutation.type) {
         case 'TFA_FORM_DONE': {
-          if (this.tfaDone) return
+          if (this.tfaDone) break
+
           this.tfaDone = true
-          return this.continueLogin()
+          await this.continueLogin()
+          break
         }
         case 'TFA_FORM_RESEND': {
           this.wantResend = true
-          this.login()
+          await this.login()
           break
         }
         case 'TFA_FORM_CLOSE': {
@@ -146,49 +149,57 @@ export default {
   },
 
   methods: {
-    login () {
+    async login () {
       if (!this.validate()) return
 
       this.$store.commit('OPEN_LOADER')
 
       const params = {
         username: this.credentials.username.toLowerCase(),
-        password: this.credentials.password
+        password: this.credentials.password,
       }
 
-      return Vue.auth.login(params)
-        .then(r => {
-          this.$store.commit('CLOSE_LOADER')
-          if (!r.ok) {
-            this.credentials.password = ''
-            ErrorHandler.process(r.message)
-            return
-          }
-          if (r.enabledTFA) {
-            this.loginParams = r.loginParams
-            this.loginParams.username = this.credentials.username.toLowerCase().trim()
-            return this.showTfaForm(r.token)
-          }
-          this.state = 'tfa'
-        }).catch(err => {
-          ErrorHandler.processWithoutFeedback(err)
-          this.$store.commit('CLOSE_LOADER')
-        })
+      try {
+        const response = await Vue.auth.login(params)
+        this.$store.commit('CLOSE_LOADER')
+
+        if (!response.ok) {
+          this.credentials.password = ''
+          ErrorHandler.process(response.message)
+          return
+        }
+
+        if (response.enabledTFA) {
+          this.loginParams = response.loginParams
+          this.loginParams.username = this.credentials.username
+            .toLowerCase()
+            .trim()
+
+          this.showTfaForm(response.token)
+        }
+        this.state = 'tfa'
+      } catch (err) {
+        ErrorHandler.processWithoutFeedback(err)
+        this.$store.commit('CLOSE_LOADER')
+      }
     },
 
-    continueLogin () {
+    async continueLogin () {
       this.$store.commit('OPEN_LOADER')
-      return Vue.auth.continueLogin(this.loginParams)
-        .then(r => {
-          this.$store.commit('CLOSE_LOADER')
-          if (!r.ok) {
-            ErrorHandler.process(r.message)
-          }
-          this.redirect()
-        }).catch(err => {
-          ErrorHandler.processWithoutFeedback(err)
-          this.$store.commit('CLOSE_LOADER')
-        })
+
+      try {
+        const response = await Vue.auth.continueLogin(this.loginParams)
+        this.$store.commit('CLOSE_LOADER')
+
+        if (!response.ok) {
+          ErrorHandler.process(response.message)
+        }
+
+        this.redirect()
+      } catch (err) {
+        ErrorHandler.processWithoutFeedback(err)
+        this.$store.commit('CLOSE_LOADER')
+      }
     },
 
     redirect () {
@@ -210,7 +221,7 @@ export default {
       this.$store.commit('OPEN_MODAL')
       this.$store.commit('REQUIRE_TFA', {
         tfaToken,
-        initiator: 'login'
+        initiator: 'login',
       })
     },
 
@@ -225,8 +236,8 @@ export default {
         return false
       }
       return true
-    }
-  }
+    },
+  },
 }
 </script>
 

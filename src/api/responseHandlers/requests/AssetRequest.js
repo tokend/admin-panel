@@ -10,7 +10,9 @@ export class AssetRequest extends ReviewableRequest {
   }
 
   get policies () {
-    return this.operationDetails.policies.map(policy => policy.value).reduce((sum, policy) => sum + policy, 0)
+    return this.operationDetails.policies
+      .map(policy => policy.value)
+      .reduce((sum, policy) => sum + policy, 0)
   }
 
   get name () {

@@ -1,18 +1,19 @@
 <template>
   <div class="user">
     <aside class="user__aside">
-      <user-sidebar/>
+      <user-sidebar />
     </aside>
     <div class="user__content">
-      <router-view/>
+      <router-view />
     </div>
   </div>
 </template>
 
 <script>
 import UserSidebar from './components/UserSidebar'
+
 export default {
-  components: { UserSidebar }
+  components: { UserSidebar },
 }
 </script>
 

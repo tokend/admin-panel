@@ -1,20 +1,20 @@
 <template>
   <span class="date-formatter">
-    {{formatDate(date, format)}}
+    {{ formatDate(date, format) }}
   </span>
 </template>
 
 <script>
 import { formatDate } from '@/utils/formatters'
+
 export default {
-  props: ['date', 'format'],
+  props: {
+    date: { type: String, required: true },
+    format: { type: String, required: true },
+  },
 
   methods: {
-    formatDate
-  }
+    formatDate,
+  },
 }
 </script>
-
-<style scoped>
-
-</style>

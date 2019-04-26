@@ -9,15 +9,15 @@ function resolve (dir) {
 
 module.exports = {
   entry: {
-    app: './src/main.js'
+    app: './src/main.js',
   },
   output: {
     path: path.resolve(__dirname, '../dist'),
     filename: '[name].js',
-    publicPath: '/'
+    publicPath: '/',
   },
   optimization: {
-    noEmitOnErrors: true
+    noEmitOnErrors: true,
   },
   resolve: {
     extensions: ['.js', '.vue', '.json', '.css', '.scss'],
@@ -25,8 +25,8 @@ module.exports = {
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
       '@comcom': resolve('src/components/common'),
-      '@store': resolve('src/store')
-    }
+      '@store': resolve('src/store'),
+    },
   },
   module: {
     rules: [
@@ -36,50 +36,50 @@ module.exports = {
         enforce: 'pre',
         include: [resolve('src'), resolve('karma')],
         options: {
-          formatter: require('eslint-friendly-formatter')
-        }
+          formatter: require('eslint-friendly-formatter'),
+        },
       },
       {
         test: /\.vue$/,
-        loader: 'vue-loader'
+        loader: 'vue-loader',
       },
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        include: [resolve('src'), resolve('karma')]
+        include: [resolve('src'), resolve('karma')],
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         loader: 'url-loader',
         options: {
           limit: 10000,
-          name: utils.assetsPath('img/[name].[hash:7].[ext]')
-        }
+          name: utils.assetsPath('img/[name].[hash:7].[ext]'),
+        },
       },
       {
         test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
         loader: 'url-loader',
         options: {
           limit: 10000,
-          name: utils.assetsPath('media/[name].[hash:7].[ext]')
-        }
+          name: utils.assetsPath('media/[name].[hash:7].[ext]'),
+        },
       },
       {
         test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
         loader: 'url-loader',
         options: {
           limit: 10000,
-          name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
-        }
+          name: utils.assetsPath('fonts/[name].[hash:7].[ext]'),
+        },
       },
       {
         test: /\.s[a|c]ss$/,
-        loader: 'style-loader!css-loader!sass-loader'
-      }
-    ]
+        loader: 'style-loader!css-loader!sass-loader',
+      },
+    ],
   },
   plugins: [
     new VueLoaderPlugin(),
-    new webpack.IgnorePlugin(/ed25519/)
-  ]
+    new webpack.IgnorePlugin(/ed25519/),
+  ],
 }

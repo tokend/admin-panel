@@ -21,7 +21,9 @@
           Asset creation request
         </template>
 
-        <template v-else-if="assetRequest.type === ASSET_REQUEST_TYPES.updateAsset">
+        <template
+          v-else-if="assetRequest.type === ASSET_REQUEST_TYPES.updateAsset"
+        >
           Asset update request
         </template>
 
@@ -33,7 +35,9 @@
         <span class="asset-requests-show__key">
           Asset logo
         </span>
-        <template v-if="safeGet(assetRequest, 'operationDetails.details.logo.key')">
+        <template
+          v-if="safeGet(assetRequest, 'operationDetails.details.logo.key')"
+        >
           <img-getter
             class="asset-requests-show__asset-logo"
             :file-key="assetRequest.operationDetails.details.logo.key"
@@ -70,7 +74,11 @@
           Max issuance amount
         </span>
         <span class="asset-requests-show__value">
-          {{ assetRequest.maxAmount ? localizeAmount(assetRequest.maxAmount) : '—' }}
+          {{
+            assetRequest.maxAmount
+              ? localizeAmount(assetRequest.maxAmount)
+              : '—'
+          }}
         </span>
       </div>
 
@@ -127,12 +135,14 @@
           </span>
           <div class="asset-requests-show__policies-wrapper">
             <template v-for="policy in assetRequest.operationDetails.policies">
+              <!-- eslint-disable max-len -->
               <span
-                :key='policy.value'
+                :key="policy.value"
                 class="asset-requests-show__key asset-requests-show__key--informative"
               >
                 {{ ASSET_POLICIES_VERBOSE[policy.value] }}
               </span>
+              <!-- eslint-enable max-len -->
             </template>
           </div>
         </div>
@@ -160,6 +170,7 @@
         />
       </div>
 
+      <!-- eslint-disable-next-line max-len -->
       <template v-if="assetRequest.state !== CREATE_ASSET_REQUEST_STATES.pending.codeVerbose">
         <div class="asset-requests-show__row">
           <span class="asset-requests-show__key">
@@ -167,11 +178,12 @@
           </span>
 
           <span class="asset-requests-show__value">
-            {{verbozify(assetRequest.state)}}
+            {{ verbozify(assetRequest.state) }}
           </span>
         </div>
       </template>
 
+      <!-- eslint-disable-next-line max-len -->
       <template v-if="assetRequest.state === CREATE_ASSET_REQUEST_STATES.rejected.codeVerbose">
         <div class="asset-requests-show__reject-reason-wrp">
           <text-field
@@ -182,6 +194,7 @@
         </div>
       </template>
 
+      <!-- eslint-disable max-len -->
       <div
         class="asset-requests-show__buttons"
         v-if="assetRequest.state === CREATE_ASSET_REQUEST_STATES.pending.codeVerbose"
@@ -203,44 +216,53 @@
         </button>
       </div>
     </div>
+    <!-- eslint-enable max-len -->
 
     <asset-request-reject-form
       @close="isRejecting = false"
-      :assetRequest="assetRequest"
+      :asset-request="assetRequest"
       v-else-if="isRejecting"
     />
   </div>
 </template>
 
 <script>
-import { Sdk } from '@/sdk'
-import { ASSET_POLICIES_VERBOSE } from '@/constants'
-import { confirmAction } from '@/js/modals/confirmation_message'
-import AssetRequestRejectForm from './components/AssetRequestRejectForm'
-import localize from '@/utils/localize'
 import TextField from '@comcom/fields/TextField'
+import AssetRequestRejectForm from './components/AssetRequestRejectForm'
+
 import { ImgGetter, EmailGetter } from '@comcom/getters'
 import { DateFormatter } from '@comcom/formatters'
-import { verbozify } from '@/utils/verbozify'
-import { AssetRequest } from '@/api/responseHandlers/requests/AssetRequest'
-import get from 'lodash/get'
-import { ErrorHandler } from '@/utils/ErrorHandler'
-import {
-  CREATE_ASSET_REQUEST_STATES,
-  ASSET_REQUEST_TYPES
-} from '@/constants'
-// TODO: extract to AssetRequestForm
 
+import { confirmAction } from '@/js/modals/confirmation_message'
+
+import { Sdk } from '@/sdk'
+
+import localize from '@/utils/localize'
+import { verbozify } from '@/utils/verbozify'
+import safeGet from 'lodash/get'
+
+import { AssetRequest } from '@/api/responseHandlers/requests/AssetRequest'
+import { ErrorHandler } from '@/utils/ErrorHandler'
+
+import {
+  ASSET_POLICIES_VERBOSE,
+  CREATE_ASSET_REQUEST_STATES,
+  ASSET_REQUEST_TYPES,
+} from '@/constants'
+
+// TODO: extract to AssetRequestForm
 export default {
   components: {
     AssetRequestRejectForm,
     TextField,
     ImgGetter,
     EmailGetter,
-    DateFormatter
+    DateFormatter,
   },
 
-  props: ['id'],
+  props: {
+    id: { type: String, required: true },
+  },
 
   data () {
     return {
@@ -251,8 +273,18 @@ export default {
       isInitFailed: false,
       ASSET_POLICIES_VERBOSE,
       ASSET_REQUEST_TYPES,
-      CREATE_ASSET_REQUEST_STATES
+      CREATE_ASSET_REQUEST_STATES,
     }
+  },
+
+  computed: {
+    isCancellable () {
+      const isPending = this.assetRequest.state ===
+        CREATE_ASSET_REQUEST_STATES.pending.codeVerbose
+      const isCancellableRequestor =
+        this.assetRequest.requestor === this.$store.getters.masterId
+      return isPending && isCancellableRequestor
+    },
   },
 
   async created () {
@@ -269,19 +301,10 @@ export default {
     this.isInitializing = false
   },
 
-  computed: {
-    isCancellable () {
-      const isPending =
-        this.assetRequest.state === CREATE_ASSET_REQUEST_STATES.pending.codeVerbose
-      const isCancellableRequestor =
-        this.assetRequest.requestor === this.$store.getters.masterId
-      return isPending && isCancellableRequestor
-    }
-  },
-
   methods: {
     verbozify,
-    safeGet: get,
+    safeGet,
+
     async fulfill () {
       this.isPending = true
       if (await confirmAction()) {
@@ -296,8 +319,8 @@ export default {
       this.isPending = false
     },
 
-    localizeAmount: localize
-  }
+    localizeAmount: localize,
+  },
 }
 </script>
 

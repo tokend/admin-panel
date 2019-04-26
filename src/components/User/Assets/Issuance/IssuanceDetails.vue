@@ -31,11 +31,14 @@
           </li>
           <li class="issuance-details__list-item">
             <span>State</span>
-            <span>{{issuance.requestState | localizeIssuanceRequestState}}</span>
+            <span>
+              {{ issuance.requestState | localizeIssuanceRequestState }}
+            </span>
           </li>
         </ul>
         <template v-if="issuance.requestStateI === REQUEST_STATES.pending">
           <div class="issuance-details__action-btns">
+            <!-- eslint-disable max-len -->
             <button
               class="app__btn issuance-details__action-btn"
               @click="fulfill(issuance)"
@@ -51,11 +54,14 @@
             >
               Reject
             </button>
+            <!-- eslint-enable max-len -->
           </div>
         </template>
       </template>
       <template v-else>
-        <span class="issuance-details__list-item">Loading...</span>
+        <span class="issuance-details__list-item">
+          Loading...
+        </span>
       </template>
       <modal
         v-if="itemToReject"
@@ -95,23 +101,30 @@
 </template>
 
 <script>
-import api from '@/api'
-import { REQUEST_STATES } from '@/constants'
-import Modal from '@comcom/modals/Modal'
-
 import TextField from '@comcom/fields/TextField'
 import { EmailGetter } from '@comcom/getters'
-import localize from '@/utils/localize'
+
+import Modal from '@comcom/modals/Modal'
 import { confirmAction } from '../../../../js/modals/confirmation_message'
+
+import api from '@/api'
+import { REQUEST_STATES } from '@/constants'
+
+import localize from '@/utils/localize'
+
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   components: {
     EmailGetter,
     Modal,
-    TextField
+    TextField,
   },
-  props: ['id'],
+
+  props: {
+    id: { type: String, required: true },
+  },
+
   data: _ => ({
     REQUEST_STATES,
     issuance: null,
@@ -120,11 +133,18 @@ export default {
     isSubmitting: false,
     isLoaded: false,
     rejectForm: {
-      reason: ''
-    }
+      reason: '',
+    },
   }),
+
+  async created () {
+    await this.getIssuance(this.id)
+    this.isLoaded = true
+  },
+
   methods: {
     localize,
+
     async getIssuance (id) {
       try {
         this.issuance = await api.requests.get(id)
@@ -132,17 +152,20 @@ export default {
         ErrorHandler.processWithoutFeedback(error)
       }
     },
+
     async fulfill (issuance) {
       this.isSubmitting = true
       if (await confirmAction()) {
         try {
           let tasksToRemove = issuance.pendingTasks
-          if (tasksToRemove & 1) tasksToRemove = tasksToRemove - 1
-          if (tasksToRemove & 4) tasksToRemove = tasksToRemove - 4
+          if (tasksToRemove & 1) tasksToRemove -= 1
+          if (tasksToRemove & 4) tasksToRemove -= 4
+
           await api.requests.approve({
             ...issuance,
-            reviewDetails: { tasksToRemove }
+            reviewDetails: { tasksToRemove },
           })
+
           await this.getIssuance(this.id)
           this.$store.dispatch('SET_INFO', 'Request fulfilled successfully.')
         } catch (error) {
@@ -153,23 +176,27 @@ export default {
         this.isSubmitting = false
       }
     },
+
     selectForRejection (item) {
       this.itemToReject = item
       this.rejectForm.reason = ''
     },
+
     async reject (issuance) {
       this.isSubmitting = true
       try {
         let tasksToRemove = issuance.pendingTasks
-        if (tasksToRemove & 1) tasksToRemove = tasksToRemove - 1
-        if (tasksToRemove & 4) tasksToRemove = tasksToRemove - 4
+        if (tasksToRemove & 1) tasksToRemove -= 1
+        if (tasksToRemove & 4) tasksToRemove -= 4
+
         await api.requests.reject(
           { reason: this.rejectForm.reason, isPermanent: true },
           {
             ...issuance,
-            reviewDetails: { tasksToRemove }
+            reviewDetails: { tasksToRemove },
           }
         )
+
         await this.getIssuance(this.id)
         this.$store.dispatch('SET_INFO', 'Request rejected successfully.')
       } catch (error) {
@@ -177,14 +204,11 @@ export default {
       }
       this.isSubmitting = false
     },
+
     clearRejectionSelection () {
       this.itemToReject = null
-    }
+    },
   },
-  async created () {
-    await this.getIssuance(this.id)
-    this.isLoaded = true
-  }
 }
 </script>
 

@@ -20,7 +20,10 @@
               <template v-if="isArray(item) || isObject(item)">
                 <div class="details-reader__row">
                   <div class="details-reader__cell">
-                    <details-reader class="details-reader__nested" :details="item" />
+                    <details-reader
+                      class="details-reader__nested"
+                      :details="item"
+                    />
                   </div>
                 </div>
               </template>
@@ -70,7 +73,10 @@
       </template>
     </template>
   </div>
-  <p :title="normalizedDetails" v-else>{{ normalizedDetails }}</p>
+
+  <p :title="normalizedDetails" v-else>
+    {{ normalizedDetails }}
+  </p>
 </template>
 
 <script>
@@ -79,18 +85,29 @@ import _omit from 'lodash/omit'
 
 export default {
   name: 'details-reader',
+
+  filters: {
+    humanize (value) {
+      // convert 'camelCaseValue' to 'camel case value'
+      const spacedValue = value.replace(/([A-Z])/g, ' $1').toLowerCase()
+      return verbozify(spacedValue)
+    },
+  },
+
   props: {
     details: {
       type: [Object, Number, Array, String],
       required: true,
-      default: () => ({})
-    }
+      default: () => ({}),
+    },
   },
+
   data () {
     return {
-      dictionary: {}
+      dictionary: {},
     }
   },
+
   computed: {
     normalizedDetails () {
       const omittedFields = [
@@ -101,19 +118,13 @@ export default {
         'effect',
         'operation.id',
         'operation.appliedAt',
-        'details.id'
+        'details.id',
       ]
 
       return _omit(this.details, omittedFields)
-    }
+    },
   },
-  filters: {
-    humanize (value) {
-      // convert 'camelCaseValue' to 'camel case value'
-      const spacedValue = value.replace(/([A-Z])/g, ' $1').toLowerCase()
-      return verbozify(spacedValue)
-    }
-  },
+
   methods: {
     isPrivate (value) {
       if (typeof value === 'string' || value instanceof String) {
@@ -132,8 +143,8 @@ export default {
 
     isObject (value) {
       return value && typeof value === 'object'
-    }
-  }
+    },
+  },
 }
 </script>
 

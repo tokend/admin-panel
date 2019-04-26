@@ -5,7 +5,7 @@ const parser = new ArgumentParser({ addHelp: true })
 parser.addArgument(['--env-file'], {
   metavar: 'ENV_PATH',
   help: 'Path to the env file to use',
-  dest: 'envFile'
+  dest: 'envFile',
 })
 parser.addArgument(['--env-arg'], {
   metavar: 'KEY VALUE',
@@ -13,18 +13,18 @@ parser.addArgument(['--env-arg'], {
   help: 'Set an env key',
   dest: 'envArgs',
   type: 'string',
-  nargs: 2
+  nargs: 2,
 })
 parser.addArgument(['--set-build-version'], {
   metavar: 'VALUE',
   help: 'Set build version env key. Equivalent to --env-arg BUILD_VERSION [VALUE]',
   type: 'string',
-  dest: 'setBuildVersion'
+  dest: 'setBuildVersion',
 })
 parser.addArgument(['--scheme-name'], {
   metavar: 'FILE_PATH',
   help: 'Path to the module file that contains module scheme to use',
-  dest: 'schemeName'
+  dest: 'schemeName',
 })
 const args = parser.parseArgs()
 
@@ -33,7 +33,7 @@ function makeEnvArgValue (val) { return `"${val}"` }
 if (args.envFile) {
   appEnv = {
     ...appEnv,
-    ...require(path.resolve(args.envFile))
+    ...require(path.resolve(args.envFile)),
   }
 }
 if (args.envArgs) {
@@ -42,8 +42,8 @@ if (args.envArgs) {
     ...args.envArgs
       .reduce((res, [key, val]) => ({
         ...res,
-        ...{ [key]: makeEnvArgValue(val) }
-      }), {})
+        ...{ [key]: makeEnvArgValue(val) },
+      }), {}),
   }
 }
 if (args.setBuildVersion) {
@@ -84,7 +84,7 @@ rm(path.join(path.resolve(__dirname, '../dist'), 'static'), err => {
       modules: false,
       children: false,
       chunks: false,
-      chunkModules: false
+      chunkModules: false,
     }) + '\n\n')
 
     if (stats.hasErrors()) {

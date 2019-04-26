@@ -13,18 +13,18 @@
             class="modal-background"
             v-if="isModalOpen"
             @click="$store.commit('WANT_CLOSE_MODAL')"
-          > </div>
+          />
         </transition>
 
         <transition name="fade">
           <loading-screen v-if="showLoader" />
         </transition>
 
-        <verify-tfa></verify-tfa>
+        <verify-tfa />
 
-        <idle-logout></idle-logout>
+        <idle-logout />
 
-        <router-view></router-view>
+        <router-view />
       </template>
     </template>
 
@@ -47,18 +47,22 @@
 </template>
 
 <script>
-import config from '../../config'
 import StatusMessage from './components/StatusMessage'
 import IdleLogout from './components/IdleLogout.vue'
 import VerifyTfa from './components/VerifyTfa'
 import LoadingScreen from './components/Loader'
-import UAParser from 'ua-parser-js'
 import NoSupportMessage from './components/IERestrictionMessage.vue'
+
+import UAParser from 'ua-parser-js'
+
 import { Sdk } from '@/sdk'
+import { ApiCallerFactory } from '@/api-caller-factory'
+import config from '../../config'
+
 import { Wallet } from '@tokend/js-sdk'
 
 import './scss/app.scss'
-import { ApiCallerFactory } from '@/api-caller-factory'
+
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { snakeToCamelCase } from '@/utils/un-camel-case'
 
@@ -76,7 +80,16 @@ export default {
     VerifyTfa,
     StatusMessage,
     IdleLogout,
-    NoSupportMessage
+    NoSupportMessage,
+  },
+
+  data () {
+    return {
+      sessionKeeperInterval: null,
+      isGoodBrowser: true,
+      isAppInitialized: false,
+      isConfigLoadingFailed: false,
+    }
   },
 
   computed: {
@@ -90,16 +103,7 @@ export default {
 
     isLoggedIn () {
       return this.$store.state.auth.isLoggedIn
-    }
-  },
-
-  data () {
-    return {
-      sessionKeeperInterval: null,
-      isGoodBrowser: true,
-      isAppInitialized: false,
-      isConfigLoadingFailed: false
-    }
+    },
   },
 
   async created () {
@@ -207,7 +211,9 @@ export default {
             break
           }
           default: {
-            if (this.$store.state.auth.isLoggedIn && this.$store.getters.logoutTimer === null) {
+            const shouldIdleBeStarted = this.$store.state.auth.isLoggedIn &&
+              this.$store.getters.logoutTimer === null
+            if (shouldIdleBeStarted) {
               this.$store.dispatch('START_IDLE')
             }
           }
@@ -220,11 +226,10 @@ export default {
       this.sessionKeeperInterval = setInterval(() => {
         this.$store.commit('KEEP_SESSION')
       }, 10 * 1000)
-    }
-  }
+    },
+  },
 }
 </script>
-
 
 <style lang="scss">
 @import "../../assets/scss/colors";

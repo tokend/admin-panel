@@ -12,5 +12,5 @@ export const BLOB_TYPES = Object.freeze({
   assetMetrics: 1024,
   kycForm: 2048,
   kycIdDocument: 4096,
-  kycProofOfAddress: 8192
+  kycProofOfAddress: 8192,
 })

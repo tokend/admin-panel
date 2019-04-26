@@ -1,28 +1,52 @@
+// https://eslint.org/docs/user-guide/configuring
+
 module.exports = {
   root: true,
-  parser: 'babel-eslint',
-  parserOptions: {
-    sourceType: 'module'
-  },
-  extends: 'vue',
-  // required to lint *.vue files
-  plugins: [
-    'html'
+  extends: [
+    'distributed-lab/vue',
   ],
-  // This will allow us to use browser context stuff like localStorage 
-  // without eslint complaining.
-  env: {
-    browser: true
+  parserOptions: {
+    parser: 'babel-eslint',
+    ecmaVersion: 2017,
+    sourceType: 'module',
   },
-  // More globals we don't want eslint to complain about in our js files.
-  globals: {
-    '$': true,
-    '_': true,
-    'utils': true
-  }, 
-  // add your custom rules here
-  'rules': {
+  rules: {
+    // 0 off, 1 warning, 2 error
+    // allow paren-less arrow functions
+    'arrow-parens': 0,
+    // allow async-await
+    'generator-star-spacing': 0,
     // allow debugger during development
-    'no-debugger': ['production', 'staging', 'dev-build'].indexOf(process.env.NODE_ENV) > -1 ? 2 : 0
-  }
+    'no-debugger': 1,
+    'no-warning-comments': [1, {
+      'terms': ['hardcoded'], location: 'anywhere',
+    }],
+    'no-console': [1, {
+      allow: ['warn', 'error'],
+    }],
+    'no-tabs': 2,
+    'max-len': [1, {
+      'code': 80,
+      'comments': 80,
+      'ignoreUrls': true,
+      'ignoreStrings': true,
+      'ignoreTemplateLiterals': true,
+      'ignoreRegExpLiterals': true,
+    }],
+    'vue/max-attributes-per-line': [1, {
+      'singleline': 2,
+      'multiline': {
+        'max': 1,
+        'allowFirstLine': false,
+      },
+    }],
+    'comma-dangle': [1, 'always-multiline'],
+  },
+  env: {
+    mocha: true,
+  },
+  globals: {
+    sinon: true,
+    expect: true,
+  },
 }

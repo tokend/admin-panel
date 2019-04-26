@@ -5,5 +5,5 @@ const assetsPath = function (_path) {
 }
 
 module.exports = {
-  assetsPath: assetsPath
+  assetsPath: assetsPath,
 }

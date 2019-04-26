@@ -6,8 +6,12 @@
     <template v-else>
       <ul class="app-list">
         <li class="app-list__li-like">
-          <template v-if="isLoading">Loading...</template>
-          <template v-else>Nothing here yet</template>
+          <template v-if="isLoading">
+            Loading...
+          </template>
+          <template v-else>
+            Nothing here yet
+          </template>
         </li>
       </ul>
     </template>
@@ -16,24 +20,23 @@
 
 <script>
 import LimitsList from './components/Limits.RequestList'
+
 import api from '@/api'
-import {
-  REQUEST_STATES
-} from '@/constants'
+import { REQUEST_STATES } from '@/constants'
+
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   components: { LimitsList },
+
   data: _ => ({
     list: {},
     accountTypeList: {},
-    isLoading: false
+    isLoading: false,
   }),
+
   async created () {
     await this.getList()
-  },
-
-  computed: {
   },
 
   methods: {
@@ -41,17 +44,13 @@ export default {
       this.isLoading = true
       try {
         this.list = await api.requests.getLimitsUpdateRequests({
-          state: REQUEST_STATES.pending
+          state: REQUEST_STATES.pending,
         })
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }
       this.isLoading = false
-    }
-  }
+    },
+  },
 }
 </script>
-
-<style lang="scss" scoped>
-
-</style>
