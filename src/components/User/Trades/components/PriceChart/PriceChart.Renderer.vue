@@ -43,22 +43,36 @@ export default {
   data () {
     return {
       assetCode: '',
+      x: '',
+      y: '',
+      isFirstRender: '',
+      svg: '',
+      xAxis: '',
+      yAxis: '',
+      animationDuration: 500,
+      isAnimating: false,
     }
   },
 
+  computed: {
+    data () {
+      return this.normalizeData(this.priceHistory[this.scale])
+    },
+  },
+
   watch: {
-    'priceHistory' () { this.render() },
-    'scale' () { this.render() },
-    'assetPair' () { this.render() },
+    'priceHistory' () { this.update() },
+    'scale' () { this.update() },
+    'assetPair' () { this.update() },
   },
 
   mounted (...args) {
-    this.render()
-    window.addEventListener('resize', this.render)
+    this.init()
+    window.addEventListener('resize', this.init)
   },
 
   beforeDestroy () {
-    window.removeEventListener('resize', this.render)
+    window.removeEventListener('resize', this.init)
   },
 
   methods: {
@@ -214,32 +228,28 @@ export default {
       return this.genXTickValues(data)
     },
 
-    // render
-
-    render () {
+    init () {
+      this.isFirstRender = true
       this.clear(this.$el)
       this.assetCode = this.extractQuoteAsset(this.assetPair)
 
-      // Setup the data
-      const scale = this.scale
-      const data = this.normalizeData(this.priceHistory[scale])
-
-      if (!data || !data[0]) return
+      if (!this.data || !this.data[0]) return
 
       // Setup svg
       const margin = {
         top: 20,
         right: 5,
         bottom: 30,
-        left: this.genYMaxTickWidth(data),
+        left: this.genYMaxTickWidth(this.data),
       }
       const dimensions = this.getDimensions(this.$el)
-      const width = dimensions.width - margin.right - margin.left
-      const height = dimensions.height - margin.top - margin.bottom
+      this.width = dimensions.width - margin.right - margin.left
+      this.height = dimensions.height - margin.top - margin.bottom
 
-      const viewWidth = width + margin.right + margin.left
-      const viewHeight = height + margin.top + margin.bottom
-      const svg = d3.select(this.$el)
+      const viewWidth = this.width + margin.right + margin.left
+      const viewHeight = this.height + margin.top + margin.bottom
+
+      this.svg = d3.select(this.$el)
         .append('svg')
         .attr('width', '100%')
         .attr('viewBox', `0 0 ${viewWidth} ${viewHeight}`)
@@ -248,62 +258,100 @@ export default {
         .append('g')
         .attr('transform', `translate(${margin.left}, ${margin.top})`)
 
-      // Define domains
-      const y = d3.scaleLinear()
-        .range([height, 0])
-        .domain(this.genYDomain(data))
+      this.y = d3.scaleLinear().range([this.height, 0])
 
-      const x = d3.scaleTime()
-        .range([0, width])
-        .domain(this.genXDomain(data))
+      this.x = d3.scaleTime().range([0, this.width])
 
       // Render x-axis
-      const xAxis = d3.axisBottom(x)
-        .tickValues(this.genXTickValues(data, width))
-        .tickFormat(this.genXAxisFormatter(data))
+      this.xAxis = d3.axisBottom(this.x)
+        .tickFormat(this.genXAxisFormatter(this.data))
         .tickSize(8)
         .tickPadding(4)
 
-      svg.append('g')
-        .attr('class', `${CLASS_NAME}__x-axis`)
-        .attr('transform', `translate(0, ${height})`)
-        .call(xAxis)
-
       // Render y-axis
-      const yAxis = d3.axisLeft(y)
-        .tickValues(this.genYTickValues(data))
+      this.yAxis = d3.axisLeft(this.y)
         .tickFormat((d) => this.formatMoney(d))
-        .tickSizeInner(-(width + margin.right))
+        .tickSizeInner(-(this.width + margin.right))
         .tickSizeOuter(0)
         .tickPadding(25)
 
-      svg.append('g')
+      this.svg.append('g')
+        .attr('class', `${CLASS_NAME}__x-axis`)
+        .attr('transform', `translate(0, ${this.height})`)
+
+      this.svg.append('g')
         .attr('class', `${CLASS_NAME}__y-axis`)
-        .call(yAxis)
-        .selectAll('line')
 
-      // Render the line
+      this.update()
+    },
+
+    update () {
+      this.isAnimating = true
       const line = d3.line()
-        .x((d) => x(d.time))
-        .y((d) => y(d.value))
+        .x((d) => this.x(d.time))
+        .y((d) => this.y(d.value))
         .curve(d3.curveStepAfter)
+      const priceChartSvg = d3.select(`svg.${CLASS_NAME}`)
+      priceChartSvg.classed(`${CLASS_NAME}--overflow-hidden`, true)
+      // Define domains
+      this.y.domain(this.genYDomain(this.data))
+      this.x.domain(this.genXDomain(this.data))
 
-      const path = svg.append('path')
-        .attr('class', `${CLASS_NAME}__line`)
-        .attr('d', line(data))
+      this.xAxis
+        .tickValues(this.genXTickValues(this.data, this.width))
 
-      const totalLength = path.node().getTotalLength()
+      this.yAxis
+        .tickValues(this.genYTickValues(this.data))
 
-      path
-        .attr('stroke-dasharray', totalLength + ' ' + totalLength)
-        .attr('stroke-dashoffset', totalLength)
+      // Update the X axis
+      this.svg.selectAll(`.${CLASS_NAME}__x-axis`)
         .transition()
-        .duration(500)
-        .ease(d3.easeLinear)
-        .attr('stroke-dashoffset', 0)
+        .duration(this.animationDuration)
+        .call(this.xAxis)
+
+      // Update the Y axis
+      this.svg.selectAll(`.${CLASS_NAME}__y-axis`)
+        .transition()
+        .duration(this.animationDuration)
+        .call(this.yAxis)
+
+      if (this.isFirstRender) {
+        const path = this.svg.append('path')
+          .attr('class', `${CLASS_NAME}__line`)
+          .attr('d', line(this.data))
+
+        const totalLength = path.node().getTotalLength()
+
+        path
+          .attr('stroke-dasharray', totalLength + ' ' + totalLength)
+          .attr('stroke-dashoffset', totalLength)
+          .transition()
+          .duration(this.animationDuration)
+          .ease(d3.easeLinear)
+          .attr('stroke-dashoffset', 0)
+
+        this.isFirstRender = false
+      } else {
+        // Update the line
+        let path = this.svg.selectAll(`.${CLASS_NAME}__line`)
+          .attr('stroke-dasharray', null)
+          .attr('stroke-dashoffset', null)
+          .attr('stroke-dashoffset', null)
+          .data([this.data])
+
+        path = path
+          .enter()
+          .append('path')
+          .attr('class', `${CLASS_NAME}__line`)
+          .merge(path)
+
+        path.transition()
+          .duration(this.animationDuration)
+          .attr('d', line)
+      }
 
       // Render Tip
-      const tip = svg.append('g')
+      const tip = this.svg.append('g')
         .attr('class', `${CLASS_NAME}__tip`)
 
       tip.append('line')
@@ -311,7 +359,7 @@ export default {
         .attr('x1', 0)
         .attr('y1', 15)
         .attr('x2', 0)
-        .attr('y2', height)
+        .attr('y2', this.height)
 
       const tipCircle = tip.append('circle')
         .attr('class', `${CLASS_NAME}__tip-circle`)
@@ -338,32 +386,34 @@ export default {
         .attr('text-anchor', 'middle')
         .attr('y', 5)
 
-      const motionCaptureArea = svg.append('rect')
+      const motionCaptureArea = this.svg.append('rect')
         .attr('class', `${CLASS_NAME}__tip-motion-capture-area`)
-        .attr('width', width)
-        .attr('height', height)
+        .attr('width', this.width)
+        .attr('height', this.height)
 
       function showTip () {
         tip.classed(`${CLASS_NAME}__tip--show`, true)
       }
 
       function moveTip () {
-        tip.classed(`${CLASS_NAME}__tip--hidden`, false)
-        const x0 = x.invert(d3.mouse(svg.node())[0])
+        if (!this.isAnimating) {
+          tip.classed(`${CLASS_NAME}__tip--hidden`, false)
+        }
+        const x0 = this.x.invert(d3.mouse(this.svg.node())[0])
         const bisectDate = d3.bisector(d => d.time).left
-        const bisectIndex = bisectDate(data, x0, 1)
-        const d0 = data[bisectIndex - 1]
-        const d1 = data[bisectIndex]
+        const bisectIndex = bisectDate(this.data, x0, 1)
+        const d0 = this.data[bisectIndex - 1]
+        const d1 = this.data[bisectIndex]
         const nearestPoint = x0 - d0.time > d1.time - x0 ? d1 : d0
         // Change text of the tooltip
         tipPriceText.text(this.formatMoney(nearestPoint.value))
         tipTimeText.text(moment(nearestPoint.time).format('MM/DD/YYYY hh:mm a'))
 
         // Change X position of the tip
-        tip.attr('transform', `translate(${x(nearestPoint.time)})`)
+        tip.attr('transform', `translate(${this.x(nearestPoint.time)})`)
 
         // Change Y position of the circle
-        tipCircle.attr('cy', y(nearestPoint.value))
+        tipCircle.attr('cy', this.y(nearestPoint.value))
       }
 
       function hideTip () {
@@ -378,6 +428,10 @@ export default {
       motionCaptureArea.on('touchend', () => hideTip.call(this))
 
       tip.classed(`${CLASS_NAME}__tip--hidden`, true)
+      setTimeout(() => {
+        this.isAnimating = false
+        priceChartSvg.classed(`${CLASS_NAME}--overflow-hidden`, false)
+      }, this.animationDuration)
     },
   },
 }
@@ -409,6 +463,10 @@ svg.price-chart {
   }
 
   & > g {
+    overflow: hidden;
+  }
+
+  &--overflow-hidden {
     overflow: hidden;
   }
 }

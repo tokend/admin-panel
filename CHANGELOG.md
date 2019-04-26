@@ -15,6 +15,7 @@ for further information about branching and tagging conventions.
 
 #### Added
 - "Invest" fee type
+- Re-render chart animation
 
 #### Changed
 - Now using ErrorHandler instead of `error.showMessage()`,
