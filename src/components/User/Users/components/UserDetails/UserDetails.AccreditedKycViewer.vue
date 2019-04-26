@@ -1,19 +1,26 @@
 <template>
-  <div class="user-details-accredited-kyc-viewer">
-    <div class="user-details-accredited-kyc-viewer__header">
-      <span class="user-details-accredited-kyc-viewer__header-title">
+  <div class="accredited-kyc-viewer">
+    <div class="accredited-kyc-viewer__warning-msg">
+      <span class="accredited-kyc-viewer__header-title">
         Current user is applied for Accredited KYC
       </span>
-      <span class="user-details-accredited-kyc-viewer__header-subtitle">
-        Please ensure user has a valid proof document
+      <span class="accredited-kyc-viewer__header-subtitle">
+        Please ensure user the attached proof document is valid
       </span>
     </div>
-    <h3 class="user-details-accredited__doc-title">Proof of invest</h3>
-    <user-doc-getter
-      class="user-details-accredited__doc-view"
-      name="user-details-accredited__doc-view"
-      :file-key="kyc.documents.kycProofInvestor"
-    />
+    <ul class="accredited-kyc-viewer__proof-document-wrp key-value-list">
+      <li>
+        <span>Proof document</span>
+        <span>
+          <user-doc-link-getter
+            :file-key="kyc.documents.kycProofInvestor"
+          >
+          Open file
+          </user-doc-link-getter>
+        </span>
+      </li>
+    </ul>
+
     <kyc-general-section
       :kyc="kyc"
       :user="user"
@@ -23,11 +30,11 @@
 
 <script>
 import KycGeneralSection from './UserDetails.Kyc'
-import { UserDocGetter } from '@comcom/getters'
+import { UserDocLinkGetter } from '@comcom/getters'
 export default {
   components: {
     KycGeneralSection,
-    UserDocGetter
+    UserDocLinkGetter
   },
   props: ['kyc', 'user']
 }
@@ -36,24 +43,29 @@ export default {
 <style lang="scss" scoped>
 @import "../../../../../assets/scss/_colors.scss";
 
-.user-details-accredited-kyc-viewer__header-title {
+.accredited-kyc-viewer__header-title {
   color: $color-text-inverse;
   font-weight: bold;
-  margin-bottom: 0;
+  margin-bottom: .5rem;
 }
 
-.user-details-accredited-kyc-viewer__header-subtitle {
+.accredited-kyc-viewer__header-subtitle {
   color: $color-text-inverse;
 }
 
-.user-details-accredited-kyc-viewer__header {
+.accredited-kyc-viewer__warning-msg {
+  padding: 1rem 2.5rem;
+  margin-bottom: 2rem;
   display: flex;
   flex-direction: column;
   background-color: $color-banner-bg;
-  padding: 1rem;
 }
 
-.user-details-accredited__doc-title {
+.accredited__doc-title {
   margin-top: 1rem;
+}
+
+.accredited-kyc-viewer__proof-document-wrp {
+  margin-bottom: 2rem;
 }
 </style>
