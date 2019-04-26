@@ -35,7 +35,7 @@ export default {
       quote: params.quote,
       action: action,
       policies: +params.policies,
-      physicalPrice: '' + params.price,
+      physicalPrice: '' + params.physicalPrice,
       physicalPriceCorrection: '' + params.physicalPriceCorrection,
       maxPriceStep: '' + params.maxPriceStep
     })
