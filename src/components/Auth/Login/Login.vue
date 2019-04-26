@@ -108,22 +108,24 @@ export default {
     },
   },
 
-  created () {
+  async created () {
     this.tfaDone = false
-    this.unsubscribe = this.$store.subscribe((mutation) => {
+    this.unsubscribe = this.$store.subscribe(async (mutation) => {
       if (this.$store.getters.tfaInitiator !== 'login') {
         return
       }
 
       switch (mutation.type) {
         case 'TFA_FORM_DONE': {
-          if (this.tfaDone) return
+          if (this.tfaDone) break
+
           this.tfaDone = true
-          return this.continueLogin()
+          await this.continueLogin()
+          break
         }
         case 'TFA_FORM_RESEND': {
           this.wantResend = true
-          this.login()
+          await this.login()
           break
         }
         case 'TFA_FORM_CLOSE': {
@@ -146,7 +148,7 @@ export default {
   },
 
   methods: {
-    login () {
+    async login () {
       if (!this.validate()) return
 
       this.$store.commit('OPEN_LOADER')
@@ -156,39 +158,47 @@ export default {
         password: this.credentials.password,
       }
 
-      return Vue.auth.login(params)
-        .then(r => {
-          this.$store.commit('CLOSE_LOADER')
-          if (!r.ok) {
-            this.credentials.password = ''
-            ErrorHandler.process(r.message)
-            return
-          }
-          if (r.enabledTFA) {
-            this.loginParams = r.loginParams
-            this.loginParams.username = this.credentials.username.toLowerCase().trim()
-            return this.showTfaForm(r.token)
-          }
-          this.state = 'tfa'
-        }).catch(err => {
-          ErrorHandler.processWithoutFeedback(err)
-          this.$store.commit('CLOSE_LOADER')
-        })
+      try {
+        const response = await Vue.auth.login(params)
+        this.$store.commit('CLOSE_LOADER')
+
+        if (!response.ok) {
+          this.credentials.password = ''
+          ErrorHandler.process(response.message)
+          return
+        }
+
+        if (response.enabledTFA) {
+          this.loginParams = response.loginParams
+          this.loginParams.username = this.credentials.username
+            .toLowerCase()
+            .trim()
+
+          this.showTfaForm(response.token)
+        }
+        this.state = 'tfa'
+      } catch (err) {
+        ErrorHandler.processWithoutFeedback(err)
+        this.$store.commit('CLOSE_LOADER')
+      }
     },
 
-    continueLogin () {
+    async continueLogin () {
       this.$store.commit('OPEN_LOADER')
-      return Vue.auth.continueLogin(this.loginParams)
-        .then(r => {
-          this.$store.commit('CLOSE_LOADER')
-          if (!r.ok) {
-            ErrorHandler.process(r.message)
-          }
-          this.redirect()
-        }).catch(err => {
-          ErrorHandler.processWithoutFeedback(err)
-          this.$store.commit('CLOSE_LOADER')
-        })
+
+      try {
+        const response = await Vue.auth.continueLogin(this.loginParams)
+        this.$store.commit('CLOSE_LOADER')
+
+        if (!response.ok) {
+          ErrorHandler.process(response.message)
+        }
+
+        this.redirect()
+      } catch (err) {
+        ErrorHandler.processWithoutFeedback(err)
+        this.$store.commit('CLOSE_LOADER')
+      }
     },
 
     redirect () {

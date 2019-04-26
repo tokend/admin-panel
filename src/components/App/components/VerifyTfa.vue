@@ -68,30 +68,35 @@ export default {
   },
 
   methods: {
-    verifyTFACode () {
+    async verifyTFACode () {
       if (this.verificationCode === '') {
         ErrorHandler.process('Enter a verification code')
         return false
       }
-      this.submitButtonDisabled = true
-      return Vue.api.tfa
-        .verifyTfaCode(this.verificationCode, this.$store.getters.tfaToken)
-        .then(() => {
-          this.submitButtonDisabled = false
-          this.verificationCode = ''
-          this.$store.commit('TFA_FORM_DONE')
-          this.$store.dispatch('CLOSE_TFA')
-        }).catch(err => {
-          this.submitButtonDisabled = false
-          this.verificationCode = ''
 
-          if (err.status !== 400) {
-            ErrorHandler.process('Verification failed')
-          } else {
-            ErrorHandler.process('Verification code mismatched')
-            this.$store.commit('TFA_FORM_FALSE')
-          }
-        })
+      this.submitButtonDisabled = true
+      try {
+        await Vue.api.tfa.verifyTfaCode(
+          this.verificationCode,
+          this.$store.getters.tfaToken
+        )
+
+        this.submitButtonDisabled = false
+        this.verificationCode = ''
+
+        this.$store.commit('TFA_FORM_DONE')
+        this.$store.dispatch('CLOSE_TFA')
+      } catch (err) {
+        this.submitButtonDisabled = false
+        this.verificationCode = ''
+
+        if (err.status !== 400) {
+          ErrorHandler.process('Verification failed')
+        } else {
+          ErrorHandler.process('Verification code mismatched')
+          this.$store.commit('TFA_FORM_FALSE')
+        }
+      }
     },
 
     requestNew () {
