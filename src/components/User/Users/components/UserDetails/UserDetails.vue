@@ -8,50 +8,33 @@
           class="user-details__section"
           v-if="requestToReview.state"
         >
-        <ul class="key-value-list">
-          <li>
-            <h3>
-              Current request state
-            </h3>
-            <p :class="`user-details__state-info
-                      user-details__state-info--${requestToReview.state}`">
-              {{ requestToReview.state }}
-            </p>
-          </li>
-          <li>
-            <span>
-              Role to set
-            </span>
-            <span class="user-details__role-info">
-              {{ ROLE_TYPE_VERBOSE[requestToReview.accountRoleToSet || verifiedRequest.accountRoleToSet] }}
-            </span>
-          </li>
-        </ul>
-
+          <ul class="key-value-list">
+            <li>
+              <h3>Current request state</h3>
+              <p :class="`user-details__state-info
+                        user-details__state-info--${requestToReview.state}`">
+                {{ requestToReview.state }}
+              </p>
+            </li>
+            <li>
+              <h3>Role to set</h3>
+              <p class="user-details__role-info">
+                {{ ROLE_TYPE_VERBOSE[requestToReview.accountRoleToSet || verifiedRequest.accountRoleToSet] }}
+              </p>
+            </li>
+          </ul>
           <p v-if="requestToReview.isRejected">
             Reason: {{ requestToReview.rejectReason }}
           </p>
 
-          <p
-            class="user-details__heading"
-            v-if="externalDetails"
-          >
-            <span>External details</span>
-            <button
-              class="app__btn-secondary app__btn-secondary--iconed"
-              @click="isShownExternal = !isShownExternal"
-            >
-              <mdi-chevron-up-icon v-if="isShownExternal" />
-              <mdi-chevron-down-icon v-else />
-            </button>
-          </p>
-
-          <!-- eslint-disable vue/no-v-html -->
-          <p
-            v-if="isShownExternal"
-            v-html="externalDetails"
-          />
-          <!-- eslint-enable vue/no-v-html -->
+          <template v-if="requestToReview.externalDetails">
+            <div class="user-details__ext-details-wrp">
+              <h3>External details (provided by external services)</h3>
+              <external-details-viewer
+                :external-details="requestToReview.externalDetails"
+              />
+            </div>
+          </template>
         </section>
 
         <section class="user-details__section">
@@ -201,8 +184,9 @@ import RequestActions from './UserDetails.Request'
 import ResetActions from './UserDetails.Reset'
 import BlockActions from './UserDetails.Block'
 
+import ExternalDetailsViewer from './UserDetails.ExternalDetailsViewer'
+
 import { UserDocLinkGetter } from '@comcom/getters'
-import { unCamelCase } from '@/utils/un-camel-case'
 
 import { ApiCallerFactory } from '@/api-caller-factory'
 import { ErrorHandler } from '@/utils/ErrorHandler'
@@ -232,6 +216,7 @@ const EVENTS = {
 export default {
   components: {
     AccountSection,
+    ExternalDetailsViewer,
     KycSyndicateSection,
     RequestActions,
     ResetActions,
@@ -253,7 +238,6 @@ export default {
       isLoaded: false,
       isFailed: false,
       isPending: false,
-      isShownExternal: false,
       isKycLoaded: false,
       isKycLoadFailed: false,
       user: {},
@@ -276,18 +260,6 @@ export default {
   },
 
   computed: {
-    externalDetails () {
-      if (!this.requestToReview.externalDetails) return ''
-      return this.requestToReview.externalDetails
-        .map(detail =>
-          Object.entries(detail)
-            .map(([key, value]) => `${unCamelCase(key)}: ${value}`)
-            .join(' ')
-        )
-        .filter(value => value)
-        .join('<br>')
-    },
-
     isUserBlocked () {
       return this.user.role === config.ACCOUNT_ROLES.blocked
     },
@@ -449,5 +421,9 @@ export default {
   &--approved { color: $color-success; }
   &--pending { color: $color-active; }
   &--rejected { color: $color-danger; }
+}
+
+.user-details__ext-details-wrp {
+  margin: 2rem 0;
 }
 </style>
