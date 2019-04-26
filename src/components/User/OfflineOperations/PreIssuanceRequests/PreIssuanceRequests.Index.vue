@@ -6,8 +6,8 @@
       <select-field class="preissuance-requests-index__asset-select"
         v-model="asset"
         label="Asset">
-        <option v-for="a in assets" :value="a.code" :key="a.code">
-          {{a.code}}
+        <option v-for="a in assets" :value="a.id" :key="a.id">
+          {{a.id}}
         </option>
       </select-field>
 
@@ -23,7 +23,7 @@
 <script>
 import PreIssuanceRequestList from './components/PreIssuanceRequestList.vue'
 import SelectField from '@comcom/fields/SelectField'
-import { Sdk } from '@/sdk'
+import { ApiCallerFactory } from '@/api-caller-factory'
 
 export default {
   components: {
@@ -33,7 +33,7 @@ export default {
 
   data () {
     return {
-      asset: [{ code: 'All' }],
+      asset: [{ id: 'All' }],
       assets: undefined,
       assetsLoaded: false
     }
@@ -41,7 +41,7 @@ export default {
 
   computed: {
     assetInfo () {
-      const selectedAsset = this.assets.filter(asset => asset.code === this.asset)[0]
+      const selectedAsset = this.assets.filter(asset => asset.id === this.asset)[0]
       return selectedAsset || {}
     },
 
@@ -61,11 +61,13 @@ export default {
     async getAssets () {
       this.$store.commit('OPEN_LOADER')
       try {
-        const response = await Sdk.horizon.assets.getAll()
+        const { data } = await ApiCallerFactory
+          .createStubbornCallerInstance()
+          .stubbornGet('/v3/assets')
         this.assets = [{
-          code: 'All'
-        }].concat(response.data)
-        this.asset = this.assets[0].code
+          id: 'All'
+        }].concat(data)
+        this.asset = this.assets[0].id
         this.assetsLoaded = true
 
         this.$store.commit('CLOSE_LOADER')
