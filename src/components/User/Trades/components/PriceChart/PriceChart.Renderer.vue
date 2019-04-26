@@ -37,7 +37,7 @@ export default {
   props: {
     priceHistory: { type: Object, required: true },
     scale: { type: String, required: true },
-    assetPair: { type: Object, required: true },
+    assetPair: { type: String, required: true },
   },
 
   data () {

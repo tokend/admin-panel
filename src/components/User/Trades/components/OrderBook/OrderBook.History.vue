@@ -108,7 +108,7 @@ export default {
 
   props: {
     list: { type: Array, required: true },
-    pair: { type: Object, required: true },
+    pair: { type: String, required: true },
   },
 
   data () {

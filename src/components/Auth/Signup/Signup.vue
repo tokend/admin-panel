@@ -61,7 +61,7 @@
         </div>
 
         <div class="app__form-actions">
-          <button class="app__btn" :disabled="buttonDisabled">
+          <button class="app__btn">
             Sign Up
           </button>
         </div>

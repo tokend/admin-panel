@@ -88,9 +88,7 @@
                     :value="normalizeLimitAmount(limits.payment[type])"
                     @input="limits.payment[type] = $event || DEFAULT_MAX_AMOUNT"
                     class="limits-manager__limit-field"
-                    :step="DEFAULT_INPUT_STEP"
                     placeholder="Unlimited"
-                    min="0"
                   />
                 </div>
               </template>
@@ -125,9 +123,7 @@
                     :value="normalizeLimitAmount(limits.withdrawal[type])"
                     @input="limits.withdrawal[type] = $event || DEFAULT_MAX_AMOUNT"
                     class="limits-manager__limit-field"
-                    :step="DEFAULT_INPUT_STEP"
                     placeholder="Unlimited"
-                    min="0"
                   />
                   <!-- eslint-enable max-len -->
                 </div>
@@ -162,9 +158,7 @@
                     :value="normalizeLimitAmount(limits.deposit[type])"
                     @input="limits.deposit[type] = $event || DEFAULT_MAX_AMOUNT"
                     class="limits-manager__limit-field"
-                    :step="DEFAULT_INPUT_STEP"
                     placeholder="Unlimited"
-                    min="0"
                   />
                 </div>
               </template>

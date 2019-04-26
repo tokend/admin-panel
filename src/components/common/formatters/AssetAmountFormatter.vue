@@ -9,8 +9,8 @@ import { formatAssetAmount } from '@/utils/formatters'
 
 export default {
   props: {
-    amount: { type: String, required: true },
-    asset: { type: String, required: true },
+    amount: { type: [String, Number], required: true },
+    asset: { type: String, default: '' },
   },
 
   methods: {

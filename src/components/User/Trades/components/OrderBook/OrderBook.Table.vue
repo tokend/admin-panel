@@ -134,7 +134,7 @@ export default {
 
   props: {
     list: { type: Array, required: true },
-    pair: { type: Object, required: true },
+    pair: { type: String, required: true },
     isBids: { type: Boolean, default: false },
     isRtl: { type: Boolean, default: false },
   },
