@@ -32,10 +32,10 @@
         :key="item.id"
         @click="$emit('op-select', item)">
         <span class="app-list__cell" :title="item.operationType">
-          {{ item.operationType }}
+          {{ getOperationType(item) }}
         </span>
-        <span class="app-list__cell" :title="item.ledgerCloseTime">
-          {{ item.ledgerCloseTime }}
+        <span class="app-list__cell" :title="item.appliedAt">
+          {{ item.appliedAt }}
         </span>
         <span class="app-list__cell" :title="item.sourceAccount">
           {{ item.sourceAccount }}
@@ -49,7 +49,7 @@
     <template v-else>
       <ul class="app-list">
         <li class="app-list__li-like">
-          {{ isPending ? 'Loading...' : 'Nothing here yet' }}
+          {{ isLoading ? 'Loading...' : 'Nothing here yet' }}
         </li>
       </ul>
     </template>
@@ -68,7 +68,8 @@
 import Vue from 'vue'
 
 import moment from 'moment'
-import get from 'lodash/get'
+
+import safeGet from 'lodash/get'
 
 import { OperationCounterparty } from '@comcom/getters'
 import { CollectionLoader } from '@/components/common'
@@ -78,6 +79,8 @@ import { ApiCallerFactory } from '@/api-caller-factory'
 import { formatAssetAmount } from '@/utils/formatters'
 import { clearObject } from '@/utils/clearObject'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+
+import config from '@/config'
 
 export default {
   components: {
@@ -126,6 +129,36 @@ export default {
       return response
     },
 
+    getOperationType (record) {
+      switch (record.operationType) {
+        case 'Create change role request':
+          return this.getChangeRoleOperationType(record)
+        default:
+          return record.operationType
+      }
+    },
+
+    getChangeRoleOperationType (record) {
+      const roleToSet = safeGet(
+        record, 'operation.details.roleToSet.id'
+      )
+      const isBlocked = Number(roleToSet) === config.ACCOUNT_ROLES.blocked
+      const isReset = safeGet(
+        record, 'operation.details.creatorDetails.resetReason'
+      )
+
+      let operationType
+      if (isBlocked) {
+        operationType = 'Block'
+      } else if (isReset) {
+        operationType = 'Reset to unverified'
+      } else {
+        operationType = 'Change role request'
+      }
+
+      return operationType
+    },
+
     setList (data) {
       this.list = data
     },
@@ -143,10 +176,10 @@ export default {
           // Capitalize and remove dashes
           operationType: operationType.charAt(0).toUpperCase() +
             operationType.slice(1),
-          ledgerCloseTime: moment(item.operation.appliedAt).format('DD MMM YYYY [at] hh:mm:ss'),
+          appliedAt: moment(item.operation.appliedAt).format('DD MMM YYYY [at] hh:mm:ss'),
           sourceAccount: item.operation.source.id === this.masterPubKey ? 'Master' : item.operation.source.id,
-          receiverAccount: get(item, 'operation.details.receiverAccount.id'),
-          accountTo: get(item, 'operation.details.accountTo.id'),
+          receiverAccount: safeGet(item, 'operation.details.receiverAccount.id'),
+          accountTo: safeGet(item, 'operation.details.accountTo.id'),
         })
       })
     },

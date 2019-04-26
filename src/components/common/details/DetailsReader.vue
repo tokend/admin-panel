@@ -1,88 +1,130 @@
 <template>
-  <table class="details-reader" v-if="isObject(details)">
-    <template v-for="(value, key) in details">
+  <div class="details-reader" v-if="isObject(normalizedDetails)">
+    <template v-for="(value, key) in normalizedDetails">
       <template v-if="isPrintablePair(key, value)">
         <template v-if="isArray(value)">
-          <tr class="details-reader__row" :key="`${_uid}-${key}`">
-            <td class="details-reader__cell">
+          <div class="details-reader__row" :key="`${_uid}-${key}`">
+            <div class="details-reader__cell">
               <span class="details-reader__label">
                 {{ key | humanize }}:
               </span>
-            </td>
-          </tr>
+            </div>
+          </div>
 
-          <tr
+          <div
             class="details-reader__row"
             v-for="(item, id) in value"
             :key="`${_uid}-${id}-${key}`"
           >
-            <td class="details-reader__cell" colspan="2">
-              <details-reader class="details-reader__nested" :details="item" />
-            </td>
-          </tr>
+            <div class="details-reader__cell">
+              <template v-if="isArray(item) || isObject(item)">
+                <div class="details-reader__row">
+                  <div class="details-reader__cell">
+                    <details-reader
+                      class="details-reader__nested"
+                      :details="item"
+                    />
+                  </div>
+                </div>
+              </template>
+
+              <template v-else>
+                <div class="details-reader__nested">
+                  <div class="details-reader__cell">
+                    <span>{{ item }}</span>
+                  </div>
+                </div>
+              </template>
+            </div>
+          </div>
         </template>
 
         <template v-else-if="isObject(value)">
-          <tr class="details-reader__row" :key="`${_uid}-${key}`">
-            <td class="details-reader__cell">
+          <div class="details-reader__row" :key="`${_uid}-${key}`">
+            <div class="details-reader__cell">
               <span class="details-reader__label">
                 {{ key | humanize }}:
               </span>
-            </td>
-          </tr>
+            </div>
+          </div>
 
-          <tr class="details-reader__row" :key="`${_uid}-${key}-nested`">
-            <td class="details-reader__cell" colspan="2">
+          <div class="details-reader__row" :key="`${_uid}-${key}-nested`">
+            <div class="details-reader__cell">
               <details-reader class="details-reader__nested" :details="value" />
-            </td>
-          </tr>
+            </div>
+          </div>
         </template>
 
         <template v-else-if="value">
-          <tr class="details-reader__row" :key="`${_uid}-${key}`">
-            <td class="details-reader__cell">
+          <div class="details-reader__row" :key="`${_uid}-${key}`">
+            <div class="details-reader__cell">
               <span class="details-reader__label">
-                {{ key | humanize }}
+                {{ key | humanize }}:
               </span>
-            </td>
+            </div>
 
-            <td class="details-reader__cell">
+            <div class="details-reader__cell">
               <span class="details-reader__value" :title="value">
                 {{ value }}
               </span>
-            </td>
-          </tr>
+            </div>
+          </div>
         </template>
       </template>
     </template>
-  </table>
-  <p :title="details" v-else>
-    {{ details }}
+  </div>
+
+  <p :title="normalizedDetails" v-else>
+    {{ normalizedDetails }}
   </p>
 </template>
 
 <script>
 import { verbozify } from '@/utils/verbozify'
+import _omit from 'lodash/omit'
 
 export default {
   name: 'details-reader',
+
   filters: {
     humanize (value) {
-      return verbozify(value)
+      // convert 'camelCaseValue' to 'camel case value'
+      const spacedValue = value.replace(/([A-Z])/g, ' $1').toLowerCase()
+      return verbozify(spacedValue)
     },
   },
+
   props: {
     details: {
       type: [Object, Number, Array, String],
       required: true,
-      default: () => { },
+      default: () => ({}),
     },
   },
+
   data () {
     return {
       dictionary: {},
     }
   },
+
+  computed: {
+    normalizedDetails () {
+      const omittedFields = [
+        'relationshipNames',
+        'type',
+        'tx',
+        'source',
+        'effect',
+        'operation.id',
+        'operation.appliedAt',
+        'details.id',
+      ]
+
+      return _omit(this.details, omittedFields)
+    },
+  },
+
   methods: {
     isPrivate (value) {
       if (typeof value === 'string' || value instanceof String) {
@@ -109,18 +151,28 @@ export default {
 <style lang="scss">
 @import "~@/assets/scss/colors";
 
+.details-reader__row {
+  display: flex;
+  line-height: 1.5;
+}
+
 .details-reader__cell {
   vertical-align: top;
   padding: 0.1rem 0;
+  color: $color-text;
 
-  & > .details-reader {
+  & > .details-reader__value {
+    word-break: break-word;
+  }
+
+  & > .details-reader__nested {
     padding-left: 2rem;
     position: relative;
 
     &:after {
       content: "";
       display: block;
-      border-left: 1px solid rgba(0, 0, 0, 0.2);
+      border-left: 0.1rem dashed rgba($color-text, 0.5);
       position: absolute;
       left: 0;
       top: 0.45rem;
@@ -130,8 +182,9 @@ export default {
 }
 
 .details-reader__label {
-  padding-right: 2.4rem;
-  color: $color-text-secondary;
+  padding-right: 1.6rem;
+  color: $color-text;
+  font-weight: bold;
   white-space: nowrap;
 }
 </style>

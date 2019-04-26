@@ -10,6 +10,8 @@ for further information about branching and tagging conventions.
 ## [Unreleased]
 #### Fixed
 - Fixed operation empty and loading list displaying of a user
+- Updating user details after KYC change
+- Error after blocking the user without verified KYC request
 
 #### Added
 - "Invest" fee type
@@ -22,6 +24,9 @@ for further information about branching and tagging conventions.
 - Updated `package.json` dependencies
 - Updated webpack build config
 - Now using "qrcode.vue" package instead of "v-qrcode"
+- Renamed "Create change role request" in the list to "Block" and
+  "Reset to unverified" if it was blocked or reset
+- Operation details formatting
 - Now using custom ESLint rules
 - Formatted & cleaned up code
 

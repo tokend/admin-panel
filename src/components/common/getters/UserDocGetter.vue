@@ -1,11 +1,12 @@
 <template>
   <div class="user-doc-getter">
     <div class="user-doc-getter__inner">
-      <div class="user-doc-getter__link" v-if="file && isLoaded">
+      <div class="user-doc-getter__link" v-if="fileKey && isLoaded">
         <a
           :href="href"
           target="_blank"
-          rel="noopener">
+          rel="noopener"
+        >
           Open file <mdi-open-in-new-icon class="user-doc-getter__ico" />
         </a>
       </div>
