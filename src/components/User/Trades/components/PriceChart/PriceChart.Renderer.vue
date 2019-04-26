@@ -271,6 +271,7 @@ export default {
         .y((d) => this.y(d.value))
         .curve(d3.curveStepAfter)
 
+      d3.select(`svg.${CLASS_NAME}`).classed(`${CLASS_NAME}--hidden`, true)
       // Define domains
       this.y.domain(this.genYDomain(this.data))
       this.x.domain(this.genXDomain(this.data))
@@ -404,6 +405,9 @@ export default {
       motionCaptureArea.on('touchend', () => hideTip.call(this))
 
       tip.classed(`${CLASS_NAME}__tip--hidden`, true)
+      setTimeout(() => {
+        d3.select(`svg.${CLASS_NAME}`).classed(`${CLASS_NAME}--hidden`, false)
+      }, this.animationDuration)
     }
   }
 }
@@ -424,7 +428,6 @@ $fs-tip: 1.2rem;
     min-height: 200px;
   }
   transition: 0.2s;
-  overflow: hidden;
 }
 
 svg.price-chart {
@@ -436,6 +439,10 @@ svg.price-chart {
   }
 
   & > g {
+    overflow: hidden;
+  }
+
+  &--hidden {
     overflow: hidden;
   }
 }
