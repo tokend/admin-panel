@@ -22,6 +22,11 @@ for further information about branching and tagging conventions.
 - Updated `package.json` dependencies
 - Updated webpack build config
 - Now using "qrcode.vue" package instead of "v-qrcode"
+- Now using custom ESLint rules
+- Formatted & cleaned up code
+
+#### Removed
+- Unnecessary "build" folder, containing old webpack config
 
 ## [1.5.0] - 2019-04-19
 ### "Under the hood" changes
