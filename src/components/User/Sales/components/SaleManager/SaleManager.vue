@@ -43,13 +43,15 @@
 </template>
 
 <script>
-import { Sdk } from '@/sdk'
 import { Tabs, Tab } from '@comcom/Tabs'
+
 import DetailsTab from './SaleManager.DetailsTab'
 import DescriptionTab from './SaleManager.DescriptionTab'
 import ParticipantsTab from './SaleManager.ParticipantsTab'
 import SyndicateTab from './SaleManager.SyndicateTab'
 import UpdatesTab from './SaleManager.UpdatesTab'
+
+import { Sdk } from '@/sdk'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
@@ -93,6 +95,3 @@ export default {
   },
 }
 </script>
-
-<style scoped lang="scss">
-</style>

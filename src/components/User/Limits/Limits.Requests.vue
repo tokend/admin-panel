@@ -20,22 +20,21 @@
 
 <script>
 import LimitsList from './components/Limits.RequestList'
+
 import api from '@/api'
-import {
-  REQUEST_STATES,
-} from '@/constants'
+import { REQUEST_STATES } from '@/constants'
+
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   components: { LimitsList },
+
   data: _ => ({
     list: {},
     accountTypeList: {},
     isLoading: false,
   }),
 
-  computed: {
-  },
   async created () {
     await this.getList()
   },
@@ -55,7 +54,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss" scoped>
-
-</style>

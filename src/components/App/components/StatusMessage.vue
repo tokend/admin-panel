@@ -14,11 +14,13 @@ import store from '@store'
 
 export default {
   name: 'status-message',
+
   computed: {
     message () {
       return store.getters.message
     },
   },
+
   methods: {
     close () {
       store.commit('CLEAN_MESSAGE')

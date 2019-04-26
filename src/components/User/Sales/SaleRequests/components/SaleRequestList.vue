@@ -116,14 +116,18 @@
 </template>
 
 <script>
-import api from '@/api'
-import { REQUEST_STATES } from '@/constants'
-import SelectField from '@comcom/fields/SelectField'
 import InputField from '@comcom/fields/InputField'
+import SelectField from '@comcom/fields/SelectField'
+
+import { REQUEST_STATES } from '@/constants'
+import api from '@/api'
+
 import { EmailGetter } from '@comcom/getters'
 import { AssetAmountFormatter } from '@comcom/formatters'
-import _ from 'lodash'
 import { CollectionLoader } from '@/components/common'
+
+import _ from 'lodash'
+
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
@@ -150,6 +154,7 @@ export default {
 
   watch: {
     'filters.state' () { this.reloadCollectionLoader() },
+
     'filters.requestor': _.throttle(function () {
       this.reloadCollectionLoader()
     }, 1000),

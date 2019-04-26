@@ -93,22 +93,22 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .operation-view__row {
-    display: flex;
-    & + & {
-      margin-top: 0.5rem;
-    }
+.operation-view__row {
+  display: flex;
+  & + & {
+    margin-top: 0.5rem;
   }
+}
 
-  .operation-view__label {
-    text-align: right;
-    padding-right: 2rem;
-    width: 20rem;
-    min-width: 20rem;
-  }
+.operation-view__label {
+  text-align: right;
+  padding-right: 2rem;
+  width: 20rem;
+  min-width: 20rem;
+}
 
-  .operation-view__value {
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+.operation-view__value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 </style>

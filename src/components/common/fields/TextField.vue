@@ -66,20 +66,10 @@ export default {
     cols: { type: [String, Number], default: undefined },
   },
 
-  data () {
-    return {
-      // data
-    }
-  },
-
   computed: {
     isNoLabel () {
       return this.label === null || this.label === '' || this.label === undefined
     },
-  },
-
-  created () {
-    // created
   },
 
   methods: {

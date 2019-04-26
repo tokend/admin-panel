@@ -10,13 +10,10 @@
 
 <script>
 import WithdrawalList from './components/WithdrawalList'
+
 export default {
   components: {
     WithdrawalList,
   },
 }
 </script>
-
-<style scoped>
-
-</style>

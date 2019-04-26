@@ -16,9 +16,7 @@
 import PreissuanceForm from './components/PreissuanceForm.vue'
 
 export default {
-  components: {
-    PreissuanceForm,
-  },
+  components: { PreissuanceForm },
 }
 </script>
 

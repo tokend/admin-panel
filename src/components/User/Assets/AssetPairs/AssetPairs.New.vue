@@ -10,14 +10,12 @@
 import AssetPairCreator from './components/AssetPairCreator'
 
 export default {
-  components: {
-    AssetPairCreator,
-  },
+  components: { AssetPairCreator },
 }
 </script>
 
 <style scoped>
-  .asset-pairs-show__mgr-wrp {
-    max-width: 60rem;
-  }
+.asset-pairs-show__mgr-wrp {
+  max-width: 60rem;
+}
 </style>

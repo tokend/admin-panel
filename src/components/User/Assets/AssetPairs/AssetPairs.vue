@@ -6,10 +6,6 @@
 
 <script>
 export default {
-
+  name: 'asset-pairs',
 }
 </script>
-
-<style scoped>
-
-</style>

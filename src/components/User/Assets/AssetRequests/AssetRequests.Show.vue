@@ -227,24 +227,30 @@
 </template>
 
 <script>
-import { Sdk } from '@/sdk'
-import { confirmAction } from '@/js/modals/confirmation_message'
-import AssetRequestRejectForm from './components/AssetRequestRejectForm'
-import localize from '@/utils/localize'
 import TextField from '@comcom/fields/TextField'
+import AssetRequestRejectForm from './components/AssetRequestRejectForm'
+
 import { ImgGetter, EmailGetter } from '@comcom/getters'
 import { DateFormatter } from '@comcom/formatters'
+
+import { confirmAction } from '@/js/modals/confirmation_message'
+
+import { Sdk } from '@/sdk'
+
+import localize from '@/utils/localize'
 import { verbozify } from '@/utils/verbozify'
+import safeGet from 'lodash/get'
+
 import { AssetRequest } from '@/api/responseHandlers/requests/AssetRequest'
-import get from 'lodash/get'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+
 import {
   ASSET_POLICIES_VERBOSE,
   CREATE_ASSET_REQUEST_STATES,
   ASSET_REQUEST_TYPES,
 } from '@/constants'
-// TODO: extract to AssetRequestForm
 
+// TODO: extract to AssetRequestForm
 export default {
   components: {
     AssetRequestRejectForm,
@@ -297,7 +303,8 @@ export default {
 
   methods: {
     verbozify,
-    safeGet: get,
+    safeGet,
+
     async fulfill () {
       this.isPending = true
       if (await confirmAction()) {

@@ -33,11 +33,10 @@
 <script>
 import { InputField } from '@comcom/fields'
 import { DOCUMENT_TYPES_STR } from '@/constants'
+
 export default {
   name: 'datalist-field',
-  components: {
-    InputField,
-  },
+  components: { InputField },
 
   props: {
     docItem: { type: Object, required: true },
@@ -49,6 +48,7 @@ export default {
     pointerCounter: 0,
     DOCUMENT_TYPES_STR,
   }),
+
   computed: {
     filteredList () {
       const nonUnderscoreList = Object.values(DOCUMENT_TYPES_STR).map(item => item.replace(/_/g, ' '))
@@ -58,6 +58,7 @@ export default {
       })
     },
   },
+
   watch: {
     docItem: {
       handler: function (value) {
@@ -67,41 +68,47 @@ export default {
       deep: true,
     },
   },
-  created () {
-  },
+
   mounted () {
     document.addEventListener('click', this.handleClickOutside)
   },
+
   destroyed () {
     document.removeEventListener('click', this.handleClickOutside)
   },
+
   methods: {
     selectItemFromList (item) {
       this.isShowingList = false
       this.searchValue = item
       this.docItem.label = item
     },
+
     showDatalist () {
       this.isShowingList = true
     },
+
     onArrowDown () {
       if (this.pointerCounter < this.filteredList.length - 1) {
         this.pointerCounter++
         this.fixScrolling()
       }
     },
+
     onArrowUp () {
       if (this.pointerCounter > 0) {
         this.pointerCounter--
         this.fixScrolling()
       }
     },
+
     handleClickOutside (event) {
       if (!this.$el.contains(event.target)) {
         this.pointerCounter = -1
         this.isShowingList = false
       }
     },
+
     fixScrolling () {
       const currentHeight = this.$refs.option[this.pointerCounter].clientHeight
       this.$refs.list.scrollTop = currentHeight * this.pointerCounter
@@ -109,30 +116,31 @@ export default {
   },
 }
 </script>
+
 <style lang="scss" scoped>
-  @import "../../../../assets/scss/colors";
-  .datalist {
-    width: 100%;
-    max-width: 28rem;
-    position: relative;
-  }
+@import "../../../../assets/scss/colors";
+.datalist {
+  width: 100%;
+  max-width: 28rem;
+  position: relative;
+}
 
-  .datalist__list {
-    position: absolute;
-    background: $color-content-bg;
-    width: 100%;
-    max-height: 10rem;
-    overflow-y: scroll;
-    border: 1px solid $color-sub-nav-bg;
-    border-top: none;
-  }
+.datalist__list {
+  position: absolute;
+  background: $color-content-bg;
+  width: 100%;
+  max-height: 10rem;
+  overflow-y: scroll;
+  border: 1px solid $color-sub-nav-bg;
+  border-top: none;
+}
 
-  .datalist__list-item {
-    &:hover {
-      background: $color-sub-nav-hover;
-    }
-  }
-  .datalist__list-item__is-active {
+.datalist__list-item {
+  &:hover {
     background: $color-sub-nav-hover;
   }
+}
+.datalist__list-item__is-active {
+  background: $color-sub-nav-hover;
+}
 </style>

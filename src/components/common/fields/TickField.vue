@@ -44,16 +44,11 @@ export default {
     autofocus: { type: Boolean, default: false },
   },
 
-  data () {
-    return {
-      // data
-    }
-  },
-
   computed: {
     id () {
       return `tick-field-${this._uid}`
     },
+
     checked () {
       const model = this.value
       const value = this.cbValue
@@ -77,10 +72,6 @@ export default {
       }
       return result
     },
-  },
-
-  created () {
-    // created
   },
 
   methods: {
@@ -110,6 +101,7 @@ export default {
           break
       }
     },
+
     typeof (value) {
       const type = typeof value
 

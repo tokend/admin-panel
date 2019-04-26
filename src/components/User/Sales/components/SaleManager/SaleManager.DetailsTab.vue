@@ -250,13 +250,14 @@
 </template>
 
 <script>
-import { Sdk } from '@/sdk'
 import { EmailGetter, ImgGetter, DocLinkGetter } from '@comcom/getters'
 import {
   AssetAmountFormatter,
   DateFormatter,
   AssetPoliciesFormatter,
 } from '@comcom/formatters'
+
+import { Sdk } from '@/sdk'
 import { SALE_STATES } from '@/constants'
 
 export default {

@@ -132,19 +132,18 @@
 </template>
 
 <script>
-import moment from 'moment'
-import api from '@/api'
-import localize from '@/utils/localize'
-import { verbozify } from '@/utils/verbozify'
 import InputField from '@comcom/fields/InputField'
 
-import { CreatePreIssuanceRequest } from '@/api/responseHandlers/requests/CreatePreIssuanceRequest'
+import moment from 'moment'
+import localize from '@/utils/localize'
+import { verbozify } from '@/utils/verbozify'
+
+import api from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { CreatePreIssuanceRequest } from '@/api/responseHandlers/requests/CreatePreIssuanceRequest'
 
 export default {
-  components: {
-    InputField,
-  },
+  components: { InputField },
 
   props: {
     asset: {

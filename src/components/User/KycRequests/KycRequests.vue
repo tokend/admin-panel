@@ -17,12 +17,9 @@ import config from '../../../config'
 
 export default {
   components: { UserHeader },
+
   data: _ => ({
     config,
   }),
 }
 </script>
-
-<style scoped>
-
-</style>

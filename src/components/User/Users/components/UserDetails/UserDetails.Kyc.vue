@@ -142,8 +142,10 @@
 
 <script>
 import { UserDocGetter, UserDocLinkGetter } from '@comcom/getters'
+
 import { fromKycTemplate } from '../../../../../utils/kyc-tempater'
 import deepCamelCase from 'camelcase-keys-deep'
+
 import config from '@/config'
 import { Sdk } from '@/sdk'
 import { ErrorHandler } from '@/utils/ErrorHandler'
@@ -175,6 +177,7 @@ export default {
       ID_DOCUMENTS_VERBOSE,
     }
   },
+
   watch: {
     user () { this.getKyc() },
     blobId () { this.getKyc() },

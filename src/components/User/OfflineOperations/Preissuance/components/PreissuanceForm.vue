@@ -233,68 +233,68 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import "../../../../../assets/scss/colors";
+@import "../../../../../assets/scss/colors";
 
-  $paddind-in-tab: 4rem;
-  $width-without-indentation: calc(100% + 2 * #{$paddind-in-tab});
+$paddind-in-tab: 4rem;
+$width-without-indentation: calc(100% + 2 * #{$paddind-in-tab});
 
-  .preissuance-form__upload-btn.app__btn {
-    display: block;
-    cursor: pointer;
-    max-width: 10rem;
-    &:hover {
-      opacity: 0.9;
-    }
+.preissuance-form__upload-btn.app__btn {
+  display: block;
+  cursor: pointer;
+  max-width: 10rem;
+  &:hover {
+    opacity: 0.9;
   }
+}
 
-  .preissuance-form__upload-input {
-    width: 0.1px;
-    height: 0.1px;
-    opacity: 0;
-    overflow: hidden;
-    position: absolute;
-    z-index: -1;
-  }
+.preissuance-form__upload-input {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
 
-  .preissuance-form__upload-wrp {
-    position: relative;
-    display: flex;
-    align-items: center;
-  }
+.preissuance-form__upload-wrp {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
 
-  .preissuance-form__summary-actions {
-    max-width: 20rem;
-    display: flex;
-    margin-top: 4.5rem;
-  }
+.preissuance-form__summary-actions {
+  max-width: 20rem;
+  display: flex;
+  margin-top: 4.5rem;
+}
 
-  .preissuance-form__hint {
-    margin-bottom: 2rem;
-  }
+.preissuance-form__hint {
+  margin-bottom: 2rem;
+}
 
-  .preissuance-form__list {
-    margin-top: 2rem;
-    width: $width-without-indentation;
-    margin-right: -$paddind-in-tab;
-    margin-left: -$paddind-in-tab;
-  }
+.preissuance-form__list {
+  margin-top: 2rem;
+  width: $width-without-indentation;
+  margin-right: -$paddind-in-tab;
+  margin-left: -$paddind-in-tab;
+}
 
-  .preissuance-form__li {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    text-decoration: none;
-    color: inherit;
-  }
+.preissuance-form__li {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  text-decoration: none;
+  color: inherit;
+}
 
-  .preissuance-form__id--max-width {
-    max-width: 75px;
-    padding-left: 4.5rem !important;
-  }
+.preissuance-form__id--max-width {
+  max-width: 75px;
+  padding-left: 4.5rem !important;
+}
 
-  .preissuance-form__not-downloaded {
-    color: $color-danger;
-    margin-top: 2rem;
-    font-size: 1.6rem;
-  }
+.preissuance-form__not-downloaded {
+  color: $color-danger;
+  margin-top: 2rem;
+  font-size: 1.6rem;
+}
 </style>

@@ -13,6 +13,7 @@
 
 <script>
 import { ASSET_POLICIES } from '@/constants'
+
 export default {
   props: {
     policies: { type: Array, default: null },
@@ -45,7 +46,3 @@ export default {
   },
 }
 </script>
-
-<style scoped>
-
-</style>

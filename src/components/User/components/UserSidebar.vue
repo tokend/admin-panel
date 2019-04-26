@@ -105,7 +105,9 @@ import 'mdi-vue/TableIcon'
 import 'mdi-vue/SyncOffIcon'
 
 import '@/assets/mdi/AccountStarIcon'
+
 import config from '@/config'
+
 export default {
   data () {
     return {

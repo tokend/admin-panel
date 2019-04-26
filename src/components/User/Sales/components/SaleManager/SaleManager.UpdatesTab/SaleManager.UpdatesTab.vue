@@ -33,10 +33,13 @@
 </template>
 
 <script>
+import TimelineItem from './TimelineItem'
+
 import { Sdk } from '@/sdk'
 import { BLOB_TYPES } from '@/constants'
+
 import _get from 'lodash/get'
-import TimelineItem from './TimelineItem'
+
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
@@ -55,6 +58,7 @@ export default {
       isFailed: false,
     }
   },
+
   created () {
     this.getUpdates({
       ownerId: _get(this.sale, 'ownerId'),
@@ -78,6 +82,3 @@ export default {
   },
 }
 </script>
-
-<style scoped lang="scss">
-</style>

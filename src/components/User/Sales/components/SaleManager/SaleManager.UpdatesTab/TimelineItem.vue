@@ -16,6 +16,7 @@
 
 <script>
 import { DateFormatter } from '@comcom/formatters'
+
 export default {
   name: 'updates-timeline-item',
   components: {
@@ -40,17 +41,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.timeline-item__date {
+  font-weight: bold;
+}
 
-  .timeline-item__date {
-    font-weight: bold;
-  }
+.timeline-item__title {
+  margin-bottom: 0.75rem;
+}
 
-  .timeline-item__title {
-    margin-bottom: 0.75rem;
-  }
-
-  .timeline-item {
-    margin-bottom: 2rem;
-  }
-
+.timeline-item {
+  margin-bottom: 2rem;
+}
 </style>

@@ -112,12 +112,15 @@
 
 <script>
 import Vue from 'vue'
+
 import InputField from '@comcom/fields/InputField'
 import SelectField from '@comcom/fields/SelectField'
 
 import { confirmAction } from '@/js/modals/confirmation_message'
+
 import { Sdk } from '@/sdk'
 import { ApiCallerFactory } from '@/api-caller-factory'
+
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 const MASTER_ROLE_ID = 1
@@ -219,6 +222,7 @@ export default {
             description: (item.details || {}).description || '(No description)',
           }
         })
+
       this.form.signerRoleId = this.form.signerRoleId ||
         this.signerRoles.find(item => item.name !== 'Master').id
     },

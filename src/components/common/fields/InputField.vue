@@ -82,14 +82,6 @@ export default {
     }
   },
 
-  computed: {
-    // computed
-  },
-
-  created () {
-    // created
-  },
-
   methods: {
     onInput (event) {
       this.beforeEmit(event.target)
@@ -152,5 +144,5 @@ export default {
 </script>
 
 <style lang="scss">
-  @import "./scss/input";
+@import "./scss/input";
 </style>

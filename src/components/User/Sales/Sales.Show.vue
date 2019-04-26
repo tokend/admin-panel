@@ -13,6 +13,7 @@ export default {
   components: {
     SaleManager,
   },
+
   props: {
     id: { type: String, required: true },
   },

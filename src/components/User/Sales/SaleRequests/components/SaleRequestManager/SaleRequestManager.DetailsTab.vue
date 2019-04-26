@@ -225,6 +225,7 @@ import {
   AssetPoliciesFormatter,
   RequestStateFormatter,
 } from '@comcom/formatters'
+
 import get from 'lodash/get'
 
 export default {

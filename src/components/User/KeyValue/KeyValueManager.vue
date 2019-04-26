@@ -84,12 +84,11 @@
   </div>
 </template>
 <script>
+import { SelectField, InputField } from '@comcom/fields'
+
 import { Sdk } from '@/sdk'
-import {
-  SelectField,
-  InputField,
-} from '@comcom/fields'
 import { KEY_VALUE_ENTRY_TYPE } from '../../../constants'
+
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
@@ -97,6 +96,7 @@ export default {
     SelectField,
     InputField,
   },
+
   data: _ => ({
     createForm: {
       key: '',
@@ -112,15 +112,18 @@ export default {
     isPending: false,
     KEY_VALUE_ENTRY_TYPE,
   }),
+
   watch: {
     'updateForm.key' (key) {
       const item = this.list.find(elem => elem.key === key)
       this.updateForm.value = item[`${item.type.name}Value`]
     },
   },
+
   created () {
     this.getList()
   },
+
   methods: {
     async setKeyValue (key, value, entryType) {
       this.isPending = true
@@ -136,6 +139,7 @@ export default {
       }
       this.isPending = false
     },
+
     async getList () {
       try {
         const response = await Sdk.horizon.keyValue.getAll()
@@ -158,34 +162,35 @@ export default {
   },
 }
 </script>
+
 <style scoped lang="scss">
-  @import "../../../assets/scss/colors";
+@import "../../../assets/scss/colors";
 
-  .key-value-manager__card {
-    background-color: $color-content-bg;
-    border-radius: 0.3rem;
-    box-shadow: 0.7px 0.7px 5.6px 0.4px rgba(170, 170, 170, 0.72);
-    padding: 1rem 1.5rem 1.5rem;
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    margin-bottom: 2rem;
-  }
+.key-value-manager__card {
+  background-color: $color-content-bg;
+  border-radius: 0.3rem;
+  box-shadow: 0.7px 0.7px 5.6px 0.4px rgba(170, 170, 170, 0.72);
+  padding: 1rem 1.5rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
 
-  .key-value-manager__input {
-    margin-left: 20px;
-    margin-right: 60px;
-    width: 300px;
-  }
+.key-value-manager__input {
+  margin-left: 20px;
+  margin-right: 60px;
+  width: 300px;
+}
 
-  .key-value-manager__btn {
-    max-width: 200px;
-  }
+.key-value-manager__btn {
+  max-width: 200px;
+}
 
-  .key-value-manager__form {
-    width: 100%;
-    display: flex;
-    padding: 30px 10px;
-    flex-wrap: nowrap;
-  }
+.key-value-manager__form {
+  width: 100%;
+  display: flex;
+  padding: 30px 10px;
+  flex-wrap: nowrap;
+}
 </style>

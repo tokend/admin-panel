@@ -106,13 +106,14 @@
 
 <script>
 import Vue from 'vue'
+
 import { mapGetters } from 'vuex'
 import { getters } from '@/store/types'
+
 import { ApiCallerFactory } from '@/api-caller-factory'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
-
   filters: {
     deriveRoleName (roleId, signerRoles = []) {
       if (+roleId === 1) {
@@ -122,6 +123,7 @@ export default {
       return (role.details || {}).name || `Unnamed (${roleId})`
     },
   },
+
   data () {
     return {
       list: [],

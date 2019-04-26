@@ -99,17 +99,22 @@
 </template>
 
 <script>
-import { Sdk } from '@/sdk'
-import api from '@/api'
 import TextField from '@comcom/fields/TextField'
 import TickField from '@comcom/fields/TickField'
+
 import Modal from '@comcom/modals/Modal'
-import { REQUEST_STATES } from '@/constants'
+import { Tabs, Tab } from '@comcom/Tabs'
+import { confirmAction } from '../../../../../../js/modals/confirmation_message'
+
 import DetailsTab from './SaleRequestManager.DetailsTab'
 import DescriptionTab from './SaleRequestManager.DescriptionTab'
-import { confirmAction } from '../../../../../../js/modals/confirmation_message'
 import SyndicateTab from '../../../components/SaleManager/SaleManager.SyndicateTab'
-import { Tabs, Tab } from '@comcom/Tabs'
+
+import { Sdk } from '@/sdk'
+import api from '@/api'
+
+import { REQUEST_STATES } from '@/constants'
+
 import cloneDeep from 'lodash/cloneDeep'
 import { snakeToCamelCase } from '@/utils/un-camel-case'
 import { ErrorHandler } from '@/utils/ErrorHandler'
@@ -147,11 +152,13 @@ export default {
       isSubmitting: false,
     }
   },
+
   computed: {
     getSaleDetails () {
       return this.request.sale.details[this.request.sale.details.requestType]
     },
   },
+
   created () {
     if (this.id) {
       this.getRequest(this.id)

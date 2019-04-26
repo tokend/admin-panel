@@ -8,13 +8,8 @@
 
 <script>
 import SaleRequestList from './components/SaleRequestList'
+
 export default {
-  components: {
-    SaleRequestList,
-  },
+  components: { SaleRequestList },
 }
 </script>
-
-<style scoped>
-
-</style>

@@ -8,13 +8,8 @@
 
 <script>
 import AdminManager from './components/AdminManager'
+
 export default {
-  components: {
-    AdminManager,
-  },
+  components: { AdminManager },
 }
 </script>
-
-<style scoped>
-
-</style>

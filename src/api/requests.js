@@ -6,6 +6,7 @@ import { REQUEST_TYPES } from '@/constants'
 import { CreatePreIssuanceRequest } from './responseHandlers/requests/CreatePreIssuanceRequest'
 import { AssetRequest } from './responseHandlers/requests/AssetRequest'
 import { IssuanceCreateRequest } from './responseHandlers/requests/IssuanceCreateRequest'
+
 import { clearObject } from '@/utils/clearObject'
 import _get from 'lodash/get'
 
@@ -29,6 +30,7 @@ export const requests = {
         action,
         reason,
       }
+
       return Sdk.base.ReviewRequestBuilder.reviewRequest({
         ...opts,
 
@@ -91,6 +93,7 @@ export const requests = {
         accountID: params.accountId,
         accountRole: undefined,
       }))
+
     const operations = []
     operations.push(Sdk.base.ReviewRequestBuilder.reviewLimitsUpdateRequest({
       requestHash: params.request.hash,
@@ -107,15 +110,17 @@ export const requests = {
         externalDetails: '{}',
       },
     }))
+
     newLimits
       .forEach(limits => {
         operations.push(
           Sdk.base.ManageLimitsBuilder.createLimits(limits)
         )
       })
-    const response = await Sdk.horizon.transactions
+
+    const { data } = await Sdk.horizon.transactions
       .submitOperations(...operations)
-    return response.data
+    return data
   },
 
   async rejectLimitsUpdate (params) {
@@ -126,6 +131,7 @@ export const requests = {
         accountID: params.accountId,
         accountType: undefined,
       }))
+
     const operation = Sdk.base.ReviewRequestBuilder.reviewLimitsUpdateRequest({
       requestHash: params.request.hash,
       requestType: params.request.request_type_i || params.request.requestTypeI,
@@ -136,8 +142,9 @@ export const requests = {
       requestID: params.request.id,
       newLimits: newLimits[0],
     })
-    const response = await Sdk.horizon.transactions.submitOperations(operation)
-    return response.data
+
+    const { data } = await Sdk.horizon.transactions.submitOperations(operation)
+    return data
   },
 
   async reject ({ reason, isPermanent = false }, ...requests) {
@@ -145,8 +152,8 @@ export const requests = {
       ? Sdk.xdr.ReviewRequestOpAction.permanentReject().value
       : Sdk.xdr.ReviewRequestOpAction.reject().value
 
-    const response = await this._review({ action, reason }, ...requests)
-    return response.data
+    const { data } = await this._review({ action, reason }, ...requests)
+    return data
   },
 
   async rejectWithdraw ({ reason, isPermanent = false }, ...requests) {
@@ -154,15 +161,15 @@ export const requests = {
       ? Sdk.xdr.ReviewRequestOpAction.permanentReject().value
       : Sdk.xdr.ReviewRequestOpAction.reject().value
 
-    const response = await this._reviewWithdraw(
+    const { data } = await this._reviewWithdraw(
       { action, reason }, ...requests
     )
-    return response.data
+    return data
   },
 
   async get (id) {
-    const response = await Sdk.horizon.request.get(id)
-    return response.data
+    const { data } = await Sdk.horizon.request.get(id)
+    return data
   },
 
   async getIssuanceRequests ({ asset, state }) {

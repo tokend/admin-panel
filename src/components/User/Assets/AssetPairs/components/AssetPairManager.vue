@@ -86,19 +86,20 @@
 </template>
 
 <script>
-import api from '@/api'
-import { Sdk } from '@/sdk'
 import InputField from '@comcom/fields/InputField'
 import TickField from '@comcom/fields/TickField'
+
+import { confirmAction } from '@/js/modals/confirmation_message'
+
+import api from '@/api'
+import { Sdk } from '@/sdk'
+
 import { DEFAULT_INPUT_STEP } from '@/constants'
 import { ASSET_PAIR_POLICIES } from '@/constants/'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
-import { confirmAction } from '@/js/modals/confirmation_message'
-
 export default {
-
   components: {
     InputField,
     TickField,
@@ -174,18 +175,18 @@ export default {
 </script>
 
 <style scoped>
-  .asset-pair-manager {
-    display: flex;
-  }
+.asset-pair-manager {
+  display: flex;
+}
 
-  .asset-pair-manager__form {
-    margin-right: 30px;
-  }
+.asset-pair-manager__form {
+  margin-right: 30px;
+}
 
-  .asset-pair-manager__checkboxes {
-    margin: 6.4rem 0 4rem;
-  }
-  .asset-pair-manager__checkbox {
-    margin: 0 0 1rem;
-  }
+.asset-pair-manager__checkboxes {
+  margin: 6.4rem 0 4rem;
+}
+.asset-pair-manager__checkbox {
+  margin: 0 0 1rem;
+}
 </style>

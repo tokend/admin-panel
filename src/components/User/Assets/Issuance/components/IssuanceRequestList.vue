@@ -118,5 +118,5 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  @import "./issuance";
+@import "./issuance";
 </style>

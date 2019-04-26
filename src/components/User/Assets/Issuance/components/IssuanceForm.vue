@@ -84,16 +84,19 @@
 </template>
 
 <script>
+import { InputField, SelectField } from '@comcom/fields'
+
+import { AssetAmountFormatter } from '@comcom/formatters'
+import { confirmAction } from '../../../../../js/modals/confirmation_message'
+
 import api from '@/api'
 import { Sdk } from '@/sdk'
-import config from '@/config'
-import { InputField, SelectField } from '@comcom/fields'
-import Bus from '@/utils/EventBus'
-import { AssetAmountFormatter } from '@comcom/formatters'
-import { DEFAULT_INPUT_STEP, DEFAULT_INPUT_MIN } from '@/constants'
 
-import { confirmAction } from '../../../../../js/modals/confirmation_message'
+import config from '@/config'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+
+import Bus from '@/utils/EventBus'
+import { DEFAULT_INPUT_STEP, DEFAULT_INPUT_MIN } from '@/constants'
 
 export default {
   components: {
@@ -132,6 +135,7 @@ export default {
     Bus.$on('issuance:updateAssets', _ => this.getAssets())
     this.getAssets()
   },
+
   methods: {
     async getAssets () {
       try {
@@ -153,9 +157,11 @@ export default {
       } else {
         address = await api.users.getAccountIdByEmail(this.form.receiver)
       }
+
       if (!address) {
         throw new Error(`Account doesn't exists in the systen`)
       }
+
       const response = await Sdk.horizon.account.get(address)
       let account = response.data
       const balance = account.balances
@@ -172,6 +178,7 @@ export default {
         } catch (error) {
           ErrorHandler.process(error)
         }
+
         const response = await Sdk.horizon.account.get(address)
         account = response.data
         return account.balances
@@ -196,6 +203,7 @@ export default {
           allTasks: 0,
         })
       await Sdk.horizon.transactions.submitOperations(operation)
+
       this.form.amount = null
       this.form.receiver = null
       this.form.reference = null

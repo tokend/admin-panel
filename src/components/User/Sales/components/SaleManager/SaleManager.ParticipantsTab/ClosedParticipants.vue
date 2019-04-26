@@ -50,8 +50,8 @@
 import { Sdk } from '@/sdk'
 import { DateFormatter } from '@comcom/formatters'
 import { EmailGetter } from '@comcom/getters'
-export default {
 
+export default {
   components: {
     DateFormatter,
     EmailGetter,

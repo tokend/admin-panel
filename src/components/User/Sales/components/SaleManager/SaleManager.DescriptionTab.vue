@@ -43,6 +43,7 @@
 <script>
 import { MarkdownFormatter } from '@comcom/formatters'
 import { Sdk } from '@/sdk'
+
 export default {
   components: {
     MarkdownFormatter,

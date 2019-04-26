@@ -6,10 +6,6 @@
 
 <script>
 export default {
-
+  name: 'preissuance-requests',
 }
 </script>
-
-<style scoped>
-
-</style>

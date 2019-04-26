@@ -68,12 +68,15 @@
 </template>
 
 <script>
-import config from '@/config'
-import { Sdk } from '@/sdk'
-import trim from 'lodash/trim'
-import { ApiCallerFactory } from '@/api-caller-factory'
-import { ErrorHandler } from '@/utils/ErrorHandler'
 import { CollectionLoader } from '@/components/common'
+
+import { Sdk } from '@/sdk'
+import { ApiCallerFactory } from '@/api-caller-factory'
+
+import trim from 'lodash/trim'
+
+import config from '@/config'
+import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   components: {
@@ -91,6 +94,7 @@ export default {
     contentLoaded () {
       return !this.$store.getters.showLoader
     },
+
     parsedAssets () {
       return this.assets.map(asset => {
         return {
@@ -106,6 +110,7 @@ export default {
       this.assets = []
       this.$store.commit('OPEN_LOADER')
       this.isLoading = true
+
       let response = {}
       try {
         response = await ApiCallerFactory
@@ -118,6 +123,7 @@ export default {
         this.$store.commit('CLOSE_LOADER')
         ErrorHandler.process('Something went wrong. Can\'t to load assets list')
       }
+
       this.isLoading = false
       return response
     },

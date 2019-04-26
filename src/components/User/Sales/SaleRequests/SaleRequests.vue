@@ -6,10 +6,6 @@
 
 <script>
 export default {
-
+  name: 'sale-requests',
 }
 </script>
-
-<style scoped>
-
-</style>

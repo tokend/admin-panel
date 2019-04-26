@@ -258,11 +258,18 @@
 </template>
 
 <script>
+import { SelectField, InputField } from '@comcom/fields'
+import { confirmAction } from '@/js/modals/confirmation_message'
+
 import api from '@/api'
 import { Sdk } from '@/sdk'
-import { xdrTypeFromValue } from '@/utils/xdrTypeFromValue'
+
 import { ErrorHandler } from '@/utils/ErrorHandler'
-import { SelectField, InputField } from '@comcom/fields'
+import config from '@/config'
+
+import { xdrTypeFromValue } from '@/utils/xdrTypeFromValue'
+import throttle from 'lodash/throttle'
+
 import {
   ASSET_POLICIES,
   DEFAULT_MAX_AMOUNT,
@@ -271,12 +278,8 @@ import {
   PAYMENT_FEE_TYPES,
   DEFAULT_BASE_ASSET,
 } from '@/constants'
-import throttle from 'lodash/throttle'
+
 import 'mdi-vue/ArrowUpIcon'
-
-import { confirmAction } from '@/js/modals/confirmation_message'
-
-import config from '@/config'
 
 const SCOPE_TYPES = Object.freeze({ // non-xdr values, internal use only
   account: 'USER',
@@ -328,23 +331,19 @@ export default {
           result = this.assets
             .filter(item => item.policy & ASSET_POLICIES.transferable)
           break
-
         case FEE_TYPES.offerFee:
           result = this.assets
             .filter(item => this.assetPairs
               .filter(el => el.quote === item.code).length
             )
           break
-
         case FEE_TYPES.issuanceFee:
           result = this.assets.filter(item => +item.maxIssuanceAmount)
           break
-
         case FEE_TYPES.withdrawalFee:
           result = this.assets
             .filter(item => +item.policy & ASSET_POLICIES.withdrawable)
           break
-
         default:
           result = this.assets
           break
@@ -520,76 +519,76 @@ export default {
 </script>
 
 <style>
-  .fee-list__cell > .input-field > .input-field__label,
-  .fee-list__cell > .select-field > .select-field__label {
-    display: none;
-  }
+.fee-list__cell > .input-field > .input-field__label,
+.fee-list__cell > .select-field > .select-field__label {
+  display: none;
+}
 
-  .fee-list__cell > .input-field > .input-field__input,
-  .fee-list__cell > .select-field > .select-field__select {
-    padding-top: 0.7rem;
-  }
+.fee-list__cell > .input-field > .input-field__input,
+.fee-list__cell > .select-field > .select-field__select {
+  padding-top: 0.7rem;
+}
 </style>
 
 <style scoped lang="scss">
-  @import "../../../../assets/scss/colors";
+@import "../../../../assets/scss/colors";
 
-  .fee-list__filters-wrp {
-    margin-bottom: 4rem;
+.fee-list__filters-wrp {
+  margin-bottom: 4rem;
+}
+
+.fee-list__filters {
+  background-color: $color-content-bg;
+  border-radius: 0.3rem;
+  box-shadow: 0.7px 0.7px 5.6px 0.4px rgba(170, 170, 170, 0.72);
+  padding: 1rem 1.5rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.fee-list__filter {
+  width: calc(33.333333% - 2rem);
+  margin: 1rem;
+}
+
+.fee-list__cell.app-list__cell {
+  display: inline-flex;
+  align-items: stretch;
+
+  & > .app__btn.app__btn--small {
+    padding: 0;
+    min-width: inherit;
   }
 
-  .fee-list__filters {
-    background-color: $color-content-bg;
-    border-radius: 0.3rem;
-    box-shadow: 0.7px 0.7px 5.6px 0.4px rgba(170, 170, 170, 0.72);
-    padding: 1rem 1.5rem 1.5rem;
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
+  & > .app__btn + .app__btn {
+    margin-left: 1rem;
+  }
+}
+
+.fee-list__li--hidden-form {
+  flex: 0;
+  opacity: 0;
+}
+
+.fee-list__btn-max {
+  display: flex;
+  justify-content: center;
+  min-width: 2rem;
+
+  &:enabled:hover {
+    opacity: 0.8;
+    cursor: pointer;
   }
 
-  .fee-list__filter {
-    width: calc(33.333333% - 2rem);
-    margin: 1rem;
+  & > svg {
+    width: 1.8rem;
+    height: 1.8rem;
   }
 
-  .fee-list__cell.app-list__cell {
-    display: inline-flex;
-    align-items: stretch;
-
-    & > .app__btn.app__btn--small {
-      padding: 0;
-      min-width: inherit;
-    }
-
-    & > .app__btn + .app__btn {
-      margin-left: 1rem;
-    }
+  &:disabled {
+    fill: $color-unfocused;
+    cursor: default;
   }
-
-  .fee-list__li--hidden-form {
-    flex: 0;
-    opacity: 0;
-  }
-
-  .fee-list__btn-max {
-    display: flex;
-    justify-content: center;
-    min-width: 2rem;
-
-    &:enabled:hover {
-      opacity: 0.8;
-      cursor: pointer;
-    }
-
-    & > svg {
-      width: 1.8rem;
-      height: 1.8rem;
-    }
-
-    &:disabled {
-      fill: $color-unfocused;
-      cursor: default;
-    }
-  }
+}
 </style>

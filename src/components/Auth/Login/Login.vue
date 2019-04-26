@@ -103,6 +103,7 @@ export default {
     buttonsDisabled () {
       return this.$store.getters.showLoader
     },
+
     seedLoginEnabled () {
       return config.FEATURES.SEED_AUTH
     },

@@ -79,6 +79,7 @@ export default {
       this.view.mode = VIEW_MODES_VERBOSE.user
       this.view.operation = null
     },
+
     back () {
       if (this.view.mode === VIEW_MODES_VERBOSE.user) {
         this.$emit(EVENTS.back)
@@ -124,6 +125,7 @@ export default {
     transform: translate(-50%, -50%);
   }
 }
+
 .users-show__details-wrp {
   max-width: 104rem;
   margin-bottom: 7rem;

@@ -99,12 +99,15 @@
 </template>
 
 <script>
-import { AssetAmountFormatter } from '@comcom/formatters'
-import { ASSET_PAIR_POLICIES_VERBOSE } from '@/constants'
-import 'mdi-vue/HelpCircleIcon'
-import { ApiCallerFactory } from '@/api-caller-factory'
-import { ErrorHandler } from '@/utils/ErrorHandler'
 import { CollectionLoader } from '@/components/common'
+import { AssetAmountFormatter } from '@comcom/formatters'
+
+import { ApiCallerFactory } from '@/api-caller-factory'
+import { ASSET_PAIR_POLICIES_VERBOSE } from '@/constants'
+
+import { ErrorHandler } from '@/utils/ErrorHandler'
+
+import 'mdi-vue/HelpCircleIcon'
 
 export default {
   components: {
@@ -151,45 +154,44 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-  .asset-pairs {
-    max-width: 72rem;
-  }
+.asset-pairs {
+  max-width: 72rem;
+}
 
-  .asset-pair__policy-tip {
-    position: relative;
+.asset-pair__policy-tip {
+  position: relative;
 
-    &:hover {
-      .asset-pairs__policies-list {
-        display: block;
-      }
+  &:hover {
+    .asset-pairs__policies-list {
+      display: block;
     }
   }
+}
 
-  .app-list__cell--policy {
-    align-items: center;
-    display: flex;
-    overflow: visible;
-  }
+.app-list__cell--policy {
+  align-items: center;
+  display: flex;
+  overflow: visible;
+}
 
-  .asset-pairs__policies-list {
-    background: rgba(10, 6, 9, 0.75);
-    border-radius: 3px;
-    bottom: -15px;
-    color: #fff;
-    display: none;
-    right: 0;
-    position: absolute;
-  }
+.asset-pairs__policies-list {
+  background: rgba(10, 6, 9, 0.75);
+  border-radius: 3px;
+  bottom: -15px;
+  color: #fff;
+  display: none;
+  right: 0;
+  position: absolute;
+}
 
-  .asset-pairs__policies-list-item {
-    display: inline-block;
-    padding: 5px 25px;
-  }
+.asset-pairs__policies-list-item {
+  display: inline-block;
+  padding: 5px 25px;
+}
 
-  .asset-pairs__tip-icon {
-    cursor: help;
-    padding: .5rem;
-    width: 2.6rem;
-  }
-
+.asset-pairs__tip-icon {
+  cursor: help;
+  padding: .5rem;
+  width: 2.6rem;
+}
 </style>

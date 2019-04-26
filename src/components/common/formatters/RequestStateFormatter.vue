@@ -2,7 +2,8 @@
   <span
     class="request-state-formatter capitalized"
     :is-colored="isColored"
-    :data-code="state">
+    :data-code="state"
+  >
     {{ format(state) }}
   </span>
 </template>

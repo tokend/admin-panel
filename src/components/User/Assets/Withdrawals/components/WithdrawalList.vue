@@ -119,20 +119,25 @@
 </template>
 
 <script>
+import SelectField from '@comcom/fields/SelectField'
+import InputField from '@comcom/fields/InputField'
+
+import Modal from '@comcom/modals/Modal'
+import WithdrawalDetails from './WithdrawalDetails'
+
 import api from '@/api'
 import { Sdk } from '@/sdk'
+
 import {
   DEFAULT_QUOTE_ASSET,
   REQUEST_STATES,
   ASSET_POLICIES,
 } from '@/constants'
+
 import { verbozify } from '@/utils/verbozify'
 import localize from '@/utils/localize'
-import SelectField from '@comcom/fields/SelectField'
-import InputField from '@comcom/fields/InputField'
-import Modal from '@comcom/modals/Modal'
-import WithdrawalDetails from './WithdrawalDetails'
 import _ from 'lodash'
+
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
@@ -162,7 +167,9 @@ export default {
 
   watch: {
     'filters.state' () { this.getList() },
+
     'filters.asset' () { this.getList() },
+
     'filters.requestor': _.throttle(function () { this.getList() }, 1000),
   },
 
@@ -224,5 +231,4 @@ export default {
 .withdrawal-list__filters-wrp {
   margin-bottom: 4rem;
 }
-
 </style>

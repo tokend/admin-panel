@@ -10,7 +10,8 @@
       :value="value"
       :required="required"
       :autofocus="autofocus"
-      @change="onChange">
+      @change="onChange"
+    >
       <option
         class="select-field__default-option"
         :selected="!value"
@@ -52,20 +53,6 @@ export default {
     disabled: { type: Boolean, default: false },
     title: { type: [String, Number], default: undefined },
     required: { type: Boolean, default: true },
-  },
-
-  data () {
-    return {
-      // data
-    }
-  },
-
-  computed: {
-    // computed
-  },
-
-  created () {
-    // created
   },
 
   methods: {

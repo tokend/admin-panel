@@ -78,6 +78,7 @@ export default {
       uploadBtnDisable: false,
     }
   },
+
   methods: {
     async onFileChange (event) {
       const files = event.target.files || event.dataTransfer.files
@@ -89,6 +90,7 @@ export default {
       this.transaction = fileData.transaction
       this.source = fileData.source
     },
+
     readFile (file) {
       // eslint-disable-next-line promise/avoid-new
       return new Promise(function (resolve) {
@@ -101,6 +103,7 @@ export default {
         reader.readAsText(file)
       })
     },
+
     clear () {
       this.accountId = ''
       this.asset = ''
@@ -111,6 +114,7 @@ export default {
         input.value = ''
       }
     },
+
     async upload () {
       this.uploadBtnDisable = true
       try {
@@ -122,6 +126,7 @@ export default {
       }
       this.uploadBtnDisable = false
     },
+
     async sendTx () {
       const transaction = new Sdk.base.Transaction(this.transaction)
       transaction.sign(this.$store.getters.keypair)

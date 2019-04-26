@@ -12,11 +12,8 @@
 
 <script>
 import FeeList from './components/FeeList'
+
 export default {
   components: { FeeList },
 }
 </script>
-
-<style scoped>
-
-</style>

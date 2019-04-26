@@ -117,6 +117,7 @@
 
 <script>
 import { AssetPair } from '../../models/AssetPair'
+
 import { AssetAmountFormatter, DateFormatter } from '@comcom/formatters'
 import { EmailGetter } from '@comcom/getters'
 import Modal from '@comcom/modals/Modal'

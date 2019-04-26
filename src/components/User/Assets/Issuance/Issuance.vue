@@ -26,10 +26,11 @@
 </template>
 
 <script>
+import { Tabs, Tab } from '@comcom/Tabs'
+
 import IssuanceForm from './components/IssuanceForm.vue'
 import IssuanceRequestList from './components/IssuanceRequestList.vue'
 import IssuanceHistory from './components/IssuanceHistory.vue'
-import { Tabs, Tab } from '@comcom/Tabs'
 
 export default {
   components: {

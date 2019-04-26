@@ -7,11 +7,11 @@
         label="Request type"
       >
         <option
-          v-for="type in Object.keys(ASSET_REQUEST_TYPES)"
-          :value="ASSET_REQUEST_TYPES[type].value"
-          :key="type"
+          v-for="requestType in Object.keys(ASSET_REQUEST_TYPES)"
+          :value="ASSET_REQUEST_TYPES[requestType].value"
+          :key="requestType"
         >
-          {{ ASSET_REQUEST_TYPES[type].text }}
+          {{ ASSET_REQUEST_TYPES[requestType].text }}
         </option>
       </select-field>
       <select-field
@@ -109,20 +109,22 @@
 </template>
 
 <script>
-import api from '@/api'
-import { Sdk } from '@/sdk'
 import InputField from '@comcom/fields/InputField'
 import SelectField from '@comcom/fields/SelectField'
-import {
-  CREATE_ASSET_REQUEST_STATES,
-  REQUEST_STATES_STR,
-} from '@/constants'
-import _ from 'lodash'
-import { ErrorHandler } from '@/utils/ErrorHandler'
-import { snakeToCamelCase } from '@/utils/un-camel-case'
+
 import { CollectionLoader } from '@/components/common'
+
+import api from '@/api'
+import { Sdk } from '@/sdk'
 import { ApiCallerFactory } from '@/api-caller-factory'
+
+import { CREATE_ASSET_REQUEST_STATES, REQUEST_STATES_STR } from '@/constants'
+
+import _ from 'lodash'
 import { clearObject } from '@/utils/clearObject'
+import { snakeToCamelCase } from '@/utils/un-camel-case'
+
+import { ErrorHandler } from '@/utils/ErrorHandler'
 
 const ASSET_REQUEST_TYPES = Object.freeze({
   create: {
@@ -160,10 +162,13 @@ export default {
 
   watch: {
     'filters.requestType' () { this.reloadCollectionLoader() },
+
     'filters.state' () { this.reloadCollectionLoader() },
+
     'filters.requestor': _.throttle(function () {
       this.reloadCollectionLoader()
     }, 1000),
+
     'filters.asset': _.throttle(function () {
       this.reloadCollectionLoader()
     }, 1000),
@@ -171,6 +176,7 @@ export default {
 
   methods: {
     snakeToCamelCase,
+
     async getList () {
       this.isPending = true
       let response = {}
@@ -199,9 +205,11 @@ export default {
     setList (data) {
       this.list = data
     },
+
     async extendList (data) {
       this.list = this.list.concat(data)
     },
+
     async getRequestorAccountId (requestor) {
       if (Sdk.base.Keypair.isValidPublicKey(requestor)) {
         return requestor

@@ -11,11 +11,13 @@
 </template>
 
 <script>
-import config from '@/config'
-import 'mdi-vue/OpenInNewIcon'
-import { DOCUMENTS_POLICIES } from '@/constants'
 import { ApiCallerFactory } from '@/api-caller-factory'
+import { DOCUMENTS_POLICIES } from '@/constants'
+
+import config from '@/config'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+
+import 'mdi-vue/OpenInNewIcon'
 
 export default {
   props: {
@@ -52,6 +54,7 @@ export default {
       }
     },
   },
+
   created () {
     if (this.fileType === DOCUMENTS_POLICIES.private) {
       if (!this.fileUrl) {
@@ -59,6 +62,7 @@ export default {
       }
     }
   },
+
   methods: {
     async getPrivateDocumentUrl (key) {
       try {

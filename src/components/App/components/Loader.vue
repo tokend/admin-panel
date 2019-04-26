@@ -9,18 +9,22 @@
 <script>
 export default {
   name: 'loading-screen',
+
   data () {
     return {
       intervalId: '',
       rotation: 0,
     }
   },
+
   created () {
     this.intervalId = window.setInterval(this.rotate, 10)
   },
+
   destroyed () {
     window.clearInterval(this.intervalId)
   },
+
   methods: {
     rotate () {
       this.rotation++

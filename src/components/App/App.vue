@@ -47,18 +47,22 @@
 </template>
 
 <script>
-import config from '../../config'
 import StatusMessage from './components/StatusMessage'
 import IdleLogout from './components/IdleLogout.vue'
 import VerifyTfa from './components/VerifyTfa'
 import LoadingScreen from './components/Loader'
-import UAParser from 'ua-parser-js'
 import NoSupportMessage from './components/IERestrictionMessage.vue'
+
+import UAParser from 'ua-parser-js'
+
 import { Sdk } from '@/sdk'
+import { ApiCallerFactory } from '@/api-caller-factory'
+import config from '../../config'
+
 import { Wallet } from '@tokend/js-sdk'
 
 import './scss/app.scss'
-import { ApiCallerFactory } from '@/api-caller-factory'
+
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { snakeToCamelCase } from '@/utils/un-camel-case'
 

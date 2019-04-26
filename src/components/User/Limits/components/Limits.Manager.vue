@@ -12,13 +12,13 @@
                 label="Account type"
               >
                 <option
-                  v-for="type in Object.values(ACCOUNT_ROLES)"
-                  v-show="ACCOUNT_ROLES_VERBOSE[type]"
-                  :key="type"
-                  :value="type"
-                  :selected="type === +filters.accountRole"
+                  v-for="role in Object.values(ACCOUNT_ROLES)"
+                  v-show="ACCOUNT_ROLES_VERBOSE[role]"
+                  :key="role"
+                  :value="role"
+                  :selected="role === +filters.accountRole"
                 >
-                  {{ ACCOUNT_ROLES_VERBOSE[type] }}
+                  {{ ACCOUNT_ROLES_VERBOSE[role] }}
                 </option>
               </select-field>
             </div>
@@ -79,7 +79,7 @@
               Payment limits
             </h3>
             <div class="limits-manager__limits-list-inner">
-              <template v-for="(type,i) in LIMITS_TYPES">
+              <template v-for="(type, i) in LIMITS_TYPES">
                 <div class="limits-manager__limit-row" :key="i">
                   <span class="limits-manager__limit-type">
                     {{ type.replace('Out', '') }}
@@ -187,17 +187,15 @@
 </template>
 
 <script>
-import api from '@/api'
-import { Sdk } from '@/sdk'
+import { SelectField, InputField } from '@comcom/fields'
+import { Tabs, Tab } from '@comcom/Tabs'
+
 import get from 'lodash/get'
 import throttle from 'lodash/throttle'
 import pick from 'lodash/pick'
-import { SelectField, InputField } from '@comcom/fields'
 
-import {
-  Tabs,
-  Tab,
-} from '@comcom/Tabs'
+import api from '@/api'
+import { Sdk } from '@/sdk'
 
 import { STATS_OPERATION_TYPES, DEFAULT_MAX_AMOUNT } from '@/constants'
 import config from '@/config'
@@ -223,6 +221,7 @@ export default {
     Tabs,
     Tab,
   },
+
   data: _ => ({
     filters: {
       asset: '',
@@ -250,6 +249,7 @@ export default {
     }),
     numericValueRegExp: /^\d*\.?\d*$/,
   }),
+
   watch: {
     assets: {
       handler: function () {
@@ -258,6 +258,7 @@ export default {
       },
       immediate: true,
     },
+
     'filters.accountRole': {
       handler: function (value) {
         if (value) {
@@ -269,6 +270,7 @@ export default {
       },
       immediate: true,
     },
+
     'filters.asset': {
       handler: function () {
         this.setFilters()
@@ -276,6 +278,7 @@ export default {
       },
       immediate: true,
     },
+
     'specificUserAddress': {
       handler: throttle(async function (value) {
         await this.setFilters()
@@ -284,9 +287,11 @@ export default {
       immediate: true,
     },
   },
+
   async created () {
     await this.getAssets()
   },
+
   methods: {
     async onTabChange (selectedTab) {
       this.selectedTabName = selectedTab.tab.name
@@ -295,6 +300,7 @@ export default {
         this.specificUserAddress = ''
       }
     },
+
     async getLimits () {
       if (!this.filters.asset) return
       const [
@@ -370,9 +376,11 @@ export default {
         ErrorHandler.processWithoutFeedback(e)
       }
     },
+
     async getAccountIdByEmail (email) {
       this.filters.address = await api.users.getAccountIdByEmail(email)
     },
+
     // it's a quick fix of the limits validation. Need to refactor it ASAP
     isValidLimits (limits) {
       for (const limit of Object.values(pick(limits, LIMITS_TYPES))) {
@@ -402,6 +410,7 @@ export default {
       }
       return true
     },
+
     isAccountAddressValid () {
       const isAddressInvalid = !this.filters.address &&
         this.selectedTabName === TAB_NAMES.account
@@ -413,16 +422,20 @@ export default {
         return true
       }
     },
+
     async setFilters () {
       if (!this.filters.asset) this.filters.asset = get(this.assets, '[0].code')
+
       if (!this.filters.accountRole) {
         this.filters.accountRole = config.ACCOUNT_ROLES.general + ''
       }
+
       if (this.specificUserAddress) {
         // Both accountRole and accountId cant be requested at same time
         this.filters.accountRole = ''
         const emailRegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
         const idLength = 56
+
         if (emailRegExp.test(this.specificUserAddress)) {
           await this.getAccountIdByEmail(this.specificUserAddress)
         } else if (this.specificUserAddress.length === idLength) {
@@ -430,6 +443,7 @@ export default {
         }
       }
     },
+
     normalizeLimitAmount (limit) {
       return limit >= DEFAULT_MAX_AMOUNT ? '' : limit
     },
@@ -438,55 +452,55 @@ export default {
 </script>
 
 <style lang="scss">
-  .limits-manager {
-    /*max-width: 80rem;*/
-    margin-top: 2rem;
-  }
+.limits-manager {
+  /*max-width: 80rem;*/
+  margin-top: 2rem;
+}
 
-  .limits-manager__filters,
-  .limits-manager__inner {
-    display: flex;
-  }
+.limits-manager__filters,
+.limits-manager__inner {
+  display: flex;
+}
 
-  .limits-manager__filter {
-    margin-bottom: 5rem;
-    width: 100%;
-    &:first-child { margin-right: 2rem }
-  }
+.limits-manager__filter {
+  margin-bottom: 5rem;
+  width: 100%;
+  &:first-child { margin-right: 2rem }
+}
 
-  .limits-manager-filters,
-  .limits-manager__limit-row {
-    display: flex;
-    align-items: center;
-  }
+.limits-manager-filters,
+.limits-manager__limit-row {
+  display: flex;
+  align-items: center;
+}
 
-  .limits-manager-filters__field,
-  .limits-manager__limits-list-wrp {
-    &:first-child:not(:only-child),
-    &:not(:last-child) {
-      margin-right: 5rem;
-    }
-    width: 100%;
+.limits-manager-filters__field,
+.limits-manager__limits-list-wrp {
+  &:first-child:not(:only-child),
+  &:not(:last-child) {
+    margin-right: 5rem;
   }
+  width: 100%;
+}
 
-  .limits-manager-filters__field {
-    margin-bottom: 5rem;
-  }
+.limits-manager-filters__field {
+  margin-bottom: 5rem;
+}
 
-  .limits-manager__limits-list {
-    margin-bottom: 4rem;
-  }
+.limits-manager__limits-list {
+  margin-bottom: 4rem;
+}
 
-  .limits-manager__limit-type {
-    margin-right: 1rem;
-    min-width: 5rem;
-    font-size: 1.2rem;
-    font-weight: 600;
-    padding: 1.7rem 0 0.6rem 0;
-  }
+.limits-manager__limit-type {
+  margin-right: 1rem;
+  min-width: 5rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  padding: 1.7rem 0 0.6rem 0;
+}
 
-  .limits-manager-filters__specific-user-field {
-    margin-bottom: 5rem;
-    width: 50%;
-  }
+.limits-manager-filters__specific-user-field {
+  margin-bottom: 5rem;
+  width: 50%;
+}
 </style>

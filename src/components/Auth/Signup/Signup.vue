@@ -111,18 +111,23 @@
 <script>
 import Vue from 'vue'
 import Qrcode from 'qrcode.vue'
+
 import StellarWallet from 'tokend-wallet-js-sdk'
+
+import InputField from '@comcom/fields/InputField'
+
 import { Sdk } from '@/sdk'
 import { ApiCallerFactory } from '@/api-caller-factory'
 import config from '@/config'
-import GAuth from '../../settings/GAuth.vue'
-import { ErrorHandler } from '@/utils/ErrorHandler'
 
-import InputField from '@comcom/fields/InputField'
+import GAuth from '../../settings/GAuth.vue'
+
+import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   name: 'sign-up',
   components: { GAuth, Qrcode, InputField },
+
   data () {
     return {
       credentials: {

@@ -127,15 +127,19 @@
 </template>
 
 <script>
-import api from '@/api'
-import { SALE_STATES } from '@/constants'
 import { InputField, TickField, InputDateField } from '@comcom/fields'
 import { EmailGetter } from '@comcom/getters'
-import _ from 'lodash'
+import { CollectionLoader } from '@/components/common'
+
+import api from '@/api'
 import { Sdk } from '@/sdk'
+
+import { SALE_STATES } from '@/constants'
+
+import _ from 'lodash'
+
 import config from '@/config'
 import { ErrorHandler } from '@/utils/ErrorHandler'
-import { CollectionLoader } from '@/components/common'
 
 export default {
   components: {
@@ -171,19 +175,24 @@ export default {
     'filters.openOnly' () {
       this.reloadCollectionLoader()
     },
+
     'owner': _.throttle(async function () {
       this.filters.owner = await this.getOwner()
       this.reloadCollectionLoader()
     }, 1000),
+
     'filters.name': _.throttle(function () {
       this.reloadCollectionLoader()
     }, 1000),
+
     'filters.baseAsset': _.throttle(function () {
       this.reloadCollectionLoader()
     }, 1000),
+
     'filtersDate.startDate' () {
       this.filterByDate(this.rawList)
     },
+
     'filtersDate.endDate' () {
       this.filterByDate(this.rawList)
     },
@@ -232,6 +241,7 @@ export default {
             +new Date(this.filtersDate.startDate)
         })
       }
+
       if (this.filtersDate.endDate) {
         sortedList = sortedList.filter(sale => {
           return +new Date(sale.endTime) <=

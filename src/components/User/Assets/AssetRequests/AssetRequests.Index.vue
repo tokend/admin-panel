@@ -12,9 +12,7 @@
 import AssetRequestList from './components/AssetRequestList'
 
 export default {
-  components: {
-    AssetRequestList,
-  },
+  components: { AssetRequestList },
 }
 </script>
 

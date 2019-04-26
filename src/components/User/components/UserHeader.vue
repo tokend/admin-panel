@@ -11,8 +11,12 @@
 <script>
 import UserAccountWidget from './UserAccountWidget'
 import ConfigChecker from './ConfigChecker'
+
 export default {
-  components: { UserAccountWidget, ConfigChecker },
+  components: {
+    UserAccountWidget,
+    ConfigChecker,
+  },
 }
 </script>
 

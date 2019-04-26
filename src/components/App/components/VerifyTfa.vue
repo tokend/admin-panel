@@ -47,7 +47,6 @@
 <script>
 import Vue from 'vue'
 import { InputField } from '@comcom/fields'
-
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {

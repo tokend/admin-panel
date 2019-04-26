@@ -25,12 +25,16 @@
 
 <script>
 import Bus from '@/utils/EventBus'
+
 import { ASSET_POLICIES } from '@/constants'
+import config from '@/config'
+
 import api from '@/api'
 import { Sdk } from '@/sdk'
-import config from '@/config'
-import 'mdi-vue/AlertOutlineIcon'
+
 import store from '@/store'
+
+import 'mdi-vue/AlertOutlineIcon'
 
 const CHECK_LIST = [
   {

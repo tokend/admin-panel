@@ -66,14 +66,18 @@
 
 <script>
 import Vue from 'vue'
+
 import moment from 'moment'
 import get from 'lodash/get'
-import { formatAssetAmount } from '@/utils/formatters'
+
 import { OperationCounterparty } from '@comcom/getters'
 import { CollectionLoader } from '@/components/common'
-import { ErrorHandler } from '@/utils/ErrorHandler'
+
 import { ApiCallerFactory } from '@/api-caller-factory'
+
+import { formatAssetAmount } from '@/utils/formatters'
 import { clearObject } from '@/utils/clearObject'
+import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   components: {
@@ -149,6 +153,3 @@ export default {
   },
 }
 </script>
-
-<style scoped lang="scss">
-</style>

@@ -1,17 +1,20 @@
-import { Sdk } from '@/sdk'
-import localize from '@/utils/localize'
 import SelectField from '@comcom/fields/SelectField'
-
-import { REQUEST_STATES, ASSET_POLICIES } from '@/constants'
 import { CollectionLoader } from '@/components/common'
-import { ErrorHandler } from '@/utils/ErrorHandler'
+
+import { Sdk } from '@/sdk'
+import { REQUEST_STATES, ASSET_POLICIES } from '@/constants'
+
+import localize from '@/utils/localize'
+
 import config from '@/config'
+import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   components: {
     SelectField,
     CollectionLoader,
   },
+
   data () {
     return {
       REQUEST_STATES,
@@ -35,12 +38,19 @@ export default {
     }
   },
 
+  watch: {
+    'filters.state' () { this.reloadCollectionLoader() },
+
+    'filters.asset' () { this.reloadCollectionLoader() },
+  },
+
   async created () {
     await this.getAssets()
   },
 
   methods: {
     localize,
+
     async getAssets () {
       try {
         const response = await Sdk.horizon.assets.getAll()
@@ -94,10 +104,5 @@ export default {
     reloadCollectionLoader () {
       this.$refs.collectionLoaderBtn.loadFirstPage()
     },
-  },
-
-  watch: {
-    'filters.state' () { this.reloadCollectionLoader() },
-    'filters.asset' () { this.reloadCollectionLoader() },
   },
 }

@@ -13,6 +13,7 @@
 <script>
 import PendingParticipants from './PendingParticipants'
 import ClosedParticipants from './ClosedParticipants'
+
 export default {
   components: {
     PendingParticipants,

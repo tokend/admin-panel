@@ -24,12 +24,14 @@ export default {
     async getHref () {
       this.isLoaded = false
       this.isFailed = false
+
       try {
         if (!this.fileKey) {
           this.isNoFile = true
           this.isFailed = true
           return
         }
+
         const { data } = await Sdk.api.documents.get(this.fileKey)
         this.href = data.url
         this.isLoaded = true

@@ -40,6 +40,7 @@
 import { Sdk } from '@/sdk'
 import { SelectField } from '@comcom/fields'
 import { AssetPair } from '../models/AssetPair.js'
+
 export default {
   components: {
     SelectField,

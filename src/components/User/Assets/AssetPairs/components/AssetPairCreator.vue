@@ -99,12 +99,18 @@
 
 <script>
 import { TickField, InputField } from '../../../../common/fields'
+
 import { ASSET_PAIR_POLICIES, DEFAULT_INPUT_STEP } from '../../../../../constants'
 import api from '@/api'
+
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
-  components: { TickField, InputField },
+  components: {
+    TickField,
+    InputField,
+  },
+
   data: _ => ({
     form: {
       base: '',
@@ -118,6 +124,7 @@ export default {
     ASSET_PAIR_POLICIES,
     DEFAULT_INPUT_STEP,
   }),
+
   methods: {
     async submit () {
       if (!window.confirm('Please confirm this action')) return
@@ -127,6 +134,7 @@ export default {
           ...this.form,
           policies: this.form.policies.reduce((sum, policy) => sum | policy, 0),
         })
+
         this.$store.dispatch('SET_INFO', 'Pair has been created.')
         this.$router.push({ name: 'assets.assetPairs.index' })
       } catch (error) {
@@ -139,11 +147,11 @@ export default {
 </script>
 
 <style scoped>
-  .asset-pair-creator__checkboxes {
-    margin: 3.5rem 0 5rem;
-  }
+.asset-pair-creator__checkboxes {
+  margin: 3.5rem 0 5rem;
+}
 
-  .asset-pair-creator__checkbox {
-    margin-bottom: 1rem;
-  }
+.asset-pair-creator__checkbox {
+  margin-bottom: 1rem;
+}
 </style>

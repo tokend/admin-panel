@@ -13,12 +13,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import "../../../assets/scss/colors";
-  .limits {
-    padding: 1rem 3rem 3rem;
-    border-radius: 2px;
-    background: $color-content-bg;
-    max-width: 120rem;
-    margin: auto;
-  }
+@import "../../../assets/scss/colors";
+
+.limits {
+  padding: 1rem 3rem 3rem;
+  border-radius: 2px;
+  background: $color-content-bg;
+  max-width: 120rem;
+  margin: auto;
+}
 </style>

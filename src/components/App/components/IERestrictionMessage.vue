@@ -33,55 +33,30 @@
 <script>
 export default {
   name: 'no-support-message',
-
-  components: {
-    // components
-  },
-
-  props: [],
-
-  data () {
-    return {
-      // data
-    }
-  },
-
-  computed: {
-    // computed
-  },
-
-  created () {
-    // created
-  },
-
-  methods: {
-    // methods
-  },
 }
 </script>
 
 <style lang="scss" scoped>
+.no-support-message {
+  height: 100%;
+  left: 0;
+  top: 0;
+  text-align: center;
+  position: fixed;
+  width: 100%;
 
-  .no-support-message {
-    height: 100%;
-    left: 0;
-    top: 0;
+  .msg {
+    padding-top: 30px;
+  }
+
+  .browser-icons {
+    margin-top: 15px;
     text-align: center;
-    position: fixed;
-    width: 100%;
 
-    .msg {
-      padding-top: 30px;
-    }
-
-    .browser-icons {
-      margin-top: 15px;
-      text-align: center;
-
-      img {
-        height: 16px;
-        width: 16px;
-      }
+    img {
+      height: 16px;
+      width: 16px;
     }
   }
+}
 </style>

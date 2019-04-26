@@ -72,14 +72,15 @@
 </template>
 
 <script>
-import { Sdk } from '@/sdk'
 import { DateFormatter } from '@comcom/formatters'
 import { EmailGetter } from '@comcom/getters'
 import { SelectField } from '@comcom/fields'
+
+import { Sdk } from '@/sdk'
+
 import get from 'lodash/get'
 
 export default {
-
   components: {
     DateFormatter,
     EmailGetter,

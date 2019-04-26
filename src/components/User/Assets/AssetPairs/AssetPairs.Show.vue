@@ -10,9 +10,7 @@
 import AssetPairManager from './components/AssetPairManager'
 
 export default {
-  components: {
-    AssetPairManager,
-  },
+  components: { AssetPairManager },
 
   props: {
     base: { type: String, required: true },
@@ -22,7 +20,7 @@ export default {
 </script>
 
 <style scoped>
-  .asset-pairs-show__mgr-wrp {
-    max-width: none;
-  }
+.asset-pairs-show__mgr-wrp {
+  max-width: none;
+}
 </style>

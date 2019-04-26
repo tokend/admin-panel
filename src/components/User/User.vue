@@ -11,6 +11,7 @@
 
 <script>
 import UserSidebar from './components/UserSidebar'
+
 export default {
   components: { UserSidebar },
 }

@@ -126,24 +126,28 @@
 </template>
 
 <script>
-import { EmailGetter } from '@comcom/getters'
-import { formatDate } from '@/utils/formatters'
 import Vue from 'vue'
+
+import InputField from '@comcom/fields/InputField'
+import SelectField from '@comcom/fields/SelectField'
+
+import { EmailGetter } from '@comcom/getters'
+import { CollectionLoader } from '@/components/common'
+
 import UserView from '../Users/Users.Show'
 
-import SelectField from '@comcom/fields/SelectField'
-import InputField from '@comcom/fields/InputField'
+import { formatDate } from '@/utils/formatters'
 import { snakeToCamelCase } from '@/utils/un-camel-case'
+import { clearObject } from '@/utils/clearObject'
+
+import throttle from 'lodash/throttle'
 
 import { REQUEST_STATES, KYC_REQUEST_STATES } from '@/constants'
 
 import config from '@/config'
 import { ApiCallerFactory } from '@/api-caller-factory'
-import { clearObject } from '@/utils/clearObject'
-import { ErrorHandler } from '@/utils/ErrorHandler'
-import { CollectionLoader } from '@/components/common'
 
-import throttle from 'lodash/throttle'
+import { ErrorHandler } from '@/utils/ErrorHandler'
 
 const VIEW_MODES_VERBOSE = Object.freeze({
   index: 'index',
@@ -179,6 +183,7 @@ export default {
       }[item.requestDetails.accountRoleToSet]
     },
   },
+
   data () {
     return {
       isLoading: false,
@@ -203,7 +208,9 @@ export default {
 
   watch: {
     'filters.state' () { this.reloadCollectionLoader() },
+
     'filters.roleToSet' () { this.reloadCollectionLoader() },
+
     'filters.address': throttle(function () {
       this.reloadCollectionLoader()
     }, 1000),
@@ -211,6 +218,7 @@ export default {
 
   methods: {
     snakeToCamelCase,
+
     async loadList () {
       this.isLoading = true
       let response = {}

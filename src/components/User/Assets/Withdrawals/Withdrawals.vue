@@ -6,10 +6,6 @@
 
 <script>
 export default {
-
+  name: 'withdrawals',
 }
 </script>
-
-<style scoped>
-
-</style>

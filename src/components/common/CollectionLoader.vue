@@ -40,6 +40,7 @@ const DEFAULT_PAGE_LIMIT = 10
 
 export default {
   name: 'collection-loader',
+
   props: {
     firstPageLoader: {
       type: Function,
@@ -50,27 +51,33 @@ export default {
       default: DEFAULT_PAGE_LIMIT,
     },
   },
+
   data: _ => ({
     nextPageLoader: () => {},
     isCollectionFetched: false,
   }),
+
   watch: {
     firstPageLoader: {
       immediate: true,
       handler: 'loadFirstPage',
     },
   },
+
   methods: {
     loadFirstPage () {
       this.loadPage(EVENTS.firstPageLoad, this.firstPageLoader)
     },
+
     loadNextPage () {
       this.loadPage(EVENTS.nextPageLoad, this.nextPageLoader)
     },
+
     async loadPage (eventName, loaderFn) {
       try {
         const response = await loaderFn()
         this.$emit(eventName, response.data)
+
         this.nextPageLoader = response.fetchNext
         this.isCollectionFetched = response.data.length < this.pageLimit
       } catch (e) {

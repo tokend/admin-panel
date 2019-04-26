@@ -6,6 +6,7 @@
 
 <script>
 import { formatDate } from '@/utils/formatters'
+
 export default {
   props: {
     date: { type: String, required: true },
@@ -17,7 +18,3 @@ export default {
   },
 }
 </script>
-
-<style scoped>
-
-</style>

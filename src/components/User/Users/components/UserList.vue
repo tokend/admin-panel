@@ -129,17 +129,24 @@
 
 <script>
 import Vue from 'vue'
-import { clearObject } from '@/utils/clearObject'
+
 import SelectField from '@comcom/fields/SelectField'
 import InputField from '@comcom/fields/InputField'
+
 import { AccountStateGetter } from '@comcom/getters'
+import { CollectionLoader } from '@/components/common'
+
 import UserView from '../Users.Show'
+
+import { clearObject } from '@/utils/clearObject'
 import _ from 'lodash'
-import 'mdi-vue/DownloadIcon'
+
 import { ApiCallerFactory } from '@/api-caller-factory'
 import config from '@/config'
+
 import { ErrorHandler } from '@/utils/ErrorHandler'
-import { CollectionLoader } from '@/components/common'
+
+import 'mdi-vue/DownloadIcon'
 
 const VIEW_MODES_VERBOSE = Object.freeze({
   index: 'index',
@@ -179,12 +186,15 @@ export default {
     'filters.state' () {
       this.reloadCollectionLoader()
     },
+
     'filters.role' () {
       this.reloadCollectionLoader()
     },
+
     'filters.email': _.throttle(function () {
       this.reloadCollectionLoader()
     }, 1000),
+
     'filters.address': _.throttle(function () {
       this.reloadCollectionLoader()
     }, 1000),

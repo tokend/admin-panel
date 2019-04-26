@@ -18,8 +18,7 @@
 <script>
 export default {
   name: 'switch-field',
-  components: {
-  },
+
   props: {
     label: { type: String, default: 'Label' },
     // eslint-disable-next-line vue/require-prop-types
@@ -34,12 +33,12 @@ export default {
     required: { type: Boolean, default: false },
     autofocus: { type: Boolean, default: false },
   },
-  data: _ => ({
-  }),
+
   computed: {
     id () {
       return `tick-field-${this._uid}`
     },
+
     checked () {
       const model = this.value
       const value = this.cbValue
@@ -52,11 +51,9 @@ export default {
         case 'number':
           result = model & +value
           break
-
         case 'array':
           result = ~model.findIndex((item) => item === value)
           break
-
         default:
           result = model
           break
@@ -64,10 +61,7 @@ export default {
       return result
     },
   },
-  watch: {
-  },
-  created () {
-  },
+
   methods: {
     onChange (event) {
       const isChecked = event.target.checked
@@ -95,6 +89,7 @@ export default {
           break
       }
     },
+
     typeof (value) {
       const type = typeof value
 
@@ -114,40 +109,42 @@ export default {
   },
 }
 </script>
-<style lang="scss" scoped>
-  @import "../../../assets/scss/colors";
-  .switch-field {
-    position: relative;
-    display: inline-block;
-    width: 40px;
-    height: 16px;
-    .switch-field__input {
-      display: none;
-    }
-  }
 
-  .switch-field__slider {
+<style lang="scss" scoped>
+@import "../../../assets/scss/colors";
+
+.switch-field {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 16px;
+  .switch-field__input {
+    display: none;
+  }
+}
+
+.switch-field__slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: $color-bg;
+  transition: .4s;
+  -webkit-transition: .4s;
+  &:before {
     position: absolute;
-    cursor: pointer;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background: $color-bg;
+    content: "";
+    height: 22px;
+    width: 22px;
+    left: 0px;
+    bottom: -3px;
+    background-color: $color-content-bg;
     transition: .4s;
     -webkit-transition: .4s;
-    &:before {
-      position: absolute;
-      content: "";
-      height: 22px;
-      width: 22px;
-      left: 0px;
-      bottom: -3px;
-      background-color: $color-content-bg;
-      transition: .4s;
-      -webkit-transition: .4s;
-    }
   }
+}
 
 .switch-field__input:checked + .switch-field__slider {
   background-color: $color-active;

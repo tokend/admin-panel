@@ -39,8 +39,10 @@
 <script>
 import { Sdk } from '@/sdk'
 import { AssetPair } from '../../models/AssetPair'
+
 import PriceChart from './PriceChart.Renderer'
 import ScalePicker from './PriceChart.ScalePicker'
+
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {

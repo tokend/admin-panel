@@ -79,6 +79,7 @@ export default {
       DOCUMENTS_POLICIES,
     }
   },
+
   methods: {
     getFileExtension (file) {
       return file.split(/\.(?=[^.]+$)/)[1]
@@ -88,9 +89,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .request-list__filters-wrp {
-    margin-bottom: 4rem;
-  }
-  .limit-uploaded-docs__list-row { box-shadow: none; }
-  .app-list__cell--center { text-align: center; }
+.request-list__filters-wrp {
+  margin-bottom: 4rem;
+}
+
+.limit-uploaded-docs__list-row { box-shadow: none; }
+
+.app-list__cell--center { text-align: center; }
 </style>

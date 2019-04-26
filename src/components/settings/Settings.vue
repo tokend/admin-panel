@@ -38,9 +38,7 @@ import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   name: 'security',
-  components: {
-    UserHeader,
-  },
+  components: { UserHeader },
 
   data () {
     return {

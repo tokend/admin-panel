@@ -19,15 +19,12 @@
 </template>
 
 <script>
-import 'mdi-vue/PlusIcon'
 import AdminList from './components/AdminList'
+import 'mdi-vue/PlusIcon'
 
 export default {
   name: 'admins',
-
-  components: {
-    AdminList,
-  },
+  components: { AdminList },
 }
 </script>
 

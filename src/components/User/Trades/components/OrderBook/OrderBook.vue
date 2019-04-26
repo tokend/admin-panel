@@ -24,9 +24,12 @@
 
 <script>
 import { Sdk } from '@/sdk'
+
 import OrderTable from './OrderBook.Table'
 import HistoryTable from './OrderBook.History'
+
 import { AssetPair } from '../../models/AssetPair'
+
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {

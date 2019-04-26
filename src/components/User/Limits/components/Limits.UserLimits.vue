@@ -51,13 +51,13 @@ export default {
     rejectReason: '',
     LIMITS_TYPES,
   }),
+
   created () {
     this.userLimits = _pick(this.limits, Object.keys(this.userLimits))
   },
-  methods: {
-  },
 }
 </script>
+
 <style lang="scss" scoped>
 .user-limits__inner {
   display: flex;

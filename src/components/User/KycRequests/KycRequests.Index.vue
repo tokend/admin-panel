@@ -13,7 +13,3 @@ export default {
   components: { RequestList },
 }
 </script>
-
-<style scoped>
-
-</style>

@@ -291,21 +291,29 @@
 </template>
 
 <script>
+import { ImageField, TickField, InputField, SelectField } from '@comcom/fields'
+import { confirmAction } from '@/js/modals/confirmation_message'
+
 import api from '@/api'
 import { Sdk } from '@/sdk'
-import safeGet from 'lodash/get'
-import config from '@/config'
-import Bus from '@/utils/EventBus'
 
-import { ImageField, TickField, InputField, SelectField } from '@comcom/fields'
-import { ASSET_POLICIES, DEFAULT_INPUT_STEP, DOCUMENT_TYPES, ASSET_POLICIES_VERBOSE } from '@/constants'
+import safeGet from 'lodash/get'
+
+import config from '@/config'
+import { ErrorHandler } from '@/utils/ErrorHandler'
+
+import Bus from '@/utils/EventBus'
 import { fileReader } from '@/utils/file-reader'
+
+import {
+  ASSET_POLICIES,
+  DEFAULT_INPUT_STEP,
+  DOCUMENT_TYPES,
+  ASSET_POLICIES_VERBOSE,
+} from '@/constants'
 
 import 'mdi-vue/ChevronDownIcon'
 import 'mdi-vue/ChevronUpIcon'
-
-import { confirmAction } from '@/js/modals/confirmation_message'
-import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   components: {
@@ -364,6 +372,7 @@ export default {
     isExistingAsset () {
       return !!this.assetCode
     },
+
     termsUrl () {
       if (safeGet(this.asset, 'creatorDetails.terms.key')) {
         return `${config.FILE_STORAGE}/${safeGet(this.asset, 'creatorDetails.terms.key')}`
@@ -380,6 +389,7 @@ export default {
 
   methods: {
     safeGet,
+
     async getAsset () {
       try {
         const { data } = await Sdk.horizon.assets.get(this.assetCode)
@@ -400,6 +410,7 @@ export default {
           this.uploadFile(DOCUMENT_TYPES.assetTerms),
           this.uploadFile(DOCUMENT_TYPES.assetLogo),
         ])
+
         let operation
         if (this.isExistingAsset) {
           const logo = {}
@@ -407,12 +418,14 @@ export default {
             logo.key = this.asset.creatorDetails.logo.key
             logo.type = this.asset.creatorDetails.logo.type
           }
+
           const terms = {}
           if (this.asset.creatorDetails.terms) {
             terms.key = this.asset.creatorDetails.terms.key
             terms.type = this.asset.creatorDetails.terms.type
             terms.name = this.asset.creatorDetails.terms.name
           }
+
           operation = Sdk.base.ManageAssetBuilder.assetUpdateRequest({
             requestID: '0',
             code: String(this.asset.code),
@@ -457,8 +470,10 @@ export default {
             },
           })
         }
+
         await Sdk.horizon.transactions.submitOperations(operation)
         Bus.$emit('recheckConfig')
+
         this.$store.dispatch('SET_INFO', 'Submitted successfully.')
         this.$router.push({ name: 'assets.masterAssets.index' })
       } catch (error) {
@@ -472,6 +487,7 @@ export default {
         ErrorHandler.process('Some field is invalid')
         return false
       }
+
       if (!Sdk.base.Keypair.isValidPublicKey(this.asset.preissuedAssetSigner)) {
         ErrorHandler.process('Issuer public key is invalid')
         return false
@@ -488,8 +504,10 @@ export default {
 
     async uploadFile (type) {
       if (!this[type].file) return
+
       const config = await Sdk.api.documents.masterCreate(type, this[type].mime)
       await api.documents.uploadFile(this[type].file, config, this[type].mime)
+
       this.asset.creatorDetails[type === DOCUMENT_TYPES.assetTerms ? 'terms' : 'logo'] = {
         key: config.formData.key,
         name: this[type].name,
@@ -502,6 +520,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "~@/assets/scss/colors";
+
 .asset-manager {
   position: relative;
   padding-top: 3rem;

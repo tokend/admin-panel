@@ -48,6 +48,7 @@
 <script>
 import Vue from 'vue'
 import Qrcode from 'qrcode.vue'
+
 import 'mdi-vue/AppleIcon'
 import 'mdi-vue/AndroidIcon'
 
@@ -80,17 +81,14 @@ export default {
       }
 
       switch (mutation.type) {
-        case 'TFA_FORM_DONE': {
+        case 'TFA_FORM_DONE':
           if (isDone) break
           isDone = true
           this.enableGAuth()
           break
-        }
-
-        case 'TFA_FORM_CLOSE': {
+        case 'TFA_FORM_CLOSE':
           this.clear()
           break
-        }
       }
     })
 
@@ -164,6 +162,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../assets/scss/colors";
+
 .g-auth {
   width: 100%;
 }
@@ -203,5 +202,4 @@ export default {
   align-self: stretch;
   text-align: center;
 }
-
 </style>

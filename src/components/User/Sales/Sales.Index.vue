@@ -8,13 +8,10 @@
 
 <script>
 import SaleList from './components/SaleList'
+
 export default {
   components: {
     SaleList,
   },
 }
 </script>
-
-<style scoped>
-
-</style>

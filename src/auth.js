@@ -1,13 +1,16 @@
 // TODO: refactor this mess
-
 import Vue from 'vue'
+
 import store from './store'
 import router from './router'
+
 import StellarWallet from 'tokend-wallet-js-sdk'
+
 import { Sdk } from '@/sdk'
-import { Wallet } from '@tokend/js-sdk'
 import config from '@/config'
 import { ApiCallerFactory } from '@/api-caller-factory'
+
+import { Wallet } from '@tokend/js-sdk'
 
 const server = {
   'trusted': true,
@@ -32,6 +35,7 @@ export default {
       seed: signingKeys.seed(),
       accountId: signingKeys.accountId(),
     }
+
     const mainData = {
       username: credentials.username.toLowerCase(),
       server: server,

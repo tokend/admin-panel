@@ -16,11 +16,8 @@
 
 <script>
 import UserHeader from '@/components/User/components/UserHeader'
+
 export default {
   components: { UserHeader },
 }
 </script>
-
-<style scoped>
-
-</style>

@@ -27,9 +27,10 @@
 
 <script>
 import { Sdk } from '@/sdk'
-import { ErrorHandler } from '@/utils/ErrorHandler'
-import config from '@/config'
 import { ApiCallerFactory } from '@/api-caller-factory'
+
+import config from '@/config'
+import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   props: {
@@ -99,6 +100,3 @@ export default {
   },
 }
 </script>
-
-<style scoped>
-</style>

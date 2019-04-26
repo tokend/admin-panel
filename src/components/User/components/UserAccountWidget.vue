@@ -36,26 +36,32 @@ export default {
       isPaneActive: false,
     }
   },
+
   computed: {
     ...mapGetters({
       user: getters.GET_USER,
     }),
+
     initials () {
       return `${this.user.name.charAt(0).toUpperCase()}`
     },
+
     fullName () {
       return `${this.user.name}`
     },
   },
+
   methods: {
     togglePane () {
       this.isPaneActive = !this.isPaneActive
       this.detectOpenedModals()
     },
+
     signOut () {
       this.$store.dispatch('LOG_OUT')
       this.$router.push({ name: 'login' })
     },
+
     detectOpenedModals () {
       const listener = (e) => {
         if (e.target.closest('.user-account-widget')) return

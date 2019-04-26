@@ -210,17 +210,19 @@
 </template>
 
 <script>
+import { TextField } from '@comcom/fields'
+
 import { EmailGetter } from '@comcom/getters'
 import Detail from '../../common/details/Detail.Row'
+import Modal from '@comcom/modals/Modal'
+
 import UserDetails from '../Users/components/UserDetails/UserDetails'
 import UserLimits from './components/Limits.UserLimits'
 import DatalistField from './components/Datalist'
 import UploadedDocsList from './components/Limits.UploadedDocsList'
 
-import { TextField } from '@comcom/fields'
-import Modal from '@comcom/modals/Modal'
 import { Sdk } from '@/sdk'
-import { snakeToCamelCase } from '@/utils/un-camel-case'
+import api from '@/api'
 
 import {
   REQUEST_STATES,
@@ -228,13 +230,17 @@ import {
   LIMITS_REQUEST_STATES_STR,
 } from '@/constants'
 import { STATS_OPERATION_TYPES } from '@tokend/js-sdk'
+
+import { snakeToCamelCase } from '@/utils/un-camel-case'
 import { formatDateWithTime } from '../../../utils/formatters'
-import api from '@/api'
+
 import get from 'lodash/get'
 import isEqual from 'lodash/isEqual'
+
+import { ErrorHandler } from '@/utils/ErrorHandler'
+
 import 'mdi-vue/CloseIcon'
 import 'mdi-vue/ChevronLeftIcon'
-import { ErrorHandler } from '@/utils/ErrorHandler'
 
 const DEFAULT_LIMIT_STRUCT = {
   'id': 0,
@@ -294,6 +300,7 @@ export default {
       isReset: false,
     },
   }),
+
   computed: {
     currentLimits () {
       if (!this.limits) return null
@@ -310,6 +317,7 @@ export default {
         statsOpType: this.desiredLimitDetails.operationType,
       }
     },
+
     newLimit () {
       const opType = OPERATION_TYPES[this.desiredLimitDetails.operationType]
 
@@ -321,11 +329,13 @@ export default {
         statsOpType: STATS_OPERATION_TYPES[opType],
       }
     },
+
     uploadedDocuments () {
       if (!this.desiredLimitDetails.documents) return
       return this.desiredLimitDetails.documents
     },
   },
+
   async created () {
     try {
       await this.getRequest()
@@ -337,9 +347,11 @@ export default {
       ErrorHandler.processWithoutFeedback(e)
     }
   },
+
   methods: {
     get,
     formatDateWithTime,
+
     async getRequest () {
       this.$store.commit('OPEN_LOADER')
       const request = await api.requests.get(this.id)
@@ -359,6 +371,7 @@ export default {
       this.isLoaded = true
       this.$store.commit('CLOSE_LOADER')
     },
+
     async approveRequest () {
       this.isPending = true
       try {
@@ -380,12 +393,14 @@ export default {
             return item.assetCode === this.request.asset &&
               item.statsOpType === STATS_OPERATION_TYPES[limitsOpType]
           })
+
         await api.requests.approveLimitsUpdate({
           request: this.request,
           oldLimits: oldLimits,
           newLimits: newLimits,
           accountId: this.request.requestor,
         })
+
         this.$router.push({ name: 'limits.requests' })
         this.$store.dispatch('SET_INFO', 'Request approved. Limits are changed')
       } catch (error) {
@@ -393,6 +408,7 @@ export default {
       }
       this.isPending = false
     },
+
     async rejectRequest () {
       this.isPending = true
       try {
@@ -404,6 +420,7 @@ export default {
           reason: this.rejectForm.reason,
           isPermanent: true,
         }, this.request)
+
         this.$router.push({ name: 'limits.requests' })
         this.$store.dispatch('SET_INFO', 'Request rejected. Limits are not changed')
       } catch (error) {
@@ -427,6 +444,7 @@ export default {
           reason: requireDocsDetails,
           isPermanent: false,
         })
+
         this.$store.dispatch('SET_INFO', 'Upload additional documents requested.')
         this.isRequiringDocs = false
       } catch (error) {
@@ -455,6 +473,7 @@ export default {
         description: '',
       })
     },
+
     removeDoc (doc) {
       if (this.uploadDocs.length === 1) {
         this.isRequiringDocs = false
@@ -462,6 +481,7 @@ export default {
       }
       this.uploadDocs.splice(doc, 1)
     },
+
     back () {
       this.$router.push({ name: 'limits.requests' })
     },

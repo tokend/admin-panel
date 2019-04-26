@@ -3,6 +3,7 @@
     {{ convertedAmount }}
   </div>
 </template>
+
 <script>
 import { Sdk } from '@/sdk'
 import { formatFiatAmount } from '@/utils/formatters'

@@ -1,7 +1,6 @@
 import { ApiCallerFactory } from '@/api-caller-factory'
 
 export default {
-
   async getAccountIdByEmail (email) {
     if (!email) return ''
 
@@ -12,6 +11,7 @@ export default {
           filter: { email },
           page: { limit: 1 },
         })
+
       return ((data || [])[0] || {}).address
     } catch (error) {
       if (error.httpStatus === 404) {

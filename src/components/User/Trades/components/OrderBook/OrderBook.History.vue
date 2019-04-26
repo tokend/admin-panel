@@ -93,6 +93,7 @@
 
 <script>
 import { AssetPair } from '../../models/AssetPair'
+
 import { DateFormatter, AssetAmountFormatter } from '@comcom/formatters'
 import Modal from '@comcom/modals/Modal'
 

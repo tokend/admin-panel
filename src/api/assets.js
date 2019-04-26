@@ -11,8 +11,9 @@ export default {
       physicalPriceCorrection: '' + params.physicalPriceCorrection,
       maxPriceStep: '' + params.maxPriceStep,
     })
-    const response = await Sdk.horizon.transactions.submitOperations(operation)
-    return response.data
+
+    const { data } = await Sdk.horizon.transactions.submitOperations(operation)
+    return data
   },
 
   async updatePair (params) {
@@ -36,7 +37,8 @@ export default {
       physicalPriceCorrection: '' + params.physicalPriceCorrection,
       maxPriceStep: '' + params.maxPriceStep,
     })
-    const response = await Sdk.horizon.transactions.submitOperations(operation)
-    return response.data
+
+    const { data } = await Sdk.horizon.transactions.submitOperations(operation)
+    return data
   },
 }

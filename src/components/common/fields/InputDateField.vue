@@ -27,10 +27,7 @@ import FlatPickr from 'vue-flatpickr-component'
 import moment from 'moment'
 
 export default {
-
-  components: {
-    FlatPickr,
-  },
+  components: { FlatPickr },
 
   props: {
     error: { type: [String, Boolean], default: '' },
@@ -76,10 +73,12 @@ export default {
       },
     }
   },
+
   methods: {
     onInput (event) {
       this.$emit('input', event.target.value)
     },
+
     onKeypress (event) {
       if (this.type !== 'number') return
       this.$number.testNumber(event)
@@ -89,15 +88,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import "./scss/input";
+@import "./scss/input";
 
-  .date-field__calendar-input {
-    position: absolute;
-    right: 5px;
-    pointer-events: none;
-  }
+.date-field__calendar-input {
+  position: absolute;
+  right: 5px;
+  pointer-events: none;
+}
 
-  input {
-    @extend .input-field__input
-  }
+input {
+  @extend .input-field__input;
+}
 </style>
