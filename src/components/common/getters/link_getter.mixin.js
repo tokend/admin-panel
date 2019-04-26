@@ -10,14 +10,16 @@ export default {
     }
   },
 
-  props: ['fileKey'],
-
-  created () {
-    this.getHref()
+  props: {
+    fileKey: { type: String, default: '' },
   },
 
   watch: {
     fileKey () { this.getHref() },
+  },
+
+  created () {
+    this.getHref()
   },
 
   methods: {

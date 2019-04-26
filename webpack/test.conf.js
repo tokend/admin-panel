@@ -8,14 +8,14 @@ module.exports = merge(baseWebpackConfig, {
     rules: [
       {
         test: /\.css?$/,
-        loader: 'style-loader!css-loader'
-      }
-    ]
+        loader: 'style-loader!css-loader',
+      },
+    ],
   },
   plugins: [
     new webpack.DefinePlugin({
       // to prevent vue of printing hints about the dev tools to the console
-      'process.env': { NODE_ENV: '"production"' }
-    })
-  ]
+      'process.env': { NODE_ENV: '"production"' },
+    }),
+  ],
 })
