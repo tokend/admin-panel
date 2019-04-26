@@ -183,7 +183,7 @@ export default {
       isShownExternal: false,
       user: {},
       requests: [],
-      verifiedRequest: {}
+      verifiedRequest: new ChangeRoleRequest({})
     }
   },
 
@@ -297,7 +297,7 @@ export default {
       setTimeout(async () => {
         await this.getUser()
         this.$emit(EVENTS.reviewed)
-      }, 1500)
+      }, 3000)
     }
   }
 }
