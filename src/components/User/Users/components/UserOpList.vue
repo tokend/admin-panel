@@ -143,7 +143,7 @@ export default {
       } else if (isReset) {
         operationType = 'Reset to unverified'
       } else {
-        operationType = 'Change role'
+        operationType = 'Change role request'
       }
 
       return operationType
