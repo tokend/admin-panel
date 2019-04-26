@@ -108,7 +108,7 @@ export default {
       try {
         const response = await Sdk.horizon.orderBook.getAll({
           order_book_id: id,
-          base_asset: baseAsset,
+          base_asset: baseAsset.id,
           quote_asset: quoteAsset,
           is_buy: true
         })

@@ -100,7 +100,7 @@ export default {
 
   created () {
     this.getCorporate({
-      ownerId: _get(this.sale, 'ownerId') ||
+      ownerId: _get(this.sale, 'owner.id') ||
         _get(this.saleRequest, 'requestor') ||
         _get(this.user, 'address'),
       blobId: this.blobId
