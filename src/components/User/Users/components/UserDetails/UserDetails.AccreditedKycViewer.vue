@@ -1,12 +1,12 @@
 <template>
   <div class="user-details-accredited-kyc-viewer">
     <div class="user-details-accredited-kyc-viewer__header">
-      <h2 class="user-details-accredited-kyc-viewer__header-title">
+      <span class="user-details-accredited-kyc-viewer__header-title">
         Current user is applied for Accredited KYC
-      </h2>
-      <h3 class="user-details-accredited-kyc-viewer__header-subtitle">
+      </span>
+      <span class="user-details-accredited-kyc-viewer__header-subtitle">
         Please ensure user has a valid proof document
-      </h3>
+      </span>
     </div>
     <h3 class="user-details-accredited__doc-title">Proof of invest</h3>
     <user-doc-getter
@@ -47,6 +47,8 @@ export default {
 }
 
 .user-details-accredited-kyc-viewer__header {
+  display: flex;
+  flex-direction: column;
   background-color: $color-banner-bg;
   padding: 1rem;
 }

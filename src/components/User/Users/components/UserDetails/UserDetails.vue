@@ -19,12 +19,12 @@
             </p>
           </li>
           <li>
-            <h3>
+            <span>
               Role to set
-            </h3>
-            <p :class="user-details__role-info">
+            </span>
+            <span class="user-details__role-info">
               {{ ROLE_TYPE_VERBOSE[requestToReview.accountRoleToSet || verifiedRequest.accountRoleToSet] }}
-            </p>
+            </span>
           </li>
         </ul>
 
@@ -95,8 +95,6 @@
             class="user-details__section"
           >
             <template v-if="isKycLoaded">
-              {{verifiedRequest.accountRoleToSet}}
-              {{ACCOUNT_ROLES}}
               <h2>Previous approved KYC Request</h2>
               <general-kyc-viewer
                 v-if="verifiedRequest.accountRoleToSet === ACCOUNT_ROLES.general"
