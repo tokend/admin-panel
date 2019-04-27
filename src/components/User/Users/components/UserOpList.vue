@@ -26,20 +26,36 @@
         </span>
       </div>
 
-      <button class="app-list__li" v-for="item in records" :key="item.id" @click="$emit('op-select', item)">
-        <span class="app-list__cell" :title="item.operationType">
+      <router-link
+        class="app-list__li"
+        v-for="item in records"
+        :key="item.id"
+        :to="{ name: 'users.operationDetails',
+          params: { operation: item, operationId: item.id }
+        }"
+      >
+        <span
+          class="app-list__cell"
+          :title="item.operationType"
+        >
           {{ item.operationType }}
         </span>
-        <span class="app-list__cell" :title="item.ledgerCloseTime">
+        <span
+          class="app-list__cell"
+          :title="item.ledgerCloseTime"
+        >
           {{ item.ledgerCloseTime }}
         </span>
-        <span class="app-list__cell" :title="item.sourceAccount">
+        <span
+          class="app-list__cell"
+          :title="item.sourceAccount"
+        >
           {{ item.sourceAccount }}
         </span>
         <span class="app-list__cell">
           <operation-counterparty :operation="item" />
         </span>
-      </button>
+      </router-link>
     </ul>
 
     <template v-else>

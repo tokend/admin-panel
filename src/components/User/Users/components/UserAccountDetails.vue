@@ -1,7 +1,7 @@
 <template>
   <div>
     <router-link
-      :to="{ name: 'users.userDetails' }"
+      :to="{ name: 'users.index' }"
       class="users-show__back-btn"
     >
       <span class="users-show__back-btn-inner">
@@ -9,39 +9,36 @@
       </span>
       Back
     </router-link>
-    <div class="operation-details">
-      <div class="app__block">
-        <h2>Operation details</h2>
-        <div class="operation-details__op-details-wrp">
-          <details-reader :details="operation" />
-        </div>
-      </div>
+    <div class="users-show__details-wrp">
+      <user-details
+        :id="id"
+        @reviewed="$emit(reviewed)"
+      />
+    </div>
+
+    <div class="users-show__list-wrp">
+      <user-op-list :id="id" />
     </div>
   </div>
 </template>
 
 <script>
 import 'mdi-vue/ChevronLeftIcon'
-import DetailsReader from '../../common/details/DetailsReader'
+import UserOpList from './UserOpList'
+import UserDetails from './UserDetails'
 
 export default {
   components: {
-    DetailsReader
+    UserOpList,
+    UserDetails
   },
-  data: _ => ({
-    userId: null,
-    operation: {},
-    operationId: null
-  }),
-  created () {
-    this.userId = this.$route.params.id
-    this.operation = this.$route.params.operation
-  }
+  props: ['id']
+
 }
 </script>
 
 <style lang="scss">
-@import "../../../assets/scss/colors";
+@import "../../../../assets/scss/colors";
 
 .users-show__back-btn {
   display: flex;
@@ -75,5 +72,10 @@ export default {
     top: 50%;
     transform: translate(-50%, -50%);
   }
+}
+
+.users-show__details-wrp {
+  max-width: 104rem;
+  margin-bottom: 7rem;
 }
 </style>

@@ -31,10 +31,29 @@ export const UserRoutes = {
         {
           path: ':id',
           name: 'users.show',
+          redirect: { name: 'users.userDetails' },
           component: function (resolve) {
             require(['../../components/User/Users/Users.Show.vue'], resolve)
           },
-          props: true
+          props: true,
+          children: [
+            {
+              path: '',
+              name: 'users.userDetails',
+              component: function (resolve) {
+                require(['../../components/User/Users/components/UserAccountDetails.vue'], resolve)
+              },
+              props: true
+            },
+            {
+              path: 'operation-details/:operationId',
+              name: 'users.operationDetails',
+              component: function (resolve) {
+                require(['../../components/User/Operations/OperationDetails.vue'], resolve)
+              },
+              props: true
+            }
+          ]
         }
       ]
     },
