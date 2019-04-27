@@ -29,3 +29,4 @@ export {
 } from './defaults'
 export { KEY_VALUE_ENTRY_TYPE } from './key-value'
 export { ASSET_REQUEST_TYPES } from './asset-request-types'
+export { CHANGE_ROLE_TASK_KEYS } from './change-role-task-keys'

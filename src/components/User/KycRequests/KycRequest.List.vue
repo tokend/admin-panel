@@ -30,6 +30,23 @@
             </option>
           </select-field>
 
+          <select-field
+            class="app-list-filters__field"
+            v-model="filters.pendingTasks"
+            label="Pending tasks"
+          >
+            <option :value="taskValues.submitAutoVerification">
+              Submit auto verification
+            </option>
+            <option :value="taskValues.completeAutoVerification">
+              Complete auto verification
+            </option>
+            <option :value="taskValues.manualReviewRequired">
+              Manual review requried
+            </option>
+            <option value="">Any</option>
+          </select-field>
+
           <input-field
             class="app-list-filters__field"
             v-model.trim="filters.email"
@@ -143,6 +160,7 @@ import { clearObject } from '@/utils/clearObject'
 import throttle from 'lodash/throttle'
 
 import { REQUEST_STATES, KYC_REQUEST_STATES } from '@/constants'
+import { CHANGE_ROLE_TASK_KEYS } from '@/constants'
 
 import config from '@/config'
 import { ApiCallerFactory } from '@/api-caller-factory'
@@ -198,6 +216,12 @@ export default {
         email: '',
         address: '',
         type: '',
+        pendingTasks: ''
+      },
+      taskValues: {
+        submitAutoVerification: null,
+        completeAutoVerification: null,
+        manualReviewRequired: null
       },
       VIEW_MODES_VERBOSE,
       REQUEST_STATES,
@@ -216,9 +240,30 @@ export default {
     }, 1000),
   },
 
+  created () {
+    this.loadTaskValues()
+  },
+
   methods: {
     snakeToCamelCase,
+    async getTaskFromKv (key) {
+      const { data } = await ApiCallerFactory
+        .createCallerInstance()
+        .get(`v3/key_values/${key}`)
 
+      return data.value.u32
+    },
+    async loadTaskValues () {
+      const [submitAutoVerification, completeAutoVerification, manualReviewRequired] = await Promise.all([
+        this.getTaskFromKv(CHANGE_ROLE_TASK_KEYS.submitAutoVerification),
+        this.getTaskFromKv(CHANGE_ROLE_TASK_KEYS.completeAutoVerification),
+        this.getTaskFromKv(CHANGE_ROLE_TASK_KEYS.manualReviewRequired)
+      ])
+
+      this.taskValues.submitAutoVerification = submitAutoVerification
+      this.taskValues.completeAutoVerification = completeAutoVerification
+      this.taskValues.manualReviewRequired = manualReviewRequired
+    },
     async loadList () {
       this.isLoading = true
       let response = {}
@@ -234,6 +279,7 @@ export default {
           .getWithSignature('/v3/change_role_requests', {
             page: { order: 'desc' },
             filter: clearObject({
+              pending_tasks: this.filters.pendingTasks,
               state: KYC_REQUEST_STATES[this.filters.state].state,
               requestor: address,
               'request_details.account_role_to_set': this.filters.roleToSet,
@@ -275,6 +321,14 @@ export default {
     },
     formatDate,
   },
+  watch: {
+    'filters.state' () { this.reloadCollectionLoader() },
+    'filters.roleToSet' () { this.reloadCollectionLoader() },
+    'filters.pendingTasks' () { this.reloadCollectionLoader() },
+    'filters.address': _.throttle(function () {
+      this.reloadCollectionLoader()
+    }, 1000)
+  }
 }
 </script>
 

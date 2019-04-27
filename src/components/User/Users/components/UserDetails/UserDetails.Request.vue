@@ -166,14 +166,10 @@ import { confirmAction } from '@/js/modals/confirmation_message'
 import { ChangeRoleRequest } from '@/api/responseHandlers/requests/ChangeRoleRequest'
 import { ApiCallerFactory } from '../../../../../api-caller-factory'
 
+import { CHANGE_ROLE_TASK_KEYS } from '@/constants'
+
 const EVENTS = {
   reviewed: 'reviewed',
-}
-
-const TASK_KEYS = {
-  submitAutoVerification: 'task:submit_auto_verification',
-  completeAutoVerification: 'task:complete_auto_verification',
-  manualReviewRequired: 'task:manual_review_required'
 }
 
 export default {
@@ -235,9 +231,9 @@ export default {
     },
     async loadTaskValues () {
       const [submitAutoVerification, completeAutoVerification, manualReviewRequired] = await Promise.all([
-        this.getTaskFromKv(TASK_KEYS.submitAutoVerification),
-        this.getTaskFromKv(TASK_KEYS.completeAutoVerification),
-        this.getTaskFromKv(TASK_KEYS.manualReviewRequired)
+        this.getTaskFromKv(CHANGE_ROLE_TASK_KEYS.submitAutoVerification),
+        this.getTaskFromKv(CHANGE_ROLE_TASK_KEYS.completeAutoVerification),
+        this.getTaskFromKv(CHANGE_ROLE_TASK_KEYS.manualReviewRequired)
       ])
 
       this.taskValues.submitAutoVerification = submitAutoVerification

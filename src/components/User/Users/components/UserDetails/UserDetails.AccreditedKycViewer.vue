@@ -2,7 +2,7 @@
   <div class="accredited-kyc-viewer">
     <div class="accredited-kyc-viewer__warning-msg">
       <span class="accredited-kyc-viewer__header-title">
-        Current user is applied for Accredited KYC
+        Current user is applying for Accredited KYC
       </span>
       <span class="accredited-kyc-viewer__header-subtitle">
         Please ensure user the attached proof document is valid
