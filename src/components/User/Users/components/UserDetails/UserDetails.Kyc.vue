@@ -97,6 +97,10 @@
 <script>
 import { UserDocLinkGetter, ImgGetter } from '@comcom/getters'
 import { byAlpha2 } from 'iso-country-codes'
+import { ErrorHandler } from '@/utils/ErrorHandler'
+import deepCamelCase from 'camelcase-keys-deep'
+import { Sdk } from '@/sdk'
+import { fromKycTemplate } from '@/utils/kyc-tempater'
 
 const ID_DOCUMENTS_VERBOSE = {
   passport: 'Passport',
