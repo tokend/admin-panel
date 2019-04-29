@@ -215,28 +215,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../../../assets/scss/_colors.scss";
-
 .user-list__filters-wrp {
   margin-bottom: 4rem;
-}
-
-.user-list__download-btn,
-.user-list__download-link {
-  background: $color-content-bg;
-  box-shadow: 0px 1px 5.6px 0.4px rgba(170, 170, 170, 0.72);
-  display: inline-block;
-  font-size: 1.6rem;
-  padding: 5px 10px;
-  margin-bottom: 10px;
-  margin-right: 10px;
-  color: $color-text;
-
-  svg {
-    height: 16px;
-    margin-left: 5px;
-    transform: translateY(4px);
-    width: 16px;
-  }
 }
 </style>

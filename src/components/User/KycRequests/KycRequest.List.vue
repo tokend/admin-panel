@@ -204,17 +204,12 @@ export default {
 
     toggleViewMode (id) {
       if (id) {
-        // const redirectComponentName = this.$route.name
         this.$router.push({
           name: 'users.show',
           params: {
             id: id
           }
-          // query: {
-          //   pathFrom: redirectComponentName
-          // }
         })
-        // this.view.mode = VIEW_MODES_VERBOSE.user
         this.view.userId = id
         return
       }
