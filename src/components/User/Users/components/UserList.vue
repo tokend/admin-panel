@@ -108,7 +108,6 @@
           ref="collectionLoaderBtn"
         />
       </div>
-
     </div>
   </div>
 </template>
@@ -140,10 +139,12 @@ export default {
         address: '',
         role: ''
       },
-      userId: null,
+      view: {
+        userId: null,
+        scrollPosition: 0
+      },
       list: [],
       isLoading: false,
-
       ACCOUNT_ROLES: config.ACCOUNT_ROLES
     }
   },
@@ -188,7 +189,7 @@ export default {
         })
         return
       }
-      this.userId = null
+      this.view.userId = null
     },
 
     reloadCollectionLoader () {
