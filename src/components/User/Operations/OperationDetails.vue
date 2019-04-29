@@ -34,6 +34,7 @@ export default {
     operationId: null
   }),
   created () {
+    window.scroll(0, 0)
     this.userId = this.$route.params.id
     this.operation = this.$route.params.operation
   }

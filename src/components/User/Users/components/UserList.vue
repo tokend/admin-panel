@@ -114,7 +114,6 @@
 </template>
 
 <script>
-import Vue from 'vue'
 import { clearObject } from '@/utils/clearObject'
 import SelectField from '@comcom/fields/SelectField'
 import InputField from '@comcom/fields/InputField'
@@ -142,7 +141,6 @@ export default {
         role: ''
       },
       userId: null,
-      scrollPosition: 0,
       list: [],
       isLoading: false,
 
@@ -182,7 +180,6 @@ export default {
 
     toggleViewMode (id) {
       if (id) {
-        this.scrollPosition = window.scrollY
         this.$router.push({
           name: 'users.show',
           params: {
@@ -192,10 +189,6 @@ export default {
         return
       }
       this.userId = null
-      Vue.nextTick(() => {
-        window.scroll(0, this.scrollPosition)
-        this.scrollPosition = 0
-      })
     },
 
     reloadCollectionLoader () {
