@@ -126,11 +126,6 @@ import config from '@/config'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { CollectionLoader } from '@/components/common'
 
-const VIEW_MODES_VERBOSE = Object.freeze({
-  index: 'index',
-  user: 'user'
-})
-
 export default {
   components: {
     SelectField,
@@ -141,7 +136,6 @@ export default {
 
   data () {
     return {
-      VIEW_MODES_VERBOSE,
       filters: {
         email: '',
         address: '',
