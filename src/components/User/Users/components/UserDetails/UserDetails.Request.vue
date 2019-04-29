@@ -2,18 +2,25 @@
   <div class="user-request">
     <template v-if="requestToReview.isPending">
       <div class="user-details-request__manage-tasks-section">
-        <h3 class="user-details-request__manage-tasks-title">Manage tasks (advanced)</h3>
+        <h3 class="user-details-request__manage-tasks-title">
+          Manage tasks (advanced)
+        </h3>
 
-        <h4 class="user-details-request__task-section-heading">Current state</h4>
+        <h4 class="user-details-request__task-section-heading">
+          Current state
+        </h4>
 
         <div class="user-details-request__task-section-content">
           <p>Pending tasks: {{ requestToReview.pendingTasks }}</p>
           <p>All tasks: {{ requestToReview.allTasks }}</p>
         </div>
 
-        <h4 class="user-details-request__task-section-heading">Tasks to add</h4>
+        <h4 class="user-details-request__task-section-heading">
+          Tasks to add
+        </h4>
 
         <div class="user-details-request__task-section-content">
+          <!--eslint-disable max-len-->
           <tick-field
             class="app__form-field"
             v-model="tasksToAdd"
@@ -21,7 +28,9 @@
             :cb-value="taskValues.submitAutoVerification"
             :disabled="isPending"
           />
+          <!--eslint-enable max-len-->
 
+          <!--eslint-disable max-len-->
           <tick-field
             class="app__form-field"
             v-model="tasksToAdd"
@@ -29,7 +38,9 @@
             :cb-value="taskValues.completeAutoVerification"
             :disabled="isPending"
           />
+          <!--eslint-enable max-len-->
 
+          <!--eslint-disable max-len-->
           <tick-field
             class="app__form-field"
             v-model="tasksToAdd"
@@ -37,6 +48,7 @@
             :cb-value="taskValues.manualReviewRequired"
             :disabled="isPending"
           />
+          <!--eslint-enable max-len-->
 
           <tick-field
             class="app__form-field"
@@ -47,9 +59,12 @@
           />
         </div>
 
-        <h4 class="user-details-request__task-section-heading">Tasks to remove</h4>
+        <h4 class="user-details-request__task-section-heading">
+          Tasks to remove
+        </h4>
 
         <div class="user-details-request__task-section-content">
+          <!--eslint-disable max-len-->
           <tick-field
             class="app__form-field"
             v-model="tasksToRemove"
@@ -57,7 +72,9 @@
             :cb-value="taskValues.submitAutoVerification"
             :disabled="isPending"
           />
+          <!--eslint-enable max-len-->
 
+          <!--eslint-disable max-len-->
           <tick-field
             class="app__form-field"
             v-model="tasksToRemove"
@@ -65,7 +82,9 @@
             :cb-value="taskValues.completeAutoVerification"
             :disabled="isPending"
           />
+          <!--eslint-enable max-len-->
 
+          <!--eslint-disable max-len-->
           <tick-field
             class="app__form-field"
             v-model="tasksToRemove"
@@ -73,6 +92,7 @@
             :cb-value="taskValues.manualReviewRequired"
             :disabled="isPending"
           />
+          <!--eslint-enable max-len-->
 
           <tick-field
             class="app__form-field"
@@ -177,21 +197,21 @@ export default {
   components: {
     Modal,
     TextField,
-    TickField
+    TickField,
   },
 
   props: {
     requestToReview: {
       type: ChangeRoleRequest,
-      default: _ => new ChangeRoleRequest({}),
+      default: () => new ChangeRoleRequest({}),
     },
     latestApprovedRequest: {
       type: ChangeRoleRequest,
-      default: _ => new ChangeRoleRequest({}),
+      default: () => new ChangeRoleRequest({}),
     },
     user: {
       type: Object,
-      default: _ => ({}),
+      default: () => ({}),
     },
   },
 
@@ -211,8 +231,8 @@ export default {
         submitAutoVerification: null,
         completeAutoVerification: null,
         manualReviewRequired: null,
-        default: 1
-      }
+        default: 1,
+      },
     }
   },
 
@@ -230,10 +250,14 @@ export default {
       return data.value.u32
     },
     async loadTaskValues () {
-      const [submitAutoVerification, completeAutoVerification, manualReviewRequired] = await Promise.all([
+      const [
+        submitAutoVerification,
+        completeAutoVerification,
+        manualReviewRequired,
+      ] = await Promise.all([
         this.getTaskFromKv(CHANGE_ROLE_TASK_KEYS.submitAutoVerification),
         this.getTaskFromKv(CHANGE_ROLE_TASK_KEYS.completeAutoVerification),
-        this.getTaskFromKv(CHANGE_ROLE_TASK_KEYS.manualReviewRequired)
+        this.getTaskFromKv(CHANGE_ROLE_TASK_KEYS.manualReviewRequired),
       ])
 
       this.taskValues.submitAutoVerification = submitAutoVerification
@@ -252,7 +276,7 @@ export default {
 
         await api.requests.approve({
           ...this.requestToReview.record,
-          reviewDetails
+          reviewDetails,
         })
 
         this.$store.dispatch('SET_INFO', 'Request approved successfully')

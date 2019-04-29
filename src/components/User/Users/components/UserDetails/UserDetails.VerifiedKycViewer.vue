@@ -9,11 +9,21 @@
 
 <script>
 import KycGeneralSection from './UserDetails.Kyc'
+
 export default {
   components: {
-    KycGeneralSection
+    KycGeneralSection,
   },
-  props: ['kyc', 'user']
+  props: {
+    kyc: {
+      type: Object,
+      required: true,
+    },
+    user: {
+      type: Object,
+      required: true,
+    },
+  },
 }
 </script>
 

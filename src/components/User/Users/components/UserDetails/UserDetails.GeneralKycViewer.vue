@@ -9,13 +9,21 @@
 
 <script>
 import KycGeneralSection from './UserDetails.Kyc'
-import UserDocGetter from '@comcom/getters'
+
 export default {
   components: {
     KycGeneralSection,
-    UserDocGetter
   },
-  props: ['kyc', 'user']
+  props: {
+    kyc: {
+      type: Object,
+      required: true,
+    },
+    user: {
+      type: Object,
+      required: true,
+    },
+  },
 }
 </script>
 

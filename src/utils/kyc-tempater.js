@@ -7,13 +7,13 @@ export function fromKycTemplate (template) {
     documents: {
       kycIdDocument: {
         face: get(template, 'documents.kyc_id_document.face.key'),
-        back: get(template, 'documents.kyc_id_document.back.key')
+        back: get(template, 'documents.kyc_id_document.back.key'),
       },
       kycAvatar: get(template, 'documents.kyc_avatar.key'),
       kycSelfie: template.documents.kyc_selfie
         ? get(template, 'documents.kyc_selfie.key')
         : get(template, 'documents.bravo.key'),
-      kycProofInvestor: get(template, 'documents.kyc_proof_investor.key')
+      kycProofInvestor: get(template, 'documents.kyc_proof_investor.key'),
     },
     first_name: template.first_name,
     last_name: template.last_name,
@@ -24,7 +24,7 @@ export function fromKycTemplate (template) {
       city: get(template, 'address.city'),
       country: get(template, 'address.country'),
       state: get(template, 'address.state'),
-      postal_code: get(template, 'address.postal_code')
-    }
+      postal_code: get(template, 'address.postal_code'),
+    },
   }
 }

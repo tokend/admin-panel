@@ -15,7 +15,7 @@
           <user-doc-link-getter
             :file-key="kyc.documents.kycProofInvestor"
           >
-          Open file
+            Open file
           </user-doc-link-getter>
         </span>
       </li>
@@ -31,12 +31,22 @@
 <script>
 import KycGeneralSection from './UserDetails.Kyc'
 import { UserDocLinkGetter } from '@comcom/getters'
+
 export default {
   components: {
     KycGeneralSection,
-    UserDocLinkGetter
+    UserDocLinkGetter,
   },
-  props: ['kyc', 'user']
+  props: {
+    kyc: {
+      type: Object,
+      required: true,
+    },
+    user: {
+      type: Object,
+      required: true,
+    },
+  },
 }
 </script>
 

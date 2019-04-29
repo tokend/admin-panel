@@ -44,7 +44,9 @@
             <option :value="taskValues.manualReviewRequired">
               Manual review requried
             </option>
-            <option value="">Any</option>
+            <option value="">
+              Any
+            </option>
           </select-field>
 
           <input-field
@@ -144,6 +146,7 @@
 
 <script>
 import Vue from 'vue'
+import _ from 'lodash'
 
 import InputField from '@comcom/fields/InputField'
 import SelectField from '@comcom/fields/SelectField'
@@ -157,10 +160,11 @@ import { formatDate } from '@/utils/formatters'
 import { snakeToCamelCase } from '@/utils/un-camel-case'
 import { clearObject } from '@/utils/clearObject'
 
-import throttle from 'lodash/throttle'
-
-import { REQUEST_STATES, KYC_REQUEST_STATES } from '@/constants'
-import { CHANGE_ROLE_TASK_KEYS } from '@/constants'
+import {
+  REQUEST_STATES,
+  KYC_REQUEST_STATES,
+  CHANGE_ROLE_TASK_KEYS,
+} from '@/constants'
 
 import config from '@/config'
 import { ApiCallerFactory } from '@/api-caller-factory'
@@ -216,12 +220,12 @@ export default {
         email: '',
         address: '',
         type: '',
-        pendingTasks: ''
+        pendingTasks: '',
       },
       taskValues: {
         submitAutoVerification: null,
         completeAutoVerification: null,
-        manualReviewRequired: null
+        manualReviewRequired: null,
       },
       VIEW_MODES_VERBOSE,
       REQUEST_STATES,
@@ -232,10 +236,9 @@ export default {
 
   watch: {
     'filters.state' () { this.reloadCollectionLoader() },
-
     'filters.roleToSet' () { this.reloadCollectionLoader() },
-
-    'filters.address': throttle(function () {
+    'filters.pendingTasks' () { this.reloadCollectionLoader() },
+    'filters.address': _.throttle(function () {
       this.reloadCollectionLoader()
     }, 1000),
   },
@@ -243,7 +246,6 @@ export default {
   created () {
     this.loadTaskValues()
   },
-
   methods: {
     snakeToCamelCase,
     async getTaskFromKv (key) {
@@ -254,10 +256,14 @@ export default {
       return data.value.u32
     },
     async loadTaskValues () {
-      const [submitAutoVerification, completeAutoVerification, manualReviewRequired] = await Promise.all([
+      const [
+        submitAutoVerification,
+        completeAutoVerification,
+        manualReviewRequired,
+      ] = await Promise.all([
         this.getTaskFromKv(CHANGE_ROLE_TASK_KEYS.submitAutoVerification),
         this.getTaskFromKv(CHANGE_ROLE_TASK_KEYS.completeAutoVerification),
-        this.getTaskFromKv(CHANGE_ROLE_TASK_KEYS.manualReviewRequired)
+        this.getTaskFromKv(CHANGE_ROLE_TASK_KEYS.manualReviewRequired),
       ])
 
       this.taskValues.submitAutoVerification = submitAutoVerification
@@ -321,14 +327,6 @@ export default {
     },
     formatDate,
   },
-  watch: {
-    'filters.state' () { this.reloadCollectionLoader() },
-    'filters.roleToSet' () { this.reloadCollectionLoader() },
-    'filters.pendingTasks' () { this.reloadCollectionLoader() },
-    'filters.address': _.throttle(function () {
-      this.reloadCollectionLoader()
-    }, 1000)
-  }
 }
 </script>
 

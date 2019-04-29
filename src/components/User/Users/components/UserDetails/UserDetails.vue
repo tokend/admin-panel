@@ -11,15 +11,19 @@
           <ul class="key-value-list">
             <li>
               <h3>Current request state</h3>
-              <p :class="`user-details__state-info
-                        user-details__state-info--${requestToReview.state}`">
+              <p
+                :class="`user-details__state-info
+                         user-details__state-info--${requestToReview.state}`">
                 {{ requestToReview.state }}
               </p>
             </li>
             <li>
               <h3>Role to set</h3>
               <p class="user-details__role-info">
-                {{ ROLE_TYPE_VERBOSE[requestToReview.accountRoleToSet || verifiedRequest.accountRoleToSet] }}
+                {{
+                  ROLE_TYPE_VERBOSE[requestToReview.accountRoleToSet
+                    || verifiedRequest.accountRoleToSet]
+                }}
               </p>
             </li>
           </ul>
@@ -49,26 +53,37 @@
           <section class="user-details__section">
             <template v-if="isKycLoaded">
               <general-kyc-viewer
-                v-if="requestToReview.accountRoleToSet === ACCOUNT_ROLES.general"
+                v-if="
+                  requestToReview.accountRoleToSet === ACCOUNT_ROLES.general
+                "
                 :kyc="kyc"
                 :user="user" />
               <verified-kyc-viewer
-                v-if="requestToReview.accountRoleToSet === ACCOUNT_ROLES.usVerified"
+                v-if="
+                  requestToReview.accountRoleToSet === ACCOUNT_ROLES.usVerified
+                "
                 :kyc="kyc"
                 :user="user" />
               <accredited-kyc-viewer
-                v-if="requestToReview.accountRoleToSet === ACCOUNT_ROLES.usAccredited"
+                v-if="
+                  requestToReview.accountRoleToSet ===
+                    ACCOUNT_ROLES.usAccredited
+                "
                 :kyc="kyc"
                 :user="user" />
             </template>
             <template v-else-if="isKycLoadFailed">
-              <p class="danger">An error occurred. Please try again later.</p>
+              <p class="danger">
+                An error occurred. Please try again later.
+              </p>
             </template>
             <template v-else>
               <p>Loading...</p>
             </template>
             <kyc-syndicate-section
-              v-if="requestToReview.accountRoleToSet === ACCOUNT_ROLES.corporate"
+              v-if="
+                requestToReview.accountRoleToSet === ACCOUNT_ROLES.corporate
+              "
               :user="user"
               :blob-id="requestToReview.blobId"
             />
@@ -87,18 +102,23 @@
               <general-kyc-viewer
                 v-if="verifiedRequest.accountRoleToSet === ACCOUNT_ROLES.general"
                 :kyc="kyc"
-                :user="user" />
+                :user="user"
+              />
               <verified-kyc-viewer
                 v-if="verifiedRequest.accountRoleToSet === ACCOUNT_ROLES.usVerified"
                 :kyc="kyc"
-                :user="user" />
+                :user="user"
+              />
               <accredited-kyc-viewer
                 v-if="verifiedRequest.accountRoleToSet === ACCOUNT_ROLES.usAccredited"
                 :kyc="kyc"
-                :user="user" />
+                :user="user"
+              />
             </template>
             <template v-else-if="isKycLoadFailed">
-              <p class="danger">An error occurred. Please try again later.</p>
+              <p class="danger">
+                An error occurred. Please try again later.
+              </p>
             </template>
             <template v-else>
               <p>Loading...</p>
@@ -186,8 +206,6 @@ import BlockActions from './UserDetails.Block'
 
 import ExternalDetailsViewer from './UserDetails.ExternalDetailsViewer'
 
-import { UserDocLinkGetter } from '@comcom/getters'
-
 import { ApiCallerFactory } from '@/api-caller-factory'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
@@ -203,7 +221,7 @@ const ROLE_TYPE_VERBOSE = {
   [ config.ACCOUNT_ROLES.usVerified ]: 'US Verified',
   [ config.ACCOUNT_ROLES.usAccredited ]: 'US Accredited',
   [ config.ACCOUNT_ROLES.corporate ]: 'Corporate',
-  [ config.ACCOUNT_ROLES.notVerified ]: 'Not Verified'
+  [ config.ACCOUNT_ROLES.notVerified ]: 'Not Verified',
 }
 
 const OPERATION_TYPE = {
@@ -224,7 +242,6 @@ export default {
     AccreditedKycViewer,
     VerifiedKycViewer,
     GeneralKycViewer,
-    UserDocLinkGetter
   },
 
   props: {
@@ -244,18 +261,7 @@ export default {
       requests: [],
       verifiedRequest: {},
       kyc: {},
-      ROLE_TYPE_VERBOSE
-    }
-  },
-
-  props: ['id'],
-
-  async created () {
-    await this.getUser()
-    if (this.requestToReview.state) {
-      await this.getKyc(this.requestToReview.blobId)
-    } else if (this.verifiedRequest.state) {
-      await this.getKyc(this.verifiedRequest.blobId)
+      ROLE_TYPE_VERBOSE,
     }
   },
 
@@ -265,14 +271,15 @@ export default {
     },
 
     latestApprovedRequest () {
-      return this.requests.find(item => item.isApproved) ||
-        new ChangeRoleRequest({})
+      return (
+        this.requests.find(item => item.isApproved)
+      ) || new ChangeRoleRequest({})
     },
 
     requestToReview () {
-      return this.requests
-        .find(item => item.isPending || item.isRejected) ||
-        new ChangeRoleRequest({})
+      return (
+        this.requests.find(item => item.isPending || item.isRejected)
+      ) || new ChangeRoleRequest({})
     },
 
     latestBlockedRequest () {
@@ -298,6 +305,12 @@ export default {
 
   async created () {
     await this.getUser()
+
+    if (this.requestToReview.state) {
+      await this.getKyc(this.requestToReview.blobId)
+    } else if (this.verifiedRequest.state) {
+      await this.getKyc(this.verifiedRequest.blobId)
+    }
   },
 
   methods: {
@@ -365,14 +378,16 @@ export default {
       try {
         const response = await Sdk.api.blobs.get(blodId, this.user.address)
         const kycFormResponse = response.data
-        this.kyc = deepCamelCase(fromKycTemplate(JSON.parse(kycFormResponse.value)))
+        this.kyc = deepCamelCase(
+          fromKycTemplate(JSON.parse(kycFormResponse.value))
+        )
         this.isKycLoaded = true
       } catch (error) {
         ErrorHandler.process(error)
         this.isKycLoadFailed = true
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

@@ -8,48 +8,72 @@
       <p> - Valid Passport;</p>
       <p> - Valid Identity card;</p>
       <p> - Valid Residence permit;</p>
-      <p> - Driving license - full, not provisional, with a color photograph;</p>
+      <p>
+        - Driving license - full, not provisional, with a color photograph;
+      </p>
     </div>
     <ul class="user-details-account__key-value-list key-value-list">
       <li>
         <span>First name</span>
-        <span :title="kyc.firstName">{{kyc.firstName}}</span>
+        <span :title="kyc.firstName">
+          {{ kyc.firstName }}
+        </span>
       </li>
       <li>
         <span>Last name</span>
-        <span :title="kyc.lastName">{{kyc.lastName}}</span>
+        <span :title="kyc.lastName">
+          {{ kyc.lastName }}
+        </span>
       </li>
       <li>
         <span>Date of birth</span>
-        <span :title="kyc.dateOfBirth">{{kyc.dateOfBirth}}</span>
+        <span :title="kyc.dateOfBirth">
+          {{ kyc.dateOfBirth }}
+        </span>
       </li>
       <li>
         <span>Address Line 1</span>
-        <span :title="kyc.address.line1">{{kyc.address.line1}}</span>
+        <span :title="kyc.address.line1">
+          {{ kyc.address.line1 }}
+        </span>
       </li>
       <li>
         <span>Address Line 2</span>
-        <span :title="kyc.address.line2">{{kyc.address.line2}}</span>
+        <span :title="kyc.address.line2">
+          {{ kyc.address.line2 }}
+        </span>
       </li>
       <li>
         <span>City</span>
-        <span :title="kyc.address.city">{{kyc.address.city}}</span>
+        <span :title="kyc.address.city">
+          {{ kyc.address.city }}
+        </span>
       </li>
       <li>
         <span>Country</span>
-        <span :title="country">{{country}}</span>
+        <span :title="country">
+          {{ country }}
+        </span>
       </li>
       <li>
         <span>State</span>
-        <span :title="kyc.address.state">{{kyc.address.state}}</span>
+        <span :title="kyc.address.state">
+          {{ kyc.address.state }}
+        </span>
       </li>
       <li>
         <span>ID Document type</span>
-        <span :title="ID_DOCUMENTS_VERBOSE[kyc.idDocumentType]">{{ID_DOCUMENTS_VERBOSE[kyc.idDocumentType]}}</span>
+        <span :title="ID_DOCUMENTS_VERBOSE[kyc.idDocumentType]">
+          {{ ID_DOCUMENTS_VERBOSE[kyc.idDocumentType] }}
+        </span>
       </li>
       <li>
-        <span v-if="kyc.documents.kycIdDocument.back">ID Document front side: </span>
-        <span v-else>ID Document</span>
+        <span v-if="kyc.documents.kycIdDocument.back">
+          ID Document front side:
+        </span>
+        <span v-else>
+          ID Document
+        </span>
         <span>
           <user-doc-link-getter
             :file-key="kyc.documents.kycIdDocument.face"
@@ -97,12 +121,8 @@
 </template>
 
 <script>
-import { UserDocLinkGetter, ImgGetter } from '@comcom/getters'
+import { UserDocLinkGetter } from '@comcom/getters'
 import { byAlpha2 } from 'iso-country-codes'
-import { ErrorHandler } from '@/utils/ErrorHandler'
-import deepCamelCase from 'camelcase-keys-deep'
-import { Sdk } from '@/sdk'
-import { fromKycTemplate } from '@/utils/kyc-tempater'
 
 const ID_DOCUMENTS_VERBOSE = {
   passport: 'Passport',
@@ -116,43 +136,31 @@ export default {
     UserDocLinkGetter,
   },
 
-  props: ['kyc', 'user'],
+  props: {
+    kyc: {
+      type: Object,
+      required: true,
+    },
+    user: {
+      type: Object,
+      required: true,
+    },
+  },
 
   data () {
     return {
-      ID_DOCUMENTS_VERBOSE
+      ID_DOCUMENTS_VERBOSE,
     }
-  },
-
-  created () {
-  },
-  methods: {
-    async getKyc () {
-      this.isLoaded = false
-      this.isFailed = false
-
-      try {
-        const response = await Sdk.api.blobs.get(this.blobId, this.user.address)
-        const kycFormResponse = response.data
-        this.kyc = deepCamelCase(
-          fromKycTemplate(JSON.parse(kycFormResponse.value))
-        )
-        this.isLoaded = true
-      } catch (error) {
-        ErrorHandler.processWithoutFeedback(error)
-        this.isFailed = true
-      }
-    },
-  },
-  watch: {
   },
 
   computed: {
     country () {
-      const country = Object.keys(byAlpha2).find(country => country === this.kyc.address.country)
+      const country = Object
+        .keys(byAlpha2)
+        .find(country => country === this.kyc.address.country)
       return byAlpha2[country].name
-    }
-  }
+    },
+  },
 }
 </script>
 

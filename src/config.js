@@ -42,7 +42,7 @@ export default Object.assign(
       corporate: '',
       blocked: '',
       usAccredited: '',
-      usVerified: ''
+      usVerified: '',
     },
 
     SIGNER_ROLES: {
