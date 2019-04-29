@@ -13,6 +13,10 @@ for further information about branching and tagging conventions.
 
 #### Added
 - "Invest" fee type
+- Filter KYC requests by pending tasks
+- KYC details renderers for US verified and US accredited roles
+- Ability to manage pending tasks of KYC request
+- External details viewer of KYC request
 
 #### Changed
 - Now using ErrorHandler instead of `error.showMessage()`,
@@ -22,6 +26,7 @@ for further information about branching and tagging conventions.
 - Updated `package.json` dependencies
 - Updated webpack build config
 - Now using "qrcode.vue" package instead of "v-qrcode"
+- KYC details for general user now renders new format of data
 
 ## [1.5.0] - 2019-04-19
 ### "Under the hood" changes
