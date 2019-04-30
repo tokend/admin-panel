@@ -175,7 +175,7 @@ export default {
             .toLowerCase()
             .trim()
 
-          this.showTfaForm(response.token)
+          return this.showTfaForm(response.token)
         }
         this.state = 'tfa'
       } catch (err) {
