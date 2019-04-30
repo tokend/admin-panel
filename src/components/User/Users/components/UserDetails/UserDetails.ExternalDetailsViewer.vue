@@ -1,21 +1,21 @@
 <template>
   <div class="external-details-viewer">
     <p
-      v-for="(item, i) in formattedExternalDetails"
-      :key="i"
+      v-for="(value, key) in actualExternalDetails"
+      :key="key"
       :class="{
         'external-details-viewer__row': true,
         'external-details-viewer__row--error':
-          item.key === POSSIBLE_KEYS.problem,
+          key === POSSIBLE_KEYS.problem,
         'external-details-viewer__row--warning':
-          item.key === POSSIBLE_KEYS.reputationProblem
+          key === POSSIBLE_KEYS.reputationProblem
       }"
     >
       <span class="external-details-viewer__label">
-        {{ unCamelCase(item.key) }}:
+        {{ unCamelCase(key) }}:
       </span>
       <span class="external-details-viewer__value">
-        {{ item.value }}
+        {{ value }}
       </span>
     </p>
   </div>
@@ -41,38 +41,13 @@ export default {
     POSSIBLE_KEYS,
   }),
   computed: {
-    formattedExternalDetails () {
-      /*
-        Here are how external details come to us:
-        [
-          {
-            a: 'b'
-          },
-          {
-            c: 'd'
-          },
-          {},
-          {},
-          {
-            e: 'f'
-          }
-        ]
-        that we need to render in human-readable way.
-        That's why we're doing this awkward stuff to make it possible
-       */
-      return this.externalDetails
-      // extracting keys and values from { a: 'b' } objects and
-      // making the entries consistent, to easily iterate through them
-      // in template:
-        .map(detail =>
-          Object
-            .entries(detail)
-            .map(([key, value]) => ({ key, value }))
-        )
-        // flattening the array:
-        .reduce((res, v) => res.concat(v), [])
-        // filtering out empty objects {}:
-        .filter(({ key, value }) => key && value)
+    actualExternalDetails () {
+      if (!this.externalDetails.length) {
+        return {}
+      }
+
+      // so we're actually interested only in the latest ones
+      return this.externalDetails[this.externalDetails.length - 1]
     },
   },
   methods: {
