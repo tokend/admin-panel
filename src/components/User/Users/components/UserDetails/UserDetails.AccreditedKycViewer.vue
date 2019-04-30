@@ -5,7 +5,7 @@
         Current user is applying for Accredited KYC
       </span>
       <span class="accredited-kyc-viewer__header-subtitle">
-        Please ensure user the attached proof document is valid
+        Please ensure the user attached a valid proof document
       </span>
     </div>
     <ul class="accredited-kyc-viewer__proof-document-wrp key-value-list">
