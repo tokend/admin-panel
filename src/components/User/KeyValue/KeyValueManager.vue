@@ -81,6 +81,7 @@ import {
 } from '@comcom/fields'
 import { KEY_VALUE_ENTRY_TYPE } from '@/constants'
 import { ApiCallerFactory } from '@/api-caller-factory'
+import { ErrorHandler } from '@/utils/ErrorHandler'
 
 const KEY_VALUE_TYPE_SHORT_NAME = {
   uint32: 'u32',
@@ -123,12 +124,7 @@ export default {
 
         this.$store.dispatch('SET_INFO', 'Submitted successfully')
       } catch (error) {
-        console.error(error)
-        if (error.showMessage) {
-          error.showMessage()
-        } else {
-          this.$store.dispatch('SET_ERROR', 'Failed to submit operation')
-        }
+        ErrorHandler.process(error)
       }
       this.isPending = false
     },
