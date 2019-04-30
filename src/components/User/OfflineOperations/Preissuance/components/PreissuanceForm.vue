@@ -125,10 +125,14 @@
       async getAssets () {
         this.$store.commit('OPEN_LOADER')
         try {
-          const response = await Sdk.horizon.assets.getAll({
-            owner: config.MASTER_ACCOUNT
-          })
-          this.assets = response.data
+          const { data } = await ApiCallerFactory
+            .createStubbornCallerInstance()
+            .stubbornGet('/v3/assets', {
+              filter: {
+                owner: config.MASTER_ACCOUNT
+              }
+            })
+          this.assets = data
         } catch (error) {
           this.$store.dispatch('SET_ERROR', 'Cannot load asset list. Please reload the page')
         }
@@ -161,7 +165,7 @@
       },
 
       getAsset (assetCode) {
-        return this.assets.filter(item => item.code === assetCode)[0]
+        return this.assets.filter(item => item.id === assetCode)[0]
       },
 
       parsePreIssuances (issuances) {
