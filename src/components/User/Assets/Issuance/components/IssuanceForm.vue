@@ -37,8 +37,8 @@
               v-model="form.asset"
               label="Asset"
               :disabled="isSubmitting">
-              <option v-for="item in assets" :value="item.code" :key="item.code">
-                {{item.code}}
+              <option v-for="item in assets" :value="item.id" :key="item.id">
+                {{item.id}}
               </option>
             </select-field>
           </div>
@@ -79,7 +79,7 @@ import Bus from '@/utils/EventBus'
 import { AssetAmountFormatter } from '@comcom/formatters'
 import { DEFAULT_INPUT_STEP, DEFAULT_INPUT_MIN } from '@/constants'
 
-import { confirmAction } from '../../../../../js/modals/confirmation_message'
+import { confirmAction } from '@/js/modals/confirmation_message'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { ApiCallerFactory } from '@/api-caller-factory'
 
@@ -112,7 +112,7 @@ export default {
 
   computed: {
     availableForIssuance () {
-      const asset = this.assets.find(item => item.code === this.form.asset)
+      const asset = this.assets.find(item => item.id === this.form.asset)
       return asset.availableForIssuance
     },
 
@@ -123,12 +123,17 @@ export default {
   methods: {
     async getAssets () {
       try {
-        const response = await Sdk.horizon.assets
-          .getAll({ owner: config.MASTER_ACCOUNT })
-        const list = response.data || []
+        const { data } = await ApiCallerFactory
+          .createStubbornCallerInstance()
+          .stubbornGet('/v3/assets', {
+            filter: {
+              owner: config.MASTER_ACCOUNT
+            }
+          })
+        const list = data || []
         const issuableAssets = list.filter(item => item.maxIssuanceAmount > 0)
         this.assets = issuableAssets
-        this.form.asset = this.form.asset || (issuableAssets[0] || {}).code
+        this.form.asset = this.form.asset || (issuableAssets[0] || {}).id
       } catch (error) {
         ErrorHandler.process(error)
       }
@@ -142,11 +147,15 @@ export default {
         address = await api.users.getAccountIdByEmail(this.form.receiver)
       }
       if (!address) {
-        return Promise.reject(`Account doesn't exists in the systen`)
+        return Promise.reject(`Account doesn't exists in the system`)
       }
-      const response = await Sdk.horizon.account.get(address)
-      let account = response.data
-      const balance = account.balances.find(item => item.asset === this.form.asset)
+      const { data } = await ApiCallerFactory
+        .createCallerInstance()
+        .getWithSignature(`/v3/accounts/${address}`, {
+          include: ['balances', 'balances.asset']
+        })
+      let account = data
+      const balance = account.balances.find(item => item.asset.id === this.form.asset)
 
       if (!balance) {
         try {
@@ -161,11 +170,15 @@ export default {
         } catch (error) {
           ErrorHandler.process(error)
         }
-        const response = await Sdk.horizon.account.get(address)
-        account = response.data
-        return account.balances.find(item => item.asset === this.form.asset).balanceId
+        const { data } = await ApiCallerFactory
+          .createCallerInstance()
+          .getWithSignature(`/v3/accounts/${address}`, {
+            include: ['balances', 'balances.asset']
+          })
+        account = data
+        return account.balances.find(item => item.asset.id === this.form.asset).id
       } else {
-        return balance.balanceId
+        return balance.id
       }
     },
 
