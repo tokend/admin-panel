@@ -1,4 +1,3 @@
-import { Sdk } from '@/sdk'
 import localize from '@/utils/localize'
 import SelectField from '@comcom/fields/SelectField'
 
@@ -6,6 +5,7 @@ import { REQUEST_STATES, ASSET_POLICIES } from '@/constants'
 import { CollectionLoader } from '@/components/common'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import config from '@/config'
+import { ApiCallerFactory } from '@/api-caller-factory'
 
 export default {
   components: {
@@ -43,12 +43,14 @@ export default {
     localize,
     async getAssets () {
       try {
-        const response = await Sdk.horizon.assets.getAll()
+        const { data } = await ApiCallerFactory
+          .createStubbornCallerInstance()
+          .stubbornGet('/v3/assets')
         this.assets = this.assets.concat(
-          response.data
-            .filter(item => (item.policy & ASSET_POLICIES.baseAsset))
-            .sort((assetA, assetB) => assetA.code > assetB.code ? 1 : -1)
-            .map(asset => asset.code)
+          data
+            .filter(item => (item.policies.value & ASSET_POLICIES.baseAsset))
+            .sort((assetA, assetB) => assetA.id > assetB.id ? 1 : -1)
+            .map(asset => asset.id)
         )
       } catch (error) {
         this.$store.dispatch('SET_ERROR', 'Cannot get asset list. Please try again later')
@@ -59,14 +61,19 @@ export default {
       this.isLoaded = false
       let response = {}
       try {
-        response = await Sdk.horizon.request.getAllForIssuances({
-          order: 'asc',
-          reviewer: config.MASTER_ACCOUNT,
-          limit: 1000,
-          ...this.filters
-        })
-        this.getListCounter(response)
-        this.isNoMoreEntries = false
+        response = await ApiCallerFactory
+          .createCallerInstance()
+          .getWithSignature('/v3/create_issuance_requests', {
+            filter: {
+              reviewer: config.MASTER_ACCOUNT,
+              state: this.filters.state,
+              'request_details.asset': this.filters.asset
+            },
+            page: {
+              order: 'asc'
+            },
+            include: ['request_details']
+          })
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }
@@ -74,6 +81,7 @@ export default {
       return response
     },
 
+    // TODO: Count issuance request
     getListCounter (response) {
       if (response) {
         this.listCounter.pending = response._rawResponse.data._embedded.meta.count.pending
