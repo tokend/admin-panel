@@ -69,7 +69,7 @@ export default {
         this.$store.dispatch('LOG_IN')
         setTimeout(() => this.$router.push({ name: 'users' }), 100)
       } catch (error) {
-        ErrorHandler.process('An error occurred, please try again later')
+        ErrorHandler.process(error)
       }
       this.form.pending = false
     },

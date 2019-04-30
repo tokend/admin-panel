@@ -368,7 +368,7 @@ export default {
       setTimeout(async () => {
         await this.getUser()
         this.$emit(EVENTS.reviewed)
-      }, 1500)
+      }, 5000)
     },
 
     async getKyc (blodId) {

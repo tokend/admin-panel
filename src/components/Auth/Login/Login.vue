@@ -179,7 +179,7 @@ export default {
         }
         this.state = 'tfa'
       } catch (err) {
-        ErrorHandler.processWithoutFeedback(err)
+        ErrorHandler.process(err)
         this.$store.commit('CLOSE_LOADER')
       }
     },

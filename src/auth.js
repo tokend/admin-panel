@@ -11,6 +11,7 @@ import config from '@/config'
 import { ApiCallerFactory } from '@/api-caller-factory'
 
 import { Wallet } from '@tokend/js-sdk'
+import _cloneDeep from 'lodash/cloneDeep'
 
 const server = {
   'trusted': true,
@@ -53,7 +54,7 @@ export default {
         keypair: signingKeys,
       })
 
-      this._storeWallet(wallet, credentials.username)
+      await this._storeWallet(wallet, credentials.username)
 
       if (redirect) {
         router.push({ name: redirect })
@@ -72,7 +73,7 @@ export default {
 
     try {
       const wallet = await StellarWallet.getWallet(params)
-      this._storeWallet(wallet, credentials.username)
+      await this._storeWallet(wallet, credentials.username)
 
       return { ok: true, enabledTFA: false }
     } catch (err) {
@@ -111,7 +112,7 @@ export default {
 
     try {
       const wallet = await StellarWallet.showWallet(options)
-      this._storeWallet(wallet, params.username)
+      await this._storeWallet(wallet, params.username)
 
       return { ok: true }
     } catch (err) {
@@ -124,12 +125,18 @@ export default {
   },
 
   async seedLogin (seed) {
-    const auth = store.state.auth || {}
-    const user = store.state.user || {}
     const keyPair = Sdk.base.Keypair.fromSecret(seed)
+    const accountId = keyPair.accountId()
+
+    if (!await this._checkMasterSignerExists(accountId)) {
+      throw new Error('Such admin does not exist')
+    }
+
+    const auth = _cloneDeep(store.state.auth) || {}
+    const user = _cloneDeep(store.state.user) || {}
 
     user.name = 'admin_demo'
-    user.address = keyPair.accountId()
+    user.address = accountId
     user.keys = user.keys || {}
     user.keys.accountId = config.MASTER_ACCOUNT
     user.keys.seed = keyPair.secret()
@@ -147,11 +154,17 @@ export default {
   },
 
   async _storeWallet (wallet, username) {
-    const auth = store.state.auth || {}
-    const user = store.state.user || {}
+    const accountId = JSON.parse(wallet.getKeychainData()).accountId
+
+    if (!await this._checkMasterSignerExists(accountId)) {
+      throw new Error('Such admin does not exist')
+    }
+
+    const auth = _cloneDeep(store.state.auth) || {}
+    const user = _cloneDeep(store.state.user) || {}
 
     user.name = username
-    user.address = JSON.parse(wallet.getKeychainData()).accountId
+    user.address = accountId
     user.keys = user.keys || {}
     user.keys.accountId = config.MASTER_ACCOUNT
     user.keys.seed = JSON.parse(wallet.getKeychainData()).seed
@@ -169,5 +182,13 @@ export default {
 
     store.commit('UPDATE_USER', user)
     store.commit('UPDATE_AUTH', auth)
+  },
+
+  async _checkMasterSignerExists (accountId) {
+    const { data: signers } = await ApiCallerFactory
+      .createPublicCallerInstance()
+      .get(`/v3/accounts/${config.MASTER_ACCOUNT}/signers`)
+
+    return Boolean(signers.find(item => item.id === accountId))
   },
 }

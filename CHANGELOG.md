@@ -12,10 +12,12 @@ for further information about branching and tagging conventions.
 - Fixed operation empty and loading list displaying of a user
 - Updating user details after KYC change
 - Error after blocking the user without verified KYC request
+- Increase a delay before getting user after KYC review
 
 #### Added
 - "Invest" fee type
 - Re-render chart animation
+- Master signer existence check on login
 - Filter KYC requests by pending tasks
 - KYC details renderers for US verified and US accredited roles
 - Ability to manage pending tasks of KYC request
