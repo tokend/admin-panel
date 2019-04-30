@@ -11,19 +11,19 @@
             </li>
             <li>
               <span>Code</span>
-              <span>{{ asset.code }}</span>
+              <span>{{ asset.id }}</span>
             </li>
             <li>
               <span>Owner</span>
               <email-getter
-                :account-id="asset.owner"
+                :account-id="asset.owner.id"
                 is-titled
               />
             </li>
             <li>
               <span>Preissued asset signer</span>
               <email-getter
-                :account-id="asset.preissuedAssetSigner"
+                :account-id="asset.preIssuanceAssetSigner"
                 is-titled
               />
             </li>
@@ -45,7 +45,7 @@
             </li>
             <li>
               <span>Policies</span>
-              <asset-policies-formatter :policies="asset.policies" />
+              <asset-policies-formatter :policy-mask="asset.policies.value" />
             </li>
             <li>
               <span>Terms</span>
@@ -230,7 +230,6 @@
 </template>
 
 <script>
-import { Sdk } from '@/sdk'
 import { EmailGetter, ImgGetter, DocLinkGetter } from '@comcom/getters'
 import {
   AssetAmountFormatter,
@@ -238,6 +237,7 @@ import {
   AssetPoliciesFormatter
 } from '@comcom/formatters'
 import { SALE_STATES } from '@/constants'
+import { ApiCallerFactory } from '@/api-caller-factory'
 
 export default {
   components: {
@@ -269,7 +269,11 @@ export default {
   methods: {
     async getAsset ({ baseAsset }) {
       try {
-        const { data } = await Sdk.horizon.assets.get(baseAsset.id)
+        const { data } = await ApiCallerFactory
+          .createCallerInstance()
+          .getWithSignature(`/v3/assets/${baseAsset.id}`, {
+            include: ['owner']
+          })
         this.asset = data
         this.isAssetLoaded = true
       } catch (error) {
