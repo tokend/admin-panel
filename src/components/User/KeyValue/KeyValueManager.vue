@@ -9,10 +9,10 @@
           >
             <option
               v-for="item in list"
-              :value="item.key"
-              :key="item.key"
+              :value="item.id"
+              :key="item.id"
             >
-              {{item.key}}
+              {{item.id}}
             </option>
           </select-field>
 
@@ -82,6 +82,12 @@ import {
 import { KEY_VALUE_ENTRY_TYPE } from '@/constants'
 import { ApiCallerFactory } from '@/api-caller-factory'
 
+const KEY_VALUE_TYPE_SHORT_NAME = {
+  uint32: 'u32',
+  string: 'str',
+  uint64: 'u64'
+}
+
 export default {
   components: {
     SelectField,
@@ -127,8 +133,10 @@ export default {
       this.isPending = false
     },
     async getList () {
-      const response = await Sdk.horizon.keyValue.getAll()
-      this.list = response.data
+      const { data } = await ApiCallerFactory
+        .createStubbornCallerInstance()
+        .stubbornGet('/v3/key_values')
+      this.list = data
 
       if (!this.list.length) {
         return
@@ -136,16 +144,17 @@ export default {
 
       if (!this.updateForm.key) {
         const item = this.list[0]
-
-        this.updateForm.key = item.key
-        this.updateForm.value = item[`${item.type.name}Value`]
+        const name = KEY_VALUE_TYPE_SHORT_NAME[item.value.type.name]
+        this.updateForm.key = item.id
+        this.updateForm.value = item.value[name]
       }
     }
   },
   watch: {
     'updateForm.key' (key) {
-      const item = this.list.find(elem => elem.key === key)
-      this.updateForm.value = item[`${item.type.name}Value`]
+      const item = this.list.find(elem => elem.id === key)
+      const name = KEY_VALUE_TYPE_SHORT_NAME[item.value.type.name]
+      this.updateForm.value = item.value[name]
     }
   }
 }
