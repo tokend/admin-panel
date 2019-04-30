@@ -18,6 +18,10 @@ for further information about branching and tagging conventions.
 - "Invest" fee type
 - Re-render chart animation
 - Master signer existence check on login
+- Filter KYC requests by pending tasks
+- KYC details renderers for US verified and US accredited roles
+- Ability to manage pending tasks of KYC request
+- External details viewer of KYC request
 
 #### Changed
 - Now using ErrorHandler instead of `error.showMessage()`,
@@ -32,6 +36,7 @@ for further information about branching and tagging conventions.
 - Operation details formatting
 - Now using custom ESLint rules
 - Formatted & cleaned up code
+- KYC details for general user now renders new format of data
 
 #### Removed
 - Unnecessary "build" folder, containing old webpack config

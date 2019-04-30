@@ -140,6 +140,7 @@ export default {
         await this.loadHorizonConfigs()
         await this.loadAccountRolesConfigs()
         await this.loadAssetTypesConfigs()
+        await this.loadChangeRoleTasks()
       } catch (error) {
         this.isConfigLoadingFailed = true
         ErrorHandler.processWithoutFeedback(error)
@@ -158,6 +159,20 @@ export default {
       ApiCallerFactory.setDefaultNetworkPassphrase(config.NETWORK_PASSPHRASE)
     },
 
+    async loadChangeRoleTasks () {
+      const { body: tasks } =
+        await this.$http.get(`${config.HORIZON_SERVER}/key_value`)
+      config.CHANGE_ROLE_TASKS.manualReviewRequired = tasks
+        .find(item => item.key === 'change_role_task:complete_auto_verification')
+        .uint32_value
+      config.CHANGE_ROLE_TASKS.submitAutoVerification = tasks
+        .find(item => item.key === 'change_role_task:submit_auto_verification')
+        .uint32_value
+      config.CHANGE_ROLE_TASKS.completeAutoVerification = tasks
+        .find(item => item.key === 'change_role_task:manual_review_required')
+        .uint32_value
+    },
+
     async loadAccountRolesConfigs () {
       const { body: roles } =
         await this.$http.get(`${config.HORIZON_SERVER}/key_value`)
@@ -166,6 +181,12 @@ export default {
         .uint32_value
       config.ACCOUNT_ROLES.general = roles
         .find(item => item.key === 'account_role:general')
+        .uint32_value
+      config.ACCOUNT_ROLES.usAccredited = roles
+        .find(item => item.key === 'account_role:us_accredited')
+        .uint32_value
+      config.ACCOUNT_ROLES.usVerified = roles
+        .find(item => item.key === 'account_role:us_verified')
         .uint32_value
       config.ACCOUNT_ROLES.corporate = roles
         .find(item => item.key === 'account_role:corporate')

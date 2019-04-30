@@ -41,6 +41,8 @@ export default Object.assign(
       general: '',
       corporate: '',
       blocked: '',
+      usAccredited: '',
+      usVerified: '',
     },
 
     SIGNER_ROLES: {
@@ -52,6 +54,13 @@ export default Object.assign(
       // Will be updated on init
       default: '0',
       kycRequired: '1',
+    },
+
+    CHANGE_ROLE_TASKS: {
+      submitAutoVerification: -1,
+      completeAutoVerification: -1,
+      manualReviewRequired: -1,
+      default: 1,
     },
   },
   process.env,

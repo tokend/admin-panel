@@ -30,6 +30,25 @@
             </option>
           </select-field>
 
+          <select-field
+            class="app-list-filters__field"
+            v-model="filters.pendingTasks"
+            label="Pending tasks"
+          >
+            <option :value="CHANGE_ROLE_TASKS.submitAutoVerification">
+              Submit auto verification
+            </option>
+            <option :value="CHANGE_ROLE_TASKS.completeAutoVerification">
+              Complete auto verification
+            </option>
+            <option :value="CHANGE_ROLE_TASKS.manualReviewRequired">
+              Manual review requried
+            </option>
+            <option value="">
+              Any
+            </option>
+          </select-field>
+
           <input-field
             class="app-list-filters__field"
             v-model.trim="filters.email"
@@ -127,6 +146,7 @@
 
 <script>
 import Vue from 'vue'
+import _ from 'lodash'
 
 import InputField from '@comcom/fields/InputField'
 import SelectField from '@comcom/fields/SelectField'
@@ -140,9 +160,10 @@ import { formatDate } from '@/utils/formatters'
 import { snakeToCamelCase } from '@/utils/un-camel-case'
 import { clearObject } from '@/utils/clearObject'
 
-import throttle from 'lodash/throttle'
-
-import { REQUEST_STATES, KYC_REQUEST_STATES } from '@/constants'
+import {
+  REQUEST_STATES,
+  KYC_REQUEST_STATES,
+} from '@/constants'
 
 import config from '@/config'
 import { ApiCallerFactory } from '@/api-caller-factory'
@@ -198,27 +219,27 @@ export default {
         email: '',
         address: '',
         type: '',
+        pendingTasks: '',
       },
       VIEW_MODES_VERBOSE,
       REQUEST_STATES,
       KYC_REQUEST_STATES,
+      CHANGE_ROLE_TASKS: config.CHANGE_ROLE_TASKS,
       ACCOUNT_ROLES: config.ACCOUNT_ROLES,
     }
   },
 
   watch: {
     'filters.state' () { this.reloadCollectionLoader() },
-
     'filters.roleToSet' () { this.reloadCollectionLoader() },
-
-    'filters.address': throttle(function () {
+    'filters.pendingTasks' () { this.reloadCollectionLoader() },
+    'filters.address': _.throttle(function () {
       this.reloadCollectionLoader()
     }, 1000),
   },
 
   methods: {
     snakeToCamelCase,
-
     async loadList () {
       this.isLoading = true
       let response = {}
@@ -234,6 +255,7 @@ export default {
           .getWithSignature('/v3/change_role_requests', {
             page: { order: 'desc' },
             filter: clearObject({
+              pending_tasks: this.filters.pendingTasks,
               state: KYC_REQUEST_STATES[this.filters.state].state,
               requestor: address,
               'request_details.account_role_to_set': this.filters.roleToSet,
