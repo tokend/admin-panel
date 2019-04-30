@@ -12,6 +12,7 @@ for further information about branching and tagging conventions.
 - Fixed operation empty and loading list displaying of a user
 - Updating user details after KYC change
 - Error after blocking the user without verified KYC request
+- Increase a delay before getting user after KYC review
 
 #### Added
 - "Invest" fee type

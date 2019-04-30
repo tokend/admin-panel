@@ -311,7 +311,7 @@ export default {
       setTimeout(async () => {
         await this.getUser()
         this.$emit(EVENTS.reviewed)
-      }, 3000)
+      }, 5000)
     },
   },
 }
