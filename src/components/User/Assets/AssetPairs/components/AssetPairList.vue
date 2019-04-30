@@ -116,7 +116,7 @@ export default {
           .createCallerInstance()
           .getWithSignature('/v3/asset_pairs')
       } catch (error) {
-        error.showMessage()
+        ErrorHandler.process(error)
         this.isFailed = true
       }
       this.isLoaded = true

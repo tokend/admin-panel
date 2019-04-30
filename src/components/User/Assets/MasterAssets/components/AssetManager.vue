@@ -371,7 +371,6 @@ export default {
           .getWithSignature(`/v3/assets/${this.assetCode}`, {
             include: ['owner']
           })
-        console.log(data)
         data.creatorDetails = data.creatorDetails || data.details
         Object.assign(this.asset, data)
       } catch (error) {
