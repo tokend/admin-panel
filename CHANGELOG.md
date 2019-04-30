@@ -16,6 +16,7 @@ for further information about branching and tagging conventions.
 #### Added
 - "Invest" fee type
 - Re-render chart animation
+- Master signer existence check on login
 
 #### Changed
 - Now using ErrorHandler instead of `error.showMessage()`,
