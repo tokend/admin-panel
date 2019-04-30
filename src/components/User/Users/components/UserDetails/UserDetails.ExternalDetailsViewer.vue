@@ -69,9 +69,8 @@ export default {
             .entries(detail)
             .map(([key, value]) => ({ key, value }))
         )
-        .reduce((res, v) => {
-          return res.concat(v)
-        }, []) // flattening the array
+        // flattening the array:
+        .reduce((res, v) => res.concat(v), [])
         // filtering out empty objects {}:
         .filter(({ key, value }) => key && value)
     },
