@@ -24,8 +24,8 @@
           <tick-field
             class="app__form-field"
             v-model="tasksToAdd"
-            :label="`Submit auto verification request (${taskValues.submitAutoVerification})`"
-            :cb-value="taskValues.submitAutoVerification"
+            :label="`Submit auto verification request (${CHANGE_ROLE_TASKS.submitAutoVerification})`"
+            :cb-value="CHANGE_ROLE_TASKS.submitAutoVerification"
             :disabled="isPending"
           />
           <!--eslint-enable max-len-->
@@ -34,8 +34,8 @@
           <tick-field
             class="app__form-field"
             v-model="tasksToAdd"
-            :label="`Complete auto verification request (${taskValues.completeAutoVerification})`"
-            :cb-value="taskValues.completeAutoVerification"
+            :label="`Complete auto verification request (${CHANGE_ROLE_TASKS.completeAutoVerification})`"
+            :cb-value="CHANGE_ROLE_TASKS.completeAutoVerification"
             :disabled="isPending"
           />
           <!--eslint-enable max-len-->
@@ -44,8 +44,8 @@
           <tick-field
             class="app__form-field"
             v-model="tasksToAdd"
-            :label="`Manual review required (${taskValues.manualReviewRequired})`"
-            :cb-value="taskValues.manualReviewRequired"
+            :label="`Manual review required (${CHANGE_ROLE_TASKS.manualReviewRequired})`"
+            :cb-value="CHANGE_ROLE_TASKS.manualReviewRequired"
             :disabled="isPending"
           />
           <!--eslint-enable max-len-->
@@ -53,8 +53,8 @@
           <tick-field
             class="app__form-field"
             v-model="tasksToAdd"
-            :label="`Default (${taskValues.default})`"
-            :cb-value="taskValues.default"
+            :label="`Default (${CHANGE_ROLE_TASKS.default})`"
+            :cb-value="CHANGE_ROLE_TASKS.default"
             :disabled="isPending"
           />
         </div>
@@ -68,8 +68,8 @@
           <tick-field
             class="app__form-field"
             v-model="tasksToRemove"
-            :label="`Submit auto verification request (${taskValues.submitAutoVerification})`"
-            :cb-value="taskValues.submitAutoVerification"
+            :label="`Submit auto verification request (${CHANGE_ROLE_TASKS.submitAutoVerification})`"
+            :cb-value="CHANGE_ROLE_TASKS.submitAutoVerification"
             :disabled="isPending"
           />
           <!--eslint-enable max-len-->
@@ -78,8 +78,8 @@
           <tick-field
             class="app__form-field"
             v-model="tasksToRemove"
-            :label="`Complete auto verification request (${taskValues.completeAutoVerification})`"
-            :cb-value="taskValues.completeAutoVerification"
+            :label="`Complete auto verification request (${CHANGE_ROLE_TASKS.completeAutoVerification})`"
+            :cb-value="CHANGE_ROLE_TASKS.completeAutoVerification"
             :disabled="isPending"
           />
           <!--eslint-enable max-len-->
@@ -88,8 +88,8 @@
           <tick-field
             class="app__form-field"
             v-model="tasksToRemove"
-            :label="`Manual review required (${taskValues.manualReviewRequired})`"
-            :cb-value="taskValues.manualReviewRequired"
+            :label="`Manual review required (${CHANGE_ROLE_TASKS.manualReviewRequired})`"
+            :cb-value="CHANGE_ROLE_TASKS.manualReviewRequired"
             :disabled="isPending"
           />
           <!--eslint-enable max-len-->
@@ -97,8 +97,8 @@
           <tick-field
             class="app__form-field"
             v-model="tasksToRemove"
-            :label="`Default (${taskValues.default})`"
-            :cb-value="taskValues.default"
+            :label="`Default (${CHANGE_ROLE_TASKS.default})`"
+            :cb-value="CHANGE_ROLE_TASKS.default"
             :disabled="isPending"
           />
         </div>
@@ -173,6 +173,7 @@
 
 <script>
 import api from '@/api'
+import config from '@/config'
 
 import { TextField, TickField } from '@comcom/fields'
 import Modal from '@comcom/modals/Modal'
@@ -184,9 +185,6 @@ import { ErrorHandler } from '@/utils/ErrorHandler'
 import { confirmAction } from '@/js/modals/confirmation_message'
 
 import { ChangeRoleRequest } from '@/api/responseHandlers/requests/ChangeRoleRequest'
-import { ApiCallerFactory } from '../../../../../api-caller-factory'
-
-import { CHANGE_ROLE_TASK_KEYS } from '@/constants'
 
 const EVENTS = {
   reviewed: 'reviewed',
@@ -227,43 +225,15 @@ export default {
       isShownAdvanced: false,
       isPending: false,
 
-      taskValues: {
-        submitAutoVerification: null,
-        completeAutoVerification: null,
-        manualReviewRequired: null,
-        default: 1,
-      },
+      CHANGE_ROLE_TASKS: config.CHANGE_ROLE_TASKS,
     }
   },
 
   async created () {
-    await this.loadTaskValues()
     this.tasksToRemove = this.requestToReview.pendingTasks
   },
 
   methods: {
-    async getTaskFromKv (key) {
-      const { data } = await ApiCallerFactory
-        .createCallerInstance()
-        .get(`v3/key_values/${key}`)
-
-      return data.value.u32
-    },
-    async loadTaskValues () {
-      const [
-        submitAutoVerification,
-        completeAutoVerification,
-        manualReviewRequired,
-      ] = await Promise.all([
-        this.getTaskFromKv(CHANGE_ROLE_TASK_KEYS.submitAutoVerification),
-        this.getTaskFromKv(CHANGE_ROLE_TASK_KEYS.completeAutoVerification),
-        this.getTaskFromKv(CHANGE_ROLE_TASK_KEYS.manualReviewRequired),
-      ])
-
-      this.taskValues.submitAutoVerification = submitAutoVerification
-      this.taskValues.completeAutoVerification = completeAutoVerification
-      this.taskValues.manualReviewRequired = manualReviewRequired
-    },
     async approve () {
       if (!await confirmAction('Are you sure? This action cannot be undone')) {
         return

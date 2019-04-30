@@ -140,6 +140,7 @@ export default {
         await this.loadHorizonConfigs()
         await this.loadAccountRolesConfigs()
         await this.loadAssetTypesConfigs()
+        await this.loadChangeRoleTasks()
       } catch (error) {
         this.isConfigLoadingFailed = true
         ErrorHandler.processWithoutFeedback(error)
@@ -156,6 +157,17 @@ export default {
 
       ApiCallerFactory.setDefaultHorizonUrl(config.HORIZON_SERVER)
       ApiCallerFactory.setDefaultNetworkPassphrase(config.NETWORK_PASSPHRASE)
+    },
+
+    async loadChangeRoleTasks () {
+      const { body: tasks } =
+        await this.$http.get(`${config.HORIZON_SERVER}/key_value`)
+      config.CHANGE_ROLE_TASKS.manualReviewRequired = tasks
+        .find(item => item.key === 'change_role_task:complete_auto_verification')
+      config.CHANGE_ROLE_TASKS.submitAutoVerification = tasks
+        .find(item => item.key === 'change_role_task:submit_auto_verification')
+      config.CHANGE_ROLE_TASKS.completeAutoVerification = tasks
+        .find(item => item.key === 'change_role_task:manual_review_required')
     },
 
     async loadAccountRolesConfigs () {

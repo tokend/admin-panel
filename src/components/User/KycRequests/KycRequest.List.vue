@@ -35,13 +35,13 @@
             v-model="filters.pendingTasks"
             label="Pending tasks"
           >
-            <option :value="taskValues.submitAutoVerification">
+            <option :value="CHANGE_ROLE_TASKS.submitAutoVerification">
               Submit auto verification
             </option>
-            <option :value="taskValues.completeAutoVerification">
+            <option :value="CHANGE_ROLE_TASKS.completeAutoVerification">
               Complete auto verification
             </option>
-            <option :value="taskValues.manualReviewRequired">
+            <option :value="CHANGE_ROLE_TASKS.manualReviewRequired">
               Manual review requried
             </option>
             <option value="">
@@ -163,7 +163,6 @@ import { clearObject } from '@/utils/clearObject'
 import {
   REQUEST_STATES,
   KYC_REQUEST_STATES,
-  CHANGE_ROLE_TASK_KEYS,
 } from '@/constants'
 
 import config from '@/config'
@@ -222,14 +221,10 @@ export default {
         type: '',
         pendingTasks: '',
       },
-      taskValues: {
-        submitAutoVerification: null,
-        completeAutoVerification: null,
-        manualReviewRequired: null,
-      },
       VIEW_MODES_VERBOSE,
       REQUEST_STATES,
       KYC_REQUEST_STATES,
+      CHANGE_ROLE_TASKS: config.CHANGE_ROLE_TASKS,
       ACCOUNT_ROLES: config.ACCOUNT_ROLES,
     }
   },
@@ -243,33 +238,8 @@ export default {
     }, 1000),
   },
 
-  created () {
-    this.loadTaskValues()
-  },
   methods: {
     snakeToCamelCase,
-    async getTaskFromKv (key) {
-      const { data } = await ApiCallerFactory
-        .createCallerInstance()
-        .get(`v3/key_values/${key}`)
-
-      return data.value.u32
-    },
-    async loadTaskValues () {
-      const [
-        submitAutoVerification,
-        completeAutoVerification,
-        manualReviewRequired,
-      ] = await Promise.all([
-        this.getTaskFromKv(CHANGE_ROLE_TASK_KEYS.submitAutoVerification),
-        this.getTaskFromKv(CHANGE_ROLE_TASK_KEYS.completeAutoVerification),
-        this.getTaskFromKv(CHANGE_ROLE_TASK_KEYS.manualReviewRequired),
-      ])
-
-      this.taskValues.submitAutoVerification = submitAutoVerification
-      this.taskValues.completeAutoVerification = completeAutoVerification
-      this.taskValues.manualReviewRequired = manualReviewRequired
-    },
     async loadList () {
       this.isLoading = true
       let response = {}

@@ -55,6 +55,13 @@ export default Object.assign(
       default: '0',
       kycRequired: '1',
     },
+
+    CHANGE_ROLE_TASKS: {
+      submitAutoVerification: -1,
+      completeAutoVerification: -1,
+      manualReviewRequired: -1,
+      default: 1,
+    },
   },
   process.env,
   document.ENV
