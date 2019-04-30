@@ -39,7 +39,7 @@
         <input-field
           class="app__form-field"
           label="Asset code"
-          v-model="asset.code"
+          v-model="asset.id"
           :disabled="isExistingAsset || isPending"
           v-validate="'required|alpha_num|max:16'"
           name="asset-code"
@@ -51,7 +51,7 @@
         <input-field
           class="app__form-field"
           label="Issuer public key"
-          v-model="asset.preissuedAssetSigner"
+          v-model="asset.preIssuanceAssetSigner"
           :disabled="isExistingAsset || isPending"
           v-validate="'required|alpha_num'"
           name="issuer-key"
@@ -114,7 +114,7 @@
         <select-field
           class="app__form-field app__form-field--halved"
           label="Asset type"
-          v-model="asset.assetType"
+          v-model="asset.type"
           :disabled="isExistingAsset || isPending"
           name="asset-type"
           v-validate="'required'"
@@ -166,7 +166,7 @@
       <div class="app__form-row">
         <tick-field
           class="app__form-field"
-          v-model="asset.policy"
+          v-model="asset.policies.value"
           :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.transferable]"
           :cb-value="ASSET_POLICIES.transferable"
           :disabled="isPending"
@@ -176,7 +176,7 @@
       <div class="app__form-row">
         <tick-field
           class="app__form-field"
-          v-model="asset.policy"
+          v-model="asset.policies.value"
           :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.baseAsset]"
           :cb-value="ASSET_POLICIES.baseAsset"
           :disabled="isPending"
@@ -186,7 +186,7 @@
       <div class="app__form-row">
         <tick-field
           class="app__form-field"
-          v-model="asset.policy"
+          v-model="asset.policies.value"
           :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.statsQuoteAsset]"
           :cb-value="ASSET_POLICIES.statsQuoteAsset"
           :disabled="isPending"
@@ -196,7 +196,7 @@
       <div class="app__form-row">
         <tick-field
           class="app__form-field"
-          v-model="asset.policy"
+          v-model="asset.policies.value"
           :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.withdrawable]"
           :cb-value="ASSET_POLICIES.withdrawable"
           :disabled="isPending"
@@ -206,7 +206,7 @@
       <div class="app__form-row">
         <tick-field
           class="app__form-field"
-          v-model="asset.policy"
+          v-model="asset.policies.value"
           :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.issuanceManualReviewRequired]"
           :cb-value="ASSET_POLICIES.issuanceManualReviewRequired"
           :disabled="isPending"
@@ -311,7 +311,9 @@ export default {
 
       asset: {
         preissuedAssetSigner: config.MASTER_ACCOUNT,
-        policy: 0,
+        policies: {
+          value: 0
+        },
         initialPreissuedAmount: '0',
         trailingDigitsCount: '6',
         assetType: '0',
@@ -364,7 +366,12 @@ export default {
     safeGet,
     async getAsset () {
       try {
-        const { data } = await Sdk.horizon.assets.get(this.assetCode)
+        const { data } = await ApiCallerFactory
+          .createCallerInstance()
+          .getWithSignature(`/v3/assets/${this.assetCode}`, {
+            include: ['owner']
+          })
+        console.log(data)
         data.creatorDetails = data.creatorDetails || data.details
         Object.assign(this.asset, data)
       } catch (error) {
@@ -397,8 +404,8 @@ export default {
           }
           operation = Sdk.base.ManageAssetBuilder.assetUpdateRequest({
             requestID: '0',
-            code: String(this.asset.code),
-            policies: Number(this.asset.policy),
+            code: String(this.asset.id),
+            policies: Number(this.asset.policies.value),
             allTasks: 0,
             creatorDetails: {
               name: this.asset.creatorDetails.name,
@@ -412,11 +419,11 @@ export default {
         } else {
           operation = Sdk.base.ManageAssetBuilder.assetCreationRequest({
             requestID: '0',
-            code: String(this.asset.code),
+            code: String(this.asset.id),
             preissuedAssetSigner: String(this.asset.preissuedAssetSigner),
             maxIssuanceAmount: String(this.asset.maxIssuanceAmount),
-            policies: Number(this.asset.policy),
-            assetType: String(this.asset.assetType),
+            policies: Number(this.asset.policies.value),
+            assetType: String(this.asset.type),
             initialPreissuedAmount: String(this.asset.initialPreissuedAmount),
             trailingDigitsCount: Number(this.asset.trailingDigitsCount),
             allTasks: 0,
