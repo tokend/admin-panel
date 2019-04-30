@@ -25,6 +25,10 @@ import { Sdk } from '@/sdk'
 import OrderTable from './OrderBook.Table'
 import HistoryTable from './OrderBook.History'
 import { AssetPair } from '../../models/AssetPair'
+import { ApiCallerFactory } from '@/api-caller-factory'
+import { ErrorHandler } from '@/utils/ErrorHandler'
+
+const SECONDARY_MARKET_ORDER_BOOK_ID = '0'
 
 export default {
   components: {
@@ -64,21 +68,21 @@ export default {
         quote_asset: pair.quote
       }
       try {
-        const response = await Sdk.horizon.orderBook.getAll({
-          ...params,
-          is_buy: true
-        })
-        this.book.bids = response.data
-        const orderBookResponse = await Sdk.horizon.orderBook.getAll({
-          ...params,
-          is_buy: false
-        })
-        this.book.asks = orderBookResponse.data
+        const orderBookId = SECONDARY_MARKET_ORDER_BOOK_ID
+        const formatedOrderBookId = `${pair.base}:${pair.quote}:${orderBookId}`
+        const { data } = await ApiCallerFactory
+          .createCallerInstance()
+          .getWithSignature(`/v3/order_books/${formatedOrderBookId}`, {
+            include: ['buy_entries', 'sell_entries']
+          })
+        this.book.bids = data.buyEntries
+        this.book.asks = data.sellEntries
+        // TODO: No /v3 endpoint for trades yet
         const tradesResponse = await Sdk.horizon.trades.getPage(params)
         this.book.history = tradesResponse.data
         this.isLoaded = true
       } catch (error) {
-        error.showMessage('Failed to get order book. Please try again later')
+        ErrorHandler.process(error)
         this.isFailed = true
       }
     }
