@@ -63,6 +63,7 @@ export default {
         this.isFailed = false
         this.priceHistory = {}
         const pair = new AssetPair(this.filters.pair)
+        // TODO: No /v3 endpoint for charts yet
         Sdk.horizon.charts.get(`${pair.base}-${pair.quote}`)
         const response = await Sdk.horizon.charts.get(`${pair.base}-${pair.quote}`)
         this.priceHistory = response.data

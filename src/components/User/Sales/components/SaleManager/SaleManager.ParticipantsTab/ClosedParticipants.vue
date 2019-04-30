@@ -66,6 +66,7 @@ export default {
   methods: {
     async getList ({ baseAsset }) {
       try {
+        // TODO: No /v3 endpoint for getHolders yet
         const response = await Sdk.horizon.assets.getHolders(baseAsset.id)
         this.list = response.data
         this.isLoaded = true

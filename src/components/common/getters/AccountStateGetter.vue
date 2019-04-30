@@ -28,6 +28,7 @@
     },
     methods: {
       async getAccount () {
+        // TODO: No isBlocked property for account yet
         const response = await Sdk.horizon.account.get(this.accountId)
         this.account = response.data
       }

@@ -106,6 +106,7 @@ export default {
       const quoteAsset = this.filters.quoteAsset
 
       try {
+        // TODO: No ownerId property for orderBook yet
         const response = await Sdk.horizon.orderBook.getAll({
           order_book_id: id,
           base_asset: baseAsset.id,

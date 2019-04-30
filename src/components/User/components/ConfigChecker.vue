@@ -27,19 +27,24 @@
 import Bus from '@/utils/EventBus'
 import { ASSET_POLICIES } from '@/constants'
 import api from '@/api'
-import { Sdk } from '@/sdk'
 import config from '@/config'
 import 'mdi-vue/AlertOutlineIcon'
 import store from '@/store'
+import { ApiCallerFactory } from '@/api-caller-factory'
 
 const CHECK_LIST = [
   {
     message: 'Please set exactly 1 quote asset',
     async check ({ store, api }) {
-      const response = (await Sdk.horizon.assets
-        .getAll({ owner: config.MASTER_ACCOUNT }))
-      return (response.data || [])
-        .filter(item => item && item.policy & ASSET_POLICIES.statsQuoteAsset)
+      const { data } = await ApiCallerFactory
+        .createStubbornCallerInstance()
+        .stubbornGet('/v3/assets', {
+          filter: {
+            owner: config.MASTER_ACCOUNT
+          }
+        })
+      return (data || [])
+        .filter(item => item && item.policies.value & ASSET_POLICIES.statsQuoteAsset)
         .length !== 1
     }
   }
