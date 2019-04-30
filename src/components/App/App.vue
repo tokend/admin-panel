@@ -164,10 +164,13 @@ export default {
         await this.$http.get(`${config.HORIZON_SERVER}/key_value`)
       config.CHANGE_ROLE_TASKS.manualReviewRequired = tasks
         .find(item => item.key === 'change_role_task:complete_auto_verification')
+        .uint32_value
       config.CHANGE_ROLE_TASKS.submitAutoVerification = tasks
         .find(item => item.key === 'change_role_task:submit_auto_verification')
+        .uint32_value
       config.CHANGE_ROLE_TASKS.completeAutoVerification = tasks
         .find(item => item.key === 'change_role_task:manual_review_required')
+        .uint32_value
     },
 
     async loadAccountRolesConfigs () {
