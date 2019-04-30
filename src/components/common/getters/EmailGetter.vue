@@ -26,7 +26,6 @@
 </template>
 
 <script>
-import { Sdk } from '@/sdk'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import config from '@/config'
 import { ApiCallerFactory } from '@/api-caller-factory'
@@ -90,8 +89,10 @@ export default {
       if (this.accountId) {
         return this.accountId
       } else if (this.balanceId) {
-        const { data } = await Sdk.horizon.balances.getAccount(this.balanceId)
-        return data.accountId
+        const { data } = await ApiCallerFactory
+          .createCallerInstance()
+          .getWithSignature(`/v3/balances/${this.balanceId}`)
+        return data.owner.id
       } else {
         return ''
       }
