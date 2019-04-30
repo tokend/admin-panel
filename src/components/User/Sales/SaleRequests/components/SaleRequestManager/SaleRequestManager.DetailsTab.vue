@@ -56,7 +56,7 @@
           </li>
           <li>
             <span>Code</span>
-            <span>{{request.asset.code}}</span>
+            <span>{{request.asset.id}}</span>
           </li>
           <li>
             <span>Initial preissued amount</span>
@@ -69,13 +69,13 @@
           <li>
             <span>Preissuance signer</span>
             <email-getter
-              :account-id="request.asset.preissuedAssetSigner"
+              :account-id="request.asset.preIssuanceAssetSigner"
               is-titled
             />
           </li>
           <li>
             <span>Policies</span>
-            <asset-policies-formatter :policies="request.asset.policies" />
+            <asset-policies-formatter :policy-mask="request.asset.policies.value" />
           </li>
           <li>
             <span>Terms</span>

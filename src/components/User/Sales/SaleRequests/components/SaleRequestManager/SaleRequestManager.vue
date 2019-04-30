@@ -93,7 +93,6 @@
 </template>
 
 <script>
-import { Sdk } from '@/sdk'
 import api from '@/api'
 import TextField from '@comcom/fields/TextField'
 import TickField from '@comcom/fields/TickField'
@@ -107,6 +106,7 @@ import { Tabs, Tab } from '@comcom/Tabs'
 import cloneDeep from 'lodash/cloneDeep'
 import { snakeToCamelCase } from '@/utils/un-camel-case'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { ApiCallerFactory } from '@/api-caller-factory'
 
 export default {
   components: {
@@ -156,9 +156,13 @@ export default {
     async getRequest (id) {
       try {
         this.request.sale = await this.getSaleRequest(id)
-        const response = await Sdk.horizon.assets
-          .get(this.getSaleDetails.baseAsset)
-        this.request.asset = response.data
+        const { data } = await ApiCallerFactory
+          .createCallerInstance()
+          .getWithSignature(`/v3/assets/${this.getSaleDetails.baseAsset}`, {
+            include: ['owner']
+          })
+        console.log(data)
+        this.request.asset = data
         this.request.isReady = true
       } catch (error) {
         ErrorHandler.process(error)
