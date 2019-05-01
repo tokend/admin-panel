@@ -48,8 +48,8 @@
             <input-field
               class="limits-manager-filters__field
                     limits-manager-filters__specific-user-field"
-              v-model.trim="specificUserAddress"
-              label="Email or Account ID"
+              v-model.trim="filters.requestor"
+              label="Requestor"
               autocomplete-type="email"
             />
 
@@ -223,11 +223,10 @@
       filters: {
         asset: '',
         accountRole: '',
-        email: '',
-        address: ''
+        address: '',
+        requestor: ''
       },
       selectedTabName: '',
-      specificUserAddress: '',
       limits: {
         withdrawal: null,
         payment: null,
@@ -254,7 +253,7 @@
         this.selectedTabName = selectedTab.tab.name
 
         if (this.selectedTabName === TAB_NAMES.accountType) {
-          this.specificUserAddress = ''
+          this.filters.requestor = ''
         }
       },
       async getLimits () {
@@ -269,12 +268,12 @@
         this.limits.deposit = depositLimits
 
         async function getLimit (statsOpType) {
+          const requestor = await this.getRequestorAccountId(this.filters.requestor)
           const { data } = await Sdk.horizon.limits.get({
-            account_id: this.filters.address,
+            account_id: requestor,
             account_type: this.filters.accountRole,
             stats_op_type: statsOpType,
-            asset: this.filters.asset,
-            email: this.filters.email
+            asset: this.filters.asset
           })
 
           // TODO: remove legacy consistency fix
@@ -324,8 +323,17 @@
         const response = await Sdk.horizon.assets.getAll()
         this.assets = response.data
       },
-      async getAccountIdByEmail (email) {
-        this.filters.address = await api.users.getAccountIdByEmail(email)
+      async getRequestorAccountId (requestor) {
+        if (Sdk.base.Keypair.isValidPublicKey(requestor)) {
+          return requestor
+        } else {
+          try {
+            const address = await api.users.getAccountIdByEmail(requestor)
+            return address || requestor
+          } catch (error) {
+            return requestor
+          }
+        }
       },
       // it's a quick fix of the limits validation. Need to refactor it ASAP
       isValidLimits (limits) {
@@ -365,16 +373,10 @@
         if (!this.filters.accountRole) {
           this.filters.accountRole = config.ACCOUNT_ROLES.general + ''
         }
-        if (this.specificUserAddress) {
+        if (this.filters.requestor) {
           // Both accountRole and accountId cant be requested at same time
           this.filters.accountRole = ''
-          const emailRegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-          const idLength = 56
-          if (emailRegExp.test(this.specificUserAddress)) {
-            await this.getAccountIdByEmail(this.specificUserAddress)
-          } else if (this.specificUserAddress.length === idLength) {
-            this.filters.address = this.specificUserAddress
-          }
+          this.filters.address = await this.getRequestorAccountId(this.filters.requestor)
         }
       },
       normalizeLimitAmount (limit) {
@@ -392,7 +394,7 @@
       'filters.accountRole': {
         handler: function (value) {
           if (value) {
-            this.specificUserAddress = ''
+            this.filters.requestor = ''
             this.filters.address = ''
           }
           this.setFilters()
@@ -407,7 +409,7 @@
         },
         immediate: true
       },
-      'specificUserAddress': {
+      'filters.requestor': {
         handler: throttle(async function (value) {
           await this.setFilters()
           await this.getLimits()

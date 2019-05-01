@@ -129,6 +129,7 @@ import { ApiCallerFactory } from '@/api-caller-factory'
 import { clearObject } from '@/utils/clearObject'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { CollectionLoader } from '@/components/common'
+import { Sdk } from '@/sdk'
 
 const VIEW_MODES_VERBOSE = Object.freeze({
   index: 'index',
@@ -158,7 +159,6 @@ export default {
       },
       filters: {
         state: 'pending',
-        email: '',
         requestor: '',
         type: ''
       },
@@ -185,7 +185,7 @@ export default {
       this.isLoading = true
       let response = {}
       try {
-        const requestor = await api.users.getAccountIdByEmail(this.filters.requestor)
+        const requestor = await this.getRequestorAccountId(this.filters.requestor)
         response = await ApiCallerFactory
           .createCallerInstance()
           .getWithSignature('/v3/change_role_requests', {
@@ -202,6 +202,19 @@ export default {
       }
       this.isLoading = false
       return response
+    },
+
+    async getRequestorAccountId (requestor) {
+      if (Sdk.base.Keypair.isValidPublicKey(requestor)) {
+        return requestor
+      } else {
+        try {
+          const address = await api.users.getAccountIdByEmail(requestor)
+          return address || requestor
+        } catch (error) {
+          return requestor
+        }
+      }
     },
 
     setList (data) {

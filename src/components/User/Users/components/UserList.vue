@@ -130,6 +130,7 @@ import config from '@/config'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { CollectionLoader } from '@/components/common'
 import api from '@/api'
+import { Sdk } from '@/sdk'
 
 const VIEW_MODES_VERBOSE = Object.freeze({
   index: 'index',
@@ -149,8 +150,6 @@ export default {
     return {
       VIEW_MODES_VERBOSE,
       filters: {
-        email: '',
-        address: '',
         role: '',
         requestor: ''
       },
@@ -171,12 +170,11 @@ export default {
       this.isLoading = true
       let response = {}
       try {
-        const requestor = await api.users.getAccountIdByEmail(this.filters.requestor)
+        const requestor = await this.getRequestorAccountId(this.filters.requestor)
         response = await ApiCallerFactory
           .createCallerInstance()
           .getWithSignature('/identities', {
             filter: clearObject({
-              email: this.filters.email,
               role: this.filters.role,
               address: requestor
             })
@@ -186,6 +184,19 @@ export default {
       }
       this.isLoading = false
       return response
+    },
+
+    async getRequestorAccountId (requestor) {
+      if (Sdk.base.Keypair.isValidPublicKey(requestor)) {
+        return requestor
+      } else {
+        try {
+          const address = await api.users.getAccountIdByEmail(requestor)
+          return address || requestor
+        } catch (error) {
+          return requestor
+        }
+      }
     },
 
     setList (data) {
