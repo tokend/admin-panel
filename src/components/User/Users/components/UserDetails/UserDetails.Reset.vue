@@ -13,7 +13,7 @@
     >
       Reset to unverified
     </button>
-  
+
     <modal
       class="user-reset__modal"
       v-if="resetForm.isShown"
@@ -67,44 +67,44 @@ import config from '@/config'
 
 const EVENTS = {
   reset: 'reset',
-  updateIsPending: 'update:isPending'
+  updateIsPending: 'update:isPending',
 }
 
 export default {
   name: 'user-details-request',
   components: {
     Modal,
-    TextField
+    TextField,
   },
 
   props: {
     user: {
       type: Object,
-      default: _ => ({})
+      default: _ => ({}),
     },
     verifiedRequest: {
       type: ChangeRoleRequest,
-      default: _ => new ChangeRoleRequest({})
+      default: _ => new ChangeRoleRequest({}),
     },
     isPending: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
 
   data () {
     return {
       resetForm: {
         reason: '',
-        isShown: false
-      }
+        isShown: false,
+      },
     }
   },
 
   computed: {
     canResetToUnverified () {
       return this.user.role !== config.ACCOUNT_ROLES.notVerified
-    }
+    },
   },
 
   methods: {
@@ -121,9 +121,9 @@ export default {
             accountRoleToSet: config.ACCOUNT_ROLES.notVerified.toString(),
             creatorDetails: {
               resetReason: this.resetForm.reason,
-              latestApprovedRequestId: this.verifiedRequest.id
+              latestApprovedRequestId: this.verifiedRequest.id,
             },
-            allTasks: 0
+            allTasks: 0,
           })
         await Sdk.horizon.transactions.submitOperations(operation)
         this.$store.dispatch('SET_INFO', 'The user account was reset to unverified')
@@ -146,8 +146,8 @@ export default {
     async submitResetForm () {
       this.hideResetModal()
       await this.resetToUnverified()
-    }
-  }
+    },
+  },
 }
 </script>
 

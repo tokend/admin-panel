@@ -25,12 +25,16 @@
 
 <script>
 import Bus from '@/utils/EventBus'
+
 import { ASSET_POLICIES } from '@/constants'
+import config from '@/config'
+
 import api from '@/api'
 import { Sdk } from '@/sdk'
-import config from '@/config'
-import 'mdi-vue/AlertOutlineIcon'
+
 import store from '@/store'
+
+import 'mdi-vue/AlertOutlineIcon'
 
 const CHECK_LIST = [
   {
@@ -41,15 +45,15 @@ const CHECK_LIST = [
       return (response.data || [])
         .filter(item => item && item.policy & ASSET_POLICIES.statsQuoteAsset)
         .length !== 1
-    }
-  }
+    },
+  },
 ]
 
 export default {
   data () {
     return {
       isPaneActive: false,
-      foundIssues: []
+      foundIssues: [],
     }
   },
 
@@ -82,8 +86,8 @@ export default {
         document.removeEventListener('click', listener)
       }
       document.addEventListener('click', listener)
-    }
-  }
+    },
+  },
 }
 </script>
 

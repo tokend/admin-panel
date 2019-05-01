@@ -1,6 +1,9 @@
 <template>
   <div class="socials">
-    <p class="socials__link-group" v-for="link in socials" :key="link">
+    <p
+      class="socials__link-group"
+      v-for="link in socials"
+      :key="link">
       <span class="socials__ico-wrp">
         <template v-if="/facebook|fb\./.test(link)">
           <mdi-facebook-box-icon class="socials__ico socials__ico--facebook" />
@@ -12,7 +15,11 @@
           <mdi-twitter-box-icon class="socials__ico socials__ico--twitter" />
         </template>
       </span>
-      <a class="socials__link" :href="link" target="_blank" rel="noopener">
+      <a
+        class="socials__link"
+        :href="link"
+        target="_blank"
+        rel="noopener">
         {{ link }}
       </a>
     </p>
@@ -23,14 +30,17 @@
 import 'mdi-vue/FacebookBoxIcon'
 import 'mdi-vue/LinkedinBoxIcon'
 import 'mdi-vue/TwitterBoxIcon'
+
 export default {
-  data () {
-    return {
-      socials: []
-    }
+  props: {
+    links: { type: String, required: true },
   },
 
-  props: ['links'],
+  data () {
+    return {
+      socials: [],
+    }
+  },
 
   created () {
     this.getSocials()
@@ -43,8 +53,8 @@ export default {
       } else {
         this.socials = this.links
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

@@ -1,7 +1,8 @@
 <template>
   <div class="change-asset-issuer-form">
     <p class="change-asset-issuer-form__hint">
-      Select file(s) with change issuer transaction and click <strong>Upload</strong>.<br />
+      Select file(s) with change issuer transaction and click
+      <strong>Upload</strong>.<br>
     </p>
 
     <div class="change-asset-issuer-form__upload-wrp">
@@ -19,7 +20,7 @@
           type="file"
           accept=".tx"
           @change="onFileChange"
-        />
+        >
       </template>
     </div>
 
@@ -27,9 +28,15 @@
       class="change-asset-issuer-form__details"
       v-if="asset && accountId"
     >
-      <p class="text">Signer will change on asset: {{ asset }}</p>
-      <p class="text">New signer will be: {{ accountId }}</p>
-      <p class="text">Transaction source: {{ source }}</p>
+      <p class="text">
+        Signer will change on asset: {{ asset }}
+      </p>
+      <p class="text">
+        New signer will be: {{ accountId }}
+      </p>
+      <p class="text">
+        Transaction source: {{ source }}
+      </p>
     </div>
 
     <p class="change-asset-issuer-form__expiration-date-note text">
@@ -68,9 +75,10 @@ export default {
       asset: '',
       transaction: '',
       source: '',
-      uploadBtnDisable: false
+      uploadBtnDisable: false,
     }
   },
+
   methods: {
     async onFileChange (event) {
       const files = event.target.files || event.dataTransfer.files
@@ -82,7 +90,9 @@ export default {
       this.transaction = fileData.transaction
       this.source = fileData.source
     },
+
     readFile (file) {
+      // eslint-disable-next-line promise/avoid-new
       return new Promise(function (resolve) {
         const reader = new FileReader()
 
@@ -93,6 +103,7 @@ export default {
         reader.readAsText(file)
       })
     },
+
     clear () {
       this.accountId = ''
       this.asset = ''
@@ -103,6 +114,7 @@ export default {
         input.value = ''
       }
     },
+
     async upload () {
       this.uploadBtnDisable = true
       try {
@@ -114,15 +126,15 @@ export default {
       }
       this.uploadBtnDisable = false
     },
+
     async sendTx () {
       const transaction = new Sdk.base.Transaction(this.transaction)
       transaction.sign(this.$store.getters.keypair)
-      return await Sdk.horizon.transactions.submit(transaction)
-    }
-  }
+      await Sdk.horizon.transactions.submit(transaction)
+    },
+  },
 }
 </script>
-
 
 <style lang="scss" scoped>
 .change-asset-issuer-form__upload-btn.app__btn {

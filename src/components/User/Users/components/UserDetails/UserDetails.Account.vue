@@ -38,13 +38,14 @@
       </li>
 
       <template v-if="isUserBlocked && blockReason">
-        <label class="data-caption">Block reason</label>
+        <label class="data-caption">
+          Block reason
+        </label>
         <p class="text">
           {{ blockReason }}
         </p>
       </template>
     </ul>
-
   </div>
 </template>
 
@@ -57,16 +58,16 @@ export default {
       type: Object,
       default () {
         return {}
-      }
+      },
     },
     originalRole: {
       type: String,
-      default: ''
+      default: '',
     },
     blockReason: {
       type: String,
-      default: ''
-    }
+      default: '',
+    },
   },
 
   computed: {
@@ -76,7 +77,7 @@ export default {
 
     accountState () {
       return this.isUserBlocked ? 'Blocked' : 'Active'
-    }
-  }
+    },
+  },
 }
 </script>
