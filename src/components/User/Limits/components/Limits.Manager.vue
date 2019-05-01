@@ -49,7 +49,7 @@
               class="limits-manager-filters__field
                     limits-manager-filters__specific-user-field"
               v-model.trim="filters.requestor"
-              label="Email or Account ID"
+              label="Requestor"
               autocomplete-type="email"
             />
 
@@ -212,7 +212,6 @@ export default {
     filters: {
       asset: '',
       accountRole: '',
-      email: '',
       address: '',
       requestor: '',
     },

@@ -185,11 +185,7 @@ export default {
       this.reloadCollectionLoader()
     },
 
-    'filters.email': _.throttle(function () {
-      this.reloadCollectionLoader()
-    }, 1000),
-
-    'filters.address': _.throttle(function () {
+    'filters.requestor': _.throttle(function () {
       this.reloadCollectionLoader()
     }, 1000),
   },
@@ -255,9 +251,6 @@ export default {
     reloadCollectionLoader () {
       this.$refs.collectionLoaderBtn.loadFirstPage()
     },
-    'filters.requestor': _.throttle(function () {
-      this.reloadCollectionLoader()
-    }, 1000),
   },
 }
 </script>
