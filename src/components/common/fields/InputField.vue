@@ -34,12 +34,12 @@
     />
 
     <span class="input-field__label">
-      {{label}}
+      {{ label }}
     </span>
 
     <transition name="input-field__err-transition">
       <p class="input-field__err-mes" v-if="errorMessage">
-        {{errorMessage}}
+        {{ errorMessage }}
       </p>
     </transition>
   </div>
@@ -50,7 +50,7 @@ import InputFieldAutocomplete from './InputFieldAutocomplete'
 
 export default {
   components: {
-    InputFieldAutocomplete
+    InputFieldAutocomplete,
   },
 
   props: {
@@ -73,21 +73,13 @@ export default {
     // [type="number"] proxies
     min: { type: [String, Number], default: undefined },
     max: { type: [String, Number], default: undefined },
-    step: { type: [String, Number], default: undefined }
+    step: { type: [String, Number], default: undefined },
   },
 
   data () {
     return {
-      isInputFocused: false
+      isInputFocused: false,
     }
-  },
-
-  created () {
-    // created
-  },
-
-  computed: {
-    // computed
   },
 
   methods: {
@@ -119,7 +111,7 @@ export default {
       const min = '' + this.min
 
       if (value === '') {
-        return
+
       } else if (value > +max) {
         target.value = max
       } else if (value < +min) {
@@ -138,7 +130,7 @@ export default {
       }
 
       if (!precision) {
-        return
+
       } else {
         const detectRe = new RegExp(`(?:\\.|,)\\d{${precision + 1},}$`)
         if (detectRe.test(value)) {
@@ -146,11 +138,11 @@ export default {
           target.value = value.replace(replaceRe, '$1')
         }
       }
-    }
-  }
+    },
+  },
 }
 </script>
 
 <style lang="scss">
-  @import "./scss/input";
+@import "./scss/input";
 </style>

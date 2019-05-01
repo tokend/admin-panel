@@ -1,8 +1,6 @@
 <template>
   <div class="request-list">
-
     <template v-if="view.mode === VIEW_MODES_VERBOSE.index">
-
       <div class="request-list__filters-wrp">
         <div class="app-list-filters">
           <select-field
@@ -10,9 +8,13 @@
             label="Role to set"
             v-model="filters.roleToSet"
           >
-            <option :value="''"></option>
-            <option :value="ACCOUNT_ROLES.general">General</option>
-            <option :value="ACCOUNT_ROLES.corporate">Сorporate</option>
+            <option :value="''" />
+            <option :value="ACCOUNT_ROLES.general">
+              General
+            </option>
+            <option :value="ACCOUNT_ROLES.corporate">
+              Сorporate
+            </option>
           </select-field>
           <select-field
             class="app-list-filters__field"
@@ -25,6 +27,25 @@
               :value="state"
             >
               {{ KYC_REQUEST_STATES[state].label }}
+            </option>
+          </select-field>
+
+          <select-field
+            class="app-list-filters__field"
+            v-model="filters.pendingTasks"
+            label="Pending tasks"
+          >
+            <option :value="CHANGE_ROLE_TASKS.submitAutoVerification">
+              Submit auto verification
+            </option>
+            <option :value="CHANGE_ROLE_TASKS.completeAutoVerification">
+              Complete auto verification
+            </option>
+            <option :value="CHANGE_ROLE_TASKS.manualReviewRequired">
+              Manual review requried
+            </option>
+            <option value="">
+              Any
             </option>
           </select-field>
 
@@ -41,10 +62,18 @@
         <template v-if="list && list.length">
           <div class="app-list">
             <div class="app-list__header">
-              <span class="app-list__cell">Email</span>
-              <span class="app-list__cell app-list__cell--right">State</span>
-              <span class="app-list__cell app-list__cell--right">Last updated</span>
-              <span class="app-list__cell app-list__cell--right">Role to set</span>
+              <span class="app-list__cell">
+                Email
+              </span>
+              <span class="app-list__cell app-list__cell--right">
+                State
+              </span>
+              <span class="app-list__cell app-list__cell--right">
+                Last updated
+              </span>
+              <span class="app-list__cell app-list__cell--right">
+                Role to set
+              </span>
             </div>
             <button
               class="app-list__li"
@@ -107,66 +136,60 @@
       @back="toggleViewMode(null)"
       @reviewed="loadList"
     />
-
   </div>
 </template>
 
 <script>
-import { EmailGetter } from '@comcom/getters'
-import { formatDate } from '@/utils/formatters'
 import Vue from 'vue'
 import UserView from '../Users/Users.Show'
 import api from '@/api'
+import _ from 'lodash'
 
-import SelectField from '@comcom/fields/SelectField'
 import InputField from '@comcom/fields/InputField'
-import { snakeToCamelCase } from '@/utils/un-camel-case'
+import SelectField from '@comcom/fields/SelectField'
 
-import { REQUEST_STATES, KYC_REQUEST_STATES } from '@/constants'
+import { EmailGetter } from '@comcom/getters'
+import { CollectionLoader } from '@/components/common'
+
+import UserView from '../Users/Users.Show'
+
+import { formatDate } from '@/utils/formatters'
+import { snakeToCamelCase } from '@/utils/un-camel-case'
+import { clearObject } from '@/utils/clearObject'
+
+import {
+  REQUEST_STATES,
+  KYC_REQUEST_STATES,
+} from '@/constants'
 
 import config from '@/config'
 import { ApiCallerFactory } from '@/api-caller-factory'
-import { clearObject } from '@/utils/clearObject'
+
 import { ErrorHandler } from '@/utils/ErrorHandler'
-import { CollectionLoader } from '@/components/common'
 
 const VIEW_MODES_VERBOSE = Object.freeze({
   index: 'index',
-  user: 'user'
+  user: 'user',
 })
 
 export default {
   name: 'kyc-request-list',
-  components: { UserView, EmailGetter, SelectField, InputField, CollectionLoader },
+  components: {
+    UserView,
+    EmailGetter,
+    SelectField,
+    InputField,
+    CollectionLoader,
+  },
+
   provide () {
     const kycRequestsList = {}
     Object.defineProperty(kycRequestsList, 'updateAsk', {
       enumerable: true,
       get: () => false,
-      set: () => this.loadList()
+      set: () => this.loadList(),
     })
     return { kycRequestsList }
-  },
-  data () {
-    return {
-      isLoading: false,
-      list: [],
-      view: {
-        mode: VIEW_MODES_VERBOSE.index,
-        userId: null,
-        scrollPosition: 0
-      },
-      filters: {
-        state: 'pending',
-        email: '',
-        requestor: '',
-        type: ''
-      },
-      VIEW_MODES_VERBOSE,
-      REQUEST_STATES,
-      KYC_REQUEST_STATES,
-      ACCOUNT_ROLES: config.ACCOUNT_ROLES
-    }
   },
 
   filters: {
@@ -174,9 +197,42 @@ export default {
       return {
         [config.ACCOUNT_ROLES.notVerified]: 'Unverified',
         [config.ACCOUNT_ROLES.general]: 'General',
-        [config.ACCOUNT_ROLES.corporate]: 'Corporate'
+        [config.ACCOUNT_ROLES.corporate]: 'Corporate',
       }[item.requestDetails.accountRoleToSet]
+    },
+  },
+
+  data () {
+    return {
+      isLoading: false,
+      list: [],
+      view: {
+        mode: VIEW_MODES_VERBOSE.index,
+        userId: null,
+        scrollPosition: 0,
+      },
+      filters: {
+        state: 'pending',
+        email: '',
+        requestor: '',
+        type: ''
+        pendingTasks: ''
+      },
+      VIEW_MODES_VERBOSE,
+      REQUEST_STATES,
+      KYC_REQUEST_STATES,
+      CHANGE_ROLE_TASKS: config.CHANGE_ROLE_TASKS,
+      ACCOUNT_ROLES: config.ACCOUNT_ROLES,
     }
+  },
+
+  watch: {
+    'filters.state' () { this.reloadCollectionLoader() },
+    'filters.roleToSet' () { this.reloadCollectionLoader() },
+    'filters.pendingTasks' () { this.reloadCollectionLoader() },
+    'filters.address': _.throttle(function () {
+      this.reloadCollectionLoader()
+    }, 1000),
   },
 
   methods: {
@@ -191,11 +247,12 @@ export default {
           .getWithSignature('/v3/change_role_requests', {
             page: { order: 'desc' },
             filter: clearObject({
+              pending_tasks: this.filters.pendingTasks,
               state: KYC_REQUEST_STATES[this.filters.state].state,
               requestor: requestor,
               'request_details.account_role_to_set': this.filters.roleToSet
             }),
-            include: ['request_details.account']
+            include: ['request_details.account'],
           })
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
@@ -229,7 +286,7 @@ export default {
     reloadCollectionLoader () {
       this.$refs.collectionLoaderBtn.loadFirstPage()
     },
-    formatDate
+    formatDate,
   },
   watch: {
     'filters.state' () { this.reloadCollectionLoader() },

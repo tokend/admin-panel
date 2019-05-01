@@ -1,13 +1,13 @@
 const state = {
   tfaToken: '',
   isRequired: false,
-  initiator: ''
+  initiator: '',
 }
 
 const getters = {
   tfaIsRequired: state => state.isRequired,
   tfaToken: state => state.tfaToken,
-  tfaInitiator: state => state.initiator
+  tfaInitiator: state => state.initiator,
 }
 
 const actions = {
@@ -15,7 +15,7 @@ const actions = {
     state.tfaToken = ''
     state.isRequired = false
     commit('CLOSE_MODAL')
-  }
+  },
 }
 
 const mutations = {
@@ -31,12 +31,12 @@ const mutations = {
 
   'TFA_FORM_RESEND' (state) {},
 
-  'TFA_FORM_CLOSE' (state) {}
+  'TFA_FORM_CLOSE' (state) {},
 }
 
 export default {
   state,
   getters,
   actions,
-  mutations
+  mutations,
 }

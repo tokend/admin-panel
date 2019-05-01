@@ -1,12 +1,12 @@
 export const DOCUMENT_TYPES = Object.freeze({
   assetTerms: 'token_terms',
-  assetLogo: 'asset_logo'
+  assetLogo: 'asset_logo',
 })
 export const ID_DOCUMENT_TYPES = {
   passport: 'passport',
   driving_license: 'driving_license',
   identity_card: 'identity_card',
-  residence_permit: 'residence_permit'
+  residence_permit: 'residence_permit',
 }
 
 export const DOCUMENT_TYPES_STR = Object.freeze({
@@ -28,5 +28,5 @@ export const DOCUMENT_TYPES_STR = Object.freeze({
   identity_card: 'identity_card',
   residence_permit: 'residence_permit',
   assetTerms: 'token_terms',
-  assetLogo: 'asset_logo'
+  assetLogo: 'asset_logo',
 })

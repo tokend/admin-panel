@@ -2,22 +2,36 @@
   <div class="withdrawal-list">
     <div class="withdrawal-list__filters-wrp">
       <div class="app-list-filters">
-        <select-field class="app-list-filters__field" label="State" v-model="filters.state">
-          <option :value="REQUEST_STATES.pending">Pending</option>
-          <option :value="REQUEST_STATES.approved">Approved</option>
-          <option :value="REQUEST_STATES.permanentlyRejected">Permanently rejected</option>
-        </select-field>
-
-        <select-field class="app-list-filters__field" label="Asset" v-model="filters.asset">
-          <option :value="item.code"
-                  v-for="item in assets"
-                  :key="item.code"
-          >
-            {{item.code}}
+        <select-field
+          class="app-list-filters__field"
+          label="State"
+          v-model="filters.state">
+          <option :value="REQUEST_STATES.pending">
+            Pending
+          </option>
+          <option :value="REQUEST_STATES.approved">
+            Approved
+          </option>
+          <option :value="REQUEST_STATES.permanentlyRejected">
+            Permanently rejected
           </option>
         </select-field>
 
-        <input-field class="app-list-filters__field"
+        <select-field
+          class="app-list-filters__field"
+          label="Asset"
+          v-model="filters.asset">
+          <option
+            :value="item.code"
+            v-for="item in assets"
+            :key="item.code"
+          >
+            {{ item.code }}
+          </option>
+        </select-field>
+
+        <input-field
+          class="app-list-filters__field"
           label="Requestor"
           placeholder="Address (full match)"
           v-model="filters.requestor"
@@ -29,25 +43,44 @@
       <template v-if="list.data && list.data.length">
         <ul class="app-list">
           <div class="app-list__header">
-            <span class="app-list__cell">Source amount</span>
-            <span class="app-list__cell">Destination amount</span>
-            <span class="app-list__cell">Status</span>
-            <span class="app-list__cell">Requestor</span>
+            <span class="app-list__cell">
+              Source amount
+            </span>
+            <span class="app-list__cell">
+              Destination amount
+            </span>
+            <span class="app-list__cell">
+              Status
+            </span>
+            <span class="app-list__cell">
+              Requestor
+            </span>
           </div>
 
-          <button class="app-list__li" v-for="item in list.data" :key="item.id"
+          <button
+            class="app-list__li"
+            v-for="item in list.data"
+            :key="item.id"
             @click="requestToShow = item">
-            <span class="app-list__cell" :title="`${localize(item.details.withdraw.amount)} ${item.details.withdraw.destAssetCode}`">
-              {{localize(item.details.withdraw.amount)}}&nbsp;{{ item.details.withdraw.destAssetCode }}
+            <!-- eslint-disable max-len -->
+            <span
+              class="app-list__cell"
+              :title="`${localize(item.details.withdraw.amount)} ${item.details.withdraw.destAssetCode}`"
+            >
+              {{ localize(item.details.withdraw.amount) }}&nbsp;{{ item.details.withdraw.destAssetCode }}
             </span>
-            <span class="app-list__cell" :title="`${localize(item.destAssetAmount)} ${item.destAssetCode}`">
-              {{localize(item.details.withdraw.destAssetAmount)}}&nbsp;{{item.details.withdraw.destAssetCode}}
+            <span
+              class="app-list__cell"
+              :title="`${localize(item.destAssetAmount)} ${item.destAssetCode}`"
+            >
+              {{ localize(item.details.withdraw.destAssetAmount) }}&nbsp;{{ item.details.withdraw.destAssetCode }}
             </span>
+            <!-- eslint-enable max-len -->
             <span class="app-list__cell" :title="verbozify(item.requestState)">
-              {{verbozify(item.requestState)}}
+              {{ verbozify(item.requestState) }}
             </span>
             <span class="app-list__cell" :title="item.requestor">
-              {{item.requestor}}
+              {{ item.requestor }}
             </span>
           </button>
         </ul>
@@ -62,38 +95,49 @@
       <template v-else>
         <ul class="app-list">
           <li class="app-list__li-like">
-            <template v-if="isLoaded">Nothing here yet</template>
-            <template v-else>Loading...</template>
+            <template v-if="isLoaded">
+              Nothing here yet
+            </template>
+            <template v-else>
+              Loading...
+            </template>
           </li>
         </ul>
       </template>
     </div>
 
-    <modal v-if="requestToShow && requestToShow.id"
+    <modal
+      v-if="requestToShow && requestToShow.id"
       @close-request="requestToShow = null"
       max-width="60rem">
-      <withdrawal-details :request="requestToShow"
-            :assets="assets"
-            @close-request="refreshList"/>
+      <withdrawal-details
+        :request="requestToShow"
+        :assets="assets"
+        @close-request="refreshList" />
     </modal>
   </div>
 </template>
 
 <script>
+import SelectField from '@comcom/fields/SelectField'
+import InputField from '@comcom/fields/InputField'
+
+import Modal from '@comcom/modals/Modal'
+import WithdrawalDetails from './WithdrawalDetails'
+
 import api from '@/api'
 import { Sdk } from '@/sdk'
+
 import {
   DEFAULT_QUOTE_ASSET,
   REQUEST_STATES,
-  ASSET_POLICIES
+  ASSET_POLICIES,
 } from '@/constants'
+
 import { verbozify } from '@/utils/verbozify'
 import localize from '@/utils/localize'
-import SelectField from '@comcom/fields/SelectField'
-import InputField from '@comcom/fields/InputField'
-import Modal from '@comcom/modals/Modal'
-import WithdrawalDetails from './WithdrawalDetails'
 import _ from 'lodash'
+
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
@@ -101,7 +145,7 @@ export default {
     SelectField,
     InputField,
     Modal,
-    WithdrawalDetails
+    WithdrawalDetails,
   },
 
   data () {
@@ -114,11 +158,19 @@ export default {
       filters: {
         state: REQUEST_STATES.pending,
         asset: DEFAULT_QUOTE_ASSET,
-        requestor: ''
+        requestor: '',
       },
       isLoaded: false,
-      isNoMoreEntries: false
+      isNoMoreEntries: false,
     }
+  },
+
+  watch: {
+    'filters.state' () { this.getList() },
+
+    'filters.asset' () { this.getList() },
+
+    'filters.requestor': _.throttle(function () { this.getList() }, 1000),
   },
 
   created () {
@@ -137,7 +189,7 @@ export default {
           .filter(item => (item.policy & ASSET_POLICIES.withdrawable))
           .sort((assetA, assetB) => assetA.code > assetB.code ? 1 : -1)
       } catch (error) {
-        this.$store.dispatch('SET_ERROR', 'Cannot get asset list. Please try again later')
+        ErrorHandler.processWithoutFeedback(error)
       }
     },
 
@@ -149,7 +201,7 @@ export default {
         const filters = { ...this.filters }
         this.list = await api.requests.getWithdrawalRequests(filters)
       } catch (error) {
-        error.showMessage('Cannot get withdrawal request list. Please try again later')
+        ErrorHandler.processWithoutFeedback(error)
       }
 
       this.isLoaded = true
@@ -163,21 +215,15 @@ export default {
         this.list.fetchNext = chunk.fetchNext
         this.isNoMoreEntries = oldLength === this.list.data.length
       } catch (error) {
-        ErrorHandler.process(error)
+        ErrorHandler.processWithoutFeedback(error)
       }
     },
 
     refreshList () {
       this.getList()
       this.requestToShow = null
-    }
+    },
   },
-
-  watch: {
-    'filters.state' () { this.getList() },
-    'filters.asset' () { this.getList() },
-    'filters.requestor': _.throttle(function () { this.getList() }, 1000)
-  }
 }
 </script>
 
@@ -185,5 +231,4 @@ export default {
 .withdrawal-list__filters-wrp {
   margin-bottom: 4rem;
 }
-
 </style>

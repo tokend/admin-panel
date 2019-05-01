@@ -1,5 +1,9 @@
-
-export default function localize (value, digits = 6, deleteZeros = false, needConvert = false) {
+export default function localize (
+  value,
+  digits = 6,
+  deleteZeros = false,
+  needConvert = false
+) {
   if (value === '') return ''
   if (typeof value !== 'string' && typeof value !== 'number') {
     return ''
@@ -37,6 +41,7 @@ function deleteTrailingZeros (value) {
   if (typeof value !== 'string' && typeof value !== 'number') {
     return ''
   }
+
   const splittedValue = value.split('.')
   const beforePoint = splittedValue[0]
   const parsed = localize.parseLocalized(value)
@@ -55,11 +60,11 @@ function convertBigNumber (number, digits = 4) {
     { value: 1E12, symbol: 'T' },
     { value: 1E9, symbol: 'G' },
     { value: 1E6, symbol: 'M' },
-    { value: 1E3, symbol: 'k' }
+    { value: 1E3, symbol: 'k' },
   ]
   const rx = /\.0+$|(\.[0-9]*[1-9])0+$/
-  let i
-  for (i = 0; i < si.length; i++) {
+
+  for (let i = 0; i < si.length; i++) {
     if (num >= si[i].value) {
       return (num / si[i].value).toFixed(digits).replace(rx, '$1') + si[i].symbol
     }

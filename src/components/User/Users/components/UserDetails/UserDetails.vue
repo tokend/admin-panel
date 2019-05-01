@@ -8,35 +8,37 @@
           class="user-details__section"
           v-if="requestToReview.state"
         >
-          <h3>
-            Current request state
-          </h3>
-          <p :class="`user-details__state-info
-                      user-details__state-info--${requestToReview.state}`">
-            {{ requestToReview.state }}
-          </p>
-
+          <ul class="key-value-list">
+            <li>
+              <h3>Current request state</h3>
+              <p
+                :class="`user-details__state-info
+                         user-details__state-info--${requestToReview.state}`">
+                {{ requestToReview.state }}
+              </p>
+            </li>
+            <li>
+              <h3>Role to set</h3>
+              <p class="user-details__role-info">
+                {{
+                  ROLE_TYPE_VERBOSE[requestToReview.accountRoleToSet
+                    || verifiedRequest.accountRoleToSet]
+                }}
+              </p>
+            </li>
+          </ul>
           <p v-if="requestToReview.isRejected">
             Reason: {{ requestToReview.rejectReason }}
           </p>
 
-          <p
-            class="user-details__heading"
-            v-if="requestToReview.isRejected"
-          >
-            <span>External rejection details</span>
-            <button
-              class="app__btn-secondary app__btn-secondary--iconed"
-              @click="isShownExternal = !isShownExternal"
-            >
-              <mdi-chevron-up-icon v-if="isShownExternal" />
-              <mdi-chevron-down-icon v-else />
-            </button>
-          </p>
-          <p
-            v-if="isShownExternal"
-            v-html="externalDetails"
-          />
+          <template v-if="requestToReview.externalDetails">
+            <div class="user-details__ext-details-wrp">
+              <h3>External details (provided by external services)</h3>
+              <external-details-viewer
+                :external-details="requestToReview.externalDetails"
+              />
+            </div>
+          </template>
         </section>
 
         <section class="user-details__section">
@@ -49,47 +51,97 @@
 
         <template v-if="requestToReview.state">
           <section class="user-details__section">
-            <kyc-general-section
-              v-if="requestToReview.accountRoleToSet === ACCOUNT_ROLES.general"
-              :user="user"
-              :blobId="requestToReview.blobId"
-            />
-
+            <template v-if="isKycLoaded">
+              <general-kyc-viewer
+                v-if="
+                  requestToReview.accountRoleToSet === ACCOUNT_ROLES.general
+                "
+                :kyc="kyc"
+                :user="user" />
+              <verified-kyc-viewer
+                v-if="
+                  requestToReview.accountRoleToSet === ACCOUNT_ROLES.usVerified
+                "
+                :kyc="kyc"
+                :user="user" />
+              <accredited-kyc-viewer
+                v-if="
+                  requestToReview.accountRoleToSet ===
+                    ACCOUNT_ROLES.usAccredited
+                "
+                :kyc="kyc"
+                :user="user" />
+            </template>
+            <template v-else-if="isKycLoadFailed">
+              <p class="danger">
+                An error occurred. Please try again later.
+              </p>
+            </template>
+            <template v-else>
+              <p>Loading...</p>
+            </template>
             <kyc-syndicate-section
-              v-if="requestToReview.accountRoleToSet === ACCOUNT_ROLES.corporate"
+              v-if="
+                requestToReview.accountRoleToSet === ACCOUNT_ROLES.corporate
+              "
               :user="user"
-              :blobId="requestToReview.blobId"
+              :blob-id="requestToReview.blobId"
             />
           </section>
+          <!-- eslint-enable max-len -->
         </template>
 
         <template v-if="verifiedRequest.state">
+          <!-- eslint-disable max-len -->
           <section
             v-if="verifiedRequest.accountRoleToSet !== ACCOUNT_ROLES.notVerified && !isUserBlocked"
             class="user-details__section"
           >
-            <h2>Previous approved KYC Request</h2>
-            <kyc-general-section
-              v-if="verifiedRequest.accountRoleToSet === ACCOUNT_ROLES.general"
-              :user="user"
-              :blobId="verifiedRequest.blobId"
-            />
+            <template v-if="isKycLoaded">
+              <h2>Previous approved KYC Request</h2>
+              <general-kyc-viewer
+                v-if="verifiedRequest.accountRoleToSet === ACCOUNT_ROLES.general"
+                :kyc="kyc"
+                :user="user"
+              />
+              <verified-kyc-viewer
+                v-if="verifiedRequest.accountRoleToSet === ACCOUNT_ROLES.usVerified"
+                :kyc="kyc"
+                :user="user"
+              />
+              <accredited-kyc-viewer
+                v-if="verifiedRequest.accountRoleToSet === ACCOUNT_ROLES.usAccredited"
+                :kyc="kyc"
+                :user="user"
+              />
+            </template>
+            <template v-else-if="isKycLoadFailed">
+              <p class="danger">
+                An error occurred. Please try again later.
+              </p>
+            </template>
+            <template v-else>
+              <p>Loading...</p>
+            </template>
             <kyc-syndicate-section
-              v-else-if="verifiedRequest.accountRoleToSet === ACCOUNT_ROLES.corporate"
+              v-if="verifiedRequest.accountRoleToSet === ACCOUNT_ROLES.corporate"
               :user="user"
-              :blobId="verifiedRequest.blobId"
+              :blob-id="verifiedRequest.blobId"
             />
           </section>
+          <!-- eslint-enable max-len -->
 
           <div
             v-if="requestToReview.state"
             class="user-details__latest-request"
           >
             <h3>Latest request</h3>
+            <!-- eslint-disable max-len -->
             <p class="text">
               Create a {{ requestToReview.accountRoleToSet | roleIdToString | lowerCase }} account:
               {{ requestToReview.state }}
             </p>
+            <!-- eslint-enable max-len -->
           </div>
         </template>
 
@@ -98,7 +150,7 @@
             <request-actions
               class="user-details__actions"
               :user="user"
-              :requestToReview="requestToReview"
+              :request-to-review="requestToReview"
               :latest-approved-request="verifiedRequest"
               @reviewed="getUpdatedUser"
             />
@@ -131,7 +183,9 @@
       </template>
 
       <template v-else>
-        <p class="danger">An error occurred. Please try again later.</p>
+        <p class="danger">
+          An error occurred. Please try again later.
+        </p>
       </template>
     </div>
   </div>
@@ -140,37 +194,58 @@
 <script>
 import AccountSection from './UserDetails.Account'
 
-import KycGeneralSection from './UserDetails.Kyc'
 import KycSyndicateSection from '@/components/User/Sales/components/SaleManager/SaleManager.SyndicateTab'
+
+import GeneralKycViewer from './UserDetails.GeneralKycViewer'
+import VerifiedKycViewer from './UserDetails.VerifiedKycViewer'
+import AccreditedKycViewer from './UserDetails.AccreditedKycViewer'
 
 import RequestActions from './UserDetails.Request'
 import ResetActions from './UserDetails.Reset'
 import BlockActions from './UserDetails.Block'
 
-import { unCamelCase } from '@/utils/un-camel-case'
+import ExternalDetailsViewer from './UserDetails.ExternalDetailsViewer'
 
 import { ApiCallerFactory } from '@/api-caller-factory'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 import { ChangeRoleRequest } from '@/api/responseHandlers/requests/ChangeRoleRequest'
+import { fromKycTemplate } from '../../../../../utils/kyc-tempater'
+import deepCamelCase from 'camelcase-keys-deep'
+import { Sdk } from '@/sdk'
 
 import config from '@/config'
 
+const ROLE_TYPE_VERBOSE = {
+  [ config.ACCOUNT_ROLES.general ]: 'General',
+  [ config.ACCOUNT_ROLES.usVerified ]: 'US Verified',
+  [ config.ACCOUNT_ROLES.usAccredited ]: 'US Accredited',
+  [ config.ACCOUNT_ROLES.corporate ]: 'Corporate',
+  [ config.ACCOUNT_ROLES.notVerified ]: 'Not Verified',
+}
+
 const OPERATION_TYPE = {
-  createKycRequest: '22'
+  createKycRequest: '22',
 }
 const EVENTS = {
-  reviewed: 'reviewed'
+  reviewed: 'reviewed',
 }
 
 export default {
   components: {
     AccountSection,
-    KycGeneralSection,
+    ExternalDetailsViewer,
     KycSyndicateSection,
     RequestActions,
     ResetActions,
-    BlockActions
+    BlockActions,
+    AccreditedKycViewer,
+    VerifiedKycViewer,
+    GeneralKycViewer,
+  },
+
+  props: {
+    id: { type: String, required: true },
   },
 
   data () {
@@ -180,45 +255,31 @@ export default {
       isLoaded: false,
       isFailed: false,
       isPending: false,
-      isShownExternal: false,
+      isKycLoaded: false,
+      isKycLoadFailed: false,
       user: {},
       requests: [],
-      verifiedRequest: {}
+      verifiedRequest: {},
+      kyc: {},
+      ROLE_TYPE_VERBOSE,
     }
   },
 
-  props: ['id'],
-
-  async created () {
-    await this.getUser()
-  },
-
   computed: {
-    externalDetails () {
-      if (!this.requestToReview.externalDetails) return ''
-      return this.requestToReview.externalDetails
-        .map(detail =>
-          Object.entries(detail)
-            .map(([key, value]) => `${unCamelCase(key)}: ${value}`)
-            .join(' ')
-        )
-        .filter(value => value)
-        .join('<br>')
-    },
-
     isUserBlocked () {
       return this.user.role === config.ACCOUNT_ROLES.blocked
     },
 
     latestApprovedRequest () {
-      return this.requests.find(item => item.isApproved) ||
-        new ChangeRoleRequest({})
+      return (
+        this.requests.find(item => item.isApproved)
+      ) || new ChangeRoleRequest({})
     },
 
     requestToReview () {
-      return this.requests
-        .find(item => item.isPending || item.isRejected) ||
-        new ChangeRoleRequest({})
+      return (
+        this.requests.find(item => item.isPending || item.isRejected)
+      ) || new ChangeRoleRequest({})
     },
 
     latestBlockedRequest () {
@@ -239,6 +300,16 @@ export default {
         this.latestNonBlockedRequest.accountRoleToSet ||
         config.ACCOUNT_ROLES.notVerified
       )
+    },
+  },
+
+  async created () {
+    await this.getUser()
+
+    if (this.requestToReview.state) {
+      await this.getKyc(this.requestToReview.blobId)
+    } else if (this.verifiedRequest.state) {
+      await this.getKyc(this.verifiedRequest.blobId)
     }
   },
 
@@ -251,15 +322,15 @@ export default {
           ApiCallerFactory
             .createCallerInstance()
             .getWithSignature('/identities', {
-              filter: { address: this.id }
+              filter: { address: this.id },
             }),
           ApiCallerFactory
             .createCallerInstance()
             .getWithSignature('/v3/change_role_requests', {
               page: { order: 'desc' },
               filter: { requestor: this.id },
-              include: ['request_details']
-            })
+              include: ['request_details'],
+            }),
         ])
         this.user = user.data[0]
         this.requests = requests.data
@@ -268,7 +339,7 @@ export default {
         await this.loadVerifiedRequest()
         this.isLoaded = true
       } catch (error) {
-        ErrorHandler.process(error)
+        ErrorHandler.processWithoutFeedback(error)
         this.isFailed = true
       }
     },
@@ -281,7 +352,7 @@ export default {
           const { data } = await ApiCallerFactory
             .createCallerInstance()
             .getWithSignature(`/v3/change_role_requests/${requestId}`, {
-              include: ['request_details']
+              include: ['request_details'],
             })
           this.verifiedRequest = new ChangeRoleRequest(data)
         } else if (!requestId) {
@@ -297,9 +368,26 @@ export default {
       setTimeout(async () => {
         await this.getUser()
         this.$emit(EVENTS.reviewed)
-      }, 1500)
-    }
-  }
+      }, 5000)
+    },
+
+    async getKyc (blodId) {
+      this.isKycLoaded = false
+      this.isKycLoadFailed = false
+
+      try {
+        const response = await Sdk.api.blobs.get(blodId, this.user.address)
+        const kycFormResponse = response.data
+        this.kyc = deepCamelCase(
+          fromKycTemplate(JSON.parse(kycFormResponse.value))
+        )
+        this.isKycLoaded = true
+      } catch (error) {
+        ErrorHandler.process(error)
+        this.isKycLoadFailed = true
+      }
+    },
+  },
 }
 </script>
 
@@ -348,5 +436,9 @@ export default {
   &--approved { color: $color-success; }
   &--pending { color: $color-active; }
   &--rejected { color: $color-danger; }
+}
+
+.user-details__ext-details-wrp {
+  margin: 2rem 0;
 }
 </style>

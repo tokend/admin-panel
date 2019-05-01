@@ -17,7 +17,7 @@ export function localizeIssuanceRequestState (type) {
     permanently_rejected: 'Permanently rejected',
     permanentlyRejected: 'Permanently rejected',
     canceled: 'Canceled',
-    cancelled: 'Cancelled'
+    cancelled: 'Cancelled',
   }[type]
 }
 
@@ -30,14 +30,14 @@ export function roleIdToString (roleId) {
     [+config.ACCOUNT_ROLES.notVerified]: 'Unverified',
     [+config.ACCOUNT_ROLES.general]: 'General',
     [+config.ACCOUNT_ROLES.corporate]: 'Corporate',
-    [+config.ACCOUNT_ROLES.blocked]: 'Blocked'
+    [+config.ACCOUNT_ROLES.blocked]: 'Blocked',
   }[+roleId]
 }
 
 export function assetTypeToString (assetType) {
   return {
     [+config.ASSET_TYPES.default]: 'Does not require KYC',
-    [+config.ASSET_TYPES.kycRequired]: 'Requires KYC'
+    [+config.ASSET_TYPES.kycRequired]: 'Requires KYC',
   }[+assetType]
 }
 

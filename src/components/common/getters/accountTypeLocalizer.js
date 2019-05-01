@@ -29,5 +29,5 @@ export const ACCOUNT_TYPES_VERBOSE = Object.freeze({
   [ACCOUNT_TYPES.institutionalInvestor]: 'Institutional Investor',
 
   verified: 'Verified',
-  [ACCOUNT_TYPES.verified]: 'Verified'
+  [ACCOUNT_TYPES.verified]: 'Verified',
 })

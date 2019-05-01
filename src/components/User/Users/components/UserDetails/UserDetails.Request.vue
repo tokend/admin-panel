@@ -1,6 +1,109 @@
 <template>
   <div class="user-request">
     <template v-if="requestToReview.isPending">
+      <div class="user-details-request__manage-tasks-section">
+        <h3 class="user-details-request__manage-tasks-title">
+          Manage tasks (advanced)
+        </h3>
+
+        <h4 class="user-details-request__task-section-heading">
+          Current state
+        </h4>
+
+        <div class="user-details-request__task-section-content">
+          <p>Pending tasks: {{ requestToReview.pendingTasks }}</p>
+          <p>All tasks: {{ requestToReview.allTasks }}</p>
+        </div>
+
+        <h4 class="user-details-request__task-section-heading">
+          Tasks to add
+        </h4>
+
+        <div class="user-details-request__task-section-content">
+          <!--eslint-disable max-len-->
+          <tick-field
+            class="app__form-field"
+            v-model="tasksToAdd"
+            :label="`Submit auto verification request (${CHANGE_ROLE_TASKS.submitAutoVerification})`"
+            :cb-value="CHANGE_ROLE_TASKS.submitAutoVerification"
+            :disabled="isPending"
+          />
+          <!--eslint-enable max-len-->
+
+          <!--eslint-disable max-len-->
+          <tick-field
+            class="app__form-field"
+            v-model="tasksToAdd"
+            :label="`Complete auto verification request (${CHANGE_ROLE_TASKS.completeAutoVerification})`"
+            :cb-value="CHANGE_ROLE_TASKS.completeAutoVerification"
+            :disabled="isPending"
+          />
+          <!--eslint-enable max-len-->
+
+          <!--eslint-disable max-len-->
+          <tick-field
+            class="app__form-field"
+            v-model="tasksToAdd"
+            :label="`Manual review required (${CHANGE_ROLE_TASKS.manualReviewRequired})`"
+            :cb-value="CHANGE_ROLE_TASKS.manualReviewRequired"
+            :disabled="isPending"
+          />
+          <!--eslint-enable max-len-->
+
+          <tick-field
+            class="app__form-field"
+            v-model="tasksToAdd"
+            :label="`Default (${CHANGE_ROLE_TASKS.default})`"
+            :cb-value="CHANGE_ROLE_TASKS.default"
+            :disabled="isPending"
+          />
+        </div>
+
+        <h4 class="user-details-request__task-section-heading">
+          Tasks to remove
+        </h4>
+
+        <div class="user-details-request__task-section-content">
+          <!--eslint-disable max-len-->
+          <tick-field
+            class="app__form-field"
+            v-model="tasksToRemove"
+            :label="`Submit auto verification request (${CHANGE_ROLE_TASKS.submitAutoVerification})`"
+            :cb-value="CHANGE_ROLE_TASKS.submitAutoVerification"
+            :disabled="isPending"
+          />
+          <!--eslint-enable max-len-->
+
+          <!--eslint-disable max-len-->
+          <tick-field
+            class="app__form-field"
+            v-model="tasksToRemove"
+            :label="`Complete auto verification request (${CHANGE_ROLE_TASKS.completeAutoVerification})`"
+            :cb-value="CHANGE_ROLE_TASKS.completeAutoVerification"
+            :disabled="isPending"
+          />
+          <!--eslint-enable max-len-->
+
+          <!--eslint-disable max-len-->
+          <tick-field
+            class="app__form-field"
+            v-model="tasksToRemove"
+            :label="`Manual review required (${CHANGE_ROLE_TASKS.manualReviewRequired})`"
+            :cb-value="CHANGE_ROLE_TASKS.manualReviewRequired"
+            :disabled="isPending"
+          />
+          <!--eslint-enable max-len-->
+
+          <tick-field
+            class="app__form-field"
+            v-model="tasksToRemove"
+            :label="`Default (${CHANGE_ROLE_TASKS.default})`"
+            :cb-value="CHANGE_ROLE_TASKS.default"
+            :disabled="isPending"
+          />
+        </div>
+      </div>
+
       <div class="app__form-actions user-details-request__form-actions">
         <button
           class="app__btn user-request__btn"
@@ -70,8 +173,9 @@
 
 <script>
 import api from '@/api'
+import config from '@/config'
 
-import { TextField } from '@comcom/fields'
+import { TextField, TickField } from '@comcom/fields'
 import Modal from '@comcom/modals/Modal'
 
 import 'mdi-vue/ChevronDownIcon'
@@ -83,40 +187,50 @@ import { confirmAction } from '@/js/modals/confirmation_message'
 import { ChangeRoleRequest } from '@/api/responseHandlers/requests/ChangeRoleRequest'
 
 const EVENTS = {
-  reviewed: 'reviewed'
+  reviewed: 'reviewed',
 }
 
 export default {
   name: 'user-details-request',
   components: {
     Modal,
-    TextField
+    TextField,
+    TickField,
   },
 
   props: {
     requestToReview: {
       type: ChangeRoleRequest,
-      default: _ => new ChangeRoleRequest({})
+      default: () => new ChangeRoleRequest({}),
     },
     latestApprovedRequest: {
       type: ChangeRoleRequest,
-      default: _ => new ChangeRoleRequest({})
+      default: () => new ChangeRoleRequest({}),
     },
     user: {
       type: Object,
-      default: _ => ({})
-    }
+      default: () => ({}),
+    },
   },
 
   data () {
     return {
+      tasksToAdd: 0,
+      tasksToRemove: 0,
+
       rejectForm: {
         reason: '',
-        isShown: false
+        isShown: false,
       },
       isShownAdvanced: false,
-      isPending: false
+      isPending: false,
+
+      CHANGE_ROLE_TASKS: config.CHANGE_ROLE_TASKS,
     }
+  },
+
+  async created () {
+    this.tasksToRemove = this.requestToReview.pendingTasks
   },
 
   methods: {
@@ -126,7 +240,15 @@ export default {
       }
       this.isPending = true
       try {
-        await api.requests.approve(this.requestToReview.record)
+        const reviewDetails = this.requestToReview.record.reviewDetails || {}
+        reviewDetails.tasksToAdd = this.tasksToAdd
+        reviewDetails.tasksToRemove = this.tasksToRemove
+
+        await api.requests.approve({
+          ...this.requestToReview.record,
+          reviewDetails,
+        })
+
         this.$store.dispatch('SET_INFO', 'Request approved successfully')
         this.$emit(EVENTS.reviewed)
       } catch (error) {
@@ -145,7 +267,10 @@ export default {
       try {
         await api.requests.reject(
           { reason: rejectReason, isPermanent },
-          { ...this.requestToReview.record, reviewDetails: { tasksToRemove: 0 }}
+          {
+            ...this.requestToReview.record,
+            reviewDetails: { tasksToRemove: 0 },
+          }
         )
         this.$store.dispatch('SET_INFO', `Request rejected successfully`)
         this.$emit(EVENTS.reviewed)
@@ -168,13 +293,25 @@ export default {
     async submitRejectForm () {
       this.hideRejectModal()
       await this.reject()
-    }
-  }
+    },
+  },
 }
 </script>
 
 <style scoped>
 .user-request__btn {
   width: 15rem;
+}
+
+.user-details-request__manage-tasks-title {
+  margin-bottom: 1.5rem;
+}
+
+.user-details-request__task-section-heading {
+  margin-bottom: 1rem;
+}
+
+.user-details-request__task-section-content {
+  margin-bottom: 2rem;
 }
 </style>

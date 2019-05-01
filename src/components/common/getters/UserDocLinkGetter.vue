@@ -1,7 +1,13 @@
 <template>
-  <doc-link-getter :file-url="href" v-if="isLoaded"><slot/></doc-link-getter>
-  <span v-else-if="isFailed" class="danger">(Error)</span>
-  <span v-else>Loading...</span>
+  <doc-link-getter :file-url="href" v-if="isLoaded">
+    <slot />
+  </doc-link-getter>
+  <span v-else-if="isFailed" class="danger">
+    (Error)
+  </span>
+  <span v-else>
+    Loading...
+  </span>
 </template>
 
 <script>
@@ -10,8 +16,8 @@ import LinkGetterMixin from './link_getter.mixin'
 
 export default {
   components: {
-    DocLinkGetter
+    DocLinkGetter,
   },
-  mixins: [LinkGetterMixin]
+  mixins: [LinkGetterMixin],
 }
 </script>
