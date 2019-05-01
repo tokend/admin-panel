@@ -16,8 +16,8 @@
 
           <input-field
             class="app-list-filters__field"
-            v-model.trim="specificUserAddress"
-            label="Email or Account ID"
+            v-model.trim="filters.requestor"
+            label="Requestor"
             autocomplete-type="email"
           />
         </div>
@@ -129,6 +129,7 @@ import { ApiCallerFactory } from '@/api-caller-factory'
 import config from '@/config'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { CollectionLoader } from '@/components/common'
+import api from '@/api'
 
 const VIEW_MODES_VERBOSE = Object.freeze({
   index: 'index',
@@ -150,14 +151,14 @@ export default {
       filters: {
         email: '',
         address: '',
-        role: ''
+        role: '',
+        requestor: ''
       },
       view: {
         mode: VIEW_MODES_VERBOSE.index,
         userId: null,
         scrollPosition: 0
       },
-      specificUserAddress: '',
       list: [],
       isLoading: false,
 
@@ -170,13 +171,14 @@ export default {
       this.isLoading = true
       let response = {}
       try {
+        const requestor = await api.users.getAccountIdByEmail(this.filters.requestor)
         response = await ApiCallerFactory
           .createCallerInstance()
           .getWithSignature('/identities', {
             filter: clearObject({
               email: this.filters.email,
               role: this.filters.role,
-              address: this.filters.address
+              address: requestor
             })
           })
       } catch (error) {
@@ -190,22 +192,6 @@ export default {
       this.list = data
       this.isLoaded = true
     },
-
-    async setFilters () {
-      if (this.specificUserAddress) {
-        const idLength = 56
-        if (this.specificUserAddress.length === idLength) {
-          this.filters.address = this.specificUserAddress
-          this.filters.email = ''
-        } else {
-          this.filters.email = this.specificUserAddress
-          this.filters.address = ''
-        }
-      } else {
-        this.filters.address = this.filters.email = ''
-      }
-    },
-
     extendList (data) {
       this.list = this.list.concat(data)
     },
@@ -237,14 +223,8 @@ export default {
     'filters.role' () {
       this.reloadCollectionLoader()
     },
-    'filters.email': _.throttle(function () {
+    'filters.requestor': _.throttle(function () {
       this.reloadCollectionLoader()
-    }, 1000),
-    'filters.address': _.throttle(function () {
-      this.reloadCollectionLoader()
-    }, 1000),
-    'specificUserAddress': _.throttle(function () {
-      this.setFilters()
     }, 1000)
   }
 }

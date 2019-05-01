@@ -30,8 +30,8 @@
 
           <input-field
             class="app-list-filters__field"
-            v-model.trim="specificUserAddress"
-            label="Email or Account ID"
+            v-model.trim="filters.requestor"
+            label="Requestor"
             autocomplete-type="email"
           />
         </div>
@@ -159,10 +159,9 @@ export default {
       filters: {
         state: 'pending',
         email: '',
-        address: '',
+        requestor: '',
         type: ''
       },
-      specificUserAddress: '',
       VIEW_MODES_VERBOSE,
       REQUEST_STATES,
       KYC_REQUEST_STATES,
@@ -186,19 +185,14 @@ export default {
       this.isLoading = true
       let response = {}
       try {
-        let address = ''
-        if (this.filters.address) {
-          address = this.filters.address
-        } else if (this.filters.email) {
-          address = await this.getAccountIdByEmail()
-        }
+        const requestor = await api.users.getAccountIdByEmail(this.filters.requestor)
         response = await ApiCallerFactory
           .createCallerInstance()
           .getWithSignature('/v3/change_role_requests', {
             page: { order: 'desc' },
             filter: clearObject({
               state: KYC_REQUEST_STATES[this.filters.state].state,
-              requestor: address,
+              requestor: requestor,
               'request_details.account_role_to_set': this.filters.roleToSet
             }),
             include: ['request_details.account']
@@ -213,21 +207,6 @@ export default {
     setList (data) {
       this.list = data
     },
-
-    async setFilters () {
-      if (this.specificUserAddress) {
-        const emailRegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-        const idLength = 56
-        if (emailRegExp.test(this.specificUserAddress)) {
-          this.filters.address = await api.users.getAccountIdByEmail(this.specificUserAddress)
-        } else if (this.specificUserAddress.length === idLength) {
-          this.filters.address = this.specificUserAddress
-        }
-      } else {
-        this.filters.address = ''
-      }
-    },
-
     async extendList (data) {
       this.list = this.list.concat(data)
     },
@@ -255,11 +234,8 @@ export default {
   watch: {
     'filters.state' () { this.reloadCollectionLoader() },
     'filters.roleToSet' () { this.reloadCollectionLoader() },
-    'filters.address': _.throttle(function () {
+    'filters.requestor': _.throttle(function () {
       this.reloadCollectionLoader()
-    }, 1000),
-    'specificUserAddress': _.throttle(function () {
-      this.setFilters()
     }, 1000)
   }
 }
