@@ -10,7 +10,8 @@ for further information about branching and tagging conventions.
 ## [Unreleased]
 #### Fixed
 - Fixed operation empty and loading list displaying of a user
-- Add validation in reviewLimitsUpdateRequest when parsing limits values
+- Add filter for fill limits in reviewLimitsUpdateRequest when 
+parsing limits values
 - Updating user details after KYC change
 - Error after blocking the user without verified KYC request
 - Increase a delay before getting user after KYC review

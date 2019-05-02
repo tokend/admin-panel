@@ -23,12 +23,10 @@
             label="Account role"
             :value="account.roleId | roleIdToString"
           />
-          <!-- eslint-disable max-len -->
           <detail
             label="Request type"
-            :value="getRequestType"
+            :value="requestType"
           />
-          <!-- eslint-enable max-len -->
           <detail label="Account email">
             <email-getter :account-id="account.id" />
           </detail>
@@ -118,7 +116,7 @@
       </div>
     </template>
     <template v-else>
-      <template v-if="!loaded">
+      <template v-if="!isLoaded">
         <p>
           Loading...
         </p>
@@ -320,13 +318,11 @@ export default {
     newLimit () {
       const requestDetails = this.desiredLimitDetails
       const operationType = OPERATION_TYPES[requestDetails.operationType]
-      const limitsKeys = Object.keys(this.desiredLimitDetails.limits)
+      const limitsList = Object.entries(requestDetails.limits)
       const limits = {}
-      limitsKeys.forEach(limit => {
-        const verifiableLimit = this.desiredLimitDetails.limits[limit]
-        const limitValue = verifiableLimit || DEFAULT_LIMIT_STRUCT[limit]
-        limits[limit] = limitValue
-      })
+      for (let limit of limitsList) {
+        limits[limit[0]] = limit[1] || DEFAULT_LIMIT_STRUCT[limit[0]]
+      }
       return {
         ...DEFAULT_LIMIT_STRUCT,
         ...limits,
@@ -340,7 +336,7 @@ export default {
       if (!this.desiredLimitDetails.documents) return
       return this.desiredLimitDetails.documents
     },
-    getRequestType () {
+    requestType () {
       return LIMITS_REQUEST_STATES_STR[get(this.request, 'details.requestType')]
     },
   },
@@ -359,8 +355,10 @@ export default {
     async getRequest () {
       this.$store.commit('OPEN_LOADER')
       const request = await api.requests.get(this.id)
-      const camelCaseByType = snakeToCamelCase(request.details.requestType)
-      const requestDetails = request.details[camelCaseByType].details
+      const camelCasedRequestType = snakeToCamelCase(
+        request.details.requestType
+      )
+      const requestDetails = request.details[camelCasedRequestType].details
       const [account, limits] = await Promise.all([
         Sdk.horizon.account.get(request.requestor),
         Sdk.horizon.account.getLimits(request.requestor),
