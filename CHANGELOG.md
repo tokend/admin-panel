@@ -22,6 +22,7 @@ for further information about branching and tagging conventions.
 - KYC details renderers for US verified and US accredited roles
 - Ability to manage pending tasks of KYC request
 - External details viewer of KYC request
+- New release sanity check script, run it on pre-push
 
 #### Changed
 - Now using ErrorHandler instead of `error.showMessage()`,
