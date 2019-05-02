@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
-## [Unreleased]
+## [1.6.0-rc.0] - 2019-05-02
 #### Added
 - New "Invest" fee type
 - New re-render chart animations
@@ -36,6 +36,7 @@ for further information about branching and tagging conventions.
 - New ESLint rules similar to web-client ones
 
 #### Changed
+- Now using @tokend/js-sdk@1.6.0-rc.0
 - Replaced `ErrorHandler.process` with `ErrorHandler.processWithoutFeedback`
   in components' created hook
 - Updated `package.json` dependencies
@@ -193,7 +194,8 @@ for further information about branching and tagging conventions.
 
 ## [1.3.0] - 2019-03-01
 
-[Unreleased]: https://github.com/tokend/admin-panel/compare/1.5.0...HEAD
+[Unreleased]: https://github.com/tokend/admin-panel/compare/1.6.0-rc.0...HEAD
+[1.6.0-rc.0]: https://github.com/tokend/admin-panel/compare/1.5.0...1.6.0-rc.0
 [1.5.0]: https://github.com/tokend/admin-panel/compare/1.5.0-rc.3...1.5.0
 [1.5.0-rc.3]: https://github.com/tokend/admin-panel/compare/1.5.0-rc.2...1.5.0-rc.3
 [1.5.0-rc.2]: https://github.com/tokend/admin-panel/compare/1.5.0-rc.1...1.5.0-rc.2
