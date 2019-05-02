@@ -4,31 +4,27 @@
       <h2>Admin list</h2>
 
       <div class="admins-index__actions">
-        <router-link class="admins-index__create-btn app__btn app__btn--iconed"
+        <router-link
+          class="admins-index__create-btn app__btn app__btn--iconed"
           :to="{ name: 'admins.new' }">
-          <mdi-plus-icon/> New admin
+          <mdi-plus-icon /> New admin
         </router-link>
       </div>
     </div>
 
     <div class="admins-index__list-wrap">
-      <admin-list/>
+      <admin-list />
     </div>
   </div>
 </template>
 
 <script>
-import 'mdi-vue/PlusIcon'
 import AdminList from './components/AdminList'
-import InputField from '@comcom/fields/InputField'
+import 'mdi-vue/PlusIcon'
 
 export default {
   name: 'admins',
-
-  components: {
-    AdminList,
-    InputField
-  }
+  components: { AdminList },
 }
 </script>
 

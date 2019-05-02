@@ -1,13 +1,13 @@
 <template>
-  <div 
+  <div
     class="autocomplete"
     v-if="isDropdownShown"
   >
     <button
       class="autocomplete__option"
-      :class="{ 
+      :class="{
         'autocomplete__option--active':
-        getOptionValue(item) === hoveredElementId
+          getOptionValue(item) === hoveredElementId
       }"
       v-for="item in list"
       :key="getOptionValue(item)"
@@ -27,22 +27,34 @@ import { debounce } from 'lodash'
 
 const EMIT_EVENTS = {
   tab: 'tab',
-  optionSelected: 'option-selected'
+  optionSelected: 'option-selected',
 }
 
 export default {
   props: {
     inputValue: { type: String, default: '' },
     autocompleteType: { type: String, default: '' },
-    isInputFocused: { type: Boolean, default: false }
+    isInputFocused: { type: Boolean, default: false },
   },
 
   data () {
     return {
       hoveredElementId: '',
       list: [],
-      isDropdownShown: false
+      isDropdownShown: false,
     }
+  },
+
+  watch: {
+    'inputValue': debounce(function () {
+      this.getList()
+    }, 400),
+
+    'isInputFocused' () {
+      if (this.isInputFocused) {
+        this.openDropdown()
+      }
+    },
   },
 
   methods: {
@@ -54,8 +66,8 @@ export default {
             .createCallerInstance()
             .getWithSignature('/identities', {
               filter: {
-                [this.autocompleteType]: this.inputValue
-              }
+                [this.autocompleteType]: this.inputValue,
+              },
             })
           this.list = response.data
         } catch (error) {
@@ -146,19 +158,8 @@ export default {
       window.addEventListener('keydown', this.onKeyDown)
       window.addEventListener('click', this.onClick)
       this.isDropdownShown = true
-    }
+    },
   },
-  watch: {
-    'inputValue': debounce(function () {
-      this.getList()
-    }, 400),
-
-    'isInputFocused' () {
-      if (this.isInputFocused) {
-        this.openDropdown()
-      }
-    }
-  }
 }
 </script>
 
@@ -190,6 +191,5 @@ export default {
     }
   }
 }
-
 
 </style>

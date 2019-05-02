@@ -47,13 +47,24 @@
         v-if="filteredRequests && filteredRequests.length"
       >
         <table class="preissuance-request-list__table">
-
           <thead>
             <tr>
-              <th><span class="secondary">Amount</span></th>
-              <th><span class="secondary">Asset</span></th>
-              <th><span class="secondary">Status</span></th>
-              <th></th>
+              <th>
+                <span class="secondary">
+                  Amount
+                </span>
+              </th>
+              <th>
+                <span class="secondary">
+                  Asset
+                </span>
+              </th>
+              <th>
+                <span class="secondary">
+                  Status
+                </span>
+              </th>
+              <th />
             </tr>
           </thead>
 
@@ -117,35 +128,33 @@
       </template>
     </div>
     <!--/ Request List -->
-
   </div>
 </template>
 
 <script>
-import moment from 'moment'
-import api from '@/api'
-import localize from '@/utils/localize'
-import { verbozify } from '@/utils/verbozify'
 import InputField from '@comcom/fields/InputField'
 
-import { CreatePreIssuanceRequest } from '@/api/responseHandlers/requests/CreatePreIssuanceRequest'
+import moment from 'moment'
+import localize from '@/utils/localize'
+import { verbozify } from '@/utils/verbozify'
+
+import api from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { CreatePreIssuanceRequest } from '@/api/responseHandlers/requests/CreatePreIssuanceRequest'
 
 export default {
-  components: {
-    InputField
-  },
+  components: { InputField },
 
   props: {
     asset: {
       type: String,
-      default: 'All'
+      default: 'All',
     },
 
     availableAmount: {
       type: Number,
-      default: 0
-    }
+      default: 0,
+    },
   },
 
   data () {
@@ -158,7 +167,7 @@ export default {
       pages: {},
       requests: [],
       rejectReason: '',
-      currentRequest: {}
+      currentRequest: {},
     }
   },
 
@@ -174,51 +183,52 @@ export default {
       return this.asset === 'All'
         ? filteredByType
         : filteredByType.filter(request => request.asset() === this.asset)
-    }
+    },
+  },
+
+  watch: {
+    asset: function () {
+      this.getRequests()
+    },
   },
 
   mounted () {
     this.getRequests()
   },
 
-  watch: {
-    asset: function () {
-      this.getRequests()
-    }
-  },
-
   methods: {
     verbozify,
     localize,
 
-    nextPageLoader () {
+    async nextPageLoader () {
       this.loadNewPage = true
-      return this.pages
-        .fetchNext(this.$store.getters.keypair)
-        .then((response) => {
-          if (response.data.length > 0) {
-            const mappedRequests = api.requests.mapRequests(response.data)
-            this.requests = this.requests.concat(mappedRequests)
-            this.pages = response
-            return
-          }
 
-          if (response.data.length < 10) {
-            this.pageableLoadCompleted = true
-          }
+      try {
+        const response = await this.pages.fetchNext(this.$store.getters.keypair)
 
-          this.loadNewPage = false
-        }).catch((err) => {
-          console.error(err)
-          this.loadNewPage = false
+        if (response.data.length > 0) {
+          const mappedRequests = api.requests.mapRequests(response.data)
+          this.requests = this.requests.concat(mappedRequests)
+          this.pages = response
+          return
+        }
+
+        if (response.data.length < 10) {
           this.pageableLoadCompleted = true
-        })
+        }
+
+        this.loadNewPage = false
+      } catch (err) {
+        ErrorHandler.processWithoutFeedback(err)
+        this.loadNewPage = false
+        this.pageableLoadCompleted = true
+      }
     },
 
     formatDate (date) {
       return moment(date).calendar(null, {
         lastWeek: 'DD MMM LT',
-        sameElse: 'DD MMM LT'
+        sameElse: 'DD MMM LT',
       })
     },
 
@@ -243,7 +253,7 @@ export default {
         this.requests = response.records
         this.pages = response
       } catch (error) {
-        ErrorHandler.process(error)
+        ErrorHandler.processWithoutFeedback(error)
       }
       this.isLoading = false
       return response
@@ -254,38 +264,44 @@ export default {
       this.requestSelected = true
     },
 
-    reject (request) {
+    async reject (request) {
       if (!this.rejectReason) {
-        this.$store.dispatch('SET_ERROR', 'Enter reject reason before continue')
+        ErrorHandler.process('Enter reject reason before continue')
         return
       }
 
       this.$store.commit('OPEN_LOADER')
-      return request.reject(this.rejectReason, true).then(r => {
+
+      try {
+        await request.reject(this.rejectReason, true)
+
         this.clear()
         this.$store.dispatch('SET_INFO', 'Pending transaction for rejected request submitted')
-        return this.getRequests()
-      }).catch(error => {
+
+        await this.getRequests()
+      } catch (error) {
         this.clear()
         ErrorHandler.process(error)
-      })
+      }
     },
 
-    fulfill (request) {
+    async fulfill (request) {
       this.$store.commit('OPEN_LOADER')
-      return request.fulfill()
-        .then(() => {
-          this.$store.commit('CLOSE_LOADER')
-          this.$store.dispatch('SET_INFO', 'Pending transaction for fulfill request submitted')
-          this.$emit('need-to-update')
-          return this.getRequests()
-        }).catch(error => {
-          console.error('error', error)
-          this.clear()
-          ErrorHandler.process(error)
-        })
-    }
-  }
+
+      try {
+        await request.fulfill()
+
+        this.$store.commit('CLOSE_LOADER')
+        this.$store.dispatch('SET_INFO', 'Pending transaction for fulfill request submitted')
+        this.$emit('need-to-update')
+
+        await this.getRequests()
+      } catch (error) {
+        this.clear()
+        ErrorHandler.process(error)
+      }
+    },
+  },
 }
 </script>
 

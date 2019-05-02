@@ -1,15 +1,11 @@
 <template>
   <div class="asset-requests">
-    <router-view/>
+    <router-view />
   </div>
 </template>
 
 <script>
 export default {
-
+  naem: 'asset-requests',
 }
 </script>
-
-<style scoped>
-
-</style>

@@ -23,10 +23,12 @@
             label="Account role"
             :value="account.roleId | roleIdToString"
           />
+          <!-- eslint-disable max-len -->
           <detail
             label="Request type"
             :value="getRequestType"
           />
+          <!-- eslint-enable max-len -->
           <detail label="Account email">
             <email-getter :account-id="account.id" />
           </detail>
@@ -49,7 +51,9 @@
         </div>
         <div class="limits-reviewer__limits-wrapper">
           <div class="limits-review__limits-item">
-            <h3 class="limits-reviewer__heading">Current limits</h3>
+            <h3 class="limits-reviewer__heading">
+              Current limits
+            </h3>
             <div class="limits-reviewer__content-section">
               <user-limits
                 :limits="currentLimits"
@@ -58,7 +62,9 @@
             </div>
           </div>
           <div class="limits-review__limits-item">
-            <h3 class="limits-reviewer__heading">Desired limits</h3>
+            <h3 class="limits-reviewer__heading">
+              Desired limits
+            </h3>
             <div class="limits-reviewer__content-section">
               <user-limits
                 :limits="desiredLimitDetails.limits"
@@ -70,16 +76,19 @@
       </div>
       <template v-if="desiredLimitDetails.requestType === 'docsUploading'">
         <div class="limits-reviewer__uploaded-docs-list-wrapper">
-          <h3 class="limits-reviewer__heading">Uploaded documents</h3>
+          <h3 class="limits-reviewer__heading">
+            Uploaded documents
+          </h3>
           <uploaded-docs-list
+            v-if="uploadedDocuments"
             :list="uploadedDocuments"
-            :uploadDate="request.updatedAt"
-            :userAccountId="account.id"
+            :upload-date="request.updatedAt"
+            :user-account-id="account.id"
           />
         </div>
         <user-details
           :id="request.requestor"
-          :isReviewing="false"
+          :is-reviewing="false"
         />
       </template>
       <div class="app__form-actions limits-reviewer__btn-outer">
@@ -94,8 +103,8 @@
           class="app__btn"
           @click="isRequiringDocs = true"
           :disabled="isPending ||
-          desiredLimitDetails.requestType === 'docsUploading' ||
-          request.requestState === REQUEST_STATES.pending"
+            desiredLimitDetails.requestType === 'docsUploading' ||
+            request.requestState === REQUEST_STATES.pending"
         >
           Request docs
         </button>
@@ -127,7 +136,7 @@
           >
             <div class="limits-reviewer__doc-label">
               <datalist-field
-                :docItem="item"
+                :doc-item="item"
                 :key="i"
               />
             </div>
@@ -201,33 +210,37 @@
 </template>
 
 <script>
+import { TextField } from '@comcom/fields'
+
 import { EmailGetter } from '@comcom/getters'
 import Detail from '../../common/details/Detail.Row'
+import Modal from '@comcom/modals/Modal'
+
 import UserDetails from '../Users/components/UserDetails/UserDetails'
 import UserLimits from './components/Limits.UserLimits'
 import DatalistField from './components/Datalist'
 import UploadedDocsList from './components/Limits.UploadedDocsList'
 
-import { UserDocLinkGetter } from '@comcom/getters'
-import { DateFormatter } from '@comcom/formatters'
-import { InputField, TextField } from '@comcom/fields'
-import Modal from '@comcom/modals/Modal'
 import { Sdk } from '@/sdk'
-import { snakeToCamelCase } from '@/utils/un-camel-case'
+import api from '@/api'
 
 import {
   REQUEST_STATES,
   DOCUMENT_TYPES_STR,
-  LIMITS_REQUEST_STATES_STR
+  LIMITS_REQUEST_STATES_STR,
 } from '@/constants'
 import { STATS_OPERATION_TYPES } from '@tokend/js-sdk'
+
+import { snakeToCamelCase } from '@/utils/un-camel-case'
 import { formatDateWithTime } from '../../../utils/formatters'
-import api from '@/api'
+
 import get from 'lodash/get'
 import isEqual from 'lodash/isEqual'
+
+import { ErrorHandler } from '@/utils/ErrorHandler'
+
 import 'mdi-vue/CloseIcon'
 import 'mdi-vue/ChevronLeftIcon'
-import { ErrorHandler } from '@/utils/ErrorHandler'
 
 const DEFAULT_LIMIT_STRUCT = {
   'id': 0,
@@ -238,13 +251,13 @@ const DEFAULT_LIMIT_STRUCT = {
   'dailyOut': '9223372036854.775807',
   'weeklyOut': '9223372036854.775807',
   'monthlyOut': '9223372036854.775807',
-  'annualOut': '9223372036854.775807'
+  'annualOut': '9223372036854.775807',
 }
 
 const OPERATION_TYPES = {
   payment: 'paymentOut',
   deposit: 'deposit',
-  withdraw: 'withdraw'
+  withdraw: 'withdraw',
 }
 
 export default {
@@ -252,16 +265,17 @@ export default {
     Detail,
     Modal,
     TextField,
-    InputField,
     DatalistField,
     UserDetails,
     UserLimits,
-    DateFormatter,
-    UserDocLinkGetter,
     UploadedDocsList,
-    EmailGetter
+    EmailGetter,
   },
-  props: ['id'],
+
+  props: {
+    id: { type: String, required: true },
+  },
+
   data: _ => ({
     request: null,
     account: null,
@@ -277,22 +291,15 @@ export default {
     uploadDocs: [
       {
         label: '',
-        description: ''
-      }
+        description: '',
+      },
     ],
     rejectForm: {
       reason: '',
       isShown: false,
-      isReset: false
-    }
+      isReset: false,
+    },
   }),
-  async created () {
-    await this.getRequest()
-    const limitRequest = await api.requests.get(this.id)
-    this.desiredLimitDetails = limitRequest
-      .details[snakeToCamelCase(limitRequest.details.requestType)].details ||
-      '{}'
-  },
   computed: {
     currentLimits () {
       if (!this.limits) return null
@@ -306,9 +313,10 @@ export default {
         ...DEFAULT_LIMIT_STRUCT,
         accountId: this.request.requestor,
         assetCode: this.assetCode,
-        statsOpType: this.desiredLimitDetails.operationType
+        statsOpType: this.desiredLimitDetails.operationType,
       }
     },
+
     newLimit () {
       const requestDetails = this.desiredLimitDetails
       const operationType = OPERATION_TYPES[requestDetails.operationType]
@@ -324,20 +332,30 @@ export default {
         ...limits,
         accountId: this.request.requestor,
         assetCode: this.assetCode,
-        statsOpType: STATS_OPERATION_TYPES[operationType]
+        statsOpType: STATS_OPERATION_TYPES[operationType],
       }
     },
+
     uploadedDocuments () {
       if (!this.desiredLimitDetails.documents) return
       return this.desiredLimitDetails.documents
     },
     getRequestType () {
       return LIMITS_REQUEST_STATES_STR[get(this.request, 'details.requestType')]
-    }
+    },
   },
+  async created () {
+    await this.getRequest()
+    const limitRequest = await api.requests.get(this.id)
+    this.desiredLimitDetails = limitRequest
+      .details[snakeToCamelCase(limitRequest.details.requestType)].details ||
+      '{}'
+  },
+
   methods: {
     get,
     formatDateWithTime,
+
     async getRequest () {
       this.$store.commit('OPEN_LOADER')
       const request = await api.requests.get(this.id)
@@ -345,17 +363,19 @@ export default {
       const requestDetails = request.details[camelCaseByType].details
       const [account, limits] = await Promise.all([
         Sdk.horizon.account.get(request.requestor),
-        Sdk.horizon.account.getLimits(request.requestor)
+        Sdk.horizon.account.getLimits(request.requestor),
       ])
       this.request = request
       this.request.document = requestDetails.document
       this.request.asset = requestDetails.asset
       this.assetCode = requestDetails.asset
       this.account = account.data
-      this.limits = (get(limits, 'data.limits') || []).map(limit => limit.limit)
+      this.limits = (get(limits, 'data.limits') || [])
+        .map(limit => limit.limit)
       this.isLoaded = true
       this.$store.commit('CLOSE_LOADER')
     },
+
     async approveRequest () {
       this.isPending = true
       try {
@@ -364,26 +384,27 @@ export default {
           newLimits.push(this.newLimit)
         }
         if (!newLimits.length) {
-          this.$store.dispatch(
-            'SET_ERROR',
-            'Please update user limits before approving request'
-          )
+          ErrorHandler.process('Please update user limits before approving request')
           this.isPending = false
           return
         }
-        const requestDetails = this.request.details.updateLimits.details
-        const operationType = OPERATION_TYPES[requestDetails.operationType]
         const oldLimits = this.limits
           .find(item => {
+            const requestOpType = this.request.details.updateLimits
+              .details.operationType
+            const limitsOpType = OPERATION_TYPES[requestOpType]
+
             return item.assetCode === this.request.asset &&
-              item.statsOpType === STATS_OPERATION_TYPES[operationType]
+              item.statsOpType === STATS_OPERATION_TYPES[limitsOpType]
           })
+
         await api.requests.approveLimitsUpdate({
           request: this.request,
           oldLimits: oldLimits,
           newLimits: newLimits,
-          accountId: this.request.requestor
+          accountId: this.request.requestor,
         })
+
         this.$router.push({ name: 'limits.requests' })
         this.$store.dispatch(
           'SET_INFO',
@@ -394,6 +415,7 @@ export default {
       }
       this.isPending = false
     },
+
     async rejectRequest () {
       this.isPending = true
       try {
@@ -403,8 +425,9 @@ export default {
           newLimits: [this.newLimit],
           accountId: this.request.requestor,
           reason: this.rejectForm.reason,
-          isPermanent: true
+          isPermanent: true,
         }, this.request)
+
         this.$router.push({ name: 'limits.requests' })
         this.$store.dispatch(
           'SET_INFO',
@@ -421,7 +444,7 @@ export default {
       this.isPending = true
       try {
         const requireDocsDetails = JSON.stringify({
-          docsToUpload: this.uploadDocs
+          docsToUpload: this.uploadDocs,
         })
         await api.requests.rejectLimitsUpdate({
           request: this.request,
@@ -429,7 +452,7 @@ export default {
           newLimits: [this.newLimit],
           accountId: this.request.requestor,
           reason: requireDocsDetails,
-          isPermanent: false
+          isPermanent: false,
         })
         this.$store.dispatch(
           'SET_INFO',
@@ -459,9 +482,10 @@ export default {
     addMoreDoc () {
       this.uploadDocs.push({
         label: '',
-        description: ''
+        description: '',
       })
     },
+
     removeDoc (doc) {
       if (this.uploadDocs.length === 1) {
         this.isRequiringDocs = false
@@ -469,13 +493,13 @@ export default {
       }
       this.uploadDocs.splice(doc, 1)
     },
+
     back () {
       this.$router.push({ name: 'limits.requests' })
-    }
-  }
+    },
+  },
 }
 </script>
-
 
 <style lang="scss" scoped>
 @import "../../../assets/scss/colors";

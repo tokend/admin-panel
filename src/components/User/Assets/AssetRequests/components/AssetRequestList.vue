@@ -7,11 +7,11 @@
         label="Request type"
       >
         <option
-          v-for="type in Object.keys(ASSET_REQUEST_TYPES)"
-          :value="ASSET_REQUEST_TYPES[type].value"
-          :key="type"
+          v-for="requestType in Object.keys(ASSET_REQUEST_TYPES)"
+          :value="ASSET_REQUEST_TYPES[requestType].value"
+          :key="requestType"
         >
-          {{ ASSET_REQUEST_TYPES[type].text }}
+          {{ ASSET_REQUEST_TYPES[requestType].text }}
         </option>
       </select-field>
       <select-field
@@ -72,15 +72,17 @@
               {{ asset.reference }}
             </span>
 
+            <!-- eslint-disable max-len -->
             <span
               class="app-list__cell"
               :title="CREATE_ASSET_REQUEST_STATES[snakeToCamelCase(asset.state)].text"
             >
               {{ CREATE_ASSET_REQUEST_STATES[snakeToCamelCase(asset.state)].text }}
             </span>
+            <!-- eslint-enable max-len -->
 
             <span class="app-list__cell" :title="asset.requestor.id">
-              {{asset.requestor.id}}
+              {{ asset.requestor.id }}
             </span>
           </router-link>
         </ul>
@@ -107,37 +109,39 @@
 </template>
 
 <script>
-import api from '@/api'
-import { Sdk } from '@/sdk'
 import InputField from '@comcom/fields/InputField'
 import SelectField from '@comcom/fields/SelectField'
-import {
-  CREATE_ASSET_REQUEST_STATES,
-  REQUEST_STATES_STR
-} from '@/constants'
-import _ from 'lodash'
-import { ErrorHandler } from '@/utils/ErrorHandler'
-import { snakeToCamelCase } from '@/utils/un-camel-case'
+
 import { CollectionLoader } from '@/components/common'
+
+import api from '@/api'
+import { Sdk } from '@/sdk'
 import { ApiCallerFactory } from '@/api-caller-factory'
+
+import { CREATE_ASSET_REQUEST_STATES, REQUEST_STATES_STR } from '@/constants'
+
+import _ from 'lodash'
 import { clearObject } from '@/utils/clearObject'
+import { snakeToCamelCase } from '@/utils/un-camel-case'
+
+import { ErrorHandler } from '@/utils/ErrorHandler'
 
 const ASSET_REQUEST_TYPES = Object.freeze({
   create: {
     value: 'create_asset_requests',
-    text: 'Create'
+    text: 'Create',
   },
   update: {
     value: 'update_asset_requests',
-    text: 'Update'
-  }
+    text: 'Update',
+  },
 })
 
 export default {
   components: {
     InputField,
     SelectField,
-    CollectionLoader
+    CollectionLoader,
   },
 
   data () {
@@ -148,21 +152,38 @@ export default {
         requestType: ASSET_REQUEST_TYPES.create.value,
         state: REQUEST_STATES_STR.pending,
         requestor: null,
-        asset: null
+        asset: null,
       },
       CREATE_ASSET_REQUEST_STATES,
       REQUEST_STATES_STR,
-      ASSET_REQUEST_TYPES
+      ASSET_REQUEST_TYPES,
     }
+  },
+
+  watch: {
+    'filters.requestType' () { this.reloadCollectionLoader() },
+
+    'filters.state' () { this.reloadCollectionLoader() },
+
+    'filters.requestor': _.throttle(function () {
+      this.reloadCollectionLoader()
+    }, 1000),
+
+    'filters.asset': _.throttle(function () {
+      this.reloadCollectionLoader()
+    }, 1000),
   },
 
   methods: {
     snakeToCamelCase,
+
     async getList () {
       this.isPending = true
       let response = {}
       try {
-        const requestor = await this.getRequestorAccountId(this.filters.requestor)
+        const requestor = await this.getRequestorAccountId(
+          this.filters.requestor
+        )
         response = await ApiCallerFactory
           .createCallerInstance()
           .getWithSignature(`/v3/${this.filters.requestType}`, {
@@ -170,8 +191,8 @@ export default {
             filter: clearObject({
               state: CREATE_ASSET_REQUEST_STATES[this.filters.state].code,
               requestor: requestor,
-              'request_details.asset': this.filters.asset
-            })
+              'request_details.asset': this.filters.asset,
+            }),
           })
         this.isListEnded = !(this.list || []).length
       } catch (error) {
@@ -184,9 +205,11 @@ export default {
     setList (data) {
       this.list = data
     },
+
     async extendList (data) {
       this.list = this.list.concat(data)
     },
+
     async getRequestorAccountId (requestor) {
       if (Sdk.base.Keypair.isValidPublicKey(requestor)) {
         return requestor
@@ -202,18 +225,8 @@ export default {
 
     reloadCollectionLoader () {
       this.$refs.collectionLoaderBtn.loadFirstPage()
-    }
+    },
   },
-  watch: {
-    'filters.requestType' () { this.reloadCollectionLoader() },
-    'filters.state' () { this.reloadCollectionLoader() },
-    'filters.requestor': _.throttle(function () {
-      this.reloadCollectionLoader()
-    }, 1000),
-    'filters.asset': _.throttle(function () {
-      this.reloadCollectionLoader()
-    }, 1000)
-  }
 }
 </script>
 

@@ -5,13 +5,13 @@ const state = {
   showIdleForm: false,
   logoutTimer: null,
   idleDelay: idleDelay,
-  timestamp: null
+  timestamp: null,
 }
 
 const getters = {
   showIdleForm: state => state.showIdleForm,
   forceLogoutDelay: state => forceLogoutDelay,
-  logoutTimer: state => state.logoutTimer
+  logoutTimer: state => state.logoutTimer,
 }
 
 const actions = {
@@ -42,7 +42,7 @@ const actions = {
     state.showIdleForm = false
     commit('CLOSE_MODAL')
     dispatch('START_IDLE')
-  }
+  },
 }
 
 const mutations = {
@@ -62,13 +62,12 @@ const mutations = {
     document.onclick = null
     document.onscroll = null
     document.onkeypress = null
-  }
+  },
 }
 
 export default {
   state,
   getters,
   actions,
-  mutations
+  mutations,
 }
-
