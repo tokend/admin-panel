@@ -96,8 +96,9 @@
           class="fee-list__filter"
           label="Account"
           v-model="filters.accountAlias"
-          placeholder="Email address or account ID"
+          placeholder="Email or account ID"
           v-if="filters.scope === SCOPE_TYPES.account"
+          autocomplete-type="email"
         />
       </div>
     </div>
