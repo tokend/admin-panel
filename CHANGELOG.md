@@ -17,6 +17,7 @@ for further information about branching and tagging conventions.
 - New feature of managing pending tasks of KYC request
 - New external details viewer of KYC request
 - New release sanity check script, run it on pre-push
+- New "Capital deployment" fee type
 
 #### Fixed
 - Fixed user operation list’s empty and loading states displaying
