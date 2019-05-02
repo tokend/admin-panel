@@ -28,7 +28,6 @@ for further information about branching and tagging conventions.
 #### Changed
 - Now displaying "Block" and "Reset to unverified" in user’s operation list
 - Updated operation details formatting, hide some unnecessary fields
-- Formatted & cleaned up code
 - Admin account id input is now unchangeable on Admin update screen
 
 ### "Under the hood" changes
