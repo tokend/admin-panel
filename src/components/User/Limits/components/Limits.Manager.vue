@@ -212,7 +212,6 @@ export default {
     filters: {
       asset: '',
       accountRole: '',
-      address: '',
       requestor: '',
     },
     selectedTabName: '',
@@ -246,7 +245,6 @@ export default {
       handler: function (value) {
         if (value) {
           this.filters.requestor = ''
-          this.filters.address = ''
         }
         this.setFilters()
         this.getLimits()
@@ -348,9 +346,6 @@ export default {
         ErrorHandler.processWithoutFeedback(e)
       }
     },
-    async getAccountIdByEmail (email) {
-      this.filters.address = await api.users.getAccountIdByEmail(email)
-    },
     async getRequestorAccountId (requestor) {
       if (Sdk.base.Keypair.isValidPublicKey(requestor)) {
         return requestor
@@ -391,7 +386,7 @@ export default {
       return true
     },
     isAccountAddressValid () {
-      const isAddressInvalid = !this.filters.address &&
+      const isAddressInvalid = !this.filters.requestor &&
         this.selectedTabName === TAB_NAMES.account
       if (isAddressInvalid) {
         ErrorHandler.process('Such account does not exist in the system')
@@ -408,8 +403,6 @@ export default {
       if (this.filters.requestor) {
         // Both accountRole and accountId cant be requested at same time
         this.filters.accountRole = ''
-        this.filters.address =
-          await this.getRequestorAccountId(this.filters.requestor)
       }
     },
     normalizeLimitAmount (limit) {

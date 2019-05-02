@@ -229,9 +229,6 @@ export default {
     'filters.state' () { this.reloadCollectionLoader() },
     'filters.roleToSet' () { this.reloadCollectionLoader() },
     'filters.pendingTasks' () { this.reloadCollectionLoader() },
-    'filters.address': _.throttle(function () {
-      this.reloadCollectionLoader()
-    }, 1000),
     'filters.requestor': _.throttle(function () {
       this.reloadCollectionLoader()
     }, 1000),

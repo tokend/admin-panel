@@ -33,7 +33,8 @@
         <input-field
           class="app-list-filters__field"
           label="Requestor"
-          placeholder="Address (full match)"
+          placeholder="Requestor"
+          autocomplete-type="email"
           v-model="filters.requestor"
         />
       </div>
@@ -196,15 +197,32 @@ export default {
     async getList () {
       this.isLoaded = false
       this.isNoMoreEntries = false
-
       try {
-        const filters = { ...this.filters }
-        this.list = await api.requests.getWithdrawalRequests(filters)
+        const requestor =
+          await this.getRequestorAccountId(this.filters.requestor)
+        this.list = await api.requests.getWithdrawalRequests({
+          state: this.filters.state,
+          asset: this.filters.asset,
+          requestor: requestor,
+        })
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }
 
       this.isLoaded = true
+    },
+
+    async getRequestorAccountId (requestor) {
+      if (Sdk.base.Keypair.isValidPublicKey(requestor)) {
+        return requestor
+      } else {
+        try {
+          const address = await api.users.getAccountIdByEmail(requestor)
+          return address || requestor
+        } catch (error) {
+          return requestor
+        }
+      }
     },
 
     async extendList () {
@@ -228,7 +246,7 @@ export default {
 </script>
 
 <style scoped>
-.withdrawal-list__filters-wrp {
-  margin-bottom: 4rem;
-}
+  .withdrawal-list__filters-wrp {
+    margin-bottom: 4rem;
+  }
 </style>
