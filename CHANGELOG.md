@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
+## [Unreleased]
+#### Changed
+- Merged email field with account ID filter fields
+- Added autocomplete by email to other filter fields
+
+#### Removed
+- Autocomplete for account ID filter on assets requests page
+
 ## [1.6.0-rc.0] - 2019-05-02
 #### Added
 - New "Invest" fee type
@@ -28,7 +36,6 @@ for further information about branching and tagging conventions.
 #### Changed
 - Now displaying "Block" and "Reset to unverified" in user’s operation list
 - Updated operation details formatting, hide some unnecessary fields
-- Formatted & cleaned up code
 - Admin account id input is now unchangeable on Admin update screen
 
 ### "Under the hood" changes

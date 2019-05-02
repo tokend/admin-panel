@@ -48,8 +48,8 @@
             <input-field
               class="limits-manager-filters__field
                     limits-manager-filters__specific-user-field"
-              v-model.trim="specificUserAddress"
-              label="Email or Account ID"
+              v-model.trim="filters.requestor"
+              label="Requestor"
               autocomplete-type="email"
             />
 
@@ -183,31 +183,24 @@
 <script>
 import { SelectField, InputField } from '@comcom/fields'
 import { Tabs, Tab } from '@comcom/Tabs'
-
 import get from 'lodash/get'
 import throttle from 'lodash/throttle'
 import pick from 'lodash/pick'
-
 import api from '@/api'
 import { Sdk } from '@/sdk'
-
 import { STATS_OPERATION_TYPES, DEFAULT_MAX_AMOUNT } from '@/constants'
 import config from '@/config'
-
 import { ErrorHandler } from '@/utils/ErrorHandler'
-
 const LIMITS_TYPES = [
   'dailyOut',
   'weeklyOut',
   'monthlyOut',
   'annualOut',
 ]
-
 const TAB_NAMES = {
   accountType: 'Specific account type',
   account: 'Specific account',
 }
-
 export default {
   components: {
     SelectField,
@@ -215,16 +208,13 @@ export default {
     Tabs,
     Tab,
   },
-
   data: _ => ({
     filters: {
       asset: '',
       accountRole: '',
-      email: '',
-      address: '',
+      requestor: '',
     },
     selectedTabName: '',
-    specificUserAddress: '',
     limits: {
       withdrawal: null,
       payment: null,
@@ -243,7 +233,6 @@ export default {
     }),
     numericValueRegExp: /^\d*\.?\d*$/,
   }),
-
   watch: {
     assets: {
       handler: function () {
@@ -252,19 +241,16 @@ export default {
       },
       immediate: true,
     },
-
     'filters.accountRole': {
       handler: function (value) {
         if (value) {
-          this.specificUserAddress = ''
-          this.filters.address = ''
+          this.filters.requestor = ''
         }
         this.setFilters()
         this.getLimits()
       },
       immediate: true,
     },
-
     'filters.asset': {
       handler: function () {
         this.setFilters()
@@ -272,8 +258,7 @@ export default {
       },
       immediate: true,
     },
-
-    'specificUserAddress': {
+    'filters.requestor': {
       handler: throttle(async function (value) {
         await this.setFilters()
         await this.getLimits()
@@ -281,20 +266,16 @@ export default {
       immediate: true,
     },
   },
-
   async created () {
     await this.getAssets()
   },
-
   methods: {
     async onTabChange (selectedTab) {
       this.selectedTabName = selectedTab.tab.name
-
       if (this.selectedTabName === TAB_NAMES.accountType) {
-        this.specificUserAddress = ''
+        this.filters.requestor = ''
       }
     },
-
     async getLimits () {
       if (!this.filters.asset) return
       const [
@@ -309,16 +290,15 @@ export default {
       this.limits.payment = paymentLimits
       this.limits.withdrawal = withdrawalLimits
       this.limits.deposit = depositLimits
-
       async function getLimit (statsOpType) {
+        const requestor =
+          await this.getRequestorAccountId(this.filters.requestor)
         const { data } = await Sdk.horizon.limits.get({
-          account_id: this.filters.address,
+          account_id: requestor,
           account_type: this.filters.accountRole,
           stats_op_type: statsOpType,
           asset: this.filters.asset,
-          email: this.filters.email,
         })
-
         // TODO: remove legacy consistency fix
         if (data.accountType || data.accountType === null) {
           const role = data.accountType === null
@@ -327,16 +307,13 @@ export default {
           data.accountRole = role
           delete data.accountType
         }
-
         return data
       }
     },
-
     async updateLimits (limits) {
       if (!this.isValidLimits(limits) || !this.isAccountAddressValid()) {
         return
       }
-
       this.isPending = true
       try {
         if (limits.accountRole == null) {
@@ -361,7 +338,6 @@ export default {
       }
       this.isPending = false
     },
-
     async getAssets () {
       try {
         const response = await Sdk.horizon.assets.getAll()
@@ -370,11 +346,18 @@ export default {
         ErrorHandler.processWithoutFeedback(e)
       }
     },
-
-    async getAccountIdByEmail (email) {
-      this.filters.address = await api.users.getAccountIdByEmail(email)
+    async getRequestorAccountId (requestor) {
+      if (Sdk.base.Keypair.isValidPublicKey(requestor)) {
+        return requestor
+      } else {
+        try {
+          const address = await api.users.getAccountIdByEmail(requestor)
+          return address || requestor
+        } catch (error) {
+          return requestor
+        }
+      }
     },
-
     // it's a quick fix of the limits validation. Need to refactor it ASAP
     isValidLimits (limits) {
       for (const limit of Object.values(pick(limits, LIMITS_TYPES))) {
@@ -387,14 +370,12 @@ export default {
         ErrorHandler.process('Weekly out limits should be more or equal to daily out')
         return false
       }
-
       const isMonthlyLimitsValid = +limits.monthlyOut < +limits.dailyOut ||
         +limits.monthlyOut < +limits.weeklyOut
       if (isMonthlyLimitsValid) {
         ErrorHandler.process('Monthly out limits should be more or equal to daily and/or weekly out')
         return false
       }
-
       const isAnnualLimitsValid = +limits.annualOut < +limits.dailyOut ||
         +limits.annualOut < +limits.weeklyOut ||
         +limits.annualOut < +limits.monthlyOut
@@ -404,11 +385,9 @@ export default {
       }
       return true
     },
-
     isAccountAddressValid () {
-      const isAddressInvalid = !this.filters.address &&
+      const isAddressInvalid = !this.filters.requestor &&
         this.selectedTabName === TAB_NAMES.account
-
       if (isAddressInvalid) {
         ErrorHandler.process('Such account does not exist in the system')
         return false
@@ -416,28 +395,16 @@ export default {
         return true
       }
     },
-
     async setFilters () {
       if (!this.filters.asset) this.filters.asset = get(this.assets, '[0].code')
-
       if (!this.filters.accountRole) {
         this.filters.accountRole = config.ACCOUNT_ROLES.general + ''
       }
-
-      if (this.specificUserAddress) {
+      if (this.filters.requestor) {
         // Both accountRole and accountId cant be requested at same time
         this.filters.accountRole = ''
-        const emailRegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-        const idLength = 56
-
-        if (emailRegExp.test(this.specificUserAddress)) {
-          await this.getAccountIdByEmail(this.specificUserAddress)
-        } else if (this.specificUserAddress.length === idLength) {
-          this.filters.address = this.specificUserAddress
-        }
       }
     },
-
     normalizeLimitAmount (limit) {
       return limit >= DEFAULT_MAX_AMOUNT ? '' : limit
     },
@@ -446,55 +413,47 @@ export default {
 </script>
 
 <style lang="scss">
-.limits-manager {
-  /*max-width: 80rem;*/
-  margin-top: 2rem;
-}
-
-.limits-manager__filters,
-.limits-manager__inner {
-  display: flex;
-}
-
-.limits-manager__filter {
-  margin-bottom: 5rem;
-  width: 100%;
-  &:first-child { margin-right: 2rem }
-}
-
-.limits-manager-filters,
-.limits-manager__limit-row {
-  display: flex;
-  align-items: center;
-}
-
-.limits-manager-filters__field,
-.limits-manager__limits-list-wrp {
-  &:first-child:not(:only-child),
-  &:not(:last-child) {
-    margin-right: 5rem;
+  .limits-manager {
+    /*max-width: 80rem;*/
+    margin-top: 2rem;
   }
-  width: 100%;
-}
-
-.limits-manager-filters__field {
-  margin-bottom: 5rem;
-}
-
-.limits-manager__limits-list {
-  margin-bottom: 4rem;
-}
-
-.limits-manager__limit-type {
-  margin-right: 1rem;
-  min-width: 5rem;
-  font-size: 1.2rem;
-  font-weight: 600;
-  padding: 1.7rem 0 0.6rem 0;
-}
-
-.limits-manager-filters__specific-user-field {
-  margin-bottom: 5rem;
-  width: 50%;
-}
+  .limits-manager__filters,
+  .limits-manager__inner {
+    display: flex;
+  }
+  .limits-manager__filter {
+    margin-bottom: 5rem;
+    width: 100%;
+    &:first-child { margin-right: 2rem }
+  }
+  .limits-manager-filters,
+  .limits-manager__limit-row {
+    display: flex;
+    align-items: center;
+  }
+  .limits-manager-filters__field,
+  .limits-manager__limits-list-wrp {
+    &:first-child:not(:only-child),
+    &:not(:last-child) {
+      margin-right: 5rem;
+    }
+    width: 100%;
+  }
+  .limits-manager-filters__field {
+    margin-bottom: 5rem;
+  }
+  .limits-manager__limits-list {
+    margin-bottom: 4rem;
+  }
+  .limits-manager__limit-type {
+    margin-right: 1rem;
+    min-width: 5rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    padding: 1.7rem 0 0.6rem 0;
+  }
+  .limits-manager-filters__specific-user-field {
+    margin-bottom: 5rem;
+    width: 50%;
+  }
 </style>
