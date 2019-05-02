@@ -12,6 +12,9 @@ for further information about branching and tagging conventions.
 - Merged email field with account ID filter fields
 - Added autocomplete by email to other filter fields
 
+#### Removed
+- Autocomplete for account ID filter on assets requests page
+
 ## [1.6.0-rc.0] - 2019-05-02
 #### Added
 - New "Invest" fee type
@@ -49,7 +52,6 @@ for further information about branching and tagging conventions.
 
 #### Removed
 - Unnecessary "build" folder, containing old webpack config
-- Autocomplete for account ID filter on assets requests page
 
 ## [1.5.0] - 2019-04-19
 ### "Under the hood" changes
