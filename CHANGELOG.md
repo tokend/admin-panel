@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
+## [Unreleased]
+#### Added
+- New "Capital deployment" fee type
+
 ## [1.6.0-rc.0] - 2019-05-02
 #### Added
 - New "Invest" fee type
@@ -17,7 +21,6 @@ for further information about branching and tagging conventions.
 - New feature of managing pending tasks of KYC request
 - New external details viewer of KYC request
 - New release sanity check script, run it on pre-push
-- New "Capital deployment" fee type
 
 #### Fixed
 - Fixed user operation list’s empty and loading states displaying

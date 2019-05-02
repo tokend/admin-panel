@@ -104,7 +104,7 @@
         />
       </div>
     </div>
-    <!-- <pre>{{ fees }}</pre> -->
+
     <div class="fee-list__list-wrp">
       <template v-if="!Object.keys(fees).length">
         <div class="app-list">
