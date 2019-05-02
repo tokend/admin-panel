@@ -7,13 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
-## [Unreleased]
+## [1.6.0-rc.1] - 2019-05-02
+#### Added
+- Added autocomplete by email to email-acceptable filter fields
+
 #### Changed
-- Merged email field with account ID filter fields
-- Added autocomplete by email to other filter fields
+- Merged email and account ID filter fields
 
 #### Removed
-- Autocomplete for account ID filter on assets requests page
+- Autocomplete for account ID on assets requests page’s filter field
 
 ## [1.6.0-rc.0] - 2019-05-02
 #### Added
@@ -201,7 +203,8 @@ for further information about branching and tagging conventions.
 
 ## [1.3.0] - 2019-03-01
 
-[Unreleased]: https://github.com/tokend/admin-panel/compare/1.6.0-rc.0...HEAD
+[Unreleased]: https://github.com/tokend/admin-panel/compare/1.6.0-rc.1...HEAD
+[1.6.0-rc.1]: https://github.com/tokend/admin-panel/compare/1.6.0-rc.0...1.6.0-rc.1
 [1.6.0-rc.0]: https://github.com/tokend/admin-panel/compare/1.5.0...1.6.0-rc.0
 [1.5.0]: https://github.com/tokend/admin-panel/compare/1.5.0-rc.3...1.5.0
 [1.5.0-rc.3]: https://github.com/tokend/admin-panel/compare/1.5.0-rc.2...1.5.0-rc.3

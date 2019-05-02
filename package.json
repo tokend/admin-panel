@@ -1,6 +1,6 @@
 {
   "name": "admin-panel",
-  "version": "1.6.0-rc.0",
+  "version": "1.6.0-rc.1",
   "description": "A TokenD admin client",
   "author": "Distributed Lab <contact@distributedlab.com>",
   "private": true,
