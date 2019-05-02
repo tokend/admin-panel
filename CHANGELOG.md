@@ -8,36 +8,39 @@ Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
 ## [Unreleased]
-#### Fixed
-- Fixed operation empty and loading list displaying of a user
-- Updating user details after KYC change
-- Error after blocking the user without verified KYC request
-- Increase a delay before getting user after KYC review
-
 #### Added
-- "Invest" fee type
-- Re-render chart animation
-- Master signer existence check on login
-- Filter KYC requests by pending tasks
-- KYC details renderers for US verified and US accredited roles
-- Ability to manage pending tasks of KYC request
-- External details viewer of KYC request
+- New "Invest" fee type
+- New re-render chart animations
+- New master signer existence check on log in
+- New KYC requests filter by pending tasks
+- New US verified and US accredited account roles support
+- New feature of managing pending tasks of KYC request
+- New external details viewer of KYC request
 - New release sanity check script, run it on pre-push
 
+#### Fixed
+- Fixed user operation list’s empty and loading states displaying
+- Fixed updating user details after KYC request review
+- Fixed an error after blocking the user without any previously verified
+  KYC request
+- Fixed some error reports
+
 #### Changed
-- Now using ErrorHandler instead of `error.showMessage()`,
-  `$store.dispatch('SET_ERROR')`, `console.error`
-- Replaced `ErrorHandler.process` by `ErrorHandler.processWithoutFeedback`
+- Now displaying "Block" and "Reset to unverified" in user’s operation list
+- Updated operation details formatting, hide some unnecessary fields
+- Formatted & cleaned up code
+- Admin account id input is now unchangeable on Admin update screen
+
+### "Under the hood" changes
+#### Added
+- New ESLint rules similar to web-client ones
+
+#### Changed
+- Replaced `ErrorHandler.process` with `ErrorHandler.processWithoutFeedback`
   in components' created hook
 - Updated `package.json` dependencies
 - Updated webpack build config
 - Now using "qrcode.vue" package instead of "v-qrcode"
-- Renamed "Create change role request" in the list to "Block" and
-  "Reset to unverified" if it was blocked or reset
-- Operation details formatting
-- Now using custom ESLint rules
-- Formatted & cleaned up code
-- KYC details for general user now renders new format of data
 
 #### Removed
 - Unnecessary "build" folder, containing old webpack config
@@ -46,7 +49,6 @@ for further information about branching and tagging conventions.
 ### "Under the hood" changes
 #### Changed
 - Now using @tokend/js-sdk@1.5.0
-- Make unchangeable adminId input field
 
 ## [1.5.0-rc.3] - 2019-04-19
 ### "Under the hood" changes
