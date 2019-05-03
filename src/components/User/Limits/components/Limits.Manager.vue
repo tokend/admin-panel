@@ -318,7 +318,7 @@ export default {
         getLimit.apply(this, [STATS_OPERATION_TYPES.deposit]),
       ])
 
-      const limitDeatils = {
+      const limitDetails = {
         assetCode: this.filters.asset,
         accountId: this.filters.address,
         accountRole: this.filters.accountRole,
@@ -326,19 +326,19 @@ export default {
 
       this.limits.payment = new LimitsRecord(paymentLimits, {
         statsOpType: STATS_OPERATION_TYPES.paymentOut,
-        ...limitDeatils,
+        ...limitDetails,
       })
 
       this.limits.withdrawal = new LimitsRecord(
         withdrawalLimits, {
           statsOpType: STATS_OPERATION_TYPES.withdraw,
-          ...limitDeatils,
+          ...limitDetails,
         })
 
       this.limits.deposit = new LimitsRecord(
         depositLimits, {
           statsOpType: STATS_OPERATION_TYPES.deposit,
-          ...limitDeatils,
+          ...limitDetails,
         })
 
       async function getLimit (statsOpType) {
