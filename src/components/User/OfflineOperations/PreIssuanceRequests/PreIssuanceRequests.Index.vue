@@ -3,16 +3,21 @@
     <div class="app__block">
       <h2>Preissuance Requests</h2>
 
-      <select-field class="preissuance-requests-index__asset-select"
+      <select-field
+        class="preissuance-requests-index__asset-select"
         v-model="asset"
         label="Asset">
-        <option v-for="a in assets" :value="a.code" :key="a.code">
-          {{a.code}}
+        <option
+          v-for="a in assets"
+          :value="a.code"
+          :key="a.code">
+          {{ a.code }}
         </option>
       </select-field>
 
-      <pre-issuance-request-list :asset="asset"
-        :availableAmount="availableAmount"
+      <pre-issuance-request-list
+        :asset="asset"
+        :available-amount="availableAmount"
         @need-to-update="getAssets"
         v-if="assetsLoaded"
       />
@@ -25,23 +30,26 @@ import PreIssuanceRequestList from './components/PreIssuanceRequestList.vue'
 import SelectField from '@comcom/fields/SelectField'
 import { Sdk } from '@/sdk'
 
+import { ErrorHandler } from '@/utils/ErrorHandler'
+
 export default {
   components: {
     PreIssuanceRequestList,
-    SelectField
+    SelectField,
   },
 
   data () {
     return {
       asset: [{ code: 'All' }],
       assets: undefined,
-      assetsLoaded: false
+      assetsLoaded: false,
     }
   },
 
   computed: {
     assetInfo () {
-      const selectedAsset = this.assets.filter(asset => asset.code === this.asset)[0]
+      const selectedAsset = this.assets
+        .filter(asset => asset.code === this.asset)[0]
       return selectedAsset || {}
     },
 
@@ -50,7 +58,7 @@ export default {
         return 0
       }
       return +this.assetInfo.available_for_issuance
-    }
+    },
   },
 
   created () {
@@ -63,19 +71,18 @@ export default {
       try {
         const response = await Sdk.horizon.assets.getAll()
         this.assets = [{
-          code: 'All'
+          code: 'All',
         }].concat(response.data)
         this.asset = this.assets[0].code
         this.assetsLoaded = true
 
         this.$store.commit('CLOSE_LOADER')
       } catch (err) {
-        console.error('caught error', err)
         this.$store.commit('CLOSE_LOADER')
-        this.$store.dispatch('SET_ERROR', 'Can not to load assets list')
+        ErrorHandler.processWithoutFeedback(err)
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

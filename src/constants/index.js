@@ -25,7 +25,7 @@ export {
   DEFAULT_DATE_TIME_FORMAT,
   DEFAULT_MAX_AMOUNT,
   DEFAULT_INPUT_STEP,
-  DEFAULT_INPUT_MIN
+  DEFAULT_INPUT_MIN,
 } from './defaults'
 export { KEY_VALUE_ENTRY_TYPE } from './key-value'
 export { ASSET_REQUEST_TYPES } from './asset-request-types'

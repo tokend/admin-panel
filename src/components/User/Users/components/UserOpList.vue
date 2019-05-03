@@ -26,12 +26,16 @@
         </span>
       </div>
 
-      <button class="app-list__li" v-for="item in records" :key="item.id" @click="$emit('op-select', item)">
+      <button
+        class="app-list__li"
+        v-for="item in records"
+        :key="item.id"
+        @click="$emit('op-select', item)">
         <span class="app-list__cell" :title="item.operationType">
-          {{ item.operationType }}
+          {{ getOperationType(item) }}
         </span>
-        <span class="app-list__cell" :title="item.ledgerCloseTime">
-          {{ item.ledgerCloseTime }}
+        <span class="app-list__cell" :title="item.appliedAt">
+          {{ item.appliedAt }}
         </span>
         <span class="app-list__cell" :title="item.sourceAccount">
           {{ item.sourceAccount }}
@@ -43,19 +47,11 @@
     </ul>
 
     <template v-else>
-      <div class="app-list__li-like">
-        <template v-if="isLoading">
-          <p>
-            Loading...
-          </p>
-        </template>
-
-        <template v-else>
-          <p>
-            Nothing here yet
-          </p>
-        </template>
-      </div>
+      <ul class="app-list">
+        <li class="app-list__li-like">
+          {{ isLoading ? 'Loading...' : 'Nothing here yet' }}
+        </li>
+      </ul>
     </template>
 
     <div class="app__more-btn-wrp">
@@ -70,36 +66,46 @@
 
 <script>
 import Vue from 'vue'
+
 import moment from 'moment'
-import get from 'lodash/get'
-import { formatAssetAmount } from '@/utils/formatters'
+
+import safeGet from 'lodash/get'
+
 import { OperationCounterparty } from '@comcom/getters'
 import { CollectionLoader } from '@/components/common'
-import { ErrorHandler } from '@/utils/ErrorHandler'
+
 import { ApiCallerFactory } from '@/api-caller-factory'
+
+import { formatAssetAmount } from '@/utils/formatters'
 import { clearObject } from '@/utils/clearObject'
+import { ErrorHandler } from '@/utils/ErrorHandler'
+
+import config from '@/config'
 
 export default {
   components: {
     OperationCounterparty,
-    CollectionLoader
+    CollectionLoader,
   },
+
+  props: {
+    id: { type: String, required: true },
+  },
+
   data () {
     return {
       formatAssetAmount,
       list: [],
       masterPubKey: Vue.params.MASTER_ACCOUNT,
-      isLoading: false
+      isLoading: false,
     }
   },
-
-  props: ['id'],
 
   computed: {
     records () {
       if (!this.list) return undefined
       return this.normalizeRecords(this.list)
-    }
+    },
   },
 
   methods: {
@@ -112,15 +118,45 @@ export default {
           .getWithSignature('/v3/history', {
             page: { order: 'desc' },
             filter: clearObject({
-              account: this.id
+              account: this.id,
             }),
-            include: ['operation.details']
+            include: ['operation.details'],
           })
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }
       this.isLoading = false
       return response
+    },
+
+    getOperationType (record) {
+      switch (record.operationType) {
+        case 'Create change role request':
+          return this.getChangeRoleOperationType(record)
+        default:
+          return record.operationType
+      }
+    },
+
+    getChangeRoleOperationType (record) {
+      const roleToSet = safeGet(
+        record, 'operation.details.roleToSet.id'
+      )
+      const isBlocked = Number(roleToSet) === config.ACCOUNT_ROLES.blocked
+      const isReset = safeGet(
+        record, 'operation.details.creatorDetails.resetReason'
+      )
+
+      let operationType
+      if (isBlocked) {
+        operationType = 'Block'
+      } else if (isReset) {
+        operationType = 'Reset to unverified'
+      } else {
+        operationType = 'Change role request'
+      }
+
+      return operationType
     },
 
     setList (data) {
@@ -133,20 +169,20 @@ export default {
 
     normalizeRecords (records) {
       return records.map((item) => {
-        const operationType = item.operation.details.type.replace(/operations-/g, '').split('-').join(' ')
+        const operationType = item.operation.details.type
+          .replace(/operations-/g, '').split('-').join(' ')
+
         return Object.assign({}, item, {
           // Capitalize and remove dashes
-          operationType: operationType.charAt(0).toUpperCase() + operationType.slice(1),
-          ledgerCloseTime: moment(item.operation.appliedAt).format('DD MMM YYYY [at] hh:mm:ss'),
+          operationType: operationType.charAt(0).toUpperCase() +
+            operationType.slice(1),
+          appliedAt: moment(item.operation.appliedAt).format('DD MMM YYYY [at] hh:mm:ss'),
           sourceAccount: item.operation.source.id === this.masterPubKey ? 'Master' : item.operation.source.id,
-          receiverAccount: get(item, 'operation.details.receiverAccount.id'),
-          accountTo: get(item, 'operation.details.accountTo.id')
+          receiverAccount: safeGet(item, 'operation.details.receiverAccount.id'),
+          accountTo: safeGet(item, 'operation.details.accountTo.id'),
         })
       })
-    }
-  }
+    },
+  },
 }
 </script>
-
-<style scoped lang="scss">
-</style>

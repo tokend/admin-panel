@@ -1,21 +1,27 @@
 <template>
   <div class="asset-pair-manager">
-
     <template v-if="isLoaded">
-      <form @submit.prevent="updatePrice" class="asset-pair-manager__form app__block">
-        <h2>Update {{base}}/{{quote}} pair price</h2>
+      <form
+        @submit.prevent="updatePrice"
+        class="asset-pair-manager__form app__block"
+      >
+        <h2>Update {{ base }}/{{ quote }} pair price</h2>
 
         <div class="asset-pair-manager__form-row app__form-row">
-          <input-field class="app__form-field"
+          <input-field
+            class="app__form-field"
             :label="`Price (${pair.quote})`"
-            type="number" min="0" :step="DEFAULT_INPUT_STEP"
+            type="number"
+            min="0"
+            :step="DEFAULT_INPUT_STEP"
             v-model="form.price"
             :disabled="isSubmitting"
           />
         </div>
 
         <div class="app__form-actions">
-          <button class="asset-pair-manager__submit-btn app__btn"
+          <button
+            class="asset-pair-manager__submit-btn app__btn"
             :disabled="isSubmitting">
             Update
           </button>
@@ -24,9 +30,11 @@
     </template>
 
     <template v-if="isLoaded">
-      <form @submit.prevent="updatePolicy" class="asset-pair-manager__form app__block">
-        <h2>Update {{base}}/{{quote}} pair policies</h2>
-
+      <form
+        @submit.prevent="updatePolicy"
+        class="asset-pair-manager__form app__block"
+      >
+        <h2>Update {{ base }}/{{ quote }} pair policies</h2>
 
         <div class="asset-pair-manager__checkboxes">
           <tick-field
@@ -38,6 +46,7 @@
             title="Allowed to trade this pair on secondary market"
             :cb-value="ASSET_PAIR_POLICIES.tradeableSecondaryMarket"
           />
+          <!-- eslint-disable max-len -->
           <tick-field
             class="asset-pair-manager__checkbox"
             v-model="form.policies"
@@ -56,6 +65,7 @@
             title="If set, then price for new offers must be in interval of (1 +- maxPriceStep)*currentPrice"
             :cb-value="ASSET_PAIR_POLICIES.currentPriceRestriction"
           />
+          <!-- eslint-enable max-len -->
         </div>
 
         <button
@@ -76,21 +86,28 @@
 </template>
 
 <script>
-import api from '@/api'
-import { Sdk } from '@/sdk'
 import InputField from '@comcom/fields/InputField'
 import TickField from '@comcom/fields/TickField'
-import { DEFAULT_INPUT_STEP } from '@/constants'
-import { ASSET_PAIR_POLICIES } from '@/constants/'
 
 import { confirmAction } from '@/js/modals/confirmation_message'
 
-export default {
-  props: ['base', 'quote'],
+import api from '@/api'
+import { Sdk } from '@/sdk'
 
+import { DEFAULT_INPUT_STEP } from '@/constants'
+import { ASSET_PAIR_POLICIES } from '@/constants/'
+
+import { ErrorHandler } from '@/utils/ErrorHandler'
+
+export default {
   components: {
     InputField,
-    TickField
+    TickField,
+  },
+
+  props: {
+    base: { type: String, required: true },
+    quote: { type: String, required: true },
   },
 
   data () {
@@ -100,10 +117,10 @@ export default {
       pair: {},
       form: {
         price: '',
-        policies: []
+        policies: [],
       },
       isLoaded: false,
-      isSubmitting: false
+      isSubmitting: false,
     }
   },
 
@@ -119,21 +136,25 @@ export default {
       try {
         const response = await Sdk.horizon.assetPairs.getAll()
         this.pair = response.data
-          .find(({ base, quote }) => base === this.base && quote === this.quote)
+          .find(({ base, quote }) => {
+            return base === this.base && quote === this.quote
+          })
         this.isLoaded = true
       } catch (error) {
-        error.showMessage()
+        ErrorHandler.processWithoutFeedback(error)
       }
     },
 
     async updatePrice () {
       this.pair.physicalPrice = this.form.price
-      this.pair.policies = this.form.policies.reduce((sum, policy) => sum | policy, 0)
+      this.pair.policies = this.form.policies
+        .reduce((sum, policy) => sum | policy, 0)
       this.submit({ updatePrice: true })
     },
 
     async updatePolicy () {
-      this.pair.policies = this.form.policies.reduce((sum, policy) => sum | policy, 0)
+      this.pair.policies = this.form.policies
+        .reduce((sum, policy) => sum | policy, 0)
       this.submit({ updatePolicy: true })
     },
 
@@ -145,28 +166,27 @@ export default {
         this.$store.dispatch('SET_INFO', 'Pair has been updated.')
         this.$router.push({ name: 'assets.assetPairs.index' })
       } catch (error) {
-        console.error(error)
-        error.showMessage()
+        ErrorHandler.process(error)
       }
       this.isSubmitting = false
-    }
-  }
+    },
+  },
 }
 </script>
 
 <style scoped>
-  .asset-pair-manager {
-    display: flex;
-  }
+.asset-pair-manager {
+  display: flex;
+}
 
-  .asset-pair-manager__form {
-    margin-right: 30px;
-  }
+.asset-pair-manager__form {
+  margin-right: 30px;
+}
 
-  .asset-pair-manager__checkboxes {
-    margin: 6.4rem 0 4rem;
-  }
-  .asset-pair-manager__checkbox {
-    margin: 0 0 1rem;
-  }
+.asset-pair-manager__checkboxes {
+  margin: 6.4rem 0 4rem;
+}
+.asset-pair-manager__checkbox {
+  margin: 0 0 1rem;
+}
 </style>

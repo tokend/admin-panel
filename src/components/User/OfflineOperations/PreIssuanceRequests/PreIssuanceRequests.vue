@@ -1,15 +1,11 @@
 <template>
   <div class="preissuance-requests">
-    <router-view/>
+    <router-view />
   </div>
 </template>
 
 <script>
 export default {
-
+  name: 'preissuance-requests',
 }
 </script>
-
-<style scoped>
-
-</style>

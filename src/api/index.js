@@ -16,5 +16,5 @@ export default {
   users: users,
 
   // new:
-  requests
+  requests,
 }

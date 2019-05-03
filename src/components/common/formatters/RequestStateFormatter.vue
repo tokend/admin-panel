@@ -1,18 +1,25 @@
 <template>
-  <span class="request-state-formatter capitalized" :is-colored="isColored" :data-code="state">
-    {{format(state)}}
+  <span
+    class="request-state-formatter capitalized"
+    :is-colored="isColored"
+    :data-code="state"
+  >
+    {{ format(state) }}
   </span>
 </template>
 
 <script>
 export default {
-  props: ['state', 'isColored'],
+  props: {
+    state: { type: String, required: true },
+    isColored: { type: Boolean, default: false },
+  },
 
   methods: {
     format (str) {
       return str.split('_').join(' ')
-    }
-  }
+    },
+  },
 }
 </script>
 

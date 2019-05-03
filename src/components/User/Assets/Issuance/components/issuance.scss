@@ -1,4 +1,5 @@
 @import "../../../../../assets/scss/colors";
+
 $paddind-in-tab: 4rem;
 $width-without-indentation:calc(100% + 2 * #{$paddind-in-tab});
 
@@ -24,9 +25,11 @@ $width-without-indentation:calc(100% + 2 * #{$paddind-in-tab});
   padding-right: 1.5rem;
   margin-right: -$paddind-in-tab;
   margin-left: -$paddind-in-tab;
+
   &:nth-child(odd) {
     background: #f9f9f9;
   }
+
   &:hover {
     background-color: rgba(123, 110, 255, 0.06);
   }

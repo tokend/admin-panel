@@ -8,24 +8,23 @@
             label="Role"
             v-model="filters.role"
           >
-            <option :value="''"></option>
-            <option :value="ACCOUNT_ROLES.notVerified">Unverified</option>
-            <option :value="ACCOUNT_ROLES.general">General</option>
-            <option :value="ACCOUNT_ROLES.corporate">Сorporate</option>
+            <option :value="''" />
+            <option :value="ACCOUNT_ROLES.notVerified">
+              Unverified
+            </option>
+            <option :value="ACCOUNT_ROLES.general">
+              General
+            </option>
+            <option :value="ACCOUNT_ROLES.corporate">
+              Сorporate
+            </option>
           </select-field>
 
           <input-field
             class="app-list-filters__field"
-            v-model.trim="filters.email"
-            label="Email"
+            v-model.trim="filters.requestor"
+            label="Requestor"
             autocomplete-type="email"
-          />
-
-          <input-field
-            class="app-list-filters__field"
-            v-model.trim="filters.address"
-            label="Account ID"
-            autocomplete-type="address"
           />
         </div>
       </div>
@@ -79,7 +78,7 @@
 
               <account-state-getter
                 class="app-list__cell app-list__cell--right"
-                :accountId="item.address"
+                :account-id="item.address"
               />
             </button>
           </template>
@@ -101,15 +100,14 @@
           </template>
         </div>
 
-      <div class="app__more-btn-wrp">
-        <collection-loader
-          :first-page-loader="getList"
-          @first-page-load="setList"
-          @next-page-load="extendList"
-          ref="collectionLoaderBtn"
-        />
-      </div>
-        
+        <div class="app__more-btn-wrp">
+          <collection-loader
+            :first-page-loader="getList"
+            @first-page-load="setList"
+            @next-page-load="extendList"
+            ref="collectionLoaderBtn"
+          />
+        </div>
       </div>
     </template>
 
@@ -119,27 +117,35 @@
       @back="toggleViewMode(null)"
       @reviewed="getList"
     />
-
   </div>
 </template>
 
 <script>
 import Vue from 'vue'
-import { clearObject } from '@/utils/clearObject'
+
 import SelectField from '@comcom/fields/SelectField'
 import InputField from '@comcom/fields/InputField'
+
 import { AccountStateGetter } from '@comcom/getters'
+import { CollectionLoader } from '@/components/common'
+
 import UserView from '../Users.Show'
+
+import { clearObject } from '@/utils/clearObject'
 import _ from 'lodash'
-import 'mdi-vue/DownloadIcon'
+
 import { ApiCallerFactory } from '@/api-caller-factory'
 import config from '@/config'
+
 import { ErrorHandler } from '@/utils/ErrorHandler'
-import { CollectionLoader } from '@/components/common'
+import api from '@/api'
+import { Sdk } from '@/sdk'
+
+import 'mdi-vue/DownloadIcon'
 
 const VIEW_MODES_VERBOSE = Object.freeze({
   index: 'index',
-  user: 'user'
+  user: 'user',
 })
 
 export default {
@@ -148,27 +154,40 @@ export default {
     InputField,
     UserView,
     AccountStateGetter,
-    CollectionLoader
+    CollectionLoader,
   },
 
   data () {
     return {
       VIEW_MODES_VERBOSE,
       filters: {
-        email: '',
-        address: '',
-        role: ''
+        role: '',
+        requestor: '',
       },
       view: {
         mode: VIEW_MODES_VERBOSE.index,
         userId: null,
-        scrollPosition: 0
+        scrollPosition: 0,
       },
       list: [],
       isLoading: false,
 
-      ACCOUNT_ROLES: config.ACCOUNT_ROLES
+      ACCOUNT_ROLES: config.ACCOUNT_ROLES,
     }
+  },
+
+  watch: {
+    'filters.state' () {
+      this.reloadCollectionLoader()
+    },
+
+    'filters.role' () {
+      this.reloadCollectionLoader()
+    },
+
+    'filters.requestor': _.throttle(function () {
+      this.reloadCollectionLoader()
+    }, 1000),
   },
 
   methods: {
@@ -176,14 +195,15 @@ export default {
       this.isLoading = true
       let response = {}
       try {
+        const requestor =
+          await this.getRequestorAccountId(this.filters.requestor)
         response = await ApiCallerFactory
           .createCallerInstance()
           .getWithSignature('/identities', {
             filter: clearObject({
-              email: this.filters.email,
               role: this.filters.role,
-              address: this.filters.address
-            })
+              address: requestor,
+            }),
           })
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
@@ -192,11 +212,23 @@ export default {
       return response
     },
 
+    async getRequestorAccountId (requestor) {
+      if (Sdk.base.Keypair.isValidPublicKey(requestor)) {
+        return requestor
+      } else {
+        try {
+          const address = await api.users.getAccountIdByEmail(requestor)
+          return address || requestor
+        } catch (error) {
+          return requestor
+        }
+      }
+    },
+
     setList (data) {
       this.list = data
       this.isLoaded = true
     },
-
     extendList (data) {
       this.list = this.list.concat(data)
     },
@@ -218,23 +250,8 @@ export default {
 
     reloadCollectionLoader () {
       this.$refs.collectionLoaderBtn.loadFirstPage()
-    }
+    },
   },
-
-  watch: {
-    'filters.state' () {
-      this.reloadCollectionLoader()
-    },
-    'filters.role' () {
-      this.reloadCollectionLoader()
-    },
-    'filters.email': _.throttle(function () {
-      this.reloadCollectionLoader()
-    }, 1000),
-    'filters.address': _.throttle(function () {
-      this.reloadCollectionLoader()
-    }, 1000)
-  }
 }
 </script>
 

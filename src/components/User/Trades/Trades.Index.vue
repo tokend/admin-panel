@@ -33,16 +33,16 @@ export default {
   components: {
     TradeFilters,
     PriceChart,
-    OrderBook
+    OrderBook,
   },
 
   data () {
     return {
       filters: {
-        pair: ''
-      }
+        pair: '',
+      },
     }
-  }
+  },
 }
 </script>
 

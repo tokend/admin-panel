@@ -3,10 +3,18 @@
     <template v-if="list">
       <ul class="app-list">
         <div class="app-list__header">
-          <span class="app-list__cell">Date</span>
-          <span class="app-list__cell">Request type</span>
-          <span class="app-list__cell">Account Id</span>
-          <span class="app-list__cell">Account email</span>
+          <span class="app-list__cell">
+            Date
+          </span>
+          <span class="app-list__cell">
+            Request type
+          </span>
+          <span class="app-list__cell">
+            Account Id
+          </span>
+          <span class="app-list__cell">
+            Account email
+          </span>
         </div>
 
         <router-link
@@ -46,14 +54,17 @@
     <template v-else>
       <ul class="app-list">
         <li class="app-list__li-like">
-          <template v-if="isLoading">Nothing here yet</template>
-          <template v-else>Loading...</template>
+          <template v-if="isLoading">
+            Nothing here yet
+          </template>
+          <template v-else>
+            Loading...
+          </template>
         </li>
       </ul>
     </template>
 
     <!-- TODO: add 'More' button (when migrating to v3 endpoints)-->
-
   </div>
 </template>
 
@@ -64,12 +75,16 @@ import { formatDate } from '@/utils/formatters'
 import {
   ACCOUNT_TYPES,
   REQUEST_STATES,
-  LIMITS_REQUEST_STATES_STR
+  LIMITS_REQUEST_STATES_STR,
 } from '@/constants'
 
 export default {
-  props: ['list'],
   components: { EmailGetter },
+
+  props: {
+    list: { type: Array, required: true },
+  },
+
   data () {
     return {
       isLoading: false,
@@ -77,11 +92,9 @@ export default {
       REQUEST_STATES,
       ACCOUNT_TYPES,
       LIMITS_REQUEST_STATES_STR,
-      formatDate
+      formatDate,
     }
   },
-  created () {
-  }
 }
 </script>
 
