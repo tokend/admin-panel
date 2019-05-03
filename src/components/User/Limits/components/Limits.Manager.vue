@@ -448,17 +448,17 @@ export default {
     isValidLimits (limits) {
       for (const limit of Object.values(pick(limits, LIMITS_TYPES))) {
         if (limit === null) {
-          this.$store.dispatch('SET_ERROR', 'Fill in all the fields. Not set value not allowed')
+          ErrorHandler.process('Fill in all the fields. Not set value not allowed')
           return false
         }
 
         if (!this.numericValueRegExp.test(limit)) {
-          this.$store.dispatch('SET_ERROR', 'Only numeric value allowed')
+          ErrorHandler.process('Only numeric value allowed')
           return false
         }
       }
       if (+limits.weeklyOut < +limits.dailyOut) {
-        this.$store.dispatch('SET_ERROR', 'Weekly out limits should be more or equal to daily out')
+        ErrorHandler.process('Weekly out limits should be more or equal to daily out')
         return false
       }
       const isMonthlyLimitsValid = +limits.monthlyOut < +limits.dailyOut ||
@@ -482,7 +482,7 @@ export default {
         this.filters.scope === SCOPE_TYPES.account
 
       if (isAddressInvalid) {
-        this.$store.dispatch('SET_ERROR', 'Such account does not exist in the system')
+        ErrorHandler.process('Such account does not exist in the system')
         return false
       } else {
         return true
