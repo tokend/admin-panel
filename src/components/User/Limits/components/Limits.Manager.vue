@@ -10,11 +10,11 @@
           >
             <option
               v-for="item in assets"
-              :key="item.code"
-              :value="item.code"
-              :selected="item.code === filters.asset"
+              :key="item.id"
+              :value="item.id"
+              :selected="item.id === filters.asset"
             >
-              {{ item.details.name }} ({{ item.code }})
+              {{ item.details.name }} ({{ item.id }})
             </option>
           </select-field>
           <select-field
@@ -169,7 +169,7 @@
 
             <button
               class="limits-manager__remove-btn app__btn app__btn-outline app__btn-outline--danger"
-              :disabled="isPending || limits.deposit.id === 0"
+                :disabled="isPending || limits.deposit.id === 0"
               @click="removeLimits(limits.deposit, 'deposit')"
             >
               Remove
@@ -199,6 +199,7 @@
   import { confirmAction } from '@/js/modals/confirmation_message'
   import { ErrorHandler } from '@/utils/ErrorHandler'
   import { ApiCallerFactory } from '@/api-caller-factory'
+  import { LimitsRecord } from '@/js/records/limits.record'
 
   const LIMITS_TYPES = [
     'dailyOut',
@@ -222,7 +223,7 @@
     data: _ => ({
       filters: {
         asset: '',
-        accountRole: config.ACCOUNT_ROLES.general,
+        accountRole: '',
         email: '',
         address: '',
         scope: SCOPE_TYPES.accountRole
@@ -230,9 +231,9 @@
       specificUserAddress: '',
       userEmail: '',
       limits: {
-        withdrawal: null,
-        payment: null,
-        deposit: null
+        withdrawal: {},
+        payment: {},
+        deposit: {}
       },
       assets: [],
       isPending: false,
@@ -244,11 +245,12 @@
         [config.ACCOUNT_ROLES.general]: 'General user',
         [config.ACCOUNT_ROLES.corporate]: 'Corporate user'
       }),
-      numericValueRegExp: /^\d*\.?\d*$/,
+      numericValueRegExp: /^[+-]?\d+(\.\d+)?$/,
       SCOPE_TYPES
     }),
     async created () {
       await this.getAssets()
+      this.filters.accountRole = config.ACCOUNT_ROLES.general.toString()
     },
     methods: {
       async getLimits () {
@@ -258,29 +260,51 @@
           getLimit.apply(this, [STATS_OPERATION_TYPES.withdraw]),
           getLimit.apply(this, [STATS_OPERATION_TYPES.deposit])
         ])
-        this.limits.payment = paymentLimits
-        this.limits.withdrawal = withdrawalLimits
-        this.limits.deposit = depositLimits
 
-        async function getLimit (statsOpType) {
-          const { data } = await Sdk.horizon.limits.get({
-            account_id: this.filters.address,
-            account_type: this.filters.accountRole,
-            stats_op_type: statsOpType,
-            asset: this.filters.asset,
-            email: this.filters.email
+        const limitDeatils = {
+          assetCode: this.filters.asset,
+          accountId: this.filters.address,
+          accountRole: this.filters.accountRole
+        }
+
+        this.limits.payment = new LimitsRecord(paymentLimits, {
+          statsOpType: STATS_OPERATION_TYPES.paymentOut,
+          ...limitDeatils
+        })
+
+        this.limits.withdrawal = new LimitsRecord(
+          withdrawalLimits, {
+            statsOpType: STATS_OPERATION_TYPES.withdraw,
+            ...limitDeatils
           })
 
-          // TODO: remove legacy consistency fix
-          if (data.accountType || data.accountType === null) {
-            const role = data.accountType === null
-              ? null
-              : String(data.accountType)
-            data.accountRole = role
-            delete data.accountType
-          }
+        this.limits.deposit = new LimitsRecord(
+          depositLimits, {
+            statsOpType: STATS_OPERATION_TYPES.deposit,
+            ...limitDeatils
+          })
 
-          return data
+        async function getLimit (statsOpType) {
+          const filters = {}
+          if (this.filters.scope === SCOPE_TYPES.account) {
+            // Load empty limit list if address field is empty
+            filters.account = this.filters.address === ''
+              ? 'empty'
+              : this.filters.address
+          } else {
+            filters.account_role = this.filters.accountRole
+          }
+          const { data } = await ApiCallerFactory
+            .createCallerInstance()
+            .getWithSignature('/v3/limits', {
+              filter: {
+                asset: this.filters.asset,
+                stats_op_type: statsOpType,
+                ...filters
+              }
+            })
+
+          return data[0]
         }
       },
 
@@ -288,21 +312,19 @@
         if (!this.isValidLimits(limits) || !this.isAccountAddressValid()) {
           return
         }
-
         this.isPending = true
         try {
           if (limits.accountRole == null) {
             // managelimitbuilder somehow doesnt accept opts.accountRole NULL value
             delete limits.accountRole
           }
-          let accountID
-          // managelimitbuilder somehow doesnt accept opts.accountId NULL value
-          if (limits.accountId) {
-            accountID = limits.accountId
+
+          if (limits.accountID == null) {
+            // managelimitbuilder somehow doesnt accept opts.accountID NULL value
+            delete limits.accountID
           }
           const operation = Sdk.base.ManageLimitsBuilder.createLimits({
-            ...limits,
-            accountID
+            ...limits
           })
           await ApiCallerFactory
             .createCallerInstance()
@@ -343,21 +365,33 @@
         }
       },
       async getAssets () {
-        const response = await Sdk.horizon.assets.getAll()
-        this.assets = response.data
+        const { data } = await ApiCallerFactory
+          .createStubbornCallerInstance()
+          .stubbornGet('/v3/assets')
+        this.assets = data
       },
       async loadAccountIdByEmail (email) {
-        let address = ''
         try {
-          address = await api.users.getAccountIdByEmail(email)
+          const { data } = await ApiCallerFactory
+            .createCallerInstance()
+            .getWithSignature('/identities', {
+              filter: { email: email },
+              page: { limit: 1 }
+            })
+          this.filters.address = ((data || [])[0] || {}).address || ''
+          this.userEmail = ((data || [])[0] || {}).email || email
         } catch (error) {
-          address = ''
+          ErrorHandler.processWithoutFeedback(error)
         }
-        this.filters.address = address
       },
       // it's a quick fix of the limits validation. Need to refactor it ASAP
       isValidLimits (limits) {
         for (const limit of Object.values(pick(limits, LIMITS_TYPES))) {
+          if (limit === null) {
+            this.$store.dispatch('SET_ERROR', 'Fill in all the fields. Not set value not allowed')
+            return false
+          }
+
           if (!this.numericValueRegExp.test(limit)) {
             this.$store.dispatch('SET_ERROR', 'Only numeric value allowed')
             return false
@@ -389,7 +423,7 @@
         }
       },
       async setFilters () {
-        if (!this.filters.asset) this.filters.asset = get(this.assets, '[0].code')
+        if (!this.filters.asset) this.filters.asset = get(this.assets, '[0].id')
         const emailRegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
         if (this.specificUserAddress) {
           if (Sdk.base.Keypair.isValidPublicKey(this.specificUserAddress)) {
@@ -397,25 +431,27 @@
             this.userEmail = await api.users.getEmailByAccountId(this.filters.address)
           } else if (emailRegExp.test(this.specificUserAddress)) {
             await this.loadAccountIdByEmail(this.specificUserAddress)
-            this.userEmail = this.specificUserAddress
           }
         } else {
           this.filters.address = ''
         }
       },
       normalizeLimitAmount (limit) {
-        return limit >= DEFAULT_MAX_AMOUNT ? '' : limit
+        return +limit >= +DEFAULT_MAX_AMOUNT ? '' : limit
       },
       getLimitLable (limit, type) {
-        const notSetLimitId = 0
-        return limit.id === notSetLimitId && limit[type] === DEFAULT_MAX_AMOUNT
+        return limit[type] === null
           ? 'Not set'
           : 'Unlimited'
       },
       setLimitValue (value) {
-        return +value >= +DEFAULT_MAX_AMOUNT
-          ? DEFAULT_MAX_AMOUNT
-          : value
+        if (value) {
+          return +value >= +DEFAULT_MAX_AMOUNT
+            ? DEFAULT_MAX_AMOUNT
+            : value
+        } else {
+          return null
+        }
       }
     },
     watch: {
@@ -454,7 +490,7 @@
         if (!value) return
         this.filters.accountRole = value === SCOPE_TYPES.accountRole
           ? config.ACCOUNT_ROLES.general
-          : ''
+          : null
         this.specificUserAddress = ''
         this.setFilters()
         this.getLimits()
