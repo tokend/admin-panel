@@ -21,7 +21,10 @@
       </template>
 
       <template v-else>
-        {{ JSON.stringify(operations) }}
+        <review-summary
+          :operations="operations"
+          :requests="pendingRequests"
+        />
       </template>
     </template>
 
@@ -50,6 +53,7 @@
 <script>
 import PendingRequestViewer from './components/PendingRequestViewer'
 import PendingRequestActions from './components/PendingRequestActions'
+import ReviewSummary from './components/ReviewSummary'
 
 import config from '@/config'
 import { ApiCallerFactory } from '@/api-caller-factory'
@@ -64,6 +68,7 @@ export default {
   components: {
     PendingRequestViewer,
     PendingRequestActions,
+    ReviewSummary,
   },
 
   data () {
