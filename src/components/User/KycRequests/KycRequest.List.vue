@@ -51,14 +51,9 @@
 
           <input-field
             class="app-list-filters__field"
-            v-model.trim="filters.email"
-            label="Email"
-          />
-
-          <input-field
-            class="app-list-filters__field"
-            v-model.trim="filters.address"
-            label="Account ID"
+            v-model.trim="filters.requestor"
+            label="Requestor"
+            autocomplete-type="email"
           />
         </div>
       </div>
@@ -146,13 +141,13 @@
 
 <script>
 import Vue from 'vue'
+import api from '@/api'
 import _ from 'lodash'
 
 import InputField from '@comcom/fields/InputField'
 import SelectField from '@comcom/fields/SelectField'
 
 import { EmailGetter } from '@comcom/getters'
-import { CollectionLoader } from '@/components/common'
 
 import UserView from '../Users/Users.Show'
 
@@ -169,6 +164,8 @@ import config from '@/config'
 import { ApiCallerFactory } from '@/api-caller-factory'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { CollectionLoader } from '@/components/common'
+import { Sdk } from '@/sdk'
 
 const VIEW_MODES_VERBOSE = Object.freeze({
   index: 'index',
@@ -216,8 +213,7 @@ export default {
       },
       filters: {
         state: 'pending',
-        email: '',
-        address: '',
+        requestor: '',
         type: '',
         pendingTasks: '',
       },
@@ -233,7 +229,7 @@ export default {
     'filters.state' () { this.reloadCollectionLoader() },
     'filters.roleToSet' () { this.reloadCollectionLoader() },
     'filters.pendingTasks' () { this.reloadCollectionLoader() },
-    'filters.address': _.throttle(function () {
+    'filters.requestor': _.throttle(function () {
       this.reloadCollectionLoader()
     }, 1000),
   },
@@ -244,12 +240,8 @@ export default {
       this.isLoading = true
       let response = {}
       try {
-        let address = ''
-        if (this.filters.address) {
-          address = this.filters.address
-        } else if (this.filters.email) {
-          address = await this.getAccountIdByEmail()
-        }
+        const requestor =
+          await this.getRequestorAccountId(this.filters.requestor)
         response = await ApiCallerFactory
           .createCallerInstance()
           .getWithSignature('/v3/change_role_requests', {
@@ -257,7 +249,7 @@ export default {
             filter: clearObject({
               pending_tasks: this.filters.pendingTasks,
               state: KYC_REQUEST_STATES[this.filters.state].state,
-              requestor: address,
+              requestor: requestor,
               'request_details.account_role_to_set': this.filters.roleToSet,
             }),
             include: ['request_details.account'],
@@ -269,10 +261,22 @@ export default {
       return response
     },
 
+    async getRequestorAccountId (requestor) {
+      if (Sdk.base.Keypair.isValidPublicKey(requestor)) {
+        return requestor
+      } else {
+        try {
+          const address = await api.users.getAccountIdByEmail(requestor)
+          return address || requestor
+        } catch (error) {
+          return requestor
+        }
+      }
+    },
+
     setList (data) {
       this.list = data
     },
-
     async extendList (data) {
       this.list = this.list.concat(data)
     },

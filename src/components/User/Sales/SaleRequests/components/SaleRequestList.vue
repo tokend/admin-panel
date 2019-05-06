@@ -31,7 +31,7 @@
         <input-field
           class="app-list-filters__field sale-rl__requestor-filter"
           label="Requestor"
-          placeholder="Address (full match)"
+          placeholder="Address or email"
           v-model="filters.requestor"
           autocomplete-type="email"
         />
@@ -121,6 +121,7 @@ import SelectField from '@comcom/fields/SelectField'
 
 import { REQUEST_STATES } from '@/constants'
 import api from '@/api'
+import { Sdk } from '@/sdk'
 
 import { EmailGetter } from '@comcom/getters'
 import { AssetAmountFormatter } from '@comcom/formatters'
@@ -165,7 +166,12 @@ export default {
       this.isLoaded = false
       let response = {}
       try {
-        const filters = { ...this.filters }
+        const requestor =
+          await this.getRequestorAccountId(this.filters.requestor)
+        const filters = {
+          state: this.filters.state,
+          requestor,
+        }
         response = await api.requests.getSaleRequests(filters)
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
@@ -173,6 +179,19 @@ export default {
 
       this.isLoaded = true
       return response
+    },
+
+    async getRequestorAccountId (requestor) {
+      if (Sdk.base.Keypair.isValidPublicKey(requestor)) {
+        return requestor
+      } else {
+        try {
+          const address = await api.users.getAccountIdByEmail(requestor)
+          return address || requestor
+        } catch (error) {
+          return requestor
+        }
+      }
     },
 
     setList (data) {
