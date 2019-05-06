@@ -50,7 +50,7 @@
             class="app-list__li"
             v-for="item in list"
             :key="item.id"
-            @click="toggleViewMode(item.address)"
+            @click="showUserDetails(item.address)"
           >
             <span
               class="app-list__cell
@@ -145,10 +145,7 @@ export default {
         role: '',
         requestor: '',
       },
-      view: {
-        userId: null,
-        scrollPosition: 0,
-      },
+      userId: null,
       list: [],
       isLoading: false,
       ACCOUNT_ROLES: config.ACCOUNT_ROLES,
@@ -212,7 +209,7 @@ export default {
       this.list = this.list.concat(data)
     },
 
-    toggleViewMode (id) {
+    showUserDetails (id) {
       if (id) {
         this.$router.push({
           name: 'users.show',
@@ -222,7 +219,7 @@ export default {
         })
         return
       }
-      this.view.userId = null
+      this.userId = null
     },
 
     reloadCollectionLoader () {

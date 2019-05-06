@@ -78,7 +78,7 @@
             class="app-list__li"
             v-for="item in list"
             :key="item.id"
-            @click="toggleViewMode(item.requestor.id)"
+            @click="showUserDetails(item.requestor.id)"
           >
             <email-getter
               class="app-list__cell app-list__cell--important"
@@ -127,7 +127,6 @@
 </template>
 
 <script>
-import Vue from 'vue'
 import api from '@/api'
 import _ from 'lodash'
 
@@ -185,10 +184,7 @@ export default {
     return {
       isLoading: false,
       list: [],
-      view: {
-        userId: null,
-        scrollPosition: 0,
-      },
+      userId: null,
       filters: {
         state: 'pending',
         requestor: '',
@@ -258,7 +254,7 @@ export default {
       this.list = this.list.concat(data)
     },
 
-    toggleViewMode (id) {
+    showUserDetails (id) {
       if (id) {
         this.$router.push({
           name: 'users.show',
@@ -266,14 +262,8 @@ export default {
             id: id,
           },
         })
-        this.view.userId = id
-        return
       }
-      this.view.userId = null
-      Vue.nextTick(() => {
-        window.scroll(0, this.view.scrollPosition)
-        this.view.scrollPosition = 0
-      })
+      this.userId = null
     },
 
     reloadCollectionLoader () {
