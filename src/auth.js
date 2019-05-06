@@ -13,6 +13,8 @@ import { ApiCallerFactory } from '@/api-caller-factory'
 import { Wallet } from '@tokend/js-sdk'
 import _cloneDeep from 'lodash/cloneDeep'
 
+import * as Sentry from '@sentry/browser'
+
 const server = {
   'trusted': true,
   'websocket_ssl': false,
@@ -151,6 +153,8 @@ export default {
 
     store.commit('UPDATE_USER', user)
     store.commit('UPDATE_AUTH', auth)
+
+    this._configureSentryScope(user)
   },
 
   async _storeWallet (wallet, username) {
@@ -182,6 +186,8 @@ export default {
 
     store.commit('UPDATE_USER', user)
     store.commit('UPDATE_AUTH', auth)
+
+    this._configureSentryScope(user)
   },
 
   async _checkMasterSignerExists (accountId) {
@@ -190,5 +196,14 @@ export default {
       .get(`/v3/accounts/${config.MASTER_ACCOUNT}/signers`)
 
     return Boolean(signers.find(item => item.id === accountId))
+  },
+
+  _configureSentryScope (user) {
+    Sentry.configureScope((scope) => {
+      scope.setUser({
+        'accountId': user.keys.accountId,
+        'name': user.name,
+      })
+    })
   },
 }
