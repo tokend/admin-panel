@@ -19,6 +19,10 @@ import api from './api'
 import params from './config'
 import VeeValidate, { Validator } from 'vee-validate'
 
+/* Sentry */
+import * as Sentry from '@sentry/browser'
+import * as Integrations from '@sentry/integrations'
+
 /* Vue filters */
 
 import {
@@ -53,6 +57,18 @@ Object.isEmpty = function (obj) {
 
   return JSON.stringify(obj) === JSON.stringify({})
 }
+
+/* Init Sentry */
+Sentry.init({
+  dsn: params.SENTRY_DSN,
+  release: params.BUILD_VERSION,
+  integrations: [
+    new Integrations.Vue({
+      Vue,
+      attachProps: true,
+    }),
+  ],
+})
 
 /* Create and Mount our Vue instance */
 new Vue({
