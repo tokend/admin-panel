@@ -29,20 +29,13 @@ for further information about branching and tagging conventions.
 - New release sanity check script, run it on pre-push
 
 #### Fixed
-<<<<<<< HEAD
-- Fixed operation empty and loading list displaying of a user
-- Add filter for fill limits in reviewLimitsUpdateRequest when 
-parsing limits values
-- Updating user details after KYC change
-- Error after blocking the user without verified KYC request
-- Increase a delay before getting user after KYC review
-=======
 - Fixed user operation list’s empty and loading states displaying
 - Fixed updating user details after KYC request review
 - Fixed an error after blocking the user without any previously verified
   KYC request
 - Fixed some error reports
->>>>>>> master
+- Fixed a bug when we confirm a request for changes in limits,
+  at which we received empty values ​​and could not confirm or cancel the request.
 
 #### Changed
 - Now displaying "Block" and "Reset to unverified" in user’s operation list
