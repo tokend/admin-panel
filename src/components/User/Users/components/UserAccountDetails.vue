@@ -20,9 +20,14 @@ import UserDetails from './UserDetails'
 export default {
   components: {
     UserOpList,
-    UserDetails
+    UserDetails,
   },
-  props: ['id']
+  props: {
+    id: {
+      type: String,
+      default: null,
+    },
+  },
 }
 </script>
 

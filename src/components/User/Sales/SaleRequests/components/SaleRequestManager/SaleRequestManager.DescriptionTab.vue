@@ -1,12 +1,14 @@
 <template>
   <div class="sale-rm-description-tab">
-    <label class="data-caption">Sale video</label>
+    <label class="data-caption">
+      Sale video
+    </label>
     <template v-if="videoId">
       <iframe
         class="sale-rm-description-tab__video"
         :src="`https://www.youtube.com/embed/${videoId}`"
         allowfullscreen="true"
-      ></iframe>
+      />
     </template>
 
     <template v-else>
@@ -15,7 +17,9 @@
       </p>
     </template>
 
-    <label class="data-caption">Sale description</label>
+    <label class="data-caption">
+      Sale description
+    </label>
     <template v-if="description">
       <div class="sale-rm-description-tab__description-wrp">
         <markdown-formatter :source="description" />
@@ -49,21 +53,19 @@ import _get from 'lodash/get'
 
 export default {
   components: {
-    MarkdownFormatter
+    MarkdownFormatter,
   },
 
-  props: ['saleRequest'],
+  props: {
+    saleRequest: { type: Object, required: true },
+  },
 
   data () {
     return {
       description: '',
       isLoaded: false,
-      isFailed: false
+      isFailed: false,
     }
-  },
-
-  created () {
-    this.loadDescription()
   },
 
   computed: {
@@ -74,7 +76,11 @@ export default {
         this.saleRequest,
         `details.${valuableRequestDetailsKey}.details.youtubeVideoId`
       )
-    }
+    },
+  },
+
+  created () {
+    this.loadDescription()
   },
 
   methods: {
@@ -98,8 +104,8 @@ export default {
           this.isFailed = true
         }
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

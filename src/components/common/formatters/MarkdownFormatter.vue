@@ -1,5 +1,6 @@
 <template>
-  <vue-markdown class="markdown-formatter"
+  <vue-markdown
+    class="markdown-formatter"
     :source="source"
     :prerender="prerender"
     :anchor-attributes="{ target: '_blank' }"
@@ -8,15 +9,15 @@
 
 <script>
 import VueMarkdown from 'vue-markdown'
+
 export default {
   components: {
-    VueMarkdown
+    VueMarkdown,
   },
 
-  props: [
-    // proxies
-    'source'
-  ],
+  props: {
+    source: { type: String, required: true },
+  },
 
   methods: {
     prerender (str) {
@@ -24,8 +25,8 @@ export default {
       const re = /<br>\s*<\/br>|<br\s*\/>|<br>/gi
       const newLineSequence = '&nbsp;  \n'
       return str.replace(re, newLineSequence)
-    }
-  }
+    },
+  },
 }
 </script>
 

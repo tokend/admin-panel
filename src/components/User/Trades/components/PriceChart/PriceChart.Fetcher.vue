@@ -6,7 +6,10 @@
           <scale-picker v-model="scale" />
         </div>
 
-        <price-chart :price-history="priceHistory" :scale="scale" :asset-pair="filters.pair" />
+        <price-chart
+          :price-history="priceHistory"
+          :scale="scale"
+          :asset-pair="filters.pair" />
       </div>
     </template>
 
@@ -18,7 +21,10 @@
 
     <template v-else-if="isFailed">
       <div class="app__block price-chart__empty">
-        <p>An error occurred while fetching chart data. Please try again later</p>
+        <p>
+          An error occurred while fetching chart data.
+          Please try again later
+        </p>
       </div>
     </template>
 
@@ -33,14 +39,20 @@
 <script>
 import { Sdk } from '@/sdk'
 import { AssetPair } from '../../models/AssetPair'
+
 import PriceChart from './PriceChart.Renderer'
 import ScalePicker from './PriceChart.ScalePicker'
-export default {
-  props: ['filters'],
 
+import { ErrorHandler } from '@/utils/ErrorHandler'
+
+export default {
   components: {
     PriceChart,
-    ScalePicker
+    ScalePicker,
+  },
+
+  props: {
+    filters: { type: Object, required: true },
   },
 
   data () {
@@ -48,8 +60,12 @@ export default {
       priceHistory: {},
       scale: 'day',
       isLoaded: [],
-      isFailed: []
+      isFailed: [],
     }
+  },
+
+  watch: {
+    'filters.pair' () { this.getPriceHistory() },
   },
 
   created () {
@@ -68,19 +84,16 @@ export default {
         this.priceHistory = response.data
         this.isLoaded = true
       } catch (error) {
-        console.error(error)
+        ErrorHandler.processWithoutFeedback(error)
+
         if (error.status === 404) {
           this.isLoaded = true
         } else {
           this.isFailed = true
         }
       }
-    }
+    },
   },
-
-  watch: {
-    'filters.pair' () { this.getPriceHistory() }
-  }
 }
 </script>
 

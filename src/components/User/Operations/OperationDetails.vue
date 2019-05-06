@@ -23,14 +23,14 @@ import { clearObject } from '@/utils/clearObject'
 
 export default {
   components: {
-    DetailsReader
+    DetailsReader,
   },
   props: {
-    operationId: { type: String, required: true }
+    operationId: { type: String, required: true },
   },
   data: _ => ({
     userId: null,
-    operation: {}
+    operation: {},
   }),
   async created () {
     window.scroll(0, 0)
@@ -46,9 +46,9 @@ export default {
           .getWithSignature('/v3/history', {
             page: { order: 'desc' },
             filter: clearObject({
-              account: this.userId
+              account: this.userId,
             }),
-            include: ['operation.details']
+            include: ['operation.details'],
           })
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
@@ -60,18 +60,17 @@ export default {
             .split('-')
             .join(' ')
           this.operation = Object.assign({}, item, {
-            operationType: operationType.charAt(0).toUpperCase() + operationType.slice(1),
-            ledgerCloseTime: moment(item.operation.appliedAt).format('DD MMM YYYY [at] hh:mm:ss'),
+            operationType: operationType
+              .charAt(0).toUpperCase() + operationType.slice(1),
+            ledgerCloseTime: moment(item.operation.appliedAt)
+              .format('DD MMM YYYY [at] hh:mm:ss'),
             sourceAccount: item.operation.source.id === this.masterPubKey ? 'Master' : item.operation.source.id,
             receiverAccount: get(item, 'operation.details.receiverAccount.id'),
-            accountTo: get(item, 'operation.details.accountTo.id')
+            accountTo: get(item, 'operation.details.accountTo.id'),
           })
         }
       })
-    }
-  }
+    },
+  },
 }
 </script>
-
-<style lang="scss">
-</style>

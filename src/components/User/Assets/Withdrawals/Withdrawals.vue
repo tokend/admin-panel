@@ -1,15 +1,11 @@
 <template>
   <div class="withdrawals">
-    <router-view/>
+    <router-view />
   </div>
 </template>
 
 <script>
 export default {
-
+  name: 'withdrawals',
 }
 </script>
-
-<style scoped>
-
-</style>

@@ -3,12 +3,26 @@
     <template v-if="list">
       <ul class="limit-uploaded-docs__list app-list">
         <li class="app-list__header">
-          <span class="limit-uploaded-docs__list-cell app-list__cell">Description</span>
-          <span class="limit-uploaded-docs__list-cell app-list__cell app-list__cell--center">File extension</span>
-          <span class="limit-uploaded-docs__list-cell app-list__cell app-list__cell--center">Uploading date</span>
-          <span class="limit-uploaded-docs__list-cell app-list__cell app-list__cell--center"><!-- view file btn --></span>
+          <span class="limit-uploaded-docs__list-cell app-list__cell">
+            Description
+          </span>
+          <!-- eslint-disable-next-line max-len -->
+          <span class="limit-uploaded-docs__list-cell app-list__cell app-list__cell--center">
+            File extension
+          </span>
+          <!-- eslint-disable-next-line max-len -->
+          <span class="limit-uploaded-docs__list-cell app-list__cell app-list__cell--center">
+            Uploading date
+          </span>
+          <!-- eslint-disable-next-line max-len -->
+          <span class="limit-uploaded-docs__list-cell app-list__cell app-list__cell--center">
+            <!-- view file btn -->
+          </span>
         </li>
-        <li class="app-list__li limit-uploaded-docs__list-row" v-for="(item, i) in list" :key="i">
+        <li
+          class="app-list__li limit-uploaded-docs__list-row"
+          v-for="(item, i) in list"
+          :key="i">
           <span class="app-list__cell" :title="item.description">
             {{ item.description }}
           </span>
@@ -20,8 +34,8 @@
           </span>
           <span class="app-list__cell app-list__cell--center">
             <doc-link-getter
-              :fileKey="item.file.key"
-              :fileType="DOCUMENTS_POLICIES.private"
+              :file-key="item.file.key"
+              :file-type="DOCUMENTS_POLICIES.private"
             >
               Open
             </doc-link-getter>
@@ -33,8 +47,12 @@
     <template v-else>
       <ul class="app-list">
         <li class="app-list__li-like">
-          <template v-if="isLoading">Nothing here yet</template>
-          <template v-else>Loading...</template>
+          <template v-if="isLoading">
+            Nothing here yet
+          </template>
+          <template v-else>
+            Loading...
+          </template>
         </li>
       </ul>
     </template>
@@ -42,33 +60,40 @@
 </template>
 
 <script>
-  import { formatDate } from '@/utils/formatters'
-  import { DocLinkGetter } from '@comcom/getters'
-  import { DOCUMENTS_POLICIES } from '@/constants'
+import { formatDate } from '@/utils/formatters'
+import { DocLinkGetter } from '@comcom/getters'
+import { DOCUMENTS_POLICIES } from '@/constants'
 
-  export default {
-    props: ['list', 'uploadDate', 'userAccountId'],
-    components: { DocLinkGetter },
-    data () {
-      return {
-        isLoading: false,
-        isNoMoreEntries: false,
-        formatDate,
-        DOCUMENTS_POLICIES
-      }
-    },
-    methods: {
-      getFileExtension (file) {
-        return file.split(/\.(?=[^.]+$)/)[1]
-      }
+export default {
+  components: { DocLinkGetter },
+  props: {
+    list: { type: Array, required: true },
+    uploadDate: { type: String, required: true },
+  },
+
+  data () {
+    return {
+      isLoading: false,
+      isNoMoreEntries: false,
+      formatDate,
+      DOCUMENTS_POLICIES,
     }
-  }
+  },
+
+  methods: {
+    getFileExtension (file) {
+      return file.split(/\.(?=[^.]+$)/)[1]
+    },
+  },
+}
 </script>
 
 <style lang="scss" scoped>
-  .request-list__filters-wrp {
-    margin-bottom: 4rem;
-  }
-  .limit-uploaded-docs__list-row { box-shadow: none; }
-  .app-list__cell--center { text-align: center; }
+.request-list__filters-wrp {
+  margin-bottom: 4rem;
+}
+
+.limit-uploaded-docs__list-row { box-shadow: none; }
+
+.app-list__cell--center { text-align: center; }
 </style>

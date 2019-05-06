@@ -13,11 +13,6 @@ export class ErrorHandler {
   }
 
   static showFeedback (error) {
-    if (error.showMessage) {
-      error.showMessage()
-      return
-    }
-
     const message = ErrorHandler.extractErrorMessage(error)
     store.dispatch('SET_ERROR', message)
   }

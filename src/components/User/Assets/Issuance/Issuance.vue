@@ -4,7 +4,7 @@
       <div class="app__block">
         <h2>Issuance</h2>
         <div class="issuance__form-wrp">
-          <issuance-form/>
+          <issuance-form />
         </div>
       </div>
     </section>
@@ -13,11 +13,11 @@
       <div class="app__block">
         <tabs>
           <tab name="History">
-            <issuance-history/>
+            <issuance-history />
           </tab>
 
           <tab name="Requests">
-            <issuance-request-list/>
+            <issuance-request-list />
           </tab>
         </tabs>
       </div>
@@ -26,10 +26,11 @@
 </template>
 
 <script>
+import { Tabs, Tab } from '@comcom/Tabs'
+
 import IssuanceForm from './components/IssuanceForm.vue'
 import IssuanceRequestList from './components/IssuanceRequestList.vue'
 import IssuanceHistory from './components/IssuanceHistory.vue'
-import { Tabs, Tab } from '@comcom/Tabs'
 
 export default {
   components: {
@@ -37,8 +38,8 @@ export default {
     IssuanceRequestList,
     IssuanceHistory,
     Tabs,
-    Tab
-  }
+    Tab,
+  },
 }
 </script>
 

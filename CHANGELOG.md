@@ -7,18 +7,58 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
-## [Unreleased]
-#### Fixed
-- Fixed operation empty and loading list displaying of a user
-
+## [1.6.0-rc.1] - 2019-05-02
 #### Added
-- "Invest" fee type
+- Added autocomplete by email to email-acceptable filter fields
+
+#### Changed
+- Merged email and account ID filter fields
+
+#### Removed
+- Autocomplete for account ID on assets requests page’s filter field
+
+## [1.6.0-rc.0] - 2019-05-02
+#### Added
+- New "Invest" fee type
+- New re-render chart animations
+- New master signer existence check on log in
+- New KYC requests filter by pending tasks
+- New US verified and US accredited account roles support
+- New feature of managing pending tasks of KYC request
+- New external details viewer of KYC request
+- New release sanity check script, run it on pre-push
+
+#### Fixed
+- Fixed user operation list’s empty and loading states displaying
+- Fixed updating user details after KYC request review
+- Fixed an error after blocking the user without any previously verified
+  KYC request
+- Fixed some error reports
+
+#### Changed
+- Now displaying "Block" and "Reset to unverified" in user’s operation list
+- Updated operation details formatting, hide some unnecessary fields
+- Admin account id input is now unchangeable on Admin update screen
+
+### "Under the hood" changes
+#### Added
+- New ESLint rules similar to web-client ones
+
+#### Changed
+- Now using @tokend/js-sdk@1.6.0-rc.0
+- Replaced `ErrorHandler.process` with `ErrorHandler.processWithoutFeedback`
+  in components' created hook
+- Updated `package.json` dependencies
+- Updated webpack build config
+- Now using "qrcode.vue" package instead of "v-qrcode"
+
+#### Removed
+- Unnecessary "build" folder, containing old webpack config
 
 ## [1.5.0] - 2019-04-19
 ### "Under the hood" changes
 #### Changed
 - Now using @tokend/js-sdk@1.5.0
-- Make unchangeable adminId input field
 
 ## [1.5.0-rc.3] - 2019-04-19
 ### "Under the hood" changes
@@ -163,7 +203,9 @@ for further information about branching and tagging conventions.
 
 ## [1.3.0] - 2019-03-01
 
-[Unreleased]: https://github.com/tokend/admin-panel/compare/1.5.0...HEAD
+[Unreleased]: https://github.com/tokend/admin-panel/compare/1.6.0-rc.1...HEAD
+[1.6.0-rc.1]: https://github.com/tokend/admin-panel/compare/1.6.0-rc.0...1.6.0-rc.1
+[1.6.0-rc.0]: https://github.com/tokend/admin-panel/compare/1.5.0...1.6.0-rc.0
 [1.5.0]: https://github.com/tokend/admin-panel/compare/1.5.0-rc.3...1.5.0
 [1.5.0-rc.3]: https://github.com/tokend/admin-panel/compare/1.5.0-rc.2...1.5.0-rc.3
 [1.5.0-rc.2]: https://github.com/tokend/admin-panel/compare/1.5.0-rc.1...1.5.0-rc.2

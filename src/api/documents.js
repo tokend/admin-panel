@@ -15,5 +15,5 @@ export default {
     formData.append('file', blob)
 
     return Vue.http.post(config.url, formData)
-  }
+  },
 }

@@ -7,9 +7,13 @@
           label="Role to set"
           v-model="filters.roleToSet"
         >
-          <option :value="''"></option>
-          <option :value="ACCOUNT_ROLES.general">General</option>
-          <option :value="ACCOUNT_ROLES.corporate">Сorporate</option>
+          <option :value="''" />
+          <option :value="ACCOUNT_ROLES.general">
+            General
+          </option>
+          <option :value="ACCOUNT_ROLES.corporate">
+            Сorporate
+          </option>
         </select-field>
         <select-field
           class="app-list-filters__field"
@@ -25,16 +29,30 @@
           </option>
         </select-field>
 
-        <input-field
+        <select-field
           class="app-list-filters__field"
-          v-model.trim="filters.email"
-          label="Email"
-        />
+          v-model="filters.pendingTasks"
+          label="Pending tasks"
+        >
+          <option :value="CHANGE_ROLE_TASKS.submitAutoVerification">
+            Submit auto verification
+          </option>
+          <option :value="CHANGE_ROLE_TASKS.completeAutoVerification">
+            Complete auto verification
+          </option>
+          <option :value="CHANGE_ROLE_TASKS.manualReviewRequired">
+            Manual review requried
+          </option>
+          <option value="">
+            Any
+          </option>
+        </select-field>
 
         <input-field
           class="app-list-filters__field"
-          v-model.trim="filters.address"
-          label="Account ID"
+          v-model.trim="filters.requestor"
+          label="Requestor"
+          autocomplete-type="email"
         />
       </div>
     </div>
@@ -43,10 +61,18 @@
       <template v-if="list && list.length">
         <div class="app-list">
           <div class="app-list__header">
-            <span class="app-list__cell">Email</span>
-            <span class="app-list__cell app-list__cell--right">State</span>
-            <span class="app-list__cell app-list__cell--right">Last updated</span>
-            <span class="app-list__cell app-list__cell--right">Role to set</span>
+            <span class="app-list__cell">
+              Email
+            </span>
+            <span class="app-list__cell app-list__cell--right">
+              State
+            </span>
+            <span class="app-list__cell app-list__cell--right">
+              Last updated
+            </span>
+            <span class="app-list__cell app-list__cell--right">
+              Role to set
+            </span>
           </div>
           <button
             class="app-list__li"
@@ -65,9 +91,6 @@
             <span class="app-list__cell app-list__cell--right">
               {{ formatDate(item.updatedAt) }}
             </span>
-            <span class="app-list__cell app-list__cell--right">
-              {{ item | deriveRoleToSet }}
-            </span>
           </button>
         </div>
       </template>
@@ -81,7 +104,6 @@
               </span>
             </p>
           </template>
-
           <template v-else>
             <p class="app-list__li">
               <span class="app-list__cell app-list__cell--center">
@@ -105,53 +127,48 @@
 </template>
 
 <script>
-import { EmailGetter } from '@comcom/getters'
-import { formatDate } from '@/utils/formatters'
 import Vue from 'vue'
-import UserView from '../Users/Users.Show'
+import api from '@/api'
+import _ from 'lodash'
 
-import SelectField from '@comcom/fields/SelectField'
 import InputField from '@comcom/fields/InputField'
-import { snakeToCamelCase } from '@/utils/un-camel-case'
+import SelectField from '@comcom/fields/SelectField'
 
-import { REQUEST_STATES, KYC_REQUEST_STATES } from '@/constants'
+import { EmailGetter } from '@comcom/getters'
+
+import { formatDate } from '@/utils/formatters'
+import { snakeToCamelCase } from '@/utils/un-camel-case'
+import { clearObject } from '@/utils/clearObject'
+
+import {
+  REQUEST_STATES,
+  KYC_REQUEST_STATES,
+} from '@/constants'
 
 import config from '@/config'
 import { ApiCallerFactory } from '@/api-caller-factory'
-import { clearObject } from '@/utils/clearObject'
+
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { CollectionLoader } from '@/components/common'
+import { Sdk } from '@/sdk'
 
 export default {
   name: 'kyc-request-list',
-  components: { UserView, EmailGetter, SelectField, InputField, CollectionLoader },
+  components: {
+    EmailGetter,
+    SelectField,
+    InputField,
+    CollectionLoader,
+  },
+
   provide () {
     const kycRequestsList = {}
     Object.defineProperty(kycRequestsList, 'updateAsk', {
       enumerable: true,
       get: () => false,
-      set: () => this.loadList()
+      set: () => this.loadList(),
     })
     return { kycRequestsList }
-  },
-  data () {
-    return {
-      isLoading: false,
-      list: [],
-      view: {
-        userId: null,
-        scrollPosition: 0
-      },
-      filters: {
-        state: 'pending',
-        email: '',
-        address: '',
-        type: ''
-      },
-      REQUEST_STATES,
-      KYC_REQUEST_STATES,
-      ACCOUNT_ROLES: config.ACCOUNT_ROLES
-    }
   },
 
   filters: {
@@ -159,9 +176,39 @@ export default {
       return {
         [config.ACCOUNT_ROLES.notVerified]: 'Unverified',
         [config.ACCOUNT_ROLES.general]: 'General',
-        [config.ACCOUNT_ROLES.corporate]: 'Corporate'
+        [config.ACCOUNT_ROLES.corporate]: 'Corporate',
       }[item.requestDetails.accountRoleToSet]
+    },
+  },
+
+  data () {
+    return {
+      isLoading: false,
+      list: [],
+      view: {
+        userId: null,
+        scrollPosition: 0,
+      },
+      filters: {
+        state: 'pending',
+        requestor: '',
+        type: '',
+        pendingTasks: '',
+      },
+      REQUEST_STATES,
+      KYC_REQUEST_STATES,
+      CHANGE_ROLE_TASKS: config.CHANGE_ROLE_TASKS,
+      ACCOUNT_ROLES: config.ACCOUNT_ROLES,
     }
+  },
+
+  watch: {
+    'filters.state' () { this.reloadCollectionLoader() },
+    'filters.roleToSet' () { this.reloadCollectionLoader() },
+    'filters.pendingTasks' () { this.reloadCollectionLoader() },
+    'filters.requestor': _.throttle(function () {
+      this.reloadCollectionLoader()
+    }, 1000),
   },
 
   methods: {
@@ -170,22 +217,19 @@ export default {
       this.isLoading = true
       let response = {}
       try {
-        let address = ''
-        if (this.filters.address) {
-          address = this.filters.address
-        } else if (this.filters.email) {
-          address = await this.getAccountIdByEmail()
-        }
+        const requestor =
+          await this.getRequestorAccountId(this.filters.requestor)
         response = await ApiCallerFactory
           .createCallerInstance()
           .getWithSignature('/v3/change_role_requests', {
             page: { order: 'desc' },
             filter: clearObject({
+              pending_tasks: this.filters.pendingTasks,
               state: KYC_REQUEST_STATES[this.filters.state].state,
-              requestor: address,
-              'request_details.account_role_to_set': this.filters.roleToSet
+              requestor: requestor,
+              'request_details.account_role_to_set': this.filters.roleToSet,
             }),
-            include: ['request_details.account']
+            include: ['request_details.account'],
           })
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
@@ -194,10 +238,22 @@ export default {
       return response
     },
 
+    async getRequestorAccountId (requestor) {
+      if (Sdk.base.Keypair.isValidPublicKey(requestor)) {
+        return requestor
+      } else {
+        try {
+          const address = await api.users.getAccountIdByEmail(requestor)
+          return address || requestor
+        } catch (error) {
+          return requestor
+        }
+      }
+    },
+
     setList (data) {
       this.list = data
     },
-
     async extendList (data) {
       this.list = this.list.concat(data)
     },
@@ -207,8 +263,8 @@ export default {
         this.$router.push({
           name: 'users.show',
           params: {
-            id: id
-          }
+            id: id,
+          },
         })
         this.view.userId = id
         return
@@ -223,15 +279,8 @@ export default {
     reloadCollectionLoader () {
       this.$refs.collectionLoaderBtn.loadFirstPage()
     },
-    formatDate
+    formatDate,
   },
-  watch: {
-    'filters.state' () { this.reloadCollectionLoader() },
-    'filters.roleToSet' () { this.reloadCollectionLoader() },
-    'filters.address': _.throttle(function () {
-      this.reloadCollectionLoader()
-    }, 1000)
-  }
 }
 </script>
 
