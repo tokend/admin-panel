@@ -126,9 +126,9 @@
 .app__btn-outline {
   @extend %base;
 
-  color: $color-text;
+  color: $color-info;
   background-color: $color-content-bg;
-  border: 0.2rem solid $color-text;
+  border: 0.2rem solid $color-info;
   padding: 1.085rem 0;
   min-width: 11.6rem;
 
@@ -138,7 +138,7 @@
   }
 
   &:enabled:hover {
-    background-color: $color-focused;
+    background-color: $color-info;
     color: $color-text-inverse;
   }
 
@@ -151,8 +151,8 @@
     }
 
     &:disabled {
-      background-color: $color-danger-inactive;
-      border-color: $color-danger-inactive;
+      background-color: rgba($color-danger, .40);
+      border-color: rgba($color-danger, .40);
     }
   }
 }
