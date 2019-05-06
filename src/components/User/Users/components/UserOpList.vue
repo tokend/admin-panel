@@ -31,7 +31,7 @@
         v-for="item in records"
         :key="item.id"
         :to="{ name: 'users.operationDetails',
-          params: { operation: item, operationId: item.id }
+          params: { operationId: item.id }
         }"
       >
         <span
