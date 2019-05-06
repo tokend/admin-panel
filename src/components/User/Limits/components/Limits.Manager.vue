@@ -68,10 +68,17 @@
                     {{ type.replace('Out', '') }}
                   </span>
                   <input-field
+                    type="number"
                     :value="normalizeLimitAmount(limits.payment[type])"
-                    @input="limits.payment[type] = setLimitValue($event)"
+                    @input="setLimitValue($event, limits.payment[type])"
                     class="limits-manager__limit-field"
                     :placeholder="getLimitLable(limits.payment, type)"
+                    :class="{
+                      'limits-manager__limit-field--unlimited':
+                        isMaxLimitValue(limits.payment[type])
+                    }"
+                    :step="DEFAULT_INPUT_STEP"
+                    :max="DEFAULT_MAX_AMOUNT"
                   />
                 </div>
               </template>
@@ -80,7 +87,7 @@
 
           <div class="limits-manager__limits-action">
             <button
-              class="limits-manager__update-btn app__btn app__btn-outline"
+              class="limits-manager__update-btn app__btn app__btn--info"
               :disabled="isPending"
               @click="updateLimits(limits.payment)"
             >
@@ -114,10 +121,17 @@
                     {{ type.replace('Out', '') }}
                   </span>
                   <input-field
+                    type="number"
                     :value="normalizeLimitAmount(limits.withdrawal[type])"
-                    @input="limits.withdrawal[type] = setLimitValue($event)"
+                    @input="setLimitValue($event, limits.withdrawal[type])"
                     class="limits-manager__limit-field"
                     :placeholder="getLimitLable(limits.withdrawal, type)"
+                    :class="{
+                      'limits-manager__limit-field--unlimited':
+                        isMaxLimitValue(limits.withdrawal[type])
+                    }"
+                    :step="DEFAULT_INPUT_STEP"
+                    :max="DEFAULT_MAX_AMOUNT"
                   />
                 </div>
               </template>
@@ -126,7 +140,7 @@
 
           <div class="limits-manager__limits-action">
             <button
-              class="limits-manager__update-btn app__btn app__btn-outline"
+              class="limits-manager__update-btn app__btn app__btn--info"
               :disabled="isPending"
               @click="updateLimits(limits.withdrawal)"
             >
@@ -160,10 +174,17 @@
                     {{ type.replace('Out', '') }}
                   </span>
                   <input-field
+                    type="number"
                     :value="normalizeLimitAmount(limits.deposit[type])"
-                    @input="limits.deposit[type] = setLimitValue($event)"
+                    @input="setLimitValue($event, limits.deposit[type])"
                     class="limits-manager__limit-field"
                     :placeholder="getLimitLable(limits.deposit, type)"
+                    :class="{
+                      'limits-manager__limit-field--unlimited':
+                        isMaxLimitValue(limits.deposit[type])
+                    }"
+                    :step="DEFAULT_INPUT_STEP"
+                    :max="DEFAULT_MAX_AMOUNT"
                   />
                 </div>
               </template>
@@ -172,7 +193,7 @@
 
           <div class="limits-manager__limits-action">
             <button
-              class="limits-manager__update-btn app__btn app__btn-outline"
+              class="limits-manager__update-btn app__btn app__btn--info"
               :disabled="isPending"
               @click="updateLimits(limits.deposit)"
             >
@@ -204,7 +225,11 @@ import throttle from 'lodash/throttle'
 import pick from 'lodash/pick'
 import api from '@/api'
 import { Sdk } from '@/sdk'
-import { STATS_OPERATION_TYPES, DEFAULT_MAX_AMOUNT } from '@/constants'
+import {
+  STATS_OPERATION_TYPES,
+  DEFAULT_MAX_AMOUNT,
+  DEFAULT_INPUT_STEP,
+} from '@/constants'
 import config from '@/config'
 import { confirmAction } from '@/js/modals/confirmation_message'
 import { ErrorHandler } from '@/utils/ErrorHandler'
@@ -247,6 +272,7 @@ export default {
     isPending: false,
     LIMITS_TYPES,
     DEFAULT_MAX_AMOUNT,
+    DEFAULT_INPUT_STEP,
     ACCOUNT_ROLES: config.ACCOUNT_ROLES,
     ACCOUNT_ROLES_VERBOSE: Object.freeze({
       [config.ACCOUNT_ROLES.notVerified]: 'Unverified user',
@@ -380,8 +406,15 @@ export default {
           // managelimitbuilder somehow doesnt accept opts.accountID NULL value
           delete limits.accountID
         }
+        const limitTypes = {}
+        LIMITS_TYPES.forEach(
+          type => {
+            limitTypes[type] = limits[type].value
+          }
+        )
         const operation = Sdk.base.ManageLimitsBuilder.createLimits({
           ...limits,
+          ...limitTypes,
         })
         await ApiCallerFactory
           .createCallerInstance()
@@ -447,29 +480,31 @@ export default {
     // it's a quick fix of the limits validation. Need to refactor it ASAP
     isValidLimits (limits) {
       for (const limit of Object.values(pick(limits, LIMITS_TYPES))) {
-        if (limit === null) {
+        if (limit.value === null) {
           ErrorHandler.process('Fill in all the fields. Not set value not allowed')
           return false
         }
 
-        if (!this.numericValueRegExp.test(limit)) {
+        if (!this.numericValueRegExp.test(limit.value)) {
           ErrorHandler.process('Only numeric value allowed')
           return false
         }
       }
-      if (+limits.weeklyOut < +limits.dailyOut) {
+      if (+limits.weeklyOut.value < +limits.dailyOut.value) {
         ErrorHandler.process('Weekly out limits should be more or equal to daily out')
         return false
       }
-      const isMonthlyLimitsValid = +limits.monthlyOut < +limits.dailyOut ||
-        +limits.monthlyOut < +limits.weeklyOut
+      const isMonthlyLimitsValid =
+        +limits.monthlyOut.value < +limits.dailyOut.value ||
+        +limits.monthlyOut.value < +limits.weeklyOut.value
       if (isMonthlyLimitsValid) {
         ErrorHandler.process('Monthly out limits should be more or equal to daily and/or weekly out')
         return false
       }
-      const isAnnualLimitsValid = +limits.annualOut < +limits.dailyOut ||
-        +limits.annualOut < +limits.weeklyOut ||
-        +limits.annualOut < +limits.monthlyOut
+      const isAnnualLimitsValid =
+        +limits.annualOut.value < +limits.dailyOut.value ||
+        +limits.annualOut.value < +limits.weeklyOut.value ||
+        +limits.annualOut.value < +limits.monthlyOut.value
       if (isAnnualLimitsValid) {
         ErrorHandler.process('Annual out limits should be more or equal to daily, weekly and/or monthly out')
         return false
@@ -505,20 +540,27 @@ export default {
       }
     },
     normalizeLimitAmount (limit) {
-      return +limit >= +DEFAULT_MAX_AMOUNT ? '' : limit
+      if (limit) {
+        return this.isMaxLimitValue(limit)
+          ? limit.isChanged ? DEFAULT_MAX_AMOUNT : ''
+          : limit.value
+      }
     },
     getLimitLable (limit, type) {
-      return limit[type] === null
-        ? 'Not set'
-        : 'Unlimited'
+      if (limit[type]) {
+        return limit[type].value === ''
+          ? 'Not set'
+          : 'Unlimited'
+      }
     },
-    setLimitValue (value) {
-      if (value) {
-        return +value >= +DEFAULT_MAX_AMOUNT
-          ? DEFAULT_MAX_AMOUNT
-          : value
-      } else {
-        return null
+    setLimitValue (value, limit) {
+      limit.isChanged = true
+      limit.value = value
+      if (this.isMaxLimitValue(limit)) limit.value = DEFAULT_MAX_AMOUNT
+    },
+    isMaxLimitValue (limit) {
+      if (limit) {
+        return +limit.value >= +DEFAULT_MAX_AMOUNT
       }
     },
   },
@@ -526,6 +568,8 @@ export default {
 </script>
 
 <style lang="scss">
+  @import "@/assets/scss/_colors.scss";
+
   .limits-manager {
     margin-top: 2rem;
   }
@@ -583,5 +627,13 @@ export default {
   .limits-manager__update-btn,
   .limits-manager__remove-btn {
     min-width: 9rem;
+  }
+
+  .limits-manager__limit-field--unlimited {
+    & .input-field__input {
+      &::placeholder {
+        color: $color-text;
+      }
+    }
   }
 </style>

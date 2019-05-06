@@ -8,12 +8,22 @@ export class LimitsRecord {
       details.assetCode ||
       null
 
-    this.annualOut = _get(record, 'annualOut') || null
-    this.dailyOut = _get(record, 'dailyOut') || null
-    this.weeklyOut = _get(record, 'weeklyOut') || null
-    this.monthlyOut = _get(record, 'monthlyOut') || null
-
-    this.monthlyOut = _get(record, 'monthlyOut') || null
+    this.annualOut = {
+      value: _get(record, 'annualOut') || '',
+      isChanged: false,
+    }
+    this.dailyOut = {
+      value: _get(record, 'dailyOut') || '',
+      isChanged: false,
+    }
+    this.weeklyOut = {
+      value: _get(record, 'weeklyOut') || '',
+      isChanged: false,
+    }
+    this.monthlyOut = {
+      value: _get(record, 'monthlyOut') || '',
+      isChanged: false,
+    }
 
     this.statsOpType =
       _get(record, 'statsOpType') ||
