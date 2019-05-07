@@ -14,6 +14,7 @@ for further information about branching and tagging conventions.
 #### Fixed
 - Fixed a bug when we confirm a request for changes in limits,
   at which we received empty values and could not confirm or cancel the request.
+  - Displaying of US-related roles in KYC verification
 
 ## [1.6.0-rc.1] - 2019-05-02
 #### Added
