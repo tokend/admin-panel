@@ -32,7 +32,7 @@
         class="arc-list__filter"
         v-model="filters.requestor"
         label="Requestor"
-        autocomplete-type="address"
+        autocomplete-type="email"
       />
 
       <input-field

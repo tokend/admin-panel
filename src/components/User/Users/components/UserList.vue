@@ -22,16 +22,9 @@
 
           <input-field
             class="app-list-filters__field"
-            v-model.trim="filters.email"
-            label="Email"
+            v-model.trim="filters.requestor"
+            label="Requestor"
             autocomplete-type="email"
-          />
-
-          <input-field
-            class="app-list-filters__field"
-            v-model.trim="filters.address"
-            label="Account ID"
-            autocomplete-type="address"
           />
         </div>
       </div>
@@ -145,6 +138,8 @@ import { ApiCallerFactory } from '@/api-caller-factory'
 import config from '@/config'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import api from '@/api'
+import { Sdk } from '@/sdk'
 
 import 'mdi-vue/DownloadIcon'
 
@@ -166,9 +161,8 @@ export default {
     return {
       VIEW_MODES_VERBOSE,
       filters: {
-        email: '',
-        address: '',
         role: '',
+        requestor: '',
       },
       view: {
         mode: VIEW_MODES_VERBOSE.index,
@@ -191,11 +185,7 @@ export default {
       this.reloadCollectionLoader()
     },
 
-    'filters.email': _.throttle(function () {
-      this.reloadCollectionLoader()
-    }, 1000),
-
-    'filters.address': _.throttle(function () {
+    'filters.requestor': _.throttle(function () {
       this.reloadCollectionLoader()
     }, 1000),
   },
@@ -205,13 +195,14 @@ export default {
       this.isLoading = true
       let response = {}
       try {
+        const requestor =
+          await this.getRequestorAccountId(this.filters.requestor)
         response = await ApiCallerFactory
           .createCallerInstance()
           .getWithSignature('/identities', {
             filter: clearObject({
-              email: this.filters.email,
               role: this.filters.role,
-              address: this.filters.address,
+              address: requestor,
             }),
           })
       } catch (error) {
@@ -221,11 +212,23 @@ export default {
       return response
     },
 
+    async getRequestorAccountId (requestor) {
+      if (Sdk.base.Keypair.isValidPublicKey(requestor)) {
+        return requestor
+      } else {
+        try {
+          const address = await api.users.getAccountIdByEmail(requestor)
+          return address || requestor
+        } catch (error) {
+          return requestor
+        }
+      }
+    },
+
     setList (data) {
       this.list = data
       this.isLoaded = true
     },
-
     extendList (data) {
       this.list = this.list.concat(data)
     },

@@ -11,6 +11,20 @@ for further information about branching and tagging conventions.
 #### Added
 - New "Capital deployment" fee type
 
+#### Fixed
+- Fixed a bug when we confirm a request for changes in limits,
+  at which we received empty values and could not confirm or cancel the request.
+
+## [1.6.0-rc.1] - 2019-05-02
+#### Added
+- Added autocomplete by email to email-acceptable filter fields
+
+#### Changed
+- Merged email and account ID filter fields
+
+#### Removed
+- Autocomplete for account ID on assets requests page’s filter field
+
 ## [1.6.0-rc.0] - 2019-05-02
 #### Added
 - New "Invest" fee type
@@ -32,7 +46,6 @@ for further information about branching and tagging conventions.
 #### Changed
 - Now displaying "Block" and "Reset to unverified" in user’s operation list
 - Updated operation details formatting, hide some unnecessary fields
-- Formatted & cleaned up code
 - Admin account id input is now unchangeable on Admin update screen
 
 ### "Under the hood" changes
@@ -198,7 +211,8 @@ for further information about branching and tagging conventions.
 
 ## [1.3.0] - 2019-03-01
 
-[Unreleased]: https://github.com/tokend/admin-panel/compare/1.6.0-rc.0...HEAD
+[Unreleased]: https://github.com/tokend/admin-panel/compare/1.6.0-rc.1...HEAD
+[1.6.0-rc.1]: https://github.com/tokend/admin-panel/compare/1.6.0-rc.0...1.6.0-rc.1
 [1.6.0-rc.0]: https://github.com/tokend/admin-panel/compare/1.5.0...1.6.0-rc.0
 [1.5.0]: https://github.com/tokend/admin-panel/compare/1.5.0-rc.3...1.5.0
 [1.5.0-rc.3]: https://github.com/tokend/admin-panel/compare/1.5.0-rc.2...1.5.0-rc.3
