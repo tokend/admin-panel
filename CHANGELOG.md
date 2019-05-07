@@ -10,6 +10,7 @@ for further information about branching and tagging conventions.
 ## [Unreleased]
 #### Added
 - New "Capital deployment" fee type
+- "Unblocked" change role request detection in user operation list
 
 #### Fixed
 - Fixed a bug when we confirm a request for changes in limits,
