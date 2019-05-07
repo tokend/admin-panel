@@ -2,7 +2,13 @@
   <div class="limits-manager__wrapper">
     <div class="limits-manager">
       <h2>Limits management</h2>
-      <div class="limits-manager-filters">
+      <div
+        class="limits-manager-filters"
+        :class="{
+          'limits-manager-filters--global':
+            filters.scope === SCOPE_TYPES.global
+        }"
+      >
         <select-field
           v-model="filters.asset"
           class="limits-manager__filter"
@@ -22,6 +28,9 @@
           label="Scope"
           v-model="filters.scope"
         >
+          <option :value="SCOPE_TYPES.global">
+            Global
+          </option>
           <option :value="SCOPE_TYPES.accountRole">
             Account type
           </option>
@@ -246,6 +255,7 @@ const LIMITS_TYPES = [
 const SCOPE_TYPES = Object.freeze({ // non-xdr values, internal use only
   account: 'USER',
   accountRole: 'ACCOUNT_TYPE',
+  global: 'GLOBAL',
 })
 
 export default {
@@ -259,7 +269,7 @@ export default {
       accountRole: '',
       email: '',
       address: '',
-      scope: SCOPE_TYPES.accountRole,
+      scope: SCOPE_TYPES.global,
     },
     specificUserAddress: '',
     userEmail: '',
@@ -317,7 +327,7 @@ export default {
     'filters.scope': function (value) {
       if (!value) return
       this.filters.accountRole = value === SCOPE_TYPES.accountRole
-        ? config.ACCOUNT_ROLES.general
+        ? String(config.ACCOUNT_ROLES.general)
         : null
       this.specificUserAddress = ''
       this.setFilters()
@@ -329,7 +339,6 @@ export default {
   },
   async created () {
     await this.getAssets()
-    this.filters.accountRole = config.ACCOUNT_ROLES.general.toString()
   },
   methods: {
     async getLimits () {
@@ -374,10 +383,10 @@ export default {
           filters.account = this.filters.address === ''
             ? 'empty'
             : this.filters.address
-        } else {
+        } else if (this.filters.scope === SCOPE_TYPES.accountRole) {
           filters.account_role = this.filters.accountRole
         }
-        const { data } = await ApiCallerFactory
+        const { data: limits } = await ApiCallerFactory
           .createCallerInstance()
           .getWithSignature('/v3/limits', {
             filter: {
@@ -386,8 +395,16 @@ export default {
               ...filters,
             },
           })
-
-        return data[0]
+        if (this.filters.scope === SCOPE_TYPES.global) {
+          const globalLimits = limits.filter((limit) => {
+            if (!limit.accountRole && !limit.account) {
+              return limit
+            }
+          })
+          return globalLimits[0]
+        } else {
+          return limits[0]
+        }
       }
     },
     async updateLimits (limits) {
@@ -617,6 +634,10 @@ export default {
     justify-content: space-between;
     flex-wrap: wrap;
     margin-bottom: 5rem;
+
+    &--global {
+      justify-content: flex-start;
+    }
   }
 
   .limits-manager__limits-action {
