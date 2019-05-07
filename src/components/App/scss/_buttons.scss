@@ -151,8 +151,9 @@
     }
 
     &:disabled {
-      background-color: rgba($color-danger, .40);
-      border-color: rgba($color-danger, .40);
+      background-color: transparent;
+      color: $color-disabled;
+      border-color: rgba($color-disabled, .5);
     }
   }
 }

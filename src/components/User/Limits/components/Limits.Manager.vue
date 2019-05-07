@@ -226,12 +226,12 @@
         </div>
       </template>
       <template v-else-if="isAddressLoading">
-        <div class="app-list__li-like">
+        <div class="limits-manager__message-wrp">
           <p>Loading ...</p>
         </div>
       </template>
       <template v-else>
-        <div class="app-list__li-like">
+        <div class="limits-manager__message-wrp">
           <p>Such account not found</p>
         </div>
       </template>
@@ -632,6 +632,11 @@ export default {
   .limits-manager__limits-list {
     margin-bottom: 1.7rem;
   }
+  .limits-manager__message-wrp {
+    display: flex;
+    justify-content: center;
+  }
+
   .limits-manager__limit-type {
     margin-right: 1rem;
     min-width: 5rem;
