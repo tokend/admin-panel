@@ -64,165 +64,177 @@
       </div>
     </div>
     <div class="limits-manager__inner">
-      <div class="limits-manager__limits-list-wrp">
-        <template v-if="limits.payment">
-          <div class="limits-manager__limits-list">
-            <h3 class="limits-manager__content-title">
-              Payment limits
-            </h3>
-            <div class="limits-manager__limits-list-inner">
-              <template v-for="(type, i) in LIMITS_TYPES">
-                <div class="limits-manager__limit-row" :key="i">
-                  <span class="limits-manager__limit-type">
-                    {{ type.replace('Out', '') }}
-                  </span>
-                  <input-field
-                    type="number"
-                    :value="normalizeLimitAmount(limits.payment[type])"
-                    @input="setLimitValue($event, limits.payment[type])"
-                    class="limits-manager__limit-field"
-                    :placeholder="getLimitLable(limits.payment, type)"
-                    :class="{
-                      'limits-manager__limit-field--unlimited':
-                        isMaxLimitValue(limits.payment[type])
-                    }"
-                    :step="DEFAULT_INPUT_STEP"
-                    :max="DEFAULT_MAX_AMOUNT"
-                  />
-                </div>
-              </template>
+      <template v-if="filters.scope !== SCOPE_TYPES.account || filters.address">
+        <div class="limits-manager__limits-list-wrp">
+          <template v-if="limits.payment">
+            <div class="limits-manager__limits-list">
+              <h3 class="limits-manager__content-title">
+                Payment limits
+              </h3>
+              <div class="limits-manager__limits-list-inner">
+                <template v-for="(type, i) in LIMITS_TYPES">
+                  <div class="limits-manager__limit-row" :key="i">
+                    <span class="limits-manager__limit-type">
+                      {{ type.replace('Out', '') }}
+                    </span>
+                    <input-field
+                      type="number"
+                      :value="normalizeLimitAmount(limits.payment[type])"
+                      @input="setLimitValue($event, limits.payment[type])"
+                      class="limits-manager__limit-field"
+                      :placeholder="getLimitLable(limits.payment, type)"
+                      :class="{
+                        'limits-manager__limit-field--unlimited':
+                          isMaxLimitValue(limits.payment[type])
+                      }"
+                      :step="DEFAULT_INPUT_STEP"
+                      :max="DEFAULT_MAX_AMOUNT"
+                    />
+                  </div>
+                </template>
+              </div>
             </div>
-          </div>
 
-          <div class="limits-manager__limits-action">
-            <button
-              class="limits-manager__update-btn app__btn app__btn--info"
-              :disabled="isPending"
-              @click="updateLimits(limits.payment)"
-            >
-              Update
-            </button>
+            <div class="limits-manager__limits-action">
+              <button
+                class="limits-manager__update-btn app__btn app__btn--info"
+                :disabled="isPending"
+                @click="updateLimits(limits.payment)"
+              >
+                Update
+              </button>
 
-            <button
-              class="
+              <button
+                class="
                 limits-manager__remove-btn
                 app__btn app__btn-outline
                 app__btn-outline--danger
               "
-              :disabled="isPending || limits.payment.id === 0"
-              @click="removeLimits(limits.payment, 'payment')"
-            >
-              Remove
-            </button>
-          </div>
-        </template>
-      </div>
-      <div class="limits-manager__limits-list-wrp">
-        <template v-if="limits.withdrawal">
-          <div class="limits-manager__limits-list">
-            <h3 class="limits-manager__content-title">
-              Withdrawal limits
-            </h3>
-            <div class="limits-manager__limits-list-inner">
-              <template v-for="(type,i) in LIMITS_TYPES">
-                <div class="limits-manager__limit-row" :key="i">
-                  <span class="limits-manager__limit-type">
-                    {{ type.replace('Out', '') }}
-                  </span>
-                  <input-field
-                    type="number"
-                    :value="normalizeLimitAmount(limits.withdrawal[type])"
-                    @input="setLimitValue($event, limits.withdrawal[type])"
-                    class="limits-manager__limit-field"
-                    :placeholder="getLimitLable(limits.withdrawal, type)"
-                    :class="{
-                      'limits-manager__limit-field--unlimited':
-                        isMaxLimitValue(limits.withdrawal[type])
-                    }"
-                    :step="DEFAULT_INPUT_STEP"
-                    :max="DEFAULT_MAX_AMOUNT"
-                  />
-                </div>
-              </template>
+                :disabled="isPending || limits.payment.id === 0"
+                @click="removeLimits(limits.payment, 'payment')"
+              >
+                Remove
+              </button>
             </div>
-          </div>
+          </template>
+        </div>
+        <div class="limits-manager__limits-list-wrp">
+          <template v-if="limits.withdrawal">
+            <div class="limits-manager__limits-list">
+              <h3 class="limits-manager__content-title">
+                Withdrawal limits
+              </h3>
+              <div class="limits-manager__limits-list-inner">
+                <template v-for="(type,i) in LIMITS_TYPES">
+                  <div class="limits-manager__limit-row" :key="i">
+                    <span class="limits-manager__limit-type">
+                      {{ type.replace('Out', '') }}
+                    </span>
+                    <input-field
+                      type="number"
+                      :value="normalizeLimitAmount(limits.withdrawal[type])"
+                      @input="setLimitValue($event, limits.withdrawal[type])"
+                      class="limits-manager__limit-field"
+                      :placeholder="getLimitLable(limits.withdrawal, type)"
+                      :class="{
+                        'limits-manager__limit-field--unlimited':
+                          isMaxLimitValue(limits.withdrawal[type])
+                      }"
+                      :step="DEFAULT_INPUT_STEP"
+                      :max="DEFAULT_MAX_AMOUNT"
+                    />
+                  </div>
+                </template>
+              </div>
+            </div>
 
-          <div class="limits-manager__limits-action">
-            <button
-              class="limits-manager__update-btn app__btn app__btn--info"
-              :disabled="isPending"
-              @click="updateLimits(limits.withdrawal)"
-            >
-              Update
-            </button>
+            <div class="limits-manager__limits-action">
+              <button
+                class="limits-manager__update-btn app__btn app__btn--info"
+                :disabled="isPending"
+                @click="updateLimits(limits.withdrawal)"
+              >
+                Update
+              </button>
 
-            <button
-              class="
+              <button
+                class="
                 limits-manager__remove-btn
                 app__btn app__btn-outline
                 app__btn-outline--danger
                "
-              :disabled="isPending || limits.withdrawal.id === 0"
-              @click="removeLimits(limits.withdrawal, 'withdrawal')"
-            >
-              Remove
-            </button>
-          </div>
-        </template>
-      </div>
-      <div class="limits-manager__limits-list-wrp">
-        <template v-if="limits.deposit">
-          <div class="limits-manager__limits-list">
-            <h3 class="limits-manager__content-title">
-              Deposit limits
-            </h3>
-            <div class="limits-manager__limits-list-inner">
-              <template v-for="(type,i) in LIMITS_TYPES">
-                <div class="limits-manager__limit-row" :key="i">
-                  <span class="limits-manager__limit-type">
-                    {{ type.replace('Out', '') }}
-                  </span>
-                  <input-field
-                    type="number"
-                    :value="normalizeLimitAmount(limits.deposit[type])"
-                    @input="setLimitValue($event, limits.deposit[type])"
-                    class="limits-manager__limit-field"
-                    :placeholder="getLimitLable(limits.deposit, type)"
-                    :class="{
-                      'limits-manager__limit-field--unlimited':
-                        isMaxLimitValue(limits.deposit[type])
-                    }"
-                    :step="DEFAULT_INPUT_STEP"
-                    :max="DEFAULT_MAX_AMOUNT"
-                  />
-                </div>
-              </template>
+                :disabled="isPending || limits.withdrawal.id === 0"
+                @click="removeLimits(limits.withdrawal, 'withdrawal')"
+              >
+                Remove
+              </button>
             </div>
-          </div>
+          </template>
+        </div>
+        <div class="limits-manager__limits-list-wrp">
+          <template v-if="limits.deposit">
+            <div class="limits-manager__limits-list">
+              <h3 class="limits-manager__content-title">
+                Deposit limits
+              </h3>
+              <div class="limits-manager__limits-list-inner">
+                <template v-for="(type,i) in LIMITS_TYPES">
+                  <div class="limits-manager__limit-row" :key="i">
+                    <span class="limits-manager__limit-type">
+                      {{ type.replace('Out', '') }}
+                    </span>
+                    <input-field
+                      type="number"
+                      :value="normalizeLimitAmount(limits.deposit[type])"
+                      @input="setLimitValue($event, limits.deposit[type])"
+                      class="limits-manager__limit-field"
+                      :placeholder="getLimitLable(limits.deposit, type)"
+                      :class="{
+                        'limits-manager__limit-field--unlimited':
+                          isMaxLimitValue(limits.deposit[type])
+                      }"
+                      :step="DEFAULT_INPUT_STEP"
+                      :max="DEFAULT_MAX_AMOUNT"
+                    />
+                  </div>
+                </template>
+              </div>
+            </div>
 
-          <div class="limits-manager__limits-action">
-            <button
-              class="limits-manager__update-btn app__btn app__btn--info"
-              :disabled="isPending"
-              @click="updateLimits(limits.deposit)"
-            >
-              Update
-            </button>
+            <div class="limits-manager__limits-action">
+              <button
+                class="limits-manager__update-btn app__btn app__btn--info"
+                :disabled="isPending"
+                @click="updateLimits(limits.deposit)"
+              >
+                Update
+              </button>
 
-            <button
-              class="
+              <button
+                class="
                 limits-manager__remove-btn
                 app__btn app__btn-outline
                 app__btn-outline--danger
               "
-              :disabled="isPending || limits.deposit.id === 0"
-              @click="removeLimits(limits.deposit, 'deposit')"
-            >
-              Remove
-            </button>
-          </div>
-        </template>
-      </div>
+                :disabled="isPending || limits.deposit.id === 0"
+                @click="removeLimits(limits.deposit, 'deposit')"
+              >
+                Remove
+              </button>
+            </div>
+          </template>
+        </div>
+      </template>
+      <template v-else-if="isAddressLoading">
+        <div class="app-list__li-like">
+          <p>Loading ...</p>
+        </div>
+      </template>
+      <template v-else>
+        <div class="app-list__li-like">
+          <p>Such account not found</p>
+        </div>
+      </template>
     </div>
   </div>
 </template>
@@ -267,7 +279,6 @@ export default {
     filters: {
       asset: '',
       accountRole: '',
-      email: '',
       address: '',
       scope: SCOPE_TYPES.global,
     },
@@ -280,6 +291,7 @@ export default {
     },
     assets: [],
     isPending: false,
+    isAddressLoading: false,
     LIMITS_TYPES,
     DEFAULT_MAX_AMOUNT,
     DEFAULT_INPUT_STEP,
@@ -305,9 +317,9 @@ export default {
         if (value) {
           this.specificUserAddress = ''
           this.filters.address = ''
+          this.setFilters()
+          this.getLimits()
         }
-        this.setFilters()
-        this.getLimits()
       },
       immediate: true,
     },
@@ -330,10 +342,13 @@ export default {
         ? String(config.ACCOUNT_ROLES.general)
         : null
       this.specificUserAddress = ''
-      this.setFilters()
-      this.getLimits()
+      if (value !== SCOPE_TYPES.account) {
+        this.setFilters()
+        this.getLimits()
+      }
     },
-    'filters.address': function () {
+    'filters.address': function (value) {
+      if (!value) return
       this.getLimits()
     },
   },
@@ -379,10 +394,7 @@ export default {
       async function getLimit (statsOpType) {
         const filters = {}
         if (this.filters.scope === SCOPE_TYPES.account) {
-          // Load empty limit list if address field is empty
-          filters.account = this.filters.address === ''
-            ? 'empty'
-            : this.filters.address
+          filters.account = this.filters.address
         } else if (this.filters.scope === SCOPE_TYPES.accountRole) {
           filters.account_role = this.filters.accountRole
         }
@@ -544,6 +556,7 @@ export default {
       if (!this.filters.asset) this.filters.asset = get(this.assets, '[0].id')
       const emailRegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
       if (this.specificUserAddress) {
+        this.isAddressLoading = true
         if (Sdk.base.Keypair.isValidPublicKey(this.specificUserAddress)) {
           this.filters.address = this.specificUserAddress
           this.userEmail = await api.users.getEmailByAccountId(
@@ -552,6 +565,7 @@ export default {
         } else if (emailRegExp.test(this.specificUserAddress)) {
           await this.loadAccountIdByEmail(this.specificUserAddress)
         }
+        this.isAddressLoading = false
       } else {
         this.filters.address = ''
       }
@@ -593,6 +607,7 @@ export default {
 
   .limits-manager__inner {
     display: flex;
+    justify-content: center;
   }
   .limits-manager__filter {
     width: calc(33.333333% - 3.4rem);
