@@ -8,6 +8,9 @@ Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
 ## [Unreleased]
+#### Added
+- New "Capital deployment" fee type
+
 #### Fixed
 - Fixed a bug when we confirm a request for changes in limits,
   at which we received empty values and could not confirm or cancel the request.
