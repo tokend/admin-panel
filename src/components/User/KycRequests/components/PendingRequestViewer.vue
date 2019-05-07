@@ -7,7 +7,7 @@
             <li>
               <h3>Role to set</h3>
               <p class="user-details__role-info">
-                {{ ROLE_TYPE_VERBOSE[request.accountRoleToSet] }}
+                {{ request.accountRoleToSet | roleIdToString }}
               </p>
             </li>
           </ul>
@@ -31,37 +31,47 @@
 
         <section class="user-details__section">
           <template v-if="isKycLoaded">
+            <kyc-documents-viewer
+              v-if="request.accountRoleToSet !== ACCOUNT_ROLES.corporate"
+              class="user-details__documents"
+              :documents="kyc.documents"
+              :user-account-id="user.address"
+            />
+
             <general-kyc-viewer
               v-if=" request.accountRoleToSet === ACCOUNT_ROLES.general"
               :kyc="kyc"
               :user="user"
             />
             <verified-kyc-viewer
-              v-if="request.accountRoleToSet === ACCOUNT_ROLES.usVerified"
+              v-else-if="request.accountRoleToSet === ACCOUNT_ROLES.usVerified"
               :kyc="kyc"
               :user="user"
             />
+            <!-- eslint-disable max-len -->
             <accredited-kyc-viewer
-              v-if="request.accountRoleToSet === ACCOUNT_ROLES.usAccredited"
+              v-else-if="request.accountRoleToSet === ACCOUNT_ROLES.usAccredited"
               :kyc="kyc"
               :user="user"
             />
+            <!-- eslint-enable max-len -->
             <kyc-syndicate-section
-              v-if="request.accountRoleToSet === ACCOUNT_ROLES.corporate"
+              v-else-if="request.accountRoleToSet === ACCOUNT_ROLES.corporate"
               :user="user"
               :blob-id="request.blobId"
             />
           </template>
+
           <template v-else-if="isKycLoadFailed">
             <p class="danger">
               An error occurred. Please try again later.
             </p>
           </template>
+
           <template v-else>
             <p>Loading...</p>
           </template>
         </section>
-        <!-- eslint-enable max-len -->
       </template>
 
       <template v-else-if="!isFailed">
@@ -82,11 +92,12 @@ import AccountSection from '@/components/User/Users/components/UserDetails/UserD
 
 import KycSyndicateSection from '@/components/User/Sales/components/SaleManager/SaleManager.SyndicateTab'
 
-import GeneralKycViewer from '@/components/User/Users/components/UserDetails/UserDetails.GeneralKycViewer'
-import VerifiedKycViewer from '@/components/User/Users/components/UserDetails/UserDetails.VerifiedKycViewer'
-import AccreditedKycViewer from '@/components/User/Users/components/UserDetails/UserDetails.AccreditedKycViewer'
+import GeneralKycViewer from '../../Users/components/UserDetails/UserDetails.GeneralKycViewer'
+import VerifiedKycViewer from '../../Users/components/UserDetails/UserDetails.VerifiedKycViewer'
+import AccreditedKycViewer from '../../Users/components/UserDetails/UserDetails.AccreditedKycViewer'
 
-import ExternalDetailsViewer from '@/components/User/Users/components/UserDetails/UserDetails.ExternalDetailsViewer'
+import KycDocumentsViewer from './KycDocumentsViewer'
+import ExternalDetailsViewer from '../../Users/components/UserDetails/UserDetails.ExternalDetailsViewer'
 
 import { ApiCallerFactory } from '@/api-caller-factory'
 import { ErrorHandler } from '@/utils/ErrorHandler'
@@ -98,26 +109,15 @@ import { Sdk } from '@/sdk'
 
 import config from '@/config'
 
-const ROLE_TYPE_VERBOSE = {
-  [config.ACCOUNT_ROLES.general]: 'General',
-  [config.ACCOUNT_ROLES.usVerified]: 'US Verified',
-  [config.ACCOUNT_ROLES.usAccredited]: 'US Accredited',
-  [config.ACCOUNT_ROLES.corporate]: 'Corporate',
-  [config.ACCOUNT_ROLES.notVerified]: 'Not Verified',
-}
-
-const OPERATION_TYPE = {
-  createKycRequest: '22',
-}
-
 export default {
   components: {
     AccountSection,
-    ExternalDetailsViewer,
     KycSyndicateSection,
     AccreditedKycViewer,
     VerifiedKycViewer,
     GeneralKycViewer,
+    ExternalDetailsViewer,
+    KycDocumentsViewer,
   },
 
   props: {
@@ -127,7 +127,6 @@ export default {
   data () {
     return {
       ACCOUNT_ROLES: config.ACCOUNT_ROLES,
-      OPERATION_TYPE,
       isLoaded: false,
       isFailed: false,
       isPending: false,
@@ -135,8 +134,14 @@ export default {
       isKycLoadFailed: false,
       user: {},
       kyc: {},
-      ROLE_TYPE_VERBOSE,
     }
+  },
+
+  watch: {
+    request: async function (value) {
+      await this.getUser()
+      await this.getKyc(value.blobId)
+    },
   },
 
   async created () {
@@ -197,5 +202,9 @@ export default {
 
 .user-details__ext-details-wrp {
   margin: 2rem 0;
+}
+
+.user-details__documents {
+  margin-bottom: 2rem;
 }
 </style>

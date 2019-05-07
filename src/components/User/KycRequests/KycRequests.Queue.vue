@@ -1,23 +1,23 @@
 <template>
-  <div class="kyc-requests-queue app__block">
+  <div class="kyc-requests-queue">
     <template v-if="pendingRequests.length">
       <template v-if="!isConfirmationShown">
-        <h2>
-          {{ currentRequestIndex + 1 }} / {{ pendingRequests.length }} requests
-        </h2>
+        <div class="app__block">
+          <h2>
+            {{ currentRequestIndex + 1 }} /
+            {{ pendingRequests.length }} requests
+          </h2>
 
-        <pending-request-viewer
-          v-for="(request, i) in pendingRequests"
-          :key="request.id"
-          v-show="currentRequestIndex === i"
-          :request="request"
-        />
+          <pending-request-viewer
+            :request="pendingRequests[currentRequestIndex]"
+          />
 
-        <pending-request-actions
-          class="kyc-requests-queue__actions"
-          :request="pendingRequests[currentRequestIndex]"
-          @reviewed="nextRequest"
-        />
+          <pending-request-actions
+            class="kyc-requests-queue__actions"
+            :request="pendingRequests[currentRequestIndex]"
+            @reviewed="nextRequest"
+          />
+        </div>
       </template>
 
       <template v-else>
@@ -99,6 +99,7 @@ export default {
             include: ['request_details'],
           })
         this.pendingRequests = data.map(item => new ChangeRoleRequest(item))
+        this.operations = new Array(this.pendingRequests.length)
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }
@@ -106,7 +107,7 @@ export default {
     },
 
     nextRequest (payload) {
-      this.operations.push(payload)
+      this.operations[this.currentRequestIndex] = payload
       this.currentRequestIndex++
       window.scrollTo({
         top: 0,

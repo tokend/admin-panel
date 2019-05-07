@@ -104,6 +104,7 @@ export default {
 
   methods: {
     async approve () {
+      this.request.state = 'approved'
       const action = base.xdr.ReviewRequestOpAction.approve().value
       const approveOp = this.createReviewRequestOperation(action)
 
@@ -111,6 +112,7 @@ export default {
     },
 
     async reject () {
+      this.request.state = 'rejected'
       const action = base.xdr.ReviewRequestOpAction.reject().value
       const rejectOp = this.createReviewRequestOperation(
         action, this.rejectForm.reason
