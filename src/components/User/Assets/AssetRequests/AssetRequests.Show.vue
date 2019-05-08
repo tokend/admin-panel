@@ -355,6 +355,7 @@ export default {
 .asset-requests-show__key {
   &--informative {
     color: $color-info;
+    text-align: right;
 
     &:before {
       content: "\2713";
