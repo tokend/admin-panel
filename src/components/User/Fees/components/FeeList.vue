@@ -36,6 +36,9 @@
           <option :value="FEE_TYPES.investFee">
             Invest
           </option>
+          <option :value="FEE_TYPES.capitalDeploymentFee">
+            Capital Deployment
+          </option>
         </select-field>
 
         <select-field
@@ -148,7 +151,8 @@
 
             <span
               class="app-list__cell"
-              v-if="+filters.feeType !== FEE_TYPES.offerFee"
+              v-if="+filters.feeType !== FEE_TYPES.offerFee &&
+                +filters.feeType !== FEE_TYPES.capitalDeploymentFee"
             >
               Fixed fee
             </span>
@@ -212,7 +216,8 @@
 
             <span
               class="app-list__cell fee-list__cell"
-              v-if="+filters.feeType !== FEE_TYPES.offerFee">
+              v-if="+filters.feeType !== FEE_TYPES.offerFee &&
+                +filters.feeType !== FEE_TYPES.capitalDeploymentFee">
               <input-field
                 type="number"
                 min="0"
@@ -497,7 +502,6 @@ export default {
           },
           isDelete: fees.isDelete,
         }
-
         const operation = Sdk.base.Operation.setFees(opts)
 
         await Sdk.horizon.transactions.submitOperations(operation)

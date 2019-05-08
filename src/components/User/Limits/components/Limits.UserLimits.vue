@@ -37,7 +37,10 @@ export default {
   },
 
   props: {
-    limits: { type: Object, required: true },
+    limits: {
+      type: Object,
+      required: true,
+    },
   },
 
   data: _ => ({
