@@ -13,7 +13,7 @@ import { ApiCallerFactory } from '@/api-caller-factory'
 import { Wallet } from '@tokend/js-sdk'
 import _cloneDeep from 'lodash/cloneDeep'
 
-import * as Sentry from '@sentry/browser'
+import { ErrorTracker } from '@/utils/ErrorTracker'
 
 const server = {
   'trusted': true,
@@ -154,7 +154,7 @@ export default {
     store.commit('UPDATE_USER', user)
     store.commit('UPDATE_AUTH', auth)
 
-    this._configureSentryScope(user)
+    this._setErrorTrackerUser(user)
   },
 
   async _storeWallet (wallet, username) {
@@ -187,7 +187,7 @@ export default {
     store.commit('UPDATE_USER', user)
     store.commit('UPDATE_AUTH', auth)
 
-    this._configureSentryScope(user)
+    this._setErrorTrackerUser(user)
   },
 
   async _checkMasterSignerExists (accountId) {
@@ -198,12 +198,10 @@ export default {
     return Boolean(signers.find(item => item.id === accountId))
   },
 
-  _configureSentryScope (user) {
-    Sentry.configureScope((scope) => {
-      scope.setUser({
-        'accountId': user.keys.accountId,
-        'name': user.name,
-      })
+  _setErrorTrackerUser (user) {
+    ErrorTracker.setLoggedInUser({
+      'accountId': user.keys.accountId,
+      'name': user.name,
     })
   },
 }

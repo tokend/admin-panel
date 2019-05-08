@@ -63,10 +63,10 @@ export default Object.assign(
       default: 1,
     },
     /**
-     * Sentry DSN. It’s a representation of the configuration required
-     * by the Sentry SDKs
+     * URL of the Sentry DSN. It’s a representation of the configuration
+     * required by the Sentry SDKs.
      */
-    SENTRY_DSN: '',
+    SENTRY_DSN: 'https://2ff1466f60c04651a1b9b590e4b2d691@sentry.io/1451832',
   },
   process.env,
   document.ENV

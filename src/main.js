@@ -19,9 +19,8 @@ import api from './api'
 import params from './config'
 import VeeValidate, { Validator } from 'vee-validate'
 
-/* Sentry */
-import * as Sentry from '@sentry/browser'
-import * as Integrations from '@sentry/integrations'
+/* Error tracker util */
+import { ErrorTracker } from '@/utils/ErrorTracker'
 
 /* Vue filters */
 
@@ -59,16 +58,7 @@ Object.isEmpty = function (obj) {
 }
 
 /* Init Sentry */
-Sentry.init({
-  dsn: params.SENTRY_DSN,
-  release: params.BUILD_VERSION,
-  integrations: [
-    new Integrations.Vue({
-      Vue,
-      attachProps: true,
-    }),
-  ],
-})
+ErrorTracker.init(params)
 
 /* Create and Mount our Vue instance */
 new Vue({

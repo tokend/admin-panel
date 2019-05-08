@@ -1,21 +1,26 @@
 import store from '@/store'
 import log from 'loglevel'
 import _get from 'lodash/get'
-import * as Sentry from '@sentry/browser'
+import { ErrorTracker } from '@/utils/ErrorTracker'
 
 export class ErrorHandler {
-  static process (error, { sentryReportTitle = '', skipSentryReport = false } = {}) {
+  static process (error, sentryReportConfig = {}) {
+    ErrorHandler.processWithoutFeedback(error, sentryReportConfig)
     const message = ErrorHandler.extractErrorMessage(error)
-    ErrorHandler.processWithoutFeedback(error)
     ErrorHandler.showFeedback(message)
-    if (!skipSentryReport) {
-      const messageForSentry = sentryReportTitle || message
-      Sentry.captureMessage(messageForSentry)
-    }
   }
 
-  static processWithoutFeedback (error) {
+  static processWithoutFeedback (error, sentryReportConfig = {}) {
     log.error(error)
+    ErrorHandler.captureSentryMessage(error, sentryReportConfig)
+  }
+
+  static captureSentryMessage (error, opts = {}) {
+    const { sentryReportTitle = '', skipSentryReport = false } = opts
+    if (!skipSentryReport) {
+      const msg = sentryReportTitle || ErrorHandler.extractErrorMessage(error)
+      ErrorTracker.trackMessage(msg)
+    }
   }
 
   static showFeedback (message) {
