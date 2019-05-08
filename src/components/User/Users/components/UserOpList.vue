@@ -143,15 +143,24 @@ export default {
         record, 'operation.details.roleToSet.id'
       )
       const isBlocked = Number(roleToSet) === config.ACCOUNT_ROLES.blocked
-      const isReset = safeGet(
+      const isReset = Boolean(safeGet(
         record, 'operation.details.creatorDetails.resetReason'
-      )
+      ))
+
+      // Currently the only non-blocking and non-resetting change role performed
+      // by the admin is unblocking. A small workaround of detecting Unblocked
+      // state, in the future replace to more robust solution if needed.
+      const isUnblocked =
+        !isBlocked && !isReset &&
+        safeGet(record, 'operation.source.id', '') === this.masterPubKey
 
       let operationType
       if (isBlocked) {
         operationType = 'Block'
       } else if (isReset) {
         operationType = 'Reset to unverified'
+      } else if (isUnblocked) {
+        operationType = 'Unblock'
       } else {
         operationType = 'Change role request'
       }
