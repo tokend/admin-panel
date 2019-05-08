@@ -504,8 +504,12 @@ export default {
             filter: { email: email },
             page: { limit: 1 },
           })
-        this.filters.address = ((data || [])[0] || {}).address || ''
         this.userEmail = ((data || [])[0] || {}).email || email
+        if (this.userEmail === email) {
+          this.filters.address = ((data || [])[0] || {}).address
+        } else {
+          this.filters.address = ''
+        }
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }
@@ -559,8 +563,8 @@ export default {
     async setFilters () {
       if (!this.filters.asset) this.filters.asset = get(this.assets, '[0].id')
       const emailRegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      this.isAddressLoading = true
       if (this.specificUserAddress) {
-        this.isAddressLoading = true
         if (Sdk.base.Keypair.isValidPublicKey(this.specificUserAddress)) {
           this.filters.address = this.specificUserAddress
           this.userEmail = await api.users.getEmailByAccountId(
@@ -569,10 +573,10 @@ export default {
         } else if (emailRegExp.test(this.specificUserAddress)) {
           await this.loadAccountIdByEmail(this.specificUserAddress)
         }
-        this.isAddressLoading = false
       } else {
         this.filters.address = ''
       }
+      this.isAddressLoading = false
     },
     normalizeLimitAmount (limit) {
       if (limit) {
