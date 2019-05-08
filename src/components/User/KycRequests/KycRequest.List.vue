@@ -142,10 +142,7 @@ import { formatDate } from '@/utils/formatters'
 import { snakeToCamelCase } from '@/utils/un-camel-case'
 import { clearObject } from '@/utils/clearObject'
 
-import {
-  REQUEST_STATES,
-  KYC_REQUEST_STATES,
-} from '@/constants'
+import { KYC_REQUEST_STATES } from '@/constants'
 
 import config from '@/config'
 import { ApiCallerFactory } from '@/api-caller-factory'
@@ -193,7 +190,6 @@ export default {
         type: '',
         pendingTasks: '',
       },
-      REQUEST_STATES,
       KYC_REQUEST_STATES,
       CHANGE_ROLE_TASKS: config.CHANGE_ROLE_TASKS,
       ACCOUNT_ROLES: config.ACCOUNT_ROLES,
