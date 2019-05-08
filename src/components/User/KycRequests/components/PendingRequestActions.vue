@@ -1,26 +1,37 @@
 <template>
   <div class="user-request">
-    <div class="user-details-request__form-actions">
-      <button
-        class="app__btn user-request__btn"
-        @click="approve"
-      >
-        Approve
-      </button>
+    <div class="user-details-request__actions">
+      <div class="user-details-request__action">
+        <button
+          class="app__btn user-request__btn"
+          @click="approve"
+        >
+          Approve
+        </button>
 
-      <button
-        class="app__btn app__btn-outline user-request__btn"
-        @click="$emit(EVENTS.reviewed)"
-      >
-        Skip
-      </button>
+        <button
+          class="app__btn app__btn-outline user-request__btn"
+          @click="skip"
+        >
+          Skip
+        </button>
 
-      <button
-        class="app__btn app__btn--danger user-request__btn"
-        @click="showRejectModal"
-      >
-        Reject
-      </button>
+        <button
+          class="app__btn app__btn--danger user-request__btn"
+          @click="showRejectModal"
+        >
+          Reject
+        </button>
+      </div>
+
+      <div class="user-details-request__action">
+        <button
+          class="app__btn app__btn user-request__btn"
+          @click="$emit(EVENTS.finished)"
+        >
+          Finish
+        </button>
+      </div>
     </div>
 
     <modal
@@ -71,6 +82,7 @@ import { ChangeRoleRequest } from '@/api/responseHandlers/requests/ChangeRoleReq
 
 const EVENTS = {
   reviewed: 'reviewed',
+  finished: 'finished',
 }
 
 export default {
@@ -104,21 +116,33 @@ export default {
 
   methods: {
     async approve () {
-      this.request.state = 'approved'
-      const action = base.xdr.ReviewRequestOpAction.approve().value
-      const approveOp = this.createReviewRequestOperation(action)
+      const reviewDecision = {
+        request: this.request,
+        action: 'approve',
+      }
+      // const action = base.xdr.ReviewRequestOpAction.approve().value
 
-      this.$emit(EVENTS.reviewed, approveOp)
+      this.$emit(EVENTS.reviewed, reviewDecision)
     },
 
     async reject () {
-      this.request.state = 'rejected'
-      const action = base.xdr.ReviewRequestOpAction.reject().value
-      const rejectOp = this.createReviewRequestOperation(
-        action, this.rejectForm.reason
-      )
+      const reviewDecision = {
+        request: this.request,
+        action: 'reject',
+        reason: this.rejectForm.reason,
+      }
+      // const action = base.xdr.ReviewRequestOpAction.reject().value
 
-      this.$emit(EVENTS.reviewed, rejectOp)
+      this.$emit(EVENTS.reviewed, reviewDecision)
+    },
+
+    skip () {
+      const reviewDecision = {
+        request: this.request,
+        action: 'skip',
+      }
+
+      this.$emit(EVENTS.reviewed, reviewDecision)
     },
 
     createReviewRequestOperation (action, reason = '') {
@@ -155,13 +179,19 @@ export default {
 </script>
 
 <style scoped>
-.user-details-request__form-actions {
+.user-details-request__actions {
   display: flex;
   justify-content: space-between;
+}
+
+.user-details-request__action {
+  display: flex;
+  margin: 0 -1rem;
 }
 
 .user-request__btn {
   width: 100%;
   max-width: 15rem;
+  margin: 0 1rem;
 }
 </style>
