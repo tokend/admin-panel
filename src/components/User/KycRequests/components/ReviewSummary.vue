@@ -35,11 +35,11 @@
       <button
         v-if="decisions.length"
         class="app__btn review-summary__btn"
-        :disabled="!readyToReviewDecisions.length"
-        :title="readyToReviewDecisions.length
+        :disabled="!readyForReviewDecisions.length"
+        :title="readyForReviewDecisions.length
           ? ''
-          : 'No ready to review decisions yet'"
-        @click="review"
+          : 'No ready for review decisions yet'"
+        @click="submitReview"
       >
         Submit
       </button>
@@ -64,20 +64,11 @@ import { confirmAction } from '@/js/modals/confirmation_message'
 
 import { base } from '@tokend/js-sdk'
 
+import { DECISION_ACTIONS } from '../constants/decision-actions'
+
 const EVENTS = {
   edit: 'edit',
   reset: 'reset',
-}
-
-const DECISION_STATES = {
-  approve: 'approve',
-  approving: 'approving',
-  approved: 'approved',
-  error: 'error',
-  reject: 'reject',
-  rejecting: 'rejecting',
-  rejected: 'rejected',
-  skip: 'skip',
 }
 
 export default {
@@ -95,14 +86,8 @@ export default {
   },
 
   computed: {
-    readyToReviewDecisions () {
-      const readyToReviewStates = [
-        DECISION_STATES.approve,
-        DECISION_STATES.reject,
-      ]
-
-      return this.decisions
-        .filter(item => readyToReviewStates.includes(item.state))
+    readyForReviewDecisions () {
+      return this.decisions.filter(item => item.isReadyForReview)
     },
   },
 
@@ -112,66 +97,52 @@ export default {
     },
 
     async resetReview () {
-      const isConfirmed = !this.decisions.length || await confirmAction({
-        title: 'Are you sure? All your decisions will be lost',
-      })
+      const isConfirmed = !this.readyForReviewDecisions.length ||
+        await confirmAction({
+          title: 'Are you sure? All your decisions will be lost',
+        })
       if (!isConfirmed) { return }
 
       this.$emit(EVENTS.reset)
     },
 
-    async review () {
+    async submitReview () {
       const isConfirmed = await confirmAction({
         title: 'Are you sure? This action cannot be undone',
       })
       if (!isConfirmed) { return }
 
-      const reviewPromises = this.readyToReviewDecisions
+      const reviewPromises = this.readyForReviewDecisions
         .map(item => this.reviewDecision(item))
       await Promise.all(reviewPromises)
     },
 
     async reviewDecision (decision) {
       try {
-        this.setDecisionProcessingState(decision)
+        decision.setProcessingState()
 
         const operation = this.createDecisionOperation(decision)
         await ApiCallerFactory
           .createCallerInstance()
           .postOperations(operation)
 
-        this.setDecisionReviewedState(decision)
+        decision.setReviewedState()
       } catch (e) {
-        decision.state = DECISION_STATES.error
-        decision.errorMessage = ErrorHandler.extractErrorMessage(e)
+        const errorMessage = ErrorHandler.extractErrorMessage(e)
+        decision.setErrorState(errorMessage)
+
         ErrorHandler.processWithoutFeedback(e)
       }
     },
 
-    setDecisionProcessingState (decision) {
-      if (decision.state === DECISION_STATES.approve) {
-        decision.state = DECISION_STATES.approving
-      } else if (decision.state === DECISION_STATES.reject) {
-        decision.state = DECISION_STATES.rejecting
-      }
-    },
-
-    setDecisionReviewedState (decision) {
-      if (decision.state === DECISION_STATES.approving) {
-        decision.state = DECISION_STATES.approved
-      } else if (decision.state === DECISION_STATES.rejecting) {
-        decision.state = DECISION_STATES.rejected
-      }
-    },
-
     createDecisionOperation (decision) {
-      switch (decision.state) {
-        case DECISION_STATES.approving:
+      switch (decision.action) {
+        case DECISION_ACTIONS.approve:
           return this.createReviewRequestOperation({
             request: decision.request,
             action: base.xdr.ReviewRequestOpAction.approve().value,
           })
-        case DECISION_STATES.rejecting:
+        case DECISION_ACTIONS.reject:
           return this.createReviewRequestOperation({
             request: decision.request,
             action: base.xdr.ReviewRequestOpAction.reject().value,
@@ -187,8 +158,7 @@ export default {
         requestType: request.type,
         reviewDetails: {
           tasksToAdd: request.tasksToAdd || 0,
-          tasksToRemove: request.tasksToRemove ||
-            request.pendingTasks,
+          tasksToRemove: request.tasksToRemove,
           externalDetails: '{}',
         },
         action,

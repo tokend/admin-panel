@@ -1,7 +1,7 @@
 <template>
   <button
     class="app-list__li decision-list-item"
-    :disabled="!isEditable"
+    :disabled="!decision.isEditable"
     @click="$emit(EVENTS.click, decision)"
   >
     <email-getter
@@ -16,7 +16,7 @@
       class="app-list__cell decision-list-item__state"
       :class="`decision-list-item__state--${decision.state}`"
     >
-      {{ DECISION_STATES[decision.state] }}
+      {{ decision.state | localizeDecisionState }}
     </span>
   </button>
 </template>
@@ -24,16 +24,8 @@
 <script>
 import { EmailGetter } from '@comcom/getters'
 
-const DECISION_STATES = {
-  approve: 'Ready to approve',
-  approving: 'Approving…',
-  approved: 'Approved',
-  error: 'Error',
-  reject: 'Ready to reject',
-  rejecting: 'Rejecting…',
-  rejected: 'Rejected',
-  skip: 'Skipped',
-}
+import { ReviewDecision } from '../wrappers/ReviewDecision'
+import { DECISION_STATES } from '../constants/decision-states'
 
 const EVENTS = {
   click: 'click',
@@ -43,22 +35,29 @@ export default {
   name: 'decision-list-item',
   components: { EmailGetter },
 
+  filters: {
+    localizeDecisionState (state) {
+      return {
+        [DECISION_STATES.approve]: 'Ready to approve',
+        [DECISION_STATES.approving]: 'Approving…',
+        [DECISION_STATES.approved]: 'Approved',
+        [DECISION_STATES.error]: 'Error',
+        [DECISION_STATES.reject]: 'Ready to reject',
+        [DECISION_STATES.rejecting]: 'Rejecting…',
+        [DECISION_STATES.rejected]: 'Rejected',
+        [DECISION_STATES.skip]: 'Skipped',
+      }[state]
+    },
+  },
+
   props: {
-    decision: { type: Object, required: true },
+    decision: { type: ReviewDecision, required: true },
   },
 
   data () {
     return {
-      DECISION_STATES,
       EVENTS,
     }
-  },
-
-  computed: {
-    isEditable () {
-      const editableStates = ['approve', 'reject', 'error', 'skip']
-      return editableStates.includes(this.decision.state)
-    },
   },
 }
 </script>

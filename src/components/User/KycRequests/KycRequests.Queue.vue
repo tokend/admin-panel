@@ -1,9 +1,9 @@
 <template>
   <div class="kyc-requests-queue">
-    <template v-if="pendingRequests.length">
+    <template v-if="reviewDecisions.length">
       <div class="kyc-requests-queue__warning-msg">
         <span class="kyc-requests-queue__header-title">
-          Your actions will not be saved
+          Your actions will be lost after page reload
         </span>
         <span class="kyc-requests-queue__header-subtitle">
           Please, do not reload the page until you finish your review
@@ -22,7 +22,7 @@
           />
 
           <div
-            v-if="currentDecision"
+            v-if="isCurrentDecisionShown"
             class="kyc-requests-queue__current-decision"
           >
             <h3>Current decision</h3>
@@ -31,7 +31,7 @@
 
           <pending-request-actions
             class="kyc-requests-queue__actions"
-            :request="pendingRequests[currentRequestIndex]"
+            :decision="currentDecision"
             @reviewed="nextRequest"
             @finished="isConfirmationShown = true"
           />
@@ -82,6 +82,9 @@ import { ErrorHandler } from '@/utils/ErrorHandler'
 import { REQUEST_STATES } from '@tokend/js-sdk'
 
 import { ChangeRoleRequest } from '@/api/responseHandlers/requests/ChangeRoleRequest'
+import { ReviewDecision } from './wrappers/ReviewDecision'
+import { DECISION_ACTIONS } from './constants/decision-actions'
+
 import { confirmAction } from '@/js/modals/confirmation_message'
 
 export default {
@@ -115,12 +118,32 @@ export default {
       return this.reviewDecisions
         .find(item => item.request === this.currentRequest)
     },
+
+    isCurrentDecisionShown () {
+      return this.currentDecision &&
+        this.currentDecision.action !== DECISION_ACTIONS.skip
+    },
+
+    isReviewActive () {
+      return this.reviewDecisions.some(item => item.isReadyForReview)
+    },
+  },
+
+  watch: {
+    isReviewActive (value) {
+      if (value) {
+        window.addEventListener('beforeunload', this.preventReload)
+      } else {
+        window.removeEventListener('beforeunload', this.preventReload)
+      }
+    },
   },
 
   async beforeRouteLeave (to, from, next) {
-    const isConfirmed = await confirmAction({
-      title: 'Quit the review? All your decisions will be lost',
-    })
+    const isConfirmed = !this.isReviewActive ||
+      await confirmAction({
+        title: 'Quit the review? All your decisions will be lost',
+      })
 
     if (isConfirmed) {
       next()
@@ -128,7 +151,6 @@ export default {
   },
 
   async created () {
-    window.addEventListener('beforeunload', this.preventReload)
     await this.loadList()
   },
 
@@ -137,9 +159,9 @@ export default {
   },
 
   methods: {
-    preventReload (e) {
+    preventReload (event) {
       const dialogMessage = 'Changes you made may not be saved.'
-      e.returnValue = dialogMessage
+      event.returnValue = dialogMessage
       return dialogMessage
     },
 
@@ -153,21 +175,22 @@ export default {
             filter: { state: REQUEST_STATES.pending },
             include: ['request_details'],
           })
+
         this.pendingRequests = data.map(item => new ChangeRoleRequest(item))
+        this.reviewDecisions = this.pendingRequests
+          .map(item => new ReviewDecision(item))
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }
       this.isLoading = false
     },
 
-    nextRequest (decision) {
+    nextRequest () {
       window.scrollTo({
         top: 0,
         left: 0,
         behavior: 'smooth',
       })
-
-      this.setDecision(decision)
       this.currentRequestIndex++
 
       if (this.isDecisionEdited) {
@@ -175,16 +198,6 @@ export default {
         this.isDecisionEdited = false
       } else if (this.currentRequestIndex === this.pendingRequests.length) {
         this.isConfirmationShown = true
-      }
-    },
-
-    setDecision (decision) {
-      if (this.isDecisionEdited) {
-        this.currentDecision.state = decision.state
-        this.currentDecision.reason = decision.reason
-        this.currentDecision.errorMessage = ''
-      } else {
-        this.reviewDecisions.push(decision)
       }
     },
 

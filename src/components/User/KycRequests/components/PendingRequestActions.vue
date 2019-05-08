@@ -1,7 +1,7 @@
 <template>
   <div class="pending-request-actions">
-    <div class="user-details-request__actions">
-      <div class="user-details-request__action">
+    <div class="pending-request-actions__btn-blocks">
+      <div class="pending-request-actions__btn-block">
         <button
           class="app__btn pending-request-actions__btn"
           @click="approve"
@@ -24,7 +24,7 @@
         </button>
       </div>
 
-      <div class="user-details-request__action">
+      <div class="pending-request-actions__btn-block">
         <button
           class="app__btn app__btn pending-request-actions__btn"
           @click="$emit(EVENTS.finished)"
@@ -76,7 +76,8 @@
 import { TextField } from '@comcom/fields'
 import Modal from '@comcom/modals/Modal'
 
-import { ChangeRoleRequest } from '@/api/responseHandlers/requests/ChangeRoleRequest'
+import { ReviewDecision } from '../wrappers/ReviewDecision'
+import { DECISION_ACTIONS } from '../constants/decision-actions'
 
 const EVENTS = {
   reviewed: 'reviewed',
@@ -84,17 +85,14 @@ const EVENTS = {
 }
 
 export default {
-  name: 'user-details-request',
+  name: 'pending-request-actions',
   components: {
     Modal,
     TextField,
   },
 
   props: {
-    request: {
-      type: ChangeRoleRequest,
-      default: () => new ChangeRoleRequest({}),
-    },
+    decision: { type: ReviewDecision, required: true },
   },
 
   data () {
@@ -109,28 +107,21 @@ export default {
 
   methods: {
     approve () {
-      const reviewDecision = {
-        request: this.request,
-        state: 'approve',
-      }
-      this.$emit(EVENTS.reviewed, reviewDecision)
+      this.decision.setReview({ action: DECISION_ACTIONS.approve })
+      this.$emit(EVENTS.reviewed)
     },
 
     reject () {
-      const reviewDecision = {
-        request: this.request,
-        state: 'reject',
+      this.decision.setReview({
+        action: DECISION_ACTIONS.reject,
         reason: this.rejectForm.reason,
-      }
-      this.$emit(EVENTS.reviewed, reviewDecision)
+      })
+      this.$emit(EVENTS.reviewed)
     },
 
     skip () {
-      const reviewDecision = {
-        request: this.request,
-        state: 'skip',
-      }
-      this.$emit(EVENTS.reviewed, reviewDecision)
+      this.decision.setReview({ action: DECISION_ACTIONS.skip })
+      this.$emit(EVENTS.reviewed)
     },
 
     showRejectModal () {
@@ -151,12 +142,12 @@ export default {
 </script>
 
 <style scoped>
-.user-details-request__actions {
+.pending-request-actions__btn-blocks {
   display: flex;
   justify-content: space-between;
 }
 
-.user-details-request__action {
+.pending-request-actions__btn-block {
   display: flex;
   margin: 0 -1rem;
 }

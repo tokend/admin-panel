@@ -5,7 +5,7 @@
         Index
       </router-link>
       <router-link :to="{ name: 'kycRequests.queue' }" slot="nav">
-        Verification queue
+        Queue
       </router-link>
     </user-header>
     <div class="app__user-container">
