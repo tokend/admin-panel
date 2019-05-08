@@ -60,11 +60,11 @@ import { ApiCallerFactory } from '@/api-caller-factory'
 import config from '../../config'
 
 import { Wallet } from '@tokend/js-sdk'
-import * as Sentry from '@sentry/browser'
 
 import './scss/app.scss'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { ErrorTracker } from '@/utils/ErrorTracker'
 import { snakeToCamelCase } from '@/utils/un-camel-case'
 
 function isIE () {
@@ -128,11 +128,9 @@ export default {
         )
         Sdk.sdk.useWallet(wallet)
         ApiCallerFactory.setDefaultWallet(wallet)
-        Sentry.configureScope((scope) => {
-          scope.setUser({
-            'accountId': this.$store.getters.GET_USER.keys.accountId,
-            'name': this.$store.getters.GET_USER.name,
-          })
+        ErrorTracker.setLoggedInUser({
+          'accountId': this.$store.getters.GET_USER.keys.accountId,
+          'name': this.$store.getters.GET_USER.name,
         })
         this.$store.dispatch('LOG_IN')
       }
