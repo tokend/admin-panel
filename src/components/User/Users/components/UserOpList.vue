@@ -30,8 +30,9 @@
         class="app-list__li"
         v-for="item in records"
         :key="item.id"
-        :to="{ name: 'users.operationDetails',
-               params: { operationId: item.id }
+        :to="{
+          name: 'users.operationDetails',
+          params: { operationId: item.id }
         }"
       >
         <span
@@ -88,7 +89,6 @@ import { CollectionLoader } from '@/components/common'
 
 import { ApiCallerFactory } from '@/api-caller-factory'
 
-import { formatAssetAmount } from '@/utils/formatters'
 import { clearObject } from '@/utils/clearObject'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
@@ -106,7 +106,6 @@ export default {
 
   data () {
     return {
-      formatAssetAmount,
       list: [],
       masterPubKey: Vue.params.MASTER_ACCOUNT,
       isLoading: false,

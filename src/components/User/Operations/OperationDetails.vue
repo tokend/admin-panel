@@ -3,16 +3,14 @@
     <div class="operation-details">
       <div class="app__block">
         <h2>Operation details</h2>
-        <div class="operation-details__op-details-wrp">
-          <details-reader :details="operation" />
-        </div>
+        <details-reader :details="operation" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import DetailsReader from '../../common/details/DetailsReader'
+import DetailsReader from '@comcom/details/DetailsReader'
 
 // ToDo: get operation by operationId from server
 import moment from 'moment'
@@ -29,19 +27,17 @@ export default {
     operationId: { type: String, required: true },
   },
   data: _ => ({
-    userId: null,
     operation: {},
   }),
   async created () {
-    window.scroll(0, 0)
     this.userId = this.$route.params.id
     await this.getOperations(this.operationId)
   },
   methods: {
     async getOperations (operationId) {
-      let response = {}
+      let operationList = {}
       try {
-        response = await ApiCallerFactory
+        const response = await ApiCallerFactory
           .createCallerInstance()
           .getWithSignature('/v3/history', {
             page: { order: 'desc' },
@@ -50,23 +46,24 @@ export default {
             }),
             include: ['operation.details'],
           })
+        operationList = response.data
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }
-      response.data.filter(item => {
-        if (item.id === this.operationId) {
-          const operationType = item.operation.details.type
+      operationList.filter(operation => {
+        if (operation.id === this.operationId) {
+          const operationType = operation.operation.details.type
             .replace(/operations-/g, '')
             .split('-')
             .join(' ')
-          this.operation = Object.assign({}, item, {
+          this.operation = Object.assign({}, operation, {
             operationType: operationType
               .charAt(0).toUpperCase() + operationType.slice(1),
-            ledgerCloseTime: moment(item.operation.appliedAt)
+            ledgerCloseTime: moment(operation.operation.appliedAt)
               .format('DD MMM YYYY [at] hh:mm:ss'),
-            sourceAccount: item.operation.source.id === this.masterPubKey ? 'Master' : item.operation.source.id,
-            receiverAccount: get(item, 'operation.details.receiverAccount.id'),
-            accountTo: get(item, 'operation.details.accountTo.id'),
+            sourceAccount: operation.operation.source.id === this.masterPubKey ? 'Master' : operation.operation.source.id,
+            receiverAccount: get(operation, 'operation.details.receiverAccount.id'),
+            accountTo: get(operation, 'operation.details.accountTo.id'),
           })
         }
       })

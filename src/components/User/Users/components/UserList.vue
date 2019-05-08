@@ -3,7 +3,7 @@
     <div class="user-list__filters-wrp">
       <div class="app-list-filters">
         <select-field
-          class="issuance-rl__filter app-list-filters__field"
+          class="app-list-filters__field"
           label="Role"
           v-model="filters.role"
         >
@@ -145,7 +145,6 @@ export default {
         role: '',
         requestor: '',
       },
-      userId: null,
       list: [],
       isLoading: false,
       ACCOUNT_ROLES: config.ACCOUNT_ROLES,
@@ -217,9 +216,7 @@ export default {
             id: id,
           },
         })
-        return
       }
-      this.userId = null
     },
 
     reloadCollectionLoader () {

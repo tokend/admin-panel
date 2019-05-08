@@ -3,7 +3,6 @@
     <div class="users-show__details-wrp">
       <user-details
         :id="id"
-        @reviewed="$emit(reviewed)"
       />
     </div>
 

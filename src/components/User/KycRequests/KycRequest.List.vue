@@ -3,7 +3,7 @@
     <div class="request-list__filters-wrp">
       <div class="app-list-filters">
         <select-field
-          class="issuance-rl__filter app-list-filters__field"
+          class="app-list-filters__field"
           label="Role to set"
           v-model="filters.roleToSet"
         >
@@ -90,6 +90,9 @@
             </span>
             <span class="app-list__cell app-list__cell--right">
               {{ formatDate(item.updatedAt) }}
+            </span>
+            <span class="app-list__cell app-list__cell--right">
+              {{ item | deriveRoleToSet }}
             </span>
           </button>
         </div>
@@ -184,7 +187,6 @@ export default {
     return {
       isLoading: false,
       list: [],
-      userId: null,
       filters: {
         state: 'pending',
         requestor: '',
@@ -263,7 +265,6 @@ export default {
           },
         })
       }
-      this.userId = null
     },
 
     reloadCollectionLoader () {
