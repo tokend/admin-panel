@@ -426,13 +426,12 @@ export default {
       this.isPending = true
       try {
         if (limits.accountRole == null) {
-          /* eslint-disable-next-line max-len */
-          // managelimitbuilder somehow doesnt accept opts.accountRole NULL value
+          // managelimitbuilder doesnt accept opts.accountRole NULL value
           delete limits.accountRole
         }
 
         if (limits.accountID == null) {
-          // managelimitbuilder somehow doesnt accept opts.accountID NULL value
+          // managelimitbuilder doesnt accept opts.accountID NULL value
           delete limits.accountID
         }
         const limitTypes = {}
