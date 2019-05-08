@@ -1,19 +1,19 @@
 <template>
-  <div class="user-details">
+  <div class="pending-request-viewer">
     <div>
       <template v-if="isLoaded">
-        <section class="user-details__section">
+        <section class="pending-request-viewer__section">
           <ul class="key-value-list">
             <li>
               <h3>Role to set</h3>
-              <p class="user-details__role-info">
+              <p class="pending-request-viewer__role-info">
                 {{ request.accountRoleToSet | roleIdToString }}
               </p>
             </li>
           </ul>
 
           <template v-if="request.externalDetails.length">
-            <div class="user-details__ext-details-wrp">
+            <div class="pending-request-viewer__ext-details-wrp">
               <h3>External details (provided by external services)</h3>
               <external-details-viewer
                 :external-details="request.externalDetails"
@@ -22,18 +22,18 @@
           </template>
         </section>
 
-        <section class="user-details__section">
+        <section class="pending-request-viewer__section">
           <account-section
             :user="user"
             :original-role="String(user.role)"
           />
         </section>
 
-        <section class="user-details__section">
+        <section class="pending-request-viewer__section">
           <template v-if="isKycLoaded">
             <kyc-documents-viewer
               v-if="request.accountRoleToSet !== ACCOUNT_ROLES.corporate"
-              class="user-details__documents"
+              class="pending-request-viewer__documents"
               :documents="kyc.documents"
               :user-account-id="user.address"
             />
@@ -188,7 +188,7 @@ export default {
 <style lang="scss" scoped>
 @import "~@/assets/scss/colors";
 
-.user-details__section {
+.pending-request-viewer__section {
   flex: 1;
 
   & > h1, & > h2, & > h3 {
@@ -196,15 +196,15 @@ export default {
   }
 }
 
-.user-details__section:not(:first-of-type) {
+.pending-request-viewer__section:not(:first-of-type) {
   margin-top: 3rem;
 }
 
-.user-details__ext-details-wrp {
+.pending-request-viewer__ext-details-wrp {
   margin: 2rem 0;
 }
 
-.user-details__documents {
+.pending-request-viewer__documents {
   margin-bottom: 2rem;
 }
 </style>

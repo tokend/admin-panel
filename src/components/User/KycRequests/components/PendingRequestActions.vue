@@ -1,23 +1,23 @@
 <template>
-  <div class="user-request">
+  <div class="pending-request-actions">
     <div class="user-details-request__actions">
       <div class="user-details-request__action">
         <button
-          class="app__btn user-request__btn"
+          class="app__btn pending-request-actions__btn"
           @click="approve"
         >
           Approve
         </button>
 
         <button
-          class="app__btn app__btn-outline user-request__btn"
+          class="app__btn app__btn-outline pending-request-actions__btn"
           @click="skip"
         >
           Skip
         </button>
 
         <button
-          class="app__btn app__btn--danger user-request__btn"
+          class="app__btn app__btn--danger pending-request-actions__btn"
           @click="showRejectModal"
         >
           Reject
@@ -26,7 +26,7 @@
 
       <div class="user-details-request__action">
         <button
-          class="app__btn app__btn user-request__btn"
+          class="app__btn app__btn pending-request-actions__btn"
           @click="$emit(EVENTS.finished)"
         >
           Finish
@@ -35,14 +35,14 @@
     </div>
 
     <modal
-      class="user-request__reject-modal"
+      class="pending-request-actions__reject-modal"
       v-if="rejectForm.isShown"
       @close-request="hideRejectModal()"
       max-width="40rem"
     >
       <form
-        class="user-request__reject-form"
-        id="user-request-reject-form"
+        class="pending-request-actions__reject-form"
+        id="pending-request-actions-reject-form"
         @submit.prevent="submitRejectForm"
       >
         <div class="app__form-row">
@@ -57,7 +57,7 @@
       <div class="app__form-actions">
         <button
           class="app__btn app__btn--danger"
-          form="user-request-reject-form"
+          form="pending-request-actions-reject-form"
         >
           Reject
         </button>
@@ -75,8 +75,6 @@
 <script>
 import { TextField } from '@comcom/fields'
 import Modal from '@comcom/modals/Modal'
-
-import { base } from '@tokend/js-sdk'
 
 import { ChangeRoleRequest } from '@/api/responseHandlers/requests/ChangeRoleRequest'
 
@@ -105,60 +103,34 @@ export default {
         reason: '',
         isShown: false,
       },
-
       EVENTS,
     }
   },
 
-  async created () {
-    this.tasksToRemove = this.request.pendingTasks
-  },
-
   methods: {
-    async approve () {
+    approve () {
       const reviewDecision = {
         request: this.request,
-        action: 'approve',
+        state: 'approve',
       }
-      // const action = base.xdr.ReviewRequestOpAction.approve().value
-
       this.$emit(EVENTS.reviewed, reviewDecision)
     },
 
-    async reject () {
+    reject () {
       const reviewDecision = {
         request: this.request,
-        action: 'reject',
+        state: 'reject',
         reason: this.rejectForm.reason,
       }
-      // const action = base.xdr.ReviewRequestOpAction.reject().value
-
       this.$emit(EVENTS.reviewed, reviewDecision)
     },
 
     skip () {
       const reviewDecision = {
         request: this.request,
-        action: 'skip',
+        state: 'skip',
       }
-
       this.$emit(EVENTS.reviewed, reviewDecision)
-    },
-
-    createReviewRequestOperation (action, reason = '') {
-      return base.ReviewRequestBuilder.reviewRequest({
-        requestID: this.request.id,
-        requestHash: this.request.hash,
-        requestType: this.request.type,
-        reviewDetails: {
-          tasksToAdd: this.request.tasksToAdd || 0,
-          tasksToRemove: this.request.tasksToRemove ||
-            this.request.pendingTasks,
-          externalDetails: '{}',
-        },
-        action,
-        reason,
-      })
     },
 
     showRejectModal () {
@@ -189,7 +161,7 @@ export default {
   margin: 0 -1rem;
 }
 
-.user-request__btn {
+.pending-request-actions__btn {
   width: 100%;
   max-width: 15rem;
   margin: 0 1rem;

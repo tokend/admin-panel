@@ -26,16 +26,7 @@
             class="kyc-requests-queue__current-decision"
           >
             <h3>Current decision</h3>
-            <ul class="key-value-list">
-              <li>
-                <span>Action</span>
-                <span>{{ currentDecision.action }}</span>
-              </li>
-              <li v-if="currentDecision.reason">
-                <span>Reason</span>
-                <span>{{ currentDecision.reason }}</span>
-              </li>
-            </ul>
+            <review-decision-viewer :decision="currentDecision" />
           </div>
 
           <pending-request-actions
@@ -50,7 +41,8 @@
       <template v-else>
         <review-summary
           :decisions="reviewDecisions"
-          @edit="editRequest"
+          @edit="editDecision"
+          @reset="resetQueue"
         />
       </template>
     </template>
@@ -81,6 +73,7 @@
 import PendingRequestViewer from './components/PendingRequestViewer'
 import PendingRequestActions from './components/PendingRequestActions'
 import ReviewSummary from './components/ReviewSummary'
+import ReviewDecisionViewer from './components/ReviewDecisionViewer'
 
 import config from '@/config'
 import { ApiCallerFactory } from '@/api-caller-factory'
@@ -89,6 +82,7 @@ import { ErrorHandler } from '@/utils/ErrorHandler'
 import { REQUEST_STATES } from '@tokend/js-sdk'
 
 import { ChangeRoleRequest } from '@/api/responseHandlers/requests/ChangeRoleRequest'
+import { confirmAction } from '@/js/modals/confirmation_message'
 
 export default {
   name: 'kyc-requests-queue',
@@ -96,13 +90,14 @@ export default {
     PendingRequestViewer,
     PendingRequestActions,
     ReviewSummary,
+    ReviewDecisionViewer,
   },
 
   data () {
     return {
       isLoading: false,
       isConfirmationShown: false,
-      isRequestEdited: false,
+      isDecisionEdited: false,
       pendingRequests: [],
       reviewDecisions: [],
       currentRequestIndex: 0,
@@ -112,18 +107,42 @@ export default {
   },
 
   computed: {
+    currentRequest () {
+      return this.pendingRequests[this.currentRequestIndex]
+    },
+
     currentDecision () {
-      return this.reviewDecisions.find(item => {
-        return item.request === this.pendingRequests[this.currentRequestIndex]
-      })
+      return this.reviewDecisions
+        .find(item => item.request === this.currentRequest)
     },
   },
 
+  async beforeRouteLeave (to, from, next) {
+    const isConfirmed = await confirmAction({
+      title: 'Quit the review? All your decisions will be lost',
+    })
+
+    if (isConfirmed) {
+      next()
+    }
+  },
+
   async created () {
+    window.addEventListener('beforeunload', this.preventReload)
     await this.loadList()
   },
 
+  destroyed () {
+    window.removeEventListener('beforeunload', this.preventReload)
+  },
+
   methods: {
+    preventReload (e) {
+      const dialogMessage = 'Changes you made may not be saved.'
+      e.returnValue = dialogMessage
+      return dialogMessage
+    },
+
     async loadList () {
       this.isLoading = true
       try {
@@ -141,35 +160,49 @@ export default {
       this.isLoading = false
     },
 
-    nextRequest (payload) {
+    nextRequest (decision) {
       window.scrollTo({
         top: 0,
         left: 0,
         behavior: 'smooth',
       })
 
-      if (this.isRequestEdited) {
-        this.currentDecision.action = payload.action
-        this.currentDecision.reason = payload.reason
+      this.setDecision(decision)
+      this.currentRequestIndex++
 
+      if (this.isDecisionEdited) {
         this.isConfirmationShown = true
-        this.isRequestEdited = false
-      } else {
-        this.reviewDecisions.push(payload)
-        this.currentRequestIndex++
-      }
-
-      if (this.currentRequestIndex === this.pendingRequests.length) {
+        this.isDecisionEdited = false
+      } else if (this.currentRequestIndex === this.pendingRequests.length) {
         this.isConfirmationShown = true
       }
     },
 
-    editRequest (decision) {
-      this.currentRequestIndex = this.pendingRequests.indexOf(
-        this.pendingRequests.find(item => item.id === decision.request.id)
-      )
-      this.isRequestEdited = true
+    setDecision (decision) {
+      if (this.isDecisionEdited) {
+        this.currentDecision.state = decision.state
+        this.currentDecision.reason = decision.reason
+        this.currentDecision.errorMessage = ''
+      } else {
+        this.reviewDecisions.push(decision)
+      }
+    },
+
+    editDecision (decision) {
+      const decisionRequest = this.pendingRequests
+        .find(item => item.id === decision.request.id)
+
+      this.currentRequestIndex = this.pendingRequests.indexOf(decisionRequest)
+      this.isDecisionEdited = true
       this.isConfirmationShown = false
+    },
+
+    async resetQueue () {
+      this.isConfirmationShown = false
+      this.reviewDecisions = []
+      this.currentRequestIndex = 0
+
+      await this.loadList()
     },
   },
 }

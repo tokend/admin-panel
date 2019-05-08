@@ -128,9 +128,3 @@ export default {
   },
 }
 </script>
-
-<style scoped lang="scss">
-.sale-manager-corporate-tab__details-wrp {
-  max-width: 48rem;
-}
-</style>
