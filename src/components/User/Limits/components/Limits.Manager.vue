@@ -230,6 +230,11 @@
           <p>Loading ...</p>
         </div>
       </template>
+      <template v-else-if="!specificUserAddress">
+        <div class="limits-manager__message-wrp">
+          <p>Please specify account</p>
+        </div>
+      </template>
       <template v-else>
         <div class="limits-manager__message-wrp">
           <p>Such account not found</p>
