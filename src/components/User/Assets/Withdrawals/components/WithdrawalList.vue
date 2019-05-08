@@ -18,6 +18,7 @@
         </select-field>
 
         <select-field
+          v-if="assets.length"
           class="app-list-filters__field"
           label="Asset"
           v-model="filters.asset">
@@ -25,8 +26,21 @@
             :value="item.code"
             v-for="item in assets"
             :key="item.code"
+            :selected="isSelected(item.code)"
           >
             {{ item.code }}
+          </option>
+        </select-field>
+
+        <select-field
+          v-else
+          class="app-list-filters__field"
+          label="Asset"
+          value="no-assets"
+          disabled
+        >
+          <option value="no-assets">
+            No withdrawable assets
           </option>
         </select-field>
 
@@ -240,6 +254,10 @@ export default {
     refreshList () {
       this.getList()
       this.requestToShow = null
+    },
+
+    isSelected (code) {
+      return DEFAULT_QUOTE_ASSET === code || this.assets[0].code === code
     },
   },
 }
