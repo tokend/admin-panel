@@ -23,12 +23,10 @@
             label="Account role"
             :value="account.roleId | roleIdToString"
           />
-          <!-- eslint-disable max-len -->
           <detail
             label="Request type"
-            :value="LIMITS_REQUEST_STATES_STR[get(request, 'details.requestType')]"
+            :value="requestType"
           />
-          <!-- eslint-enable max-len -->
           <detail label="Account email">
             <email-getter :account-id="account.id" />
           </detail>
@@ -118,7 +116,7 @@
       </div>
     </template>
     <template v-else>
-      <template v-if="!loaded">
+      <template v-if="!isLoaded">
         <p>
           Loading...
         </p>
@@ -300,16 +298,15 @@ export default {
       isReset: false,
     },
   }),
-
   computed: {
     currentLimits () {
       if (!this.limits) return null
       const limits = this.limits
         .filter(limit => limit.assetCode === this.assetCode)
-      const operationTypeLimits = limits.find(limit => {
-        return limit.statsOpType === this.desiredLimitDetails.statsOpType
-      })
-
+      const operationTypeLimits = limits
+        .find(limit => {
+          return limit.statsOpType === this.desiredLimitDetails.statsOpType
+        })
       return operationTypeLimits || {
         ...DEFAULT_LIMIT_STRUCT,
         accountId: this.request.requestor,
@@ -319,14 +316,19 @@ export default {
     },
 
     newLimit () {
-      const opType = OPERATION_TYPES[this.desiredLimitDetails.operationType]
-
+      const requestDetails = this.desiredLimitDetails
+      const operationType = OPERATION_TYPES[requestDetails.operationType]
+      const limitsList = Object.entries(requestDetails.limits)
+      const limits = {}
+      for (let limit of limitsList) {
+        limits[limit[0]] = limit[1] || DEFAULT_LIMIT_STRUCT[limit[0]]
+      }
       return {
         ...DEFAULT_LIMIT_STRUCT,
-        ...this.desiredLimitDetails.limits,
+        ...limits,
         accountId: this.request.requestor,
         assetCode: this.assetCode,
-        statsOpType: STATS_OPERATION_TYPES[opType],
+        statsOpType: STATS_OPERATION_TYPES[operationType],
       }
     },
 
@@ -334,17 +336,19 @@ export default {
       if (!this.desiredLimitDetails.documents) return
       return this.desiredLimitDetails.documents
     },
+    requestType () {
+      return LIMITS_REQUEST_STATES_STR[get(this.request, 'details.requestType')]
+    },
   },
-
   async created () {
     try {
       await this.getRequest()
       const limitRequest = await api.requests.get(this.id)
-      const requestType = snakeToCamelCase(limitRequest.details.requestType)
       this.desiredLimitDetails = limitRequest
-        .details[requestType].details || '{}'
-    } catch (e) {
-      ErrorHandler.processWithoutFeedback(e)
+        .details[snakeToCamelCase(limitRequest.details.requestType)].details ||
+        '{}'
+    } catch (error) {
+      ErrorHandler.process(error)
     }
   },
 
@@ -355,8 +359,10 @@ export default {
     async getRequest () {
       this.$store.commit('OPEN_LOADER')
       const request = await api.requests.get(this.id)
-      const requestType = snakeToCamelCase(request.details.requestType)
-      const requestDetails = request.details[requestType].details
+      const camelCasedRequestType = snakeToCamelCase(
+        request.details.requestType
+      )
+      const requestDetails = request.details[camelCasedRequestType].details
       const [account, limits] = await Promise.all([
         Sdk.horizon.account.get(request.requestor),
         Sdk.horizon.account.getLimits(request.requestor),
@@ -402,7 +408,10 @@ export default {
         })
 
         this.$router.push({ name: 'limits.requests' })
-        this.$store.dispatch('SET_INFO', 'Request approved. Limits are changed')
+        this.$store.dispatch(
+          'SET_INFO',
+          'Request approved. Limits are changed'
+        )
       } catch (error) {
         ErrorHandler.process(error)
       }
@@ -422,7 +431,10 @@ export default {
         }, this.request)
 
         this.$router.push({ name: 'limits.requests' })
-        this.$store.dispatch('SET_INFO', 'Request rejected. Limits are not changed')
+        this.$store.dispatch(
+          'SET_INFO',
+          'Request rejected. Limits are not changed'
+        )
       } catch (error) {
         this.isPending = false
         ErrorHandler.process(error)
@@ -444,8 +456,10 @@ export default {
           reason: requireDocsDetails,
           isPermanent: false,
         })
-
-        this.$store.dispatch('SET_INFO', 'Upload additional documents requested.')
+        this.$store.dispatch(
+          'SET_INFO',
+          'Upload additional documents requested.'
+        )
         this.isRequiringDocs = false
       } catch (error) {
         this.isPending = false

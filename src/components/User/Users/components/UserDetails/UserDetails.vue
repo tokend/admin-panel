@@ -138,7 +138,7 @@
             <h3>Latest request</h3>
             <!-- eslint-disable max-len -->
             <p class="text">
-              Create a {{ requestToReview.accountRoleToSet | roleIdToString | lowerCase }} account:
+              Create a "{{ requestToReview.accountRoleToSet | roleIdToString }}" account:
               {{ requestToReview.state }}
             </p>
             <!-- eslint-enable max-len -->
