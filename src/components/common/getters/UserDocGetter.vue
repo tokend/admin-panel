@@ -13,8 +13,8 @@
       <div v-if="href && isLoaded">
         <img :src="href">
       </div>
-      <span v-else-if="isNoFile" class="danger">
-        No file found
+      <span v-else-if="isNoFile">
+        —
       </span>
       <span v-else-if="isFailed" class="danger">
         (Error)

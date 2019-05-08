@@ -11,6 +11,7 @@ for further information about branching and tagging conventions.
 #### Added
 - New "Capital deployment" fee type
 - "Unblocked" change role request detection in user operation list
+- Terms field in asset details
 - KYC verification queue page for quick requests review
 - "US Verified" & "US Accredited" roles to the roleIdToString filter
 - "hash", "type", & "requestor" fields to `ChangeRoleRequest` wrapper
