@@ -101,7 +101,7 @@ export default {
 
     kycAvatarMimeType () {
       return _get(this.corporate, 'documents.kyc_avatar.mime_type')
-    }
+    },
   },
 
   created () {

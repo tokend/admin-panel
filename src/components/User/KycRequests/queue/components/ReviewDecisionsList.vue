@@ -7,10 +7,13 @@
             Email
           </span>
           <span class="app-list__cell">
-            Role
+            Role to set
           </span>
           <span class="app-list__cell">
             State
+          </span>
+          <span class="app-list__cell">
+            Reason
           </span>
         </div>
 

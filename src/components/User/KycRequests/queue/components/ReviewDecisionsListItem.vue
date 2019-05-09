@@ -9,14 +9,21 @@
       :account-id="decision.request.requestor"
       is-titled
     />
-    <span class="app-list__cell">
+    <span
+      class="app-list__cell"
+      :title="decision.request.accountRoleToSet | roleIdToString"
+    >
       {{ decision.request.accountRoleToSet | roleIdToString }}
     </span>
     <span
       class="app-list__cell review-decisions-list-item__state"
       :class="`review-decisions-list-item__state--${decision.state}`"
+      :title="decision.state | localizeDecisionState"
     >
       {{ decision.state | localizeDecisionState }}
+    </span>
+    <span class="app-list__cell" :title="decision.reason">
+      {{ decision.reason || '&mdash;' }}
     </span>
   </button>
 </template>

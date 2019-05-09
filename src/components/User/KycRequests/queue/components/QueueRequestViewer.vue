@@ -3,14 +3,14 @@
     <div>
       <template v-if="isLoaded">
         <section class="queue-request-viewer__section">
-          <ul class="key-value-list">
-            <li>
-              <h3>Role to set</h3>
-              <p class="queue-request-viewer__role-info">
+          <div class="queue-request-viewer__account-role">
+            <span>
+              <strong>Role to set:</strong>
+              <span>
                 {{ request.accountRoleToSet | roleIdToString }}
-              </p>
-            </li>
-          </ul>
+              </span>
+            </span>
+          </div>
 
           <template v-if="request.externalDetails.length">
             <div class="queue-request-viewer__ext-details-wrp">
@@ -195,6 +195,16 @@ export default {
 
   & > h1, & > h2, & > h3 {
     margin-bottom: 1.2rem;
+  }
+}
+
+.queue-request-viewer__account-role {
+  border: solid 0.1rem;
+  padding: 1rem;
+  text-align: center;
+
+  & span {
+    font-size: 1.8rem;
   }
 }
 
