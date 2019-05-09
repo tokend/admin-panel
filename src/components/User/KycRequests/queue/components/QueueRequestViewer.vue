@@ -34,7 +34,7 @@
             <queue-request-documents
               v-if="request.accountRoleToSet !== ACCOUNT_ROLES.corporate"
               class="queue-request-viewer__documents"
-              :documents="kyc.documents"
+              :documents="kycDocuments"
               :user-account-id="user.address"
             />
 
@@ -134,6 +134,7 @@ export default {
       isKycLoadFailed: false,
       user: {},
       kyc: {},
+      kycDocuments: {},
     }
   },
 
@@ -175,6 +176,7 @@ export default {
       try {
         const { data } = await Sdk.api.blobs.get(blodId, this.user.address)
         this.kyc = deepCamelCase(fromKycTemplate(JSON.parse(data.value)))
+        this.kycDocuments = deepCamelCase(JSON.parse(data.value)).documents
         this.isKycLoaded = true
       } catch (error) {
         ErrorHandler.process(error)

@@ -158,6 +158,10 @@
               assetRequest,
               'operationDetails.details.logo.key'
             )"
+            :mime-type="safeGet(
+              assetRequest,
+              'operationDetails.details.logo.mime_type'
+            )"
           />
         </span>
       </div>

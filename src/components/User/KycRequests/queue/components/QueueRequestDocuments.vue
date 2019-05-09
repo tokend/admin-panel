@@ -15,7 +15,8 @@
         </span>
         <user-doc-getter
           class="queue-request-documents__doc-getter"
-          :file-key="documents.kycSelfie"
+          :file-key="documents.kycSelfie.key"
+          :mime-type="documents.kycSelfie.mimeType"
         />
       </div>
 
@@ -33,7 +34,8 @@
 
         <user-doc-getter
           class="queue-request-documents__doc-getter"
-          :file-key="documents.kycIdDocument.face"
+          :file-key="documents.kycIdDocument.face.key"
+          :mime-type="documents.kycIdDocument.face.mimeType"
         />
       </div>
 
@@ -44,7 +46,8 @@
         <span>ID Document back side: </span>
         <user-doc-getter
           class="queue-request-documents__doc-getter"
-          :file-key="documents.kycIdDocument.back"
+          :file-key="documents.kycIdDocument.back.key"
+          :mime-type="documents.kycIdDocument.back.mimeType"
         />
       </div>
 
@@ -55,7 +58,8 @@
         <span>Avatar</span>
         <user-doc-getter
           class="queue-request-documents__doc-getter"
-          :file-key="documents.kycAvatar"
+          :file-key="documents.kycAvatar.key"
+          :mime-type="documents.kycAvatar.mimeType"
         />
       </div>
 
@@ -66,7 +70,8 @@
         <span>Proof document</span>
         <user-doc-getter
           class="queue-request-documents__doc-getter"
-          :file-key="documents.kycProofInvestor"
+          :file-key="documents.kycProofInvestor.key"
+          :mime-type="documents.kycProofInvestor.mimeType"
         />
       </div>
     </div>
