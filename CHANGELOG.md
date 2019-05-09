@@ -11,9 +11,10 @@ for further information about branching and tagging conventions.
 #### Added
 - New "Capital deployment" fee type
 - "Unblocked" change role request detection in user operation list
+- Terms field in asset details
 - Show all the limits in one screen, "Not set" and "Unlimited" labels,
   ability to remove limits and move `Limits.Manager` to v3 endpoint
-
+  
 #### Fixed
 - Fixed a bug when we confirm a request for changes in limits,
   at which we received empty values and could not confirm or cancel the request.
