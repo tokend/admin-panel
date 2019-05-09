@@ -12,6 +12,9 @@ for further information about branching and tagging conventions.
 - New "Capital deployment" fee type
 - "Unblocked" change role request detection in user operation list
 
+#### Changed
+- Routing to UserDetails and OperationDetails pages from User and KYCRequest
+
 #### Fixed
 - Fixed a bug when we confirm a request for changes in limits,
   at which we received empty values and could not confirm or cancel the request.
