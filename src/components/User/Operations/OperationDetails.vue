@@ -15,7 +15,7 @@ import DetailsReader from '@comcom/details/DetailsReader'
 // ToDo: get operation by operationId from server
 import moment from 'moment'
 import get from 'lodash/get'
-import { ErrorHandler } from '@/utilss./ErrorHandler'
+import { ErrorHandler } from '@/utils/ErrorHandler'
 import { ApiCallerFactory } from '@/api-caller-factory'
 import { clearObject } from '@/utils/clearObject'
 
