@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="operation.id">
     <div class="operation-details">
       <div class="app__block">
         <h2>Operation details</h2>
