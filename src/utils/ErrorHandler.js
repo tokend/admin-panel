@@ -4,22 +4,22 @@ import _get from 'lodash/get'
 import { ErrorTracker } from '@/utils/ErrorTracker'
 
 export class ErrorHandler {
-  static process (error, sentryReportConfig = {}) {
-    ErrorHandler.processWithoutFeedback(error, sentryReportConfig)
+  static process (error, errorTrackerConfig = {}) {
+    ErrorHandler.processWithoutFeedback(error, errorTrackerConfig)
     const message = ErrorHandler.extractErrorMessage(error)
     ErrorHandler.showFeedback(message)
   }
 
-  static processWithoutFeedback (error, sentryReportConfig = {}) {
+  static processWithoutFeedback (error, errorTrackerConfig = {}) {
     log.error(error)
-    ErrorHandler.captureSentryMessage(error, sentryReportConfig)
+    ErrorHandler.trackMessage(error, errorTrackerConfig)
   }
 
-  static captureSentryMessage (error, opts = {}) {
-    const { sentryReportTitle = '', skipSentryReport = false } = opts
-    if (!skipSentryReport) {
-      const msg = sentryReportTitle || ErrorHandler.extractErrorMessage(error)
-      ErrorTracker.trackMessage(msg)
+  static trackMessage (error, opts = {}) {
+    const { translationId = '', skipTrack = false } = opts
+    if (!skipTrack) {
+      const msgTrId = translationId || ErrorHandler.extractErrorMessage(error)
+      ErrorTracker.trackMessage(msgTrId)
     }
   }
 
