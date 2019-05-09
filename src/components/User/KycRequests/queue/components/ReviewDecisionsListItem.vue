@@ -1,6 +1,6 @@
 <template>
   <button
-    class="app-list__li decision-list-item"
+    class="app-list__li review-decisions-list-item"
     :disabled="!decision.isEditable"
     @click="$emit(EVENTS.click, decision)"
   >
@@ -13,8 +13,8 @@
       {{ decision.request.accountRoleToSet | roleIdToString }}
     </span>
     <span
-      class="app-list__cell decision-list-item__state"
-      :class="`decision-list-item__state--${decision.state}`"
+      class="app-list__cell review-decisions-list-item__state"
+      :class="`review-decisions-list-item__state--${decision.state}`"
     >
       {{ decision.state | localizeDecisionState }}
     </span>
@@ -32,7 +32,7 @@ const EVENTS = {
 }
 
 export default {
-  name: 'decision-list-item',
+  name: 'review-decisions-list-item',
   components: { EmailGetter },
 
   filters: {
@@ -65,12 +65,12 @@ export default {
 <style lang="scss" scoped>
 @import "~@/assets/scss/colors";
 
-.decision-list-item__state--error {
+.review-decisions-list-item__state--error {
   color: $color-danger;
 }
 
-.decision-list-item__state--approved,
-.decision-list-item__state--rejected {
+.review-decisions-list-item__state--approved,
+.review-decisions-list-item__state--rejected {
   color: $color-success;
 }
 </style>

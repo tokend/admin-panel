@@ -1,19 +1,19 @@
 <template>
-  <div class="pending-request-viewer">
+  <div class="queue-request-viewer">
     <div>
       <template v-if="isLoaded">
-        <section class="pending-request-viewer__section">
+        <section class="queue-request-viewer__section">
           <ul class="key-value-list">
             <li>
               <h3>Role to set</h3>
-              <p class="pending-request-viewer__role-info">
+              <p class="queue-request-viewer__role-info">
                 {{ request.accountRoleToSet | roleIdToString }}
               </p>
             </li>
           </ul>
 
           <template v-if="request.externalDetails.length">
-            <div class="pending-request-viewer__ext-details-wrp">
+            <div class="queue-request-viewer__ext-details-wrp">
               <h3>External details (provided by external services)</h3>
               <external-details-viewer
                 :external-details="request.externalDetails"
@@ -22,18 +22,18 @@
           </template>
         </section>
 
-        <section class="pending-request-viewer__section">
+        <section class="queue-request-viewer__section">
           <account-section
             :user="user"
             :original-role="String(user.role)"
           />
         </section>
 
-        <section class="pending-request-viewer__section">
+        <section class="queue-request-viewer__section">
           <template v-if="isKycLoaded">
-            <kyc-documents-viewer
+            <queue-request-documents
               v-if="request.accountRoleToSet !== ACCOUNT_ROLES.corporate"
-              class="pending-request-viewer__documents"
+              class="queue-request-viewer__documents"
               :documents="kyc.documents"
               :user-account-id="user.address"
             />
@@ -92,12 +92,12 @@ import AccountSection from '@/components/User/Users/components/UserDetails/UserD
 
 import KycSyndicateSection from '@/components/User/Sales/components/SaleManager/SaleManager.SyndicateTab'
 
-import GeneralKycViewer from '../../Users/components/UserDetails/UserDetails.GeneralKycViewer'
-import VerifiedKycViewer from '../../Users/components/UserDetails/UserDetails.VerifiedKycViewer'
-import AccreditedKycViewer from '../../Users/components/UserDetails/UserDetails.AccreditedKycViewer'
+import GeneralKycViewer from '@/components/User/Users/components/UserDetails/UserDetails.GeneralKycViewer'
+import VerifiedKycViewer from '@/components/User/Users/components/UserDetails/UserDetails.VerifiedKycViewer'
+import AccreditedKycViewer from '@/components/User/Users/components/UserDetails/UserDetails.AccreditedKycViewer'
 
-import KycDocumentsViewer from './KycDocumentsViewer'
-import ExternalDetailsViewer from '../../Users/components/UserDetails/UserDetails.ExternalDetailsViewer'
+import QueueRequestDocuments from './QueueRequestDocuments'
+import ExternalDetailsViewer from '@/components/User/Users/components/UserDetails/UserDetails.ExternalDetailsViewer'
 
 import { ApiCallerFactory } from '@/api-caller-factory'
 import { ErrorHandler } from '@/utils/ErrorHandler'
@@ -117,7 +117,7 @@ export default {
     VerifiedKycViewer,
     GeneralKycViewer,
     ExternalDetailsViewer,
-    KycDocumentsViewer,
+    QueueRequestDocuments,
   },
 
   props: {
@@ -188,7 +188,7 @@ export default {
 <style lang="scss" scoped>
 @import "~@/assets/scss/colors";
 
-.pending-request-viewer__section {
+.queue-request-viewer__section {
   flex: 1;
 
   & > h1, & > h2, & > h3 {
@@ -196,15 +196,15 @@ export default {
   }
 }
 
-.pending-request-viewer__section:not(:first-of-type) {
+.queue-request-viewer__section:not(:first-of-type) {
   margin-top: 3rem;
 }
 
-.pending-request-viewer__ext-details-wrp {
+.queue-request-viewer__ext-details-wrp {
   margin: 2rem 0;
 }
 
-.pending-request-viewer__documents {
+.queue-request-viewer__documents {
   margin-bottom: 2rem;
 }
 </style>

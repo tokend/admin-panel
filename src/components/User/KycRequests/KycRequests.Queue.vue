@@ -10,38 +10,35 @@
         </span>
       </div>
 
-      <template v-if="!isConfirmationShown">
+      <template v-if="!isDecisionsListShown">
         <div class="app__block">
           <h2>
             {{ currentRequestIndex + 1 }} /
             {{ pendingRequests.length }} requests
           </h2>
 
-          <pending-request-viewer
+          <queue-request-viewer
             :request="pendingRequests[currentRequestIndex]"
           />
 
-          <div
-            v-if="isCurrentDecisionShown"
-            class="kyc-requests-queue__current-decision"
-          >
+          <div class="kyc-requests-queue__current-decision">
             <h3>Current decision</h3>
             <review-decision-viewer :decision="currentDecision" />
           </div>
 
-          <pending-request-actions
+          <queue-request-actions
             class="kyc-requests-queue__actions"
             :decision="currentDecision"
             @reviewed="nextRequest"
-            @finished="isConfirmationShown = true"
+            @finished="isDecisionsListShown = true"
           />
         </div>
       </template>
 
       <template v-else>
-        <review-summary
+        <review-decisions-list
           :decisions="reviewDecisions"
-          @edit="editDecision"
+          @edit="editSingleDecision"
           @reset="resetQueue"
         />
       </template>
@@ -51,17 +48,13 @@
       <div>
         <template v-if="isLoading">
           <p>
-            <span>
-              Loading...
-            </span>
+            <span>Loading...</span>
           </p>
         </template>
 
         <template v-else>
           <p>
-            <span>
-              No requests to review yet
-            </span>
+            <span>No requests to review yet</span>
           </p>
         </template>
       </div>
@@ -70,10 +63,10 @@
 </template>
 
 <script>
-import PendingRequestViewer from './components/PendingRequestViewer'
-import PendingRequestActions from './components/PendingRequestActions'
-import ReviewSummary from './components/ReviewSummary'
-import ReviewDecisionViewer from './components/ReviewDecisionViewer'
+import QueueRequestViewer from './queue/components/QueueRequestViewer'
+import QueueRequestActions from './queue/components/QueueRequestActions'
+import ReviewDecisionsList from './queue/components/ReviewDecisionsList'
+import ReviewDecisionViewer from './queue/components/ReviewDecisionViewer'
 
 import config from '@/config'
 import { ApiCallerFactory } from '@/api-caller-factory'
@@ -82,25 +75,24 @@ import { ErrorHandler } from '@/utils/ErrorHandler'
 import { REQUEST_STATES } from '@tokend/js-sdk'
 
 import { ChangeRoleRequest } from '@/api/responseHandlers/requests/ChangeRoleRequest'
-import { ReviewDecision } from './wrappers/ReviewDecision'
-import { DECISION_ACTIONS } from './constants/decision-actions'
+import { ReviewDecision } from './queue/wrappers/ReviewDecision'
 
 import { confirmAction } from '@/js/modals/confirmation_message'
 
 export default {
   name: 'kyc-requests-queue',
   components: {
-    PendingRequestViewer,
-    PendingRequestActions,
-    ReviewSummary,
+    QueueRequestViewer,
+    QueueRequestActions,
+    ReviewDecisionsList,
     ReviewDecisionViewer,
   },
 
   data () {
     return {
       isLoading: false,
-      isConfirmationShown: false,
-      isDecisionEdited: false,
+      isDecisionsListShown: false,
+      isSingleDecisionEdited: false,
       pendingRequests: [],
       reviewDecisions: [],
       currentRequestIndex: 0,
@@ -117,11 +109,6 @@ export default {
     currentDecision () {
       return this.reviewDecisions
         .find(item => item.request === this.currentRequest)
-    },
-
-    isCurrentDecisionShown () {
-      return this.currentDecision &&
-        this.currentDecision.action !== DECISION_ACTIONS.skip
     },
 
     isReviewActive () {
@@ -160,9 +147,8 @@ export default {
 
   methods: {
     preventReload (event) {
-      const dialogMessage = 'Changes you made may not be saved.'
-      event.returnValue = dialogMessage
-      return dialogMessage
+      event.returnValue = ''
+      return ''
     },
 
     async loadList () {
@@ -193,25 +179,25 @@ export default {
       })
       this.currentRequestIndex++
 
-      if (this.isDecisionEdited) {
-        this.isConfirmationShown = true
-        this.isDecisionEdited = false
+      if (this.isSingleDecisionEdited) {
+        this.isDecisionsListShown = true
+        this.isSingleDecisionEdited = false
       } else if (this.currentRequestIndex === this.pendingRequests.length) {
-        this.isConfirmationShown = true
+        this.isDecisionsListShown = true
       }
     },
 
-    editDecision (decision) {
+    editSingleDecision (decision) {
       const decisionRequest = this.pendingRequests
         .find(item => item.id === decision.request.id)
 
       this.currentRequestIndex = this.pendingRequests.indexOf(decisionRequest)
-      this.isDecisionEdited = true
-      this.isConfirmationShown = false
+      this.isSingleDecisionEdited = true
+      this.isDecisionsListShown = false
     },
 
     async resetQueue () {
-      this.isConfirmationShown = false
+      this.isDecisionsListShown = false
       this.reviewDecisions = []
       this.currentRequestIndex = 0
 

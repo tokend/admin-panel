@@ -32,15 +32,22 @@ export class ReviewDecision {
     return readyForReviewStates.includes(this.state)
   }
 
-  setReview ({ action, reason = '' }) {
-    this.action = action
-    this.state = DECISION_STATES[this.action]
-
-    this.reason = reason
-    this.errorMessage = ''
+  approve () {
+    this._setReview({ action: DECISION_ACTIONS.approve })
   }
 
-  setProcessingState () {
+  reject (reason) {
+    this._setReview({
+      action: DECISION_ACTIONS.reject,
+      reason,
+    })
+  }
+
+  skip () {
+    this._setReview({ action: DECISION_ACTIONS.skip })
+  }
+
+  setProcessing () {
     switch (this.action) {
       case DECISION_ACTIONS.approve:
         this.state = DECISION_STATES.approving
@@ -51,7 +58,7 @@ export class ReviewDecision {
     }
   }
 
-  setReviewedState () {
+  setReviewed () {
     switch (this.action) {
       case DECISION_ACTIONS.approve:
         this.state = DECISION_STATES.approved
@@ -62,8 +69,16 @@ export class ReviewDecision {
     }
   }
 
-  setErrorState (errorMessage) {
+  setError (errorMessage) {
     this.state = DECISION_STATES.error
     this.errorMessage = errorMessage
+  }
+
+  _setReview ({ action, reason = '' }) {
+    this.action = action
+    this.state = DECISION_STATES[this.action]
+
+    this.reason = reason
+    this.errorMessage = ''
   }
 }

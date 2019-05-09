@@ -1,27 +1,27 @@
 <template>
-  <div class="kyc-documents-viewer">
-    <h3 class="kyc-documents-viewer__title">
+  <div class="queue-request-documents">
+    <h3 class="queue-request-documents__title">
       User documents
     </h3>
 
-    <div class="kyc-documents-viewer__list">
+    <div class="queue-request-documents__list">
       <div
         v-if="documents.kycSelfie"
-        class="kyc-documents-viewer__list-item"
+        class="queue-request-documents__list-item"
       >
         <span>
           Photo with verification code
           <strong>{{ userAccountId.slice(1, 6) }}</strong>:
         </span>
         <user-doc-getter
-          class="kyc-documents-viewer__doc-getter"
+          class="queue-request-documents__doc-getter"
           :file-key="documents.kycSelfie"
         />
       </div>
 
       <div
         v-if="documents.kycIdDocument.face"
-        class="kyc-documents-viewer__list-item"
+        class="queue-request-documents__list-item"
       >
         <span v-if="documents.kycIdDocument.back">
           ID Document front side:
@@ -32,40 +32,40 @@
         </span>
 
         <user-doc-getter
-          class="kyc-documents-viewer__doc-getter"
+          class="queue-request-documents__doc-getter"
           :file-key="documents.kycIdDocument.face"
         />
       </div>
 
       <div
         v-if="documents.kycIdDocument.back"
-        class="kyc-documents-viewer__list-item"
+        class="queue-request-documents__list-item"
       >
         <span>ID Document back side: </span>
         <user-doc-getter
-          class="kyc-documents-viewer__doc-getter"
+          class="queue-request-documents__doc-getter"
           :file-key="documents.kycIdDocument.back"
         />
       </div>
 
       <div
         v-if="documents.kycAvatar"
-        class="kyc-documents-viewer__list-item"
+        class="queue-request-documents__list-item"
       >
         <span>Avatar</span>
         <user-doc-getter
-          class="kyc-documents-viewer__doc-getter"
+          class="queue-request-documents__doc-getter"
           :file-key="documents.kycAvatar"
         />
       </div>
 
       <div
         v-if="documents.kycProofInvestor"
-        class="kyc-documents-viewer__list-item"
+        class="queue-request-documents__list-item"
       >
         <span>Proof document</span>
         <user-doc-getter
-          class="kyc-documents-viewer__doc-getter"
+          class="queue-request-documents__doc-getter"
           :file-key="documents.kycProofInvestor"
         />
       </div>
@@ -77,7 +77,7 @@
 import { UserDocGetter } from '@comcom/getters'
 
 export default {
-  name: 'kyc-documents-viewer',
+  name: 'queue-request-documents',
   components: {
     UserDocGetter,
   },
@@ -90,23 +90,23 @@ export default {
 </script>
 
 <style scoped>
-.kyc-documents-viewer__title {
+.queue-request-documents__title {
   margin-bottom: 0.6rem;
 }
-.kyc-documents-viewer__list {
+.queue-request-documents__list {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   margin: -2rem;
 }
 
-.kyc-documents-viewer__list-item {
+.queue-request-documents__list-item {
   flex: 0 1 calc(50% - 4rem);
   margin: 2.4rem 2rem;
   width: 10rem;
 }
 
-.kyc-documents-viewer__doc-getter {
+.queue-request-documents__doc-getter {
   margin-top: 1rem;
 }
 </style>

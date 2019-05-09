@@ -1,40 +1,31 @@
 <template>
-  <div class="review-summary">
-    <div class="review-summary__list-wrp">
-      <template v-if="decisions.length">
-        <div class="app-list">
-          <div class="app-list__header">
-            <span class="app-list__cell">
-              Email
-            </span>
-            <span class="app-list__cell">
-              Role
-            </span>
-            <span class="app-list__cell">
-              State
-            </span>
-          </div>
-
-          <decision-list-item
-            v-for="decision in decisions"
-            :decision="decision"
-            :key="decision.request.id"
-            @click="emitDecisionEditing"
-          />
+  <div class="review-decisions-list">
+    <div class="review-decisions-list__list-wrp">
+      <div class="app-list">
+        <div class="app-list__header">
+          <span class="app-list__cell">
+            Email
+          </span>
+          <span class="app-list__cell">
+            Role
+          </span>
+          <span class="app-list__cell">
+            State
+          </span>
         </div>
-      </template>
 
-      <template v-else>
-        <p class="app__block">
-          You haven't reviewed any request
-        </p>
-      </template>
+        <review-decisions-list-item
+          v-for="decision in decisions"
+          :decision="decision"
+          :key="decision.request.id"
+          @click="emitDecisionEditing"
+        />
+      </div>
     </div>
 
-    <div class="review-summary__actions">
+    <div class="review-decisions-list__actions">
       <button
-        v-if="decisions.length"
-        class="app__btn review-summary__btn"
+        class="app__btn review-decisions-list__btn"
         :disabled="!readyForReviewDecisions.length"
         :title="readyForReviewDecisions.length
           ? ''
@@ -45,7 +36,7 @@
       </button>
 
       <button
-        class="app__btn review-summary__btn"
+        class="app__btn review-decisions-list__btn"
         @click="resetReview"
       >
         Start new review
@@ -55,7 +46,7 @@
 </template>
 
 <script>
-import DecisionListItem from './DecisionListItem'
+import ReviewDecisionsListItem from './ReviewDecisionsListItem'
 
 import { ApiCallerFactory } from '@/api-caller-factory'
 import { ErrorHandler } from '@/utils/ErrorHandler'
@@ -72,8 +63,8 @@ const EVENTS = {
 }
 
 export default {
-  name: 'review-summary',
-  components: { DecisionListItem },
+  name: 'review-decisions-list',
+  components: { ReviewDecisionsListItem },
 
   props: {
     decisions: { type: Array, required: true },
@@ -119,23 +110,23 @@ export default {
 
     async reviewDecision (decision) {
       try {
-        decision.setProcessingState()
+        decision.setProcessing()
 
-        const operation = this.createDecisionOperation(decision)
+        const operation = this.convertDecisionToReviewOperation(decision)
         await ApiCallerFactory
           .createCallerInstance()
           .postOperations(operation)
 
-        decision.setReviewedState()
+        decision.setReviewed()
       } catch (e) {
         const errorMessage = ErrorHandler.extractErrorMessage(e)
-        decision.setErrorState(errorMessage)
+        decision.setError(errorMessage)
 
         ErrorHandler.processWithoutFeedback(e)
       }
     },
 
-    createDecisionOperation (decision) {
+    convertDecisionToReviewOperation (decision) {
       switch (decision.action) {
         case DECISION_ACTIONS.approve:
           return this.createReviewRequestOperation({
@@ -170,20 +161,20 @@ export default {
 </script>
 
 <style scoped>
-.review-summary__btn {
+.review-decisions-list__btn {
   margin-top: 4rem;
   max-width: 16rem;
 }
 
-.review-summary__status-cell {
+.review-decisions-list__status-cell {
   display: flex;
 }
 
-.review-summary__status-cell-text {
+.review-decisions-list__status-cell-text {
   margin-left: 0.6rem;
 }
 
-.review-summary__actions {
+.review-decisions-list__actions {
   display: flex;
   justify-content: space-between;
 }
