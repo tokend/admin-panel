@@ -1,6 +1,6 @@
 <template>
   <div class="fees-balances">
-    <h2>Balance manegment</h2>
+    <h2>Balance management</h2>
     <div class="fees-balances__balance-info">
       <div class="app__block">
         <h2>Balance</h2>
@@ -24,22 +24,20 @@
             <span>{{ formatBalance }}</span>
           </div>
         </div>
-
-        <div class="fees-balances__asset-info" />
       </div>
       <div class="app__block">
         <h2>Withdrawal</h2>
         <input-field
           class="app__form-field fees-balances__input-field"
           type="number"
-          v-model.trim="form.amount"
+          v-model.trim="withdrawal.amount"
           label="Amount"
           name="amount"
         />
         <input-field
           class="app__form-field fees-balances__input-field"
           type="text"
-          v-model.trim="form.comment"
+          v-model.trim="withdrawal.comment"
           label="Comment"
           name="comment"
         />
@@ -70,17 +68,14 @@ export default {
   },
   data () {
     return {
-      asset: {
-        code: null,
-        details: {},
-      },
+      asset: {},
       balance: {
         code: null,
         id: null,
         details: {},
       },
-      form: {
-        amount: 0,
+      withdrawal: {
+        amount: '',
         comment: '',
       },
       assets: [],
@@ -91,9 +86,16 @@ export default {
   computed: {
     ...mapGetters({
       adminId: getters.GET_USER_ADDRESS,
+      masterId: getters.masterId,
     }),
     formatBalance () {
       return `${this.balance.details.balance} ${this.balance.code}`
+    },
+    balanceId () {
+      return this.balance.details.balanceId || null
+    },
+    isMasterAssetOwner () {
+      return this.asset.owner === this.masterId
     },
   },
   watch: {
@@ -106,37 +108,37 @@ export default {
     await this.setInfoByAsset()
   },
   methods: {
-    // TODO: Standartilize asset info
-    // TODO: Add v-model to the field for withdrawal
-    // TODO: form disabled + form enabled
-    // TODO: Check valid values of Withdrawal
-    // TODO: Add trailing digits count
     async createWithdraw () {
+      this.$store.commit('OPEN_LOADER')
+      this.isPending = true
       try {
         const operation = Sdk.base.CreateWithdrawRequestBuilder
           .createWithdrawWithAutoConversion(this.composeOptions())
         await Sdk.horizon.transactions.submitOperations(operation)
       } catch (e) {
         ErrorHandler.process(
-          'Something went wrong. Can\'t to load assets list'
+          'Something went wrong. Can\'t to create withdraw'
         )
       }
+      this.$store.commit('CLOSE_LOADER')
+      this.isPending = false
     },
+
     composeOptions () {
       const creatorDetails = {}
 
       if (this.isMasterAssetOwner) {
         creatorDetails.address = this.adminId
       } else {
-        creatorDetails.comment = ':3'
+        creatorDetails.comment = this.withdrawal.comment
       }
 
       return {
-        balance: 'BBRZIIZLA7W7OYZAS4OE4FR2ZZT74DXGBE3XXWG6GIPK4N37CO7NRRES',
-        amount: '1',
+        balance: this.balanceId,
+        amount: this.withdrawal.amount,
         creatorDetails: creatorDetails,
-        destAsset: 'BTC',
-        expectedDestAssetAmount: '12',
+        destAsset: this.balance.code,
+        expectedDestAssetAmount: this.withdrawal.amount,
         fee: {
           fixed: '0',
           percent: '0',
@@ -151,14 +153,16 @@ export default {
         const balancesDetails = (
           await Sdk.horizon.account.getDetails(this.adminId)
         ).data
-        const assets = balancesDetails.map(balance => {
-          return balance.asset
-        })
-        this.balances = assets
-        this.balance.code = assets[0]
-        this.balance.details = balancesDetails.find(balance => {
-          return balance.asset === this.balance.code
-        })
+        const balances = balancesDetails
+          .map(balance => {
+            return balance.asset
+          })
+        this.balances = balances
+        this.balance.code = balances[0]
+        this.balance.details = balancesDetails
+          .find(balance => {
+            return balance.asset === this.balance.code
+          })
       } catch (err) {
         ErrorHandler.process(
           'Something went wrong. Can\'t to load assets list'
@@ -167,6 +171,7 @@ export default {
       this.isPending = false
       this.$store.commit('CLOSE_LOADER')
     },
+
     async setInfoByAsset () {
       this.$store.commit('OPEN_LOADER')
       this.isPending = true
@@ -174,8 +179,7 @@ export default {
         const { data } = await Sdk.horizon.assets.get(
           this.balance.code
         )
-        this.asset.details = data
-        this.asset.code = data.code
+        this.asset = data
       } catch (error) {
         ErrorHandler.process(
           'Something went wrong. Can\'t to load asset info'
@@ -206,10 +210,6 @@ $side-padding: 0.5rem;
   max-width: 20rem;
 }
 
-.fees-balances__asset-info {
-  margin-top: 1.2rem;
-}
-
 .fees-balances__balance-wrapper {
   display: flex;
 }
@@ -227,7 +227,7 @@ $side-padding: 0.5rem;
   & span {
     display: inline-block;
     vertical-align: middle;
-    font-size: 1.6srem;
+    font-size: 1.6rem;
     font-weight: 700;
   }
 }
