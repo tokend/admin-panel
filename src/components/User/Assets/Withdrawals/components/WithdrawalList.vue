@@ -77,7 +77,7 @@
             :key="item.id"
             @click="requestToShow = item">
             <!-- eslint-disable max-len -->
-            <!-- <span
+            <span
               class="app-list__cell"
               :title="`${localize(item.details.withdraw.amount)} ${item.details.withdraw.destAssetCode}`"
             >
@@ -88,7 +88,7 @@
               :title="`${localize(item.destAssetAmount)} ${item.destAssetCode}`"
             >
               {{ localize(item.details.withdraw.destAssetAmount) }}&nbsp;{{ item.details.withdraw.destAssetCode }}
-            </span> -->
+            </span>
             <!-- eslint-enable max-len -->
             <span class="app-list__cell" :title="verbozify(item.requestState)">
               {{ verbozify(item.requestState) }}
