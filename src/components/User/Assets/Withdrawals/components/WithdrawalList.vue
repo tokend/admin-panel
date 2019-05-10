@@ -26,7 +26,6 @@
             :value="item.code"
             v-for="item in assets"
             :key="item.code"
-            :selected="isSelected(item.code)"
           >
             {{ item.code }}
           </option>
@@ -203,6 +202,12 @@ export default {
         this.assets = response.data
           .filter(item => (item.policy & ASSET_POLICIES.withdrawable))
           .sort((assetA, assetB) => assetA.code > assetB.code ? 1 : -1)
+
+        const isDefaultValueInAssets = this.assets.some(item =>
+          item.code === DEFAULT_QUOTE_ASSET)
+        if (!isDefaultValueInAssets) {
+          this.filters.asset = this.assets[0].code
+        }
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }
@@ -254,10 +259,6 @@ export default {
     refreshList () {
       this.getList()
       this.requestToShow = null
-    },
-
-    isSelected (code) {
-      return DEFAULT_QUOTE_ASSET === code || this.assets[0].code === code
     },
   },
 }
