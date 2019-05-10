@@ -93,7 +93,7 @@ export default {
       }
 
       return tasksDescriptions.join('\n')
-    }
+    },
   },
 
   props: {

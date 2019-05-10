@@ -15,11 +15,15 @@ for further information about branching and tagging conventions.
 - KYC verification queue page for quick requests review
 - "US Verified" & "US Accredited" roles to the roleIdToString filter
 - "hash", "type", & "requestor" fields to `ChangeRoleRequest` wrapper
+- PDF documents preview to the `UserDocGetter` component
 
 #### Fixed
 - Fixed a bug when we confirm a request for changes in limits,
   at which we received empty values and could not confirm or cancel the request.
-  - Displaying of US-related roles in KYC verification
+- Displaying of US-related roles in KYC verification
+
+#### Updated
+- Extracted change role request tasks manager to a separate component
 
 ## [1.6.0-rc.1] - 2019-05-02
 #### Added
