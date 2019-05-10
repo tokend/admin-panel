@@ -188,7 +188,7 @@ export const requests = {
 
   async getWithdrawalRequests ({ asset, state, requestor }) {
     const filters = {}
-    if (asset) filters.dest_asset_code = asset
+    // if (asset) filters.dest_asset_code = asset
     if (state) filters.state = state
     if (requestor) filters.requestor = requestor
 

@@ -66,22 +66,22 @@
             <!-- eslint-disable max-len -->
             <span
               class="app-list__cell"
-              :title="`${localize(item.details.withdraw.amount)} ${item.details.withdraw.destAssetCode}`"
+              :title="`${localize(item.requestDetails.amount)} ${'BTC'}`"
             >
-              {{ localize(item.details.withdraw.amount) }}&nbsp;{{ item.details.withdraw.destAssetCode }}
+              {{ localize(item.requestDetails.amount) }}&nbsp;{{ 'BTC' }}
             </span>
             <span
               class="app-list__cell"
-              :title="`${localize(item.destAssetAmount)} ${item.destAssetCode}`"
+              :title="`${localize(item.requestDetails.amount)} ${'BTC'}`"
             >
-              {{ localize(item.details.withdraw.destAssetAmount) }}&nbsp;{{ item.details.withdraw.destAssetCode }}
+              {{ localize(item.requestDetails.amount) }}&nbsp;{{ 'BTC' }}
             </span>
             <!-- eslint-enable max-len -->
-            <span class="app-list__cell" :title="verbozify(item.requestState)">
-              {{ verbozify(item.requestState) }}
+            <span class="app-list__cell" :title="verbozify(item.state)">
+              {{ verbozify(item.state) }}
             </span>
-            <span class="app-list__cell" :title="item.requestor">
-              {{ item.requestor }}
+            <span class="app-list__cell" :title="item.requestor.id">
+              {{ item.requestor.id }}
             </span>
           </button>
         </ul>
@@ -128,6 +128,7 @@ import WithdrawalDetails from './WithdrawalDetails'
 
 import api from '@/api'
 import { Sdk } from '@/sdk'
+import { ApiCallerFactory } from '@/api-caller-factory'
 
 import {
   DEFAULT_QUOTE_ASSET,
@@ -200,11 +201,23 @@ export default {
       try {
         const requestor =
           await this.getRequestorAccountId(this.filters.requestor)
-        this.list = await api.requests.getWithdrawalRequests({
-          state: this.filters.state,
-          asset: this.filters.asset,
-          requestor: requestor,
-        })
+
+        this.list = await ApiCallerFactory
+          .createCallerInstance()
+          .getWithSignature('/v3/create_withdraw_requests', {
+            filter: {
+              requestor: requestor,
+              state: this.filters.state,
+            },
+            include: ['request_details', 'request_details.balance'],
+          })
+        // const oldList = await api.requests.getWithdrawalRequests({
+        //   state: this.filters.state,
+        //   asset: this.filters.asset,
+        //   requestor: requestor,
+        // })
+        console.log(this.list)
+        // console.log(oldList)
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }
