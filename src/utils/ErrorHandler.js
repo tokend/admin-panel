@@ -16,10 +16,10 @@ export class ErrorHandler {
   }
 
   static trackMessage (error, opts = {}) {
-    const { translationId = '', skipTrack = false } = opts
+    const { message = '', skipTrack = false } = opts
     if (!skipTrack) {
-      const msgTrId = translationId || ErrorHandler.extractErrorMessage(error)
-      ErrorTracker.trackMessage(msgTrId)
+      const msg = message || ErrorHandler.extractErrorMessage(error)
+      ErrorTracker.trackMessage(msg)
     }
   }
 
