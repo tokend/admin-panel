@@ -8,16 +8,22 @@
       {{ decision.errorMessage }}
     </p>
 
-    <ul class="key-value-list">
-      <li>
-        <span>Action</span>
-        <span>{{ decision.action }}</span>
-      </li>
-      <li v-if="decision.reason">
-        <span>Reason</span>
-        <span>{{ decision.reason }}</span>
-      </li>
-    </ul>
+    <p class="review-decision-viewer__item">
+      <strong>Action:</strong>
+      <span :title="decision.action">
+        {{ decision.action }}
+      </span>
+    </p>
+
+    <p
+      v-if="decision.reason"
+      class="review-decision-viewer__item"
+    >
+      <strong>Reason:</strong>
+      <span :title="decision.reason">
+        {{ decision.reason }}
+      </span>
+    </p>
   </div>
 </template>
 
@@ -45,5 +51,11 @@ export default {
 
 .review-decision-viewer__error {
   color: $color-danger;
+}
+
+.review-decision-viewer__item {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  word-break: break-word;
 }
 </style>

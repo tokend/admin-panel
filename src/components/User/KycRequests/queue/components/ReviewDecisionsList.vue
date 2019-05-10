@@ -15,6 +15,12 @@
           <span class="app-list__cell">
             Reason
           </span>
+          <span class="app-list__cell">
+            Tasks to add
+          </span>
+          <span class="app-list__cell">
+            Tasks to remove
+          </span>
         </div>
 
         <review-decisions-list-item
@@ -135,24 +141,26 @@ export default {
           return this.createReviewRequestOperation({
             request: decision.request,
             action: base.xdr.ReviewRequestOpAction.approve().value,
+            tasks: decision.tasks,
           })
         case DECISION_ACTIONS.reject:
           return this.createReviewRequestOperation({
             request: decision.request,
             action: base.xdr.ReviewRequestOpAction.reject().value,
             reason: decision.reason,
+            tasks: decision.tasks,
           })
       }
     },
 
-    createReviewRequestOperation ({ request, action, reason = '' }) {
+    createReviewRequestOperation ({ request, tasks, action, reason = '' }) {
       return base.ReviewRequestBuilder.reviewRequest({
         requestID: request.id,
         requestHash: request.hash,
         requestType: request.type,
         reviewDetails: {
-          tasksToAdd: request.tasksToAdd || 0,
-          tasksToRemove: request.tasksToRemove,
+          tasksToAdd: tasks.toAdd,
+          tasksToRemove: tasks.toRemove,
           externalDetails: '{}',
         },
         action,

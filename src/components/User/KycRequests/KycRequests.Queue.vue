@@ -64,7 +64,9 @@
             v-if="currentDecision.action !== DECISION_ACTIONS.none"
             class="kyc-requests-queue__current-decision"
           >
-            <h3>Current decision</h3>
+            <p class="kyc-requests-queue__current-decision-title">
+              Current decision
+            </p>
             <review-decision-viewer :decision="currentDecision" />
           </div>
 
@@ -322,12 +324,19 @@ export default {
 
 .kyc-requests-queue__current-decision {
   margin-top: 4rem;
+  border: solid 0.1rem;
+  padding: 2rem;
+}
+
+.kyc-requests-queue__current-decision-title {
+  font-size: 2rem;
+  margin-bottom: 1rem;
 }
 
 .kyc-requests-queue__header-title {
   color: $color-text-inverse;
   font-weight: bold;
-  margin-bottom: .5rem;
+  margin-bottom: 0.5rem;
 }
 
 .kyc-requests-queue__header-subtitle {

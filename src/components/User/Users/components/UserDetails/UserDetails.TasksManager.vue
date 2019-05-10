@@ -5,7 +5,7 @@
     </h3>
 
     <h4 class="user-details-task-manager__section-heading">
-      Current state
+      Current request tasks
     </h4>
 
     <div class="user-details-task-manager__section-content">
@@ -135,10 +135,7 @@ export default {
 
   data () {
     return {
-      tasks: {
-        toAdd: 0,
-        toRemove: 0,
-      },
+      tasks: {},
       CHANGE_ROLE_TASKS: config.CHANGE_ROLE_TASKS,
     }
   },
@@ -150,10 +147,27 @@ export default {
       },
       deep: true,
     },
+
+    value () {
+      this.setTasks()
+    },
   },
 
   created () {
-    this.tasks.toRemove = this.request.pendingTasks
+    this.setTasks()
+  },
+
+  methods: {
+    setTasks () {
+      if (this.value.toAdd || this.value.toRemove) {
+        this.tasks = this.value
+      } else {
+        this.tasks = {
+          toAdd: 0,
+          toRemove: this.request.pendingTasks,
+        }
+      }
+    },
   },
 }
 </script>

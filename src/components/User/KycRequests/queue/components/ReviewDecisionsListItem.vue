@@ -9,12 +9,14 @@
       :account-id="decision.request.requestor"
       is-titled
     />
+
     <span
       class="app-list__cell"
       :title="decision.request.accountRoleToSet | roleIdToString"
     >
       {{ decision.request.accountRoleToSet | roleIdToString }}
     </span>
+
     <span
       class="app-list__cell review-decisions-list-item__state"
       :class="`review-decisions-list-item__state--${decision.state}`"
@@ -22,8 +24,23 @@
     >
       {{ decision.state | localizeDecisionState }}
     </span>
+
     <span class="app-list__cell" :title="decision.reason">
       {{ decision.reason || '&mdash;' }}
+    </span>
+
+    <span
+      class="app-list__cell"
+      :title="decision.tasks.toAdd | localizeTasks"
+    >
+      {{ decision.tasks.toAdd || '&mdash;' }}
+    </span>
+
+    <span
+      class="app-list__cell"
+      :title="decision.tasks.toRemove | localizeTasks"
+    >
+      {{ decision.tasks.toRemove || '&mdash;' }}
     </span>
   </button>
 </template>
@@ -33,6 +50,8 @@ import { EmailGetter } from '@comcom/getters'
 
 import { ReviewDecision } from '../wrappers/ReviewDecision'
 import { DECISION_STATES } from '../constants/decision-states'
+
+import config from '@/config'
 
 const EVENTS = {
   click: 'click',
@@ -56,6 +75,25 @@ export default {
         [DECISION_STATES.none]: 'Not reviewed',
       }[state]
     },
+
+    localizeTasks (tasks) {
+      let tasksDescriptions = []
+
+      if (tasks & config.CHANGE_ROLE_TASKS.submitAutoVerification) {
+        tasksDescriptions.push('Submit auto verification request')
+      }
+      if (tasks & config.CHANGE_ROLE_TASKS.completeAutoVerification) {
+        tasksDescriptions.push('Complete auto verification request')
+      }
+      if (tasks & config.CHANGE_ROLE_TASKS.manualReviewRequired) {
+        tasksDescriptions.push('Manual review required')
+      }
+      if (tasks & config.CHANGE_ROLE_TASKS.default) {
+        tasksDescriptions.push('Default')
+      }
+
+      return tasksDescriptions.join('\n')
+    }
   },
 
   props: {

@@ -9,6 +9,10 @@ export class ReviewDecision {
     this.state = DECISION_STATES[this.action]
 
     this.reason = ''
+    this.tasks = {
+      toAdd: 0,
+      toRemove: request.pendingTasks,
+    }
     this.errorMessage = ''
   }
 

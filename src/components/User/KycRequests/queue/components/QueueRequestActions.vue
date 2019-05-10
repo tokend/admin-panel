@@ -1,5 +1,12 @@
 <template>
   <div class="queue-request-actions">
+    <div class="queue-request-actions__manage-tasks-section">
+      <tasks-manager
+        v-model="decision.tasks"
+        :request="decision.request"
+      />
+    </div>
+
     <div class="queue-request-actions__btn-blocks">
       <div class="queue-request-actions__btn-block">
         <button
@@ -73,6 +80,8 @@
 </template>
 
 <script>
+import TasksManager from '@/components/User/Users/components/UserDetails/UserDetails.TasksManager'
+
 import { TextField } from '@comcom/fields'
 import Modal from '@comcom/modals/Modal'
 
@@ -88,6 +97,7 @@ export default {
   components: {
     Modal,
     TextField,
+    TasksManager,
   },
 
   props: {
@@ -141,6 +151,7 @@ export default {
 .queue-request-actions__btn-blocks {
   display: flex;
   justify-content: space-between;
+  margin-top: 4rem;
 }
 
 .queue-request-actions__btn-block {
