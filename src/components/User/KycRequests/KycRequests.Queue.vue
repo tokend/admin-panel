@@ -12,10 +12,24 @@
 
       <template v-if="!isDecisionsListShown">
         <div class="app__block">
-          <h2>
-            {{ currentRequestIndex + 1 }} /
-            {{ pendingRequests.length }} requests
-          </h2>
+          <div class="kyc-requests-queue__nav">
+            <button
+              class="kyc-requests-queue__nav-btn"
+              @click="incrementRequestIndex"
+            >
+              <mdi-chevron-left-icon />
+            </button>
+            <p class="kyc-requests-queue__nav-title">
+              {{ currentRequestIndex + 1 }} /
+              {{ pendingRequests.length }} requests
+            </p>
+            <button
+              class="kyc-requests-queue__nav-btn"
+              @click="decrementRequestIndex"
+            >
+              <mdi-chevron-right-icon />
+            </button>
+          </div>
 
           <queue-request-viewer
             :request="pendingRequests[currentRequestIndex]"
@@ -78,6 +92,9 @@ import { ChangeRoleRequest } from '@/api/responseHandlers/requests/ChangeRoleReq
 import { ReviewDecision } from './queue/wrappers/ReviewDecision'
 
 import { confirmAction } from '@/js/modals/confirmation_message'
+
+import 'mdi-vue/ChevronLeftIcon'
+import 'mdi-vue/ChevronRightIcon'
 
 export default {
   name: 'kyc-requests-queue',
@@ -171,13 +188,29 @@ export default {
       this.isLoading = false
     },
 
+    incrementRequestIndex () {
+      this.currentRequestIndex++
+
+      if (this.currentRequestIndex === this.pendingRequests.length) {
+        this.currentRequestIndex = 0
+      }
+    },
+
+    decrementRequestIndex () {
+      this.currentRequestIndex--
+
+      if (this.currentRequestIndex < 0) {
+        this.currentRequestIndex = this.pendingRequests.length - 1
+      }
+    },
+
     nextRequest () {
       window.scrollTo({
         top: 0,
         left: 0,
         behavior: 'smooth',
       })
-      this.currentRequestIndex++
+      this.incrementRequestIndex()
 
       if (this.isSingleDecisionEdited) {
         this.isDecisionsListShown = true
@@ -234,5 +267,23 @@ export default {
   display: flex;
   flex-direction: column;
   background-color: $color-banner-bg;
+}
+
+.kyc-requests-queue__nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4rem;
+}
+
+.kyc-requests-queue__nav-title {
+  font-size: 2.4rem;
+}
+
+.kyc-requests-queue__nav-btn {
+  display: flex;
+  border: solid 0.1rem;
+  padding: 0.6rem;
+  border-radius: 5rem;
 }
 </style>

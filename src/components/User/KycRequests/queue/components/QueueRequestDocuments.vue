@@ -21,7 +21,7 @@
       </div>
 
       <div
-        v-if="documents.kycIdDocument.face"
+        v-if="documents.kycIdDocument && documents.kycIdDocument.face"
         class="queue-request-documents__list-item"
       >
         <span v-if="documents.kycIdDocument.back">
@@ -40,7 +40,7 @@
       </div>
 
       <div
-        v-if="documents.kycIdDocument.back"
+        v-if="documents.kycIdDocument && documents.kycIdDocument.back"
         class="queue-request-documents__list-item"
       >
         <span>ID Document back side: </span>
