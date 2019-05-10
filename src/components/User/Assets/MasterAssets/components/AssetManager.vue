@@ -155,28 +155,25 @@
             class="app__upload-input"
             id="file-select"
             type="file"
+            :disabled="isPending"
             accept="application/pdf, image/*"
             @change="onFileChange($event, DOCUMENT_TYPES.assetTerms)"
           >
-          <span
-            v-if="safeGet(asset, 'creatorDetails.terms.name')"
-            class="asset-manager__file-name"
-          >
-            {{ safeGet(asset, 'creatorDetails.terms.name') }}
+          <span class="asset-manager__file-name">
+            <template v-if="termsSelectedFileName">
+              {{ termsSelectedFileName }}
+            </template>
+
+            <template v-else-if="termsUrl">
+              <a
+                :href="termsUrl"
+                target="_blank"
+                rel="noopener"
+              >
+                {{ safeGet(asset, 'creatorDetails.terms.name') }}
+              </a>
+            </template>
           </span>
-          <span
-            v-else-if="termsUrl"
-            class="asset-manager__file-name"
-          >
-            <a
-              :href="termsUrl"
-              target="_blank"
-              rel="noopener"
-            >
-              {{ safeGet(asset, 'creatorDetails.terms.name') }}
-            </a>
-          </span>
-          <!--<span v-else-if="safeGet(asset, 'terms..')"></span>-->
         </div>
       </div>
 
@@ -296,6 +293,7 @@ import { confirmAction } from '@/js/modals/confirmation_message'
 
 import api from '@/api'
 import { Sdk } from '@/sdk'
+import { ApiCallerFactory } from '@/api-caller-factory'
 
 import safeGet from 'lodash/get'
 
@@ -304,6 +302,9 @@ import { ErrorHandler } from '@/utils/ErrorHandler'
 
 import Bus from '@/utils/EventBus'
 import { fileReader } from '@/utils/file-reader'
+
+import { mapGetters } from 'vuex'
+import { getters } from '@/store/types'
 
 import {
   ASSET_POLICIES,
@@ -324,7 +325,7 @@ export default {
   },
 
   props: {
-    assetCode: { type: String, required: true },
+    assetCode: { type: String, default: '' },
   },
 
   data () {
@@ -369,8 +370,14 @@ export default {
   },
 
   computed: {
+    ...mapGetters({ userAddress: getters.GET_USER_ADDRESS }),
+
     isExistingAsset () {
       return !!this.assetCode
+    },
+
+    termsSelectedFileName () {
+      return this[DOCUMENT_TYPES.assetTerms].name
     },
 
     termsUrl () {
@@ -495,21 +502,35 @@ export default {
       return true
     },
 
-    async onFileChange (event, type) {
+    onFileChange (event, type) {
       const file = fileReader.deriveFileFromChangeEvent(event)
-      this[type].file = file
-      this[type].mime = file.type
-      this[type].name = file.name
+      this[type] = {
+        file,
+        mime: file.type,
+        name: file.name,
+      }
     },
 
-    async uploadFile (type) {
+    async uploadFile (type, mimeType) {
       if (!this[type].file) return
 
-      const config = await Sdk.api.documents.masterCreate(type, this[type].mime)
+      const { data: config } = await ApiCallerFactory
+        .createCallerInstance()
+        .postWithSignature('/documents', {
+          data: {
+            type,
+            attributes: { content_type: this[type].mime },
+            relationships: {
+              owner: {
+                data: { id: this.userAddress },
+              },
+            },
+          },
+        })
       await api.documents.uploadFile(this[type].file, config, this[type].mime)
 
       this.asset.creatorDetails[type === DOCUMENT_TYPES.assetTerms ? 'terms' : 'logo'] = {
-        key: config.formData.key,
+        key: config.key,
         name: this[type].name,
         type: this[type].mime,
       }
