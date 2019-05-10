@@ -20,6 +20,11 @@ for further information about branching and tagging conventions.
 - Displaying of confirmation modal on the issuance form
 - Uploading documents on create asset form
 
+## [1.6.0] - 2019-05-09
+### "Under the hood" changes
+#### Changed
+- Now using @tokend/js-sdk@1.6.0
+
 ## [1.6.0-rc.1] - 2019-05-02
 #### Added
 - Added autocomplete by email to email-acceptable filter fields
@@ -216,7 +221,8 @@ for further information about branching and tagging conventions.
 
 ## [1.3.0] - 2019-03-01
 
-[Unreleased]: https://github.com/tokend/admin-panel/compare/1.6.0-rc.1...HEAD
+[Unreleased]: https://github.com/tokend/admin-panel/compare/1.6.0...HEAD
+[1.6.0]: https://github.com/tokend/admin-panel/compare/1.6.0-rc.1...1.6.0
 [1.6.0-rc.1]: https://github.com/tokend/admin-panel/compare/1.6.0-rc.0...1.6.0-rc.1
 [1.6.0-rc.0]: https://github.com/tokend/admin-panel/compare/1.5.0...1.6.0-rc.0
 [1.5.0]: https://github.com/tokend/admin-panel/compare/1.5.0-rc.3...1.5.0
