@@ -35,7 +35,10 @@
             :request="pendingRequests[currentRequestIndex]"
           />
 
-          <div class="kyc-requests-queue__current-decision">
+          <div
+            v-if="currentDecision.action !== DECISION_ACTIONS.none"
+            class="kyc-requests-queue__current-decision"
+          >
             <h3>Current decision</h3>
             <review-decision-viewer :decision="currentDecision" />
           </div>
@@ -82,7 +85,6 @@ import QueueRequestActions from './queue/components/QueueRequestActions'
 import ReviewDecisionsList from './queue/components/ReviewDecisionsList'
 import ReviewDecisionViewer from './queue/components/ReviewDecisionViewer'
 
-import config from '@/config'
 import { ApiCallerFactory } from '@/api-caller-factory'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
@@ -90,6 +92,7 @@ import { REQUEST_STATES } from '@tokend/js-sdk'
 
 import { ChangeRoleRequest } from '@/api/responseHandlers/requests/ChangeRoleRequest'
 import { ReviewDecision } from './queue/wrappers/ReviewDecision'
+import { DECISION_ACTIONS } from './queue/constants/decision-actions'
 
 import { confirmAction } from '@/js/modals/confirmation_message'
 
@@ -114,7 +117,7 @@ export default {
       reviewDecisions: [],
       currentRequestIndex: 0,
       REQUEST_STATES,
-      CHANGE_ROLE_TASKS: config.CHANGE_ROLE_TASKS,
+      DECISION_ACTIONS,
     }
   },
 

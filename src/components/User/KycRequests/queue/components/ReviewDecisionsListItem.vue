@@ -53,6 +53,7 @@ export default {
         [DECISION_STATES.rejecting]: 'Rejecting…',
         [DECISION_STATES.rejected]: 'Rejected',
         [DECISION_STATES.skip]: 'Skipped',
+        [DECISION_STATES.none]: 'Not reviewed',
       }[state]
     },
   },

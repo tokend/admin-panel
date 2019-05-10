@@ -2,7 +2,7 @@ import { DECISION_ACTIONS } from '../constants/decision-actions'
 import { DECISION_STATES } from '../constants/decision-states'
 
 export class ReviewDecision {
-  constructor (request, action = DECISION_ACTIONS.skip) {
+  constructor (request, action = DECISION_ACTIONS.none) {
     this.request = request
 
     this.action = action
@@ -17,6 +17,7 @@ export class ReviewDecision {
       DECISION_STATES.approve,
       DECISION_STATES.reject,
       DECISION_STATES.skip,
+      DECISION_STATES.none,
       DECISION_STATES.error,
     ]
 

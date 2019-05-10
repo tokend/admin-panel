@@ -7,4 +7,5 @@ export const DECISION_STATES = Object.freeze({
   rejecting: 'rejecting',
   rejected: 'rejected',
   skip: 'skip',
+  none: 'none',
 })
