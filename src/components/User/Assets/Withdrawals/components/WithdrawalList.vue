@@ -202,7 +202,9 @@ export default {
           .filter(item => (item.policy & ASSET_POLICIES.withdrawable))
           .sort((assetA, assetB) => assetA.code > assetB.code ? 1 : -1)
 
-        this.filters.asset = this.assets[0].code
+        if (this.assets.length) {
+          this.filters.asset = this.assets[0].code
+        }
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }
