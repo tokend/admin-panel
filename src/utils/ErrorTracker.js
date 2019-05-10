@@ -1,4 +1,4 @@
-import * as sentry from '@/browser'
+import * as sentry from '@sentry/browser'
 import * as Integrations from '@sentry/integrations'
 import Vue from 'vue'
 
