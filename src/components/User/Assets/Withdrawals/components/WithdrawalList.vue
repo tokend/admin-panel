@@ -216,8 +216,6 @@ export default {
         //   asset: this.filters.asset,
         //   requestor: requestor,
         // })
-        console.log(this.list)
-        // console.log(oldList)
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }
