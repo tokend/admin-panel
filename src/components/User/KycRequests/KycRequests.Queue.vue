@@ -1,15 +1,41 @@
 <template>
   <div class="kyc-requests-queue">
-    <template v-if="reviewDecisions.length">
-      <div class="kyc-requests-queue__warning-msg">
-        <span class="kyc-requests-queue__header-title">
-          Your actions will be lost after page reload
-        </span>
-        <span class="kyc-requests-queue__header-subtitle">
-          Please, do not reload the page until you finish your review
-        </span>
-      </div>
+    <div
+      v-if="reviewDecisions.length"
+      class="kyc-requests-queue__warning-msg"
+    >
+      <span class="kyc-requests-queue__header-title">
+        Your actions will be lost after page reload
+      </span>
+      <span class="kyc-requests-queue__header-subtitle">
+        Please, do not reload the page until you finish your review
+      </span>
+    </div>
 
+    <div
+      v-if="!isDecisionsListShown"
+      class="app-list-filters kyc-requests-queue__roles-select-wrp"
+    >
+      <select-field
+        class="kyc-requests-queue__roles-select"
+        :value="filters.role"
+        @input="setRoleFilter"
+        label="Role to set"
+      >
+        <option :value="ALL_ROLES_FILTER">
+          All
+        </option>
+        <option
+          v-for="role in verifiedAccountRoles"
+          :value="role"
+          :key="role"
+        >
+          {{ role | roleIdToString }}
+        </option>
+      </select-field>
+    </div>
+
+    <template v-if="reviewDecisions.length">
       <template v-if="!isDecisionsListShown">
         <div class="app__block">
           <div class="kyc-requests-queue__nav">
@@ -34,7 +60,6 @@
           <queue-request-viewer
             :request="pendingRequests[currentRequestIndex]"
           />
-
           <div
             v-if="currentDecision.action !== DECISION_ACTIONS.none"
             class="kyc-requests-queue__current-decision"
@@ -62,7 +87,7 @@
     </template>
 
     <template v-else>
-      <div>
+      <div class="app__block">
         <template v-if="isLoading">
           <p>
             <span>Loading...</span>
@@ -80,6 +105,8 @@
 </template>
 
 <script>
+import SelectField from '@comcom/fields/SelectField'
+
 import QueueRequestViewer from './queue/components/QueueRequestViewer'
 import QueueRequestActions from './queue/components/QueueRequestActions'
 import ReviewDecisionsList from './queue/components/ReviewDecisionsList'
@@ -90,18 +117,25 @@ import { ApiCallerFactory } from '@/api-caller-factory'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { REQUEST_STATES } from '@tokend/js-sdk'
 
+import config from '@/config'
+
 import { ChangeRoleRequest } from '@/api/responseHandlers/requests/ChangeRoleRequest'
 import { ReviewDecision } from './queue/wrappers/ReviewDecision'
 import { DECISION_ACTIONS } from './queue/constants/decision-actions'
 
 import { confirmAction } from '@/js/modals/confirmation_message'
 
+import _omit from 'lodash/omit'
+
 import 'mdi-vue/ChevronLeftIcon'
 import 'mdi-vue/ChevronRightIcon'
+
+const ALL_ROLES_FILTER = '0'
 
 export default {
   name: 'kyc-requests-queue',
   components: {
+    SelectField,
     QueueRequestViewer,
     QueueRequestActions,
     ReviewDecisionsList,
@@ -110,12 +144,16 @@ export default {
 
   data () {
     return {
+      filters: {
+        role: ALL_ROLES_FILTER,
+      },
       isLoading: false,
       isDecisionsListShown: false,
       isSingleDecisionEdited: false,
       pendingRequests: [],
       reviewDecisions: [],
       currentRequestIndex: 0,
+      ALL_ROLES_FILTER,
       REQUEST_STATES,
       DECISION_ACTIONS,
     }
@@ -133,6 +171,10 @@ export default {
 
     isReviewActive () {
       return this.reviewDecisions.some(item => item.isReadyForReview)
+    },
+
+    verifiedAccountRoles () {
+      return _omit(config.ACCOUNT_ROLES, ['notVerified', 'blocked'])
     },
   },
 
@@ -178,7 +220,11 @@ export default {
           .createCallerInstance()
           .getWithSignature('/v3/change_role_requests', {
             page: { order: 'desc' },
-            filter: { state: REQUEST_STATES.pending },
+            filter: {
+              state: REQUEST_STATES.pending,
+              'request_details.account_role_to_set':
+                this.filters.role === ALL_ROLES_FILTER ? '' : this.filters.role,
+            },
             include: ['request_details'],
           })
 
@@ -189,6 +235,22 @@ export default {
         ErrorHandler.processWithoutFeedback(error)
       }
       this.isLoading = false
+    },
+
+    async setRoleFilter (role) {
+      const prevRole = this.filters.role
+      this.filters.role = role
+
+      const isConfirmed = !this.isReviewActive ||
+        await confirmAction({
+          title: 'Filter requests? All your decisions will be lost',
+        })
+
+      if (isConfirmed) {
+        await this.resetQueue()
+      } else {
+        this.filters.role = prevRole
+      }
     },
 
     incrementRequestIndex () {
@@ -213,7 +275,7 @@ export default {
         left: 0,
         behavior: 'smooth',
       })
-      this.incrementRequestIndex()
+      this.currentRequestIndex++
 
       if (this.isSingleDecisionEdited) {
         this.isDecisionsListShown = true
@@ -245,6 +307,14 @@ export default {
 
 <style lang="scss" scoped>
 @import "~@/assets/scss/colors";
+
+.kyc-requests-queue__roles-select-wrp {
+  margin-bottom: 4rem;
+}
+
+.kyc-requests-queue__roles-select {
+  max-width: 20rem;
+}
 
 .kyc-requests-queue__actions {
   margin-top: 4rem;
