@@ -77,7 +77,7 @@
             :key="item.id"
             @click="requestToShow = item">
             <!-- eslint-disable max-len -->
-            <span
+            <!-- <span
               class="app-list__cell"
               :title="`${localize(item.details.withdraw.amount)} ${item.details.withdraw.destAssetCode}`"
             >
@@ -88,7 +88,7 @@
               :title="`${localize(item.destAssetAmount)} ${item.destAssetCode}`"
             >
               {{ localize(item.details.withdraw.destAssetAmount) }}&nbsp;{{ item.details.withdraw.destAssetCode }}
-            </span>
+            </span> -->
             <!-- eslint-enable max-len -->
             <span class="app-list__cell" :title="verbozify(item.requestState)">
               {{ verbozify(item.requestState) }}
@@ -143,7 +143,6 @@ import api from '@/api'
 import { Sdk } from '@/sdk'
 
 import {
-  DEFAULT_QUOTE_ASSET,
   REQUEST_STATES,
   ASSET_POLICIES,
 } from '@/constants'
@@ -166,12 +165,12 @@ export default {
     return {
       REQUEST_STATES,
 
-      assets: [{ code: DEFAULT_QUOTE_ASSET }],
+      assets: [],
       list: {},
       requestToShow: {},
       filters: {
         state: REQUEST_STATES.pending,
-        asset: DEFAULT_QUOTE_ASSET,
+        asset: '',
         requestor: '',
       },
       isLoaded: false,
@@ -203,11 +202,7 @@ export default {
           .filter(item => (item.policy & ASSET_POLICIES.withdrawable))
           .sort((assetA, assetB) => assetA.code > assetB.code ? 1 : -1)
 
-        const isDefaultValueInAssets = this.assets.some(item =>
-          item.code === DEFAULT_QUOTE_ASSET)
-        if (!isDefaultValueInAssets) {
-          this.filters.asset = this.assets[0].code
-        }
+        this.filters.asset = this.assets[0].code
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }
