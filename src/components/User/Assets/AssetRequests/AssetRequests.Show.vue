@@ -150,6 +150,20 @@
 
       <div class="asset-requests-show__row">
         <span class="asset-requests-show__key">
+          Terms
+        </span>
+        <span class="asset-requests-show__value">
+          <user-doc-getter
+            :file-key="safeGet(
+              assetRequest,
+              'operationDetails.details.logo.key'
+            )"
+          />
+        </span>
+      </div>
+
+      <div class="asset-requests-show__row">
+        <span class="asset-requests-show__key">
           Creation date
         </span>
         <date-formatter
@@ -230,7 +244,7 @@
 import TextField from '@comcom/fields/TextField'
 import AssetRequestRejectForm from './components/AssetRequestRejectForm'
 
-import { ImgGetter, EmailGetter } from '@comcom/getters'
+import { ImgGetter, EmailGetter, UserDocGetter } from '@comcom/getters'
 import { DateFormatter } from '@comcom/formatters'
 
 import { confirmAction } from '@/js/modals/confirmation_message'
@@ -258,6 +272,7 @@ export default {
     ImgGetter,
     EmailGetter,
     DateFormatter,
+    UserDocGetter,
   },
 
   props: {
@@ -340,6 +355,7 @@ export default {
 .asset-requests-show__key {
   &--informative {
     color: $color-info;
+    text-align: right;
 
     &:before {
       content: "\2713";
