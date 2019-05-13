@@ -18,6 +18,7 @@
         </select-field>
 
         <select-field
+          v-if="assets.length"
           class="app-list-filters__field"
           label="Asset"
           v-model="filters.asset">
@@ -27,6 +28,18 @@
             :key="item.code"
           >
             {{ item.code }}
+          </option>
+        </select-field>
+
+        <select-field
+          v-else
+          class="app-list-filters__field"
+          label="Asset"
+          value="no-assets"
+          disabled
+        >
+          <option value="no-assets">
+            No withdrawable assets
           </option>
         </select-field>
 
@@ -130,7 +143,6 @@ import api from '@/api'
 import { Sdk } from '@/sdk'
 
 import {
-  DEFAULT_QUOTE_ASSET,
   REQUEST_STATES,
   ASSET_POLICIES,
 } from '@/constants'
@@ -153,12 +165,12 @@ export default {
     return {
       REQUEST_STATES,
 
-      assets: [{ code: DEFAULT_QUOTE_ASSET }],
+      assets: [],
       list: {},
       requestToShow: {},
       filters: {
         state: REQUEST_STATES.pending,
-        asset: DEFAULT_QUOTE_ASSET,
+        asset: '',
         requestor: '',
       },
       isLoaded: false,
@@ -189,6 +201,10 @@ export default {
         this.assets = response.data
           .filter(item => (item.policy & ASSET_POLICIES.withdrawable))
           .sort((assetA, assetB) => assetA.code > assetB.code ? 1 : -1)
+
+        if (this.assets.length) {
+          this.filters.asset = this.assets[0].code
+        }
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }

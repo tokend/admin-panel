@@ -20,6 +20,7 @@ for further information about branching and tagging conventions.
 - Displaying of US-related roles in KYC verification
 - Displaying of confirmation modal on the issuance form
 - Uploading documents on create asset form
+- Asset select in withdrawal list
 
 ## [1.6.0] - 2019-05-09
 ### "Under the hood" changes
