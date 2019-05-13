@@ -461,8 +461,9 @@ export default {
       if (limits.id === 0) {
         return false
       }
-      /* eslint-disable-next-line max-len */
-      if (!await confirmAction({ title: this.getTitleConfirmAction(type) })) return
+      if (!await confirmAction({
+        title: this.getTitleConfirmAction(type),
+      })) return
       this.isPending = true
       try {
         const operation = Sdk.base.ManageLimitsBuilder.removeLimits({
