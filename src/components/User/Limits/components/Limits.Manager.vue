@@ -413,11 +413,9 @@ export default {
             },
           })
         if (this.filters.scope === SCOPE_TYPES.global) {
-          const globalLimits = limits.filter((limit) => {
-            if (!limit.accountRole && !limit.account) {
-              return limit
-            }
-          })
+          const globalLimits = limits
+            .filter((limit) => !(limit.accountRole || limit.account))
+
           return globalLimits[0]
         } else {
           return limits[0]
