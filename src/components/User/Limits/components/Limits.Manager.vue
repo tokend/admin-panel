@@ -44,14 +44,14 @@
           label="Account type"
           v-if="filters.scope === SCOPE_TYPES.accountRole"
         >
-          <option
-            v-for="type in Object.values(ACCOUNT_ROLES)"
-            v-show="ACCOUNT_ROLES_VERBOSE[type]"
-            :key="type"
-            :value="type"
-            :selected="type === +filters.accountRole"
-          >
-            {{ ACCOUNT_ROLES_VERBOSE[type] }}
+          <option :value="ACCOUNT_ROLES.general">
+            General
+          </option>
+          <option :value="ACCOUNT_ROLES.notVerified">
+            Not verified
+          </option>
+          <option :value="ACCOUNT_ROLES.corporate">
+            Corporate
           </option>
         </select-field>
         <input-field
