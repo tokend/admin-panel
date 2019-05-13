@@ -12,6 +12,7 @@ for further information about branching and tagging conventions.
 - New "Capital deployment" fee type
 - "Unblocked" change role request detection in user operation list
 - Terms field in asset details
+- Sentry integration
 
 #### Fixed
 - Fixed a bug when we confirm a request for changes in limits,
