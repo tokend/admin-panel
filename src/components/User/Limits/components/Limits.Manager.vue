@@ -3,9 +3,9 @@
     <div class="limits-manager">
       <h2>Limits management</h2>
       <div
-        class="limits-manager-filters"
+        class="limits-manager__filters"
         :class="{
-          'limits-manager-filters--global':
+          'limits-manager__filters--global':
             filters.scope === SCOPE_TYPES.global
         }"
       >
@@ -657,7 +657,7 @@ export default {
     margin-left: 0.5rem;
   }
 
-  .limits-manager-filters {
+  .limits-manager__filters {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
