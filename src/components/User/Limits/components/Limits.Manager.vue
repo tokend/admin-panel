@@ -261,6 +261,7 @@ import { confirmAction } from '@/js/modals/confirmation_message'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { ApiCallerFactory } from '@/api-caller-factory'
 import { LimitsRecord } from '@/js/records/limits.record'
+import cloneDeep from 'lodash/cloneDeep'
 
 const LIMITS_TYPES = [
   'dailyOut',
@@ -427,24 +428,25 @@ export default {
         return
       }
       this.isPending = true
+      const newLimits = cloneDeep(limits)
       try {
-        if (limits.accountRole == null) {
+        if (newLimits.accountRole == null) {
           // managelimitbuilder doesnt accept opts.accountRole NULL value
-          delete limits.accountRole
+          delete newLimits.accountRole
         }
 
-        if (limits.accountID == null) {
+        if (newLimits.accountID == null) {
           // managelimitbuilder doesnt accept opts.accountID NULL value
-          delete limits.accountID
+          delete newLimits.accountID
         }
         const limitTypes = {}
         LIMITS_TYPES.forEach(
           type => {
-            limitTypes[type] = limits[type].value
+            limitTypes[type] = newLimits[type].value
           }
         )
         const operation = Sdk.base.ManageLimitsBuilder.createLimits({
-          ...limits,
+          ...newLimits,
           ...limitTypes,
         })
         await ApiCallerFactory
