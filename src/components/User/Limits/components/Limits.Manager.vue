@@ -82,7 +82,7 @@
                       :value="normalizeLimitAmount(limits.payment[type])"
                       @input="setLimitValue($event, limits.payment[type])"
                       class="limits-manager__limit-field"
-                      :placeholder="getLimitLable(limits.payment, type)"
+                      :placeholder="getLimitLabel(limits.payment, type)"
                       :class="{
                         'limits-manager__limit-field--unlimited':
                           isMaxLimitValue(limits.payment[type])
@@ -135,7 +135,7 @@
                       :value="normalizeLimitAmount(limits.withdrawal[type])"
                       @input="setLimitValue($event, limits.withdrawal[type])"
                       class="limits-manager__limit-field"
-                      :placeholder="getLimitLable(limits.withdrawal, type)"
+                      :placeholder="getLimitLabel(limits.withdrawal, type)"
                       :class="{
                         'limits-manager__limit-field--unlimited':
                           isMaxLimitValue(limits.withdrawal[type])
@@ -188,7 +188,7 @@
                       :value="normalizeLimitAmount(limits.deposit[type])"
                       @input="setLimitValue($event, limits.deposit[type])"
                       class="limits-manager__limit-field"
-                      :placeholder="getLimitLable(limits.deposit, type)"
+                      :placeholder="getLimitLabel(limits.deposit, type)"
                       :class="{
                         'limits-manager__limit-field--unlimited':
                           isMaxLimitValue(limits.deposit[type])
@@ -585,7 +585,7 @@ export default {
           : limit.value
       }
     },
-    getLimitLable (limit, type) {
+    getLimitLabel (limit, type) {
       if (limit[type]) {
         return limit[type].value === ''
           ? 'Not set'
