@@ -1,6 +1,6 @@
 {
   "name": "admin-panel",
-  "version": "1.6.0-rc.1",
+  "version": "1.6.0",
   "description": "A TokenD admin client",
   "author": "Distributed Lab <contact@distributedlab.com>",
   "private": true,
@@ -18,7 +18,9 @@
     "rsc": "node scripts/release-sanity-check.js"
   },
   "dependencies": {
-    "@tokend/js-sdk": "1.6.0-rc.0",
+    "@sentry/browser": "5.1.1",
+    "@sentry/integrations": "5.1.2",
+    "@tokend/js-sdk": "1.6.0",
     "axios": "0.15.3",
     "camelcase-keys-deep": "0.1.0",
     "d3": "5.7.0",
