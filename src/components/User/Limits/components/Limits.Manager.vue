@@ -56,7 +56,7 @@
         </select-field>
         <input-field
           class="limits-manager__filter"
-          v-model.trim="specificUserAddress"
+          v-model.trim="filters.account"
           label="Email or Account ID"
           autocomplete-type="email"
           v-if="filters.scope === SCOPE_TYPES.account"
@@ -64,7 +64,9 @@
       </div>
     </div>
     <div class="limits-manager__inner">
-      <template v-if="filters.scope !== SCOPE_TYPES.account || filters.address">
+      <template
+        v-if="filters.scope !== SCOPE_TYPES.account || filters.userAddress"
+      >
         <div class="limits-manager__limits-list-wrp">
           <template v-if="limits.payment">
             <div class="limits-manager__limits-list">
@@ -230,7 +232,7 @@
           <p>Loading ...</p>
         </div>
       </template>
-      <template v-else-if="!specificUserAddress">
+      <template v-else-if="!filters.account">
         <div class="limits-manager__message-wrp">
           <p>Please specify account</p>
         </div>
@@ -249,7 +251,6 @@ import { SelectField, InputField } from '@comcom/fields'
 import get from 'lodash/get'
 import throttle from 'lodash/throttle'
 import pick from 'lodash/pick'
-import api from '@/api'
 import { Sdk } from '@/sdk'
 import {
   STATS_OPERATION_TYPES,
@@ -285,11 +286,10 @@ export default {
     filters: {
       asset: '',
       accountRole: '',
-      address: '',
+      userAddress: '',
+      account: '',
       scope: SCOPE_TYPES.global,
     },
-    specificUserAddress: '',
-    userEmail: '',
     limits: {
       withdrawal: {},
       payment: {},
@@ -321,8 +321,8 @@ export default {
     'filters.accountRole': {
       handler: function (value) {
         if (value) {
-          this.specificUserAddress = ''
-          this.filters.address = ''
+          this.filters.account = ''
+          this.filters.userAddress = ''
           this.setFilters()
           this.getLimits()
         }
@@ -336,7 +336,7 @@ export default {
       },
       immediate: true,
     },
-    'specificUserAddress': {
+    'filters.account': {
       handler: throttle(function () {
         this.setFilters()
       }, 1000),
@@ -347,13 +347,13 @@ export default {
       this.filters.accountRole = value === SCOPE_TYPES.accountRole
         ? String(config.ACCOUNT_ROLES.general)
         : null
-      this.specificUserAddress = ''
+      this.filters.account = ''
       if (value !== SCOPE_TYPES.account) {
         this.setFilters()
         this.getLimits()
       }
     },
-    'filters.address': function (value) {
+    'filters.userAddress': function (value) {
       if (!value) return
       this.getLimits()
     },
@@ -376,7 +376,7 @@ export default {
 
       const limitDetails = {
         assetCode: this.filters.asset,
-        accountId: this.filters.address,
+        accountId: this.filters.userAddress,
         accountRole: this.filters.accountRole,
       }
 
@@ -400,7 +400,7 @@ export default {
       async function getLimit (statsOpType) {
         const filters = {}
         if (this.filters.scope === SCOPE_TYPES.account) {
-          filters.account = this.filters.address
+          filters.account = this.filters.userAddress
         } else if (this.filters.scope === SCOPE_TYPES.accountRole) {
           filters.account_role = this.filters.accountRole
         }
@@ -487,8 +487,10 @@ export default {
           .toLowerCase()
 
         return `Delete ${accountRole} ${type} limits?`
+      } else if (this.filters.scope === SCOPE_TYPES.account) {
+        return `Delete ${this.filters.account} ${type} limits?`
       } else {
-        return `Delete ${this.userEmail} ${type} limits?`
+        return `Delete global ${type} limits?`
       }
     },
     async getAssets () {
@@ -505,11 +507,11 @@ export default {
             filter: { email: email },
             page: { limit: 1 },
           })
-        this.userEmail = ((data || [])[0] || {}).email || email
-        if (this.userEmail === email) {
-          this.filters.address = ((data || [])[0] || {}).address
+        const userEmail = ((data || [])[0] || {}).email || email
+        if (userEmail === email) {
+          this.filters.userAddress = ((data || [])[0] || {}).address
         } else {
-          this.filters.address = ''
+          this.filters.userAddress = ''
         }
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
@@ -551,7 +553,7 @@ export default {
     },
 
     isAccountAddressValid () {
-      const isAddressInvalid = !this.filters.address &&
+      const isAddressInvalid = !this.filters.userAddress &&
         this.filters.scope === SCOPE_TYPES.account
 
       if (isAddressInvalid) {
@@ -565,17 +567,14 @@ export default {
       if (!this.filters.asset) this.filters.asset = get(this.assets, '[0].id')
       const emailRegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
       this.isAddressLoading = true
-      if (this.specificUserAddress) {
-        if (Sdk.base.Keypair.isValidPublicKey(this.specificUserAddress)) {
-          this.filters.address = this.specificUserAddress
-          this.userEmail = await api.users.getEmailByAccountId(
-            this.filters.address
-          )
-        } else if (emailRegExp.test(this.specificUserAddress)) {
-          await this.loadAccountIdByEmail(this.specificUserAddress)
+      if (this.filters.account) {
+        if (Sdk.base.Keypair.isValidPublicKey(this.filters.account)) {
+          this.filters.userAddress = this.filters.account
+        } else if (emailRegExp.test(this.filters.account)) {
+          await this.loadAccountIdByEmail(this.filters.account)
         }
       } else {
-        this.filters.address = ''
+        this.filters.userAddress = ''
       }
       this.isAddressLoading = false
     },
