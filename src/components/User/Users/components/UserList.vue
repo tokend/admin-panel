@@ -152,10 +152,6 @@ export default {
   },
 
   watch: {
-    'filters.state' () {
-      this.reloadCollectionLoader()
-    },
-
     'filters.role' () {
       this.reloadCollectionLoader()
     },

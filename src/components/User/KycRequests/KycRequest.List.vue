@@ -139,7 +139,6 @@ import SelectField from '@comcom/fields/SelectField'
 import { EmailGetter } from '@comcom/getters'
 
 import { formatDate } from '@/utils/formatters'
-import { snakeToCamelCase } from '@/utils/un-camel-case'
 import { clearObject } from '@/utils/clearObject'
 
 import { KYC_REQUEST_STATES } from '@/constants'
@@ -158,16 +157,6 @@ export default {
     SelectField,
     InputField,
     CollectionLoader,
-  },
-
-  provide () {
-    const kycRequestsList = {}
-    Object.defineProperty(kycRequestsList, 'updateAsk', {
-      enumerable: true,
-      get: () => false,
-      set: () => this.loadList(),
-    })
-    return { kycRequestsList }
   },
 
   filters: {
@@ -206,7 +195,6 @@ export default {
   },
 
   methods: {
-    snakeToCamelCase,
     async loadList () {
       this.isLoading = true
       let response = {}

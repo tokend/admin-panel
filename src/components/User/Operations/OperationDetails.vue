@@ -51,22 +51,20 @@ export default {
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }
-      operationList.filter(operation => {
-        if (operation.id === this.operationId) {
-          const operationType = operation.operation.details.type
-            .replace(/operations-/g, '')
-            .split('-')
-            .join(' ')
-          this.operation = Object.assign({}, operation, {
-            operationType: operationType
-              .charAt(0).toUpperCase() + operationType.slice(1),
-            ledgerCloseTime: moment(operation.operation.appliedAt)
-              .format('DD MMM YYYY [at] hh:mm:ss'),
-            sourceAccount: operation.operation.source.id === this.masterPubKey ? 'Master' : operation.operation.source.id,
-            receiverAccount: get(operation, 'operation.details.receiverAccount.id'),
-            accountTo: get(operation, 'operation.details.accountTo.id'),
-          })
-        }
+      const operation = operationList
+        .find(operation => operation.id === this.operationId)
+      const operationType = operation.operation.details.type
+        .replace(/operations-/g, '')
+        .split('-')
+        .join(' ')
+      this.operation = Object.assign({}, operation, {
+        operationType: operationType
+          .charAt(0).toUpperCase() + operationType.slice(1),
+        ledgerCloseTime: moment(operation.operation.appliedAt)
+          .format('DD MMM YYYY [at] hh:mm:ss'),
+        sourceAccount: operation.operation.source.id === this.masterPubKey ? 'Master' : operation.operation.source.id,
+        receiverAccount: get(operation, 'operation.details.receiverAccount.id'),
+        accountTo: get(operation, 'operation.details.accountTo.id'),
       })
     },
   },
