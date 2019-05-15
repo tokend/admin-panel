@@ -71,7 +71,7 @@ export default Object.assign(
     /**
      * URL of the web client
      */
-    WEB_CLIENT: 'http://localhost:8095/',
+    WEB_CLIENT_URL: 'http://localhost:8095',
   },
   process.env,
   document.ENV

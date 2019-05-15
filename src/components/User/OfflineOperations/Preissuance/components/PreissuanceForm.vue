@@ -138,7 +138,7 @@ export default {
 
   computed: {
     preissuanceGuideURL () {
-      return config.WEB_CLIENT + 'pre-issuance-guide'
+      return config.WEB_CLIENT_URL + '/pre-issuance-guide'
     },
   },
 
