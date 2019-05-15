@@ -424,11 +424,20 @@ export default {
       }
     },
     async updateLimits (limits) {
-      if (!this.isValidLimits(limits) || !this.isAccountAddressValid()) {
+      const newLimits = cloneDeep(limits)
+      LIMITS_TYPES.forEach(
+        type => {
+          if (newLimits[type].value === '' && !this.isLimitsEmpty(newLimits)) {
+            newLimits[type] = DEFAULT_MAX_AMOUNT
+          } else {
+            newLimits[type] = newLimits[type].value
+          }
+        }
+      )
+      if (!this.isValidLimits(newLimits) || !this.isAccountAddressValid()) {
         return
       }
       this.isPending = true
-      const newLimits = cloneDeep(limits)
       try {
         if (newLimits.accountRole == null) {
           // managelimitbuilder doesnt accept opts.accountRole NULL value
@@ -439,15 +448,8 @@ export default {
           // managelimitbuilder doesnt accept opts.accountID NULL value
           delete newLimits.accountID
         }
-        const limitTypes = {}
-        LIMITS_TYPES.forEach(
-          type => {
-            limitTypes[type] = newLimits[type].value
-          }
-        )
         const operation = Sdk.base.ManageLimitsBuilder.createLimits({
           ...newLimits,
-          ...limitTypes,
         })
         await ApiCallerFactory
           .createCallerInstance()
@@ -458,6 +460,18 @@ export default {
         ErrorHandler.process(e)
       }
       this.isPending = false
+    },
+    isLimitsEmpty (limits) {
+      const totalCountLimits = 4
+      let countEmptyLimits = 0
+      LIMITS_TYPES.forEach(
+        type => {
+          if (limits[type].value === '') {
+            countEmptyLimits++
+          }
+        }
+      )
+      return countEmptyLimits === totalCountLimits
     },
     async removeLimits (limits, type) {
       if (limits.id === 0) {
@@ -520,31 +534,26 @@ export default {
     // it's a quick fix of the limits validation. Need to refactor it ASAP
     isValidLimits (limits) {
       for (const limit of Object.values(pick(limits, LIMITS_TYPES))) {
-        if (limit.value === null) {
-          ErrorHandler.process('Fill in all the fields. Not set value not allowed')
-          return false
-        }
-
-        if (!this.numericValueRegExp.test(limit.value)) {
+        if (!this.numericValueRegExp.test(limit)) {
           ErrorHandler.process('Only numeric value allowed')
           return false
         }
       }
-      if (+limits.weeklyOut.value < +limits.dailyOut.value) {
+      if (+limits.weeklyOut < +limits.dailyOut) {
         ErrorHandler.process('Weekly out limits should be more or equal to daily out')
         return false
       }
       const isMonthlyLimitsValid =
-        +limits.monthlyOut.value < +limits.dailyOut.value ||
-        +limits.monthlyOut.value < +limits.weeklyOut.value
+        +limits.monthlyOut < +limits.dailyOut ||
+        +limits.monthlyOut < +limits.weeklyOut
       if (isMonthlyLimitsValid) {
         ErrorHandler.process('Monthly out limits should be more or equal to daily and/or weekly out')
         return false
       }
       const isAnnualLimitsValid =
-        +limits.annualOut.value < +limits.dailyOut.value ||
-        +limits.annualOut.value < +limits.weeklyOut.value ||
-        +limits.annualOut.value < +limits.monthlyOut.value
+        +limits.annualOut < +limits.dailyOut ||
+        +limits.annualOut < +limits.weeklyOut ||
+        +limits.annualOut < +limits.monthlyOut
       if (isAnnualLimitsValid) {
         ErrorHandler.process('Annual out limits should be more or equal to daily, weekly and/or monthly out')
         return false
@@ -685,4 +694,5 @@ export default {
       }
     }
   }
+
 </style>
