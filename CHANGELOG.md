@@ -12,13 +12,23 @@ for further information about branching and tagging conventions.
 - New "Capital deployment" fee type
 - "Unblocked" change role request detection in user operation list
 - Terms field in asset details
+- Sentry integration
+- Add link to pre-issuance guide
 - Show all the limits in one screen, "Not set" and "Unlimited" labels,
   ability to remove limits and move `Limits.Manager` to v3 endpoint
-  
+
 #### Fixed
 - Fixed a bug when we confirm a request for changes in limits,
   at which we received empty values and could not confirm or cancel the request.
-  - Displaying of US-related roles in KYC verification
+- Displaying of US-related roles in KYC verification
+- Displaying of confirmation modal on the issuance form
+- Uploading documents on create asset form
+- Asset select in withdrawal list
+
+## [1.6.0] - 2019-05-09
+### "Under the hood" changes
+#### Changed
+- Now using @tokend/js-sdk@1.6.0
 
 ## [1.6.0-rc.1] - 2019-05-02
 #### Added
@@ -216,7 +226,8 @@ for further information about branching and tagging conventions.
 
 ## [1.3.0] - 2019-03-01
 
-[Unreleased]: https://github.com/tokend/admin-panel/compare/1.6.0-rc.1...HEAD
+[Unreleased]: https://github.com/tokend/admin-panel/compare/1.6.0...HEAD
+[1.6.0]: https://github.com/tokend/admin-panel/compare/1.6.0-rc.1...1.6.0
 [1.6.0-rc.1]: https://github.com/tokend/admin-panel/compare/1.6.0-rc.0...1.6.0-rc.1
 [1.6.0-rc.0]: https://github.com/tokend/admin-panel/compare/1.5.0...1.6.0-rc.0
 [1.5.0]: https://github.com/tokend/admin-panel/compare/1.5.0-rc.3...1.5.0
