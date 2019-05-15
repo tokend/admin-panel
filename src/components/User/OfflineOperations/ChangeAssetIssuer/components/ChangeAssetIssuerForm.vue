@@ -45,7 +45,9 @@
     <a
       class="change-asset-issuer-form__link"
       :href="preissuanceGuideURL"
-      target="_blank">
+      target="_blank"
+      rel="noopener"
+    >
       Learn more about pre-issuance
     </a>
     <div
