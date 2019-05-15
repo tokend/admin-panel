@@ -42,7 +42,14 @@
     <p class="change-asset-issuer-form__expiration-date-note text">
       <i>Note: </i>Transaction is valid for one week since the file was created
     </p>
-
+    <a
+      class="change-asset-issuer-form__link"
+      :href="preissuanceGuideURL"
+      target="_blank"
+      rel="noopener"
+    >
+      Learn more about pre-issuance
+    </a>
     <div
       class="change-asset-issuer-form__summary-actions"
       v-if="asset && accountId"
@@ -67,6 +74,7 @@
 <script>
 import { Sdk } from '@/sdk'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import config from '@/config'
 
 export default {
   data () {
@@ -77,6 +85,12 @@ export default {
       source: '',
       uploadBtnDisable: false,
     }
+  },
+
+  computed: {
+    preissuanceGuideURL () {
+      return config.WEB_CLIENT_URL + '/pre-issuance-guide'
+    },
   },
 
   methods: {
@@ -177,5 +191,9 @@ export default {
 
 .change-asset-issuer-form__expiration-date-note {
   margin-top: 1rem;
+}
+
+.change-asset-issuer-form__link {
+  font-size: 1.4rem;
 }
 </style>

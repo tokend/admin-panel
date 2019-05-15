@@ -67,6 +67,11 @@ export default Object.assign(
      * required by the Sentry SDKs.
      */
     SENTRY_DSN: '',
+
+    /**
+     * URL of the web client
+     */
+    WEB_CLIENT_URL: 'http://localhost:8095',
   },
   process.env,
   document.ENV
