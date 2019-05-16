@@ -55,7 +55,7 @@
               class="app-list__cell app-list__cell--right app-list__cell--important"
               :title="`${localize(item.requestDetails.amount)} ${item.requestDetails.asset.id}`"
             >
-              {{ localize(item.requestDetails.amount) }} {{item.requestDetails.asset.id }}
+              {{ localize(item.requestDetails.amount) }} {{ item.requestDetails.asset.id }}
             </span>
             <!-- eslint-enable max-len -->
 

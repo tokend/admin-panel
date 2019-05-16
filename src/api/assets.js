@@ -43,5 +43,5 @@ export default {
       .createCallerInstance()
       .postOperations(operation)
     return response.data
-  }
+  },
 }

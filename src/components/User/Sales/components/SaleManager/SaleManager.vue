@@ -51,7 +51,6 @@ import ParticipantsTab from './SaleManager.ParticipantsTab'
 import SyndicateTab from './SaleManager.SyndicateTab'
 import UpdatesTab from './SaleManager.UpdatesTab'
 
-import { Sdk } from '@/sdk'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { ApiCallerFactory } from '@/api-caller-factory'
 
@@ -88,7 +87,7 @@ export default {
         const { data } = await ApiCallerFactory
           .createCallerInstance()
           .get(`/v3/sales/${id}`, {
-            include: ['base_asset', 'default_quote_asset']
+            include: ['base_asset', 'default_quote_asset'],
           })
         this.sale = data
         this.isLoaded = true

@@ -1,7 +1,6 @@
 import SelectField from '@comcom/fields/SelectField'
 import { CollectionLoader } from '@/components/common'
 
-import { Sdk } from '@/sdk'
 import { REQUEST_STATES, ASSET_POLICIES } from '@/constants'
 
 import localize from '@/utils/localize'
@@ -78,12 +77,12 @@ export default {
             filter: {
               reviewer: config.MASTER_ACCOUNT,
               state: this.filters.state,
-              'request_details.asset': this.filters.asset
+              'request_details.asset': this.filters.asset,
             },
             page: {
-              order: 'asc'
+              order: 'asc',
             },
-            include: ['request_details']
+            include: ['request_details'],
           })
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)

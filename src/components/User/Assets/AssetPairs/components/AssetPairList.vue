@@ -135,11 +135,7 @@ export default {
           .createCallerInstance()
           .getWithSignature('/v3/asset_pairs')
       } catch (error) {
-<<<<<<< HEAD
-        ErrorHandler.process(error)
-=======
         ErrorHandler.processWithoutFeedback(error)
->>>>>>> master
         this.isFailed = true
       }
       this.isLoaded = true

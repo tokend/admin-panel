@@ -62,11 +62,7 @@
           </li>
           <li>
             <span>Code</span>
-<<<<<<< HEAD
-            <span>{{request.asset.id}}</span>
-=======
-            <span>{{ request.asset.code }}</span>
->>>>>>> master
+            <span>{{ request.asset.id }}</span>
           </li>
           <li>
             <span>Initial preissued amount</span>
@@ -85,7 +81,9 @@
           </li>
           <li>
             <span>Policies</span>
-            <asset-policies-formatter :policy-mask="request.asset.policies.value" />
+            <asset-policies-formatter
+              :policy-mask="request.asset.policies.value"
+            />
           </li>
           <li>
             <span>Terms</span>

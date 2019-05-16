@@ -46,7 +46,7 @@
                 :value="item.id"
                 :key="item.id"
               >
-                {{item.id}}
+                {{ item.id }}
               </option>
             </select-field>
           </div>
@@ -98,7 +98,6 @@ import Bus from '@/utils/EventBus'
 import { DEFAULT_INPUT_STEP, DEFAULT_INPUT_MIN } from '@/constants'
 
 import { confirmAction } from '@/js/modals/confirmation_message'
-import { ErrorHandler } from '@/utils/ErrorHandler'
 import { ApiCallerFactory } from '@/api-caller-factory'
 
 export default {
@@ -146,8 +145,8 @@ export default {
           .createStubbornCallerInstance()
           .stubbornGet('/v3/assets', {
             filter: {
-              owner: config.MASTER_ACCOUNT
-            }
+              owner: config.MASTER_ACCOUNT,
+            },
           })
         const list = data || []
         const issuableAssets = list.filter(item => item.maxIssuanceAmount > 0)
@@ -167,15 +166,18 @@ export default {
       }
 
       if (!address) {
+        // eslint-disable-next-line prefer-promise-reject-errors
         return Promise.reject(`Account doesn't exists in the system`)
       }
       const { data } = await ApiCallerFactory
         .createCallerInstance()
         .getWithSignature(`/v3/accounts/${address}`, {
-          include: ['balances', 'balances.asset']
+          include: ['balances', 'balances.asset'],
         })
       let account = data
-      const balance = account.balances.find(item => item.asset.id === this.form.asset)
+      const balance = account.balances.find(
+        item => item.asset.id === this.form.asset
+      )
 
       if (!balance) {
         try {
@@ -193,10 +195,12 @@ export default {
         const { data } = await ApiCallerFactory
           .createCallerInstance()
           .getWithSignature(`/v3/accounts/${address}`, {
-            include: ['balances', 'balances.asset']
+            include: ['balances', 'balances.asset'],
           })
         account = data
-        return account.balances.find(item => item.asset.id === this.form.asset).id
+        return account.balances.find(
+          item => item.asset.id === this.form.asset
+        ).id
       } else {
         return balance.id
       }
@@ -206,15 +210,16 @@ export default {
       if (receiver === '') {
         throw new Error(`The receiver has no ${this.form.asset} balance.`)
       }
-      const operation = Sdk.base.CreateIssuanceRequestBuilder.createIssuanceRequest({
-        asset: this.form.asset,
-        amount: this.form.amount,
-        receiver: receiver,
-        reference: this.form.reference,
-        source: config.MASTER_ACCOUNT,
-        creatorDetails: {},
-        allTasks: 0
-      })
+      const operation = Sdk.base.CreateIssuanceRequestBuilder
+        .createIssuanceRequest({
+          asset: this.form.asset,
+          amount: this.form.amount,
+          receiver: receiver,
+          reference: this.form.reference,
+          source: config.MASTER_ACCOUNT,
+          creatorDetails: {},
+          allTasks: 0,
+        })
       await ApiCallerFactory
         .createCallerInstance()
         .postOperations(operation)

@@ -289,8 +289,6 @@
 
 <script>
 import { ImageField, TickField, InputField, SelectField } from '@comcom/fields'
-import { confirmAction } from '@/js/modals/confirmation_message'
-
 import api from '@/api'
 import { Sdk } from '@/sdk'
 import { ApiCallerFactory } from '@/api-caller-factory'
@@ -298,7 +296,6 @@ import { ApiCallerFactory } from '@/api-caller-factory'
 import safeGet from 'lodash/get'
 
 import config from '@/config'
-import { ErrorHandler } from '@/utils/ErrorHandler'
 
 import Bus from '@/utils/EventBus'
 import { fileReader } from '@/utils/file-reader'
@@ -316,13 +313,9 @@ import {
 import 'mdi-vue/ChevronDownIcon'
 import 'mdi-vue/ChevronUpIcon'
 
-<<<<<<< HEAD
 import { confirmAction } from '@/js/modals/confirmation_message'
 import { ErrorHandler } from '@/utils/ErrorHandler'
-import { ApiCallerFactory } from '@/api-caller-factory'
 
-=======
->>>>>>> master
 export default {
   components: {
     InputField,
@@ -346,7 +339,7 @@ export default {
       asset: {
         preissuedAssetSigner: config.MASTER_ACCOUNT,
         policies: {
-          value: 0
+          value: 0,
         },
         initialPreissuedAmount: '0',
         trailingDigitsCount: '6',
@@ -411,7 +404,7 @@ export default {
         const { data } = await ApiCallerFactory
           .createCallerInstance()
           .getWithSignature(`/v3/assets/${this.assetCode}`, {
-            include: ['owner']
+            include: ['owner'],
           })
         data.creatorDetails = data.creatorDetails || data.details
         Object.assign(this.asset, data)
@@ -490,14 +483,9 @@ export default {
             },
           })
         }
-<<<<<<< HEAD
         await ApiCallerFactory
           .createCallerInstance()
           .postOperations(operation)
-=======
-
-        await Sdk.horizon.transactions.submitOperations(operation)
->>>>>>> master
         Bus.$emit('recheckConfig')
 
         this.$store.dispatch('SET_INFO', 'Submitted successfully.')

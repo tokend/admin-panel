@@ -30,17 +30,9 @@ import { ASSET_POLICIES } from '@/constants'
 import config from '@/config'
 
 import api from '@/api'
-<<<<<<< HEAD
-import config from '@/config'
 import 'mdi-vue/AlertOutlineIcon'
-=======
-import { Sdk } from '@/sdk'
-
->>>>>>> master
 import store from '@/store'
 import { ApiCallerFactory } from '@/api-caller-factory'
-
-import 'mdi-vue/AlertOutlineIcon'
 
 const CHECK_LIST = [
   {
@@ -50,11 +42,13 @@ const CHECK_LIST = [
         .createStubbornCallerInstance()
         .stubbornGet('/v3/assets', {
           filter: {
-            owner: config.MASTER_ACCOUNT
-          }
+            owner: config.MASTER_ACCOUNT,
+          },
         })
       return (data || [])
-        .filter(item => item && item.policies.value & ASSET_POLICIES.statsQuoteAsset)
+        .filter(
+          item => item && item.policies.value & ASSET_POLICIES.statsQuoteAsset
+        )
         .length !== 1
     },
   },

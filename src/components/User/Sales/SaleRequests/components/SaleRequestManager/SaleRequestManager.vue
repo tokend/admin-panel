@@ -99,10 +99,6 @@
 </template>
 
 <script>
-<<<<<<< HEAD
-import api from '@/api'
-=======
->>>>>>> master
 import TextField from '@comcom/fields/TextField'
 import TickField from '@comcom/fields/TickField'
 
@@ -114,7 +110,6 @@ import DetailsTab from './SaleRequestManager.DetailsTab'
 import DescriptionTab from './SaleRequestManager.DescriptionTab'
 import SyndicateTab from '../../../components/SaleManager/SaleManager.SyndicateTab'
 
-import { Sdk } from '@/sdk'
 import api from '@/api'
 
 import { REQUEST_STATES } from '@/constants'
@@ -179,9 +174,8 @@ export default {
         const { data } = await ApiCallerFactory
           .createCallerInstance()
           .getWithSignature(`/v3/assets/${this.getSaleDetails.baseAsset}`, {
-            include: ['owner']
+            include: ['owner'],
           })
-        console.log(data)
         this.request.asset = data
         this.request.isReady = true
       } catch (error) {

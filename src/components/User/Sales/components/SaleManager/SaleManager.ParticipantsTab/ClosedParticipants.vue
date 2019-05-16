@@ -9,12 +9,8 @@
         <thead>
           <tr>
             <th>Investor</th>
-<<<<<<< HEAD
             <th>Invested at</th>
-            <th>{{sale.baseAsset.id}} acquired</th>
-=======
-            <th>{{ sale.baseAsset }} acquired</th>
->>>>>>> master
+            <th>{{ sale.baseAsset.id }} acquired</th>
           </tr>
         </thead>
         <tbody>

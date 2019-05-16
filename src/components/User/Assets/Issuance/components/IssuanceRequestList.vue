@@ -65,23 +65,28 @@
               class="issuance-rl__li-a"
               :to="{ name: 'assets.issuance.props', params: { id: item.id } }"
             >
-            <span
-              class="app-list__cell app-list__cell--important"
-              :title="`${localize(item.requestDetails.amount)} ${item.requestDetails.asset.id}`"
-            >
-              {{ localize(item.requestDetails.amount) }}
-              {{ item.requestDetails.asset.id }}
-            </span>
+              <span
+                class="app-list__cell app-list__cell--important"
+                :title="
+                  // eslint-disable-next-line max-len
+                  `${localize(item.requestDetails.amount)} ${item.requestDetails.asset.id}`
+                "
+              >
+                {{ localize(item.requestDetails.amount) }}
+                {{ item.requestDetails.asset.id }}
+              </span>
 
-              <span class="app-list__cell app-list__cell--wrap"
-                    :title="item.createdAt">
-              {{ item.createdAt | dateTime }}
-            </span>
+              <span
+                class="app-list__cell app-list__cell--wrap"
+                :title="item.createdAt">
+                {{ item.createdAt | dateTime }}
+              </span>
 
-              <span class="app-list__cell"
-                    :title="item.requestor.id">
-              {{ item.requestor.id }}
-            </span>
+              <span
+                class="app-list__cell"
+                :title="item.requestor.id">
+                {{ item.requestor.id }}
+              </span>
             </router-link>
           </li>
         </ul>

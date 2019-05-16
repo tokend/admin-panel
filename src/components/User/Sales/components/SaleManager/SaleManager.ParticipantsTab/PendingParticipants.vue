@@ -7,22 +7,14 @@
         class="pending-participants__filter"
         v-model="filters.quoteAsset"
         label="Quote asset">
-<<<<<<< HEAD
         <template v-if="get(sale, 'quoteAssets', []).length">
-          <option :value="item.asset.id"
+          <option
+            :value="item.asset.id"
             v-for="(item, index) in sale.quoteAssets"
             :key="index"
-          >{{item.asset.id}}</option>
-=======
-        <template v-if="get(sale, 'quoteAssets.quoteAssets', []).length">
-          <option
-            :value="item.asset"
-            v-for="(item, index) in sale.quoteAssets.quoteAssets"
-            :key="index"
           >
-            {{ item.asset }}
+            {{ item.asset.id }}
           </option>
->>>>>>> master
         </template>
 
         <template v-else>
@@ -39,13 +31,8 @@
           <tr>
             <th>Investor</th>
             <th>Invested at</th>
-<<<<<<< HEAD
-            <th>{{filters.quoteAsset}} invested</th>
-            <th>{{sale.baseAsset.id}} acquired</th>
-=======
             <th>{{ filters.quoteAsset }} invested</th>
-            <th>{{ sale.baseAsset }} acquired</th>
->>>>>>> master
+            <th>{{ sale.baseAsset.id }} acquired</th>
           </tr>
         </thead>
         <tbody>
@@ -108,11 +95,7 @@ export default {
     return {
       participants: [],
       filters: {
-<<<<<<< HEAD
-        quoteAsset: get(this, 'sale.quoteAssets[0].asset.id', '')
-=======
-        quoteAsset: get(this, 'sale.quoteAssets.quoteAssets[0].asset', ''),
->>>>>>> master
+        quoteAsset: get(this, 'sale.quoteAssets[0].asset.id', ''),
       },
       isLoaded: false,
       isFailed: false,

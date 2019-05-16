@@ -39,10 +39,7 @@
 <script>
 import { SelectField } from '@comcom/fields'
 import { AssetPair } from '../models/AssetPair.js'
-<<<<<<< HEAD
 import { ApiCallerFactory } from '@/api-caller-factory'
-=======
->>>>>>> master
 
 export default {
   components: {

@@ -34,8 +34,6 @@ import { ErrorHandler } from '@/utils/ErrorHandler'
 
 const SECONDARY_MARKET_ORDER_BOOK_ID = '0'
 
-import { ErrorHandler } from '@/utils/ErrorHandler'
-
 export default {
   components: {
     OrderTable,
@@ -76,38 +74,21 @@ export default {
         quote_asset: pair.quote,
       }
       try {
-<<<<<<< HEAD
         const orderBookId = SECONDARY_MARKET_ORDER_BOOK_ID
         const formatedOrderBookId = `${pair.base}:${pair.quote}:${orderBookId}`
         const { data } = await ApiCallerFactory
           .createCallerInstance()
           .getWithSignature(`/v3/order_books/${formatedOrderBookId}`, {
-            include: ['buy_entries', 'sell_entries']
+            include: ['buy_entries', 'sell_entries'],
           })
         this.book.bids = data.buyEntries
         this.book.asks = data.sellEntries
         // TODO: No /v3 endpoint for trades yet
-=======
-        const response = await Sdk.horizon.orderBook.getAll({
-          ...params,
-          is_buy: true,
-        })
-        this.book.bids = response.data
-        const orderBookResponse = await Sdk.horizon.orderBook.getAll({
-          ...params,
-          is_buy: false,
-        })
-        this.book.asks = orderBookResponse.data
->>>>>>> master
         const tradesResponse = await Sdk.horizon.trades.getPage(params)
         this.book.history = tradesResponse.data
         this.isLoaded = true
       } catch (error) {
-<<<<<<< HEAD
         ErrorHandler.process(error)
-=======
-        ErrorHandler.processWithoutFeedback(error)
->>>>>>> master
         this.isFailed = true
       }
     },

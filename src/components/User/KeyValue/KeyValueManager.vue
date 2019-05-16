@@ -13,7 +13,7 @@
               :value="item.id"
               :key="item.id"
             >
-              {{item.id}}
+              {{ item.id }}
             </option>
           </select-field>
 
@@ -87,10 +87,6 @@
 import { SelectField, InputField } from '@comcom/fields'
 
 import { Sdk } from '@/sdk'
-import {
-  SelectField,
-  InputField
-} from '@comcom/fields'
 import { KEY_VALUE_ENTRY_TYPE } from '@/constants'
 import { ApiCallerFactory } from '@/api-caller-factory'
 import { ErrorHandler } from '@/utils/ErrorHandler'
@@ -98,10 +94,8 @@ import { ErrorHandler } from '@/utils/ErrorHandler'
 const KEY_VALUE_TYPE_SHORT_NAME = {
   uint32: 'u32',
   string: 'str',
-  uint64: 'u64'
+  uint64: 'u64',
 }
-
-import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   components: {
@@ -119,7 +113,6 @@ export default {
       key: '',
       value: '',
     },
-
     list: [],
     isPending: false,
     KEY_VALUE_ENTRY_TYPE,
@@ -127,8 +120,9 @@ export default {
 
   watch: {
     'updateForm.key' (key) {
-      const item = this.list.find(elem => elem.key === key)
-      this.updateForm.value = item[`${item.type.name}Value`]
+      const item = this.list.find(elem => elem.id === key)
+      const name = KEY_VALUE_TYPE_SHORT_NAME[item.value.type.name]
+      this.updateForm.value = item.value[name]
     },
   },
 
@@ -161,9 +155,9 @@ export default {
         .stubbornGet('/v3/key_values')
       this.list = data
 
-        if (!this.list.length) {
-          return
-        }
+      if (!this.list.length) {
+        return
+      }
 
       if (!this.updateForm.key) {
         const item = this.list[0]
@@ -173,13 +167,6 @@ export default {
       }
     },
   },
-  watch: {
-    'updateForm.key' (key) {
-      const item = this.list.find(elem => elem.id === key)
-      const name = KEY_VALUE_TYPE_SHORT_NAME[item.value.type.name]
-      this.updateForm.value = item.value[name]
-    }
-  }
 }
 </script>
 

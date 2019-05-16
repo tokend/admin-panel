@@ -7,16 +7,12 @@
         class="preissuance-requests-index__asset-select"
         v-model="asset"
         label="Asset">
-<<<<<<< HEAD
-        <option v-for="a in assets" :value="a.id" :key="a.id">
-          {{a.id}}
-=======
         <option
           v-for="a in assets"
-          :value="a.code"
-          :key="a.code">
-          {{ a.code }}
->>>>>>> master
+          :value="a.id"
+          :key="a.id"
+        >
+          {{ a.id }}
         </option>
       </select-field>
 
@@ -53,12 +49,8 @@ export default {
 
   computed: {
     assetInfo () {
-<<<<<<< HEAD
-      const selectedAsset = this.assets.filter(asset => asset.id === this.asset)[0]
-=======
       const selectedAsset = this.assets
-        .filter(asset => asset.code === this.asset)[0]
->>>>>>> master
+        .filter(asset => asset.id === this.asset)[0]
       return selectedAsset || {}
     },
 
@@ -82,15 +74,9 @@ export default {
           .createStubbornCallerInstance()
           .stubbornGet('/v3/assets')
         this.assets = [{
-<<<<<<< HEAD
-          id: 'All'
+          id: 'All',
         }].concat(data)
         this.asset = this.assets[0].id
-=======
-          code: 'All',
-        }].concat(response.data)
-        this.asset = this.assets[0].code
->>>>>>> master
         this.assetsLoaded = true
 
         this.$store.commit('CLOSE_LOADER')

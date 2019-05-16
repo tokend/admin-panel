@@ -115,7 +115,9 @@
               <template v-else-if="sale.saleState.value === SALE_STATES.closed">
                 Closed
               </template>
-              <template v-else-if="sale.saleState.value === SALE_STATES.cancelled">
+              <template
+                v-else-if="sale.saleState.value === SALE_STATES.cancelled"
+              >
                 Cancelled
               </template>
             </span>
@@ -151,13 +153,9 @@
           <span>
             <!-- to padding of label.data-caption -->
           </span>
-<<<<<<< HEAD
-          <label class="data-caption">{{ item.asset.id }} progress</label>
-=======
           <label class="data-caption">
-            {{ item.asset }} progress
+            {{ item.asset.id }} progress
           </label>
->>>>>>> master
           <li>
             <span>Price (per {{ sale.baseAsset.id }})</span>
             <asset-amount-formatter :amount="item.price" />
@@ -168,24 +166,16 @@
           </li>
           <li>
             <!-- eslint-disable-next-line max-len -->
-<<<<<<< HEAD
-            <span :title="`Current cap + current caps of the other acceptable assets in the ${item.asset.id} equivalent`">Total current cap</span>
-=======
-            <span :title="`Current cap + current caps of the other acceptable assets in the ${item.asset} equivalent`">
+            <span :title="`Current cap + current caps of the other acceptable assets in the ${item.asset.id} equivalent`">
               Total current cap
             </span>
->>>>>>> master
             <asset-amount-formatter :amount="item.totalCurrentCap" />
           </li>
           <li>
             <!-- eslint-disable-next-line max-len -->
-<<<<<<< HEAD
-            <span :title="`Hard cap of the sale in the ${item.asset.id} equivalent`">Hard cap</span>
-=======
-            <span :title="`Hard cap of the sale in the ${item.asset} equivalent`">
+            <span :title="`Hard cap of the sale in the ${item.asset.id} equivalent`">
               Hard cap
             </span>
->>>>>>> master
             <asset-amount-formatter :amount="item.hardCap" />
           </li>
         </ul>
@@ -269,7 +259,6 @@ import {
   AssetPoliciesFormatter,
 } from '@comcom/formatters'
 
-import { Sdk } from '@/sdk'
 import { SALE_STATES } from '@/constants'
 import { ApiCallerFactory } from '@/api-caller-factory'
 
@@ -306,7 +295,7 @@ export default {
         const { data } = await ApiCallerFactory
           .createCallerInstance()
           .getWithSignature(`/v3/assets/${baseAsset.id}`, {
-            include: ['owner']
+            include: ['owner'],
           })
         this.asset = data
         this.isAssetLoaded = true

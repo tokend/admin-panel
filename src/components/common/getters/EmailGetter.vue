@@ -26,12 +26,6 @@
 </template>
 
 <script>
-<<<<<<< HEAD
-import { ErrorHandler } from '@/utils/ErrorHandler'
-import config from '@/config'
-=======
-import { Sdk } from '@/sdk'
->>>>>>> master
 import { ApiCallerFactory } from '@/api-caller-factory'
 
 import config from '@/config'
