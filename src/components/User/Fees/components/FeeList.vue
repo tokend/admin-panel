@@ -264,67 +264,6 @@
 </template>
 
 <script>
-<<<<<<< HEAD
-  import api from '@/api'
-  import { Sdk } from '@/sdk'
-  import { xdrTypeFromValue } from '@/utils/xdrTypeFromValue'
-  import { ErrorHandler } from '@/utils/ErrorHandler'
-  import { SelectField, InputField } from '@comcom/fields'
-  import {
-    ASSET_POLICIES,
-    DEFAULT_MAX_AMOUNT,
-    DEFAULT_INPUT_STEP,
-    FEE_TYPES,
-    PAYMENT_FEE_TYPES,
-    DEFAULT_BASE_ASSET
-  } from '@/constants'
-  import throttle from 'lodash/throttle'
-  import 'mdi-vue/ArrowUpIcon'
-
-  import { confirmAction } from '@/js/modals/confirmation_message'
-
-  import config from '@/config'
-  import { ApiCallerFactory } from '@/api-caller-factory'
-
-  const SCOPE_TYPES = Object.freeze({ // non-xdr values, internal use only
-    account: 'USER',
-    accountRole: 'ACCOUNT_TYPE',
-    global: 'GLOBAL'
-  })
-
-  export default {
-    components: {
-      SelectField,
-      InputField
-    },
-
-    data () {
-      return {
-        SCOPE_TYPES,
-        FEE_TYPES,
-        ACCOUNT_ROLES: config.ACCOUNT_ROLES,
-        DEFAULT_MAX_AMOUNT,
-        DEFAULT_INPUT_STEP,
-        PAYMENT_FEE_TYPES,
-
-        assets: [{ code: DEFAULT_BASE_ASSET }],
-        assetPairs: [],
-        fees: {},
-        isSubmitting: false,
-
-        filters: {
-          scope: SCOPE_TYPES.global,
-          feeType: '' + FEE_TYPES.paymentFee,
-          assetCode: DEFAULT_BASE_ASSET,
-
-          // secondary
-          accountRole: config.ACCOUNT_ROLES.general,
-          accountAlias: '', // address or email
-          accountAddress: '', // address will be inserted here
-
-          paymentFeeSubtype: PAYMENT_FEE_TYPES.outgoing // every fee has a subtype, but we're interested only in payment's
-        }
-=======
 import { SelectField, InputField } from '@comcom/fields'
 import { confirmAction } from '@/js/modals/confirmation_message'
 
@@ -414,7 +353,6 @@ export default {
         default:
           result = this.assets
           break
->>>>>>> master
       }
       return result
     },
@@ -539,37 +477,6 @@ export default {
     async updateFee (fees) {
       if (!await confirmAction()) return
 
-<<<<<<< HEAD
-        this.isSubmitting = true
-        try {
-          const opts = {
-            fee: {
-              feeType: xdrTypeFromValue('FeeType', Number(fees.feeType)),
-              subtype: String(fees.subtype) || '0',
-              asset: String(fees.asset),
-              fixedFee: String(fees.fixed),
-              percentFee: String(fees.percent),
-              accountId: additionalParams.account_id || additionalParams.address,
-              accountRole: additionalParams.account_type
-                ? String(additionalParams.account_type)
-                : undefined,
-              lowerBound: String(fees.lowerBound),
-              upperBound: String(fees.upperBound)
-            },
-            isDelete: fees.isDelete
-          }
-
-          const operation = Sdk.base.Operation.setFees(opts)
-
-          await ApiCallerFactory
-            .createCallerInstance()
-            .postOperations(operation)
-          await this.getFees()
-          this.$store.dispatch('SET_INFO', 'Submitted successfully')
-        } catch (error) {
-          this.isSubmitting = false
-          ErrorHandler.process(error)
-=======
       const additionalParams = this.composeRequestFilters(this.filters)
 
       if (+fees.lowerBound > +fees.upperBound) {
@@ -594,7 +501,6 @@ export default {
             upperBound: String(fees.upperBound),
           },
           isDelete: fees.isDelete,
->>>>>>> master
         }
         const operation = Sdk.base.Operation.setFees(opts)
 

@@ -13,11 +13,7 @@
               :value="item.id"
               :key="item.id"
             >
-<<<<<<< HEAD
               {{item.id}}
-=======
-              {{ item.key }}
->>>>>>> master
             </option>
           </select-field>
 
@@ -91,7 +87,6 @@
 import { SelectField, InputField } from '@comcom/fields'
 
 import { Sdk } from '@/sdk'
-<<<<<<< HEAD
 import {
   SelectField,
   InputField
@@ -105,9 +100,6 @@ const KEY_VALUE_TYPE_SHORT_NAME = {
   string: 'str',
   uint64: 'u64'
 }
-=======
-import { KEY_VALUE_ENTRY_TYPE } from '../../../constants'
->>>>>>> master
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
@@ -148,65 +140,39 @@ export default {
     async setKeyValue (key, value, entryType) {
       this.isPending = true
       try {
-<<<<<<< HEAD
-        const operation = Sdk.base.ManageKeyValueBuilder.putKeyValue({ key, value, entryType })
+        const operation = Sdk.base.ManageKeyValueBuilder
+          .putKeyValue({ key, value, entryType })
+
         await ApiCallerFactory
           .createCallerInstance()
           .postOperations(operation)
-=======
-        const operation = Sdk.base.ManageKeyValueBuilder
-          .putKeyValue({ key, value, entryType })
-        await Sdk.horizon.transactions.submitOperations(operation)
->>>>>>> master
         await this.getList()
 
         this.$store.dispatch('SET_INFO', 'Submitted successfully')
       } catch (error) {
-<<<<<<< HEAD
         ErrorHandler.process(error)
-=======
-        ErrorHandler.process('Failed to submit operation')
->>>>>>> master
       }
       this.isPending = false
     },
 
     async getList () {
-<<<<<<< HEAD
       const { data } = await ApiCallerFactory
         .createStubbornCallerInstance()
         .stubbornGet('/v3/key_values')
       this.list = data
-=======
-      try {
-        const response = await Sdk.horizon.keyValue.getAll()
-        this.list = response.data
->>>>>>> master
 
         if (!this.list.length) {
           return
         }
 
-<<<<<<< HEAD
       if (!this.updateForm.key) {
         const item = this.list[0]
         const name = KEY_VALUE_TYPE_SHORT_NAME[item.value.type.name]
         this.updateForm.key = item.id
         this.updateForm.value = item.value[name]
-=======
-        if (!this.updateForm.key) {
-          const item = this.list[0]
-
-          this.updateForm.key = item.key
-          this.updateForm.value = item[`${item.type.name}Value`]
-        }
-      } catch (e) {
-        ErrorHandler.processWithoutFeedback(e)
->>>>>>> master
       }
     },
   },
-<<<<<<< HEAD
   watch: {
     'updateForm.key' (key) {
       const item = this.list.find(elem => elem.id === key)
@@ -214,8 +180,6 @@ export default {
       this.updateForm.value = item.value[name]
     }
   }
-=======
->>>>>>> master
 }
 </script>
 

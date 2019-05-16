@@ -55,11 +55,7 @@
               class="app-list__cell app-list__cell--right app-list__cell--important"
               :title="`${localize(item.requestDetails.amount)} ${item.requestDetails.asset.id}`"
             >
-<<<<<<< HEAD
               {{ localize(item.requestDetails.amount) }} {{item.requestDetails.asset.id }}
-=======
-              {{ localize(item.details.createIssuance.amount) }} {{ item.details.createIssuance.asset }}
->>>>>>> master
             </span>
             <!-- eslint-enable max-len -->
 
@@ -74,13 +70,7 @@
               class="app-list__cell app-list__cell--right "
               :title="item.requestDetails.receiver.id"
             >
-<<<<<<< HEAD
               <email-getter :balance-id="item.requestDetails.receiver.id" />
-=======
-              <email-getter
-                :balance-id="item.details.createIssuance.receiver"
-              />
->>>>>>> master
             </span>
 
             <span

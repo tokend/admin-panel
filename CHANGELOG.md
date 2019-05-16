@@ -14,6 +14,8 @@ for further information about branching and tagging conventions.
 - Terms field in asset details
 - Sentry integration
 - Add link to pre-issuance guide
+- Show all the limits in one screen, "Not set" and "Unlimited" labels,
+  ability to remove limits and move `Limits.Manager` to v3 endpoint
 
 #### Fixed
 - Fixed a bug when we confirm a request for changes in limits,

@@ -65,7 +65,6 @@
               class="issuance-rl__li-a"
               :to="{ name: 'assets.issuance.props', params: { id: item.id } }"
             >
-<<<<<<< HEAD
             <span
               class="app-list__cell app-list__cell--important"
               :title="`${localize(item.requestDetails.amount)} ${item.requestDetails.asset.id}`"
@@ -83,27 +82,6 @@
                     :title="item.requestor.id">
               {{ item.requestor.id }}
             </span>
-=======
-              <span
-                class="app-list__cell app-list__cell--important"
-                :title="`${localize(item.amount)} ${item.asset}`"
-              >
-                {{ localize(item.details.createIssuance.amount) }}
-                {{ item.details.createIssuance.asset }}
-              </span>
-
-              <span
-                class="app-list__cell app-list__cell--wrap"
-                :title="item.createdAt">
-                {{ item.createdAt | dateTime }}
-              </span>
-
-              <span
-                class="app-list__cell"
-                :title="item.requestor">
-                {{ item.requestor }}
-              </span>
->>>>>>> master
             </router-link>
           </li>
         </ul>

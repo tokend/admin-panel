@@ -41,16 +41,12 @@
               v-model="form.asset"
               label="Asset"
               :disabled="isSubmitting">
-<<<<<<< HEAD
-              <option v-for="item in assets" :value="item.id" :key="item.id">
-                {{item.id}}
-=======
               <option
                 v-for="item in assets"
-                :value="item.code"
-                :key="item.code">
-                {{ item.code }}
->>>>>>> master
+                :value="item.id"
+                :key="item.id"
+              >
+                {{item.id}}
               </option>
             </select-field>
           </div>
@@ -92,8 +88,6 @@
 import { InputField, SelectField } from '@comcom/fields'
 
 import { AssetAmountFormatter } from '@comcom/formatters'
-import { confirmAction } from '../../../../../js/modals/confirmation_message'
-
 import api from '@/api'
 import { Sdk } from '@/sdk'
 
@@ -103,13 +97,10 @@ import { ErrorHandler } from '@/utils/ErrorHandler'
 import Bus from '@/utils/EventBus'
 import { DEFAULT_INPUT_STEP, DEFAULT_INPUT_MIN } from '@/constants'
 
-<<<<<<< HEAD
 import { confirmAction } from '@/js/modals/confirmation_message'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { ApiCallerFactory } from '@/api-caller-factory'
 
-=======
->>>>>>> master
 export default {
   components: {
     InputField,
@@ -176,7 +167,6 @@ export default {
       }
 
       if (!address) {
-<<<<<<< HEAD
         return Promise.reject(`Account doesn't exists in the system`)
       }
       const { data } = await ApiCallerFactory
@@ -186,15 +176,6 @@ export default {
         })
       let account = data
       const balance = account.balances.find(item => item.asset.id === this.form.asset)
-=======
-        throw new Error(`Account doesn't exists in the systen`)
-      }
-
-      const response = await Sdk.horizon.account.get(address)
-      let account = response.data
-      const balance = account.balances
-        .find(item => item.asset === this.form.asset)
->>>>>>> master
 
       if (!balance) {
         try {
@@ -209,7 +190,6 @@ export default {
         } catch (error) {
           ErrorHandler.process(error)
         }
-<<<<<<< HEAD
         const { data } = await ApiCallerFactory
           .createCallerInstance()
           .getWithSignature(`/v3/accounts/${address}`, {
@@ -217,13 +197,6 @@ export default {
           })
         account = data
         return account.balances.find(item => item.asset.id === this.form.asset).id
-=======
-
-        const response = await Sdk.horizon.account.get(address)
-        account = response.data
-        return account.balances
-          .find(item => item.asset === this.form.asset).balanceId
->>>>>>> master
       } else {
         return balance.id
       }
@@ -233,7 +206,6 @@ export default {
       if (receiver === '') {
         throw new Error(`The receiver has no ${this.form.asset} balance.`)
       }
-<<<<<<< HEAD
       const operation = Sdk.base.CreateIssuanceRequestBuilder.createIssuanceRequest({
         asset: this.form.asset,
         amount: this.form.amount,
@@ -246,20 +218,6 @@ export default {
       await ApiCallerFactory
         .createCallerInstance()
         .postOperations(operation)
-=======
-      const operation = Sdk.base.CreateIssuanceRequestBuilder
-        .createIssuanceRequest({
-          asset: this.form.asset,
-          amount: this.form.amount,
-          receiver: receiver,
-          reference: this.form.reference,
-          source: config.MASTER_ACCOUNT,
-          creatorDetails: {},
-          allTasks: 0,
-        })
-      await Sdk.horizon.transactions.submitOperations(operation)
-
->>>>>>> master
       this.form.amount = null
       this.form.receiver = null
       this.form.reference = null
