@@ -1,21 +1,35 @@
 <template>
   <div class="trade-filters">
     <div class="app-list-filters">
-      <select-field class="app-list-filters__field trade-filters__asset-selector" v-model="filters.pair">
+      <select-field
+        class="app-list-filters__field trade-filters__asset-selector"
+        v-model="filters.pair"
+      >
         <template v-if="isLoaded && pairs.length">
-          <option v-for="(pair, index) in pairs" :key="index" :value="pair">{{pair}}</option>
+          <option
+            v-for="(pair, index) in pairs"
+            :key="index"
+            :value="pair">
+            {{ pair }}
+          </option>
         </template>
 
         <template v-else-if="isLoaded && !pairs.length">
-          <option value="" disabled>No pairs yet</option>
+          <option value="" disabled>
+            No pairs yet
+          </option>
         </template>
 
         <template v-else-if="isFailed">
-          <option value="" disabled>An error occurred</option>
+          <option value="" disabled>
+            An error occurred
+          </option>
         </template>
 
         <template v-else>
-          <option value="" disabled>Loading...</option>
+          <option value="" disabled>
+            Loading...
+          </option>
         </template>
       </select-field>
     </div>
@@ -25,25 +39,34 @@
 <script>
 import { SelectField } from '@comcom/fields'
 import { AssetPair } from '../models/AssetPair.js'
+<<<<<<< HEAD
 import { ApiCallerFactory } from '@/api-caller-factory'
+=======
+>>>>>>> master
 
 export default {
   components: {
-    SelectField
+    SelectField,
+  },
+
+  props: {
+    value: { type: Object, required: true },
   },
 
   data () {
     return {
       filters: {
-        pair: ''
+        pair: '',
       },
       pairs: [],
       isLoaded: false,
-      isFailed: false
+      isFailed: false,
     }
   },
 
-  props: ['value'],
+  watch: {
+    'filters.pair' () { this.updateFilters() },
+  },
 
   created () {
     this.copyFilters()
@@ -53,7 +76,7 @@ export default {
   methods: {
     copyFilters () {
       this.filters = {
-        pair: this.value.pair
+        pair: this.value.pair,
       }
     },
 
@@ -77,12 +100,8 @@ export default {
 
     updateFilters () {
       this.$emit('input', this.filters)
-    }
+    },
   },
-
-  watch: {
-    'filters.pair' () { this.updateFilters() }
-  }
 }
 </script>
 

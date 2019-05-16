@@ -1,151 +1,150 @@
 <template>
   <label class="switch-field">
-    <input class="switch-field__input"
-            type="checkbox"
-            :checked="checked"
-            :disabled="disabled"
-            :name="name"
-            :id="id"
-            :value="cbValue"
-            :required="required"
-            :autofocus="autofocus"
-            @change="onChange">
-    <span class="switch-field__slider"></span>
+    <input
+      class="switch-field__input"
+      type="checkbox"
+      :checked="checked"
+      :disabled="disabled"
+      :name="name"
+      :id="id"
+      :value="cbValue"
+      :required="required"
+      :autofocus="autofocus"
+      @change="onChange">
+    <span class="switch-field__slider" />
   </label>
 </template>
 
-
 <script>
-  export default {
-    name: 'Switch-field',
-    props: {
-      label: { type: String, default: 'Label' },
-      value: { default: false },
+export default {
+  name: 'switch-field',
 
-      // proxies
-      name: { type: String, default: undefined },
-      disabled: { type: Boolean, default: false },
-      cbValue: { default: undefined },
-      title: { type: [String, Number], default: undefined },
-      required: { type: Boolean, default: false },
-      autofocus: { type: Boolean, default: false }
+  props: {
+    label: { type: String, default: 'Label' },
+    // eslint-disable-next-line vue/require-prop-types
+    value: { default: false },
+
+    // proxies
+    name: { type: String, default: undefined },
+    disabled: { type: Boolean, default: false },
+    // eslint-disable-next-line vue/require-prop-types
+    cbValue: { default: undefined },
+    title: { type: [String, Number], default: undefined },
+    required: { type: Boolean, default: false },
+    autofocus: { type: Boolean, default: false },
+  },
+
+  computed: {
+    id () {
+      return `tick-field-${this._uid}`
     },
-    components: {
+
+    checked () {
+      const model = this.value
+      const value = this.cbValue
+      if (typeof value === 'undefined') {
+        return model
+      }
+
+      let result
+      switch (this.typeof(model)) {
+        case 'number':
+          result = model & +value
+          break
+        case 'array':
+          result = ~model.findIndex((item) => item === value)
+          break
+        default:
+          result = model
+          break
+      }
+      return result
     },
-    data: _ => ({
-    }),
-    created () {
-    },
-    computed: {
-      id () {
-        return `tick-field-${this._uid}`
-      },
-      checked () {
-        const model = this.value
-        const value = this.cbValue
-        if (typeof value === 'undefined') {
-          return model
-        }
+  },
 
-        let result
-        switch (this.typeof(model)) {
-          case 'number':
-            result = model & +value
-            break
+  methods: {
+    onChange (event) {
+      const isChecked = event.target.checked
+      const model = this.value
+      const value = this.cbValue || isChecked
 
-          case 'array':
-            result = ~model.findIndex((item) => item === value)
-            break
+      if (typeof value === 'undefined') {
+        return this.$emit('input', isChecked)
+      }
 
-          default:
-            result = model
-            break
-        }
-        return result
+      switch (this.typeof(model)) {
+        case 'number':
+          this.$emit('input', isChecked ? model + +value : model - value)
+          break
+
+        case 'array':
+          this.$emit('input', isChecked
+            ? model.concat(value)
+            : model.filter((item) => item !== value)
+          )
+          break
+
+        default:
+          this.$emit('input', isChecked)
+          break
       }
     },
-    methods: {
-      onChange (event) {
-        const isChecked = event.target.checked
-        const model = this.value
-        const value = this.cbValue || isChecked
 
-        if (typeof value === 'undefined') {
-          return this.$emit('input', isChecked)
-        }
+    typeof (value) {
+      const type = typeof value
 
-        switch (this.typeof(model)) {
-          case 'number':
-            this.$emit('input', isChecked ? model + +value : model - value)
-            break
+      let result
+      switch (type) {
+        case 'object':
+          if (Array.isArray(value)) result = 'array'
+          if (value === null) result = 'null'
+          break
 
-          case 'array':
-            this.$emit('input', isChecked
-              ? model.concat(value)
-              : model.filter((item) => item !== value)
-            )
-            break
-
-          default:
-            this.$emit('input', isChecked)
-            break
-        }
-      },
-      typeof (value) {
-        const type = typeof value
-
-        let result
-        switch (type) {
-          case 'object':
-            if (Array.isArray(value)) result = 'array'
-            if (value === null) result = 'null'
-            break
-
-          default:
-            result = type
-            break
-        }
-        return result
+        default:
+          result = type
+          break
       }
+      return result
     },
-    watch: {
-    }
-  }
+  },
+}
 </script>
-<style lang="scss" scoped>
-  @import "../../../assets/scss/colors";
-  .switch-field {
-    position: relative;
-    display: inline-block;
-    width: 40px;
-    height: 16px;
-    .switch-field__input {
-      display: none;
-    }
-  }
 
-  .switch-field__slider {
+<style lang="scss" scoped>
+@import "../../../assets/scss/colors";
+
+.switch-field {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 16px;
+  .switch-field__input {
+    display: none;
+  }
+}
+
+.switch-field__slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: $color-bg;
+  transition: .4s;
+  -webkit-transition: .4s;
+  &:before {
     position: absolute;
-    cursor: pointer;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background: $color-bg;
+    content: "";
+    height: 22px;
+    width: 22px;
+    left: 0px;
+    bottom: -3px;
+    background-color: $color-content-bg;
     transition: .4s;
     -webkit-transition: .4s;
-    &:before {
-      position: absolute;
-      content: "";
-      height: 22px;
-      width: 22px;
-      left: 0px;
-      bottom: -3px;
-      background-color: $color-content-bg;
-      transition: .4s;
-      -webkit-transition: .4s;
-    }
   }
+}
 
 .switch-field__input:checked + .switch-field__slider {
   background-color: $color-active;

@@ -1,21 +1,25 @@
 <template>
-  <div class="select-field"
+  <div
+    class="select-field"
     :class="{'select-field--error': errorMessage}">
-    <select class="select-field__select"
+    <select
+      class="select-field__select"
       :class="{'select-field__select--empty': !(value || emptyText)}"
       :disabled="disabled"
       :name="name"
       :value="value"
       :required="required"
       :autofocus="autofocus"
-      @change="onChange">
-      <option class="select-field__default-option"
+      @change="onChange"
+    >
+      <option
+        class="select-field__default-option"
         :selected="!value"
         v-if="emptyText"
         disabled>
-        {{emptyText}}
+        {{ emptyText }}
       </option>
-      <slot/>
+      <slot />
     </select>
 
     <div class="select-field__arrow">
@@ -23,12 +27,12 @@
     </div>
 
     <span class="select-field__label">
-      {{label}}
+      {{ label }}
     </span>
 
     <transition name="select-field__err-transition">
       <p class="select-field__err-mes" v-if="errorMessage">
-        {{errorMessage}}
+        {{ errorMessage }}
       </p>
     </transition>
   </div>
@@ -38,6 +42,7 @@
 export default {
   props: {
     label: { type: String, default: 'Label' },
+    // eslint-disable-next-line vue/require-prop-types
     value: { default: false },
     errorMessage: { type: String, default: undefined },
     emptyText: { type: [String, Number], default: undefined },
@@ -47,28 +52,14 @@ export default {
     autofocus: { type: Boolean, default: false },
     disabled: { type: Boolean, default: false },
     title: { type: [String, Number], default: undefined },
-    required: { type: Boolean, default: true }
-  },
-
-  data () {
-    return {
-      // data
-    }
-  },
-
-  created () {
-    // created
-  },
-
-  computed: {
-    // computed
+    required: { type: Boolean, default: true },
   },
 
   methods: {
     onChange (event) {
       this.$emit('input', event.target.value)
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -82,7 +73,9 @@ export default {
 
 .select-field__arrow {
   position: absolute;
-  bottom: calc(50% - #{$field-input-padding-top} + #{$field-input-padding-bottom});
+  bottom: calc(
+    50% - #{$field-input-padding-top} + #{$field-input-padding-bottom}
+  );
   right: $field-input-padding-bottom / 2;
   width: .6rem;
   height: .6rem;

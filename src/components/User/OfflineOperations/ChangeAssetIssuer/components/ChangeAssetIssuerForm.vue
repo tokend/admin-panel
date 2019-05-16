@@ -1,7 +1,8 @@
 <template>
   <div class="change-asset-issuer-form">
     <p class="change-asset-issuer-form__hint">
-      Select file(s) with change issuer transaction and click <strong>Upload</strong>.<br />
+      Select file(s) with change issuer transaction and click
+      <strong>Upload</strong>.<br>
     </p>
 
     <div class="change-asset-issuer-form__upload-wrp">
@@ -19,7 +20,7 @@
           type="file"
           accept=".tx"
           @change="onFileChange"
-        />
+        >
       </template>
     </div>
 
@@ -27,15 +28,28 @@
       class="change-asset-issuer-form__details"
       v-if="asset && accountId"
     >
-      <p class="text">Signer will change on asset: {{ asset }}</p>
-      <p class="text">New signer will be: {{ accountId }}</p>
-      <p class="text">Transaction source: {{ source }}</p>
+      <p class="text">
+        Signer will change on asset: {{ asset }}
+      </p>
+      <p class="text">
+        New signer will be: {{ accountId }}
+      </p>
+      <p class="text">
+        Transaction source: {{ source }}
+      </p>
     </div>
 
     <p class="change-asset-issuer-form__expiration-date-note text">
       <i>Note: </i>Transaction is valid for one week since the file was created
     </p>
-
+    <a
+      class="change-asset-issuer-form__link"
+      :href="preissuanceGuideURL"
+      target="_blank"
+      rel="noopener"
+    >
+      Learn more about pre-issuance
+    </a>
     <div
       class="change-asset-issuer-form__summary-actions"
       v-if="asset && accountId"
@@ -60,7 +74,11 @@
 <script>
 import { Sdk } from '@/sdk'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+<<<<<<< HEAD
 import { ApiCallerFactory } from '@/api-caller-factory'
+=======
+import config from '@/config'
+>>>>>>> master
 
 export default {
   data () {
@@ -69,9 +87,16 @@ export default {
       asset: '',
       transaction: '',
       source: '',
-      uploadBtnDisable: false
+      uploadBtnDisable: false,
     }
   },
+
+  computed: {
+    preissuanceGuideURL () {
+      return config.WEB_CLIENT_URL + '/pre-issuance-guide'
+    },
+  },
+
   methods: {
     async onFileChange (event) {
       const files = event.target.files || event.dataTransfer.files
@@ -83,7 +108,9 @@ export default {
       this.transaction = fileData.transaction
       this.source = fileData.source
     },
+
     readFile (file) {
+      // eslint-disable-next-line promise/avoid-new
       return new Promise(function (resolve) {
         const reader = new FileReader()
 
@@ -94,6 +121,7 @@ export default {
         reader.readAsText(file)
       })
     },
+
     clear () {
       this.accountId = ''
       this.asset = ''
@@ -104,6 +132,7 @@ export default {
         input.value = ''
       }
     },
+
     async upload () {
       this.uploadBtnDisable = true
       try {
@@ -115,17 +144,23 @@ export default {
       }
       this.uploadBtnDisable = false
     },
+
     async sendTx () {
       const transaction = new Sdk.base.Transaction(this.transaction)
       transaction.sign(this.$store.getters.keypair)
+<<<<<<< HEAD
       return await ApiCallerFactory
         .createCallerInstance()
         .postOperations(transaction)
     }
   }
+=======
+      await Sdk.horizon.transactions.submit(transaction)
+    },
+  },
+>>>>>>> master
 }
 </script>
-
 
 <style lang="scss" scoped>
 .change-asset-issuer-form__upload-btn.app__btn {
@@ -168,5 +203,9 @@ export default {
 
 .change-asset-issuer-form__expiration-date-note {
   margin-top: 1rem;
+}
+
+.change-asset-issuer-form__link {
+  font-size: 1.4rem;
 }
 </style>

@@ -72,33 +72,33 @@ import { ApiCallerFactory } from '@/api-caller-factory'
 
 const EVENTS = {
   updated: 'updated',
-  updateIsPending: 'update:isPending'
+  updateIsPending: 'update:isPending',
 }
 
 export default {
   name: 'user-details-block',
   components: {
     Modal,
-    TextField
+    TextField,
   },
 
   props: {
     latestApprovedRequest: {
       type: ChangeRoleRequest,
-      default: _ => new ChangeRoleRequest({})
+      default: _ => new ChangeRoleRequest({}),
     },
     verifiedRequest: {
       type: ChangeRoleRequest,
-      default: _ => new ChangeRoleRequest({})
+      default: _ => new ChangeRoleRequest({}),
     },
     user: {
       type: Object,
-      default: _ => ({})
+      default: _ => ({}),
     },
     isPending: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
 
   data () {
@@ -106,15 +106,15 @@ export default {
       ACCOUNT_ROLES: config.ACCOUNT_ROLES,
       blockForm: {
         reason: '',
-        isShown: false
-      }
+        isShown: false,
+      },
     }
   },
 
   computed: {
     isUserBlocked () {
       return this.user.role === config.ACCOUNT_ROLES.blocked
-    }
+    },
   },
 
   methods: {
@@ -131,9 +131,9 @@ export default {
             accountRoleToSet: config.ACCOUNT_ROLES.blocked.toString(),
             creatorDetails: {
               blockReason: this.blockForm.reason,
-              latestApprovedRequestId: this.latestApprovedRequest.id
+              latestApprovedRequestId: this.latestApprovedRequest.id,
             },
-            allTasks: 0
+            allTasks: 0,
           })
         await ApiCallerFactory
           .createCallerInstance()
@@ -162,9 +162,9 @@ export default {
             destinationAccount: this.user.address,
             accountRoleToSet: accountRoleToSet.toString(),
             creatorDetails: {
-              ...this.verifiedRequest.creatorDetails
+              ...this.verifiedRequest.creatorDetails,
             },
-            allTasks: 0
+            allTasks: 0,
           })
         await ApiCallerFactory
           .createCallerInstance()
@@ -190,8 +190,8 @@ export default {
     async submitBlockForm () {
       this.hideBlockModal()
       await this.blockUser()
-    }
-  }
+    },
+  },
 }
 </script>
 

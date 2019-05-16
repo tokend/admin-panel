@@ -3,7 +3,8 @@
     <template v-if="assets && assets.length">
       <form @submit.prevent="submit">
         <div class="app__form-row">
-          <input-field class="app__form-field"
+          <input-field
+            class="app__form-field"
             type="text"
             placeholder="email@example.com or GAAQ..."
             v-model="form.receiver"
@@ -14,7 +15,8 @@
         </div>
 
         <div class="app__form-row">
-          <input-field class="app__form-field"
+          <input-field
+            class="app__form-field"
             v-model="form.reference"
             label="Reference"
             :disabled="isSubmitting"
@@ -22,7 +24,8 @@
         </div>
 
         <div class="app__form-row">
-          <input-field class="app__form-field"
+          <input-field
+            class="app__form-field"
             type="number"
             :step="DEFAULT_INPUT_STEP"
             :min="DEFAULT_INPUT_MIN"
@@ -33,12 +36,21 @@
           />
 
           <div class="issuance-form__asset-field app__form-field">
-            <select-field class="issuance-form__asset-select"
+            <select-field
+              class="issuance-form__asset-select"
               v-model="form.asset"
               label="Asset"
               :disabled="isSubmitting">
+<<<<<<< HEAD
               <option v-for="item in assets" :value="item.id" :key="item.id">
                 {{item.id}}
+=======
+              <option
+                v-for="item in assets"
+                :value="item.code"
+                :key="item.code">
+                {{ item.code }}
+>>>>>>> master
               </option>
             </select-field>
           </div>
@@ -47,7 +59,10 @@
         <div class="issuance-form__asset-info app__form-row" v-if="form.asset">
           <p v-if="isIssuanceAllowed" class="text">
             <span>Available:</span>
-            <asset-amount-formatter :amount="availableForIssuance" :asset="form.asset"/>
+            <asset-amount-formatter
+              :amount="availableForIssuance"
+              :asset="form.asset"
+            />
           </p>
 
           <p v-else class="text">
@@ -56,7 +71,10 @@
         </div>
 
         <div class="issuance-form__form-actions app__form-actions">
-          <button class="app__btn" :disabled="isSubmitting || !isIssuanceAllowed">
+          <button
+            class="app__btn"
+            :disabled="isSubmitting || !isIssuanceAllowed"
+          >
             Issue
           </button>
         </div>
@@ -71,28 +89,32 @@
 </template>
 
 <script>
+import { InputField, SelectField } from '@comcom/fields'
+
+import { AssetAmountFormatter } from '@comcom/formatters'
+import { confirmAction } from '../../../../../js/modals/confirmation_message'
+
 import api from '@/api'
 import { Sdk } from '@/sdk'
+
 import config from '@/config'
-import { InputField, SelectField } from '@comcom/fields'
+import { ErrorHandler } from '@/utils/ErrorHandler'
+
 import Bus from '@/utils/EventBus'
-import { AssetAmountFormatter } from '@comcom/formatters'
 import { DEFAULT_INPUT_STEP, DEFAULT_INPUT_MIN } from '@/constants'
 
+<<<<<<< HEAD
 import { confirmAction } from '@/js/modals/confirmation_message'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { ApiCallerFactory } from '@/api-caller-factory'
 
+=======
+>>>>>>> master
 export default {
   components: {
     InputField,
     SelectField,
-    AssetAmountFormatter
-  },
-
-  created () {
-    Bus.$on('issuance:updateAssets', _ => this.getAssets())
-    this.getAssets()
+    AssetAmountFormatter,
   },
 
   data () {
@@ -103,10 +125,10 @@ export default {
         amount: '',
         receiver: '',
         reference: '',
-        asset: ''
+        asset: '',
       },
       assets: [],
-      isSubmitting: false
+      isSubmitting: false,
     }
   },
 
@@ -118,8 +140,14 @@ export default {
 
     isIssuanceAllowed () {
       return this.availableForIssuance > 0
-    }
+    },
   },
+
+  created () {
+    Bus.$on('issuance:updateAssets', _ => this.getAssets())
+    this.getAssets()
+  },
+
   methods: {
     async getAssets () {
       try {
@@ -135,7 +163,7 @@ export default {
         this.assets = issuableAssets
         this.form.asset = this.form.asset || (issuableAssets[0] || {}).id
       } catch (error) {
-        ErrorHandler.process(error)
+        ErrorHandler.processWithoutFeedback(error)
       }
     },
 
@@ -146,7 +174,9 @@ export default {
       } else {
         address = await api.users.getAccountIdByEmail(this.form.receiver)
       }
+
       if (!address) {
+<<<<<<< HEAD
         return Promise.reject(`Account doesn't exists in the system`)
       }
       const { data } = await ApiCallerFactory
@@ -156,13 +186,22 @@ export default {
         })
       let account = data
       const balance = account.balances.find(item => item.asset.id === this.form.asset)
+=======
+        throw new Error(`Account doesn't exists in the systen`)
+      }
+
+      const response = await Sdk.horizon.account.get(address)
+      let account = response.data
+      const balance = account.balances
+        .find(item => item.asset === this.form.asset)
+>>>>>>> master
 
       if (!balance) {
         try {
           const operation = Sdk.base.Operation.manageBalance({
             asset: this.form.asset,
             action: Sdk.xdr.ManageBalanceAction.createUnique(),
-            destination: address
+            destination: address,
           })
           await ApiCallerFactory
             .createCallerInstance()
@@ -170,6 +209,7 @@ export default {
         } catch (error) {
           ErrorHandler.process(error)
         }
+<<<<<<< HEAD
         const { data } = await ApiCallerFactory
           .createCallerInstance()
           .getWithSignature(`/v3/accounts/${address}`, {
@@ -177,6 +217,13 @@ export default {
           })
         account = data
         return account.balances.find(item => item.asset.id === this.form.asset).id
+=======
+
+        const response = await Sdk.horizon.account.get(address)
+        account = response.data
+        return account.balances
+          .find(item => item.asset === this.form.asset).balanceId
+>>>>>>> master
       } else {
         return balance.id
       }
@@ -184,8 +231,9 @@ export default {
 
     async sendManualIssuance (receiver) {
       if (receiver === '') {
-        return Promise.reject(`The receiver has no ${this.form.asset} balance.`)
+        throw new Error(`The receiver has no ${this.form.asset} balance.`)
       }
+<<<<<<< HEAD
       const operation = Sdk.base.CreateIssuanceRequestBuilder.createIssuanceRequest({
         asset: this.form.asset,
         amount: this.form.amount,
@@ -198,6 +246,20 @@ export default {
       await ApiCallerFactory
         .createCallerInstance()
         .postOperations(operation)
+=======
+      const operation = Sdk.base.CreateIssuanceRequestBuilder
+        .createIssuanceRequest({
+          asset: this.form.asset,
+          amount: this.form.amount,
+          receiver: receiver,
+          reference: this.form.reference,
+          source: config.MASTER_ACCOUNT,
+          creatorDetails: {},
+          allTasks: 0,
+        })
+      await Sdk.horizon.transactions.submitOperations(operation)
+
+>>>>>>> master
       this.form.amount = null
       this.form.receiver = null
       this.form.reference = null
@@ -207,27 +269,27 @@ export default {
     },
 
     async submit () {
-      if (!await confirmAction()) return
-
       this.isSubmitting = true
-      return this.$validator.validateAll()
-        .then(this.getBalanceId)
-        .then(this.sendManualIssuance)
-        .then(_ => {
+
+      if (await confirmAction()) {
+        try {
+          await this.$validator.validateAll()
+
+          const balanceId = await this.getBalanceId()
+          await this.sendManualIssuance(balanceId)
+
           Bus.$emit('issuance:updateRequestList')
-          return this.getAssets()
-        })
-        .catch((error) => {
+          await this.getAssets()
+        } catch (error) {
           ErrorHandler.process(error)
-        })
-        .finally(() => {
-          this.isSubmitting = false
-        })
-    }
-  }
+        }
+      }
+
+      this.isSubmitting = false
+    },
+  },
 }
 </script>
-
 
 <style scoped>
 .issuance-form__asset-field.app__form-field {

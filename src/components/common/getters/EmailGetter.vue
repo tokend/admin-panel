@@ -26,30 +26,37 @@
 </template>
 
 <script>
+<<<<<<< HEAD
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import config from '@/config'
+=======
+import { Sdk } from '@/sdk'
+>>>>>>> master
 import { ApiCallerFactory } from '@/api-caller-factory'
+
+import config from '@/config'
+import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   props: {
     accountId: {
       type: String,
-      default: ''
+      default: '',
     },
     balanceId: {
       type: String,
-      default: ''
+      default: '',
     },
     isTitled: {
       type: Boolean,
-      default: true
-    }
+      default: true,
+    },
   },
 
   data: _ => ({
     email: '',
     isMasterAccount: false,
-    isLoading: false
+    isLoading: false,
   }),
 
   async created () {
@@ -77,7 +84,7 @@ export default {
           .createCallerInstance()
           .getWithSignature('/identities', {
             filter: { address: accountId },
-            page: { limit: 1 }
+            page: { limit: 1 },
           })
         this.email = ((data || [])[0] || {}).email || this.email
       } catch (error) {
@@ -96,10 +103,7 @@ export default {
       } else {
         return ''
       }
-    }
-  }
+    },
+  },
 }
 </script>
-
-<style scoped>
-</style>

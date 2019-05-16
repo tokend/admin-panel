@@ -1,18 +1,22 @@
 <template>
   <header class="user-header">
     <nav class="user-header__nav">
-      <slot name="nav"/>
+      <slot name="nav" />
     </nav>
-    <config-checker/>
-    <user-account-widget/>
+    <config-checker />
+    <user-account-widget />
   </header>
 </template>
 
 <script>
 import UserAccountWidget from './UserAccountWidget'
 import ConfigChecker from './ConfigChecker'
+
 export default {
-  components: { UserAccountWidget, ConfigChecker }
+  components: {
+    UserAccountWidget,
+    ConfigChecker,
+  },
 }
 </script>
 

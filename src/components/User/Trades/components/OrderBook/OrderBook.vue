@@ -1,14 +1,16 @@
 <template>
   <div class="order-book">
     <div class="order-book__orders-wrp">
-      <order-table class="order-book__table"
+      <order-table
+        class="order-book__table"
         :list="book.bids"
         :pair="filters.pair"
-        is-rtl="true"
-        is-bids="true"
+        :is-rtl="true"
+        :is-bids="true"
       />
 
-      <order-table class="order-book__table"
+      <order-table
+        class="order-book__table"
         :list="book.asks"
         :pair="filters.pair"
       />
@@ -22,18 +24,26 @@
 
 <script>
 import { Sdk } from '@/sdk'
+
 import OrderTable from './OrderBook.Table'
 import HistoryTable from './OrderBook.History'
+
 import { AssetPair } from '../../models/AssetPair'
 import { ApiCallerFactory } from '@/api-caller-factory'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 const SECONDARY_MARKET_ORDER_BOOK_ID = '0'
 
+import { ErrorHandler } from '@/utils/ErrorHandler'
+
 export default {
   components: {
     OrderTable,
-    HistoryTable
+    HistoryTable,
+  },
+
+  props: {
+    filters: { type: Object, required: true },
   },
 
   data () {
@@ -41,21 +51,19 @@ export default {
       book: {
         bids: [],
         asks: [],
-        history: []
+        history: [],
       },
       isLoaded: false,
-      isFailed: false
+      isFailed: false,
     }
   },
 
-  props: ['filters'],
+  watch: {
+    'filters.pair' () { this.getBook() },
+  },
 
   created () {
     this.getBook()
-  },
-
-  watch: {
-    'filters.pair' () { this.getBook() }
   },
 
   methods: {
@@ -65,9 +73,10 @@ export default {
       const params = {
         order_book_id: 0,
         base_asset: pair.base,
-        quote_asset: pair.quote
+        quote_asset: pair.quote,
       }
       try {
+<<<<<<< HEAD
         const orderBookId = SECONDARY_MARKET_ORDER_BOOK_ID
         const formatedOrderBookId = `${pair.base}:${pair.quote}:${orderBookId}`
         const { data } = await ApiCallerFactory
@@ -78,15 +87,31 @@ export default {
         this.book.bids = data.buyEntries
         this.book.asks = data.sellEntries
         // TODO: No /v3 endpoint for trades yet
+=======
+        const response = await Sdk.horizon.orderBook.getAll({
+          ...params,
+          is_buy: true,
+        })
+        this.book.bids = response.data
+        const orderBookResponse = await Sdk.horizon.orderBook.getAll({
+          ...params,
+          is_buy: false,
+        })
+        this.book.asks = orderBookResponse.data
+>>>>>>> master
         const tradesResponse = await Sdk.horizon.trades.getPage(params)
         this.book.history = tradesResponse.data
         this.isLoaded = true
       } catch (error) {
+<<<<<<< HEAD
         ErrorHandler.process(error)
+=======
+        ErrorHandler.processWithoutFeedback(error)
+>>>>>>> master
         this.isFailed = true
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

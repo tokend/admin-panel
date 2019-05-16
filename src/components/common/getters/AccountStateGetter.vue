@@ -10,22 +10,34 @@
 </template>
 
 <script>
-  import { Sdk } from '@/sdk'
+import { Sdk } from '@/sdk'
 
-  export default {
-    props: ['accountId'],
-    data: _ => ({
-      account: null
-    }),
-    async created () {
-      await this.getAccount()
+export default {
+  props: {
+    accountId: { type: String, required: true },
+  },
+
+  data: _ => ({
+    account: null,
+  }),
+
+  computed: {
+    accountState () {
+      if (!this.account) return null
+      return this.account.isBlocked ? 'Blocked' : 'Active'
     },
-    computed: {
-      accountState () {
-        if (!this.account) return null
-        return this.account.isBlocked ? 'Blocked' : 'Active'
-      }
+  },
+
+  async created () {
+    await this.getAccount()
+  },
+
+  methods: {
+    async getAccount () {
+      const response = await Sdk.horizon.account.get(this.accountId)
+      this.account = response.data
     },
+<<<<<<< HEAD
     methods: {
       async getAccount () {
         // TODO: No isBlocked property for account yet
@@ -34,7 +46,8 @@
       }
     }
   }
+=======
+  },
+}
+>>>>>>> master
 </script>
-
-<style lang="scss" scoped>
-</style>

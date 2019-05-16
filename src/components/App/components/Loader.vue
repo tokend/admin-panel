@@ -1,31 +1,35 @@
 <template>
-    <div class="cover">
-        <div class="progress-outer">
-            <div class="progress"></div>
-        </div>
+  <div class="cover">
+    <div class="progress-outer">
+      <div class="progress" />
     </div>
+  </div>
 </template>
 
 <script>
 export default {
   name: 'loading-screen',
+
   data () {
     return {
       intervalId: '',
-      rotation: 0
+      rotation: 0,
     }
   },
-  methods: {
-    rotate () {
-      this.rotation++
-    }
-  },
+
   created () {
     this.intervalId = window.setInterval(this.rotate, 10)
   },
+
   destroyed () {
     window.clearInterval(this.intervalId)
-  }
+  },
+
+  methods: {
+    rotate () {
+      this.rotation++
+    },
+  },
 }
 </script>
 

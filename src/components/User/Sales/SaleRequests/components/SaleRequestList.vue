@@ -11,17 +11,27 @@
           label="State"
           v-model="filters.state"
         >
-          <option :value="REQUEST_STATES.pending">Pending</option>
-          <option :value="REQUEST_STATES.cancelled">Cancelled</option>
-          <option :value="REQUEST_STATES.approved">Approved</option>
-          <option :value="REQUEST_STATES.rejected">Rejected</option>
-          <option :value="REQUEST_STATES.permanentlyRejected">Permanently rejected</option>
+          <option :value="REQUEST_STATES.pending">
+            Pending
+          </option>
+          <option :value="REQUEST_STATES.cancelled">
+            Cancelled
+          </option>
+          <option :value="REQUEST_STATES.approved">
+            Approved
+          </option>
+          <option :value="REQUEST_STATES.rejected">
+            Rejected
+          </option>
+          <option :value="REQUEST_STATES.permanentlyRejected">
+            Permanently rejected
+          </option>
         </select-field>
 
         <input-field
           class="app-list-filters__field sale-rl__requestor-filter"
           label="Requestor"
-          placeholder="Address (full match)"
+          placeholder="Address or email"
           v-model="filters.requestor"
           autocomplete-type="email"
         />
@@ -33,10 +43,17 @@
         <ul class="app-list">
           <div class="app-list__header">
             <span class="app-list__cell">
-              <!-- empty --></span>
-            <span class="app-list__cell">Name</span>
-            <span class="app-list__cell">Hard cap</span>
-            <span class="app-list__cell">Requestor</span>
+              <!-- empty -->
+            </span>
+            <span class="app-list__cell">
+              Name
+            </span>
+            <span class="app-list__cell">
+              Hard cap
+            </span>
+            <span class="app-list__cell">
+              Requestor
+            </span>
           </div>
 
           <router-link
@@ -55,7 +72,7 @@
               class="app-list__cell"
               :title="extractDetails(item).details.name"
             >
-              {{extractDetails(item).details.name}}
+              {{ extractDetails(item).details.name }}
             </span>
             <span class="app-list__cell">
               <asset-amount-formatter
@@ -76,8 +93,12 @@
       <template v-else>
         <ul class="app-list">
           <li class="app-list__li-like">
-            <template v-if="isLoaded">Nothing here yet</template>
-            <template v-else>Loading...</template>
+            <template v-if="isLoaded">
+              Nothing here yet
+            </template>
+            <template v-else>
+              Loading...
+            </template>
           </li>
         </ul>
       </template>
@@ -95,14 +116,19 @@
 </template>
 
 <script>
-import api from '@/api'
-import { REQUEST_STATES } from '@/constants'
-import SelectField from '@comcom/fields/SelectField'
 import InputField from '@comcom/fields/InputField'
+import SelectField from '@comcom/fields/SelectField'
+
+import { REQUEST_STATES } from '@/constants'
+import api from '@/api'
+import { Sdk } from '@/sdk'
+
 import { EmailGetter } from '@comcom/getters'
 import { AssetAmountFormatter } from '@comcom/formatters'
-import _ from 'lodash'
 import { CollectionLoader } from '@/components/common'
+
+import _ from 'lodash'
+
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
@@ -111,7 +137,7 @@ export default {
     InputField,
     EmailGetter,
     AssetAmountFormatter,
-    CollectionLoader
+    CollectionLoader,
   },
 
   data () {
@@ -121,10 +147,18 @@ export default {
       list: [],
       filters: {
         state: REQUEST_STATES.pending,
-        requestor: ''
+        requestor: '',
       },
-      isLoaded: false
+      isLoaded: false,
     }
+  },
+
+  watch: {
+    'filters.state' () { this.reloadCollectionLoader() },
+
+    'filters.requestor': _.throttle(function () {
+      this.reloadCollectionLoader()
+    }, 1000),
   },
 
   methods: {
@@ -132,7 +166,12 @@ export default {
       this.isLoaded = false
       let response = {}
       try {
-        const filters = { ...this.filters }
+        const requestor =
+          await this.getRequestorAccountId(this.filters.requestor)
+        const filters = {
+          state: this.filters.state,
+          requestor,
+        }
         response = await api.requests.getSaleRequests(filters)
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
@@ -140,6 +179,19 @@ export default {
 
       this.isLoaded = true
       return response
+    },
+
+    async getRequestorAccountId (requestor) {
+      if (Sdk.base.Keypair.isValidPublicKey(requestor)) {
+        return requestor
+      } else {
+        try {
+          const address = await api.users.getAccountIdByEmail(requestor)
+          return address || requestor
+        } catch (error) {
+          return requestor
+        }
+      }
     },
 
     setList (data) {
@@ -158,15 +210,8 @@ export default {
 
     reloadCollectionLoader () {
       this.$refs.collectionLoaderBtn.loadFirstPage()
-    }
+    },
   },
-
-  watch: {
-    'filters.state' () { this.reloadCollectionLoader() },
-    'filters.requestor': _.throttle(function () {
-      this.reloadCollectionLoader()
-    }, 1000)
-  }
 }
 </script>
 

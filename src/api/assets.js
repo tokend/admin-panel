@@ -10,7 +10,7 @@ export default {
       policies: +params.policies,
       physicalPrice: '' + params.physicalPrice,
       physicalPriceCorrection: '' + params.physicalPriceCorrection,
-      maxPriceStep: '' + params.maxPriceStep
+      maxPriceStep: '' + params.maxPriceStep,
     })
     const response = await ApiCallerFactory
       .createCallerInstance()
@@ -37,7 +37,7 @@ export default {
       policies: +params.policies,
       physicalPrice: '' + params.physicalPrice,
       physicalPriceCorrection: '' + params.physicalPriceCorrection,
-      maxPriceStep: '' + params.maxPriceStep
+      maxPriceStep: '' + params.maxPriceStep,
     })
     const response = await ApiCallerFactory
       .createCallerInstance()

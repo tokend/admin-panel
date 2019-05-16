@@ -1,24 +1,28 @@
-import localize from '@/utils/localize'
 import SelectField from '@comcom/fields/SelectField'
-
-import { REQUEST_STATES, ASSET_POLICIES } from '@/constants'
 import { CollectionLoader } from '@/components/common'
-import { ErrorHandler } from '@/utils/ErrorHandler'
+
+import { Sdk } from '@/sdk'
+import { REQUEST_STATES, ASSET_POLICIES } from '@/constants'
+
+import localize from '@/utils/localize'
+
 import config from '@/config'
 import { ApiCallerFactory } from '@/api-caller-factory'
+import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   components: {
     SelectField,
-    CollectionLoader
+    CollectionLoader,
   },
+
   data () {
     return {
       REQUEST_STATES,
       list: [],
       listCounter: {
         pending: null,
-        approved: null
+        approved: null,
       },
       assets: [''],
       isNoMoreEntries: false,
@@ -26,13 +30,19 @@ export default {
       isRejectionModalShown: false,
       itemToReject: null,
       rejectForm: {
-        reason: ''
+        reason: '',
       },
       filters: {
         state: REQUEST_STATES.approved,
-        asset: ''
-      }
+        asset: '',
+      },
     }
+  },
+
+  watch: {
+    'filters.state' () { this.reloadCollectionLoader() },
+
+    'filters.asset' () { this.reloadCollectionLoader() },
   },
 
   async created () {
@@ -41,6 +51,7 @@ export default {
 
   methods: {
     localize,
+
     async getAssets () {
       try {
         const { data } = await ApiCallerFactory
@@ -53,7 +64,7 @@ export default {
             .map(asset => asset.id)
         )
       } catch (error) {
-        this.$store.dispatch('SET_ERROR', 'Cannot get asset list. Please try again later')
+        ErrorHandler.processWithoutFeedback(error)
       }
     },
 
@@ -84,8 +95,10 @@ export default {
     // TODO: Count issuance request
     getListCounter (response) {
       if (response) {
-        this.listCounter.pending = response._rawResponse.data._embedded.meta.count.pending
-        this.listCounter.approved = response._rawResponse.data._embedded.meta.count.approved
+        this.listCounter.pending = response._rawResponse.data
+          ._embedded.meta.count.pending
+        this.listCounter.approved = response._rawResponse.data
+          ._embedded.meta.count.approved
       }
     },
 
@@ -99,11 +112,6 @@ export default {
 
     reloadCollectionLoader () {
       this.$refs.collectionLoaderBtn.loadFirstPage()
-    }
+    },
   },
-
-  watch: {
-    'filters.state' () { this.reloadCollectionLoader() },
-    'filters.asset' () { this.reloadCollectionLoader() }
-  }
 }

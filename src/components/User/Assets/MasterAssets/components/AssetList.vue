@@ -17,9 +17,17 @@
       class="asset-list__ul"
       v-if="assets && assets.length"
     >
-      <li class="asset-list__li" v-for="(asset, i) in parsedAssets" :key="i">
-        <router-link class="asset-list__li-a"
-          :to="{ name: 'assets.masterAssets.show', params: { asset: asset.id }}">
+      <li
+        class="asset-list__li"
+        v-for="(asset, i) in parsedAssets"
+        :key="i">
+        <router-link
+          class="asset-list__li-a"
+          :to="{
+            name: 'assets.masterAssets.show',
+            params: { asset: asset.id }
+          }"
+        >
           <span class="asset-list__li-name" :title="asset.creatorDetails.name">
             {{ asset.creatorDetails.name }}
           </span>
@@ -60,22 +68,25 @@
 </template>
 
 <script>
-import config from '@/config'
-import { Sdk } from '@/sdk'
-import trim from 'lodash/trim'
-import { ApiCallerFactory } from '@/api-caller-factory'
-import { ErrorHandler } from '@/utils/ErrorHandler'
 import { CollectionLoader } from '@/components/common'
+
+import { Sdk } from '@/sdk'
+import { ApiCallerFactory } from '@/api-caller-factory'
+
+import trim from 'lodash/trim'
+
+import config from '@/config'
+import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   components: {
-    CollectionLoader
+    CollectionLoader,
   },
 
   data () {
     return {
       assets: [],
-      isLoading: false
+      isLoading: false,
     }
   },
 
@@ -83,14 +94,15 @@ export default {
     contentLoaded () {
       return !this.$store.getters.showLoader
     },
+
     parsedAssets () {
       return this.assets.map(asset => {
         return {
           ...asset,
-          policiesStr: convertPolicyToString(asset.policy)
+          policiesStr: convertPolicyToString(asset.policy),
         }
       })
-    }
+    },
   },
 
   methods: {
@@ -98,19 +110,20 @@ export default {
       this.assets = []
       this.$store.commit('OPEN_LOADER')
       this.isLoading = true
+
       let response = {}
       try {
         response = await ApiCallerFactory
           .createCallerInstance()
           .getWithSignature('/v3/assets', {
-            filter: { owner: config.MASTER_ACCOUNT }
+            filter: { owner: config.MASTER_ACCOUNT },
           })
         this.$store.commit('CLOSE_LOADER')
       } catch (err) {
-        console.error('caught error', err)
         this.$store.commit('CLOSE_LOADER')
-        this.$store.dispatch('SET_ERROR', 'Something went wrong. Can\'t to load assets list')
+        ErrorHandler.process('Something went wrong. Can\'t to load assets list')
       }
+
       this.isLoading = false
       return response
     },
@@ -133,8 +146,8 @@ export default {
         const creatorDetails = item.details || item.creatorDetails
         return Object.assign(item, { creatorDetails })
       })
-    }
-  }
+    },
+  },
 }
 
 function decamelize (str, prefixForRemove = '') {

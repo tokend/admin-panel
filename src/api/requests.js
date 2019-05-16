@@ -6,6 +6,7 @@ import { REQUEST_TYPES } from '@/constants'
 import { CreatePreIssuanceRequest } from './responseHandlers/requests/CreatePreIssuanceRequest'
 import { AssetRequest } from './responseHandlers/requests/AssetRequest'
 import { IssuanceCreateRequest } from './responseHandlers/requests/IssuanceCreateRequest'
+
 import { clearObject } from '@/utils/clearObject'
 import _get from 'lodash/get'
 import { ApiCallerFactory } from '@/api-caller-factory'
@@ -25,16 +26,17 @@ export const requests = {
           tasksToRemove: _get(item, 'reviewDetails.tasksToRemove',
             item.pendingTasks
           ),
-          externalDetails: '{}'
+          externalDetails: '{}',
         },
         action,
-        reason
+        reason,
       }
+
       return Sdk.base.ReviewRequestBuilder.reviewRequest({
         ...opts,
 
         // TODO: remove. added due to a bug in the @tokend/js-sdk
-        requestDetails: opts
+        requestDetails: opts,
       })
     })
     return ApiCallerFactory
@@ -51,16 +53,16 @@ export const requests = {
         reviewDetails: {
           tasksToAdd: 0,
           tasksToRemove: item.pendingTasks || item.pending_tasks,
-          externalDetails: '{}'
+          externalDetails: '{}',
         },
         action,
-        reason
+        reason,
       }
       return Sdk.base.ReviewRequestBuilder.reviewWithdrawRequest({
         ...opts,
 
         // TODO: remove. added due to a bug in the @tokend/js-sdk
-        requestDetails: opts
+        requestDetails: opts,
       })
     })
     return ApiCallerFactory
@@ -81,7 +83,8 @@ export const requests = {
   },
 
   /**
-   * Approves limit request without changes, then submits ManageLimits op to all limit changes
+   * Approves limit request without changes, then submits
+   * ManageLimits op to all limit changes
    * @param {Object} params.request
    * @param {Object} params.oldLimits
    * @param {Array} params.newLimits
@@ -93,12 +96,14 @@ export const requests = {
         ...limits,
         id: '' + limits.id,
         accountID: params.accountId,
-        accountRole: undefined
+        accountRole: undefined,
       }))
+
     const operations = []
     operations.push(Sdk.base.ReviewRequestBuilder.reviewLimitsUpdateRequest({
       requestHash: params.request.hash,
-      requestType: params.request.details.request_type_i || params.request.details.requestTypeI,
+      requestType: params.request.details.request_type_i ||
+        params.request.details.requestTypeI,
       action: Sdk.xdr.ReviewRequestOpAction.approve().value,
       reason: '',
       requestID: params.request.id,
@@ -107,9 +112,10 @@ export const requests = {
         tasksToAdd: 0,
         tasksToRemove: params.request.pendingTasks ||
           params.request.pending_tasks,
-        externalDetails: '{}'
-      }
+        externalDetails: '{}',
+      },
     }))
+
     newLimits
       .forEach(limits => {
         operations.push(
@@ -128,8 +134,9 @@ export const requests = {
         ...limits,
         id: '' + limits.id,
         accountID: params.accountId,
-        accountType: undefined
+        accountType: undefined,
       }))
+
     const operation = Sdk.base.ReviewRequestBuilder.reviewLimitsUpdateRequest({
       requestHash: params.request.hash,
       requestType: params.request.request_type_i || params.request.requestTypeI,
@@ -138,7 +145,7 @@ export const requests = {
         : Sdk.xdr.ReviewRequestOpAction.reject().value,
       reason: params.reason,
       requestID: params.request.id,
-      newLimits: newLimits[0]
+      newLimits: newLimits[0],
     })
     const response = await ApiCallerFactory
       .createCallerInstance()
@@ -150,31 +157,39 @@ export const requests = {
     const action = isPermanent
       ? Sdk.xdr.ReviewRequestOpAction.permanentReject().value
       : Sdk.xdr.ReviewRequestOpAction.reject().value
-    return (await this._review({ action, reason }, ...requests)).data
+
+    const { data } = await this._review({ action, reason }, ...requests)
+    return data
   },
 
   async rejectWithdraw ({ reason, isPermanent = false }, ...requests) {
     const action = isPermanent
       ? Sdk.xdr.ReviewRequestOpAction.permanentReject().value
       : Sdk.xdr.ReviewRequestOpAction.reject().value
-    return (await this._reviewWithdraw({ action, reason }, ...requests)).data
+
+    const { data } = await this._reviewWithdraw(
+      { action, reason }, ...requests
+    )
+    return data
   },
 
   async get (id) {
-    const response = await Sdk.horizon.request.get(id)
-    return response.data
+    const { data } = await Sdk.horizon.request.get(id)
+    return data
   },
 
   async getIssuanceRequests ({ asset, state }) {
     const filters = {}
     if (state) filters.state = state
     if (asset) filters.asset = asset
-    return (await Sdk.horizon.request.getAllForIssuances({
+
+    const response = await Sdk.horizon.request.getAllForIssuances({
       order: 'desc',
       reviewer: config.MASTER_ACCOUNT,
       limit: 1000,
-      ...filters
-    }))
+      ...filters,
+    })
+    return response
   },
 
   async getWithdrawalRequests ({ asset, state, requestor }) {
@@ -182,22 +197,26 @@ export const requests = {
     if (asset) filters.dest_asset_code = asset
     if (state) filters.state = state
     if (requestor) filters.requestor = requestor
-    return (await Sdk.horizon.request.getAllForWithdrawals({
+
+    const response = await Sdk.horizon.request.getAllForWithdrawals({
       order: 'desc',
       limit: 1000,
-      ...filters
-    }))
+      ...filters,
+    })
+    return response
   },
 
   async getSaleRequests ({ state, requestor }) {
     const filters = {}
     if (state) filters.state = state
     if (requestor) filters.requestor = requestor
-    return (await Sdk.horizon.request.getAllForSales({
+
+    const response = await Sdk.horizon.request.getAllForSales({
       order: 'desc',
       limit: 1000,
-      ...filters
-    }))
+      ...filters,
+    })
+    return response
   },
 
   async getAssetRequests (filters) {
@@ -207,9 +226,11 @@ export const requests = {
       state: filters.state,
       reviewer: filters.reviewer,
       order: 'desc',
-      limit: 1000
+      limit: 1000,
     })
-    return (await Sdk.horizon.request.getAllForAssets(params))
+
+    const response = await Sdk.horizon.request.getAllForAssets(params)
+    return response
   },
 
   async getLimitsUpdateRequests ({ asset, state, requestor }) {
@@ -217,11 +238,13 @@ export const requests = {
     if (asset) filters.dest_asset_code = asset
     if (state) filters.state = state
     if (requestor) filters.requestor = requestor
-    return (await Sdk.horizon.request.getAllForLimitsUpdates({
+
+    const response = await Sdk.horizon.request.getAllForLimitsUpdates({
       order: 'desc',
       limit: 1000,
-      ...filters
-    }))
+      ...filters,
+    })
+    return response
   },
 
   async getPreissuanceRequests (asset) {
@@ -232,13 +255,13 @@ export const requests = {
       asset: asset,
       order: 'desc',
       limit: 1000,
-      reviewer: config.MASTER_ACCOUNT
+      reviewer: config.MASTER_ACCOUNT,
     })
     response.records = mapRequests(response.data)
     return response
   },
 
-  mapRequests
+  mapRequests,
 }
 
 function mapRequests (records) {

@@ -4,7 +4,9 @@
       <template v-if="isAssetLoaded">
         <div class="sale-manager-details-tab__row-item">
           <ul class="key-value-list">
-            <label class="data-caption">Asset details</label>
+            <label class="data-caption">
+              Asset details
+            </label>
             <li>
               <span>Name</span>
               <span>{{ asset.details.name || '&mdash;' }}</span>
@@ -65,7 +67,9 @@
         </div>
 
         <div class="sale-manager-details-tab__row-item">
-          <label class="data-caption">Asset logo</label>
+          <label class="data-caption">
+            Asset logo
+          </label>
           <template v-if="asset.details.logo && asset.details.logo.key">
             <img-getter
               class="sale-manager-details-tab__asset-logo"
@@ -95,7 +99,9 @@
     <div class="sale-manager-details-tab__row">
       <div class="sale-manager-details-tab__row-item">
         <ul class="key-value-list">
-          <label class="data-caption">Sale details</label>
+          <label class="data-caption">
+            Sale details
+          </label>
           <li>
             <span>Name</span>
             <span>{{ sale.details.name || '&mdash;' }}</span>
@@ -145,7 +151,13 @@
           <span>
             <!-- to padding of label.data-caption -->
           </span>
+<<<<<<< HEAD
           <label class="data-caption">{{ item.asset.id }} progress</label>
+=======
+          <label class="data-caption">
+            {{ item.asset }} progress
+          </label>
+>>>>>>> master
           <li>
             <span>Price (per {{ sale.baseAsset.id }})</span>
             <asset-amount-formatter :amount="item.price" />
@@ -156,12 +168,24 @@
           </li>
           <li>
             <!-- eslint-disable-next-line max-len -->
+<<<<<<< HEAD
             <span :title="`Current cap + current caps of the other acceptable assets in the ${item.asset.id} equivalent`">Total current cap</span>
+=======
+            <span :title="`Current cap + current caps of the other acceptable assets in the ${item.asset} equivalent`">
+              Total current cap
+            </span>
+>>>>>>> master
             <asset-amount-formatter :amount="item.totalCurrentCap" />
           </li>
           <li>
             <!-- eslint-disable-next-line max-len -->
+<<<<<<< HEAD
             <span :title="`Hard cap of the sale in the ${item.asset.id} equivalent`">Hard cap</span>
+=======
+            <span :title="`Hard cap of the sale in the ${item.asset} equivalent`">
+              Hard cap
+            </span>
+>>>>>>> master
             <asset-amount-formatter :amount="item.hardCap" />
           </li>
         </ul>
@@ -170,7 +194,9 @@
           <span>
             <!-- to padding of label.data-caption -->
           </span>
-          <label class="data-caption">Total progress</label>
+          <label class="data-caption">
+            Total progress
+          </label>
           <li>
             <span>Assets sold</span>
             <asset-amount-formatter
@@ -208,12 +234,18 @@
           </li>
         </ul>
 
-        <label class="data-caption">Short description</label>
-        <p class="text">{{ sale.details.shortDescription }}</p>
+        <label class="data-caption">
+          Short description
+        </label>
+        <p class="text">
+          {{ sale.details.shortDescription }}
+        </p>
       </div>
 
       <div class="sale-manager-details-tab__row-item">
-        <label class="data-caption">Sale logo</label>
+        <label class="data-caption">
+          Sale logo
+        </label>
         <template v-if="sale.details.logo && sale.details.logo.key">
           <img-getter
             class="sale-manager-details-tab__sale-logo"
@@ -234,8 +266,10 @@ import { EmailGetter, ImgGetter, DocLinkGetter } from '@comcom/getters'
 import {
   AssetAmountFormatter,
   DateFormatter,
-  AssetPoliciesFormatter
+  AssetPoliciesFormatter,
 } from '@comcom/formatters'
+
+import { Sdk } from '@/sdk'
 import { SALE_STATES } from '@/constants'
 import { ApiCallerFactory } from '@/api-caller-factory'
 
@@ -246,11 +280,11 @@ export default {
     AssetPoliciesFormatter,
     EmailGetter,
     ImgGetter,
-    DocLinkGetter
+    DocLinkGetter,
   },
 
   props: {
-    sale: { type: Object, required: true }
+    sale: { type: Object, required: true },
   },
 
   data () {
@@ -258,7 +292,7 @@ export default {
       SALE_STATES,
       asset: {},
       isAssetLoaded: false,
-      isAssetFailed: false
+      isAssetFailed: false,
     }
   },
 
@@ -279,8 +313,8 @@ export default {
       } catch (error) {
         this.isAssetFailed = true
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

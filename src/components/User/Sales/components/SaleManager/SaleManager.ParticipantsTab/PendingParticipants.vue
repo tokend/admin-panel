@@ -3,18 +3,32 @@
     <h2>Pending deals</h2>
 
     <div class="pending-participants__filters">
-      <select-field class="pending-participants__filter"
+      <select-field
+        class="pending-participants__filter"
         v-model="filters.quoteAsset"
         label="Quote asset">
+<<<<<<< HEAD
         <template v-if="get(sale, 'quoteAssets', []).length">
           <option :value="item.asset.id"
             v-for="(item, index) in sale.quoteAssets"
             :key="index"
           >{{item.asset.id}}</option>
+=======
+        <template v-if="get(sale, 'quoteAssets.quoteAssets', []).length">
+          <option
+            :value="item.asset"
+            v-for="(item, index) in sale.quoteAssets.quoteAssets"
+            :key="index"
+          >
+            {{ item.asset }}
+          </option>
+>>>>>>> master
         </template>
 
         <template v-else>
-          <option disabled>No options</option>
+          <option disabled>
+            No options
+          </option>
         </template>
       </select-field>
     </div>
@@ -25,16 +39,26 @@
           <tr>
             <th>Investor</th>
             <th>Invested at</th>
+<<<<<<< HEAD
             <th>{{filters.quoteAsset}} invested</th>
             <th>{{sale.baseAsset.id}} acquired</th>
+=======
+            <th>{{ filters.quoteAsset }} invested</th>
+            <th>{{ sale.baseAsset }} acquired</th>
+>>>>>>> master
           </tr>
         </thead>
         <tbody>
           <tr v-for="(participant, index) in participants" :key="index">
             <td><email-getter :account-id="participant.ownerId" /></td>
-            <td><date-formatter :date="participant.createdAt" format="DD MMM YYYY HH:mm:ss" /></td>
-            <td>{{participant.quoteAmount}}</td>
-            <td>{{participant.baseAmount}}</td>
+            <td>
+              <date-formatter
+                :date="participant.createdAt"
+                format="DD MMM YYYY HH:mm:ss"
+              />
+            </td>
+            <td>{{ participant.quoteAmount }}</td>
+            <td>{{ participant.baseAmount }}</td>
           </tr>
         </tbody>
       </table>
@@ -61,38 +85,46 @@
 </template>
 
 <script>
-import { Sdk } from '@/sdk'
 import { DateFormatter } from '@comcom/formatters'
 import { EmailGetter } from '@comcom/getters'
 import { SelectField } from '@comcom/fields'
+
+import { Sdk } from '@/sdk'
+
 import get from 'lodash/get'
 
 export default {
+  components: {
+    DateFormatter,
+    EmailGetter,
+    SelectField,
+  },
+
+  props: {
+    sale: { type: Object, required: true },
+  },
+
   data () {
     return {
       participants: [],
       filters: {
+<<<<<<< HEAD
         quoteAsset: get(this, 'sale.quoteAssets[0].asset.id', '')
+=======
+        quoteAsset: get(this, 'sale.quoteAssets.quoteAssets[0].asset', ''),
+>>>>>>> master
       },
       isLoaded: false,
-      isFailed: false
+      isFailed: false,
     }
   },
 
-  components: {
-    DateFormatter,
-    EmailGetter,
-    SelectField
+  watch: {
+    'filters.quoteAsset' () { this.getParticipants() },
   },
-
-  props: ['sale'],
 
   created () {
     this.getParticipants()
-  },
-
-  watch: {
-    'filters.quoteAsset' () { this.getParticipants() }
   },
 
   methods: {
@@ -111,15 +143,15 @@ export default {
           order_book_id: id,
           base_asset: baseAsset.id,
           quote_asset: quoteAsset,
-          is_buy: true
+          is_buy: true,
         })
         this.participants = response.data
         this.isLoaded = true
       } catch (error) {
         this.isFailed = true
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

@@ -26,13 +26,14 @@
         <input-date-field
           label="Start date"
           class="sale-list__field sale-list__field-margin-top"
-          :enableTime="false"
+          :enable-time="false"
           v-model="filtersDate.startDate"
         />
+        <!-- eslint-disable max-len -->
         <input-date-field
           label="End date"
           class="sale-list__field sale-list__field-margin-left sale-list__field-margin-top"
-          :enableTime="false"
+          :enable-time="false"
           v-model="filtersDate.endDate"
         />
         <tick-field
@@ -40,6 +41,7 @@
           label="Open only"
           v-model="filters.openOnly"
         />
+        <!-- eslint-enable max-len -->
       </div>
     </div>
 
@@ -50,9 +52,15 @@
             <span class="app-list__cell">
               <!-- empty -->
             </span>
-            <span class="app-list__cell">Name</span>
-            <span class="app-list__cell">State</span>
-            <span class="app-list__cell">Owner</span>
+            <span class="app-list__cell">
+              Name
+            </span>
+            <span class="app-list__cell">
+              State
+            </span>
+            <span class="app-list__cell">
+              Owner
+            </span>
           </div>
 
           <router-link
@@ -97,8 +105,12 @@
       <template v-else>
         <ul class="app-list">
           <li class="app-list__li-like">
-            <template v-if="isLoaded">Nothing here yet</template>
-            <template v-else>Loading...</template>
+            <template v-if="isLoaded">
+              Nothing here yet
+            </template>
+            <template v-else>
+              Loading...
+            </template>
           </li>
         </ul>
       </template>
@@ -115,25 +127,27 @@
 </template>
 
 <script>
-import api from '@/api'
-import { AssetAmountFormatter } from '@comcom/formatters'
-import { SALE_STATES } from '@/constants'
 import { InputField, TickField, InputDateField } from '@comcom/fields'
 import { EmailGetter } from '@comcom/getters'
-import _ from 'lodash'
+import { CollectionLoader } from '@/components/common'
+
+import api from '@/api'
 import { Sdk } from '@/sdk'
+
+import { SALE_STATES } from '@/constants'
+
+import _ from 'lodash'
+
 import config from '@/config'
 import { ErrorHandler } from '@/utils/ErrorHandler'
-import { CollectionLoader } from '@/components/common'
 
 export default {
   components: {
-    AssetAmountFormatter,
     InputField,
     TickField,
     EmailGetter,
     InputDateField,
-    CollectionLoader
+    CollectionLoader,
   },
 
   data () {
@@ -148,13 +162,40 @@ export default {
         baseAsset: '',
         owner: '',
         openOnly: false,
-        name: ''
+        name: '',
       },
       filtersDate: {
         startDate: '',
-        endDate: ''
-      }
+        endDate: '',
+      },
     }
+  },
+
+  watch: {
+    'filters.openOnly' () {
+      this.reloadCollectionLoader()
+    },
+
+    'owner': _.throttle(async function () {
+      this.filters.owner = await this.getOwner()
+      this.reloadCollectionLoader()
+    }, 1000),
+
+    'filters.name': _.throttle(function () {
+      this.reloadCollectionLoader()
+    }, 1000),
+
+    'filters.baseAsset': _.throttle(function () {
+      this.reloadCollectionLoader()
+    }, 1000),
+
+    'filtersDate.startDate' () {
+      this.filterByDate(this.rawList)
+    },
+
+    'filtersDate.endDate' () {
+      this.filterByDate(this.rawList)
+    },
   },
 
   methods: {
@@ -178,7 +219,7 @@ export default {
           open_only: this.filters.openOnly,
           name: this.filters.name,
           order: this.filters.order || 'desc',
-          limit: this.filters.limit || config.PAGE_LIMIT
+          limit: this.filters.limit || config.PAGE_LIMIT,
         })
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
@@ -195,10 +236,17 @@ export default {
     filterByDate (filteredList) {
       let sortedList = filteredList
       if (this.filtersDate.startDate) {
-        sortedList = sortedList.filter(sale => +new Date(sale.startTime) >= +new Date(this.filtersDate.startDate))
+        sortedList = sortedList.filter(sale => {
+          return +new Date(sale.startTime) >=
+            +new Date(this.filtersDate.startDate)
+        })
       }
+
       if (this.filtersDate.endDate) {
-        sortedList = sortedList.filter(sale => +new Date(sale.endTime) <= +new Date(this.filtersDate.endDate))
+        sortedList = sortedList.filter(sale => {
+          return +new Date(sale.endTime) <=
+            +new Date(this.filtersDate.endDate)
+        })
       }
       this.list = sortedList
     },
@@ -214,30 +262,8 @@ export default {
 
     reloadCollectionLoader () {
       this.$refs.collectionLoaderBtn.loadFirstPage()
-    }
+    },
   },
-
-  watch: {
-    'filters.openOnly' () {
-      this.reloadCollectionLoader()
-    },
-    'owner': _.throttle(async function () {
-      this.filters.owner = await this.getOwner()
-      this.reloadCollectionLoader()
-    }, 1000),
-    'filters.name': _.throttle(function () {
-      this.reloadCollectionLoader()
-    }, 1000),
-    'filters.baseAsset': _.throttle(function () {
-      this.reloadCollectionLoader()
-    }, 1000),
-    'filtersDate.startDate' () {
-      this.filterByDate(this.rawList)
-    },
-    'filtersDate.endDate' () {
-      this.filterByDate(this.rawList)
-    }
-  }
 }
 </script>
 

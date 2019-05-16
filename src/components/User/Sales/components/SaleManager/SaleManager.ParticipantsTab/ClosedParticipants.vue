@@ -1,21 +1,26 @@
 <template>
   <div class="closed-participants">
-    <h2 class="data-caption">Closed deals</h2>
+    <h2 class="data-caption">
+      Closed deals
+    </h2>
 
     <template v-if="isLoaded && list.length">
       <table class="closed-participants__table">
         <thead>
           <tr>
             <th>Investor</th>
+<<<<<<< HEAD
             <th>Invested at</th>
             <th>{{sale.baseAsset.id}} acquired</th>
+=======
+            <th>{{ sale.baseAsset }} acquired</th>
+>>>>>>> master
           </tr>
         </thead>
         <tbody>
           <tr v-for="(item, index) in list" :key="index">
             <td><email-getter :account-id="item.accountId" /></td>
-            <td><date-formatter :date="item.createdAt" format="DD MMM YYYY HH:mm:ss" /></td>
-            <td>{{item.balance}}</td>
+            <td>{{ item.balance }}</td>
           </tr>
         </tbody>
       </table>
@@ -41,23 +46,22 @@
 
 <script>
 import { Sdk } from '@/sdk'
-import { DateFormatter } from '@comcom/formatters'
 import { EmailGetter } from '@comcom/getters'
+
 export default {
+  components: { EmailGetter },
+
+  props: {
+    sale: { type: Object, required: true },
+  },
+
   data () {
     return {
       list: [],
       isLoaded: false,
-      isFailed: false
+      isFailed: false,
     }
   },
-
-  components: {
-    DateFormatter,
-    EmailGetter
-  },
-
-  props: ['sale'],
 
   created () {
     this.getList(this.sale)
@@ -73,8 +77,8 @@ export default {
       } catch (error) {
         this.isFailed = true
       }
-    }
-  }
+    },
+  },
 }
 </script>
 
