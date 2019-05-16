@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { Sdk } from '@/sdk'
+import { ApiCallerFactory } from '@/api-caller-factory'
 import { AssetPair } from '../../models/AssetPair'
 
 import PriceChart from './PriceChart.Renderer'
@@ -79,9 +79,10 @@ export default {
         this.isFailed = false
         this.priceHistory = {}
         const pair = new AssetPair(this.filters.pair)
-        // TODO: No /v3 endpoint for charts yet
-        Sdk.horizon.charts.get(`${pair.base}-${pair.quote}`)
-        const response = await Sdk.horizon.charts.get(`${pair.base}-${pair.quote}`)
+
+        const { _rawResponse: response } = await ApiCallerFactory
+          .createCallerInstance()
+          .getWithSignature(`/charts/${pair.base}-${pair.quote}`)
         this.priceHistory = response.data
         this.isLoaded = true
       } catch (error) {
