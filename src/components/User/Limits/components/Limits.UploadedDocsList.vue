@@ -67,7 +67,7 @@ import { DOCUMENTS_POLICIES } from '@/constants'
 export default {
   components: { DocLinkGetter },
   props: {
-    list: { type: Array, required: true },
+    list: { type: Object, required: true },
     uploadDate: { type: String, required: true },
   },
 

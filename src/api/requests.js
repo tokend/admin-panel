@@ -102,8 +102,7 @@ export const requests = {
     const operations = []
     operations.push(Sdk.base.ReviewRequestBuilder.reviewLimitsUpdateRequest({
       requestHash: params.request.hash,
-      requestType: params.request.details.request_type_i ||
-        params.request.details.requestTypeI,
+      requestType: params.request.xdrType.value,
       action: Sdk.xdr.ReviewRequestOpAction.approve().value,
       reason: '',
       requestID: params.request.id,
@@ -139,7 +138,7 @@ export const requests = {
 
     const operation = Sdk.base.ReviewRequestBuilder.reviewLimitsUpdateRequest({
       requestHash: params.request.hash,
-      requestType: params.request.request_type_i || params.request.requestTypeI,
+      requestType: params.request.xdrType.value,
       action: params.isPermanent
         ? Sdk.xdr.ReviewRequestOpAction.permanentReject().value
         : Sdk.xdr.ReviewRequestOpAction.reject().value,
@@ -174,7 +173,11 @@ export const requests = {
   },
 
   async get (id) {
-    const { data } = await Sdk.horizon.request.get(id)
+    const { data } = await ApiCallerFactory
+      .createCallerInstance()
+      .getWithSignature(`/v3/requests/${id}`, {
+        include: ['request_details'],
+      })
     return data
   },
 
@@ -233,17 +236,22 @@ export const requests = {
     return response
   },
 
-  async getLimitsUpdateRequests ({ asset, state, requestor }) {
+  async getLimitsUpdateRequests ({ state, requestor }) {
     const filters = {}
-    if (asset) filters.dest_asset_code = asset
     if (state) filters.state = state
     if (requestor) filters.requestor = requestor
 
-    const response = await Sdk.horizon.request.getAllForLimitsUpdates({
-      order: 'desc',
-      limit: 1000,
-      ...filters,
-    })
+    const response = await ApiCallerFactory
+      .createCallerInstance()
+      .getWithSignature('/v3/update_limits_requests', {
+        filter: {
+          ...filters,
+        },
+        page: {
+          order: 'desc',
+        },
+        include: ['request_details'],
+      })
     return response
   },
 
