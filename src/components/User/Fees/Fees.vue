@@ -5,7 +5,7 @@
         Fee settings
       </router-link>
       <router-link :to="{ name: 'fees-balances.index' }" slot="nav">
-        Fees balances
+        Collected fees
       </router-link>
     </user-header>
     <div class="app__user-container">

@@ -1,6 +1,9 @@
 <template>
-  <span class="asset-amount-formatter">
-    {{ formatAssetAmount(amount, asset) }}
+  <span
+    class="asset-amount-formatter"
+    :title="isTitled && formatted"
+  >
+    {{ formatted }}
   </span>
 </template>
 
@@ -11,10 +14,13 @@ export default {
   props: {
     amount: { type: [String, Number], required: true },
     asset: { type: String, default: '' },
+    isTitled: { type: Boolean, default: false },
   },
 
-  methods: {
-    formatAssetAmount,
+  computed: {
+    formatted () {
+      return formatAssetAmount(this.amount, this.asset)
+    },
   },
 }
 </script>
