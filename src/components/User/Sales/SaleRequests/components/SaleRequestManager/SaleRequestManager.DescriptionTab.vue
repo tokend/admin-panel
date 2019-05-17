@@ -70,11 +70,9 @@ export default {
 
   computed: {
     videoId () {
-      const valuableRequestDetailsKey = Object.keys(this.saleRequest.details)
-        .find(item => !/request_type|requestType/gi.test(item))
       return _get(
         this.saleRequest,
-        `details.${valuableRequestDetailsKey}.details.youtubeVideoId`
+        `requestDetails.creatorDetails.youtubeVideoId`
       )
     },
   },
@@ -85,12 +83,10 @@ export default {
 
   methods: {
     async loadDescription () {
-      const userId = this.saleRequest.requestor
-
-      const requestType = this.saleRequest.details.requestType
+      const userId = this.saleRequest.requestor.id
       const blobId = _get(
         this.saleRequest,
-        `details.${requestType}.details.description`
+        `requestDetails.creatorDetails.description`
       )
 
       try {

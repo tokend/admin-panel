@@ -20,7 +20,7 @@
 
         <div
           class="sale-rm__actions app__form-actions"
-          v-if="request.sale.requestStateI === REQUEST_STATES.pending"
+          v-if="request.sale.stateI === REQUEST_STATES.pending"
         >
           <button
             class="app__btn"
@@ -155,7 +155,7 @@ export default {
 
   computed: {
     getSaleDetails () {
-      return this.request.sale.details[this.request.sale.details.requestType]
+      return this.request.sale.requestDetails
     },
   },
 
@@ -173,7 +173,7 @@ export default {
         this.request.sale = await this.getSaleRequest(id)
         const { data } = await ApiCallerFactory
           .createCallerInstance()
-          .getWithSignature(`/v3/assets/${this.getSaleDetails.baseAsset}`, {
+          .getWithSignature(`/v3/assets/${this.getSaleDetails.baseAsset.id}`, {
             include: ['owner'],
           })
         this.request.asset = data
@@ -233,13 +233,8 @@ export default {
     fixDetails (record) {
       const newRecord = cloneDeep(record)
 
-      const valuableRequestDetailsKey = Object.keys(record.details)
-        .find(item => !/request_type|requestType/gi.test(item))
-
-      newRecord.details.requestType =
-        snakeToCamelCase(record.details.requestType)
-      newRecord.details[newRecord.details.requestType] =
-        record.details[valuableRequestDetailsKey] || {}
+      newRecord.requestDetails.requestType =
+        snakeToCamelCase(record.xdrType.name)
 
       return newRecord
     },
