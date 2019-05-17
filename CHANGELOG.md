@@ -16,6 +16,10 @@ for further information about branching and tagging conventions.
 - Add link to pre-issuance guide
 - Show all the limits in one screen, "Not set" and "Unlimited" labels,
   ability to remove limits and move `Limits.Manager` to v3 endpoint
+- KYC verification queue page for quick requests review
+- "US Verified" & "US Accredited" roles to the roleIdToString filter
+- "hash", "type", & "requestor" fields to `ChangeRoleRequest` wrapper
+- PDF documents preview to the `UserDocGetter` component
 
 #### Fixed
 - Fixed a bug when we confirm a request for changes in limits,
