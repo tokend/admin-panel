@@ -23,11 +23,11 @@
           label="Asset"
           v-model="filters.asset">
           <option
-            :value="item.code"
+            :value="item.id"
             v-for="item in assets"
-            :key="item.code"
+            :key="item.id"
           >
-            {{ item.code }}
+            {{ item.id }}
           </option>
         </select-field>
 
@@ -152,6 +152,7 @@ import localize from '@/utils/localize'
 import _ from 'lodash'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { ApiCallerFactory } from '@/api-caller-factory'
 
 export default {
   components: {
@@ -197,13 +198,15 @@ export default {
 
     async getAssets () {
       try {
-        const response = await Sdk.horizon.assets.getAll()
-        this.assets = response.data
-          .filter(item => (item.policy & ASSET_POLICIES.withdrawable))
-          .sort((assetA, assetB) => assetA.code > assetB.code ? 1 : -1)
+        const { data } = await ApiCallerFactory
+          .createStubbornCallerInstance()
+          .stubbornGet('/v3/assets')
+        this.assets = data
+          .filter(item => (item.policies.value & ASSET_POLICIES.withdrawable))
+          .sort((assetA, assetB) => assetA.id > assetB.id ? 1 : -1)
 
         if (this.assets.length) {
-          this.filters.asset = this.assets[0].code
+          this.filters.asset = this.assets[0].id
         }
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
