@@ -5,10 +5,13 @@ export class ChangeRoleRequest {
   constructor (record) {
     this._record = record
     this.id = record.id || '0'
+    this.hash = record.hash
+    this.type = safeGet(record, 'xdrType.value')
 
     this.rejectReason = record.rejectReason
     this.pendingTasks = record.pendingTasks
     this.allTasks = record.allTasks
+    this.requestor = safeGet(record, 'requestor.id')
 
     this.resetReason = safeGet(
       record, 'requestDetails.creatorDetails.resetReason'

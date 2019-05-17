@@ -158,7 +158,7 @@ export default {
       const country = Object
         .keys(byAlpha2)
         .find(country => country === this.kyc.address.country)
-      return byAlpha2[country].name
+      return country ? byAlpha2[country].name : ''
     },
   },
 }
