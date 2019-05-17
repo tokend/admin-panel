@@ -19,6 +19,9 @@ import api from './api'
 import params from './config'
 import VeeValidate, { Validator } from 'vee-validate'
 
+/* Error tracker util */
+import { ErrorTracker } from '@/utils/ErrorTracker'
+
 /* Vue filters */
 
 import {
@@ -53,6 +56,9 @@ Object.isEmpty = function (obj) {
 
   return JSON.stringify(obj) === JSON.stringify({})
 }
+
+/* Init Sentry */
+ErrorTracker.init(params)
 
 /* Create and Mount our Vue instance */
 new Vue({

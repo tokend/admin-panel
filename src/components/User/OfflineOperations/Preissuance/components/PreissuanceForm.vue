@@ -1,9 +1,20 @@
 <template>
   <div class="preissuance-form">
-    <p class="preissuance-form__hint">
-      Select file(s) with preissued asset and click <strong>Upload</strong>.<br>
-      <em>Note:</em> you cannot upload the same preissuance twice
-    </p>
+    <div class="preissuance-form__header">
+      <p class="preissuance-form__hint">
+        Select file(s) with preissued asset and click
+        <strong>Upload</strong>.<br>
+        <em>Note:</em> you cannot upload the same preissuance twice
+      </p>
+      <a
+        class="preissuance-form__link"
+        :href="preissuanceGuideURL"
+        target="_blank"
+        rel="noopener"
+      >
+        Learn more about pre-issuance
+      </a>
+    </div>
 
     <div class="preissuance-form__upload-wrp">
       <template v-if="assets.length">
@@ -125,6 +136,12 @@ export default {
       temporaryFileName: null,
       notLoadedFiles: [],
     }
+  },
+
+  computed: {
+    preissuanceGuideURL () {
+      return config.WEB_CLIENT_URL + '/pre-issuance-guide'
+    },
   },
 
   created () {
@@ -268,8 +285,12 @@ $width-without-indentation: calc(100% + 2 * #{$paddind-in-tab});
   margin-top: 4.5rem;
 }
 
-.preissuance-form__hint {
+.preissuance-form__header {
   margin-bottom: 2rem;
+}
+
+.preissuance-form__link {
+  font-size: 1.4rem;
 }
 
 .preissuance-form__list {

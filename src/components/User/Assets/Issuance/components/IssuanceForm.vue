@@ -213,20 +213,22 @@ export default {
     },
 
     async submit () {
-      if (!await confirmAction()) return
-
       this.isSubmitting = true
-      try {
-        await this.$validator.validateAll()
 
-        const balanceId = await this.getBalanceId()
-        await this.sendManualIssuance(balanceId)
+      if (await confirmAction()) {
+        try {
+          await this.$validator.validateAll()
 
-        Bus.$emit('issuance:updateRequestList')
-        await this.getAssets()
-      } catch (error) {
-        ErrorHandler.process(error)
+          const balanceId = await this.getBalanceId()
+          await this.sendManualIssuance(balanceId)
+
+          Bus.$emit('issuance:updateRequestList')
+          await this.getAssets()
+        } catch (error) {
+          ErrorHandler.process(error)
+        }
       }
+
       this.isSubmitting = false
     },
   },

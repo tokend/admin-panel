@@ -62,6 +62,16 @@ export default Object.assign(
       manualReviewRequired: -1,
       default: 1,
     },
+    /**
+     * URL of the Sentry DSN. It’s a representation of the configuration
+     * required by the Sentry SDKs.
+     */
+    SENTRY_DSN: '',
+
+    /**
+     * URL of the web client
+     */
+    WEB_CLIENT_URL: 'http://localhost:8095',
   },
   process.env,
   document.ENV
