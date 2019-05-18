@@ -47,6 +47,10 @@
       {{ label }}
     </span>
 
+    <div class="input-field__hints">
+      <slot name="hint" />
+    </div>
+
     <transition name="input-field__err-transition">
       <p class="input-field__err-mes" v-if="errorMessage">
         {{ errorMessage }}
