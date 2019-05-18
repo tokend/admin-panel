@@ -4,42 +4,53 @@
 
     <div class="fees-balances__withdraw-form-wrp">
       <collected-fees-withdraw
-        :from-balance-id="toWithdrawalForm.balanceId"
-        :withdrawal-amount="toWithdrawalForm.amount"
+        :ref="REFS.withdrawalForm"
       />
     </div>
 
     <div class="fees-balances__list-wrp">
-      <collected-fees-list @on-item-clicked="passToWithdrawalForm(balance)" />
+      <collected-fees-list @on-item-clicked="passToWithdrawalForm($event)" />
     </div>
 
-    <!-- TODO: request list with filters -->
+    <div class="fees-balances__withdrawals-wrp">
+      <collected-fees-withdrawals />
+    </div>
+
+    <!--
+      TODO: withdraw only withdrawable assets on balances,
+      hide all the others
+    -->
   </div>
 </template>
 
 <script>
 import CollectedFeesList from './components/CollectedFeesList'
 import CollectedFeesWithdraw from './components/CollectedFeesWithdraw'
+import CollectedFeesWithdrawals from './components/CollectedFeesWithdrawals'
+
+const REFS = {
+  withdrawalForm: 'withdrawalForm',
+}
 
 export default {
   components: {
     CollectedFeesList,
     CollectedFeesWithdraw,
+    CollectedFeesWithdrawals,
   },
 
   data () {
     return {
-      toWithdrawalForm: {
-        balanceId: '',
-        amount: '',
-      },
+      REFS,
     }
   },
 
   methods: {
-    passToWithdrawalForm (balance) {
-      this.toWithdrawalForm.balanceId = balance.id
-      this.toWithdrawalForm.balanceId = balance.asset.amount
+    passToWithdrawalForm (payload) {
+      this.$refs[REFS.withdrawalForm].setForm({
+        balanceId: payload.balanceId,
+        amount: payload.amount,
+      })
     },
   },
 }
@@ -51,6 +62,10 @@ export default {
 }
 
 .fees-balances__list-wrp {
-  margin-top: 4rem;
+  margin-top: 5rem;
+}
+
+.fees-balances__withdrawals-wrp {
+  margin-top: 5rem;
 }
 </style>

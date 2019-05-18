@@ -3,7 +3,7 @@
     <div class="app__block">
       <h2>Withdrawal</h2>
 
-      <form @submit.prevent="createWithdraw">
+      <form @submit.prevent="submit">
         <div class="app__form-row">
           <template v-if="masterBalances.length">
             <select-field
@@ -19,6 +19,7 @@
               >
                 {{ balance.asset.id }}
               </option>
+              <!-- TODO: empty-text -->
             </select-field>
           </template>
 
@@ -57,11 +58,71 @@
             v-model.trim="form.amount"
             label="Amount"
             name="amount"
+            step="0.000001"
+            :max="maxWithdrawalAmount"
+            :disabled="isFormPending"
+          >
+            <p slot="hint">
+              {{ maxWithdrawalAmountHint }}
+            </p>
+          </input-field>
+        </div>
+
+        <div class="app__form-row">
+          <input-field
+            class="app__form-field"
+            type="text"
+            v-model.trim="form.meta"
+            :label="isMasterSelectedBalanceAsset
+              ? 'Destination address'
+              : 'Comment'
+            "
+            name="meta"
             :disabled="isFormPending"
           />
         </div>
 
-        <!-- TODO: withdraw to where? -->
+        <div class="collected-fees-withdraw__op-attrs">
+          <p class="collected-fees-withdraw__op-attrs-row">
+            <span>
+              Reviewer:
+            </span>
+            <email-getter
+              :account-id="opAttrs.reviewerAddress"
+              is-titled
+            />
+          </p>
+
+          <template v-if="+opAttrs.fixedFee">
+            <p class="collected-fees-withdraw__op-attrs-row">
+              <span>
+                Fixed fee:
+              </span>
+              <asset-amount-formatter
+                :amount="opAttrs.fixedFee"
+                :asset="opAttrs.feeAssetCode"
+              />
+            </p>
+          </template>
+
+          <template v-if="+opAttrs.fixedFee">
+            <p class="collected-fees-withdraw__op-attrs-row">
+              <span>
+                Percent fee:
+              </span>
+              <asset-amount-formatter
+                :amount="opAttrs.percentFee"
+                :asset="opAttrs.feeAssetCode"
+              />
+            </p>
+          </template>
+
+          <template v-if="isMasterSelectedBalanceAsset">
+            <p class="collected-fees-withdraw__op-attrs-row">
+              External fee present
+            </p>
+          </template>
+        </div>
 
         <div class="app__form-actions">
           <button
@@ -83,23 +144,20 @@ import SelectField from '@comcom/fields/SelectField'
 
 import { ApiCallerFactory } from '@/api-caller-factory'
 import { ErrorHandler } from '@/utils/ErrorHandler'
-import { Sdk } from '@/sdk'
+import { formatAssetAmount } from '@/utils/formatters'
+import { EmailGetter } from '@comcom/getters'
+import { AssetAmountFormatter } from '@comcom/formatters'
+
+import _pick from 'lodash/pick'
+import _throttle from 'lodash/throttle'
+import { FEE_TYPES, base } from '@tokend/js-sdk'
 
 export default {
   components: {
     InputField,
     SelectField,
-  },
-
-  props: {
-    fromBalanceId: {
-      type: String,
-      default: '',
-    },
-    withdrawalAmount: {
-      type: [String, Number],
-      default: '',
-    },
+    EmailGetter,
+    AssetAmountFormatter,
   },
 
   data () {
@@ -107,21 +165,58 @@ export default {
       form: {
         balanceId: '',
         amount: '',
+        meta: '',
+      },
+      opAttrs: {
+        reviewerAddress: '',
+        fixedFee: '',
+        percentFee: '',
+        totalFee: '',
+        feeAssetCode: '',
       },
       isFormPending: false,
       isMasterBalancesLoading: false,
       isMasterBalancesFailed: false,
+      isOpAttrsLoading: false,
+      isOpAttrsFailed: false,
       masterBalances: [],
     }
   },
 
-  watch: {
-    fromBalanceId (newValue) {
-      this.form.balanceId = newValue
+  computed: {
+    selectedBalanceAttrs () {
+      return ((this.masterBalances || [])
+        .find(item => item.id === this.form.balanceId)) || {}
     },
 
-    withdrawalAmount (newValue) {
-      this.form.amount = newValue
+    isMasterSelectedBalanceAsset () {
+      try {
+        return this.opAttrs.reviewerAddress === Vue.params.MASTER_ACCOUNT
+      } catch (error) {
+        return false
+      }
+    },
+
+    maxWithdrawalAmount () {
+      return (this.selectedBalanceAttrs.state || {}).available
+    },
+
+    maxWithdrawalAmountHint () {
+      const formatted = formatAssetAmount(
+        (this.selectedBalanceAttrs.state || {}).available,
+        (this.selectedBalanceAttrs.asset || {}).id,
+      )
+      return `Max amount is ${formatted}`
+    },
+  },
+
+  watch: {
+    'form.balanceId' () {
+      this.loadOpAttrs()
+    },
+
+    'form.amount' () {
+      this.loadOpAttrs()
     },
   },
 
@@ -133,6 +228,7 @@ export default {
     async loadMasterBalances () {
       this.isMasterBalancesLoading = true
       this.isMasterBalancesFailed = false
+
       try {
         const { data: { balances: masterBalances } } = await ApiCallerFactory
           .createCallerInstance()
@@ -150,35 +246,97 @@ export default {
         this.isMasterBalancesFailed = true
         this.masterBalances = []
       }
+
       this.isMasterBalancesLoading = false
     },
 
-    async createWithdraw () {
+    async submit () {
       this.isFormPending = true
       try {
-        const operation = this.craftWithdrawOperation()
-        await Sdk.horizon.transactions.submitOperations(operation)
-      } catch (err) {
-        ErrorHandler.process('Something went wrong. Can’t to create withdraw')
+        const operation = this.craftWithdrawalOperation()
+        await ApiCallerFactory
+          .createCallerInstance()
+          .postOperations(operation)
+
+        this.form.amount = ''
+        this.form.meta = ''
+        this.$store.dispatch('SET_INFO', 'Request created successfully')
+      } catch (error) {
+        ErrorHandler.process(error)
       }
       this.isFormPending = false
     },
 
-    craftWithdrawOperation () {
+    craftWithdrawalOperation () {
       const opts = {
         balance: this.form.balanceId,
         amount: this.form.amount,
-        creatorDetails: {},
-        destAsset: this.form.code,
-        // TODO: calculate
-        // fee: {
-        //   fixed: '0',
-        //   percent: '0',
-        // },
+        destAsset: this.selectedBalanceAttrs.asset.id,
+        creatorDetails: this.isMasterSelectedBalanceAsset
+          ? { address: this.form.meta }
+          : { comment: this.form.meta },
+        fee: {
+          fixed: this.opAttrs.fixedFee,
+          percent: this.opAttrs.percentFee,
+        },
       }
 
-      return Sdk.base.CreateWithdrawRequestBuilder
+      return base.CreateWithdrawRequestBuilder
         .createWithdrawWithAutoConversion(opts)
+    },
+
+    async loadOpAttrs () {
+      this.isOpAttrsLoading = true
+      this.isOpAttrsFailed = false
+
+      try {
+        await this.loadReviewerAddress()
+        await this.loadCalculatedFees()
+      } catch (error) {
+        ErrorHandler.process(error)
+        this.isOpAttrsFailed = true
+      }
+
+      this.isOpAttrsLoading = false
+    },
+
+    async loadReviewerAddress () {
+      const assetCode = this.selectedBalanceAttrs.asset.id
+      const { data: asset } = await ApiCallerFactory
+        .createCallerInstance()
+        .getWithSignature(`/v3/assets/${assetCode}`, {
+          include: ['owner'],
+        })
+
+      this.opAttrs.reviewerAddress = ((asset || {}).owner || {}).id
+    },
+
+    async loadCalculatedFees () {
+      if (!this.form.amount || !this.form.balanceId) {
+        return
+      }
+
+      const assetCode = (this.selectedBalanceAttrs.asset || {}).id
+      const { data: fees } = await ApiCallerFactory
+        .createCallerInstance()
+        .getWithSignature(
+          `/v3/accounts/${Vue.params.MASTER_ACCOUNT}/calculated_fees`,
+          {
+            asset: assetCode,
+            fee_type: FEE_TYPES.withdrawalFee,
+            amount: this.form.amount,
+          })
+
+      this.opAttrs.feeAssetCode = assetCode
+      this.opAttrs.fixedFee = fees.fixed
+      this.opAttrs.percentFee = fees.calculatedPercent
+    },
+
+    throttledLoadOpAttrs: _throttle(_ => this.loadOpAttrs(), 1000),
+
+    // For parent access
+    setForm (opts) {
+      Object.assign(this.form, _pick(opts, ['balanceId', 'amount']))
     },
   },
 }
@@ -187,5 +345,13 @@ export default {
 <style lang="scss" scoped>
 .collected-fees-withdraw__submit-btn {
   max-width: 18rem;
+}
+
+.collected-fees-withdraw__op-attrs {
+  margin-top: 1.6rem;
+}
+
+.collected-fees-withdraw__op-attrs-row {
+  line-height: 1.5;
 }
 </style>

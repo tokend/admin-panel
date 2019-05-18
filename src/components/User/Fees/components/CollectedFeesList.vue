@@ -117,7 +117,10 @@ export default {
     },
 
     emitOnItemClicked (balance) {
-      this.emit(EVENTS.onItemClicked, balance)
+      this.$emit(EVENTS.onItemClicked, {
+        balanceId: balance.id,
+        amount: balance.state.available,
+      })
     },
   },
 }
