@@ -105,8 +105,7 @@
 }
 
 // Hide number spinner
-.input-field__input[type="number"]:not(:hover):not(:focus),
-.input-field__input[type="number"]:not(:hover):not(:focus) {
+.input-field__input[type="number"] {
   -moz-appearance: textfield;
 
   &::-webkit-inner-spin-button,
@@ -155,4 +154,35 @@
     margin-top: $field-error-margin-top;
     overflow: hidden;
   }
+}
+
+.input-field__tip {
+  position: absolute;
+  top: 1.6rem;
+  right: 0;
+
+  &:hover {
+    .input-field__tip-content {
+      display: flex;
+    }
+  }
+}
+
+.input-field__tip-content {
+  z-index: 1;
+  background-color: rgba($color-text, 0.95);
+  border-radius: 0.3rem;
+  top: 2rem;
+  color: $color-text-inverse;
+  display: none;
+  right: 0;
+  position: absolute;
+  padding: 1rem;
+}
+
+.input-field__tip-icon {
+  cursor: help;
+  display: flex;
+  width: 1.8rem;
+  fill: $field-color-unfocused;
 }

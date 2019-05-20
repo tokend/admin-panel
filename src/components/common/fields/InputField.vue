@@ -37,6 +37,16 @@
       {{ label }}
     </span>
 
+    <div
+      v-if="showHelp"
+      class="input-field__tip"
+    >
+      <mdi-help-circle-icon class="input-field__tip-icon" />
+      <div class="input-field__tip-content">
+        <slot />
+      </div>
+    </div>
+
     <transition name="input-field__err-transition">
       <p class="input-field__err-mes" v-if="errorMessage">
         {{ errorMessage }}
@@ -48,6 +58,8 @@
 <script>
 import InputFieldAutocomplete from './InputFieldAutocomplete'
 
+import 'mdi-vue/HelpCircleIcon'
+
 export default {
   components: {
     InputFieldAutocomplete,
@@ -55,6 +67,7 @@ export default {
 
   props: {
     label: { type: String, default: '' },
+    showHelp: { type: Boolean, default: false },
     value: { type: [String, Number], default: undefined },
     errorMessage: { type: String, default: undefined },
     autocompleteType: { type: String, default: '' },

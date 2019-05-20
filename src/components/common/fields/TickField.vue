@@ -1,30 +1,42 @@
 <template>
   <div class="tick-field">
-    <input
-      class="tick-field__input"
-      type="checkbox"
-      :checked="checked"
-      :disabled="disabled"
-      :name="name"
-      :id="id"
-      :value="cbValue"
-      :required="required"
-      :autofocus="autofocus"
-      @change="onChange">
+    <div class="tick-field__input-wrp">
+      <input
+        class="tick-field__input"
+        type="checkbox"
+        :checked="checked"
+        :disabled="disabled"
+        :name="name"
+        :id="id"
+        :value="cbValue"
+        :required="required"
+        :autofocus="autofocus"
+        @change="onChange">
 
-    <label
-      class="tick-field__label"
-      :for="id"
-      :title="title">
-      {{ label }}
-    </label>
+      <label
+        class="tick-field__label"
+        :for="id"
+        :title="title">
+        {{ label }}
+      </label>
 
-    <span
-      class="tick-field__tick"
-      :for="id"
-      :title="title">
-      <!-- css art -->
-    </span>
+      <span
+        class="tick-field__tick"
+        :for="id"
+        :title="title">
+        <!-- css art -->
+      </span>
+    </div>
+
+    <div
+      v-if="showHelp"
+      class="tick-field__tip"
+    >
+      <mdi-help-circle-icon class="tick-field__tip-icon" />
+      <div class="tick-field__tip-content">
+        <slot />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -32,6 +44,7 @@
 export default {
   props: {
     label: { type: String, default: 'Label' },
+    showHelp: { type: Boolean, default: false },
     value: { type: [String, Number, Array, Boolean], default: false },
 
     // proxies
@@ -128,6 +141,11 @@ export default {
 .tick-field {
   position: relative;
   display: flex;
+}
+
+.tick-field__input-wrp {
+  position: relative;
+  display: flex;
   z-index: 0; // HACK: fix cut of transforms on some browsers (chrome)
 }
 
@@ -146,7 +164,7 @@ export default {
   min-width: 1.6rem;
   height: 1.6rem;
   margin: 0.2rem 1.3rem 0 0;
-  z-index: 0;
+  // z-index: 0;
   border: solid 0.2rem;
   border-radius: 0.3rem;
   border-color: $field-color-unfocused;
@@ -200,5 +218,35 @@ export default {
     cursor: default;
     color: $field-color-unfocused;
   }
+}
+
+.tick-field__tip {
+  position: relative;
+  margin-left: 0.4rem;
+
+  &:hover {
+    .tick-field__tip-content {
+      display: flex;
+    }
+  }
+}
+
+.tick-field__tip-content {
+  z-index: 1;
+  background-color: rgba($color-text, 0.95);
+  border-radius: 0.3rem;
+  top: 2rem;
+  color: $color-text-inverse;
+  display: none;
+  right: 0;
+  position: absolute;
+  padding: 1rem;
+}
+
+.tick-field__tip-icon {
+  cursor: help;
+  display: flex;
+  width: 1.8rem;
+  fill: $field-color-unfocused;
 }
 </style>
