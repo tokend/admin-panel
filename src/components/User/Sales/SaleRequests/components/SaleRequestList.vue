@@ -8,6 +8,19 @@
       <div class="app-list-filters">
         <select-field
           class="app-list-filters__field"
+          v-model="filters.requestType"
+          label="Request type"
+        >
+          <option
+            v-for="requestType in Object.keys(SALE_REQUEST_TYPES)"
+            :value="SALE_REQUEST_TYPES[requestType].value"
+            :key="requestType"
+          >
+            {{ SALE_REQUEST_TYPES[requestType].text }}
+          </option>
+        </select-field>
+        <select-field
+          class="app-list-filters__field"
           label="State"
           v-model="filters.state"
         >
@@ -64,25 +77,25 @@
           >
             <span
               class="app-list__cell app-list__cell--important"
-              :title="item.baseAsset"
+              :title="item.requestDetails.baseAsset.id"
             >
-              {{ extractDetails(item).baseAsset }}
+              {{ item.requestDetails.baseAsset.id }}
             </span>
             <span
               class="app-list__cell"
-              :title="extractDetails(item).details.name"
+              :title="item.requestDetails.creatorDetails.name"
             >
-              {{ extractDetails(item).details.name }}
+              {{ item.requestDetails.creatorDetails.name }}
             </span>
             <span class="app-list__cell">
               <asset-amount-formatter
-                :amount="extractDetails(item).hardCap"
-                :asset="extractDetails(item).defaultQuoteAsset"
+                :amount="item.requestDetails.hardCap"
+                :asset="item.requestDetails.defaultQuoteAsset.id"
               />
             </span>
             <span class="app-list__cell">
               <email-getter
-                :account-id="item.requestor"
+                :account-id="item.requestor.id"
                 is-titled
               />
             </span>
@@ -131,6 +144,17 @@ import _ from 'lodash'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
+const SALE_REQUEST_TYPES = Object.freeze({
+  create: {
+    value: 'create_sale_requests',
+    text: 'Create',
+  },
+  update: {
+    value: 'update_sale_details_requests',
+    text: 'Update',
+  },
+})
+
 export default {
   components: {
     SelectField,
@@ -148,12 +172,16 @@ export default {
       filters: {
         state: REQUEST_STATES.pending,
         requestor: '',
+        requestType: SALE_REQUEST_TYPES.create.value,
       },
       isLoaded: false,
+      SALE_REQUEST_TYPES,
     }
   },
 
   watch: {
+    'filters.requestType' () { this.reloadCollectionLoader() },
+
     'filters.state' () { this.reloadCollectionLoader() },
 
     'filters.requestor': _.throttle(function () {
@@ -171,6 +199,7 @@ export default {
         const filters = {
           state: this.filters.state,
           requestor,
+          requestType: this.filters.requestType,
         }
         response = await api.requests.getSaleRequests(filters)
       } catch (error) {
@@ -200,12 +229,6 @@ export default {
 
     async extendList (data) {
       this.list = this.list.concat(data)
-    },
-
-    extractDetails (record) {
-      const valuableRequestDetailsKey = Object.keys(record.details)
-        .find(item => !/request_type|requestType/gi.test(item))
-      return record.details[valuableRequestDetailsKey] || {}
     },
 
     reloadCollectionLoader () {

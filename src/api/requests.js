@@ -181,20 +181,6 @@ export const requests = {
     return data
   },
 
-  async getIssuanceRequests ({ asset, state }) {
-    const filters = {}
-    if (state) filters.state = state
-    if (asset) filters.asset = asset
-
-    const response = await Sdk.horizon.request.getAllForIssuances({
-      order: 'desc',
-      reviewer: config.MASTER_ACCOUNT,
-      limit: 1000,
-      ...filters,
-    })
-    return response
-  },
-
   async getWithdrawalRequests ({ asset, state, requestor }) {
     const filters = {}
     if (asset) filters.dest_asset_code = asset
@@ -209,16 +195,22 @@ export const requests = {
     return response
   },
 
-  async getSaleRequests ({ state, requestor }) {
+  async getSaleRequests ({ state, requestor, requestType }) {
     const filters = {}
     if (state) filters.state = state
     if (requestor) filters.requestor = requestor
 
-    const response = await Sdk.horizon.request.getAllForSales({
-      order: 'desc',
-      limit: 1000,
-      ...filters,
-    })
+    const response = await ApiCallerFactory
+      .createCallerInstance()
+      .getWithSignature(`/v3/${requestType}`, {
+        filter: {
+          ...filters,
+        },
+        page: {
+          order: 'desc',
+        },
+        include: ['request_details'],
+      })
     return response
   },
 
