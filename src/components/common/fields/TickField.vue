@@ -29,12 +29,12 @@
     </div>
 
     <div
-      v-if="showHelp"
+      v-if="$slots.help"
       class="tick-field__tip"
     >
       <mdi-help-circle-icon class="tick-field__tip-icon" />
       <div class="tick-field__tip-content">
-        <slot />
+        <slot name="help" />
       </div>
     </div>
   </div>
@@ -44,7 +44,6 @@
 export default {
   props: {
     label: { type: String, default: 'Label' },
-    showHelp: { type: Boolean, default: false },
     value: { type: [String, Number, Array, Boolean], default: false },
 
     // proxies
@@ -164,7 +163,7 @@ export default {
   min-width: 1.6rem;
   height: 1.6rem;
   margin: 0.2rem 1.3rem 0 0;
-  // z-index: 0;
+  z-index: 0;
   border: solid 0.2rem;
   border-radius: 0.3rem;
   border-color: $field-color-unfocused;

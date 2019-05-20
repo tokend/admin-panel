@@ -21,6 +21,10 @@
   }
 }
 
+.input-field__tip ~ .input-field__input {
+  padding-right: 2rem;
+}
+
 .input-field__input {
   // HACK: do not merge these rulesets
 

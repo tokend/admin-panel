@@ -14,12 +14,7 @@ $field-transition-duration: .2s;
 $field-error-margin-top: .4rem;
 $field-input-padding-top: 1.7rem;
 $field-input-padding-bottom: .6rem;
-$field-input-padding-right: 2rem;
-$field-input-padding:
-  $field-input-padding-top
-  $field-input-padding-right
-  $field-input-padding-bottom
-  0;
+$field-input-padding: $field-input-padding-top 0 $field-input-padding-bottom 0;
 $field-placeholder-color: $field-color-unfocused;
 
 @mixin input-paddings {

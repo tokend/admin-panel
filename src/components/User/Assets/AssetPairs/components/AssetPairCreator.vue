@@ -40,16 +40,17 @@
           :step="DEFAULT_INPUT_STEP"
           v-model="form.physicalPriceCorrection"
           :disabled="isPending"
-          show-help
         >
-          <p class="asset-pair-creator__tip-message">
-            <span>
-              The correction of physical price in percents.
-              If physical price and restriction by physical price are set,
-              minimum price for this pair offer will be
-            </span>
-            <strong>physicalPrice * physicalPriceCorrection</strong>
-          </p>
+          <template slot="help">
+            <p class="asset-pair-creator__tip-message">
+              <span>
+                The correction of physical price in percents.
+                If physical price and restriction by physical price are set,
+                minimum price for this pair offer will be
+              </span>
+              <strong>physicalPrice * physicalPriceCorrection</strong>
+            </p>
+          </template>
         </input-field>
 
         <input-field
@@ -60,16 +61,17 @@
           :step="DEFAULT_INPUT_STEP"
           v-model="form.maxPriceStep"
           :disabled="isPending"
-          show-help
         >
-          <p class="asset-pair-creator__tip-message">
-            <span>
-              Maximum offer price step in percents.
-              If current price restriction is set,
-              the users are allowed to set an offer with price in interval
-            </span>
-            <strong>(1 ± maxPriceStep) * currentPrice</strong>
-          </p>
+          <template slot="help">
+            <p class="asset-pair-creator__tip-message">
+              <span>
+                Maximum offer price step in percents.
+                If current price restriction is set,
+                the users are allowed to set an offer with price in interval
+              </span>
+              <strong>(1 ± maxPriceStep) * currentPrice</strong>
+            </p>
+          </template>
         </input-field>
       </div>
 
@@ -81,11 +83,12 @@
             :required="false"
             label="Is tradable"
             :cb-value="ASSET_PAIR_POLICIES.tradeableSecondaryMarket"
-            show-help
           >
-            <span class="asset-pair-creator__tip-message">
-              Allowed to trade this pair on secondary market
-            </span>
+            <template slot="help">
+              <span class="asset-pair-creator__tip-message">
+                Allowed to trade this pair on secondary market
+              </span>
+            </template>
           </tick-field>
         </div>
 
@@ -96,12 +99,13 @@
             :required="false"
             label="Physical price restriction"
             :cb-value="ASSET_PAIR_POLICIES.physicalPriceRestriction"
-            show-help
           >
-            <span class="asset-pair-creator__tip-message">
-              If set, then prices for new offers must be greater
-              than physical price with correction
-            </span>
+            <template slot="help">
+              <span class="asset-pair-creator__tip-message">
+                If set, then prices for new offers must be greater
+                than physical price with correction
+              </span>
+            </template>
           </tick-field>
         </div>
 
@@ -112,14 +116,15 @@
             :required="false"
             label="Current price restriction"
             :cb-value="ASSET_PAIR_POLICIES.currentPriceRestriction"
-            show-help
           >
-            <p class="asset-pair-creator__tip-message">
-              <span>
-                If set, then price for new offers must be in interval of
-              </span>
-              <strong>(1 ± maxPriceStep) * currentPrice</strong>
-            </p>
+            <template slot="help">
+              <p class="asset-pair-creator__tip-message">
+                <span>
+                  If set, then price for new offers must be in interval of
+                </span>
+                <strong>(1 ± maxPriceStep) * currentPrice</strong>
+              </p>
+            </template>
           </tick-field>
         </div>
       </div>
