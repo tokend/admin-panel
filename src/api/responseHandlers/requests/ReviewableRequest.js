@@ -3,12 +3,8 @@ import api from '@/api/index'
 export class ReviewableRequest {
   constructor (record) {
     this._rawRequest = { ...record }
-    this.record = { ...record, ...record.details }
-    delete this.record.details
-
-    const valuableRequestDetailsKey = Object.keys(record.details)
-      .find(item => !/request_type|requestType/gi.test(item))
-    this.operationDetails = this.record[valuableRequestDetailsKey]
+    this.record = { ...record, ...record.requestDetails }
+    this.operationDetails = this.record.requestDetails
   }
 
   get id () {
@@ -16,7 +12,7 @@ export class ReviewableRequest {
   }
 
   get state () {
-    return this.record.requestState
+    return this.record.state
   }
 
   get rejectReason () {

@@ -36,11 +36,13 @@
           Asset logo
         </span>
         <template
-          v-if="safeGet(assetRequest, 'operationDetails.details.logo.key')"
+          v-if="safeGet(
+            assetRequest, 'operationDetails.creatorDetails.logo.key'
+          )"
         >
           <img-getter
             class="asset-requests-show__asset-logo"
-            :file-key="assetRequest.operationDetails.details.logo.key"
+            :file-key="assetRequest.operationDetails.creatorDetails.logo.key"
             alt="Asset logo"
           />
         </template>
@@ -51,9 +53,9 @@
         </span>
         <span
           class="asset-requests-show__value"
-          :title="assetRequest.operationDetails.details.name"
+          :title="assetRequest.operationDetails.creatorDetails.name"
         >
-          {{ assetRequest.operationDetails.details.name || '—' }}
+          {{ assetRequest.operationDetails.creatorDetails.name || '—' }}
         </span>
       </div>
 
@@ -134,13 +136,14 @@
             Policies
           </span>
           <div class="asset-requests-show__policies-wrapper">
-            <template v-for="policy in assetRequest.operationDetails.policies">
+            <template v-for="(policy, key) in ASSET_POLICIES_VERBOSE">
               <!-- eslint-disable max-len -->
               <span
-                :key="policy.value"
+                :key="key"
                 class="asset-requests-show__key asset-requests-show__key--informative"
+                v-if="assetRequest.policies & key"
               >
-                {{ ASSET_POLICIES_VERBOSE[policy.value] }}
+                {{ policy }}
               </span>
               <!-- eslint-enable max-len -->
             </template>
@@ -156,7 +159,7 @@
           <user-doc-getter
             :file-key="safeGet(
               assetRequest,
-              'operationDetails.details.logo.key'
+              'operationDetails.creatorDetails.logo.key'
             )"
           />
         </span>
@@ -249,8 +252,6 @@ import { DateFormatter } from '@comcom/formatters'
 
 import { confirmAction } from '@/js/modals/confirmation_message'
 
-import { Sdk } from '@/sdk'
-
 import localize from '@/utils/localize'
 import { verbozify } from '@/utils/verbozify'
 import safeGet from 'lodash/get'
@@ -263,6 +264,8 @@ import {
   CREATE_ASSET_REQUEST_STATES,
   ASSET_REQUEST_TYPES,
 } from '@/constants'
+
+import { ApiCallerFactory } from '@/api-caller-factory'
 
 // TODO: extract to AssetRequestForm
 export default {
@@ -306,8 +309,12 @@ export default {
     this.isInitializing = true
 
     try {
-      const response = await Sdk.horizon.request.get(this.id)
-      this.assetRequest = new AssetRequest(response.data)
+      const { data } = await ApiCallerFactory
+        .createCallerInstance()
+        .getWithSignature(`/v3/requests/${this.id}`, {
+          include: ['request_details'],
+        })
+      this.assetRequest = new AssetRequest(data)
     } catch (error) {
       ErrorHandler.processWithoutFeedback(error)
       this.isInitFailed = true
