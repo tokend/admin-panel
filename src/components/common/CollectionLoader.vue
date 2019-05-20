@@ -23,7 +23,11 @@
  * Example:
  *
  * <collection-loader
- *    :first-page-loader="Sdk.horizon.transactions.getAll"
+ *    :first-page-loader="
+ *      ApiCallerFactory
+          .createCallerInstance()
+          .getWithSignature('endpoint')
+      "
  *    :page-limit="10"
  *    @first-page-load="onFirstPageLoad"/>
  *    @next-page-load="onNextPageLoad"
