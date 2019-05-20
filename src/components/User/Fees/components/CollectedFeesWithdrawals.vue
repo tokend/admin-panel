@@ -28,87 +28,75 @@
           </option>
         </select-field>
 
-        <select-field
+        <input-field
           class="app-list-filters__field"
-          label="Asset"
-          v-model="filters.assetCode"
-        >
-          <option
-            v-for="item in assetCodes"
-            :key="item"
-            :value="item"
-          >
-            {{ item }}
-          </option>
-        </select-field>
+          label="Pending tasks"
+          placeholder="Bitmask, exact match"
+          v-model="filters.pendingTasks"
+        />
       </div>
     </div>
 
     <div class="withdrawal-list__list-wrp">
-      <template v-if="withdrawals.data && withdrawals.data.length">
+      <template v-if="list && list.length">
         <ul class="app-list">
           <div class="app-list__header">
             <span class="app-list__cell">
-              Source amount
+              Created at
             </span>
-            <span class="app-list__cell">
-              Destination amount
-            </span>
-            <span class="app-list__cell">
+            <span class="app-list__cell app-list__cell--right">
               Status
+            </span>
+            <span class="app-list__cell app-list__cell--right">
+              Amount
+            </span>
+            <span class="app-list__cell app-list__cell--right">
+              Tasks
             </span>
           </div>
 
           <button
             class="app-list__li"
-            v-for="item in list.data"
+            v-for="item in list"
             :key="item.id"
+            @click="itemToShow = item"
           >
-            <!-- @click="requestToShow = item" -->
-            <!-- eslint-disable max-len -->
-            <asset-amount-formatter
+            <date-formatter
               class="app-list__cell"
-              is-titled
-              :amount="item.details.withdraw.amount"
-              :asset="item.details.withdraw.destAssetCode"
+              :date="item.createdAt"
+              format="DD MMM YYYY HH:mm:ss"
             />
 
             <span
-              class="app-list__cell"
-              :title="`${localize(item.destAssetAmount)} ${item.destAssetCode}`"
+              class="app-list__cell app-list__cell--right"
+              :title="verbozify(item.state)"
             >
-              {{ localize(item.details.withdraw.destAssetAmount) }}&nbsp;{{ item.details.withdraw.destAssetCode }}
+              {{ verbozify(item.state) }}
             </span>
 
-            <span
-              class="app-list__cell"
-              :title="verbozify(item.requestState)"
-            >
-              {{ verbozify(item.requestState) }}
+            <asset-amount-formatter
+              class="app-list__cell app-list__cell--right"
+              is-titled
+              :amount="item.requestDetails.amount"
+            />
+
+            <span class="app-list__cell app-list__cell--right">
+              {{ item.allTasks }}
             </span>
           </button>
         </ul>
-
-        <div class="app__more-btn-wrp">
-          <collection-loader
-            :first-page-loader="getWithdrawals"
-            @first-page-load="setWithdrawals"
-            @next-page-load="extendWithdrawals"
-            ref="collectionLoaderBtn"
-          />
-        </div>
       </template>
 
       <template v-else>
         <ul class="app-list">
           <li class="app-list__li-like">
-            <template v-if="isWithdrawalsLoading">
+            <template v-if="isListLoading">
               <p>
                 Loading...
               </p>
             </template>
 
-            <template v-else-if="isWithdrawalsFailed">
+            <template v-else-if="isListFailed">
               <p class="danger">
                 An error occurred. Please try again later
               </p>
@@ -122,106 +110,84 @@
           </li>
         </ul>
       </template>
+
+      <div class="app__more-btn-wrp">
+        <collection-loader
+          :first-page-loader="getList"
+          @first-page-load="setList"
+          @next-page-load="extendList"
+          ref="collectionLoaderBtn"
+        />
+      </div>
     </div>
 
-    <!-- <modal
-      v-if="requestToShow && requestToShow.id"
-      @close-request="requestToShow = null"
-      max-width="60rem">
-      <withdrawal-details
-        :request="requestToShow"
-        :assetCodes="assetCodes"
-        @close-request="refreshList" />
-    </modal> -->
+    <modal
+      v-if="itemToShow && itemToShow.id"
+      @close-request="itemToShow = null"
+      max-width="64rem"
+    >
+      <h2>Withdrawal request details</h2>
+      <details-reader :details="itemToShow" />
+    </modal>
   </div>
 </template>
 
 <script>
 import Vue from 'vue'
 
-import SelectField from '@comcom/fields/SelectField'
-import { CollectionLoader } from '@comcom'
-import { AssetAmountFormatter } from '@comcom/formatters'
-
-// TODO: restore withdraw details modal
-// import Modal from '@comcom/modals/Modal'
-// import WithdrawalDetails from './WithdrawalDetails'
-
 import { REQUEST_STATES } from '@/constants'
 
-import { verbozify } from '@/utils/verbozify'
-import localize from '@/utils/localize'
+import { SelectField, InputField } from '@comcom/fields'
+import Modal from '@comcom/modals/Modal'
+import { CollectionLoader } from '@comcom'
+import { AssetAmountFormatter, DateFormatter } from '@comcom/formatters'
+import DetailsReader from '@comcom/details/DetailsReader'
 
+import { verbozify } from '@/utils/verbozify'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { clearObject } from '@/utils/clearObject'
+
 import { ApiCallerFactory } from '@/api-caller-factory'
+import _throttle from 'lodash/throttle'
 
 export default {
   components: {
+    InputField,
     SelectField,
     CollectionLoader,
     AssetAmountFormatter,
-    // Modal,
-    // WithdrawalDetails,
+    DateFormatter,
+    Modal,
+    DetailsReader,
   },
 
   data () {
     return {
       REQUEST_STATES,
 
-      assetCodes: [],
-      withdrawals: {},
-      // requestToShow: {},
       filters: {
         state: REQUEST_STATES.pending,
-        assetCode: '',
+        pendingTasks: '',
+        // TODO: add asset when https://tokend.atlassian.net/browse/TDV-890
+        // merged
       },
-      isWithdrawalsLoading: false,
-      isWithdrawalsFailed: false,
-      isAssetCodesLoading: false,
-      isAssetCodesFailed: false,
+      list: [],
+      isListLoading: false,
+      isListFailed: false,
+      itemToShow: {},
     }
   },
 
   watch: {
-    'filters.state' () { this.getWithdrawals() },
-    'filters.assetCode' () { this.getWithdrawals() },
-  },
-
-  created () {
-    this.loadAssetCodes()
+    'filters.state' () { this.reloadWithdrawalsThrottled() },
+    'filters.pendingTasks' () { this.reloadWithdrawalsThrottled() },
   },
 
   methods: {
     verbozify,
-    localize,
 
-    async loadAssetCodes () {
-      this.isAssetCodesLoading = true
-      this.isAssetCodesFailed = false
-      try {
-        const { data: { balances: assetCodes } } = await ApiCallerFactory
-          .createCallerInstance()
-          .getWithSignature(`/v3/accounts/${Vue.params.MASTER_ACCOUNT}`, {
-            include: ['balances.state'],
-          })
-
-        this.assetCodes = assetCodes
-          .map(item => item.asset.id)
-
-        if (this.assetCodes.length) {
-          this.filters.assetCode = this.assetCodes[0]
-        }
-      } catch (err) {
-        ErrorHandler.processWithoutFeedback(err)
-        this.isAssetCodesFailed = true
-        this.assetCodes = []
-      }
-      this.isAssetCodesLoading = false
-    },
-
-    async getWithdrawals () {
-      this.isWithdrawalsLoading = true
+    async getList () {
+      this.isListLoading = true
       let response = {}
       try {
         response = await ApiCallerFactory
@@ -230,26 +196,33 @@ export default {
             filter: clearObject({
               requestor: Vue.params.MASTER_ACCOUNT,
               state: this.filters.state,
-              // TODO: tmp disabled
-              // 'request_details.asset': this.filters.assetCode,
+              'pending_tasks': /^\d+$/.test(this.filters.pendingTasks)
+                ? this.filters.pendingTasks
+                : null,
             }),
+            include: ['request_details', 'request_details.balance'],
           })
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
-        this.isWithdrawalsFailed = true
-        this.withdrawals = []
+        this.isListFailed = true
+        this.list = []
       }
-      this.isWithdrawalsLoading = false
+      this.isListLoading = false
       return response
     },
 
-    setWithdrawals (data) {
-      this.withdrawals = data
+    setList (data) {
+      this.list = data
     },
 
-    async extendWithdrawals (data) {
-      this.withdrawals = this.withdrawals.concat(data)
+    extendList (data) {
+      this.list = this.list.concat(data)
     },
+
+    reloadWithdrawalsThrottled: _throttle(function () {
+      this.isListLoading = true
+      this.$refs.collectionLoaderBtn.loadFirstPage()
+    }, 1200),
   },
 }
 </script>
