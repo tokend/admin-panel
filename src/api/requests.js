@@ -7,7 +7,6 @@ import { CreatePreIssuanceRequest } from './responseHandlers/requests/CreatePreI
 import { AssetRequest } from './responseHandlers/requests/AssetRequest'
 import { IssuanceCreateRequest } from './responseHandlers/requests/IssuanceCreateRequest'
 
-import { clearObject } from '@/utils/clearObject'
 import _get from 'lodash/get'
 import { ApiCallerFactory } from '@/api-caller-factory'
 
@@ -211,20 +210,6 @@ export const requests = {
         },
         include: ['request_details'],
       })
-    return response
-  },
-
-  async getAssetRequests (filters) {
-    const params = clearObject({
-      asset: filters.code,
-      requestor: filters.requestor,
-      state: filters.state,
-      reviewer: filters.reviewer,
-      order: 'desc',
-      limit: 1000,
-    })
-
-    const response = await Sdk.horizon.request.getAllForAssets(params)
     return response
   },
 
