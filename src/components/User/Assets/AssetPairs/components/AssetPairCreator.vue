@@ -43,9 +43,10 @@
         />
         <input-field
           class="app__form-field"
-          label="Max price step"
+          label="Max price step (0-100%)"
           type="number"
           min="0"
+          max="100"
           :step="DEFAULT_INPUT_STEP"
           v-model="form.maxPriceStep"
           :disabled="isPending"
@@ -102,6 +103,7 @@ import { TickField, InputField } from '../../../../common/fields'
 
 import { ASSET_PAIR_POLICIES, DEFAULT_INPUT_STEP } from '../../../../../constants'
 import api from '@/api'
+import { confirmAction } from '@/js/modals/confirmation_message'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
@@ -127,7 +129,7 @@ export default {
 
   methods: {
     async submit () {
-      if (!window.confirm('Please confirm this action')) return
+      if (!await confirmAction()) return
       this.isPending = true
       try {
         await api.assets.createPair({

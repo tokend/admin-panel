@@ -31,6 +31,7 @@ for further information about branching and tagging conventions.
 
 #### Updated
 - Extracted change role request tasks manager to a separate component
+- Replace window.confirm with 'confirm-action' compononent
 
 ## [1.6.0] - 2019-05-09
 ### "Under the hood" changes
