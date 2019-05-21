@@ -1,4 +1,3 @@
-import moment from 'moment'
 import * as validators from 'vuelidate/lib/validators'
 import { base } from '@tokend/js-sdk'
 
@@ -22,12 +21,12 @@ export const amountRange = (from, to) => value =>
     Number(value) <= Number(to)
   )
 
-export const minDate = (minDate) => value => {
-  return moment(value).isAfter(moment(minDate))
+export const minAmount = value => {
+  return value >= 1 / base.Operation.ONE
 }
 
-export const maxDate = (maxDate) => value => {
-  return moment(value).isBefore(moment(maxDate))
+export const maxAmount = value => {
+  return value <= base.MAX_INT64_AMOUNT
 }
 
 export const emailOrAccountId = value => {

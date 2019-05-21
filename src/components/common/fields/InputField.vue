@@ -4,23 +4,13 @@
     :class="{'input-field--error': errorMessage}"
   >
     <input
+      v-bind="$attrs"
+      v-on="listeners"
       class="input-field__input"
       :class="{ 'input-field__input--placeholder-auto-hidden': label }"
       :type="type"
-      :placeholder="placeholder || ' '"
+      :placeholder="$attrs.placeholder || ' '"
       :value="value"
-      :disabled="disabled"
-      :name="name"
-      :autocomplete="autocomplete"
-      :autofocus="autofocus"
-      :min="min"
-      :max="max"
-      :step="step"
-      :required="required"
-      :readonly="readonly"
-      :title="title"
-      :form="form"
-      @input="onInput"
       @focus="isInputFocused = true"
       @blur="isInputFocused = false"
     >
@@ -48,6 +38,10 @@
 <script>
 import InputFieldAutocomplete from './InputFieldAutocomplete'
 
+const EVENTS = {
+  input: 'input',
+}
+
 export default {
   components: {
     InputFieldAutocomplete,
@@ -58,22 +52,7 @@ export default {
     value: { type: [String, Number], default: undefined },
     errorMessage: { type: String, default: undefined },
     autocompleteType: { type: String, default: '' },
-    // proxies
-    autocomplete: { type: String, default: 'off' },
-    autofocus: { type: Boolean, default: false },
-    disabled: { type: Boolean, default: false },
-    name: { type: String, default: undefined },
-    placeholder: { type: String, default: undefined },
     type: { type: String, default: 'text' },
-    required: { type: Boolean, default: true },
-    readonly: { type: Boolean, default: false },
-    title: { type: [String, Number], default: undefined },
-    form: { type: [String, Number], default: null },
-
-    // [type="number"] proxies
-    min: { type: [String, Number], default: undefined },
-    max: { type: [String, Number], default: undefined },
-    step: { type: [String, Number], default: undefined },
   },
 
   data () {
@@ -82,11 +61,20 @@ export default {
     }
   },
 
-  methods: {
-    onInput (event) {
-      this.beforeEmit(event.target)
-      this.$emit('input', event.target.value)
+  computed: {
+    listeners () {
+      return {
+        ...this.$listeners,
+        input: event => {
+          this.beforeEmit(event.target)
+          this.$emit(EVENTS.input, event.target.value)
+        },
+      }
     },
+  },
+
+  methods: {
+    onInput (event) {},
 
     beforeEmit (target) {
       if (this.type === 'number') {

@@ -5,6 +5,14 @@ import { InputField, SelectField, TextField, TickField } from '@comcom/fields'
 import safeGet from 'lodash/get'
 import isObject from 'lodash/isObject'
 
+const VALIDATION_ERRORS = {
+  required: 'Please, fill out this field',
+  emailOrAccountId: 'This field should be a valid email or account ID',
+  minAmount: 'The amount should be more or equal minimum value',
+  noMoreThanAvailableForIssuance: 'Not enough assets available for issuance',
+  maxLength: 'This field exceeded maximum line length',
+}
+
 export default {
   components: {
     InputField,
@@ -68,7 +76,7 @@ export default {
 
       for (const rule of Object.keys(fieldDetails.$params)) {
         if (!fieldDetails[rule]) {
-          return rule
+          return VALIDATION_ERRORS[rule]
         }
       }
     },
