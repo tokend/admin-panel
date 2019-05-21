@@ -16,6 +16,9 @@ const VALIDATION_ERRORS = {
   password: 'Use at least 8 characters for password',
   sameAsPassword: 'Passwords do not match',
   alphaNum: 'Only alphaumeric values allowed (A-Z, a-z, 0-9)',
+  minValue: 'This field should be more or equal min value',
+  maxValue: 'This field should be less or equal max value',
+  accountId: 'This field should be a valid account ID',
 }
 
 export default {

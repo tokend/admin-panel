@@ -29,8 +29,12 @@ export const maxAmount = value => {
   return value <= base.MAX_INT64_AMOUNT
 }
 
+export const accountId = value => {
+  return base.Keypair.isValidPublicKey(value)
+}
+
 export const emailOrAccountId = value => {
-  return validators.email(value) || base.Keypair.isValidPublicKey(value)
+  return validators.email(value) || accountId(value)
 }
 
 export const noMoreThanAvailableOnBalance = balance => value => {
