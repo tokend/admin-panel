@@ -20,6 +20,10 @@ for further information about branching and tagging conventions.
 - "US Verified" & "US Accredited" roles to the roleIdToString filter
 - "hash", "type", & "requestor" fields to `ChangeRoleRequest` wrapper
 - PDF documents preview to the `UserDocGetter` component
+- Help hints to the `<input-field>` & `<tick-field>`
+- Help messages on asset pair forms
+- "Physical price correction" & "Max price step" fields
+  to the asset pair manager form
 
 #### Fixed
 - Fixed a bug when we confirm a request for changes in limits,
