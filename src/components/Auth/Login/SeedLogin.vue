@@ -68,10 +68,7 @@ export default {
   validations () {
     return {
       form: {
-        seed: {
-          required,
-          seed,
-        },
+        seed: { required, seed },
       },
     }
   },

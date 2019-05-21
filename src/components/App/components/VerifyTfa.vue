@@ -21,8 +21,8 @@
             v-model.trim="form.verificationCode"
             label="Verification Code"
             autofocus
-            @blur="touchField('form.asset')"
-            :error-message="getFieldErrorMessage('form.asset')"
+            @blur="touchField('form.verificationCode')"
+            :error-message="getFieldErrorMessage('form.verificationCode')"
             :disabled="formMixin.isDisabled"
           />
         </div>
@@ -93,7 +93,7 @@ export default {
       this.disableForm()
       try {
         await Vue.api.tfa.verifyTfaCode(
-          this.verificationCode,
+          this.form.verificationCode,
           this.$store.getters.tfaToken
         )
 

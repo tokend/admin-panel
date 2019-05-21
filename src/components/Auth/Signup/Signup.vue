@@ -11,11 +11,11 @@
           <div class="app__form-field">
             <input-field
               label="Username"
-              v-model="credentials.username"
+              v-model="form.username"
+              @blur="touchField('form.username')"
+              :error-message="getFieldErrorMessage('form.username')"
+              :disabled="formMixin.isDisabled"
             />
-            <span v-show="formErrors.username.error" class="small danger">
-              {{ formErrors.username.message }}
-            </span>
           </div>
         </div>
 
@@ -24,11 +24,11 @@
             <input-field
               label="Password"
               type="password"
-              v-model="credentials.password"
+              v-model="form.password"
+              @blur="touchField('form.password')"
+              :error-message="getFieldErrorMessage('form.password')"
+              :disabled="formMixin.isDisabled"
             />
-            <span v-show="formErrors.password.error" class="small danger">
-              {{ formErrors.password.message }}
-            </span>
           </div>
         </div>
 
@@ -37,14 +37,11 @@
             <input-field
               label="Password confirmation"
               type="password"
-              v-model="credentials.confirmPassword"
+              v-model="form.confirmPassword"
+              @blur="touchField('form.confirmPassword')"
+              :error-message="getFieldErrorMessage('form.confirmPassword')"
+              :disabled="formMixin.isDisabled"
             />
-            <span
-              v-show="formErrors.confirmPassword.error"
-              class="small danger"
-            >
-              {{ formErrors.confirmPassword.message }}
-            </span>
           </div>
         </div>
 
@@ -52,16 +49,19 @@
           <div class="app__form-field">
             <input-field
               label="Save this seed"
-              v-model="credentials.seed"
+              v-model="form.seed"
+              @blur="touchField('form.seed')"
+              :error-message="getFieldErrorMessage('form.seed')"
+              :disabled="formMixin.isDisabled"
             />
-            <span v-show="formErrors.seed.error" class="small danger">
-              {{ formErrors.seed.message }}
-            </span>
           </div>
         </div>
 
         <div class="app__form-actions">
-          <button class="app__btn">
+          <button
+            class="app__btn"
+            :disabled="formMixin.isDisabled"
+          >
             Sign Up
           </button>
         </div>
@@ -92,9 +92,10 @@
         <qrcode
           :size="240"
           foreground="#3f4244"
-          :value="credentials.publicKey" />
+          :value="form.publicKey"
+        />
         <p class="signup__account-id small">
-          {{ credentials.publicKey }}
+          {{ form.publicKey }}
         </p>
       </div>
     </div>
@@ -112,11 +113,19 @@
 import Vue from 'vue'
 import Qrcode from 'qrcode.vue'
 
+import FormMixin from '@/mixins/form.mixin'
+import {
+  required,
+  minLength,
+  password,
+  seed,
+  sameAs,
+  alphaNum,
+} from '@/validators'
+
 import StellarWallet from 'tokend-wallet-js-sdk'
 
-import InputField from '@comcom/fields/InputField'
-
-import { Sdk } from '@/sdk'
+import { base } from '@tokend/js-sdk'
 import { ApiCallerFactory } from '@/api-caller-factory'
 import config from '@/config'
 
@@ -124,34 +133,48 @@ import GAuth from '../../settings/GAuth.vue'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
+const USERNAME_MIN_LENGTH = 3
+
 export default {
   name: 'sign-up',
-  components: { GAuth, Qrcode, InputField },
+  components: { GAuth, Qrcode },
+  mixins: [FormMixin],
 
   data () {
     return {
-      credentials: {
+      form: {
         username: '',
         password: '',
         confirmPassword: '',
-        publicKey: '',
         seed: '',
+        publicKey: '',
         keypair: {},
-      },
-      userNameValidatorRegExp: /^\w+$/,
-
-      formErrors: {
-        seed: { error: false, message: '' },
-        username: { error: false, message: '' },
-        password: { error: false, message: '' },
-        confirmPassword: { error: false, message: '' },
       },
       state: 'signup',
     }
   },
 
+  validations () {
+    return {
+      form: {
+        username: {
+          required,
+          minLength: minLength(USERNAME_MIN_LENGTH),
+          alphaNum,
+        },
+        password: { required, password },
+        confirmPassword: {
+          required,
+          password,
+          sameAsPassword: sameAs(function () { return this.form.password }),
+        },
+        seed: { required, seed },
+      },
+    }
+  },
+
   created () {
-    this.credentials.seed = Sdk.base.Keypair.random().secret()
+    this.form.seed = base.Keypair.random().secret()
   },
 
   methods: {
@@ -161,7 +184,7 @@ export default {
           .createPublicCallerInstance()
           .get(`/v3/accounts/${config.MASTER_ACCOUNT}/signers`)
         const isSignerExists = data
-          .find(item => item.id === this.credentials.publicKey)
+          .find(item => item.id === this.form.publicKey)
 
         if (!isSignerExists) {
           setTimeout(this.isSigner, 5000)
@@ -178,10 +201,10 @@ export default {
     async createWallet () {
       let walletCreated = false
       try {
-        await Vue.auth.createWallet(this.credentials)
+        await Vue.auth.createWallet(this.form)
         walletCreated = true
 
-        const res = await Vue.auth.login(this.credentials)
+        const res = await Vue.auth.login(this.form)
 
         if (!res.ok || res.enabledTFA) {
           ErrorHandler.process('Can not automatically log into the system. Try to log yourself')
@@ -207,115 +230,52 @@ export default {
     },
 
     async getUniqueCredentials (credential, errorText) {
+      let response
       try {
-        const response = await StellarWallet.getUniqueCredentials({
+        response = await StellarWallet.getUniqueCredentials({
           server: Vue.params.KEY_SERVER_ADMIN,
           key: credential.toLowerCase(),
         })
-
-        if (response.status === 409) {
-          return { success: false, error: errorText }
-        } else if (response.status === 200) {
-          return { success: true }
-        }
       } catch (err) {
         ErrorHandler.processWithoutFeedback(err)
-        return { success: false, error: 'Server error' }
+        throw new Error('Server error')
+      }
+
+      if (response.status === 409) {
+        throw new Error(errorText)
       }
     },
 
     async submit () {
-      this.credentials.keypair = Sdk.base.Keypair
-        .fromSecret(this.credentials.seed)
-      this.credentials.publicKey = this.credentials.keypair.accountId()
+      if (!this.isFormValid()) {
+        return
+      }
 
+      this.form.keypair = base.Keypair.fromSecret(this.form.seed)
+      this.form.publicKey = this.form.keypair.accountId()
+
+      this.disableForm()
       this.$store.commit('OPEN_LOADER')
       try {
-        const data = await this.validate()
+        await this.checkCredentials()
         this.$store.commit('CLOSE_LOADER')
 
-        if (data) {
-          this.state = 'submit'
-          await this.isSigner()
-        }
+        this.state = 'submit'
+        await this.isSigner()
       } catch (err) {
-        ErrorHandler.processWithoutFeedback(err)
+        ErrorHandler.process(err)
         this.$store.commit('CLOSE_LOADER')
       }
+      this.enableForm()
     },
 
-    async validate () {
-      let valid = true
-      this.formErrors = {
-        seed: { error: false, message: '' },
-        username: { error: false, message: '' },
-        password: { error: false, message: '' },
-        confirmPassword: { error: false, message: '' },
-      }
-
-      if (this.credentials.username === '') {
-        this.formErrors.username = { error: true, message: 'Enter username' }
-        valid = false
-      }
-      if (this.credentials.username.length < 3) {
-        this.formErrors.username = {
-          error: true,
-          message: 'Use at least 3 characters for username',
-        }
-        valid = false
-      }
-      if (!this.userNameValidatorRegExp.test(this.credentials.username)) {
-        this.formErrors.username = {
-          error: true,
-          message: 'Only alphaumeric values allowed (A-Z, a-z, 0-9, _)',
-        }
-        valid = false
-      }
-      if (this.credentials.password === '') {
-        this.formErrors.password = { error: true, message: 'Enter password' }
-        valid = false
-      }
-      if (this.credentials.confirmPassword === '') {
-        this.formErrors.confirmPassword = {
-          error: true,
-          message: 'Enter the same password again',
-        }
-        valid = false
-      }
-      if (this.credentials.password.length < 8) {
-        this.formErrors.password = {
-          error: true,
-          message: 'Use at least 8 characters for password',
-        }
-        valid = false
-      }
-      if (this.credentials.password !== this.credentials.confirmPassword) {
-        this.formErrors.confirmPassword = {
-          error: true,
-          message: 'Enter the same password again',
-        }
-        valid = false
-      }
-
-      const usernamePromise = this.getUniqueCredentials(this.credentials.username, 'Username already exist. Please select another')
-      const accountPromise = this.getUniqueCredentials(this.credentials.publicKey, 'Account already exist')
-
-      const data = await Promise.all([accountPromise, usernamePromise])
-
-      if (!this.formErrors.seed.error) {
-        if (!data[0].success) {
-          this.formErrors.seed = { error: true, message: 'Account is already exist' }
-          valid = false
-        }
-      }
-      if (!this.formErrors.username.error) {
-        if (!data[1].success) {
-          this.formErrors.username = { error: true, message: 'Username already exist. Please select another' }
-          valid = false
-        }
-      }
-
-      return valid
+    async checkCredentials () {
+      await this.getUniqueCredentials(
+        this.form.username, 'Username already exist. Please select another'
+      )
+      await this.getUniqueCredentials(
+        this.form.publicKey, 'Account already exists'
+      )
     },
   },
 }

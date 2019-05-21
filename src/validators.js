@@ -1,7 +1,7 @@
 import * as validators from 'vuelidate/lib/validators'
 import { base } from '@tokend/js-sdk'
 
-export const password = value => validators.minLength(6)(value)
+export const password = value => validators.minLength(8)(value)
 export const seed = value => base.Keypair.isValidSecretKey(value)
 export const amount = value => Number(value) && Number(value) > 0
 export const requiredAtLeastOne = value => !!value.length

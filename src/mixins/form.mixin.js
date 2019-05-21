@@ -10,8 +10,12 @@ const VALIDATION_ERRORS = {
   emailOrAccountId: 'This field should be a valid email or account ID',
   minAmount: 'The amount should be more or equal minimum value',
   noMoreThanAvailableForIssuance: 'Not enough assets available for issuance',
+  minLength: 'This field should have at least minimum line length',
   maxLength: 'This field exceeded maximum line length',
   seed: 'Invalid seed',
+  password: 'Use at least 8 characters for password',
+  sameAsPassword: 'Passwords do not match',
+  alphaNum: 'Only alphaumeric values allowed (A-Z, a-z, 0-9)',
 }
 
 export default {
