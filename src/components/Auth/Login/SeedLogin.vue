@@ -5,7 +5,10 @@
         Sign In With Seed
       </h2>
 
-      <form @submit.prevent="seedLogin">
+      <form
+        @submit.prevent="seedLogin"
+        novalidate
+      >
         <div class="app__form-row">
           <input-field
             class="app__form-field"
