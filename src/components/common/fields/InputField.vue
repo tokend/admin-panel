@@ -3,6 +3,16 @@
     class="input-field"
     :class="{'input-field--error': errorMessage}"
   >
+    <div
+      v-if="$slots.help"
+      class="input-field__tip"
+    >
+      <mdi-help-circle-icon class="input-field__tip-icon" />
+      <div class="input-field__tip-content">
+        <slot name="help" />
+      </div>
+    </div>
+
     <input
       v-bind="$attrs"
       v-on="listeners"
@@ -37,6 +47,8 @@
 
 <script>
 import InputFieldAutocomplete from './InputFieldAutocomplete'
+
+import 'mdi-vue/HelpCircleIcon'
 
 const EVENTS = {
   input: 'input',
