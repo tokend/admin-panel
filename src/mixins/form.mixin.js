@@ -40,20 +40,30 @@ export default {
 
   methods: {
     /**
-    * isFormValid checks if your form  meets the validation rules,
-    * established for its fields.
+    * isFormValid checks if your form (or a part of it) meets
+    * the validation rules, established for its fields.
     *
-    * @returns {boolean} True if the form meets the validation rules
-    *                    or false if it does not.
+    * @param {string} [formPart] - the string with the form part name.
+    *                 Works also for nested parts, such as `form.part1`.
+    *
+    * @returns {boolean} True if the form (or its part) meets
+    *                    the validation rules or false if it does not.
     */
-    isFormValid () {
-      if (!this.$v) {
+    isFormValid (formPart) {
+      let form
+      if (formPart) {
+        form = safeGet(this.$v, formPart)
+      } else {
+        form = this.$v
+      }
+
+      if (!form) {
         // in case we have no validation rules at all
         return true
       }
 
-      this.$v.$touch()
-      return !this.$v.$invalid
+      form.$touch()
+      return !form.$invalid
     },
 
     /**
