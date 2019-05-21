@@ -145,7 +145,7 @@ export default {
           minAmount,
           noMoreThanAvailableForIssuance: noMoreThanAvailableForIssuance(
             this.availableForIssuance
-          )
+          ),
         },
         receiver: { required, emailOrAccountId },
         reference: {

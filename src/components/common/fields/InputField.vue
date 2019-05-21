@@ -95,8 +95,8 @@ export default {
 
     normalizeMinMax (target) {
       const { value } = target
-      const max = '' + this.max
-      const min = '' + this.min
+      const max = '' + this.$attrs.max
+      const min = '' + this.$attrs.min
 
       if (value === '') {
 
@@ -112,7 +112,7 @@ export default {
 
       let precision
       try {
-        precision = this.step.match(/(?:\.|,)\d+$/)[0].slice(1).length
+        precision = this.$attrs.step.match(/(?:\.|,)\d+$/)[0].slice(1).length
       } catch (error) {
         precision = 0
       }

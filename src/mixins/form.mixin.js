@@ -11,6 +11,7 @@ const VALIDATION_ERRORS = {
   minAmount: 'The amount should be more or equal minimum value',
   noMoreThanAvailableForIssuance: 'Not enough assets available for issuance',
   maxLength: 'This field exceeded maximum line length',
+  seed: 'Invalid seed',
 }
 
 export default {
