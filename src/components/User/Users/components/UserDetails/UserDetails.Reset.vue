@@ -24,12 +24,15 @@
         class="user-reset__form"
         id="user-reset-form"
         @submit.prevent="submitResetForm"
+        novalidate
       >
         <div class="app__form-row">
           <text-field
             label="Reset reason"
             :autofocus="true"
             v-model="resetForm.reason"
+            @blur="touchField('resetForm.reason')"
+            :error-message="getFieldErrorMessage('resetForm.reason')"
           />
         </div>
       </form>
@@ -55,8 +58,10 @@
 <script>
 import { Sdk } from '@/sdk'
 
-import { TextField } from '@comcom/fields'
 import Modal from '@comcom/modals/Modal'
+
+import FormMixin from '@/mixins/form.mixin'
+import { required, maxLength } from '@/validators'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { confirmAction } from '@/js/modals/confirmation_message'
@@ -70,12 +75,12 @@ const EVENTS = {
   updateIsPending: 'update:isPending',
 }
 
+const REJECT_REASON_MAX_LENGTH = 255
+
 export default {
   name: 'user-details-request',
-  components: {
-    Modal,
-    TextField,
-  },
+  components: { Modal },
+  mixins: [FormMixin],
 
   props: {
     user: {
@@ -97,6 +102,17 @@ export default {
       resetForm: {
         reason: '',
         isShown: false,
+      },
+    }
+  },
+
+  validations () {
+    return {
+      resetForm: {
+        reason: {
+          required,
+          maxLength: maxLength(REJECT_REASON_MAX_LENGTH),
+        },
       },
     }
   },
@@ -144,6 +160,8 @@ export default {
     },
 
     async submitResetForm () {
+      if (!this.isFormValid()) return
+
       this.hideResetModal()
       await this.resetToUnverified()
     },

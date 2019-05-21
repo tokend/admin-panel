@@ -48,12 +48,15 @@
         class="user-request__reject-form"
         id="user-request-reject-form"
         @submit.prevent="submitRejectForm"
+        novalidate
       >
         <div class="app__form-row">
           <text-field
             label="Reject reason"
             :autofocus="true"
             v-model="rejectForm.reason"
+            @blur="touchField('rejectForm.reason')"
+            :error-message="getFieldErrorMessage('rejectForm.reason')"
           />
         </div>
       </form>
@@ -80,9 +83,10 @@
 import api from '@/api'
 
 import TasksManager from './UserDetails.TasksManager'
-
-import { TextField } from '@comcom/fields'
 import Modal from '@comcom/modals/Modal'
+
+import FormMixin from '@/mixins/form.mixin'
+import { required, maxLength } from '@/validators'
 
 import 'mdi-vue/ChevronDownIcon'
 import 'mdi-vue/ChevronUpIcon'
@@ -96,13 +100,15 @@ const EVENTS = {
   reviewed: 'reviewed',
 }
 
+const REJECT_REASON_MAX_LENGTH = 255
+
 export default {
   name: 'user-details-request',
   components: {
     Modal,
-    TextField,
     TasksManager,
   },
+  mixins: [FormMixin],
 
   props: {
     requestToReview: {
@@ -128,6 +134,17 @@ export default {
       isShownAdvanced: false,
       isPending: false,
       tasks: {},
+    }
+  },
+
+  validations () {
+    return {
+      rejectForm: {
+        reason: {
+          required,
+          maxLength: maxLength(REJECT_REASON_MAX_LENGTH),
+        },
+      },
     }
   },
 
@@ -189,6 +206,8 @@ export default {
     },
 
     async submitRejectForm () {
+      if (!this.isFormValid()) return
+
       this.hideRejectModal()
       await this.reject()
     },

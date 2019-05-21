@@ -71,7 +71,7 @@
         <form
           class="issuance-rl__reject-form"
           id="issuance-rl-reject-form"
-          @submit.prevent="reject(itemToReject) && clearRejectionSelection()"
+          @submit.prevent="reject(itemToReject)"
           novalidate
         >
           <div class="app__form-row">
@@ -221,6 +221,7 @@ export default {
         )
 
         await this.getIssuance(this.id)
+        this.clearRejectionSelection()
         this.$store.dispatch('SET_INFO', 'Request rejected successfully.')
       } catch (error) {
         ErrorHandler.process(error)
