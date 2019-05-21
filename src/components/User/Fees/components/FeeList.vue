@@ -164,98 +164,14 @@
           <li
             class="app-list__li"
             v-for="(item, id) in feesByFilters"
-            :key="id">
-            <form
-              class="fee-list__li--hidden-form"
-              @submit.prevent="updateFee(item)"
-              :id="`fee-list-form-${id}`"
+            :key="id"
+          >
+            <fee-form
+              :fee="item"
+              :account-id="requestFilters.account_id"
+              :account-role="requestFilters.account_type"
+              @fee-updated="getFees"
             />
-
-            <span class="app-list__cell fee-list__cell">
-              <input-field
-                type="number"
-                min="0"
-                :step="DEFAULT_INPUT_STEP"
-                :form="`fee-list-form-${id}`"
-                :disabled="isSubmitting || item.exists"
-                v-model="item.lowerBound"
-              />
-            </span>
-
-            <span class="app-list__cell fee-list__cell">
-              <input-field
-                type="number"
-                min="0"
-                :max="DEFAULT_MAX_AMOUNT"
-                :step="DEFAULT_INPUT_STEP"
-                :form="`fee-list-form-${id}`"
-                :disabled="isSubmitting || item.exists"
-                v-model="item.upperBound"
-              />
-              <button
-                class="fee-list__btn-max"
-                @click="item.upperBound = DEFAULT_MAX_AMOUNT"
-                v-if="!item.exists"
-                :disabled="isSubmitting"
-              >
-                <mdi-arrow-up-icon />
-              </button>
-            </span>
-
-            <span class="app-list__cell fee-list__cell">
-              <input-field
-                type="number"
-                min="0"
-                max="100"
-                :step="DEFAULT_INPUT_STEP"
-                :form="`fee-list-form-${id}`"
-                :disabled="isSubmitting"
-                v-model="item.percent"
-              />
-            </span>
-
-            <span
-              class="app-list__cell fee-list__cell"
-              v-if="+filters.feeType !== FEE_TYPES.offerFee &&
-                +filters.feeType !== FEE_TYPES.capitalDeploymentFee">
-              <input-field
-                type="number"
-                min="0"
-                :step="DEFAULT_INPUT_STEP"
-                :form="`fee-list-form-${id}`"
-                :disabled="isSubmitting"
-                v-model="item.fixed"
-              />
-            </span>
-
-            <span class="app-list__cell fee-list__cell">
-              <template v-if="item.exists">
-                <button
-                  class="app__btn app__btn--small"
-                  :form="`fee-list-form-${id}`"
-                  :disabled="isSubmitting"
-                >
-                  Update
-                </button>
-                <button
-                  class="app__btn app__btn--small app__btn--danger"
-                  :disabled="isSubmitting"
-                  @click="deleteFee(item)"
-                >
-                  Delete
-                </button>
-              </template>
-
-              <template v-else>
-                <button
-                  class="app__btn app__btn--small"
-                  :form="`fee-list-form-${id}`"
-                  :disabled="isSubmitting"
-                >
-                  Create
-                </button>
-              </template>
-            </span>
           </li>
         </ul>
       </template>
@@ -265,7 +181,7 @@
 
 <script>
 import { SelectField, InputField } from '@comcom/fields'
-import { confirmAction } from '@/js/modals/confirmation_message'
+import FeeForm from './FeeForm'
 
 import api from '@/api'
 import { Sdk } from '@/sdk'
@@ -273,19 +189,14 @@ import { Sdk } from '@/sdk'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import config from '@/config'
 
-import { xdrTypeFromValue } from '@/utils/xdrTypeFromValue'
 import throttle from 'lodash/throttle'
 
 import {
   ASSET_POLICIES,
-  DEFAULT_MAX_AMOUNT,
-  DEFAULT_INPUT_STEP,
   FEE_TYPES,
   PAYMENT_FEE_TYPES,
   DEFAULT_BASE_ASSET,
 } from '@/constants'
-
-import 'mdi-vue/ArrowUpIcon'
 
 const SCOPE_TYPES = Object.freeze({ // non-xdr values, internal use only
   account: 'USER',
@@ -297,6 +208,7 @@ export default {
   components: {
     SelectField,
     InputField,
+    FeeForm,
   },
 
   data () {
@@ -304,8 +216,6 @@ export default {
       SCOPE_TYPES,
       FEE_TYPES,
       ACCOUNT_ROLES: config.ACCOUNT_ROLES,
-      DEFAULT_MAX_AMOUNT,
-      DEFAULT_INPUT_STEP,
       PAYMENT_FEE_TYPES,
 
       assets: [{ code: DEFAULT_BASE_ASSET }],
@@ -377,6 +287,22 @@ export default {
             : true
         })
     },
+
+    requestFilters () {
+      if (!Object.keys(this.filters).length) return this.filters
+
+      const result = {}
+
+      if (this.filters.scope === SCOPE_TYPES.accountRole) {
+        // snake_case because sdk wait for it
+        result.account_type = this.filters.accountRole
+      } else if (this.filters.scope === SCOPE_TYPES.account) {
+        // snake_case because sdk wait for it
+        result.account_id = this.filters.accountAddress
+      }
+
+      return result
+    },
   },
 
   watch: {
@@ -437,22 +363,6 @@ export default {
   },
 
   methods: {
-    composeRequestFilters (filters) {
-      if (!Object.keys(filters).length) return filters
-
-      const result = {}
-
-      if (filters.scope === SCOPE_TYPES.accountRole) {
-        // snake_case because sdk wait for it
-        result.account_type = filters.accountRole
-      } else if (filters.scope === SCOPE_TYPES.account) {
-        // snake_case because sdk wait for it
-        result.account_id = filters.accountAddress
-      }
-
-      return result
-    },
-
     async getAssetsAndPairs () {
       try {
         const response = await Sdk.horizon.assets.getAll()
@@ -466,8 +376,7 @@ export default {
 
     async getFees () {
       try {
-        const filters = this.composeRequestFilters(this.filters)
-        const response = await Sdk.horizon.fees.getAll(filters)
+        const response = await Sdk.horizon.fees.getAll(this.requestFilters)
         this.fees = response.data.fees
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
@@ -475,49 +384,7 @@ export default {
     },
 
     async updateFee (fees) {
-      if (!await confirmAction()) return
-
-      const additionalParams = this.composeRequestFilters(this.filters)
-
-      if (+fees.lowerBound > +fees.upperBound) {
-        ErrorHandler.process('Lower bound should be less or equal to Upper bound')
-        return false
-      }
-
-      this.isSubmitting = true
-      try {
-        const opts = {
-          fee: {
-            feeType: xdrTypeFromValue('FeeType', Number(fees.feeType)),
-            subtype: String(fees.subtype) || '0',
-            asset: String(fees.asset),
-            fixedFee: String(fees.fixed),
-            percentFee: String(fees.percent),
-            accountId: additionalParams.account_id || additionalParams.address,
-            accountRole: additionalParams.account_type
-              ? String(additionalParams.account_type)
-              : undefined,
-            lowerBound: String(fees.lowerBound),
-            upperBound: String(fees.upperBound),
-          },
-          isDelete: fees.isDelete,
-        }
-        const operation = Sdk.base.Operation.setFees(opts)
-
-        await Sdk.horizon.transactions.submitOperations(operation)
-        await this.getFees()
-        this.$store.dispatch('SET_INFO', 'Submitted successfully')
-      } catch (error) {
-        this.isSubmitting = false
-        ErrorHandler.process(error)
-      }
-      this.isSubmitting = false
-    },
-
-    async deleteFee (fee) {
-      if (!await confirmAction({ title: 'Delete the fee rule?' })) return
-      fee.isDelete = true
-      return this.updateFee(Object.assign({}, fee, { isDelete: true }))
+      await this.getFees()
     },
   },
 }

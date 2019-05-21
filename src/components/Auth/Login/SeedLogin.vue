@@ -75,9 +75,7 @@ export default {
 
   methods: {
     async seedLogin () {
-      if (!this.isFormValid()) {
-        return
-      }
+      if (!this.isFormValid()) return
 
       this.disableForm()
       try {

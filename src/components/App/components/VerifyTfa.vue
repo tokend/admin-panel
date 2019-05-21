@@ -86,9 +86,7 @@ export default {
 
   methods: {
     async verifyTFACode () {
-      if (!this.isFormValid()) {
-        return
-      }
+      if (!this.isFormValid()) return
 
       this.disableForm()
       try {

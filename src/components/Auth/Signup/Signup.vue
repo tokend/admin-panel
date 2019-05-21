@@ -247,9 +247,7 @@ export default {
     },
 
     async submit () {
-      if (!this.isFormValid()) {
-        return
-      }
+      if (!this.isFormValid()) return
 
       this.form.keypair = base.Keypair.fromSecret(this.form.seed)
       this.form.publicKey = this.form.keypair.accountId()

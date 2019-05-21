@@ -22,11 +22,13 @@ export const amountRange = (from, to) => value =>
   )
 
 export const minAmount = value => {
-  return Number(value) && Number(value) >= 1 / base.Operation.ONE
+  return !validators.helpers.req(value) ||
+    Number(value) >= 1 / base.Operation.ONE
 }
 
 export const maxAmount = value => {
-  return Number(value) && Number(value) <= base.Operation.MAX_INT64_AMOUNT
+  return !validators.helpers.req(value) ||
+    Number(value) <= base.Operation.MAX_INT64_AMOUNT
 }
 
 export const accountId = value => {
