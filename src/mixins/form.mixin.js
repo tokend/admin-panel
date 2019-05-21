@@ -1,6 +1,12 @@
 import { validationMixin } from 'vuelidate'
 
-import { InputField, SelectField, TextField, TickField } from '@comcom/fields'
+import {
+  InputField,
+  SelectField,
+  TextField,
+  TickField,
+  ImageField,
+} from '@comcom/fields'
 
 import safeGet from 'lodash/get'
 import isObject from 'lodash/isObject'
@@ -29,6 +35,7 @@ export default {
     SelectField,
     TextField,
     TickField,
+    ImageField,
   },
   mixins: [validationMixin],
 

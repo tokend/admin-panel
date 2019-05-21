@@ -24,7 +24,10 @@
       </div>
     </div>
 
-    <form @submit.prevent="submit">
+    <form
+      @submit.prevent="submit"
+      novalidate
+    >
       <div class="asset-manager__image-field-wrp">
         <label class="asset-manager__image-lbl">
           Upload asset logo
@@ -40,20 +43,22 @@
           class="app__form-field"
           label="Asset name"
           v-model="asset.creatorDetails.name"
-          :disabled="isPending"
-          v-validate="'required|max:255'"
           name="asset-name"
-          :error-message="errors.first('asset-name')"
+          max="255"
+          @blur="touchField('asset.creatorDetails.name')"
+          :error-message="getFieldErrorMessage('asset.creatorDetails.name')"
+          :disabled="formMixin.isDisabled"
         />
 
         <input-field
           class="app__form-field"
           label="Asset code"
           v-model="asset.code"
-          :disabled="isExistingAsset || isPending"
-          v-validate="'required|alpha_num|max:16'"
+          max="16"
+          :disabled="isExistingAsset || formMixin.isDisabled"
           name="asset-code"
-          :error-message="errors.first('asset-code')"
+          @blur="touchField('asset.code')"
+          :error-message="getFieldErrorMessage('asset.code')"
         />
       </div>
 
@@ -62,21 +67,24 @@
           class="app__form-field"
           label="Issuer public key"
           v-model="asset.preissuedAssetSigner"
-          :disabled="isExistingAsset || isPending"
-          v-validate="'required|alpha_num'"
+          :disabled="isExistingAsset || formMixin.isDisabled"
           name="issuer-key"
-          :error-message="errors.first('issuer-key')"
+          @blur="touchField('asset.preissuedAssetSigner')"
+          :error-message="getFieldErrorMessage('asset.preissuedAssetSigner')"
         />
 
         <input-field
           v-if="!isExistingAsset"
+          type="number"
+          min="0"
+          :max="asset.maxIssuanceAmount"
           class="app__form-field"
           label="Initial preissued amount"
           v-model="asset.initialPreissuedAmount"
-          :disabled="isExistingAsset || isPending"
-          v-validate="'required|decimal'"
+          :disabled="isExistingAsset || formMixin.isDisabled"
           name="initial-preissued"
-          :error-message="errors.first('initial-preissued')"
+          @blur="touchField('asset.initialPreissuedAmount')"
+          :error-message="getFieldErrorMessage('asset.initialPreissuedAmount')"
         />
 
         <input-field
@@ -85,9 +93,7 @@
           class="app__form-field"
           label="Available for issuance"
           :disabled="true"
-          v-validate="'required|decimal'"
           name="available-issuance"
-          :error-message="errors.first('available-issuance')"
         />
       </div>
 
@@ -95,14 +101,14 @@
         <input-field
           class="app__form-field app__form-field--halved"
           type="number"
-          :min="0"
+          min="0"
           :step="DEFAULT_INPUT_STEP"
           label="Maximum assets"
           v-model="asset.maxIssuanceAmount"
-          :disabled="isExistingAsset || isPending"
-          v-validate="'required|decimal'"
+          :disabled="isExistingAsset || formMixin.isDisabled"
           name="max-assets"
-          :error-message="errors.first('max-assets')"
+          @blur="touchField('asset.maxIssuanceAmount')"
+          :error-message="getFieldErrorMessage('asset.maxIssuanceAmount')"
         />
 
         <!--
@@ -112,14 +118,15 @@
         <input-field
           class="app__form-field app__form-field--halved"
           type="number"
-          :min="0"
-          :step="0"
+          min="0"
+          step="1"
+          max="6"
           label="Trailing digits count"
           v-model="asset.trailingDigitsCount"
-          :disabled="true || isExistingAsset || isPending"
-          v-validate="'required|numeric|max_value:6'"
+          :disabled="true || isExistingAsset || formMixin.isDisabled"
           name="trailing-digits-count"
-          :error-message="errors.first('trailing-digits-count')"
+          @blur="touchField('asset.trailingDigitsCount')"
+          :error-message="getFieldErrorMessage('asset.trailingDigitsCount')"
         />
       </div>
 
@@ -128,10 +135,10 @@
           class="app__form-field app__form-field--halved"
           label="Asset type"
           v-model="asset.assetType"
-          :disabled="isExistingAsset || isPending"
+          :disabled="isExistingAsset || formMixin.isDisabled"
           name="asset-type"
-          v-validate="'required'"
-          :error-message="errors.first('asset-type')"
+          @blur="touchField('asset.assetType')"
+          :error-message="getFieldErrorMessage('asset.assetType')"
         >
           <option :value="ASSET_TYPES.default">
             Default
@@ -155,7 +162,7 @@
             class="app__upload-input"
             id="file-select"
             type="file"
-            :disabled="isPending"
+            :disabled="formMixin.isDisabled"
             accept="application/pdf, image/*"
             @change="onFileChange($event, DOCUMENT_TYPES.assetTerms)"
           >
@@ -183,7 +190,7 @@
           v-model="asset.policy"
           :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.transferable]"
           :cb-value="ASSET_POLICIES.transferable"
-          :disabled="isPending"
+          :disabled="formMixin.isDisabled"
         />
       </div>
 
@@ -193,7 +200,7 @@
           v-model="asset.policy"
           :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.baseAsset]"
           :cb-value="ASSET_POLICIES.baseAsset"
-          :disabled="isPending"
+          :disabled="formMixin.isDisabled"
         />
       </div>
 
@@ -203,7 +210,7 @@
           v-model="asset.policy"
           :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.statsQuoteAsset]"
           :cb-value="ASSET_POLICIES.statsQuoteAsset"
-          :disabled="isPending"
+          :disabled="formMixin.isDisabled"
         />
       </div>
 
@@ -213,7 +220,7 @@
           v-model="asset.policy"
           :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.withdrawable]"
           :cb-value="ASSET_POLICIES.withdrawable"
-          :disabled="isPending"
+          :disabled="formMixin.isDisabled"
         />
       </div>
 
@@ -224,7 +231,7 @@
           v-model="asset.policy"
           :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.issuanceManualReviewRequired]"
           :cb-value="ASSET_POLICIES.issuanceManualReviewRequired"
-          :disabled="isPending"
+          :disabled="formMixin.isDisabled"
         />
       </div>
       <!-- eslint-enable max-len -->
@@ -234,7 +241,7 @@
           class="app__form-field"
           v-model="asset.creatorDetails.isFiat"
           label="Fiat asset"
-          :disabled="isPending"
+          :disabled="formMixin.isDisabled"
         />
       </div>
 
@@ -258,7 +265,7 @@
             class="app__form-field"
             v-model="asset.creatorDetails.isCoinpayments"
             label="Use Coinpayments"
-            :disabled="isPending"
+            :disabled="formMixin.isDisabled"
           />
         </div>
         <div class="app__form-row">
@@ -269,8 +276,7 @@
             name="External system type"
             v-model="asset.creatorDetails.externalSystemType"
             :required="false"
-            :disabled="isPending"
-            v-validate="{max_value: int32}"
+            :disabled="formMixin.isDisabled"
           />
         </div>
       </template>
@@ -278,7 +284,7 @@
       <div class="app__form-actions">
         <button
           class="app__btn"
-          :disabled="isPending"
+          :disabled="formMixin.isDisabled"
         >
           {{ isExistingAsset ? 'Update asset' : 'Create asset' }}
         </button>
@@ -288,8 +294,19 @@
 </template>
 
 <script>
-import { ImageField, TickField, InputField, SelectField } from '@comcom/fields'
 import { confirmAction } from '@/js/modals/confirmation_message'
+
+import FormMixin from '@/mixins/form.mixin'
+import {
+  required,
+  accountId,
+  minValue,
+  maxValue,
+  maxAmount,
+  minAmount,
+  maxLength,
+  alphaNum,
+} from '@/validators'
 
 import api from '@/api'
 import { Sdk } from '@/sdk'
@@ -317,12 +334,7 @@ import 'mdi-vue/ChevronDownIcon'
 import 'mdi-vue/ChevronUpIcon'
 
 export default {
-  components: {
-    InputField,
-    SelectField,
-    TickField,
-    ImageField,
-  },
+  mixins: [FormMixin],
 
   props: {
     assetCode: { type: String, default: '' },
@@ -337,9 +349,12 @@ export default {
       ASSET_TYPES: config.ASSET_TYPES,
 
       asset: {
+        code: '',
         preissuedAssetSigner: config.MASTER_ACCOUNT,
         policy: 0,
         initialPreissuedAmount: '0',
+        maxIssuanceAmount: '0',
+        availableForIssuance: '0',
         trailingDigitsCount: '6',
         assetType: '0',
         creatorDetails: {
@@ -364,8 +379,38 @@ export default {
         name: null,
       },
 
-      isPending: false,
       DOCUMENT_TYPES,
+    }
+  },
+
+  validations () {
+    return {
+      asset: {
+        code: {
+          required,
+          maxLength: maxLength(16),
+          alphaNum,
+        },
+        preissuedAssetSigner: { required, accountId },
+        maxIssuanceAmount: { required, minAmount, maxAmount },
+        initialPreissuedAmount: {
+          required,
+          minValue: minValue(0),
+          maxValue: maxValue(this.asset.maxIssuanceAmount),
+        },
+        trailingDigitsCount: {
+          required,
+          minValue: minValue(0),
+          maxValue: maxValue(6),
+        },
+        assetType: { required },
+        creatorDetails: {
+          name: {
+            required,
+            maxLength: maxLength(255),
+          },
+        },
+      },
     }
   },
 
@@ -408,10 +453,10 @@ export default {
     },
 
     async submit () {
-      if (!this.isValid()) return
+      if (!this.isFormValid()) return
       if (!await confirmAction()) return
 
-      this.isPending = true
+      this.disableForm()
       try {
         await Promise.all([
           this.uploadFile(DOCUMENT_TYPES.assetTerms),
@@ -486,20 +531,7 @@ export default {
       } catch (error) {
         ErrorHandler.process(error)
       }
-      this.isPending = false
-    },
-
-    isValid () {
-      if (this.errors.errors.lenght) {
-        ErrorHandler.process('Some field is invalid')
-        return false
-      }
-
-      if (!Sdk.base.Keypair.isValidPublicKey(this.asset.preissuedAssetSigner)) {
-        ErrorHandler.process('Issuer public key is invalid')
-        return false
-      }
-      return true
+      this.enableForm()
     },
 
     onFileChange (event, type) {
