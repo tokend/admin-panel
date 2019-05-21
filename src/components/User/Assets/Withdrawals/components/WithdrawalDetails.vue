@@ -95,12 +95,21 @@
     <modal
       v-if="itemToReject"
       @close-request="clearRejectionSelection()"
-      max-width="40rem">
+      max-width="40rem"
+    >
       <form
         id="withdrawal-details-reject-form"
-        @submit.prevent="reject(itemToReject) && clearRejectionSelection()">
+        @submit.prevent="reject(itemToReject) && clearRejectionSelection()"
+        novalidate
+      >
         <div class="app__form-row">
-          <text-field label="Enter reject reason" v-model="rejectForm.reason" />
+          <text-field
+            label="Enter reject reason"
+            v-model="rejectForm.reason"
+            :disabled="formMixin.isDisabled"
+            @blur="touchField('rejectForm.reason')"
+            :error-message="getFieldErrorMessage('rejectForm.reason')"
+          />
         </div>
       </form>
 
@@ -108,13 +117,13 @@
         <button
           class="app__btn app__btn--danger"
           form="withdrawal-details-reject-form"
-          :disabled="isSubmitting">
+          :disabled="formMixin.isDisabled">
           Reject
         </button>
         <button
           class="app__btn-secondary"
           @click="clearRejectionSelection"
-          :disabled="isSubmitting">
+          :disabled="formMixin.isDisabled">
           Cancel
         </button>
       </div>
@@ -123,7 +132,8 @@
 </template>
 
 <script>
-import TextField from '@comcom/fields/TextField'
+import FormMixin from '@/mixins/form.mixin'
+import { required, maxLength } from '@/validators'
 
 import { EmailGetter } from '@comcom/getters'
 import { VerboseFormatter, AssetAmountFormatter } from '@comcom/formatters'
@@ -136,14 +146,16 @@ import { ASSET_POLICIES } from '@/constants'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
+const REJECT_REASON_MAX_LENGTH = 255
+
 export default {
   components: {
     EmailGetter,
     VerboseFormatter,
     AssetAmountFormatter,
     Modal,
-    TextField,
   },
+  mixins: [FormMixin],
 
   props: {
     request: { type: Object, required: true },
@@ -158,6 +170,17 @@ export default {
         reason: '',
       },
       ASSET_POLICIES,
+    }
+  },
+
+  validations () {
+    return {
+      rejectForm: {
+        reason: {
+          required,
+          maxLength: maxLength(REJECT_REASON_MAX_LENGTH),
+        },
+      },
     }
   },
 
@@ -186,9 +209,9 @@ export default {
     },
 
     async reject (request) {
-      if (!this.reviewAllowed) return
+      if (!this.reviewAllowed || !this.isFormValid()) return
 
-      this.isSubmitting = true
+      this.disableForm()
       try {
         await api.requests.rejectWithdraw(
           {
@@ -203,7 +226,7 @@ export default {
       } catch (error) {
         ErrorHandler.process(error)
       }
-      this.isSubmitting = false
+      this.enableForm()
     },
 
     selectForRejection (item) {

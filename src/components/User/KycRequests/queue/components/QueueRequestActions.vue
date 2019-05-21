@@ -51,12 +51,16 @@
         class="queue-request-actions__reject-form"
         id="queue-request-actions-reject-form"
         @submit.prevent="submitRejectForm"
+        novalidate
       >
         <div class="app__form-row">
           <text-field
             label="Reject reason"
             :autofocus="true"
             v-model="rejectForm.reason"
+            :disabled="formMixin.isDisabled"
+            @blur="touchField('rejectForm.reason')"
+            :error-message="getFieldErrorMessage('rejectForm.reason')"
           />
         </div>
       </form>
@@ -81,9 +85,10 @@
 
 <script>
 import TasksManager from '@/components/User/Users/components/UserDetails/UserDetails.TasksManager'
-
-import { TextField } from '@comcom/fields'
 import Modal from '@comcom/modals/Modal'
+
+import FormMixin from '@/mixins/form.mixin'
+import { required, maxLength } from '@/validators'
 
 import { ReviewDecision } from '../wrappers/ReviewDecision'
 
@@ -92,13 +97,15 @@ const EVENTS = {
   finished: 'finished',
 }
 
+const REJECT_REASON_MAX_LENGTH = 255
+
 export default {
   name: 'queue-request-actions',
   components: {
     Modal,
-    TextField,
     TasksManager,
   },
+  mixins: [FormMixin],
 
   props: {
     decision: { type: ReviewDecision, required: true },
@@ -111,6 +118,17 @@ export default {
         isShown: false,
       },
       EVENTS,
+    }
+  },
+
+  validations () {
+    return {
+      rejectForm: {
+        reason: {
+          required,
+          maxLength: maxLength(REJECT_REASON_MAX_LENGTH),
+        },
+      },
     }
   },
 
@@ -139,9 +157,11 @@ export default {
       this.rejectForm.isShown = false
     },
 
-    async submitRejectForm () {
+    submitRejectForm () {
+      if (!this.isFormValid()) return
+
       this.hideRejectModal()
-      await this.reject()
+      this.reject()
     },
   },
 }

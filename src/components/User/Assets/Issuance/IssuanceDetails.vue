@@ -72,11 +72,15 @@
           class="issuance-rl__reject-form"
           id="issuance-rl-reject-form"
           @submit.prevent="reject(itemToReject) && clearRejectionSelection()"
+          novalidate
         >
           <div class="app__form-row">
             <text-field
               label="Enter reject reason"
               v-model="rejectForm.reason"
+              :disabled="formMixin.isDisabled"
+              @blur="touchField('rejectForm.reason')"
+              :error-message="getFieldErrorMessage('rejectForm.reason')"
             />
           </div>
         </form>
@@ -85,12 +89,14 @@
           <button
             class="app__btn app__btn--danger"
             form="issuance-rl-reject-form"
+            :disabled="formMixin.isDisabled"
           >
             Reject
           </button>
           <button
             class="app__btn-secondary"
             @click="clearRejectionSelection"
+            :disabled="formMixin.isDisabled"
           >
             Cancel
           </button>
@@ -101,7 +107,9 @@
 </template>
 
 <script>
-import TextField from '@comcom/fields/TextField'
+import FormMixin from '@/mixins/form.mixin'
+import { required, maxLength } from '@/validators'
+
 import { EmailGetter } from '@comcom/getters'
 
 import Modal from '@comcom/modals/Modal'
@@ -114,12 +122,14 @@ import localize from '@/utils/localize'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
+const REJECT_REASON_MAX_LENGTH = 255
+
 export default {
   components: {
     EmailGetter,
     Modal,
-    TextField,
   },
+  mixins: [FormMixin],
 
   props: {
     id: { type: String, required: true },
@@ -136,6 +146,17 @@ export default {
       reason: '',
     },
   }),
+
+  validations () {
+    return {
+      rejectForm: {
+        reason: {
+          required,
+          maxLength: maxLength(REJECT_REASON_MAX_LENGTH),
+        },
+      },
+    }
+  },
 
   async created () {
     await this.getIssuance(this.id)
@@ -183,7 +204,9 @@ export default {
     },
 
     async reject (issuance) {
-      this.isSubmitting = true
+      if (!this.isFormValid()) return
+
+      this.disableForm()
       try {
         let tasksToRemove = issuance.pendingTasks
         if (tasksToRemove & 1) tasksToRemove -= 1
@@ -202,7 +225,7 @@ export default {
       } catch (error) {
         ErrorHandler.process(error)
       }
-      this.isSubmitting = false
+      this.enableForm()
     },
 
     clearRejectionSelection () {
