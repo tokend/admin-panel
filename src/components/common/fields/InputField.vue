@@ -55,9 +55,7 @@ const EVENTS = {
 }
 
 export default {
-  components: {
-    InputFieldAutocomplete,
-  },
+  components: { InputFieldAutocomplete },
 
   props: {
     label: { type: String, default: '' },

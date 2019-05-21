@@ -9,6 +9,7 @@ const VALIDATION_ERRORS = {
   required: 'Please, fill out this field',
   emailOrAccountId: 'This field should be a valid email or account ID',
   minAmount: 'The amount should be more or equal minimum value',
+  maxAmount: 'The amount should be less or equal maximum value',
   noMoreThanAvailableForIssuance: 'Not enough assets available for issuance',
   minLength: 'This field should have at least minimum line length',
   maxLength: 'This field exceeded maximum line length',
@@ -19,6 +20,7 @@ const VALIDATION_ERRORS = {
   minValue: 'This field should be more or equal min value',
   maxValue: 'This field should be less or equal max value',
   accountId: 'This field should be a valid account ID',
+  not: 'This field cannot take that value',
 }
 
 export default {

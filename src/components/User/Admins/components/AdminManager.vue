@@ -102,14 +102,14 @@
         <button
           class="app__btn"
           form="admin-manager-form"
-          :disabled="formMixin.isDisabled"
+          :disabled="isMaster || formMixin.isDisabled"
         >
           {{ addNew ? 'Add' : 'Update' }}
         </button>
 
         <button
           class="app__btn-secondary app__btn-secondary--danger"
-          :disabled="formMixin.isDisabled"
+          :disabled="isMaster || formMixin.isDisabled"
           @click="deleteAdmin"
           v-if="!addNew"
         >

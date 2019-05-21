@@ -22,11 +22,11 @@ export const amountRange = (from, to) => value =>
   )
 
 export const minAmount = value => {
-  return value >= 1 / base.Operation.ONE
+  return Number(value) && Number(value) >= 1 / base.Operation.ONE
 }
 
 export const maxAmount = value => {
-  return value <= base.MAX_INT64_AMOUNT
+  return Number(value) && Number(value) <= base.Operation.MAX_INT64_AMOUNT
 }
 
 export const accountId = value => {
