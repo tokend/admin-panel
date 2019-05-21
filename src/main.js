@@ -18,6 +18,7 @@ import Auth from './auth'
 import api from './api'
 import params from './config'
 import VeeValidate, { Validator } from 'vee-validate'
+import Vuelidate from 'vuelidate'
 
 /* Error tracker util */
 import { ErrorTracker } from '@/utils/ErrorTracker'
@@ -82,6 +83,7 @@ Validator.extend('accountId', {
 Vue.use(Auth)
 Vue.use(params)
 Vue.use(VeeValidate)
+Vue.use(Vuelidate)
 Vue.use(api)
 
 Vue.filter('dateTime', filterDateWithTime)
