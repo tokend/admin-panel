@@ -33,7 +33,7 @@ export default Object.assign(
      * Should be populated by DevOps team during the deployment
      * The field being displayed on login screen.
      */
-    BUILD_VERSION: 'dev: ' + packageJson.version,
+    BUILD_VERSION: packageJson.version,
 
     ACCOUNT_ROLES: {
       // Will be updated on init
