@@ -71,6 +71,8 @@ import { Sdk } from '@/sdk'
 
 import _get from 'lodash/get'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { ApiCallerFactory } from '@/api-caller-factory'
+import _isEmpty from 'lodash/isEmpty'
 
 export default {
   components: {
@@ -113,10 +115,7 @@ export default {
       try {
         const response = blobId
           ? await Sdk.api.blobs.get(blobId, owner)
-          : await Sdk.api.blobs.get(
-            (await Sdk.horizon.account.getAccountKyc(owner))
-              .data.kycData.blobId
-          )
+          : await Sdk.api.blobs.get(await this.getBlobId(owner))
         this.corporate = JSON.parse(
           response.data.value || response.data[0].value
         )
@@ -125,6 +124,23 @@ export default {
         ErrorHandler.processWithoutFeedback(error)
       }
     },
+    async getBlobId (owner) {
+      const { data } = await ApiCallerFactory
+        .createCallerInstance()
+        .getWithSignature('/v3/change_role_requests', {
+          filter: { requestor: owner },
+          page: {
+            limit: 1,
+            order: 'desc',
+          },
+          include: ['request_details'],
+        })
+      let blobId = ''
+      if (!_isEmpty(data[0].requestDetails.creatorDetails)) {
+        blobId = data[0].requestDetails.creatorDetails.blobId
+      }
+      return blobId
+    }
   },
 }
 </script>
