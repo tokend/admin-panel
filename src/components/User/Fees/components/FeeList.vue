@@ -59,7 +59,8 @@
         <select-field
           class="fee-list__filter"
           label="Asset"
-          v-model="filters.assetCode">
+          v-model="filters.assetCode"
+        >
           <template v-if="assetsByType.length">
             <option
               v-for="item in assetsByType"
@@ -170,7 +171,7 @@
               :fee="item"
               :account-id="requestFilters.account_id"
               :account-role="requestFilters.account_type"
-              @fee-updated="getFees"
+              @fee-updated="loadFees"
             />
           </li>
         </ul>
@@ -322,20 +323,17 @@ export default {
 
     'filters.scope': function (newValue) {
       if (!(newValue === SCOPE_TYPES.account && !this.filters.accountAddress)) {
-        this.fees = {}
-        this.getFees()
+        this.loadFees()
       }
     },
 
     'filters.accountRole': function () {
-      this.fees = {}
-      this.getFees()
+      this.loadFees()
     },
 
     'filters.accountAddress': function (newValue) {
       if (newValue) {
-        this.fees = {}
-        this.getFees()
+        this.loadFees()
       }
     },
 
@@ -359,7 +357,7 @@ export default {
 
   created () {
     this.getAssetsAndPairs()
-    this.getFees()
+    this.loadFees()
   },
 
   methods: {
@@ -374,7 +372,8 @@ export default {
       }
     },
 
-    async getFees () {
+    async loadFees () {
+      this.fees = {}
       try {
         const response = await Sdk.horizon.fees.getAll(this.requestFilters)
         this.fees = response.data.fees
@@ -384,26 +383,14 @@ export default {
     },
 
     async updateFee (fees) {
-      await this.getFees()
+      await this.loadFees()
     },
   },
 }
 </script>
 
-<style>
-.fee-list__cell > .input-field > .input-field__label,
-.fee-list__cell > .select-field > .select-field__label {
-  display: none;
-}
-
-.fee-list__cell > .input-field > .input-field__input,
-.fee-list__cell > .select-field > .select-field__select {
-  padding-top: 0.7rem;
-}
-</style>
-
 <style scoped lang="scss">
-@import "../../../../assets/scss/colors";
+@import "~@/assets/scss/colors";
 
 .fee-list__filters-wrp {
   margin-bottom: 4rem;
@@ -422,45 +409,5 @@ export default {
 .fee-list__filter {
   width: calc(33.333333% - 2rem);
   margin: 1rem;
-}
-
-.fee-list__cell.app-list__cell {
-  display: inline-flex;
-  align-items: stretch;
-
-  & > .app__btn.app__btn--small {
-    padding: 0;
-    min-width: inherit;
-  }
-
-  & > .app__btn + .app__btn {
-    margin-left: 1rem;
-  }
-}
-
-.fee-list__li--hidden-form {
-  flex: 0;
-  opacity: 0;
-}
-
-.fee-list__btn-max {
-  display: flex;
-  justify-content: center;
-  min-width: 2rem;
-
-  &:enabled:hover {
-    opacity: 0.8;
-    cursor: pointer;
-  }
-
-  & > svg {
-    width: 1.8rem;
-    height: 1.8rem;
-  }
-
-  &:disabled {
-    fill: $color-unfocused;
-    cursor: default;
-  }
 }
 </style>

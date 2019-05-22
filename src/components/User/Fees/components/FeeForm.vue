@@ -3,7 +3,7 @@
     class="fee-form app-list__li"
     @submit.prevent="updateFee"
   >
-    <span class="app-list__cell fee-list__cell">
+    <span class="fee-form__cell app-list__cell">
       <input-field
         type="number"
         min="0"
@@ -15,7 +15,7 @@
       />
     </span>
 
-    <span class="app-list__cell fee-list__cell">
+    <span class="fee-form__cell app-list__cell">
       <input-field
         type="number"
         min="0"
@@ -37,7 +37,7 @@
       </button>
     </span>
 
-    <span class="app-list__cell fee-list__cell">
+    <span class="fee-form__cell app-list__cell">
       <input-field
         type="number"
         min="0"
@@ -51,7 +51,7 @@
     </span>
 
     <span
-      class="app-list__cell fee-list__cell"
+      class="fee-form__cell app-list__cell"
       v-if="canSetFixedFee"
     >
       <input-field
@@ -65,20 +65,20 @@
       />
     </span>
 
-    <span class="app-list__cell fee-list__cell">
+    <span class="fee-form__cell app-list__cell">
       <template v-if="fee.exists">
         <button
-          class="app__btn app__btn--small"
+          class="app__btn app__btn--small fee-form__btn"
           :disabled="formMixin.isDisabled"
         >
           Update
         </button>
 
         <button
-          class="app__btn app__btn--small app__btn--danger"
+          class="app__btn app__btn--small app__btn--danger fee-form__btn"
           type="button"
           :disabled="formMixin.isDisabled"
-          @click="deleteFee"
+          @click="updateFee({ isDeleteMode: true })"
         >
           Delete
         </button>
@@ -86,7 +86,7 @@
 
       <template v-else>
         <button
-          class="app__btn app__btn--small"
+          class="app__btn app__btn--small fee-form__btn"
           :disabled="formMixin.isDisabled"
         >
           Create
@@ -127,7 +127,7 @@ export default {
   props: {
     fee: { type: Object, required: true },
     accountId: { type: String, default: '' },
-    accountRole: { type: String, default: '' },
+    accountRole: { type: [Number, String], default: '' },
   },
 
   data () {
@@ -154,12 +154,14 @@ export default {
         },
         upperBound: {
           required,
-          minValue: minValue(this.form.upperBound),
+          minValue: minValue(this.form.lowerBound),
           maxAmount,
         },
         fixed: {
-          requiredIf: requiredIf(this.canSetFixedFee),
-          minValue: minValue(1),
+          required: requiredIf(function () {
+            return this.canSetFixedFee
+          }),
+          minValue: minValue(0),
           maxAmount,
         },
         percent: {
@@ -178,6 +180,12 @@ export default {
     },
   },
 
+  watch: {
+    fee: function () {
+      this.populateForm()
+    },
+  },
+
   created () {
     this.populateForm()
   },
@@ -190,7 +198,7 @@ export default {
       this.form.fixed = this.fee.fixed
     },
 
-    async updateFee (isDeleteMode) {
+    async updateFee ({ isDeleteMode }) {
       if (!this.isFormValid() || !await confirmAction()) return
 
       this.disableForm()
@@ -202,8 +210,10 @@ export default {
             asset: String(this.fee.asset),
             fixedFee: String(this.form.fixed),
             percentFee: String(this.form.percent),
-            accountId: this.accountId,
-            accountRole: this.accountRole,
+            accountId: this.accountId || undefined,
+            accountRole: this.accountRole
+              ? String(this.accountRole)
+              : undefined,
             lowerBound: String(this.form.lowerBound),
             upperBound: String(this.form.upperBound),
           },
@@ -219,31 +229,30 @@ export default {
       }
       this.enableForm()
     },
-
-    async deleteFee (fee) {
-      if (!await confirmAction({ title: 'Delete the fee rule?' })) return
-      await this.updateFee(true)
-    },
   },
 }
 </script>
 
-<style>
-.fee-list__cell > .input-field > .input-field__label {
+<style lang="scss">
+@import "~@/assets/scss/colors";
+
+.fee-form__cell > .input-field > .input-field__label {
   display: none;
 }
 
-.fee-list__cell > .input-field > .input-field__input {
+.fee-form__cell > .input-field > .input-field__input {
   padding-top: 0.7rem;
 }
-</style>
 
-<style lang="scss" scoped>
-@import "../../../../assets/scss/colors";
+.fee-form__btn {
+  max-height: 3.4rem;
+  height: 100%;
+}
 
-.fee-list__cell.app-list__cell {
+.fee-form__cell.app-list__cell {
   display: inline-flex;
-  align-items: stretch;
+  align-items: flex-start;
+  white-space: normal;
 
   & > .app__btn.app__btn--small {
     padding: 0;
@@ -255,15 +264,11 @@ export default {
   }
 }
 
-.fee-list__li--hidden-form {
-  flex: 0;
-  opacity: 0;
-}
-
 .fee-list__btn-max {
   display: flex;
   justify-content: center;
   min-width: 2rem;
+  margin-top: 1.2rem;
 
   &:enabled:hover {
     opacity: 0.8;
