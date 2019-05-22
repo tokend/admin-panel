@@ -117,12 +117,12 @@ export default {
       this.isLoaded = false
       this.isFailed = false
 
-      const { baseAsset } = this.sale
+      const { id, baseAsset } = this.sale
       const quoteAsset = this.filters.quoteAsset
 
       try {
         // TODO: No ownerId property for orderBook yet
-        const orderBookId = `${baseAsset.id}:${quoteAsset}`
+        const orderBookId = `${baseAsset.id}:${quoteAsset}:${id}`
         const { data } = await ApiCallerFactory
           .createCallerInstance()
           .getWithSignature(`/v3/order_books/${orderBookId}`, {

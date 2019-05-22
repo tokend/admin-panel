@@ -61,7 +61,7 @@ export default {
 
   created () {
     this.getUpdates({
-      ownerId: _get(this.sale, 'ownerId'),
+      ownerId: _get(this.sale, 'owner.id'),
     })
   },
 

@@ -87,7 +87,7 @@ export default {
         const { data } = await ApiCallerFactory
           .createCallerInstance()
           .get(`/v3/sales/${id}`, {
-            include: ['base_asset', 'default_quote_asset'],
+            include: ['base_asset', 'default_quote_asset', 'quote_assets'],
           })
         this.sale = data
         this.isLoaded = true

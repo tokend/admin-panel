@@ -197,22 +197,22 @@
           <li>
             <span>Current cap</span>
             <asset-amount-formatter
-              :amount="sale.currentCap"
-              :asset="sale.defaultQuoteAsset.id"
+              :amount="sale.defaultQuoteAsset.currentCap"
+              :asset="sale.defaultQuoteAsset.asset.id"
             />
           </li>
           <li>
             <span>Soft cap</span>
             <asset-amount-formatter
-              :amount="sale.softCap"
-              :asset="sale.defaultQuoteAsset.id"
+              :amount="sale.defaultQuoteAsset.softCap"
+              :asset="sale.defaultQuoteAsset.asset.id"
             />
           </li>
           <li>
             <span>Hard cap</span>
             <asset-amount-formatter
-              :amount="sale.hardCap"
-              :asset="sale.defaultQuoteAsset.id"
+              :amount="sale.defaultQuoteAsset.hardCap"
+              :asset="sale.defaultQuoteAsset.asset.id"
             />
           </li>
           <li>
