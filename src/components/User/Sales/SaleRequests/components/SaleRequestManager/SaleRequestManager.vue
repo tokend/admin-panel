@@ -191,7 +191,6 @@ export default {
           include: ['request_details.quote_assets'],
         })
       const sale = this.fixDetails(data)
-      console.log(data)
       return sale
     },
 
