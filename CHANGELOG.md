@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
+## [Unreleased]
+### Added
+- Vuelidate plugin for validating forms
+
+### Updated
+- Now using Vuelidate and form mixin instead of
+  native browser tools for validating forms
+- Extracted fees updating to a separate form
+- Extracted limits updating to a separate form
+- Now using $attrs property for input field proxies
+
+### Fixed
+- Error message styles on text field
+
+### Removed
+- Vee-validate plugin
+
 ## [1.7.0-rc.1] - 2019-05-21
 ### "Under the hood" changes
 #### Changed
