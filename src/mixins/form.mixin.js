@@ -27,6 +27,7 @@ const VALIDATION_ERRORS = {
   maxValue: 'This field should be less or equal max value',
   accountId: 'This field should be a valid account ID',
   not: 'This field cannot take that value',
+  decimal: 'This field accepts only decimal values',
 }
 
 export default {
