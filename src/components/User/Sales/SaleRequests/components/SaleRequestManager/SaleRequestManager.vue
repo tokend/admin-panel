@@ -185,8 +185,13 @@ export default {
     },
 
     async getSaleRequest (id) {
-      const response = await api.requests.get(id)
-      const sale = this.fixDetails(response)
+      const { data } = await ApiCallerFactory
+        .createCallerInstance()
+        .getWithSignature(`/v3/create_sale_requests/${id}`, {
+          include: ['request_details.quote_assets'],
+        })
+      const sale = this.fixDetails(data)
+      console.log(data)
       return sale
     },
 
@@ -232,7 +237,6 @@ export default {
 
     fixDetails (record) {
       const newRecord = cloneDeep(record)
-
       newRecord.requestDetails.requestType =
         snakeToCamelCase(record.xdrType.name)
 

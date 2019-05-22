@@ -194,14 +194,14 @@ export const requests = {
     return response
   },
 
-  async getSaleRequests ({ state, requestor, requestType }) {
+  async getSaleCreateRequests ({ state, requestor }) {
     const filters = {}
     if (state) filters.state = state
     if (requestor) filters.requestor = requestor
 
     const response = await ApiCallerFactory
       .createCallerInstance()
-      .getWithSignature(`/v3/${requestType}`, {
+      .getWithSignature('/v3/create_sale_requests', {
         filter: {
           ...filters,
         },

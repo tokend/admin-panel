@@ -76,7 +76,7 @@ import { DateFormatter } from '@comcom/formatters'
 import { EmailGetter } from '@comcom/getters'
 import { SelectField } from '@comcom/fields'
 
-import { Sdk } from '@/sdk'
+import { ApiCallerFactory } from '@/api-caller-factory'
 
 import get from 'lodash/get'
 
@@ -117,18 +117,18 @@ export default {
       this.isLoaded = false
       this.isFailed = false
 
-      const { id, baseAsset } = this.sale
+      const { baseAsset } = this.sale
       const quoteAsset = this.filters.quoteAsset
 
       try {
         // TODO: No ownerId property for orderBook yet
-        const response = await Sdk.horizon.orderBook.getAll({
-          order_book_id: id,
-          base_asset: baseAsset.id,
-          quote_asset: quoteAsset,
-          is_buy: true,
-        })
-        this.participants = response.data
+        const orderBookId = `${baseAsset.id}:${quoteAsset}`
+        const { data } = await ApiCallerFactory
+          .createCallerInstance()
+          .getWithSignature(`/v3/order_books/${orderBookId}`, {
+            include: ['buy_entries', 'base_asset'],
+          })
+        this.participants = data
         this.isLoaded = true
       } catch (error) {
         this.isFailed = true

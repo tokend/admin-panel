@@ -179,7 +179,7 @@
             v-for="(item, index) in saleDetails.quoteAssets"
             :key="index"
           >
-            <span>{{ item.quoteAsset }}</span>
+            <span>{{ item.id }}</span>
             <span>{{ item.price }}</span>
           </li>
         </ul>

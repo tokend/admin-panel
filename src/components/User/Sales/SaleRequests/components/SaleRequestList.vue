@@ -8,19 +8,6 @@
       <div class="app-list-filters">
         <select-field
           class="app-list-filters__field"
-          v-model="filters.requestType"
-          label="Request type"
-        >
-          <option
-            v-for="requestType in Object.keys(SALE_REQUEST_TYPES)"
-            :value="SALE_REQUEST_TYPES[requestType].value"
-            :key="requestType"
-          >
-            {{ SALE_REQUEST_TYPES[requestType].text }}
-          </option>
-        </select-field>
-        <select-field
-          class="app-list-filters__field"
           label="State"
           v-model="filters.state"
         >
@@ -144,17 +131,6 @@ import _ from 'lodash'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
-const SALE_REQUEST_TYPES = Object.freeze({
-  create: {
-    value: 'create_sale_requests',
-    text: 'Create',
-  },
-  update: {
-    value: 'update_sale_details_requests',
-    text: 'Update',
-  },
-})
-
 export default {
   components: {
     SelectField,
@@ -172,16 +148,12 @@ export default {
       filters: {
         state: REQUEST_STATES.pending,
         requestor: '',
-        requestType: SALE_REQUEST_TYPES.create.value,
       },
       isLoaded: false,
-      SALE_REQUEST_TYPES,
     }
   },
 
   watch: {
-    'filters.requestType' () { this.reloadCollectionLoader() },
-
     'filters.state' () { this.reloadCollectionLoader() },
 
     'filters.requestor': _.throttle(function () {
@@ -199,9 +171,8 @@ export default {
         const filters = {
           state: this.filters.state,
           requestor,
-          requestType: this.filters.requestType,
         }
-        response = await api.requests.getSaleRequests(filters)
+        response = await api.requests.getSaleCreateRequests(filters)
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }

@@ -41,8 +41,8 @@
 </template>
 
 <script>
-import { Sdk } from '@/sdk'
 import { EmailGetter } from '@comcom/getters'
+import { ApiCallerFactory } from '@/api-caller-factory'
 
 export default {
   components: { EmailGetter },
@@ -60,15 +60,17 @@ export default {
   },
 
   created () {
-    this.getList(this.sale)
+    this.getList()
   },
 
   methods: {
-    async getList ({ baseAsset }) {
+    async getList () {
       try {
-        // TODO: No /v3 endpoint for getHolders yet
-        const response = await Sdk.horizon.assets.getHolders(baseAsset.id)
-        this.list = response.data
+        const endpoint = `/v3/sales/${this.sale.id}/relationships/participation`
+        const { data } = await ApiCallerFactory
+          .createCallerInstance()
+          .getWithSignature(endpoint)
+        this.list = data
         this.isLoaded = true
       } catch (error) {
         this.isFailed = true
