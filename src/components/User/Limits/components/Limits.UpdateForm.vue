@@ -10,7 +10,6 @@
       </span>
 
       <input-field
-        type="number"
         class="update-limits-form__field"
         :class="{
           'update-limits-form__field--unlimited':
@@ -19,9 +18,6 @@
         v-model="form.dailyOut"
         @blur="touchField('form.dailyOut')"
         :error-message="getFieldErrorMessage('form.dailyOut')"
-        min="0"
-        :max="DEFAULT_MAX_AMOUNT"
-        :step="DEFAULT_INPUT_STEP"
         :placeholder="limits.id ? 'Unlimited' : 'Not set'"
         :disabled="formMixin.isDisabled"
       />
@@ -33,7 +29,6 @@
       </span>
 
       <input-field
-        type="number"
         class="update-limits-form__field"
         :class="{
           'update-limits-form__field--unlimited':
@@ -42,9 +37,6 @@
         v-model="form.weeklyOut"
         @blur="touchField('form.weeklyOut')"
         :error-message="getFieldErrorMessage('form.weeklyOut')"
-        min="0"
-        :max="DEFAULT_MAX_AMOUNT"
-        :step="DEFAULT_INPUT_STEP"
         :placeholder="limits.id ? 'Unlimited' : 'Not set'"
         :disabled="formMixin.isDisabled"
       />
@@ -56,7 +48,6 @@
       </span>
 
       <input-field
-        type="number"
         class="update-limits-form__field"
         :class="{
           'update-limits-form__field--unlimited':
@@ -65,9 +56,6 @@
         v-model="form.monthlyOut"
         @blur="touchField('form.monthlyOut')"
         :error-message="getFieldErrorMessage('form.monthlyOut')"
-        min="0"
-        :max="DEFAULT_MAX_AMOUNT"
-        :step="DEFAULT_INPUT_STEP"
         :placeholder="limits.id ? 'Unlimited' : 'Not set'"
         :disabled="formMixin.isDisabled"
       />
@@ -79,7 +67,6 @@
       </span>
 
       <input-field
-        type="number"
         class="update-limits-form__field"
         :class="{
           'update-limits-form__field--unlimited':
@@ -88,9 +75,6 @@
         v-model="form.annualOut"
         @blur="touchField('form.annualOut')"
         :error-message="getFieldErrorMessage('form.annualOut')"
-        min="0"
-        :max="DEFAULT_MAX_AMOUNT"
-        :step="DEFAULT_INPUT_STEP"
         :placeholder="limits.id ? 'Unlimited' : 'Not set'"
         :disabled="formMixin.isDisabled"
       />
