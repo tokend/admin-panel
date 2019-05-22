@@ -1,19 +1,19 @@
 <template>
   <form
-    class="limits-manager__limits-list-inner"
+    class="update-limits-form"
     @submit.prevent="updateLimit"
     novalidate
   >
-    <div class="limits-manager__limit-row">
-      <span class="limits-manager__limit-type">
+    <div class="update-limits-form__row">
+      <span class="update-limits-form__limit-type">
         Daily
       </span>
 
       <input-field
         type="number"
-        class="limits-manager__limit-field"
+        class="update-limits-form__field"
         :class="{
-          'limits-manager__limit-field--unlimited':
+          'update-limits-form__field--unlimited':
             limits.id
         }"
         v-model="form.dailyOut"
@@ -27,16 +27,16 @@
       />
     </div>
 
-    <div class="limits-manager__limit-row">
-      <span class="limits-manager__limit-type">
+    <div class="update-limits-form__row">
+      <span class="update-limits-form__limit-type">
         Weekly
       </span>
 
       <input-field
         type="number"
-        class="limits-manager__limit-field"
+        class="update-limits-form__field"
         :class="{
-          'limits-manager__limit-field--unlimited':
+          'update-limits-form__field--unlimited':
             limits.id
         }"
         v-model="form.weeklyOut"
@@ -50,16 +50,16 @@
       />
     </div>
 
-    <div class="limits-manager__limit-row">
-      <span class="limits-manager__limit-type">
+    <div class="update-limits-form__row">
+      <span class="update-limits-form__limit-type">
         Monthly
       </span>
 
       <input-field
         type="number"
-        class="limits-manager__limit-field"
+        class="update-limits-form__field"
         :class="{
-          'limits-manager__limit-field--unlimited':
+          'update-limits-form__field--unlimited':
             limits.id
         }"
         v-model="form.monthlyOut"
@@ -73,16 +73,16 @@
       />
     </div>
 
-    <div class="limits-manager__limit-row">
-      <span class="limits-manager__limit-type">
+    <div class="update-limits-form__row">
+      <span class="update-limits-form__limit-type">
         Annual
       </span>
 
       <input-field
         type="number"
-        class="limits-manager__limit-field"
+        class="update-limits-form__field"
         :class="{
-          'limits-manager__limit-field--unlimited':
+          'update-limits-form__field--unlimited':
             limits.id
         }"
         v-model="form.annualOut"
@@ -96,9 +96,9 @@
       />
     </div>
 
-    <div class="limits-manager__limits-action">
+    <div class="update-limits-form__actions">
       <button
-        class="limits-manager__update-btn app__btn app__btn--info"
+        class="update-limits-form__update-btn app__btn app__btn--info"
         :disabled="formMixin.isDisabled"
       >
         Update
@@ -106,7 +106,7 @@
 
       <button
         type="button"
-        class="limits-manager__remove-btn
+        class="update-limits-form__remove-btn
                app__btn app__btn-outline
                app__btn-outline--danger"
         :disabled="formMixin.isDisabled || limits.id === 0"
@@ -276,7 +276,7 @@ export default {
 <style lang="scss">
 @import "~@/assets/scss/colors";
 
-.limits-manager__limit-row {
+.update-limits-form__row {
   display: flex;
   align-items: center;
 }
@@ -285,7 +285,7 @@ export default {
   margin-bottom: 1.7rem;
 }
 
-.limits-manager__limit-type {
+.update-limits-form__limit-type {
   margin-right: 1rem;
   min-width: 5rem;
   font-size: 1.2rem;
@@ -293,22 +293,22 @@ export default {
   padding: 1.7rem 0 0.6rem 0;
 }
 
-.limits-manager__remove-btn {
+.update-limits-form__remove-btn {
   margin-left: 0.5rem;
 }
 
-.limits-manager__limits-action {
+.update-limits-form__actions {
   display: flex;
   justify-content: space-between;
   margin-top: 1.7rem;
 }
 
-.limits-manager__update-btn,
-.limits-manager__remove-btn {
+.update-limits-form__update-btn,
+.update-limits-form__remove-btn {
   min-width: 9rem;
 }
 
-.limits-manager__limit-field--unlimited {
+.update-limits-form__field--unlimited {
   & .input-field__input {
     &::placeholder {
       color: $color-text;

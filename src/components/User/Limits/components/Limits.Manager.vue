@@ -376,16 +376,12 @@ export default {
   display: flex;
   justify-content: center;
 }
+
 .limits-manager__filter {
   width: calc(33.333333% - 3.4rem);
   &:not(:last-child) {
     margin-right: 5rem;
   }
-}
-
-.limits-manager__limit-row {
-  display: flex;
-  align-items: center;
 }
 
 .limits-manager__limits-list-wrp {
@@ -399,21 +395,10 @@ export default {
 .limits-manager__limits-list {
   margin-bottom: 1.7rem;
 }
+
 .limits-manager__message-wrp {
   display: flex;
   justify-content: center;
-}
-
-.limits-manager__limit-type {
-  margin-right: 1rem;
-  min-width: 5rem;
-  font-size: 1.2rem;
-  font-weight: 600;
-  padding: 1.7rem 0 0.6rem 0;
-}
-
-.limits-manager__remove-btn {
-  margin-left: 0.5rem;
 }
 
 .limits-manager__filters {
@@ -424,24 +409,6 @@ export default {
 
   &--global {
     justify-content: flex-start;
-  }
-}
-
-.limits-manager__limits-action {
-  display: flex;
-  justify-content: space-between;
-}
-
-.limits-manager__update-btn,
-.limits-manager__remove-btn {
-  min-width: 9rem;
-}
-
-.limits-manager__limit-field--unlimited {
-  & .input-field__input {
-    &::placeholder {
-      color: $color-text;
-    }
   }
 }
 </style>
