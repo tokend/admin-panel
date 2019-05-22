@@ -140,7 +140,7 @@ export default {
         blobId = data[0].requestDetails.creatorDetails.blobId
       }
       return blobId
-    }
+    },
   },
 }
 </script>
