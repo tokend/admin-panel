@@ -188,7 +188,10 @@
             :autofocus="true"
             v-model="rejectForm.reason"
             @blur="touchField('rejectForm.reason')"
-            :error-message="getFieldErrorMessage('rejectForm.reason')"
+            :error-message="getFieldErrorMessage(
+              'rejectForm.reason',
+              { maxLength: REJECT_REASON_MAX_LENGTH }
+            )"
           />
         </div>
       </form>
@@ -292,6 +295,7 @@ export default {
     REQUEST_STATES,
     DOCUMENT_TYPES_STR,
     LIMITS_REQUEST_STATES_STR,
+    REJECT_REASON_MAX_LENGTH,
     uploadDocs: [
       {
         label: '',

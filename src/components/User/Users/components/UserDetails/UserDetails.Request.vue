@@ -56,7 +56,10 @@
             :autofocus="true"
             v-model="rejectForm.reason"
             @blur="touchField('rejectForm.reason')"
-            :error-message="getFieldErrorMessage('rejectForm.reason')"
+            :error-message="getFieldErrorMessage(
+              'rejectForm.reason',
+              { maxLength: REJECT_REASON_MAX_LENGTH }
+            )"
           />
         </div>
       </form>
@@ -134,6 +137,7 @@ export default {
       isShownAdvanced: false,
       isPending: false,
       tasks: {},
+      REJECT_REASON_MAX_LENGTH,
     }
   },
 

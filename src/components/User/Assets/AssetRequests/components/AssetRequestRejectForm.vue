@@ -16,7 +16,10 @@
           v-model="form.rejectReason"
           :disabled="formMixin.isDisabled"
           @blur="touchField('form.rejectReason')"
-          :error-message="getFieldErrorMessage('form.rejectReason')"
+          :error-message="getFieldErrorMessage(
+            'form.rejectReason',
+            { maxLength: REJECT_REASON_MAX_LENGTH }
+          )"
           rows="5"
         />
       </div>
@@ -70,6 +73,7 @@ export default {
         rejectReason: '',
       },
       isPermanentReject: false,
+      REJECT_REASON_MAX_LENGTH,
     }
   },
 

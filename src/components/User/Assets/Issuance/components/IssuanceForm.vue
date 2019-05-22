@@ -25,7 +25,10 @@
             v-model="form.reference"
             label="Reference"
             @blur="touchField('form.reference')"
-            :error-message="getFieldErrorMessage('form.reference')"
+            :error-message="getFieldErrorMessage(
+              'form.reference',
+              { maxLength: REFERENCE_MAX_LENGTH }
+            )"
             :disabled="formMixin.isDisabled"
           />
         </div>
@@ -40,7 +43,13 @@
             v-model="form.amount"
             label="Amount"
             @blur="touchField('form.amount')"
-            :error-message="getFieldErrorMessage('form.amount')"
+            :error-message="getFieldErrorMessage(
+              'form.amount',
+              {
+                minValue: DEFAULT_INPUT_MIN,
+                available: availableForIssuance
+              }
+            )"
             :disabled="formMixin.isDisabled"
           />
 
@@ -108,7 +117,7 @@ import { ErrorHandler } from '@/utils/ErrorHandler'
 
 import {
   required,
-  minAmount,
+  minValue,
   noMoreThanAvailableForIssuance,
   emailOrAccountId,
   maxLength,
@@ -125,8 +134,6 @@ export default {
 
   data () {
     return {
-      DEFAULT_INPUT_STEP,
-      DEFAULT_INPUT_MIN,
       form: {
         amount: '',
         receiver: '',
@@ -134,6 +141,9 @@ export default {
         asset: '',
       },
       assets: [],
+      DEFAULT_INPUT_STEP,
+      DEFAULT_INPUT_MIN,
+      REFERENCE_MAX_LENGTH,
     }
   },
 
@@ -142,7 +152,7 @@ export default {
       form: {
         amount: {
           required,
-          minAmount,
+          minValue: minValue(DEFAULT_INPUT_MIN),
           noMoreThanAvailableForIssuance: noMoreThanAvailableForIssuance(
             this.availableForIssuance
           ),

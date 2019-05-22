@@ -44,9 +44,11 @@
           label="Asset name"
           v-model="asset.creatorDetails.name"
           name="asset-name"
-          max="255"
           @blur="touchField('asset.creatorDetails.name')"
-          :error-message="getFieldErrorMessage('asset.creatorDetails.name')"
+          :error-message="getFieldErrorMessage(
+            'asset.creatorDetails.name',
+            { maxLength: ASSET_NAME_MAX_LENGTH }
+          )"
           :disabled="formMixin.isDisabled"
         />
 
@@ -54,11 +56,13 @@
           class="app__form-field"
           label="Asset code"
           v-model="asset.code"
-          max="16"
           :disabled="isExistingAsset || formMixin.isDisabled"
           name="asset-code"
           @blur="touchField('asset.code')"
-          :error-message="getFieldErrorMessage('asset.code')"
+          :error-message="getFieldErrorMessage(
+            'asset.code',
+            { maxLength: ASSET_CODE_MAX_LENGTH }
+          )"
         />
       </div>
 
@@ -84,7 +88,10 @@
           :disabled="isExistingAsset || formMixin.isDisabled"
           name="initial-preissued"
           @blur="touchField('asset.initialPreissuedAmount')"
-          :error-message="getFieldErrorMessage('asset.initialPreissuedAmount')"
+          :error-message="getFieldErrorMessage(
+            'asset.initialPreissuedAmount',
+            { minValue: 0, maxValue: asset.maxIssuanceAmount }
+          )"
         />
 
         <input-field
@@ -108,7 +115,13 @@
           :disabled="isExistingAsset || formMixin.isDisabled"
           name="max-assets"
           @blur="touchField('asset.maxIssuanceAmount')"
-          :error-message="getFieldErrorMessage('asset.maxIssuanceAmount')"
+          :error-message="getFieldErrorMessage(
+            'asset.maxIssuanceAmount',
+            {
+              minValue: DEFAULT_INPUT_MIN,
+              maxValue: DEFAULT_MAX_AMOUNT
+            }
+          )"
         />
 
         <!--
@@ -126,7 +139,10 @@
           :disabled="true || isExistingAsset || formMixin.isDisabled"
           name="trailing-digits-count"
           @blur="touchField('asset.trailingDigitsCount')"
-          :error-message="getFieldErrorMessage('asset.trailingDigitsCount')"
+          :error-message="getFieldErrorMessage(
+            'asset.trailingDigitsCount',
+            { minValue: 0, maxValue: 6 }
+          )"
         />
       </div>
 
@@ -302,8 +318,6 @@ import {
   accountId,
   minValue,
   maxValue,
-  maxAmount,
-  minAmount,
   maxLength,
   alphaNum,
 } from '@/validators'
@@ -326,12 +340,17 @@ import { getters } from '@/store/types'
 import {
   ASSET_POLICIES,
   DEFAULT_INPUT_STEP,
+  DEFAULT_INPUT_MIN,
+  DEFAULT_MAX_AMOUNT,
   DOCUMENT_TYPES,
   ASSET_POLICIES_VERBOSE,
 } from '@/constants'
 
 import 'mdi-vue/ChevronDownIcon'
 import 'mdi-vue/ChevronUpIcon'
+
+const ASSET_CODE_MAX_LENGTH = 16
+const ASSET_NAME_MAX_LENGTH = 255
 
 export default {
   mixins: [FormMixin],
@@ -342,11 +361,7 @@ export default {
 
   data () {
     return {
-      ASSET_POLICIES,
-      DEFAULT_INPUT_STEP,
-      ASSET_POLICIES_VERBOSE,
       isShownAdvanced: false,
-      ASSET_TYPES: config.ASSET_TYPES,
 
       asset: {
         code: '',
@@ -380,6 +395,14 @@ export default {
       },
 
       DOCUMENT_TYPES,
+      ASSET_POLICIES,
+      DEFAULT_INPUT_STEP,
+      DEFAULT_INPUT_MIN,
+      DEFAULT_MAX_AMOUNT,
+      ASSET_POLICIES_VERBOSE,
+      ASSET_TYPES: config.ASSET_TYPES,
+      ASSET_CODE_MAX_LENGTH,
+      ASSET_NAME_MAX_LENGTH,
     }
   },
 
@@ -388,11 +411,15 @@ export default {
       asset: {
         code: {
           required,
-          maxLength: maxLength(16),
+          maxLength: maxLength(ASSET_CODE_MAX_LENGTH),
           alphaNum,
         },
         preissuedAssetSigner: { required, accountId },
-        maxIssuanceAmount: { required, minAmount, maxAmount },
+        maxIssuanceAmount: {
+          required,
+          minValue: minValue(DEFAULT_INPUT_MIN),
+          maxValue: maxValue(DEFAULT_MAX_AMOUNT),
+        },
         initialPreissuedAmount: {
           required,
           minValue: minValue(0),
@@ -407,7 +434,7 @@ export default {
         creatorDetails: {
           name: {
             required,
-            maxLength: maxLength(255),
+            maxLength: maxLength(ASSET_NAME_MAX_LENGTH),
           },
         },
       },

@@ -13,7 +13,10 @@
           label="Base"
           v-model="form.base"
           @blur="touchField('form.base')"
-          :error-message="getFieldErrorMessage('form.base')"
+          :error-message="getFieldErrorMessage(
+            'form.base',
+            { value: form.quote }
+          )"
           :disabled="formMixin.isDisabled"
         />
 
@@ -22,7 +25,10 @@
           label="Quote"
           v-model="form.quote"
           @blur="touchField('form.quote')"
-          :error-message="getFieldErrorMessage('form.quote')"
+          :error-message="getFieldErrorMessage(
+            'form.quote',
+            { value: form.base }
+          )"
           :disabled="formMixin.isDisabled"
         />
       </div>
@@ -36,7 +42,13 @@
           :step="DEFAULT_INPUT_STEP"
           v-model="form.physicalPrice"
           @blur="touchField('form.physicalPrice')"
-          :error-message="getFieldErrorMessage('form.physicalPrice')"
+          :error-message="getFieldErrorMessage(
+            'form.physicalPrice',
+            {
+              minValue: DEFAULT_INPUT_MIN,
+              maxValue: DEFAULT_MAX_AMOUNT
+            }
+          )"
           :disabled="formMixin.isDisabled"
         />
       </div>
@@ -50,7 +62,10 @@
           :step="DEFAULT_INPUT_STEP"
           v-model="form.physicalPriceCorrection"
           @blur="touchField('form.physicalPriceCorrection')"
-          :error-message="getFieldErrorMessage('form.physicalPriceCorrection')"
+          :error-message="getFieldErrorMessage(
+            'form.physicalPriceCorrection',
+            { minValue: 0, maxValue: DEFAULT_MAX_AMOUNT }
+          )"
           :disabled="formMixin.isDisabled"
         >
           <template slot="help">
@@ -74,7 +89,10 @@
           :step="DEFAULT_INPUT_STEP"
           v-model="form.maxPriceStep"
           @blur="touchField('form.maxPriceStep')"
-          :error-message="getFieldErrorMessage('form.maxPriceStep')"
+          :error-message="getFieldErrorMessage(
+            'form.maxPriceStep',
+            { minValue: 0, maxValue: 100 }
+          )"
           :disabled="formMixin.isDisabled"
         >
           <template slot="help">
@@ -157,17 +175,14 @@
 
 <script>
 import FormMixin from '@/mixins/form.mixin'
-import {
-  required,
-  minValue,
-  maxValue,
-  maxAmount,
-  minAmount,
-  not,
-  sameAs,
-} from '@/validators'
+import { required, minValue, maxValue, not, sameAs } from '@/validators'
 
-import { ASSET_PAIR_POLICIES, DEFAULT_INPUT_STEP } from '../../../../../constants'
+import {
+  ASSET_PAIR_POLICIES,
+  DEFAULT_INPUT_STEP,
+  DEFAULT_MAX_AMOUNT,
+  DEFAULT_INPUT_MIN,
+} from '@/constants'
 import api from '@/api'
 import { confirmAction } from '@/js/modals/confirmation_message'
 
@@ -187,6 +202,8 @@ export default {
     },
     ASSET_PAIR_POLICIES,
     DEFAULT_INPUT_STEP,
+    DEFAULT_INPUT_MIN,
+    DEFAULT_MAX_AMOUNT,
   }),
 
   validations () {
@@ -202,8 +219,8 @@ export default {
         },
         physicalPrice: {
           required,
-          minAmount,
-          maxAmount,
+          minValue: minValue(DEFAULT_INPUT_MIN),
+          maxValue: maxValue(DEFAULT_MAX_AMOUNT),
         },
         maxPriceStep: {
           required,
@@ -213,7 +230,7 @@ export default {
         physicalPriceCorrection: {
           required,
           minValue: minValue(0),
-          maxAmount,
+          maxValue: maxValue(DEFAULT_MAX_AMOUNT),
         },
       },
     }

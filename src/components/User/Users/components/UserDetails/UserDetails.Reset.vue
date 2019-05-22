@@ -32,7 +32,10 @@
             :autofocus="true"
             v-model="resetForm.reason"
             @blur="touchField('resetForm.reason')"
-            :error-message="getFieldErrorMessage('resetForm.reason')"
+            :error-message="getFieldErrorMessage(
+              'resetForm.reason',
+              { maxLength: REJECT_REASON_MAX_LENGTH }
+            )"
           />
         </div>
       </form>
@@ -103,6 +106,7 @@ export default {
         reason: '',
         isShown: false,
       },
+      REJECT_REASON_MAX_LENGTH,
     }
   },
 

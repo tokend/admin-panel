@@ -11,7 +11,10 @@
         :disabled="formMixin.isDisabled || fee.exists"
         v-model="form.lowerBound"
         @blur="touchField('form.lowerBound')"
-        :error-message="getFieldErrorMessage('form.lowerBound')"
+        :error-message="getFieldErrorMessage(
+          'form.lowerBound',
+          { minValue: 0, maxValue: form.upperBound }
+        )"
       />
     </span>
 
@@ -24,7 +27,10 @@
         :disabled="formMixin.isDisabled || fee.exists"
         v-model="form.upperBound"
         @blur="touchField('form.upperBound')"
-        :error-message="getFieldErrorMessage('form.upperBound')"
+        :error-message="getFieldErrorMessage(
+          'form.upperBound',
+          { minValue: form.lowerBound, maxValue: DEFAULT_MAX_AMOUNT }
+        )"
       />
       <button
         v-if="!fee.exists"
@@ -46,7 +52,10 @@
         :disabled="formMixin.isDisabled"
         v-model="form.percent"
         @blur="touchField('form.percent')"
-        :error-message="getFieldErrorMessage('form.percent')"
+        :error-message="getFieldErrorMessage(
+          'form.percent',
+          { minValue: 0, maxValue: 100 }
+        )"
       />
     </span>
 
@@ -61,7 +70,10 @@
         :disabled="formMixin.isDisabled"
         v-model="form.fixed"
         @blur="touchField('form.fixed')"
-        :error-message="getFieldErrorMessage('form.fixed')"
+        :error-message="getFieldErrorMessage(
+          'form.fixed',
+          { minValue: 0, maxValue: DEFAULT_MAX_AMOUNT }
+        )"
       />
     </span>
 
@@ -98,13 +110,7 @@
 
 <script>
 import FormMixin from '@/mixins/form.mixin'
-import {
-  required,
-  requiredIf,
-  minValue,
-  maxValue,
-  maxAmount,
-} from '@/validators'
+import { required, requiredIf, minValue, maxValue } from '@/validators'
 
 import { confirmAction } from '@/js/modals/confirmation_message'
 
@@ -112,7 +118,12 @@ import { Sdk } from '@/sdk'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 import { xdrTypeFromValue } from '@/utils/xdrTypeFromValue'
-import { DEFAULT_MAX_AMOUNT, DEFAULT_INPUT_STEP, FEE_TYPES } from '@/constants'
+import {
+  DEFAULT_INPUT_MIN,
+  DEFAULT_MAX_AMOUNT,
+  DEFAULT_INPUT_STEP,
+  FEE_TYPES,
+} from '@/constants'
 
 import 'mdi-vue/ArrowUpIcon'
 
@@ -139,6 +150,7 @@ export default {
         percent: '0',
       },
       FEE_TYPES,
+      DEFAULT_INPUT_MIN,
       DEFAULT_MAX_AMOUNT,
       DEFAULT_INPUT_STEP,
     }
@@ -155,14 +167,14 @@ export default {
         upperBound: {
           required,
           minValue: minValue(this.form.lowerBound),
-          maxAmount,
+          maxValue: maxValue(DEFAULT_MAX_AMOUNT),
         },
         fixed: {
           required: requiredIf(function () {
             return this.canSetFixedFee
           }),
           minValue: minValue(0),
-          maxAmount,
+          maxValue: maxValue(DEFAULT_MAX_AMOUNT),
         },
         percent: {
           required,

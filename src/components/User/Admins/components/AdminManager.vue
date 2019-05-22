@@ -43,7 +43,10 @@
               v-model="form.identity"
               :disabled="isMaster || formMixin.isDisabled"
               @blur="touchField('form.identity')"
-              :error-message="getFieldErrorMessage('form.identity')"
+              :error-message="getFieldErrorMessage(
+                'form.identity',
+                { minValue: 0, maxValue: 255 }
+              )"
             />
 
             <input-field
@@ -55,7 +58,10 @@
               v-model="form.weight"
               :disabled="isMaster || formMixin.isDisabled"
               @blur="touchField('form.weight')"
-              :error-message="getFieldErrorMessage('form.weight')"
+              :error-message="getFieldErrorMessage(
+                'form.weight',
+                { minValue: 1, maxValue: 1000 }
+              )"
             />
           </div>
 

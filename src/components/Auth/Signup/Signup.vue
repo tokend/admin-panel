@@ -6,14 +6,20 @@
         Sign Up
       </h2>
 
-      <form @submit.prevent="submit">
+      <form
+        @submit.prevent="submit"
+        novalidate
+      >
         <div class="app__form-row">
           <div class="app__form-field">
             <input-field
               label="Username"
               v-model="form.username"
               @blur="touchField('form.username')"
-              :error-message="getFieldErrorMessage('form.username')"
+              :error-message="getFieldErrorMessage(
+                'form.username',
+                { minLength: USERNAME_MIN_LENGTH }
+              )"
               :disabled="formMixin.isDisabled"
             />
           </div>
@@ -151,6 +157,7 @@ export default {
         keypair: {},
       },
       state: 'signup',
+      USERNAME_MIN_LENGTH,
     }
   },
 

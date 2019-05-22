@@ -72,7 +72,10 @@
             :label="null"
             :disabled="formMixin.isDisabled"
             @blur="touchField('rejectForm.reason')"
-            :error-message="getFieldErrorMessage('rejectForm.reason')"
+            :error-message="getFieldErrorMessage(
+              'rejectForm.reason',
+              { maxLength: REJECT_REASON_MAX_LENGTH }
+            )"
           />
         </div>
 
@@ -144,7 +147,6 @@ export default {
 
   data () {
     return {
-      REQUEST_STATES,
       request: {
         sale: {},
         asset: {},
@@ -157,6 +159,8 @@ export default {
         isPermanentReject: false,
       },
       isSubmitting: false,
+      REQUEST_STATES,
+      REJECT_REASON_MAX_LENGTH,
     }
   },
 

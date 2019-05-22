@@ -17,7 +17,13 @@
         }"
         v-model="form.dailyOut"
         @blur="touchField('form.dailyOut')"
-        :error-message="getFieldErrorMessage('form.dailyOut')"
+        :error-message="getFieldErrorMessage(
+          'form.dailyOut',
+          {
+            minValue: DEFAULT_MAX_AMOUNT,
+            maxValue: form.weeklyOut || DEFAULT_MAX_AMOUNT
+          }
+        )"
         :placeholder="limits.id ? 'Unlimited' : 'Not set'"
         :disabled="formMixin.isDisabled"
       />
@@ -36,7 +42,13 @@
         }"
         v-model="form.weeklyOut"
         @blur="touchField('form.weeklyOut')"
-        :error-message="getFieldErrorMessage('form.weeklyOut')"
+        :error-message="getFieldErrorMessage(
+          'form.weeklyOut',
+          {
+            minValue: form.dailyOut || DEFAULT_MAX_AMOUNT,
+            maxValue: form.monthlyOut || DEFAULT_MAX_AMOUNT
+          }
+        )"
         :placeholder="limits.id ? 'Unlimited' : 'Not set'"
         :disabled="formMixin.isDisabled"
       />
@@ -55,7 +67,13 @@
         }"
         v-model="form.monthlyOut"
         @blur="touchField('form.monthlyOut')"
-        :error-message="getFieldErrorMessage('form.monthlyOut')"
+        :error-message="getFieldErrorMessage(
+          'form.monthlyOut',
+          {
+            minValue: form.weeklyOut || DEFAULT_MAX_AMOUNT,
+            maxValue: form.annualOut || DEFAULT_MAX_AMOUNT
+          }
+        )"
         :placeholder="limits.id ? 'Unlimited' : 'Not set'"
         :disabled="formMixin.isDisabled"
       />
@@ -74,7 +92,13 @@
         }"
         v-model="form.annualOut"
         @blur="touchField('form.annualOut')"
-        :error-message="getFieldErrorMessage('form.annualOut')"
+        :error-message="getFieldErrorMessage(
+          'form.annualOut',
+          {
+            minValue: form.monthlyOut || DEFAULT_MAX_AMOUNT,
+            maxValue: DEFAULT_MAX_AMOUNT
+          }
+        )"
         :placeholder="limits.id ? 'Unlimited' : 'Not set'"
         :disabled="formMixin.isDisabled"
       />
@@ -104,7 +128,7 @@
 
 <script>
 import FormMixin from '@/mixins/form.mixin'
-import { decimal, minValue, maxValue, maxAmount } from '@/validators'
+import { decimal, minValue, maxValue } from '@/validators'
 
 import { confirmAction } from '@/js/modals/confirmation_message'
 
@@ -151,18 +175,18 @@ export default {
         },
         weeklyOut: {
           decimal,
-          minValue: minValue(this.form.dailyOut),
+          minValue: minValue(this.form.dailyOut || DEFAULT_MAX_AMOUNT),
           maxValue: maxValue(this.form.monthlyOut || DEFAULT_MAX_AMOUNT),
         },
         monthlyOut: {
           decimal,
-          minValue: minValue(this.form.weeklyOut),
+          minValue: minValue(this.form.weeklyOut || DEFAULT_MAX_AMOUNT),
           maxValue: maxValue(this.form.annualOut || DEFAULT_MAX_AMOUNT),
         },
         annualOut: {
           decimal,
-          minValue: minValue(this.form.monthlyOut),
-          maxAmount,
+          minValue: minValue(this.form.monthlyOut || DEFAULT_MAX_AMOUNT),
+          maxValue: maxValue(DEFAULT_MAX_AMOUNT),
         },
       },
     }

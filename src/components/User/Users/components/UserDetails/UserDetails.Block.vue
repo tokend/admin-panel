@@ -36,7 +36,10 @@
             label="Block reason"
             v-model="blockForm.reason"
             @blur="touchField('blockForm.reason')"
-            :error-message="getFieldErrorMessage('blockForm.reason')"
+            :error-message="getFieldErrorMessage(
+              'blockForm.reason',
+              { maxLength: REJECT_REASON_MAX_LENGTH }
+            )"
           />
         </div>
       </form>
@@ -107,11 +110,12 @@ export default {
 
   data () {
     return {
-      ACCOUNT_ROLES: config.ACCOUNT_ROLES,
       blockForm: {
         reason: '',
         isShown: false,
       },
+      ACCOUNT_ROLES: config.ACCOUNT_ROLES,
+      REJECT_REASON_MAX_LENGTH,
     }
   },
 

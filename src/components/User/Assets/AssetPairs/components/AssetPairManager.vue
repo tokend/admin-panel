@@ -12,11 +12,17 @@
             class="app__form-field"
             :label="`Price (${pair.quote})`"
             type="number"
-            min="0"
+            :min="DEFAULT_INPUT_MIN"
             :step="DEFAULT_INPUT_STEP"
             v-model="priceForm.price"
             @blur="touchField('priceForm.price')"
-            :error-message="getFieldErrorMessage('priceForm.price')"
+            :error-message="getFieldErrorMessage(
+              'priceForm.price',
+              {
+                minValue: DEFAULT_INPUT_MIN,
+                maxValue: DEFAULT_MAX_AMOUNT
+              }
+            )"
             :disabled="formMixin.isDisabled"
           />
         </div>
@@ -48,7 +54,8 @@
             v-model="attributesForm.physicalPriceCorrection"
             @blur="touchField('attributesForm.physicalPriceCorrection')"
             :error-message="getFieldErrorMessage(
-              'attributesForm.physicalPriceCorrection'
+              'attributesForm.physicalPriceCorrection',
+              { minValue: 0, maxValue: DEFAULT_MAX_AMOUNT }
             )"
             :disabled="formMixin.isDisabled"
           >
@@ -71,11 +78,13 @@
             label="Max price step"
             type="number"
             min="0"
+            max="100"
             :step="DEFAULT_INPUT_STEP"
             v-model="attributesForm.maxPriceStep"
             @blur="touchField('attributesForm.maxPriceStep')"
             :error-message="getFieldErrorMessage(
-              'attributesForm.maxPriceStep'
+              'attributesForm.maxPriceStep',
+              { minValue: 0, maxValue: 100 }
             )"
             :disabled="formMixin.isDisabled"
           >
@@ -162,20 +171,18 @@
 
 <script>
 import FormMixin from '@/mixins/form.mixin'
-import {
-  required,
-  minValue,
-  maxValue,
-  maxAmount,
-  minAmount,
-} from '@/validators'
+import { required, minValue, maxValue } from '@/validators'
 
 import { confirmAction } from '@/js/modals/confirmation_message'
 
 import api from '@/api'
 import { Sdk } from '@/sdk'
 
-import { DEFAULT_INPUT_STEP } from '@/constants'
+import {
+  DEFAULT_INPUT_STEP,
+  DEFAULT_MAX_AMOUNT,
+  DEFAULT_INPUT_MIN,
+} from '@/constants'
 import { ASSET_PAIR_POLICIES } from '@/constants/'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
@@ -190,8 +197,6 @@ export default {
 
   data () {
     return {
-      DEFAULT_INPUT_STEP,
-      ASSET_PAIR_POLICIES,
       pair: {},
       priceForm: {
         price: '',
@@ -202,6 +207,10 @@ export default {
         policies: [],
       },
       isLoaded: false,
+      ASSET_PAIR_POLICIES,
+      DEFAULT_INPUT_STEP,
+      DEFAULT_INPUT_MIN,
+      DEFAULT_MAX_AMOUNT,
     }
   },
 
@@ -210,8 +219,8 @@ export default {
       priceForm: {
         price: {
           required,
-          minAmount,
-          maxAmount,
+          minValue: minValue(DEFAULT_INPUT_MIN),
+          maxValue: maxValue(DEFAULT_MAX_AMOUNT),
         },
       },
       attributesForm: {
@@ -223,7 +232,7 @@ export default {
         physicalPriceCorrection: {
           required,
           minValue: minValue(0),
-          maxAmount,
+          maxValue: maxValue(DEFAULT_MAX_AMOUNT),
         },
       },
     }
