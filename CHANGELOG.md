@@ -10,6 +10,8 @@ for further information about branching and tagging conventions.
 ## [Unreleased]
 #### Added
 - External link icon to the "Learn more about pre-issuance" link
+- NProgress package for displaying loading progress while
+  switching between routes
 
 #### Updated
 - Now displaying "Yes" and "No" buttons on KYC queue confirmation
