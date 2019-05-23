@@ -1,110 +1,112 @@
 <template>
   <div class="fee-list">
-    <div class="fee-list__filters-wrp">
-      <div class="fee-list__filters">
-        <select-field
-          class="fee-list__filter"
-          label="Scope"
-          v-model="filters.scope">
-          <option :value="SCOPE_TYPES.global">
-            Global
-          </option>
-          <option :value="SCOPE_TYPES.accountRole">
-            Account type
-          </option>
-          <option :value="SCOPE_TYPES.account">
-            Account
-          </option>
-        </select-field>
+    <template v-if="isLoaded">
+      <div class="fee-list__filters-wrp">
+        <div class="fee-list__filters">
+          <select-field
+            class="fee-list__filter"
+            label="Scope"
+            v-model="filters.scope">
+            <option :value="SCOPE_TYPES.global">
+              Global
+            </option>
+            <option :value="SCOPE_TYPES.accountRole">
+              Account type
+            </option>
+            <option :value="SCOPE_TYPES.account">
+              Account
+            </option>
+          </select-field>
 
-        <select-field
-          class="fee-list__filter"
-          label="Type"
-          v-model="filters.feeType">
-          <option :value="FEE_TYPES.paymentFee">
-            Payment
-          </option>
-          <option :value="FEE_TYPES.offerFee">
-            Order Match
-          </option>
-          <option :value="FEE_TYPES.withdrawalFee">
-            Withdrawal
-          </option>
-          <option :value="FEE_TYPES.issuanceFee">
-            Issuance
-          </option>
-          <option :value="FEE_TYPES.investFee">
-            Invest
-          </option>
-          <option :value="FEE_TYPES.capitalDeploymentFee">
-            Capital Deployment
-          </option>
-        </select-field>
+          <select-field
+            class="fee-list__filter"
+            label="Type"
+            v-model="filters.feeType">
+            <option :value="FEE_TYPES.paymentFee">
+              Payment
+            </option>
+            <option :value="FEE_TYPES.offerFee">
+              Order Match
+            </option>
+            <option :value="FEE_TYPES.withdrawalFee">
+              Withdrawal
+            </option>
+            <option :value="FEE_TYPES.issuanceFee">
+              Issuance
+            </option>
+            <option :value="FEE_TYPES.investFee">
+              Invest
+            </option>
+            <option :value="FEE_TYPES.capitalDeploymentFee">
+              Capital Deployment
+            </option>
+          </select-field>
 
-        <select-field
-          class="fee-list__filter"
-          v-model.number="filters.paymentFeeSubtype"
-          v-if="+filters.feeType === FEE_TYPES.paymentFee"
-          label="Direction"
-        >
-          <option
-            v-for="(value, name) in PAYMENT_FEE_TYPES"
-            :key="`fee-list-item-option-${name}`"
-            :value="value"
+          <select-field
+            class="fee-list__filter"
+            v-model.number="filters.paymentFeeSubtype"
+            v-if="+filters.feeType === FEE_TYPES.paymentFee"
+            label="Direction"
           >
-            {{ name }}
-          </option>
-        </select-field>
-
-        <select-field
-          class="fee-list__filter"
-          label="Asset"
-          v-model="filters.assetCode">
-          <template v-if="assetsByType.length">
             <option
-              v-for="item in assetsByType"
-              :key="item.code"
-              :value="item.code"
-              :selected="item.code === filters.assetCode"
+              v-for="(value, name) in PAYMENT_FEE_TYPES"
+              :key="`fee-list-item-option-${name}`"
+              :value="value"
             >
-              {{ item.code }}
+              {{ name }}
             </option>
-          </template>
+          </select-field>
 
-          <template v-else>
-            <option disabled>
-              No appropriate assets
+          <select-field
+            class="fee-list__filter"
+            label="Asset"
+            v-model="filters.assetCode">
+            <template v-if="assetsByType.length">
+              <option
+                v-for="item in assetsByType"
+                :key="item.id"
+                :value="item.id"
+                :selected="item.id === filters.assetCode"
+              >
+                {{ item.id }}
+              </option>
+            </template>
+
+            <template v-else>
+              <option disabled>
+                No appropriate assets
+              </option>
+            </template>
+          </select-field>
+
+          <select-field
+            class="fee-list__filter"
+            label="Account type"
+            v-model="filters.accountRole"
+            v-if="filters.scope === SCOPE_TYPES.accountRole"
+          >
+            <option :value="ACCOUNT_ROLES.general">
+              General
             </option>
-          </template>
-        </select-field>
+            <option :value="ACCOUNT_ROLES.notVerified">
+              Not verified
+            </option>
+            <option :value="ACCOUNT_ROLES.corporate">
+              Corporate
+            </option>
+          </select-field>
 
-        <select-field
-          class="fee-list__filter"
-          label="Account type"
-          v-model="filters.accountRole"
-          v-if="filters.scope === SCOPE_TYPES.accountRole"
-        >
-          <option :value="ACCOUNT_ROLES.general">
-            General
-          </option>
-          <option :value="ACCOUNT_ROLES.notVerified">
-            Not verified
-          </option>
-          <option :value="ACCOUNT_ROLES.corporate">
-            Corporate
-          </option>
-        </select-field>
-
-        <input-field
-          class="fee-list__filter"
-          label="Account"
-          v-model="filters.accountAlias"
-          placeholder="Email or account ID"
-          v-if="filters.scope === SCOPE_TYPES.account"
-          autocomplete-type="email"
-        />
+          <input-field
+            class="fee-list__filter"
+            label="Account"
+            v-model="filters.accountAlias"
+            placeholder="Email or account ID"
+            v-if="filters.scope === SCOPE_TYPES.account"
+            autocomplete-type="email"
+          />
+        </div>
       </div>
-    </div>
+    </template>
 
     <div class="fee-list__list-wrp">
       <template v-if="!Object.keys(fees).length">
@@ -126,7 +128,7 @@
         </div>
       </template>
 
-      <template v-else-if="!feesByFilters.length">
+      <template v-else-if="!fees.length">
         <div class="app-list">
           <p class="app-list__li-like">
             No fees available for current filter settings
@@ -163,7 +165,7 @@
 
           <li
             class="app-list__li"
-            v-for="(item, id) in feesByFilters"
+            v-for="(item, id) in fees"
             :key="id">
             <form
               class="fee-list__li--hidden-form"
@@ -275,6 +277,7 @@ import config from '@/config'
 
 import { xdrTypeFromValue } from '@/utils/xdrTypeFromValue'
 import throttle from 'lodash/throttle'
+import { ApiCallerFactory } from '@/api-caller-factory'
 
 import {
   ASSET_POLICIES,
@@ -286,12 +289,22 @@ import {
 } from '@/constants'
 
 import 'mdi-vue/ArrowUpIcon'
+import { FeesRecord } from '@/js/records/fees.record'
+import _cloneDeep from 'lodash/cloneDeep'
 
 const SCOPE_TYPES = Object.freeze({ // non-xdr values, internal use only
   account: 'USER',
   accountRole: 'ACCOUNT_TYPE',
   global: 'GLOBAL',
 })
+
+const DEFAULT_FEE = {
+  lowerBound: 0,
+  upperBound: 0,
+  percent: 0,
+  fixed: 0,
+  exists: false,
+}
 
 export default {
   components: {
@@ -308,10 +321,11 @@ export default {
       DEFAULT_INPUT_STEP,
       PAYMENT_FEE_TYPES,
 
-      assets: [{ code: DEFAULT_BASE_ASSET }],
+      assets: [{ id: DEFAULT_BASE_ASSET }],
       assetPairs: [],
       fees: {},
       isSubmitting: false,
+      isLoaded: false,
 
       filters: {
         scope: SCOPE_TYPES.global,
@@ -335,12 +349,12 @@ export default {
       switch (+this.filters.feeType) {
         case FEE_TYPES.paymentFee:
           result = this.assets
-            .filter(item => item.policy & ASSET_POLICIES.transferable)
+            .filter(item => item.policies.value & ASSET_POLICIES.transferable)
           break
         case FEE_TYPES.offerFee:
           result = this.assets
             .filter(item => this.assetPairs
-              .filter(el => el.quote === item.code).length
+              .filter(el => el.quoteAsset.id === item.id).length
             )
           break
         case FEE_TYPES.issuanceFee:
@@ -348,7 +362,7 @@ export default {
           break
         case FEE_TYPES.withdrawalFee:
           result = this.assets
-            .filter(item => +item.policy & ASSET_POLICIES.withdrawable)
+            .filter(item => +item.policies.value & ASSET_POLICIES.withdrawable)
           break
         default:
           result = this.assets
@@ -356,38 +370,17 @@ export default {
       }
       return result
     },
-
-    feesByFilters () {
-      const isFeeListEmpty = !Object.keys(this.fees).length
-      const isInvalidAsset = !this.filters.assetCode
-      if (isFeeListEmpty || isInvalidAsset) return []
-
-      const type = +this.filters.feeType
-      const asset = this.filters.assetCode
-      const paymentFeeSubtype = +this.filters.paymentFeeSubtype
-
-      // TODO: fetch from /v3/fees/ instead
-      const filtered = Object.entries(this.fees)
-        .find(([key]) => key.toLowerCase() === asset.toLowerCase())
-      return filtered[1]
-        .filter((item) => item.feeType === type)
-        .filter((item) => {
-          return type === FEE_TYPES.paymentFee
-            ? item.subtype === paymentFeeSubtype
-            : true
-        })
-    },
   },
 
   watch: {
     'assetsByType': function () {
       const isSelectedAssetInRange = this.assetsByType
-        .filter(item => item.code === this.filters.assetCode)
+        .filter(item => item.id === this.filters.assetCode)
         .length
 
       if (!isSelectedAssetInRange) {
         try {
-          this.filters.assetCode = this.assetsByType[0].code
+          this.filters.assetCode = this.assetsByType[0].id
         } catch (error) {
           this.filters.assetCode = null
         }
@@ -406,11 +399,26 @@ export default {
       this.getFees()
     },
 
+    'filters.assetCode': function () {
+      this.fees = {}
+      this.getFees()
+    },
+
     'filters.accountAddress': function (newValue) {
       if (newValue) {
         this.fees = {}
         this.getFees()
       }
+    },
+
+    'filters.feeType': function () {
+      this.fees = {}
+      this.getFees()
+    },
+
+    'filters.paymentFeeSubtype': function () {
+      this.fees = {}
+      this.getFees()
     },
 
     'filters.accountAlias': throttle(async function () {
@@ -431,9 +439,11 @@ export default {
     }, 1000),
   },
 
-  created () {
-    this.getAssetsAndPairs()
-    this.getFees()
+  async created () {
+    this.isLoaded = false
+    await this.getAssetsAndPairs()
+    await this.getFees()
+    this.isLoaded = true
   },
 
   methods: {
@@ -444,10 +454,14 @@ export default {
 
       if (filters.scope === SCOPE_TYPES.accountRole) {
         // snake_case because sdk wait for it
-        result.account_type = filters.accountRole
+        result.account_role = filters.accountRole
       } else if (filters.scope === SCOPE_TYPES.account) {
         // snake_case because sdk wait for it
-        result.account_id = filters.accountAddress
+        result.account = filters.accountAddress
+      }
+
+      if (+filters.feeType === FEE_TYPES.paymentFee) {
+        result.subtype = filters.paymentFeeSubtype
       }
 
       return result
@@ -455,10 +469,14 @@ export default {
 
     async getAssetsAndPairs () {
       try {
-        const response = await Sdk.horizon.assets.getAll()
-        this.assets = response.data
-        const assetsResponse = await Sdk.horizon.assetPairs.getAll()
-        this.assetPairs = assetsResponse.data
+        const { data: assets } = await ApiCallerFactory
+          .createStubbornCallerInstance()
+          .stubbornGet('/v3/assets')
+        this.assets = assets
+        const { data: assetPairs } = await ApiCallerFactory
+          .createStubbornCallerInstance()
+          .stubbornGet('/v3/asset_pairs')
+        this.assetPairs = assetPairs
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }
@@ -467,8 +485,18 @@ export default {
     async getFees () {
       try {
         const filters = this.composeRequestFilters(this.filters)
-        const response = await Sdk.horizon.fees.getAll(filters)
-        this.fees = response.data.fees
+        const { data } = await ApiCallerFactory
+          .createCallerInstance()
+          .getWithSignature('/v3/fees', {
+            filter: {
+              asset: this.filters.assetCode,
+              fee_type: this.filters.feeType,
+              ...filters,
+            },
+          })
+        const newFees = _cloneDeep(data)
+        newFees.push(DEFAULT_FEE)
+        this.fees = newFees.map(item => new FeesRecord(item, this.filters))
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }
@@ -493,9 +521,9 @@ export default {
             asset: String(fees.asset),
             fixedFee: String(fees.fixed),
             percentFee: String(fees.percent),
-            accountId: additionalParams.account_id || additionalParams.address,
-            accountRole: additionalParams.account_type
-              ? String(additionalParams.account_type)
+            accountId: additionalParams.account,
+            accountRole: additionalParams.account_role
+              ? String(additionalParams.account_role)
               : undefined,
             lowerBound: String(fees.lowerBound),
             upperBound: String(fees.upperBound),
