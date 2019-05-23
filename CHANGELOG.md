@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
+## [Unreleased]
+#### Added
+- External link icon to the "Learn more about pre-issuance" link
+
+#### Updated
+- Now displaying "Yes" and "No" buttons on KYC queue confirmation
+- Now providing only tasks to add to KYC reject request operation
+- Renamed "Master assets" to "System assets" on "Assets" menu
+
+#### Fixed
+- Displaying asset request terms document
+
+#### Removed
+- "Fiat asset" checkbox from asset creation form
+
 ## [1.7.0-rc.1] - 2019-05-21
 ### "Under the hood" changes
 #### Changed

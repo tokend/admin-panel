@@ -100,6 +100,8 @@ export default {
       const isConfirmed = !this.readyForReviewDecisions.length ||
         await confirmAction({
           title: 'Are you sure? All your decisions will be lost',
+          confirmText: 'Yes',
+          cancelText: 'No',
         })
       if (!isConfirmed) { return }
 
@@ -109,6 +111,8 @@ export default {
     async submitReview () {
       const isConfirmed = await confirmAction({
         title: 'Are you sure? This action cannot be undone',
+        confirmText: 'Yes, confirm',
+        cancelText: 'No, cancel',
       })
       if (!isConfirmed) { return }
 
@@ -148,7 +152,7 @@ export default {
             request: decision.request,
             action: base.xdr.ReviewRequestOpAction.reject().value,
             reason: decision.reason,
-            tasks: decision.tasks,
+            tasks: { toAdd: decision.tasks.toAdd },
           })
       }
     },

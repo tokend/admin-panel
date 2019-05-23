@@ -156,11 +156,11 @@
           <user-doc-getter
             :file-key="safeGet(
               assetRequest,
-              'operationDetails.details.logo.key'
+              'operationDetails.details.terms.key'
             )"
             :mime-type="safeGet(
               assetRequest,
-              'operationDetails.details.logo.mime_type'
+              'operationDetails.details.terms.mimeType'
             )"
           />
         </span>

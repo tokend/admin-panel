@@ -1,18 +1,18 @@
 <template>
-  <div class="master-assets-index">
-    <div class="master-assets-index__heading-row">
+  <div class="system-assets-index">
+    <div class="system-assets-index__heading-row">
       <h2>Assets owned by master</h2>
 
-      <div class="master-assets-index__actions">
+      <div class="system-assets-index__actions">
         <router-link
-          class="master-assets-index__create-btn app__btn app__btn--iconed"
-          :to="{ name: 'assets.masterAssets.new' }">
+          class="system-assets-index__create-btn app__btn app__btn--iconed"
+          :to="{ name: 'assets.systemAssets.new' }">
           <mdi-plus-icon /> Create asset
         </router-link>
       </div>
     </div>
 
-    <div class="master-assets-index__list-wrp">
+    <div class="system-assets-index__list-wrp">
       <asset-list />
     </div>
   </div>
@@ -29,7 +29,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.master-assets-index__heading-row {
+.system-assets-index__heading-row {
   display: flex;
   justify-content: space-between;
   margin-bottom: 2.5rem;
@@ -44,12 +44,12 @@ export default {
   }
 }
 
-.master-assets-index__actions {
+.system-assets-index__actions {
   flex: 1;
   max-width: 17rem;
 }
 
-.master-assets-index__create-btn {
+.system-assets-index__create-btn {
   font-weight: 600;
   text-decoration: none;
 
