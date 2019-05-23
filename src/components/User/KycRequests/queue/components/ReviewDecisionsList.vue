@@ -152,7 +152,7 @@ export default {
             request: decision.request,
             action: base.xdr.ReviewRequestOpAction.reject().value,
             reason: decision.reason,
-            tasks: { toAdd: decision.tasks.toAdd },
+            tasks: {},
           })
       }
     },
@@ -163,8 +163,8 @@ export default {
         requestHash: request.hash,
         requestType: request.type,
         reviewDetails: {
-          tasksToAdd: tasks.toAdd,
-          tasksToRemove: tasks.toRemove,
+          tasksToAdd: tasks.toAdd || 0,
+          tasksToRemove: tasks.toRemove || 0,
           externalDetails: '{}',
         },
         action,
