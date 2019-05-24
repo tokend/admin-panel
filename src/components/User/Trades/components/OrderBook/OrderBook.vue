@@ -23,8 +23,6 @@
 </template>
 
 <script>
-import { Sdk } from '@/sdk'
-
 import OrderTable from './OrderBook.Table'
 import HistoryTable from './OrderBook.History'
 
@@ -68,11 +66,6 @@ export default {
     async getBook () {
       this.isLoaded = false
       const pair = new AssetPair(this.filters.pair)
-      const params = {
-        order_book_id: 0,
-        base_asset: pair.base,
-        quote_asset: pair.quote,
-      }
       try {
         const orderBookId = SECONDARY_MARKET_ORDER_BOOK_ID
         const formatedOrderBookId = `${pair.base}:${pair.quote}:${orderBookId}`
@@ -83,8 +76,15 @@ export default {
           })
         this.book.bids = data.buyEntries
         this.book.asks = data.sellEntries
-        // TODO: No /v3 endpoint for trades yet
-        const tradesResponse = await Sdk.horizon.trades.getPage(params)
+
+        const tradesResponse = await ApiCallerFactory
+          .createCallerInstance()
+          .getWithSignature('/v3/matches', {
+            filter: {
+              base_asset: pair.base,
+              quote_asset: pair.quote,
+            },
+          })
         this.book.history = tradesResponse.data
         this.isLoaded = true
       } catch (error) {
