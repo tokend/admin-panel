@@ -20,5 +20,11 @@ export class FeesRecord {
 
     this.fixed = _get(record, 'fixed') || 0
     this.percent = _get(record, 'percent') || 0
+    this.exists = this._isFeeExists(record)
+  }
+
+  // In the fees that come from the server there is no field exists
+  _isFeeExists (fee) {
+    return typeof fee.exists === 'undefined' ? true : fee.exists
   }
 }
