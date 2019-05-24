@@ -494,8 +494,13 @@ export default {
               ...filters,
             },
           })
-        const newFees = _cloneDeep(data)
+        let newFees = _cloneDeep(data)
         newFees.push(DEFAULT_FEE)
+
+        if (this.filters.scope === SCOPE_TYPES.global) {
+          newFees = newFees
+            .filter((fee) => !(fee.accountRole || fee.account))
+        }
         this.fees = newFees.map(item => new FeesRecord(item, this.filters))
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
