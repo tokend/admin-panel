@@ -537,7 +537,9 @@ export default {
         }
         const operation = Sdk.base.Operation.setFees(opts)
 
-        await Sdk.horizon.transactions.submitOperations(operation)
+        await await ApiCallerFactory
+          .createCallerInstance()
+          .postOperations(operation)
         await this.getFees()
         this.$store.dispatch('SET_INFO', 'Submitted successfully')
       } catch (error) {
