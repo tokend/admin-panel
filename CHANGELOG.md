@@ -9,8 +9,7 @@ for further information about branching and tagging conventions.
 
 ## [Unreleased]
 #### Fixed
-- Terms field appereance in asset request
-
+- Terms field appearance in asset request
 
 ## [1.7.0-rc.2] - 2019-05-21
 ### "Under the hood" changes
