@@ -28,7 +28,7 @@
       <li>
         <span>Date of birth</span>
         <span :title="kyc.dateOfBirth">
-          {{ kyc.dateOfBirth }}
+          {{ kyc.dateOfBirth | dateTime }}
         </span>
       </li>
       <li>
