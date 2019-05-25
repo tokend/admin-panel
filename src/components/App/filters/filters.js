@@ -42,6 +42,7 @@ export function assetTypeToString (assetType) {
   return {
     [+config.ASSET_TYPES.default]: 'Does not require KYC',
     [+config.ASSET_TYPES.kycRequired]: 'Requires KYC',
+    [+config.ASSET_TYPES.security]: 'Is security (requires accreditation for US residents)',
   }[+assetType]
 }
 

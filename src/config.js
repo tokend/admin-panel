@@ -54,6 +54,7 @@ export default Object.assign(
       // Will be updated on init
       default: '0',
       kycRequired: '1',
+      security: '2',
     },
 
     CHANGE_ROLE_TASKS: {
