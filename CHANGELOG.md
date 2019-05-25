@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
+## [Unreleased]
+#### Added
+- Postal code field in kyc request
+
+#### Fixed
+- Show dash, if line 2 is not specified in kyc request
+
 ## [1.7.0-rc.2] - 2019-05-21
 ### "Under the hood" changes
 #### Changed
