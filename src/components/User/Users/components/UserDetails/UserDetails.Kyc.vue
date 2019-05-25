@@ -40,7 +40,18 @@
       <li>
         <span>Address Line 2</span>
         <span :title="kyc.address.line2">
-          {{ kyc.address.line2 }}
+          <template v-if="kyc.address.line2">
+            {{ kyc.address.line2 }}
+          </template>
+          <template v-else>
+            -
+          </template>
+        </span>
+      </li>
+      <li>
+        <span>Postal code</span>
+        <span :title="kyc.address.postalCode">
+          {{ kyc.address.postalCode }}
         </span>
       </li>
       <li>
