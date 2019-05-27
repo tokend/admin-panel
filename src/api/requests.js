@@ -236,12 +236,18 @@ export const requests = {
     if (asset.toLowerCase() === 'all') {
       asset = ''
     }
-    const response = await Sdk.horizon.request.getAllForPreissuances({
-      asset: asset,
-      order: 'desc',
-      limit: 1000,
-      reviewer: config.MASTER_ACCOUNT,
-    })
+    const response = await ApiCallerFactory
+      .createCallerInstance()
+      .getWithSignature('/v3/create_pre_issuance_requests', {
+        filter: {
+          'request_details.asset': asset,
+          reviewer: config.MASTER_ACCOUNT,
+        },
+        page: {
+          order: 'desc',
+        },
+        include: ['request_details'],
+      })
     response.records = mapRequests(response.data)
     return response
   },
@@ -251,7 +257,7 @@ export const requests = {
 
 function mapRequests (records) {
   return records.map(record => {
-    const type = record.details.requestTypeI
+    const type = record.xdrType.value
     switch (type) {
       case REQUEST_TYPES.createAsset:
       case REQUEST_TYPES.updateAsset:

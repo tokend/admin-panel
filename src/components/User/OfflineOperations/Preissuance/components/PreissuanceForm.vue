@@ -204,7 +204,6 @@ export default {
 
           result.xdr = _xdr
           result.isUsed = item.used
-
           return result
         }).filter(item => {
           return !this.issuances.find(el => el.reference === item.reference)
@@ -222,7 +221,7 @@ export default {
         } else {
           this.fileInfo.push({
             fileName: this.temporaryFileName,
-            preissuedAssetSigner: asset.preissuedAssetSigner,
+            preissuedAssetSigner: asset.preIssuanceAssetSigner,
             issuance: items[i],
           })
         }

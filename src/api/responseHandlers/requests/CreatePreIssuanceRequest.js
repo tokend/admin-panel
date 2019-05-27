@@ -6,6 +6,6 @@ export class CreatePreIssuanceRequest extends ReviewableRequest {
   }
 
   asset () {
-    return this.operationDetails.asset
+    return this.operationDetails.asset.id
   }
 }
