@@ -36,8 +36,8 @@ for further information about branching and tagging conventions.
   - Added help messages to asset pair forms
   - Added "Physical price correction" and "Max price step" fields to asset pair
     management form
-  - Replace native confirmation on asset pair creation form with custom
-    confirmation component
+  - Now using custom confirmation message instead of the native one on asset
+    pair creation submit
 
 #### Fixed
 - Fixed a bug when we confirm a request for limits changes,
