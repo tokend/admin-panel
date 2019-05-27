@@ -36,7 +36,8 @@ for further information about branching and tagging conventions.
   - Added help messages to asset pair forms
   - Added "Physical price correction" and "Max price step" fields to asset pair
     management form
-
+  - Replace native confirmation on asset pair creation form with custom
+    confirmation component
 
 #### Fixed
 - Fixed a bug when we confirm a request for limits changes,
@@ -46,10 +47,6 @@ for further information about branching and tagging conventions.
 - Fixed uploading documents on create asset form
 - Displaying of US-related roles on KYC review
 - Displaying of asset filter on withdrawal list
-
-#### Updated
-- Extracted change role request tasks manager to a separate component
-- Replace window.confirm with 'confirm-action' compononent
 
 #### Removed
 - Removed "dev: " prefix from displayed version
@@ -63,6 +60,7 @@ for further information about branching and tagging conventions.
 
 #### Changed
 - Now using @tokend/js-sdk@1.7.0-rc.0
+- Extracted change role request tasks manager to a separate component
 
 ## [1.6.0] - 2019-05-09
 ### "Under the hood" changes
