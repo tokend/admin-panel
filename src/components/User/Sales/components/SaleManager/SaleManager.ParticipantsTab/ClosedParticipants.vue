@@ -15,8 +15,8 @@
         </thead>
         <tbody>
           <tr v-for="(item, index) in list" :key="index">
-            <td><email-getter :account-id="item.accountId" /></td>
-            <td>{{ item.balance }}</td>
+            <td><email-getter :account-id="item.participant.id" /></td>
+            <td>{{ item.amount }}</td>
           </tr>
         </tbody>
       </table>
