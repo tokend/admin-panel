@@ -61,9 +61,6 @@
               Source amount
             </span>
             <span class="app-list__cell">
-              Destination amount
-            </span>
-            <span class="app-list__cell">
               Status
             </span>
             <span class="app-list__cell">
@@ -79,22 +76,16 @@
             <!-- eslint-disable max-len -->
             <span
               class="app-list__cell"
-              :title="`${localize(item.details.withdraw.amount)} ${item.details.withdraw.destAssetCode}`"
+              :title="`${localize(item.requestDetails.amount)}`"
             >
-              {{ localize(item.details.withdraw.amount) }}&nbsp;{{ item.details.withdraw.destAssetCode }}
-            </span>
-            <span
-              class="app-list__cell"
-              :title="`${localize(item.destAssetAmount)} ${item.destAssetCode}`"
-            >
-              {{ localize(item.details.withdraw.destAssetAmount) }}&nbsp;{{ item.details.withdraw.destAssetCode }}
+              {{ localize(item.requestDetails.amount) }}
             </span>
             <!-- eslint-enable max-len -->
-            <span class="app-list__cell" :title="verbozify(item.requestState)">
-              {{ verbozify(item.requestState) }}
+            <span class="app-list__cell" :title="verbozify(item.state)">
+              {{ verbozify(item.state) }}
             </span>
-            <span class="app-list__cell" :title="item.requestor">
-              {{ item.requestor }}
+            <span class="app-list__cell" :title="item.requestor.id">
+              {{ item.requestor.id }}
             </span>
           </button>
         </ul>
@@ -153,6 +144,7 @@ import _ from 'lodash'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { ApiCallerFactory } from '@/api-caller-factory'
+import config from '@/config'
 
 export default {
   components: {
@@ -219,11 +211,16 @@ export default {
       try {
         const requestor =
           await this.getRequestorAccountId(this.filters.requestor)
-        this.list = await api.requests.getWithdrawalRequests({
-          state: this.filters.state,
-          asset: this.filters.asset,
-          requestor: requestor,
-        })
+        this.list = await ApiCallerFactory
+          .createCallerInstance()
+          .getWithSignature('/v3/create_withdraw_requests', {
+            filter: {
+              state: this.filters.state,
+              requestor: requestor,
+              reviewer: config.MASTER_ACCOUNT,
+            },
+            include: ['request_details'],
+          })
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }

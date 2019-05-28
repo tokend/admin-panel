@@ -48,7 +48,7 @@ export const requests = {
       const opts = {
         requestID: item.id,
         requestHash: item.hash,
-        requestType: item.request_type_i || item.requestTypeI,
+        requestType: item.xdrType.value,
         reviewDetails: {
           tasksToAdd: 0,
           tasksToRemove: item.pendingTasks || item.pending_tasks,
@@ -61,7 +61,7 @@ export const requests = {
         ...opts,
 
         // TODO: remove. added due to a bug in the @tokend/js-sdk
-        requestDetails: opts,
+        requestDetails: JSON.stringify(opts),
       })
     })
     return ApiCallerFactory
@@ -178,20 +178,6 @@ export const requests = {
         include: ['request_details'],
       })
     return data
-  },
-
-  async getWithdrawalRequests ({ asset, state, requestor }) {
-    const filters = {}
-    if (asset) filters.dest_asset_code = asset
-    if (state) filters.state = state
-    if (requestor) filters.requestor = requestor
-
-    const response = await Sdk.horizon.request.getAllForWithdrawals({
-      order: 'desc',
-      limit: 1000,
-      ...filters,
-    })
-    return response
   },
 
   async getSaleCreateRequests ({ state, requestor }) {

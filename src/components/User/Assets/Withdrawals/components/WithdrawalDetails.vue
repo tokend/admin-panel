@@ -9,70 +9,45 @@
       </li>
       <li>
         <span>Request state</span>
-        <verbose-formatter :string="request.requestState" />
+        <verbose-formatter :string="request.state" />
       </li>
       <li>
         <span>Requestor</span>
-        <email-getter :account-id="request.requestor" is-titled />
+        <email-getter :account-id="request.requestor.id" is-titled />
       </li>
       <li>
         <span>Requestor id</span>
-        <span>{{ request.requestor }} </span>
+        <span>{{ request.requestor.id }} </span>
       </li>
       <li>
         <span>Receiver address</span>
-        <span :title="request.details.withdraw.creatorDetails.address">
-          {{ request.details.withdraw.creatorDetails.address }}
+        <span :title="request.requestDetails.creatorDetails.address">
+          {{ request.requestDetails.creatorDetails.address }}
         </span>
       </li>
-      <template v-if="request.details.withdraw.reviewerDetails">
-        <li>
-          <span>Hash</span>
-          <span :title="request.details.withdraw.reviewerDetails.hash">
-            {{ request.details.withdraw.reviewerDetails.hash }}
-          </span>
-        </li>
-        <li>
-          <span>Transaction</span>
-          <span :title="request.details.withdraw.reviewerDetails.tx">
-            {{ request.details.withdraw.reviewerDetails.tx }}
-          </span>
-        </li>
-      </template>
       <li>
         <span>Source amount</span>
         <asset-amount-formatter
-          :amount="request.details.withdraw.amount"
-          :asset="request.details.withdraw.destAssetCode"
-        />
-      </li>
-      <li>
-        <span>Destination amount</span>
-        <asset-amount-formatter
-          :amount="request.details.withdraw.destAssetAmount"
-          :asset="request.details.withdraw.destAssetCode"
+          :amount="request.requestDetails.amount"
         />
       </li>
       <li>
         <span>Fixed fee</span>
         <asset-amount-formatter
-          :amount="request.details.withdraw.fixedFee"
-          :asset="request.details.withdraw.destAssetCode"
+          :amount="request.requestDetails.fee.fixed"
         />
       </li>
       <li>
         <span>Percent fee</span>
         <asset-amount-formatter
-          :amount="request.details.withdraw.percentFee"
-          :asset="request.details.withdraw.destAssetCode"
+          :amount="request.requestDetails.fee.calculatedPercent"
         />
       </li>
       <li>
         <span>Total fee</span>
         <asset-amount-formatter
-          :amount="Number(request.details.withdraw.fixedFee) +
-            Number(request.details.withdraw.percentFee)"
-          :asset="request.details.withdraw.destAssetCode"
+          :amount="Number(request.requestDetails.fee.fixed) +
+            Number(request.requestDetails.fee.calculatedPercent)"
         />
       </li>
     </ul>
@@ -132,7 +107,7 @@ import Modal from '@comcom/modals/Modal'
 import { confirmAction } from '@/js/modals/confirmation_message'
 
 import api from '@/api'
-import { ASSET_POLICIES } from '@/constants'
+import { REQUEST_STATES } from '@/constants'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
@@ -157,15 +132,13 @@ export default {
       rejectForm: {
         reason: '',
       },
-      ASSET_POLICIES,
+      REQUEST_STATES,
     }
   },
 
   computed: {
     reviewAllowed () {
-      return this.assets
-        .find(item => item.code === this.request.details.withdraw.destAssetCode)
-        .policy & ASSET_POLICIES.withdrawable
+      return this.request.stateI === REQUEST_STATES.pending
     },
   },
 
