@@ -7,23 +7,60 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
-## [Unreleased]
+## [1.7.0-rc.2] - 2019-05-21
+### "Under the hood" changes
+#### Changed
+- Some DevOps changes
+
+## [1.7.0-rc.1] - 2019-05-21
+### "Under the hood" changes
+#### Changed
+- Now using @tokend/js-sdk@1.7.0-rc.1
+
+## [1.7.0-rc.0] - 2019-05-21
 #### Added
 - New "Capital deployment" fee type
-- "Unblocked" change role request detection in user operation list
-- Terms field in asset details
-- Sentry integration
-- Add link to pre-issuance guide
-- Show all the limits in one screen, "Not set" and "Unlimited" labels,
-  ability to remove limits and move `Limits.Manager` to v3 endpoint
+- New KYC verification queue feature for quick requests review
+- New links to pre-issuance guide on pre-issuance related pages
+- New Sentry error tracking integration
+- Displaying of "Unblocked" instead of "Change role request" in users operation
+  list if the request performed by an admin
+- Restored Terms field in asset details
+
+#### Changed
+- Limits management form:
+  - Merged "specific account" and "scoped" tabs
+  - Now showing "Not set" and "Unlimited" values accordingly
+  - Added limits removal button
+- Asset pair pages:
+  - Added help messages to asset pair forms
+  - Added "Physical price correction" and "Max price step" fields to asset pair
+    management form
+  - Now using custom confirmation message instead of the native one on asset
+    pair creation submit
 
 #### Fixed
-- Fixed a bug when we confirm a request for changes in limits,
-  at which we received empty values and could not confirm or cancel the request.
-- Displaying of US-related roles in KYC verification
-- Displaying of confirmation modal on the issuance form
-- Uploading documents on create asset form
-- Asset select in withdrawal list
+- Fixed a bug when we confirm a request for limits changes,
+  at which we received empty values and could not confirm or cancel the request
+- Fixed a bug with displaying of multiple overlayed confirmation modals on the
+  issuance form
+- Fixed uploading documents on create asset form
+- Displaying of US-related roles on KYC review
+- Displaying of asset filter on withdrawal list
+
+#### Removed
+- Removed "dev: " prefix from displayed version
+
+### "Under the hood" changes
+#### Added
+- "US Verified" & "US Accredited" roles to the `roleIdToString` filter
+- New "hash", "type", & "requestor" fields to `ChangeRoleRequest` wrapper
+- New PDF documents preview to the `UserDocGetter` component
+- New `help` prop to `<input-field>` and `<tick-field>`
+
+#### Changed
+- Now using @tokend/js-sdk@1.7.0-rc.0
+- Extracted change role request tasks manager to a separate component
 
 ## [1.6.0] - 2019-05-09
 ### "Under the hood" changes
@@ -226,7 +263,10 @@ for further information about branching and tagging conventions.
 
 ## [1.3.0] - 2019-03-01
 
-[Unreleased]: https://github.com/tokend/admin-panel/compare/1.6.0...HEAD
+[Unreleased]: https://github.com/tokend/admin-panel/compare/1.7.0-rc.2...HEAD
+[1.7.0-rc.2]: https://github.com/tokend/admin-panel/compare/1.7.0-rc.1...1.7.0-rc.2
+[1.7.0-rc.1]: https://github.com/tokend/admin-panel/compare/1.7.0-rc.0...1.7.0-rc.1
+[1.7.0-rc.0]: https://github.com/tokend/admin-panel/compare/1.6.0...1.7.0-rc.0
 [1.6.0]: https://github.com/tokend/admin-panel/compare/1.6.0-rc.1...1.6.0
 [1.6.0-rc.1]: https://github.com/tokend/admin-panel/compare/1.6.0-rc.0...1.6.0-rc.1
 [1.6.0-rc.0]: https://github.com/tokend/admin-panel/compare/1.5.0...1.6.0-rc.0

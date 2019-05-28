@@ -10,8 +10,25 @@
           Open file <mdi-open-in-new-icon class="user-doc-getter__ico" />
         </a>
       </div>
+
       <div v-if="href && isLoaded">
-        <img :src="href">
+        <img
+          v-if="isImage"
+          class="user-doc-getter__img"
+          :src="href"
+          alt=""
+        >
+
+        <embed
+          v-else-if="isPdf"
+          class="user-doc-getter__pdf"
+          type="application/pdf"
+          :src="href"
+        >
+
+        <p v-else>
+          No preview available
+        </p>
       </div>
       <span v-else-if="isNoFile">
         —
@@ -31,6 +48,20 @@ import LinkGetterMixin from './link_getter.mixin'
 
 export default {
   mixins: [LinkGetterMixin],
+
+  props: {
+    mimeType: { type: String, required: true },
+  },
+
+  computed: {
+    isPdf () {
+      return this.mimeType === 'application/pdf'
+    },
+
+    isImage () {
+      return this.mimeType.includes('image')
+    },
+  },
 }
 </script>
 
@@ -79,7 +110,7 @@ export default {
   fill: $color-active;
 }
 
-iframe, img {
+embed, img {
   border: none;
   width: 100%;
 }
@@ -87,7 +118,8 @@ iframe, img {
 img {
   height: auto;
 }
-iframe {
+
+embed {
   min-height: 400px;
   height: 100%;
 }

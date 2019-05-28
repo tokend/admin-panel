@@ -40,50 +40,94 @@
           :step="DEFAULT_INPUT_STEP"
           v-model="form.physicalPriceCorrection"
           :disabled="isPending"
-        />
+        >
+          <template slot="help">
+            <p class="asset-pair-creator__tip-message">
+              <span>
+                The correction of physical price in percents.
+                If physical price and restriction by physical price are set,
+                minimum price for this pair offer will be
+              </span>
+              <strong>physicalPrice * physicalPriceCorrection</strong>
+            </p>
+          </template>
+        </input-field>
+
         <input-field
           class="app__form-field"
-          label="Max price step"
+          label="Max price step (0-100%)"
           type="number"
           min="0"
+          max="100"
           :step="DEFAULT_INPUT_STEP"
           v-model="form.maxPriceStep"
           :disabled="isPending"
-        />
+        >
+          <template slot="help">
+            <p class="asset-pair-creator__tip-message">
+              <span>
+                Maximum offer price step in percents.
+                If current price restriction is set,
+                the users are allowed to set an offer with price in interval
+              </span>
+              <strong>(1 ± maxPriceStep) * currentPrice</strong>
+            </p>
+          </template>
+        </input-field>
       </div>
 
       <div class="asset-pair-creator__checkboxes">
-        <tick-field
-          class="asset-pair-creator__checkbox"
-          v-model="form.policies"
-          :disabled="isPending"
-          :required="false"
-          label="Is tradable"
-          title="Allowed to trade this pair on secondary market"
-          :cb-value="ASSET_PAIR_POLICIES.tradeableSecondaryMarket"
-        />
+        <div class="asset-pair-creator__checkbox">
+          <tick-field
+            v-model="form.policies"
+            :disabled="isPending"
+            :required="false"
+            label="Is tradable"
+            :cb-value="ASSET_PAIR_POLICIES.tradeableSecondaryMarket"
+          >
+            <template slot="help">
+              <span class="asset-pair-creator__tip-message">
+                Allowed to trade this pair on secondary market
+              </span>
+            </template>
+          </tick-field>
+        </div>
 
-        <!-- eslint-disable max-len -->
-        <tick-field
-          class="asset-pair-creator__checkbox"
-          v-model="form.policies"
-          :disabled="isPending"
-          :required="false"
-          label="Physical price restriction"
-          title="If set, then prices for new offers must be greater then physical price with correction"
-          :cb-value="ASSET_PAIR_POLICIES.physicalPriceRestriction"
-        />
+        <div class="asset-pair-creator__checkbox">
+          <tick-field
+            v-model="form.policies"
+            :disabled="isPending"
+            :required="false"
+            label="Physical price restriction"
+            :cb-value="ASSET_PAIR_POLICIES.physicalPriceRestriction"
+          >
+            <template slot="help">
+              <span class="asset-pair-creator__tip-message">
+                If set, then prices for new offers must be greater
+                than physical price with correction
+              </span>
+            </template>
+          </tick-field>
+        </div>
 
-        <tick-field
-          class="asset-pair-creator__checkbox"
-          v-model="form.policies"
-          :disabled="isPending"
-          :required="false"
-          label="Current price restriction"
-          title="If set, then price for new offers must be in interval of (1 +- maxPriceStep)*currentPrice"
-          :cb-value="ASSET_PAIR_POLICIES.currentPriceRestriction"
-        />
-        <!-- eslint-enable max-len -->
+        <div class="asset-pair-creator__checkbox">
+          <tick-field
+            v-model="form.policies"
+            :disabled="isPending"
+            :required="false"
+            label="Current price restriction"
+            :cb-value="ASSET_PAIR_POLICIES.currentPriceRestriction"
+          >
+            <template slot="help">
+              <p class="asset-pair-creator__tip-message">
+                <span>
+                  If set, then price for new offers must be in interval of
+                </span>
+                <strong>(1 ± maxPriceStep) * currentPrice</strong>
+              </p>
+            </template>
+          </tick-field>
+        </div>
       </div>
 
       <div class="app__form-actions">
@@ -98,10 +142,11 @@
 </template>
 
 <script>
-import { TickField, InputField } from '../../../../common/fields'
+import { TickField, InputField } from '@comcom/fields'
 
 import { ASSET_PAIR_POLICIES, DEFAULT_INPUT_STEP } from '../../../../../constants'
 import api from '@/api'
+import { confirmAction } from '@/js/modals/confirmation_message'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
@@ -127,7 +172,7 @@ export default {
 
   methods: {
     async submit () {
-      if (!window.confirm('Please confirm this action')) return
+      if (!await confirmAction()) return
       this.isPending = true
       try {
         await api.assets.createPair({
@@ -153,5 +198,10 @@ export default {
 
 .asset-pair-creator__checkbox {
   margin-bottom: 1rem;
+  display: flex;
+}
+
+.asset-pair-creator__tip-message {
+  min-width: 20rem;
 }
 </style>

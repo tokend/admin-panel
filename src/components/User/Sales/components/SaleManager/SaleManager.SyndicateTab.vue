@@ -44,6 +44,7 @@
               <user-doc-getter
                 class="sale-manager-corporate-tab__doc-view"
                 :file-key="kycAvatarKey"
+                :mime-type="kycAvatarMimeType"
               />
             </div>
           </li>
@@ -99,6 +100,10 @@ export default {
     kycAvatarKey () {
       return _get(this.corporate, 'documents.kyc_avatar.key')
     },
+
+    kycAvatarMimeType () {
+      return _get(this.corporate, 'documents.kyc_avatar.mime_type')
+    },
   },
 
   created () {
@@ -144,9 +149,3 @@ export default {
   },
 }
 </script>
-
-<style scoped lang="scss">
-.sale-manager-corporate-tab__details-wrp {
-  max-width: 48rem;
-}
-</style>

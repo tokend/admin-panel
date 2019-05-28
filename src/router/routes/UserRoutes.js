@@ -57,6 +57,13 @@ export const UserRoutes = {
             require(['../../components/User/KycRequests/KycRequests.Index.vue'], resolve)
           },
         },
+        {
+          path: 'queue',
+          name: 'kycRequests.queue',
+          component: function (resolve) {
+            require(['../../components/User/KycRequests/KycRequests.Queue.vue'], resolve)
+          },
+        },
       ],
     },
     {

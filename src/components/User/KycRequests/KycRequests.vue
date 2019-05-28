@@ -4,6 +4,9 @@
       <router-link :to="{ name: 'kycRequests.index' }" slot="nav">
         Index
       </router-link>
+      <router-link :to="{ name: 'kycRequests.queue' }" slot="nav">
+        Queue
+      </router-link>
     </user-header>
     <div class="app__user-container">
       <router-view />

@@ -1,6 +1,10 @@
 import { Sdk } from '@/sdk'
 
 export default {
+  props: {
+    fileKey: { type: String, default: '' },
+  },
+
   data () {
     return {
       href: '',
@@ -8,10 +12,6 @@ export default {
       isFailed: false,
       isNoFile: false,
     }
-  },
-
-  props: {
-    fileKey: { type: String, default: '' },
   },
 
   watch: {
