@@ -104,7 +104,8 @@
   -webkit-text-fill-color: $field-color-unfocused;
   color: $field-color-unfocused;
 
-  & ~ .input-field__label {
+  & ~ .input-field__label,
+  & ~ .input-field__hint {
     filter: grayscale(100%);
   }
 }
@@ -146,6 +147,14 @@
 .input-field__err-transition-leave-active {
   animation: input-field__err-transition-keyframes $field-transition-duration
   ease-in-out reverse;
+}
+
+.input-field__hints {
+  @include field-hints;
+
+  .input-field__input:not(:focus) ~ & {
+    @extend .input-field__hints--unfocused;
+  }
 }
 
 @keyframes input-field__err-transition-keyframes {

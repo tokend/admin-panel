@@ -14,6 +14,9 @@ for further information about branching and tagging conventions.
 - Postal code field in kyc request
 - Usage of Unix line endings rule
 - Vuelidate plugin for validating forms
+- Collected fees management page
+- Assets vuex module
+- Wrappers for assets and balances
 
 #### Changed
 - Align asset requests detail values to right side
@@ -32,6 +35,7 @@ for further information about branching and tagging conventions.
 - Show dash, if line 2 is not specified in kyc request
 - Terms field appearance in asset request
 - Error message styles on text field
+- Select field arrow position
 
 ## [1.7.0-rc.2] - 2019-05-21
 ### "Under the hood" changes

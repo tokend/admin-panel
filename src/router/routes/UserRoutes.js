@@ -409,6 +409,15 @@ export const UserRoutes = {
             require(['../../components/User/Fees/Fees.Index.vue'], resolve)
           },
         },
+        {
+          path: '/balances',
+          name: 'fees-balances.index',
+          component: function (resolve) {
+            require(
+              ['../../components/User/Fees/FeesBalances.Index.vue'], resolve
+            )
+          },
+        },
       ],
     },
 

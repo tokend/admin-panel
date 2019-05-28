@@ -50,9 +50,14 @@ export default {
 
   data: _ => ({
     email: '',
-    isMasterAccount: false,
     isLoading: false,
   }),
+
+  computed: {
+    isMasterAccount () {
+      return this.accountId === config.MASTER_ACCOUNT
+    },
+  },
 
   async created () {
     await this.init()
@@ -60,8 +65,7 @@ export default {
 
   methods: {
     async init () {
-      if (this.accountId === config.MASTER_ACCOUNT) {
-        this.isMasterAccount = true
+      if (this.isMasterAccount) {
         return
       }
 
