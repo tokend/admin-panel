@@ -6,15 +6,20 @@
       <div class="fees-balances__withdraw-form-wrp">
         <collected-fees-withdraw
           :ref="REFS.withdrawalForm"
+          @submitted="updateCollectedFees"
         />
       </div>
 
       <div class="fees-balances__list-wrp">
-        <collected-fees-list @on-item-clicked="passToWithdrawalForm($event)" />
+        <collected-fees-list
+          :ref="REFS.collectedFeesList"
+          @on-item-clicked="passToWithdrawalForm($event)" />
       </div>
 
       <div class="fees-balances__withdrawals-wrp">
-        <collected-fees-withdrawals />
+        <collected-fees-withdrawals
+          :ref="REFS.collectedFeesWithdrawals"
+        />
       </div>
     </template>
 
@@ -46,6 +51,8 @@ import { ErrorHandler } from '@/utils/ErrorHandler'
 
 const REFS = {
   withdrawalForm: 'withdrawalForm',
+  collectedFeesList: 'collectedFeesList',
+  collectedFeesWithdrawals: 'collectedFeesWithdrawals',
 }
 
 export default {
@@ -82,6 +89,20 @@ export default {
       this.$refs[REFS.withdrawalForm].setForm({
         balanceId: payload.balanceId,
         amount: payload.amount,
+      })
+      this.scrollTop()
+    },
+
+    updateCollectedFees () {
+      this.$refs[REFS.collectedFeesList].loadList()
+      this.$refs[REFS.collectedFeesWithdrawals].reloadWithdrawalsThrottled()
+    },
+
+    scrollTop () {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth',
       })
     },
   },

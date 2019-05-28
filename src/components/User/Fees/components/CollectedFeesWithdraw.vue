@@ -11,15 +11,17 @@
               v-model="form.balanceId"
               label="Asset"
               :disabled="isFormPending"
+              :error-message="isSelectedAssetWithdrawable
+                ? ''
+                : 'Asset is not withdrawable. Please, select another asset'"
             >
               <option
                 v-for="balance in masterBalances"
                 :value="balance.id"
                 :key="balance.id"
               >
-                {{ balance.asset.id }}
+                {{ balance.assetCode }}
               </option>
-              <!-- TODO: empty-text -->
             </select-field>
           </template>
 
@@ -127,7 +129,7 @@
         <div class="app__form-actions">
           <button
             class="app__btn collected-fees-withdraw__submit-btn"
-            :disabled="isFormPending"
+            :disabled="isFormPending || !isSelectedAssetWithdrawable"
           >
             Withdraw
           </button>
@@ -139,18 +141,28 @@
 
 <script>
 import Vue from 'vue'
+import { mapGetters, mapActions } from 'vuex'
+
 import InputField from '@comcom/fields/InputField'
 import SelectField from '@comcom/fields/SelectField'
 
 import { ApiCallerFactory } from '@/api-caller-factory'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { formatAssetAmount } from '@/utils/formatters'
+
 import { EmailGetter } from '@comcom/getters'
 import { AssetAmountFormatter } from '@comcom/formatters'
+import { confirmAction } from '@/js/modals/confirmation_message'
 
 import _pick from 'lodash/pick'
 import _throttle from 'lodash/throttle'
 import { FEE_TYPES, base } from '@tokend/js-sdk'
+
+import { Balance } from '@/store/wrappers/balance'
+
+const EVENTS = {
+  submitted: 'submitted',
+}
 
 export default {
   components: {
@@ -184,6 +196,10 @@ export default {
   },
 
   computed: {
+    ...mapGetters({
+      assetByCode: 'assetByCode',
+    }),
+
     selectedBalanceAttrs () {
       return ((this.masterBalances || [])
         .find(item => item.id === this.form.balanceId)) || {}
@@ -198,15 +214,20 @@ export default {
     },
 
     maxWithdrawalAmount () {
-      return (this.selectedBalanceAttrs.state || {}).available
+      return this.selectedBalanceAttrs.available
     },
 
     maxWithdrawalAmountHint () {
       const formatted = formatAssetAmount(
-        (this.selectedBalanceAttrs.state || {}).available,
-        (this.selectedBalanceAttrs.asset || {}).id,
+        this.selectedBalanceAttrs.available,
+        this.selectedBalanceAttrs.assetCode,
       )
       return `Max amount is ${formatted}`
+    },
+
+    isSelectedAssetWithdrawable () {
+      const asset = this.assetByCode(this.selectedBalanceAttrs.assetCode)
+      return asset && asset.isWithdrawable
     },
   },
 
@@ -220,11 +241,19 @@ export default {
     },
   },
 
-  created () {
-    this.loadMasterBalances()
+  async created () {
+    await this.loadMasterBalances()
+
+    if (this.masterBalances.length) {
+      this.form.balanceId = this.masterBalances[0].id
+    }
   },
 
   methods: {
+    ...mapActions({
+      loadAssets: 'LOAD_ASSETS',
+    }),
+
     async loadMasterBalances () {
       this.isMasterBalancesLoading = true
       this.isMasterBalancesFailed = false
@@ -236,11 +265,7 @@ export default {
             include: ['balances.state'],
           })
 
-        this.masterBalances = masterBalances
-
-        if (this.masterBalances.length) {
-          this.form.balanceId = masterBalances[0].state.id
-        }
+        this.masterBalances = masterBalances.map(b => new Balance(b))
       } catch (err) {
         ErrorHandler.processWithoutFeedback(err)
         this.isMasterBalancesFailed = true
@@ -251,6 +276,8 @@ export default {
     },
 
     async submit () {
+      if (!await confirmAction()) return
+
       this.isFormPending = true
       try {
         const operation = this.craftWithdrawalOperation()
@@ -261,6 +288,10 @@ export default {
         this.form.amount = ''
         this.form.meta = ''
         this.$store.dispatch('SET_INFO', 'Request created successfully')
+        this.$emit(EVENTS.submitted)
+
+        await this.loadAssets()
+        await this.loadMasterBalances()
       } catch (error) {
         ErrorHandler.process(error)
       }
@@ -271,7 +302,7 @@ export default {
       const opts = {
         balance: this.form.balanceId,
         amount: this.form.amount,
-        destAsset: this.selectedBalanceAttrs.asset.id,
+        destAsset: this.selectedBalanceAttrs.assetCode,
         creatorDetails: this.isMasterSelectedBalanceAsset
           ? { address: this.form.meta }
           : { comment: this.form.meta },
@@ -290,7 +321,7 @@ export default {
       this.isOpAttrsFailed = false
 
       try {
-        await this.loadReviewerAddress()
+        this.setReviewerAddress()
         await this.loadCalculatedFees()
       } catch (error) {
         ErrorHandler.process(error)
@@ -300,15 +331,9 @@ export default {
       this.isOpAttrsLoading = false
     },
 
-    async loadReviewerAddress () {
-      const assetCode = this.selectedBalanceAttrs.asset.id
-      const { data: asset } = await ApiCallerFactory
-        .createCallerInstance()
-        .getWithSignature(`/v3/assets/${assetCode}`, {
-          include: ['owner'],
-        })
-
-      this.opAttrs.reviewerAddress = ((asset || {}).owner || {}).id
+    async setReviewerAddress () {
+      const asset = this.assetByCode(this.selectedBalanceAttrs.assetCode)
+      this.opAttrs.reviewerAddress = (asset || {}).owner
     },
 
     async loadCalculatedFees () {
@@ -316,18 +341,17 @@ export default {
         return
       }
 
-      const assetCode = (this.selectedBalanceAttrs.asset || {}).id
       const { data: fees } = await ApiCallerFactory
         .createCallerInstance()
         .getWithSignature(
           `/v3/accounts/${Vue.params.MASTER_ACCOUNT}/calculated_fees`,
           {
-            asset: assetCode,
+            asset: this.selectedBalanceAttrs.assetCode,
             fee_type: FEE_TYPES.withdrawalFee,
             amount: this.form.amount,
           })
 
-      this.opAttrs.feeAssetCode = assetCode
+      this.opAttrs.feeAssetCode = this.selectedBalanceAttrs.assetCode
       this.opAttrs.fixedFee = fees.fixed
       this.opAttrs.percentFee = fees.calculatedPercent
     },

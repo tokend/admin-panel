@@ -13,6 +13,9 @@
           <span class="app-list__cell app-list__cell--right">
             Locked
           </span>
+          <span class="app-list__cell app-list__cell--right">
+            Withdrawable
+          </span>
         </div>
 
         <button
@@ -23,24 +26,33 @@
         >
           <span
             class="app-list__cell app-list__cell--important"
-            :title="balance.asset.id"
+            :title="balance.assetCode"
           >
-            {{ balance.asset.id }}
+            {{ balance.assetCode }}
           </span>
 
           <asset-amount-formatter
             class="app-list__cell app-list__cell--right"
             is-titled
-            :amount="balance.state.available"
-            :asset="balance.asset.id"
+            :amount="balance.available"
+            :asset="balance.assetCode"
           />
 
           <asset-amount-formatter
             class="app-list__cell app-list__cell--right"
             is-titled
-            :amount="balance.state.locked"
-            :asset="balance.asset.id"
+            :amount="balance.locked"
+            :asset="balance.assetCode"
           />
+
+          <span class="app-list__cell app-list__cell--right">
+            <template v-if="isAssetWithdrawable(balance.assetCode)">
+              Yes
+            </template>
+            <template v-else>
+              No
+            </template>
+          </span>
         </button>
       </template>
 
@@ -71,9 +83,14 @@
 
 <script>
 import Vue from 'vue'
+import { mapGetters } from 'vuex'
+
 import { AssetAmountFormatter } from '@comcom/formatters'
+
 import { ApiCallerFactory } from '@/api-caller-factory'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+
+import { Balance } from '@/store/wrappers/balance'
 
 const EVENTS = {
   onItemClicked: 'on-item-clicked',
@@ -92,6 +109,12 @@ export default {
     }
   },
 
+  computed: {
+    ...mapGetters({
+      assetByCode: 'assetByCode',
+    }),
+  },
+
   created () {
     this.loadList()
   },
@@ -107,7 +130,7 @@ export default {
             include: ['balances.state'],
           })
 
-        this.masterBalances = masterBalances
+        this.masterBalances = masterBalances.map(b => new Balance(b))
       } catch (err) {
         ErrorHandler.processWithoutFeedback(err)
         this.isFailed = true
@@ -119,8 +142,13 @@ export default {
     emitOnItemClicked (balance) {
       this.$emit(EVENTS.onItemClicked, {
         balanceId: balance.id,
-        amount: balance.state.available,
+        amount: balance.available,
       })
+    },
+
+    isAssetWithdrawable (assetCode) {
+      const asset = this.assetByCode(assetCode)
+      return asset && asset.isWithdrawable
     },
   },
 }

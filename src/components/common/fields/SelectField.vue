@@ -73,8 +73,8 @@ export default {
 
 .select-field__arrow {
   position: absolute;
-  bottom: calc(
-    50% - #{$field-input-padding-top} + #{$field-input-padding-bottom}
+  top: calc(
+    #{$field-text-font-size} / 2 + #{$field-input-padding-top}
   );
   right: $field-input-padding-bottom / 2;
   width: .6rem;
