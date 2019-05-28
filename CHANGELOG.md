@@ -20,6 +20,7 @@ for further information about branching and tagging conventions.
 
 #### Fixed
 - Show dash, if line 2 is not specified in kyc request
+- Terms field appearance in asset request
 
 ## [1.7.0-rc.2] - 2019-05-21
 ### "Under the hood" changes
