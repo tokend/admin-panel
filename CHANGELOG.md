@@ -49,6 +49,9 @@ for further information about branching and tagging conventions.
   - Now using custom confirmation message instead of the native one on asset
     pair creation submit
 
+#### Changed
+- Routing to UserDetails and OperationDetails pages from User and KYCRequest
+
 #### Fixed
 - Fixed a bug when we confirm a request for limits changes,
   at which we received empty values and could not confirm or cancel the request
