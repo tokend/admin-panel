@@ -20,10 +20,16 @@
     <label class="data-caption">
       Sale description
     </label>
-    <template v-if="isLoaded">
+    <template v-if="description">
       <div class="sale-manager-description-tab__description-wrp">
         <markdown-formatter :source="description" />
       </div>
+    </template>
+
+    <template v-else-if="isLoaded">
+      <p class="text">
+        (Not provided yet)
+      </p>
     </template>
 
     <template v-else-if="isFailed">
