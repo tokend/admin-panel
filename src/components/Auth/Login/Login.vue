@@ -11,14 +11,18 @@
       <form
         @submit.prevent="login"
         :id="`${_uid}-login-form`"
+        novalidate
       >
         <div class="app__form-row">
           <input-field
             class="app__form-field"
             id="login-field"
-            v-model.trim="credentials.username"
+            v-model.trim="form.username"
             label="Username"
             name="username"
+            @blur="touchField('form.username')"
+            :error-message="getFieldErrorMessage('form.username')"
+            :disabled="formMixin.isDisabled"
           />
         </div>
 
@@ -26,16 +30,19 @@
           <input-field
             class="app__form-field"
             type="password"
-            v-model.trim="credentials.password"
+            v-model.trim="form.password"
             label="Password"
             name="password"
+            @blur="touchField('form.password')"
+            :error-message="getFieldErrorMessage('form.password')"
+            :disabled="formMixin.isDisabled"
           />
         </div>
 
         <div class="app__form-actions">
           <button
             class="app__btn"
-            :disabled="buttonsDisabled"
+            :disabled="formMixin.isDisabled"
           >
             Sign in
           </button>
@@ -72,14 +79,17 @@ import Vue from 'vue'
 
 import GAuth from '../../settings/GAuth.vue'
 
-import InputField from '@comcom/fields/InputField'
+import FormMixin from '@/mixins/form.mixin'
 import config from '@/config'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
+import { required } from '@/validators'
+
 export default {
   name: 'login',
-  components: { GAuth, InputField },
+  components: { GAuth },
+  mixins: [FormMixin],
 
   data () {
     return {
@@ -87,23 +97,26 @@ export default {
       tfaDone: false,
       loginParams: {},
 
-      credentials: {
+      form: {
         username: '',
         password: '',
       },
       error: '',
-
       unsubscribe: null,
-
       buildVersion: config.BUILD_VERSION,
     }
   },
 
-  computed: {
-    buttonsDisabled () {
-      return this.$store.getters.showLoader
-    },
+  validations () {
+    return {
+      form: {
+        username: { required },
+        password: { required },
+      },
+    }
+  },
 
+  computed: {
     seedLoginEnabled () {
       return config.FEATURES.SEED_AUTH
     },
@@ -150,28 +163,30 @@ export default {
 
   methods: {
     async login () {
-      if (!this.validate()) return
+      if (!this.isFormValid()) return
 
+      this.disableForm()
       this.$store.commit('OPEN_LOADER')
 
       const params = {
-        username: this.credentials.username.toLowerCase(),
-        password: this.credentials.password,
+        username: this.form.username.toLowerCase(),
+        password: this.form.password,
       }
 
       try {
         const response = await Vue.auth.login(params)
+        this.enableForm()
         this.$store.commit('CLOSE_LOADER')
 
         if (!response.ok) {
-          this.credentials.password = ''
+          this.form.password = ''
           ErrorHandler.process(response.message)
           return
         }
 
         if (response.enabledTFA) {
           this.loginParams = response.loginParams
-          this.loginParams.username = this.credentials.username
+          this.loginParams.username = this.form.username
             .toLowerCase()
             .trim()
 
@@ -210,8 +225,8 @@ export default {
 
     refresh () {
       this.loginParams = {}
-      this.credentials.username = ''
-      this.credentials.password = ''
+      this.form.username = ''
+      this.form.password = ''
       this.state = 'login'
     },
 
@@ -223,19 +238,6 @@ export default {
         tfaToken,
         initiator: 'login',
       })
-    },
-
-    validate () {
-      this.error = ''
-      if (this.credentials.username === '') {
-        ErrorHandler.process('Username should not be empty')
-        return false
-      }
-      if (this.credentials.password === '') {
-        ErrorHandler.process('Password should not be empty')
-        return false
-      }
-      return true
     },
   },
 }

@@ -5,21 +5,27 @@
         Sign In With Seed
       </h2>
 
-      <form @submit.prevent="seedLogin">
+      <form
+        @submit.prevent="seedLogin"
+        novalidate
+      >
         <div class="app__form-row">
           <input-field
             class="app__form-field"
             type="password"
             v-model.trim="form.seed"
-            label="Seed"
             name="seed"
+            label="Seed"
+            @blur="touchField('form.seed')"
+            :error-message="getFieldErrorMessage('form.seed')"
+            :disabled="formMixin.isDisabled"
           />
         </div>
 
         <div class="app__form-actions">
           <button
             class="app__btn"
-            :disabled="form.pending"
+            :disabled="formMixin.isDisabled"
           >
             Sign in
           </button>
@@ -37,15 +43,18 @@
 
 <script>
 import Vue from 'vue'
+import FormMixin from '@/mixins/form.mixin'
 
-import { InputField } from '@comcom/fields'
-
-import { Sdk } from '@/sdk'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+
+import {
+  required,
+  seed,
+} from '@/validators'
 
 export default {
   name: 'seed-login',
-  components: { InputField },
+  mixins: [FormMixin],
 
   data () {
     return {
@@ -56,14 +65,19 @@ export default {
     }
   },
 
+  validations () {
+    return {
+      form: {
+        seed: { required, seed },
+      },
+    }
+  },
+
   methods: {
     async seedLogin () {
-      if (!Sdk.base.Keypair.isValidSecretKey(this.form.seed)) {
-        ErrorHandler.process('Invalid seed')
-        return
-      }
+      if (!this.isFormValid()) return
 
-      this.form.pending = true
+      this.disableForm()
       try {
         await Vue.auth.seedLogin(this.form.seed)
         this.$store.dispatch('LOG_IN')
@@ -71,7 +85,7 @@ export default {
       } catch (error) {
         ErrorHandler.process(error)
       }
-      this.form.pending = false
+      this.enableForm()
     },
   },
 }
