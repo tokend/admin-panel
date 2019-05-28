@@ -16,6 +16,7 @@ for further information about branching and tagging conventions.
 #### Changed
 - Align asset requests detail values to right side
 - Add datetime filter to kyc user's birthdate
+- Web client url in config changed to localhost:8060
 
 #### Fixed
 - Show dash, if line 2 is not specified in kyc request
