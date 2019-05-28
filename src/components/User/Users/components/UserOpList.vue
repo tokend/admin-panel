@@ -26,24 +26,37 @@
         </span>
       </div>
 
-      <button
+      <router-link
         class="app-list__li"
         v-for="item in records"
         :key="item.id"
-        @click="$emit('op-select', item)">
-        <span class="app-list__cell" :title="item.operationType">
+        :to="{
+          name: 'users.operationDetails',
+          params: { operationId: item.id }
+        }"
+      >
+        <span
+          class="app-list__cell"
+          :title="item.operationType"
+        >
           {{ getOperationType(item) }}
         </span>
-        <span class="app-list__cell" :title="item.appliedAt">
+        <span
+          class="app-list__cell"
+          :title="item.appliedAt"
+        >
           {{ item.appliedAt }}
         </span>
-        <span class="app-list__cell" :title="item.sourceAccount">
+        <span
+          class="app-list__cell"
+          :title="item.sourceAccount"
+        >
           {{ item.sourceAccount }}
         </span>
         <span class="app-list__cell">
           <operation-counterparty :operation="item" />
         </span>
-      </button>
+      </router-link>
     </ul>
 
     <template v-else>
@@ -76,7 +89,6 @@ import { CollectionLoader } from '@/components/common'
 
 import { ApiCallerFactory } from '@/api-caller-factory'
 
-import { formatAssetAmount } from '@/utils/formatters'
 import { clearObject } from '@/utils/clearObject'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
@@ -94,7 +106,6 @@ export default {
 
   data () {
     return {
-      formatAssetAmount,
       list: [],
       masterPubKey: Vue.params.MASTER_ACCOUNT,
       isLoading: false,
