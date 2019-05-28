@@ -25,13 +25,13 @@ for further information about branching and tagging conventions.
 - Extracted limits updating to a separate form
 - Now using $attrs property for input field proxies
 
+#### Removed
+- Vee-validate plugin
+
 #### Fixed
 - Show dash, if line 2 is not specified in kyc request
 - Terms field appearance in asset request
 - Error message styles on text field
-
-### Removed
-- Vee-validate plugin
 
 ## [1.7.0-rc.2] - 2019-05-21
 ### "Under the hood" changes
