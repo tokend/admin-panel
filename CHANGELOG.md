@@ -14,6 +14,11 @@ for further information about branching and tagging conventions.
 
 #### Changed
 - Align asset requests detail values to right side
+- Postal code field in kyc request
+- Add datetime filter to kyc user's birthdate
+
+#### Fixed
+- Show dash, if line 2 is not specified in kyc request
 
 ## [1.7.0-rc.2] - 2019-05-21
 ### "Under the hood" changes
@@ -44,7 +49,11 @@ for further information about branching and tagging conventions.
   - Added help messages to asset pair forms
   - Added "Physical price correction" and "Max price step" fields to asset pair
     management form
+  - Now using custom confirmation message instead of the native one on asset
+    pair creation submit
 
+#### Changed
+- Routing to UserDetails and OperationDetails pages from User and KYCRequest
 
 #### Fixed
 - Fixed a bug when we confirm a request for limits changes,
@@ -54,10 +63,6 @@ for further information about branching and tagging conventions.
 - Fixed uploading documents on create asset form
 - Displaying of US-related roles on KYC review
 - Displaying of asset filter on withdrawal list
-
-#### Updated
-- Extracted change role request tasks manager to a separate component
-- Replace window.confirm with 'confirm-action' compononent
 
 #### Removed
 - Removed "dev: " prefix from displayed version
@@ -71,6 +76,7 @@ for further information about branching and tagging conventions.
 
 #### Changed
 - Now using @tokend/js-sdk@1.7.0-rc.0
+- Extracted change role request tasks manager to a separate component
 
 ## [1.6.0] - 2019-05-09
 ### "Under the hood" changes
