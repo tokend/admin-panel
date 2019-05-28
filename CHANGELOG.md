@@ -11,10 +11,10 @@ for further information about branching and tagging conventions.
 #### Added
 - Security asset type to config
 - Security asset type string to assetTypeToString filter
+- Postal code field in kyc request
 
 #### Changed
 - Align asset requests detail values to right side
-- Postal code field in kyc request
 - Add datetime filter to kyc user's birthdate
 
 #### Fixed
