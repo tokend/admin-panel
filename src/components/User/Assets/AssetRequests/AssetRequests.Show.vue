@@ -371,6 +371,7 @@ export default {
   max-width: 24rem;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-align: right;
 }
 
 .asset-requests-show__buttons {
