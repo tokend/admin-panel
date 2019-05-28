@@ -9,7 +9,12 @@ for further information about branching and tagging conventions.
 
 ## [Unreleased]
 #### Added
-- Add collected fees page
+- Collected fees management page
+- Assets vuex module
+- Wrappers for assets and balances
+
+#### Fixed
+- Select field arrow position
 
 ## [1.7.0-rc.2] - 2019-05-21
 ### "Under the hood" changes
