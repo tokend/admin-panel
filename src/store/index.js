@@ -10,6 +10,7 @@ import plugins from './plugins'
 import idleHandler from './modules/idle-handler'
 import loader from './modules/loader'
 import tfa from './modules/tfa'
+import assets from './modules/assets'
 import { emailBooks } from './modules/email-books'
 
 Vue.use(Vuex)
@@ -25,6 +26,7 @@ const store = new Vuex.Store({
     loader,
     tfa,
     emailBooks,
+    assets,
   },
 })
 
