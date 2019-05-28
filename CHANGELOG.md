@@ -12,6 +12,7 @@ for further information about branching and tagging conventions.
 - Security asset type to config
 - Security asset type string to assetTypeToString filter
 - Postal code field in kyc request
+- Usage of Unix line endings rule
 
 #### Changed
 - Align asset requests detail values to right side
