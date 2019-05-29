@@ -1,10 +1,8 @@
 <template>
-  <div class="pending-participants">
-    <h2>Pending deals</h2>
-
-    <div class="pending-participants__filters">
+  <div class="participants">
+    <div class="participants__filters">
       <select-field
-        class="pending-participants__filter"
+        class="participants__filter"
         v-model="filters.quoteAsset"
         label="Quote asset">
         <template v-if="get(sale, 'quoteAssets', []).length">
@@ -26,26 +24,24 @@
     </div>
 
     <template v-if="isLoaded && participants.length">
-      <table class="pending-participants__table">
+      <table class="participants__table">
         <thead>
           <tr>
             <th>Investor</th>
             <th>Invested at</th>
             <th>{{ filters.quoteAsset }} invested</th>
-            <th>{{ sale.baseAsset.id }} acquired</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(participant, index) in participants" :key="index">
-            <td><email-getter :account-id="participant.ownerId" /></td>
+          <tr v-for="(item, index) in participants" :key="index">
+            <td><email-getter :account-id="item.participant.id" /></td>
             <td>
               <date-formatter
-                :date="participant.createdAt"
+                :date="item.createdAt"
                 format="DD MMM YYYY HH:mm:ss"
               />
             </td>
-            <td>{{ participant.quoteAmount }}</td>
-            <td>{{ participant.baseAmount }}</td>
+            <td>{{ item.amount }}</td>
           </tr>
         </tbody>
       </table>
@@ -114,19 +110,14 @@ export default {
     get,
 
     async getParticipants () {
-      this.isLoaded = false
-      this.isFailed = false
-
-      const { id, baseAsset } = this.sale
-      const quoteAsset = this.filters.quoteAsset
-
       try {
-        // TODO: No ownerId property for orderBook yet
-        const orderBookId = `${baseAsset.id}:${quoteAsset}:${id}`
+        const endpoint = `/v3/sales/${this.sale.id}/relationships/participation`
         const { data } = await ApiCallerFactory
           .createCallerInstance()
-          .getWithSignature(`/v3/order_books/${orderBookId}`, {
-            include: ['buy_entries', 'base_asset'],
+          .getWithSignature(endpoint, {
+            filter: {
+              'quote_asset': this.filters.quoteAsset,
+            },
           })
         this.participants = data
         this.isLoaded = true
@@ -141,7 +132,7 @@ export default {
 <style scoped lang="scss">
 $side-padding: 0.8rem;
 
-.pending-participants__table {
+.participants__table {
   width: calc(100% + #{$side-padding} * 2);
   margin: 0 -$side-padding 0 -$side-padding;
   font-size: 1.6rem;
@@ -174,12 +165,12 @@ $side-padding: 0.8rem;
   }
 }
 
-.pending-participants__filters {
+.participants__filters {
   margin-top: -2.5rem;
   margin-bottom: 3rem;
   display: flex;
 
-  & > .pending-participants__filter {
+  & > .participants__filter {
     flex: 1;
     max-width: 20rem;
   }

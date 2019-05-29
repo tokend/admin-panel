@@ -20,10 +20,6 @@
           <tab name="Corporate user">
             <syndicate-tab :sale="sale" />
           </tab>
-
-          <tab name="Updates">
-            <updates-tab :sale="sale" />
-          </tab>
         </tabs>
       </template>
 
@@ -49,7 +45,6 @@ import DetailsTab from './SaleManager.DetailsTab'
 import DescriptionTab from './SaleManager.DescriptionTab'
 import ParticipantsTab from './SaleManager.ParticipantsTab'
 import SyndicateTab from './SaleManager.SyndicateTab'
-import UpdatesTab from './SaleManager.UpdatesTab'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { ApiCallerFactory } from '@/api-caller-factory'
@@ -62,7 +57,6 @@ export default {
     DescriptionTab,
     ParticipantsTab,
     SyndicateTab,
-    UpdatesTab,
   },
 
   props: {
