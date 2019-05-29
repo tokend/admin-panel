@@ -126,6 +126,7 @@ import {
 } from '@/constants'
 
 import 'mdi-vue/ArrowUpIcon'
+import { ApiCallerFactory } from '@/api-caller-factory'
 
 const EVENTS = {
   feeUpdated: 'fee-updated',
@@ -233,7 +234,9 @@ export default {
         }
         const operation = Sdk.base.Operation.setFees(opts)
 
-        await Sdk.horizon.transactions.submitOperations(operation)
+        await ApiCallerFactory
+          .createCallerInstance()
+          .postOperations(operation)
         this.$store.dispatch('SET_INFO', 'Submitted successfully')
         this.$emit(EVENTS.feeUpdated)
       } catch (error) {

@@ -56,12 +56,11 @@
           class="app__form-field"
           label="Asset code"
           v-model="asset.id"
-          v-validate="'required|alpha_num|max:16'"
           :disabled="isExistingAsset || formMixin.isDisabled"
           name="asset-code"
-          @blur="touchField('asset.code')"
+          @blur="touchField('asset.id')"
           :error-message="getFieldErrorMessage(
-            'asset.code',
+            'asset.id',
             { maxLength: ASSET_CODE_MAX_LENGTH }
           )"
         />
@@ -72,7 +71,6 @@
           class="app__form-field"
           label="Issuer public key"
           v-model="asset.preissuedAssetSigner"
-          v-validate="'required|alpha_num'"
           :disabled="isExistingAsset || formMixin.isDisabled"
           name="issuer-key"
           @blur="touchField('asset.preissuedAssetSigner')"
@@ -155,8 +153,8 @@
           v-model="asset.type"
           :disabled="isExistingAsset || formMixin.isDisabled"
           name="asset-type"
-          @blur="touchField('asset.assetType')"
-          :error-message="getFieldErrorMessage('asset.assetType')"
+          @blur="touchField('asset.type')"
+          :error-message="getFieldErrorMessage('asset.type')"
         >
           <option :value="ASSET_TYPES.default">
             Default
@@ -434,7 +432,7 @@ export default {
           minValue: minValue(0),
           maxValue: maxValue(6),
         },
-        assetType: { required },
+        type: { required },
         creatorDetails: {
           name: {
             required,

@@ -163,7 +163,7 @@ export default {
           })
         this.assets = data
       } catch (error) {
-        this.$store.dispatch('SET_ERROR', 'Cannot load asset list. Please reload the page')
+        ErrorHandler.processWithoutFeedback(error)
       }
       this.$store.commit('CLOSE_LOADER')
     },

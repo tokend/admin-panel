@@ -46,6 +46,9 @@
             alt="Asset logo"
           />
         </template>
+        <template v-else>
+          &mdash;
+        </template>
       </div>
       <div class="asset-requests-show__row">
         <span class="asset-requests-show__key">
@@ -156,14 +159,20 @@
           Terms
         </span>
         <span class="asset-requests-show__value">
-          <user-doc-link-getter
-            :file-key="safeGet(
-              assetRequest,
-              'operationDetails.details.terms.key'
+          <template
+            v-if="safeGet(
+              assetRequest, 'operationDetails.creatorDetails.terms.key'
             )"
           >
-            Open file
-          </user-doc-link-getter>
+            <user-doc-link-getter
+              :file-key="assetRequest.operationDetails.creatorDetails.terms.key"
+            >
+              Open file
+            </user-doc-link-getter>
+          </template>
+          <template v-else>
+            &mdash;
+          </template>
         </span>
       </div>
 
