@@ -8,6 +8,7 @@
       <form
         @submit.prevent="submit"
         id="admin-manager-form"
+        novalidate
       >
         <div class="admin-manager__short-section">
           <div class="app__form-row">
@@ -15,8 +16,9 @@
               class="app__form-field"
               label="Account ID"
               v-model="form.accountId"
-              :error-message="formErrors.accountId.message"
-              :disabled="!addNew || isPending"
+              :disabled="!addNew || formMixin.isDisabled"
+              @blur="touchField('form.accountId')"
+              :error-message="getFieldErrorMessage('form.accountId')"
             />
           </div>
 
@@ -25,7 +27,9 @@
               class="app__form-field"
               label="Name"
               v-model="form.name"
-              :disabled="isMaster || isPending"
+              :disabled="isMaster || formMixin.isDisabled"
+              @blur="touchField('form.name')"
+              :error-message="getFieldErrorMessage('form.name')"
             />
           </div>
 
@@ -37,7 +41,12 @@
               min="0"
               max="255"
               v-model="form.identity"
-              :disabled="isMaster || isPending"
+              :disabled="isMaster || formMixin.isDisabled"
+              @blur="touchField('form.identity')"
+              :error-message="getFieldErrorMessage(
+                'form.identity',
+                { minValue: 0, maxValue: 255 }
+              )"
             />
 
             <input-field
@@ -47,7 +56,12 @@
               min="1"
               max="1000"
               v-model="form.weight"
-              :disabled="isMaster || isPending"
+              :disabled="isMaster || formMixin.isDisabled"
+              @blur="touchField('form.weight')"
+              :error-message="getFieldErrorMessage(
+                'form.weight',
+                { minValue: 1, maxValue: 1000 }
+              )"
             />
           </div>
 
@@ -60,7 +74,9 @@
                 class="app__form-field"
                 label="Signer role"
                 v-model="form.signerRoleId"
-                :disabled="isMaster || isPending"
+                :disabled="isMaster || formMixin.isDisabled"
+                @blur="touchField('form.signerRoleId')"
+                :error-message="getFieldErrorMessage('form.signerRoleId')"
               >
                 <option
                   v-for="item in signerRoles"
@@ -77,7 +93,7 @@
                   class="admin-manager__role-description"
                   :class="{
                     'admin-manager__role-description--grayscale':
-                      isMaster || isPending
+                      isMaster || formMixin.isDisabled
                   }"
                 >
                   {{ form.signerRoleId | deriveRoleDescription(signerRoles) }}
@@ -92,14 +108,14 @@
         <button
           class="app__btn"
           form="admin-manager-form"
-          :disabled="isPending"
+          :disabled="isMaster || formMixin.isDisabled"
         >
           {{ addNew ? 'Add' : 'Update' }}
         </button>
 
         <button
           class="app__btn-secondary app__btn-secondary--danger"
-          :disabled="isPending"
+          :disabled="isMaster || formMixin.isDisabled"
           @click="deleteAdmin"
           v-if="!addNew"
         >
@@ -113,8 +129,8 @@
 <script>
 import Vue from 'vue'
 
-import InputField from '@comcom/fields/InputField'
-import SelectField from '@comcom/fields/SelectField'
+import FormMixin from '@/mixins/form.mixin'
+import { required, minValue, maxValue, accountId } from '@/validators'
 
 import { confirmAction } from '@/js/modals/confirmation_message'
 
@@ -128,16 +144,13 @@ const MASTER_ROLE_ID = 1
 export default {
   name: 'admin-manager',
 
-  components: {
-    InputField,
-    SelectField,
-  },
-
   filters: {
     deriveRoleDescription (roleId, signerRoles = []) {
       return (signerRoles.find(item => +item.id === +roleId) || {}).description
     },
   },
+
+  mixins: [FormMixin],
 
   props: {
     id: { type: String, default: '' },
@@ -148,8 +161,8 @@ export default {
       form: {
         accountId: '',
         name: '',
-        weight: '',
         identity: '',
+        weight: '',
         signerRoleId: '',
       },
 
@@ -160,13 +173,28 @@ export default {
 
       signerRoles: [],
 
-      formErrors: {
-        accountId: { error: false, message: '' },
-      },
-
       masterPubKey: Vue.params.MASTER_ACCOUNT,
       MASTER_ROLE_ID,
-      isPending: false,
+    }
+  },
+
+  validations () {
+    return {
+      form: {
+        accountId: { required, accountId },
+        name: { required },
+        identity: {
+          required,
+          minValue: minValue(0),
+          maxValue: maxValue(255),
+        },
+        weight: {
+          required,
+          minValue: minValue(1),
+          maxValue: maxValue(1000),
+        },
+        signerRoleId: { required },
+      },
     }
   },
 
@@ -246,7 +274,7 @@ export default {
     },
 
     async submit () {
-      if (!this.validate()) return
+      if (!this.isFormValid()) return
       if (!await confirmAction()) return
 
       return this.addNew
@@ -270,7 +298,7 @@ export default {
     },
 
     async submitTx (operationConstructor) {
-      this.isPending = true
+      this.disableForm()
       this.$store.commit('OPEN_LOADER')
 
       try {
@@ -286,7 +314,7 @@ export default {
         ErrorHandler.process(error)
       }
 
-      this.isPending = false
+      this.enableForm()
       this.$store.commit('CLOSE_LOADER')
     },
 
@@ -298,18 +326,6 @@ export default {
         identity: this.form.identity,
         details: { name: this.form.name },
       }
-    },
-
-    validate () {
-      let valid = true
-      this.formErrors.accountId.message = ''
-
-      if (!Sdk.base.Keypair.isValidPublicKey(this.form.accountId)) {
-        this.formErrors.accountId.message = 'Enter a valid account address'
-        valid = false
-      }
-
-      return valid
     },
   },
 }

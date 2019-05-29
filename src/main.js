@@ -10,14 +10,11 @@ import './assets/style/app.scss'
 /* App component */
 import App from './components/App/App.vue'
 
-import moment from 'moment'
-import { Sdk } from '@/sdk'
-
 /* Vue plugins */
 import Auth from './auth'
 import api from './api'
 import params from './config'
-import VeeValidate, { Validator } from 'vee-validate'
+import Vuelidate from 'vuelidate'
 
 /* Error tracker util */
 import { ErrorTracker } from '@/utils/ErrorTracker'
@@ -73,15 +70,9 @@ new Vue({
   template: '<App/>',
 }).$mount('#app')
 
-Validator.installDateTimeValidators(moment)
-Validator.extend('accountId', {
-  getMessage: field => 'The ' + field + ' invalid.',
-  validate: value => Sdk.base.Keypair.isValidPublicKey(value),
-})
-
 Vue.use(Auth)
 Vue.use(params)
-Vue.use(VeeValidate)
+Vue.use(Vuelidate)
 Vue.use(api)
 
 Vue.filter('dateTime', filterDateWithTime)

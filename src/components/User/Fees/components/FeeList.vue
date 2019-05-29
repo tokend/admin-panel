@@ -166,98 +166,14 @@
           <li
             class="app-list__li"
             v-for="(item, id) in fees"
-            :key="id">
-            <form
-              class="fee-list__li--hidden-form"
-              @submit.prevent="updateFee(item)"
-              :id="`fee-list-form-${id}`"
+            :key="id"
+          >
+            <fee-form
+              :fee="item"
+              :account-id="requestFilters.account_id"
+              :account-role="requestFilters.account_type"
+              @fee-updated="loadFees"
             />
-
-            <span class="app-list__cell fee-list__cell">
-              <input-field
-                type="number"
-                min="0"
-                :step="DEFAULT_INPUT_STEP"
-                :form="`fee-list-form-${id}`"
-                :disabled="isSubmitting || item.exists"
-                v-model="item.lowerBound"
-              />
-            </span>
-
-            <span class="app-list__cell fee-list__cell">
-              <input-field
-                type="number"
-                min="0"
-                :max="DEFAULT_MAX_AMOUNT"
-                :step="DEFAULT_INPUT_STEP"
-                :form="`fee-list-form-${id}`"
-                :disabled="isSubmitting || item.exists"
-                v-model="item.upperBound"
-              />
-              <button
-                class="fee-list__btn-max"
-                @click="item.upperBound = DEFAULT_MAX_AMOUNT"
-                v-if="!item.exists"
-                :disabled="isSubmitting"
-              >
-                <mdi-arrow-up-icon />
-              </button>
-            </span>
-
-            <span class="app-list__cell fee-list__cell">
-              <input-field
-                type="number"
-                min="0"
-                max="100"
-                :step="DEFAULT_INPUT_STEP"
-                :form="`fee-list-form-${id}`"
-                :disabled="isSubmitting"
-                v-model="item.percent"
-              />
-            </span>
-
-            <span
-              class="app-list__cell fee-list__cell"
-              v-if="+filters.feeType !== FEE_TYPES.offerFee &&
-                +filters.feeType !== FEE_TYPES.capitalDeploymentFee">
-              <input-field
-                type="number"
-                min="0"
-                :step="DEFAULT_INPUT_STEP"
-                :form="`fee-list-form-${id}`"
-                :disabled="isSubmitting"
-                v-model="item.fixed"
-              />
-            </span>
-
-            <span class="app-list__cell fee-list__cell">
-              <template v-if="item.exists">
-                <button
-                  class="app__btn app__btn--small"
-                  :form="`fee-list-form-${id}`"
-                  :disabled="isSubmitting"
-                >
-                  Update
-                </button>
-                <button
-                  class="app__btn app__btn--small app__btn--danger"
-                  :disabled="isSubmitting"
-                  @click="deleteFee(item)"
-                >
-                  Delete
-                </button>
-              </template>
-
-              <template v-else>
-                <button
-                  class="app__btn app__btn--small"
-                  :form="`fee-list-form-${id}`"
-                  :disabled="isSubmitting"
-                >
-                  Create
-                </button>
-              </template>
-            </span>
           </li>
         </ul>
       </template>
@@ -267,7 +183,7 @@
 
 <script>
 import { SelectField, InputField } from '@comcom/fields'
-import { confirmAction } from '@/js/modals/confirmation_message'
+import FeeForm from './FeeForm'
 
 import api from '@/api'
 import { Sdk } from '@/sdk'
@@ -275,14 +191,11 @@ import { Sdk } from '@/sdk'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import config from '@/config'
 
-import { xdrTypeFromValue } from '@/utils/xdrTypeFromValue'
 import throttle from 'lodash/throttle'
 import { ApiCallerFactory } from '@/api-caller-factory'
 
 import {
   ASSET_POLICIES,
-  DEFAULT_MAX_AMOUNT,
-  DEFAULT_INPUT_STEP,
   FEE_TYPES,
   PAYMENT_FEE_TYPES,
   DEFAULT_BASE_ASSET,
@@ -310,6 +223,7 @@ export default {
   components: {
     SelectField,
     InputField,
+    FeeForm,
   },
 
   data () {
@@ -317,8 +231,6 @@ export default {
       SCOPE_TYPES,
       FEE_TYPES,
       ACCOUNT_ROLES: config.ACCOUNT_ROLES,
-      DEFAULT_MAX_AMOUNT,
-      DEFAULT_INPUT_STEP,
       PAYMENT_FEE_TYPES,
 
       assets: [{ id: DEFAULT_BASE_ASSET }],
@@ -389,14 +301,12 @@ export default {
 
     'filters.scope': function (newValue) {
       if (!(newValue === SCOPE_TYPES.account && !this.filters.accountAddress)) {
-        this.fees = {}
-        this.getFees()
+        this.loadFees()
       }
     },
 
     'filters.accountRole': function () {
-      this.fees = {}
-      this.getFees()
+      this.loadFees()
     },
 
     'filters.assetCode': function () {
@@ -406,8 +316,7 @@ export default {
 
     'filters.accountAddress': function (newValue) {
       if (newValue) {
-        this.fees = {}
-        this.getFees()
+        this.loadFees()
       }
     },
 
@@ -482,7 +391,8 @@ export default {
       }
     },
 
-    async getFees () {
+    async loadFees () {
+      this.fees = {}
       try {
         const filters = this.composeRequestFilters(this.filters)
         const { data } = await ApiCallerFactory
@@ -508,70 +418,14 @@ export default {
     },
 
     async updateFee (fees) {
-      if (!await confirmAction()) return
-
-      const additionalParams = this.composeRequestFilters(this.filters)
-
-      if (+fees.lowerBound > +fees.upperBound) {
-        ErrorHandler.process('Lower bound should be less or equal to Upper bound')
-        return false
-      }
-
-      this.isSubmitting = true
-      try {
-        const opts = {
-          fee: {
-            feeType: xdrTypeFromValue('FeeType', Number(fees.feeType)),
-            subtype: String(fees.subtype) || '0',
-            asset: String(fees.asset),
-            fixedFee: String(fees.fixed),
-            percentFee: String(fees.percent),
-            accountId: additionalParams.account,
-            accountRole: additionalParams.account_role
-              ? String(additionalParams.account_role)
-              : undefined,
-            lowerBound: String(fees.lowerBound),
-            upperBound: String(fees.upperBound),
-          },
-          isDelete: fees.isDelete,
-        }
-        const operation = Sdk.base.Operation.setFees(opts)
-
-        await await ApiCallerFactory
-          .createCallerInstance()
-          .postOperations(operation)
-        await this.getFees()
-        this.$store.dispatch('SET_INFO', 'Submitted successfully')
-      } catch (error) {
-        this.isSubmitting = false
-        ErrorHandler.process(error)
-      }
-      this.isSubmitting = false
-    },
-
-    async deleteFee (fee) {
-      if (!await confirmAction({ title: 'Delete the fee rule?' })) return
-      fee.isDelete = true
-      return this.updateFee(Object.assign({}, fee, { isDelete: true }))
+      await this.loadFees()
     },
   },
 }
 </script>
 
-<style>
-.fee-list__cell > .input-field > .input-field__label,
-.fee-list__cell > .select-field > .select-field__label {
-  display: none;
-}
-
-.fee-list__cell > .input-field > .input-field__input,
-.fee-list__cell > .select-field > .select-field__select {
-  padding-top: 0.7rem;
-}
-</style>
-
 <style scoped lang="scss">
-@import "../../../../assets/scss/colors";
+@import "~@/assets/scss/colors";
 
 .fee-list__filters-wrp {
   margin-bottom: 4rem;
@@ -590,45 +444,5 @@ export default {
 .fee-list__filter {
   width: calc(33.333333% - 2rem);
   margin: 1rem;
-}
-
-.fee-list__cell.app-list__cell {
-  display: inline-flex;
-  align-items: stretch;
-
-  & > .app__btn.app__btn--small {
-    padding: 0;
-    min-width: inherit;
-  }
-
-  & > .app__btn + .app__btn {
-    margin-left: 1rem;
-  }
-}
-
-.fee-list__li--hidden-form {
-  flex: 0;
-  opacity: 0;
-}
-
-.fee-list__btn-max {
-  display: flex;
-  justify-content: center;
-  min-width: 2rem;
-
-  &:enabled:hover {
-    opacity: 0.8;
-    cursor: pointer;
-  }
-
-  & > svg {
-    width: 1.8rem;
-    height: 1.8rem;
-  }
-
-  &:disabled {
-    fill: $color-unfocused;
-    cursor: default;
-  }
 }
 </style>

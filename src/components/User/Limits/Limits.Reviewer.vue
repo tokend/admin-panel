@@ -178,7 +178,8 @@
       <form
         class="limits-reviewer__reject-form"
         id="limits-reviewer__reject-form"
-        @submit.prevent="hideRejectModal() || rejectRequest()"
+        @submit.prevent="rejectRequest"
+        novalidate
       >
         <div class="app__form-row">
           <text-field
@@ -186,6 +187,11 @@
             class="limits-reviewer__reject-form-textfield"
             :autofocus="true"
             v-model="rejectForm.reason"
+            @blur="touchField('rejectForm.reason')"
+            :error-message="getFieldErrorMessage(
+              'rejectForm.reason',
+              { maxLength: REJECT_REASON_MAX_LENGTH }
+            )"
           />
         </div>
       </form>
@@ -208,7 +214,8 @@
 </template>
 
 <script>
-import { TextField } from '@comcom/fields'
+import FormMixin from '@/mixins/form.mixin'
+import { required, maxLength } from '@/validators'
 
 import { EmailGetter } from '@comcom/getters'
 import Detail from '../../common/details/Detail.Row'
@@ -257,17 +264,19 @@ const OPERATION_TYPES = {
   withdraw: 'withdraw',
 }
 
+const REJECT_REASON_MAX_LENGTH = 255
+
 export default {
   components: {
     Detail,
     Modal,
-    TextField,
     DatalistField,
     UserDetails,
     UserLimits,
     UploadedDocsList,
     EmailGetter,
   },
+  mixins: [FormMixin],
 
   props: {
     id: { type: String, required: true },
@@ -285,6 +294,7 @@ export default {
     REQUEST_STATES,
     DOCUMENT_TYPES_STR,
     LIMITS_REQUEST_STATES_STR,
+    REJECT_REASON_MAX_LENGTH,
     uploadDocs: [
       {
         label: '',
@@ -297,6 +307,18 @@ export default {
       isReset: false,
     },
   }),
+
+  validations () {
+    return {
+      rejectForm: {
+        reason: {
+          required,
+          maxLength: maxLength(REJECT_REASON_MAX_LENGTH),
+        },
+      },
+    }
+  },
+
   computed: {
     currentLimits () {
       if (!this.limits) return null
@@ -335,10 +357,12 @@ export default {
       if (!this.desiredLimitDetails.documents) return
       return this.desiredLimitDetails.documents
     },
+
     requestType () {
       return LIMITS_REQUEST_STATES_STR[get(this.desiredLimitDetails, 'requestType')]
     },
   },
+
   async created () {
     try {
       await this.getRequest()
@@ -416,6 +440,9 @@ export default {
     },
 
     async rejectRequest () {
+      if (!this.isFormValid()) return
+
+      this.hideRejectModal()
       this.isPending = true
       try {
         await api.requests.rejectLimitsUpdate({

@@ -33,13 +33,13 @@
     "qrcode.vue": "1.6.1",
     "tokend-wallet-js-sdk": "git+https://github.com/tokend/wallet-js-sdk.git#ec401cabdb6d9a4e122f54bf1332cf1957e80956",
     "ua-parser-js": "0.7.18",
-    "vee-validate": "2.0.0-rc.5",
     "vue": "2.5.21",
     "vue-flatpickr-component": "8.1.0",
     "vue-markdown": "2.2.4",
     "vue-resource": "1.5.1",
     "vue-router": "3.0.2",
     "vue-tabs-component": "1.4.0",
+    "vuelidate": "0.7.4",
     "vuex": "3.0.1"
   },
   "devDependencies": {

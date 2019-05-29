@@ -4,6 +4,9 @@
       <router-link :to="{ name: 'fees.index' }" slot="nav">
         Fee settings
       </router-link>
+      <router-link :to="{ name: 'fees-balances.index' }" slot="nav">
+        Collected fees
+      </router-link>
     </user-header>
     <div class="app__user-container">
       <router-view />

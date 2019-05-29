@@ -63,12 +63,19 @@
       <form
         class="sale-rm__reject-form"
         id="sale-reject-form"
-        @submit.prevent="reject() & hideRejectForm()"
+        @submit.prevent="reject"
+        novalidate
       >
         <div class="app__form-row">
           <text-field
             v-model="rejectForm.reason"
             :label="null"
+            :disabled="formMixin.isDisabled"
+            @blur="touchField('rejectForm.reason')"
+            :error-message="getFieldErrorMessage(
+              'rejectForm.reason',
+              { maxLength: REJECT_REASON_MAX_LENGTH }
+            )"
           />
         </div>
 
@@ -84,12 +91,14 @@
         <button
           class="app__btn app__btn--danger"
           form="sale-reject-form"
+          :disabled="formMixin.isDisabled"
         >
           Reject
         </button>
         <button
           class="app__btn-secondary"
           @click="hideRejectForm"
+          :disabled="formMixin.isDisabled"
         >
           Cancel
         </button>
@@ -99,8 +108,8 @@
 </template>
 
 <script>
-import TextField from '@comcom/fields/TextField'
-import TickField from '@comcom/fields/TickField'
+import FormMixin from '@/mixins/form.mixin'
+import { required, maxLength } from '@/validators'
 
 import Modal from '@comcom/modals/Modal'
 import { Tabs, Tab } from '@comcom/Tabs'
@@ -119,17 +128,18 @@ import { snakeToCamelCase } from '@/utils/un-camel-case'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { ApiCallerFactory } from '@/api-caller-factory'
 
+const REJECT_REASON_MAX_LENGTH = 255
+
 export default {
   components: {
     Tabs,
     Tab,
-    TextField,
-    TickField,
     Modal,
     DetailsTab,
     DescriptionTab,
     SyndicateTab,
   },
+  mixins: [FormMixin],
 
   props: {
     id: { type: String, required: true },
@@ -137,7 +147,6 @@ export default {
 
   data () {
     return {
-      REQUEST_STATES,
       request: {
         sale: {},
         asset: {},
@@ -150,6 +159,19 @@ export default {
         isPermanentReject: false,
       },
       isSubmitting: false,
+      REQUEST_STATES,
+      REJECT_REASON_MAX_LENGTH,
+    }
+  },
+
+  validations () {
+    return {
+      rejectForm: {
+        reason: {
+          required,
+          maxLength: maxLength(REJECT_REASON_MAX_LENGTH),
+        },
+      },
     }
   },
 
@@ -217,6 +239,9 @@ export default {
     },
 
     async reject () {
+      if (!this.isFormValid()) return
+
+      this.hideRejectForm()
       this.isSubmitting = true
       try {
         await api.requests.reject(

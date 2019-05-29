@@ -123,4 +123,34 @@ export default {
     }
   }
 }
+
+.text-field__err-mes {
+  color: $field-color-error;
+  margin-top: $field-error-margin-top;
+  font-size: $field-error-font-size;
+  line-height: $field-error-line-height;
+}
+
+.text-field__err-transition-enter-active {
+  animation: text-field__err-transition-keyframes $field-transition-duration
+  ease-in-out;
+}
+
+.text-field__err-transition-leave-active {
+  animation: text-field__err-transition-keyframes $field-transition-duration
+  ease-in-out reverse;
+}
+
+@keyframes text-field__err-transition-keyframes {
+  from {
+    max-height: 0;
+    margin-top: 0;
+    overflow: hidden;
+  }
+  to {
+    max-height: $field-error-font-size * $field-error-line-height;
+    margin-top: $field-error-margin-top;
+    overflow: hidden;
+  }
+}
 </style>

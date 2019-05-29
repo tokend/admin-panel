@@ -8,8 +8,35 @@ Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
 ## [Unreleased]
+#### Added
+- Security asset type to config
+- Security asset type string to assetTypeToString filter
+- Postal code field in kyc request
+- Usage of Unix line endings rule
+- Vuelidate plugin for validating forms
+- Collected fees management page
+- Assets vuex module
+- Wrappers for assets and balances
+
 #### Changed
+- Align asset requests detail values to right side
+- Add datetime filter to kyc user's birthdate
+- Web client url in config changed to localhost:8060
+- Now using Vuelidate and form mixin instead of
+  native browser tools for validating forms
+- Extracted fees updating to a separate form
+- Extracted limits updating to a separate form
+- Now using $attrs property for input field proxies
 - Moved horizon resources to "/v3" endpoints
+
+#### Removed
+- Vee-validate plugin
+
+#### Fixed
+- Show dash, if line 2 is not specified in kyc request
+- Terms field appearance in asset request
+- Error message styles on text field
+- Select field arrow position
 
 ## [1.7.0-rc.2] - 2019-05-21
 ### "Under the hood" changes
@@ -42,6 +69,9 @@ for further information about branching and tagging conventions.
     management form
   - Now using custom confirmation message instead of the native one on asset
     pair creation submit
+
+#### Changed
+- Routing to UserDetails and OperationDetails pages from User and KYCRequest
 
 #### Fixed
 - Fixed a bug when we confirm a request for limits changes,
