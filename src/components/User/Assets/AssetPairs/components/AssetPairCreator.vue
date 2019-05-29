@@ -1,6 +1,10 @@
 <template>
   <div class="asset-pair-creator">
-    <form @submit.prevent="submit" class="asset-pair-creator__form app__block">
+    <form
+      class="asset-pair-creator__form app__block"
+      @submit.prevent="submit"
+      novalidate
+    >
       <h2>Create asset pair</h2>
 
       <div class="asset-pair-creator__form-row app__form-row">
@@ -8,14 +12,24 @@
           class="app__form-field"
           label="Base"
           v-model="form.base"
-          :disabled="isPending"
+          @blur="touchField('form.base')"
+          :error-message="getFieldErrorMessage(
+            'form.base',
+            { value: form.quote }
+          )"
+          :disabled="formMixin.isDisabled"
         />
 
         <input-field
           class="app__form-field"
           label="Quote"
           v-model="form.quote"
-          :disabled="isPending"
+          @blur="touchField('form.quote')"
+          :error-message="getFieldErrorMessage(
+            'form.quote',
+            { value: form.base }
+          )"
+          :disabled="formMixin.isDisabled"
         />
       </div>
 
@@ -27,7 +41,15 @@
           min="0"
           :step="DEFAULT_INPUT_STEP"
           v-model="form.physicalPrice"
-          :disabled="isPending"
+          @blur="touchField('form.physicalPrice')"
+          :error-message="getFieldErrorMessage(
+            'form.physicalPrice',
+            {
+              minValue: DEFAULT_INPUT_MIN,
+              maxValue: DEFAULT_MAX_AMOUNT
+            }
+          )"
+          :disabled="formMixin.isDisabled"
         />
       </div>
 
@@ -39,7 +61,12 @@
           min="0"
           :step="DEFAULT_INPUT_STEP"
           v-model="form.physicalPriceCorrection"
-          :disabled="isPending"
+          @blur="touchField('form.physicalPriceCorrection')"
+          :error-message="getFieldErrorMessage(
+            'form.physicalPriceCorrection',
+            { minValue: 0, maxValue: DEFAULT_MAX_AMOUNT }
+          )"
+          :disabled="formMixin.isDisabled"
         >
           <template slot="help">
             <p class="asset-pair-creator__tip-message">
@@ -61,7 +88,12 @@
           max="100"
           :step="DEFAULT_INPUT_STEP"
           v-model="form.maxPriceStep"
-          :disabled="isPending"
+          @blur="touchField('form.maxPriceStep')"
+          :error-message="getFieldErrorMessage(
+            'form.maxPriceStep',
+            { minValue: 0, maxValue: 100 }
+          )"
+          :disabled="formMixin.isDisabled"
         >
           <template slot="help">
             <p class="asset-pair-creator__tip-message">
@@ -80,7 +112,7 @@
         <div class="asset-pair-creator__checkbox">
           <tick-field
             v-model="form.policies"
-            :disabled="isPending"
+            :disabled="formMixin.isDisabled"
             :required="false"
             label="Is tradable"
             :cb-value="ASSET_PAIR_POLICIES.tradeableSecondaryMarket"
@@ -96,7 +128,7 @@
         <div class="asset-pair-creator__checkbox">
           <tick-field
             v-model="form.policies"
-            :disabled="isPending"
+            :disabled="formMixin.isDisabled"
             :required="false"
             label="Physical price restriction"
             :cb-value="ASSET_PAIR_POLICIES.physicalPriceRestriction"
@@ -113,7 +145,7 @@
         <div class="asset-pair-creator__checkbox">
           <tick-field
             v-model="form.policies"
-            :disabled="isPending"
+            :disabled="formMixin.isDisabled"
             :required="false"
             label="Current price restriction"
             :cb-value="ASSET_PAIR_POLICIES.currentPriceRestriction"
@@ -133,7 +165,7 @@
       <div class="app__form-actions">
         <button
           class="asset-pair-creator__submit-btn app__btn"
-          :disabled="isPending">
+          :disabled="formMixin.isDisabled">
           Create
         </button>
       </div>
@@ -142,19 +174,22 @@
 </template>
 
 <script>
-import { TickField, InputField } from '@comcom/fields'
+import FormMixin from '@/mixins/form.mixin'
+import { required, minValue, maxValue, not, sameAs } from '@/validators'
 
-import { ASSET_PAIR_POLICIES, DEFAULT_INPUT_STEP } from '../../../../../constants'
+import {
+  ASSET_PAIR_POLICIES,
+  DEFAULT_INPUT_STEP,
+  DEFAULT_MAX_AMOUNT,
+  DEFAULT_INPUT_MIN,
+} from '@/constants'
 import api from '@/api'
 import { confirmAction } from '@/js/modals/confirmation_message'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
-  components: {
-    TickField,
-    InputField,
-  },
+  mixins: [FormMixin],
 
   data: _ => ({
     form: {
@@ -165,15 +200,47 @@ export default {
       physicalPrice: '',
       physicalPriceCorrection: '',
     },
-    isPending: false,
     ASSET_PAIR_POLICIES,
     DEFAULT_INPUT_STEP,
+    DEFAULT_INPUT_MIN,
+    DEFAULT_MAX_AMOUNT,
   }),
+
+  validations () {
+    return {
+      form: {
+        base: {
+          required,
+          not: not(sameAs(function () { return this.form.quote })),
+        },
+        quote: {
+          required,
+          not: not(sameAs(function () { return this.form.base })),
+        },
+        physicalPrice: {
+          required,
+          minValue: minValue(DEFAULT_INPUT_MIN),
+          maxValue: maxValue(DEFAULT_MAX_AMOUNT),
+        },
+        maxPriceStep: {
+          required,
+          minValue: minValue(0),
+          maxValue: maxValue(100),
+        },
+        physicalPriceCorrection: {
+          required,
+          minValue: minValue(0),
+          maxValue: maxValue(DEFAULT_MAX_AMOUNT),
+        },
+      },
+    }
+  },
 
   methods: {
     async submit () {
+      if (!this.isFormValid()) return
       if (!await confirmAction()) return
-      this.isPending = true
+      this.disableForm()
       try {
         await api.assets.createPair({
           ...this.form,
@@ -185,7 +252,7 @@ export default {
       } catch (error) {
         ErrorHandler.process(error)
       }
-      this.isPending = false
+      this.enableForm()
     },
   },
 }

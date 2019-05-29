@@ -1,7 +1,10 @@
 <template>
   <div class="issuance-form">
     <template v-if="assets && assets.length">
-      <form @submit.prevent="submit">
+      <form
+        @submit.prevent="submit"
+        novalidate
+      >
         <div class="app__form-row">
           <input-field
             class="app__form-field"
@@ -9,7 +12,9 @@
             placeholder="email@example.com or GAAQ..."
             v-model="form.receiver"
             label="Receiver (email or address)"
-            :disabled="isSubmitting"
+            @blur="touchField('form.receiver')"
+            :error-message="getFieldErrorMessage('form.receiver')"
+            :disabled="formMixin.isDisabled"
             autocomplete-type="email"
           />
         </div>
@@ -19,7 +24,12 @@
             class="app__form-field"
             v-model="form.reference"
             label="Reference"
-            :disabled="isSubmitting"
+            @blur="touchField('form.reference')"
+            :error-message="getFieldErrorMessage(
+              'form.reference',
+              { maxLength: REFERENCE_MAX_LENGTH }
+            )"
+            :disabled="formMixin.isDisabled"
           />
         </div>
 
@@ -32,7 +42,15 @@
             :max="availableForIssuance"
             v-model="form.amount"
             label="Amount"
-            :disabled="isSubmitting"
+            @blur="touchField('form.amount')"
+            :error-message="getFieldErrorMessage(
+              'form.amount',
+              {
+                minValue: DEFAULT_INPUT_MIN,
+                available: availableForIssuance
+              }
+            )"
+            :disabled="formMixin.isDisabled"
           />
 
           <div class="issuance-form__asset-field app__form-field">
@@ -40,7 +58,10 @@
               class="issuance-form__asset-select"
               v-model="form.asset"
               label="Asset"
-              :disabled="isSubmitting">
+              @blur="touchField('form.asset')"
+              :error-message="getFieldErrorMessage('form.asset')"
+              :disabled="formMixin.isDisabled"
+            >
               <option
                 v-for="item in assets"
                 :value="item.code"
@@ -68,7 +89,7 @@
         <div class="issuance-form__form-actions app__form-actions">
           <button
             class="app__btn"
-            :disabled="isSubmitting || !isIssuanceAllowed"
+            :disabled="formMixin.isDisabled || !isIssuanceAllowed"
           >
             Issue
           </button>
@@ -84,8 +105,7 @@
 </template>
 
 <script>
-import { InputField, SelectField } from '@comcom/fields'
-
+import FormMixin from '@/mixins/form.mixin'
 import { AssetAmountFormatter } from '@comcom/formatters'
 import { confirmAction } from '../../../../../js/modals/confirmation_message'
 
@@ -95,20 +115,25 @@ import { Sdk } from '@/sdk'
 import config from '@/config'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
+import {
+  required,
+  minValue,
+  noMoreThanAvailableForIssuance,
+  emailOrAccountId,
+  maxLength,
+} from '@/validators'
+
 import Bus from '@/utils/EventBus'
 import { DEFAULT_INPUT_STEP, DEFAULT_INPUT_MIN } from '@/constants'
 
+const REFERENCE_MAX_LENGTH = 255
+
 export default {
-  components: {
-    InputField,
-    SelectField,
-    AssetAmountFormatter,
-  },
+  components: { AssetAmountFormatter },
+  mixins: [FormMixin],
 
   data () {
     return {
-      DEFAULT_INPUT_STEP,
-      DEFAULT_INPUT_MIN,
       form: {
         amount: '',
         receiver: '',
@@ -116,7 +141,29 @@ export default {
         asset: '',
       },
       assets: [],
-      isSubmitting: false,
+      DEFAULT_INPUT_STEP,
+      DEFAULT_INPUT_MIN,
+      REFERENCE_MAX_LENGTH,
+    }
+  },
+
+  validations () {
+    return {
+      form: {
+        amount: {
+          required,
+          minValue: minValue(DEFAULT_INPUT_MIN),
+          noMoreThanAvailableForIssuance: noMoreThanAvailableForIssuance(
+            this.availableForIssuance
+          ),
+        },
+        receiver: { required, emailOrAccountId },
+        reference: {
+          required,
+          maxLength: maxLength(REFERENCE_MAX_LENGTH),
+        },
+        asset: { required },
+      },
     }
   },
 
@@ -213,8 +260,9 @@ export default {
     },
 
     async submit () {
-      this.isSubmitting = true
+      if (!this.isFormValid()) return
 
+      this.disableForm()
       if (await confirmAction()) {
         try {
           await this.$validator.validateAll()
@@ -228,8 +276,7 @@ export default {
           ErrorHandler.process(error)
         }
       }
-
-      this.isSubmitting = false
+      this.enableForm()
     },
   },
 }

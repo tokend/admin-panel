@@ -153,7 +153,7 @@
           Terms
         </span>
         <span class="asset-requests-show__value">
-          <user-doc-getter
+          <user-doc-link-getter
             :file-key="safeGet(
               assetRequest,
               'operationDetails.details.terms.key'
@@ -162,7 +162,9 @@
               assetRequest,
               'operationDetails.details.terms.mimeType'
             )"
-          />
+          >
+            Open file
+          </user-doc-link-getter>
         </span>
       </div>
 
@@ -248,7 +250,7 @@
 import TextField from '@comcom/fields/TextField'
 import AssetRequestRejectForm from './components/AssetRequestRejectForm'
 
-import { ImgGetter, EmailGetter, UserDocGetter } from '@comcom/getters'
+import { ImgGetter, EmailGetter, UserDocLinkGetter } from '@comcom/getters'
 import { DateFormatter } from '@comcom/formatters'
 
 import { confirmAction } from '@/js/modals/confirmation_message'
@@ -276,7 +278,7 @@ export default {
     ImgGetter,
     EmailGetter,
     DateFormatter,
-    UserDocGetter,
+    UserDocLinkGetter,
   },
 
   props: {
@@ -371,6 +373,7 @@ export default {
   max-width: 24rem;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-align: right;
 }
 
 .asset-requests-show__buttons {

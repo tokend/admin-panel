@@ -12,17 +12,25 @@
             class="app__form-field"
             :label="`Price (${pair.quote})`"
             type="number"
-            min="0"
+            :min="DEFAULT_INPUT_MIN"
             :step="DEFAULT_INPUT_STEP"
-            v-model="form.price"
-            :disabled="isSubmitting"
+            v-model="priceForm.price"
+            @blur="touchField('priceForm.price')"
+            :error-message="getFieldErrorMessage(
+              'priceForm.price',
+              {
+                minValue: DEFAULT_INPUT_MIN,
+                maxValue: DEFAULT_MAX_AMOUNT
+              }
+            )"
+            :disabled="formMixin.isDisabled"
           />
         </div>
 
         <div class="app__form-actions">
           <button
             class="asset-pair-manager__submit-btn app__btn"
-            :disabled="isSubmitting">
+            :disabled="formMixin.isDisabled">
             Update
           </button>
         </div>
@@ -43,8 +51,13 @@
             type="number"
             min="0"
             :step="DEFAULT_INPUT_STEP"
-            v-model="form.physicalPriceCorrection"
-            :disabled="isSubmitting"
+            v-model="attributesForm.physicalPriceCorrection"
+            @blur="touchField('attributesForm.physicalPriceCorrection')"
+            :error-message="getFieldErrorMessage(
+              'attributesForm.physicalPriceCorrection',
+              { minValue: 0, maxValue: DEFAULT_MAX_AMOUNT }
+            )"
+            :disabled="formMixin.isDisabled"
           >
             <template slot="help">
               <p class="asset-pair-manager__tip-message">
@@ -65,9 +78,15 @@
             label="Max price step"
             type="number"
             min="0"
+            max="100"
             :step="DEFAULT_INPUT_STEP"
-            v-model="form.maxPriceStep"
-            :disabled="isSubmitting"
+            v-model="attributesForm.maxPriceStep"
+            @blur="touchField('attributesForm.maxPriceStep')"
+            :error-message="getFieldErrorMessage(
+              'attributesForm.maxPriceStep',
+              { minValue: 0, maxValue: 100 }
+            )"
+            :disabled="formMixin.isDisabled"
           >
             <template slot="help">
               <p class="asset-pair-manager__tip-message">
@@ -85,8 +104,8 @@
         <div class="asset-pair-manager__checkboxes">
           <tick-field
             class="asset-pair-manager__checkbox"
-            v-model="form.policies"
-            :disabled="isSubmitting"
+            v-model="attributesForm.policies"
+            :disabled="formMixin.isDisabled"
             :required="false"
             label="Is tradable"
             :cb-value="ASSET_PAIR_POLICIES.tradeableSecondaryMarket"
@@ -100,8 +119,8 @@
 
           <tick-field
             class="asset-pair-manager__checkbox"
-            v-model="form.policies"
-            :disabled="isSubmitting"
+            v-model="attributesForm.policies"
+            :disabled="formMixin.isDisabled"
             :required="false"
             label="Physical price restriction"
             :cb-value="ASSET_PAIR_POLICIES.physicalPriceRestriction"
@@ -116,8 +135,8 @@
 
           <tick-field
             class="asset-pair-manager__checkbox"
-            v-model="form.policies"
-            :disabled="isSubmitting"
+            v-model="attributesForm.policies"
+            :disabled="formMixin.isDisabled"
             :required="false"
             label="Current price restriction"
             :cb-value="ASSET_PAIR_POLICIES.currentPriceRestriction"
@@ -135,7 +154,7 @@
 
         <button
           class="asset-pair-manager__submit-btn app__btn"
-          :disabled="isSubmitting"
+          :disabled="formMixin.isDisabled"
         >
           Update policy
         </button>
@@ -151,24 +170,25 @@
 </template>
 
 <script>
-import InputField from '@comcom/fields/InputField'
-import TickField from '@comcom/fields/TickField'
+import FormMixin from '@/mixins/form.mixin'
+import { required, minValue, maxValue } from '@/validators'
 
 import { confirmAction } from '@/js/modals/confirmation_message'
 
 import api from '@/api'
 import { Sdk } from '@/sdk'
 
-import { DEFAULT_INPUT_STEP } from '@/constants'
+import {
+  DEFAULT_INPUT_STEP,
+  DEFAULT_MAX_AMOUNT,
+  DEFAULT_INPUT_MIN,
+} from '@/constants'
 import { ASSET_PAIR_POLICIES } from '@/constants/'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
-  components: {
-    InputField,
-    TickField,
-  },
+  mixins: [FormMixin],
 
   props: {
     base: { type: String, required: true },
@@ -177,26 +197,55 @@ export default {
 
   data () {
     return {
-      DEFAULT_INPUT_STEP,
-      ASSET_PAIR_POLICIES,
       pair: {},
-      form: {
+      priceForm: {
         price: '',
+      },
+      attributesForm: {
         physicalPriceCorrection: '',
         maxPriceStep: '',
         policies: [],
       },
       isLoaded: false,
-      isSubmitting: false,
+      ASSET_PAIR_POLICIES,
+      DEFAULT_INPUT_STEP,
+      DEFAULT_INPUT_MIN,
+      DEFAULT_MAX_AMOUNT,
+    }
+  },
+
+  validations () {
+    return {
+      priceForm: {
+        price: {
+          required,
+          minValue: minValue(DEFAULT_INPUT_MIN),
+          maxValue: maxValue(DEFAULT_MAX_AMOUNT),
+        },
+      },
+      attributesForm: {
+        maxPriceStep: {
+          required,
+          minValue: minValue(0),
+          maxValue: maxValue(100),
+        },
+        physicalPriceCorrection: {
+          required,
+          minValue: minValue(0),
+          maxValue: maxValue(DEFAULT_MAX_AMOUNT),
+        },
+      },
     }
   },
 
   async created () {
     await this.getPair()
-    this.form.price = this.pair.physicalPrice
-    this.form.physicalPriceCorrection = this.pair.physicalPriceCorrection
-    this.form.maxPriceStep = this.pair.maxPriceStep
-    this.form.policies = this.pair.policies.map(policy => policy.value)
+    this.priceForm.price = this.pair.physicalPrice
+    this.attributesForm.physicalPriceCorrection =
+      this.pair.physicalPriceCorrection
+    this.attributesForm.maxPriceStep = this.pair.maxPriceStep
+    this.attributesForm.policies = this.pair.policies
+      .map(policy => policy.value)
   },
 
   methods: {
@@ -215,24 +264,29 @@ export default {
     },
 
     async updatePrice () {
-      this.pair.physicalPrice = this.form.price
-      this.pair.policies = this.form.policies
+      if (!this.isFormValid('priceForm')) return
+
+      this.pair.physicalPrice = this.priceForm.price
+      this.pair.policies = this.attributesForm.policies
         .reduce((sum, policy) => sum | policy, 0)
       this.submit({ updatePrice: true })
     },
 
     async updateAttributes () {
-      this.pair.physicalPriceCorrection = this.form.physicalPriceCorrection
-      this.pair.maxPriceStep = this.form.maxPriceStep
+      if (!this.isFormValid('attributesForm')) return
 
-      this.pair.policies = this.form.policies
+      this.pair.physicalPriceCorrection =
+        this.attributesForm.physicalPriceCorrection
+      this.pair.maxPriceStep = this.attributesForm.maxPriceStep
+
+      this.pair.policies = this.attributesForm.policies
         .reduce((sum, policy) => sum | policy, 0)
       this.submit({ updatePolicy: true })
     },
 
     async submit (action) {
       if (!await confirmAction()) return
-      this.isSubmitting = true
+      this.disableForm()
       try {
         await api.assets.updatePair({ ...this.pair, ...action })
         this.$store.dispatch('SET_INFO', 'Pair has been updated.')
@@ -240,7 +294,7 @@ export default {
       } catch (error) {
         ErrorHandler.process(error)
       }
-      this.isSubmitting = false
+      this.enableForm()
     },
   },
 }

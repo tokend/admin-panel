@@ -54,6 +54,7 @@ export default Object.assign(
       // Will be updated on init
       default: '0',
       kycRequired: '1',
+      security: '2',
     },
 
     CHANGE_ROLE_TASKS: {
@@ -71,7 +72,7 @@ export default Object.assign(
     /**
      * URL of the web client
      */
-    WEB_CLIENT_URL: 'http://localhost:8095',
+    WEB_CLIENT_URL: 'http://localhost:8060',
   },
   process.env,
   document.ENV

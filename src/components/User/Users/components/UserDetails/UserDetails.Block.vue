@@ -29,11 +29,17 @@
         class="user-block__block-form"
         id="user-block-form"
         @submit.prevent="submitBlockForm"
+        novalidate
       >
         <div class="app__form-row">
           <text-field
             label="Block reason"
             v-model="blockForm.reason"
+            @blur="touchField('blockForm.reason')"
+            :error-message="getFieldErrorMessage(
+              'blockForm.reason',
+              { maxLength: REJECT_REASON_MAX_LENGTH }
+            )"
           />
         </div>
       </form>
@@ -59,7 +65,9 @@
 <script>
 import { Sdk } from '@/sdk'
 
-import { TextField } from '@comcom/fields'
+import FormMixin from '@/mixins/form.mixin'
+import { required, maxLength } from '@/validators'
+
 import Modal from '@comcom/modals/Modal'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
@@ -74,12 +82,12 @@ const EVENTS = {
   updateIsPending: 'update:isPending',
 }
 
+const REJECT_REASON_MAX_LENGTH = 255
+
 export default {
   name: 'user-details-block',
-  components: {
-    Modal,
-    TextField,
-  },
+  components: { Modal },
+  mixins: [FormMixin],
 
   props: {
     latestApprovedRequest: {
@@ -102,10 +110,22 @@ export default {
 
   data () {
     return {
-      ACCOUNT_ROLES: config.ACCOUNT_ROLES,
       blockForm: {
         reason: '',
         isShown: false,
+      },
+      ACCOUNT_ROLES: config.ACCOUNT_ROLES,
+      REJECT_REASON_MAX_LENGTH,
+    }
+  },
+
+  validations () {
+    return {
+      blockForm: {
+        reason: {
+          required,
+          maxLength: maxLength(REJECT_REASON_MAX_LENGTH),
+        },
       },
     }
   },
@@ -183,6 +203,8 @@ export default {
     },
 
     async submitBlockForm () {
+      if (!this.isFormValid()) return
+
       this.hideBlockModal()
       await this.blockUser()
     },

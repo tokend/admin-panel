@@ -9,20 +9,46 @@ for further information about branching and tagging conventions.
 
 ## [Unreleased]
 #### Added
+- Security asset type to config
+- Security asset type string to assetTypeToString filter
+- Postal code field in kyc request
+- Usage of Unix line endings rule
+- Vuelidate plugin for validating forms
+- Collected fees management page
+- Assets vuex module
+- Wrappers for assets and balances
 - External link icon to the "Learn more about pre-issuance" link
 - NProgress package for displaying loading progress while
   switching between routes
 
-#### Updated
+#### Changed
+- Align asset requests detail values to right side
+- Add datetime filter to kyc user's birthdate
+- Web client url in config changed to localhost:8060
+- Now using Vuelidate and form mixin instead of
+  native browser tools for validating forms
+- Extracted fees updating to a separate form
+- Extracted limits updating to a separate form
+- Now using $attrs property for input field proxies
 - Now displaying "Yes" and "No" buttons on KYC queue confirmation
 - Now providing only tasks to add to KYC reject request operation
 - Renamed "Master assets" to "System assets" on "Assets" menu
 
+#### Removed
+- Vee-validate plugin
+- "Fiat asset" checkbox from asset creation form
+
 #### Fixed
+- Show dash, if line 2 is not specified in kyc request
+- Terms field appearance in asset request
+- Error message styles on text field
+- Select field arrow position
 - Displaying asset request terms document
 
-#### Removed
-- "Fiat asset" checkbox from asset creation form
+## [1.7.0-rc.2] - 2019-05-21
+### "Under the hood" changes
+#### Changed
+- Some DevOps changes
 
 ## [1.7.0-rc.1] - 2019-05-21
 ### "Under the hood" changes
@@ -48,7 +74,11 @@ for further information about branching and tagging conventions.
   - Added help messages to asset pair forms
   - Added "Physical price correction" and "Max price step" fields to asset pair
     management form
+  - Now using custom confirmation message instead of the native one on asset
+    pair creation submit
 
+#### Changed
+- Routing to UserDetails and OperationDetails pages from User and KYCRequest
 
 #### Fixed
 - Fixed a bug when we confirm a request for limits changes,
@@ -58,10 +88,6 @@ for further information about branching and tagging conventions.
 - Fixed uploading documents on create asset form
 - Displaying of US-related roles on KYC review
 - Displaying of asset filter on withdrawal list
-
-#### Updated
-- Extracted change role request tasks manager to a separate component
-- Replace window.confirm with 'confirm-action' compononent
 
 #### Removed
 - Removed "dev: " prefix from displayed version
@@ -75,6 +101,7 @@ for further information about branching and tagging conventions.
 
 #### Changed
 - Now using @tokend/js-sdk@1.7.0-rc.0
+- Extracted change role request tasks manager to a separate component
 
 ## [1.6.0] - 2019-05-09
 ### "Under the hood" changes
@@ -277,7 +304,8 @@ for further information about branching and tagging conventions.
 
 ## [1.3.0] - 2019-03-01
 
-[Unreleased]: https://github.com/tokend/admin-panel/compare/1.7.0-rc.1...HEAD
+[Unreleased]: https://github.com/tokend/admin-panel/compare/1.7.0-rc.2...HEAD
+[1.7.0-rc.2]: https://github.com/tokend/admin-panel/compare/1.7.0-rc.1...1.7.0-rc.2
 [1.7.0-rc.1]: https://github.com/tokend/admin-panel/compare/1.7.0-rc.0...1.7.0-rc.1
 [1.7.0-rc.0]: https://github.com/tokend/admin-panel/compare/1.6.0...1.7.0-rc.0
 [1.6.0]: https://github.com/tokend/admin-panel/compare/1.6.0-rc.1...1.6.0

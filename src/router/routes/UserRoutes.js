@@ -35,10 +35,29 @@ export const UserRoutes = {
         {
           path: ':id',
           name: 'users.show',
+          redirect: { name: 'users.userDetails' },
           component: function (resolve) {
             require(['../../components/User/Users/Users.Show.vue'], resolve)
           },
           props: true,
+          children: [
+            {
+              path: '',
+              name: 'users.userDetails',
+              component: function (resolve) {
+                require(['../../components/User/Users/components/UserAccountDetails.vue'], resolve)
+              },
+              props: true,
+            },
+            {
+              path: 'operation-details/:operationId',
+              name: 'users.operationDetails',
+              component: function (resolve) {
+                require(['../../components/User/Operations/OperationDetails.vue'], resolve)
+              },
+              props: true,
+            },
+          ],
         },
       ],
     },
@@ -388,6 +407,15 @@ export const UserRoutes = {
           name: 'fees.index',
           component: function (resolve) {
             require(['../../components/User/Fees/Fees.Index.vue'], resolve)
+          },
+        },
+        {
+          path: '/balances',
+          name: 'fees-balances.index',
+          component: function (resolve) {
+            require(
+              ['../../components/User/Fees/FeesBalances.Index.vue'], resolve
+            )
           },
         },
       ],
