@@ -83,9 +83,9 @@
         </span>
         <span
           class="app-list__cell"
-          :title="item.preissuedAssetSigner"
+          :title="item.preIssuanceAssetSigner"
         >
-          {{ item.preissuedAssetSigner | cropAddress }}
+          {{ item.preIssuanceAssetSigner | cropAddress }}
         </span>
         <span class="app-list__cell" :title="1">
           1
@@ -221,7 +221,7 @@ export default {
         } else {
           this.fileInfo.push({
             fileName: this.temporaryFileName,
-            preissuedAssetSigner: asset.preIssuanceAssetSigner,
+            preIssuanceAssetSigner: asset.preIssuanceAssetSigner,
             issuance: items[i],
           })
         }
