@@ -48,7 +48,7 @@
 
 <script>
 import { MarkdownFormatter } from '@comcom/formatters'
-import { Sdk } from '@/sdk'
+import { ApiCallerFactory } from '@/api-caller-factory'
 
 export default {
   components: {
@@ -74,10 +74,12 @@ export default {
   methods: {
     async loadDescription () {
       try {
-        const { ownerId: userId, description: blobId } = this.sale.details
-        const response = await Sdk.api.blobs.get(blobId, userId)
-        const blob = response.data
-        this.description = JSON.parse(blob.value)
+        const { description: blobId } = this.sale.details
+        const userId = this.sale.owner.id
+        const { data } = await ApiCallerFactory
+          .createCallerInstance()
+          .getWithSignature(`/accounts/${userId}/blobs/${blobId}`)
+        this.description = JSON.parse(data.value)
         this.isLoaded = true
       } catch (error) {
         this.isFailed = true

@@ -105,7 +105,6 @@ import { ErrorHandler } from '@/utils/ErrorHandler'
 import { ChangeRoleRequest } from '@/api/responseHandlers/requests/ChangeRoleRequest'
 import { fromKycTemplate } from '@/utils/kyc-tempater'
 import deepCamelCase from 'camelcase-keys-deep'
-import { Sdk } from '@/sdk'
 
 import config from '@/config'
 
@@ -169,12 +168,14 @@ export default {
       }
     },
 
-    async getKyc (blodId) {
+    async getKyc (blobId) {
       this.isKycLoaded = false
       this.isKycLoadFailed = false
 
       try {
-        const { data } = await Sdk.api.blobs.get(blodId, this.user.address)
+        const { data } = await ApiCallerFactory
+          .createCallerInstance()
+          .getWithSignature(`/accounts/${this.user.address}/blobs/${blobId}`)
         this.kyc = deepCamelCase(fromKycTemplate(JSON.parse(data.value)))
         this.kycDocuments = deepCamelCase(JSON.parse(data.value)).documents
         this.isKycLoaded = true

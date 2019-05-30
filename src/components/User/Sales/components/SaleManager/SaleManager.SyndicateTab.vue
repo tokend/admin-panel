@@ -68,7 +68,6 @@
 
 <script>
 import { UserDocLinkGetter, UserDocGetter } from '@comcom/getters'
-import { Sdk } from '@/sdk'
 
 import _get from 'lodash/get'
 import { ErrorHandler } from '@/utils/ErrorHandler'
@@ -119,8 +118,12 @@ export default {
     async getCorporate ({ ownerId: owner, blobId }) {
       try {
         const response = blobId
-          ? await Sdk.api.blobs.get(blobId, owner)
-          : await Sdk.api.blobs.get(await this.getBlobId(owner))
+          ? await ApiCallerFactory
+            .createCallerInstance()
+            .getWithSignature(`/accounts/${owner}/blobs/${blobId}`)
+          : await ApiCallerFactory
+            .createCallerInstance()
+            .getWithSignature(`/blobs/${await this.getBlobId(owner)}`)
         this.corporate = JSON.parse(
           response.data.value || response.data[0].value
         )
