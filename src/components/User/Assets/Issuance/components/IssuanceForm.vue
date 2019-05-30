@@ -114,6 +114,7 @@ import { Sdk } from '@/sdk'
 
 import config from '@/config'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { Bus } from '@/utils/state-bus'
 
 import {
   required,
@@ -123,7 +124,7 @@ import {
   maxLength,
 } from '@/validators'
 
-import Bus from '@/utils/EventBus'
+import EventBus from '@/utils/EventBus'
 import { DEFAULT_INPUT_STEP, DEFAULT_INPUT_MIN } from '@/constants'
 
 const REFERENCE_MAX_LENGTH = 255
@@ -179,7 +180,7 @@ export default {
   },
 
   created () {
-    Bus.$on('issuance:updateAssets', _ => this.getAssets())
+    EventBus.$on('issuance:updateAssets', _ => this.getAssets())
     this.getAssets()
   },
 
@@ -255,7 +256,7 @@ export default {
       this.form.receiver = null
       this.form.reference = null
 
-      this.$store.dispatch('SET_INFO', 'Issued successfully')
+      Bus.success('Issued successfully')
       this.getAssets()
     },
 
@@ -270,7 +271,7 @@ export default {
           const balanceId = await this.getBalanceId()
           await this.sendManualIssuance(balanceId)
 
-          Bus.$emit('issuance:updateRequestList')
+          EventBus.$emit('issuance:updateRequestList')
           await this.getAssets()
         } catch (error) {
           ErrorHandler.process(error)

@@ -331,7 +331,8 @@ import safeGet from 'lodash/get'
 import config from '@/config'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
-import Bus from '@/utils/EventBus'
+import EventBus from '@/utils/EventBus'
+import { Bus } from '@/utils/state-bus'
 import { fileReader } from '@/utils/file-reader'
 
 import { mapGetters } from 'vuex'
@@ -551,9 +552,9 @@ export default {
         }
 
         await Sdk.horizon.transactions.submitOperations(operation)
-        Bus.$emit('recheckConfig')
+        EventBus.$emit('recheckConfig')
 
-        this.$store.dispatch('SET_INFO', 'Submitted successfully.')
+        Bus.success('Submitted successfully.')
         this.$router.push({ name: 'assets.masterAssets.index' })
       } catch (error) {
         ErrorHandler.process(error)

@@ -116,6 +116,7 @@ import { confirmAction } from '@/js/modals/confirmation_message'
 
 import { Sdk } from '@/sdk'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { Bus } from '@/utils/state-bus'
 
 import { xdrTypeFromValue } from '@/utils/xdrTypeFromValue'
 import {
@@ -234,7 +235,7 @@ export default {
         const operation = Sdk.base.Operation.setFees(opts)
 
         await Sdk.horizon.transactions.submitOperations(operation)
-        this.$store.dispatch('SET_INFO', 'Submitted successfully')
+        Bus.success('Submitted successfully')
         this.$emit(EVENTS.feeUpdated)
       } catch (error) {
         ErrorHandler.process(error)

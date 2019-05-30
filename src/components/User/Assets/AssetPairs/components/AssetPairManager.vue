@@ -186,6 +186,7 @@ import {
 import { ASSET_PAIR_POLICIES } from '@/constants/'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { Bus } from '@/utils/state-bus'
 
 export default {
   mixins: [FormMixin],
@@ -289,7 +290,7 @@ export default {
       this.disableForm()
       try {
         await api.assets.updatePair({ ...this.pair, ...action })
-        this.$store.dispatch('SET_INFO', 'Pair has been updated.')
+        Bus.success('Pair has been updated.')
         this.$router.push({ name: 'assets.assetPairs.index' })
       } catch (error) {
         ErrorHandler.process(error)

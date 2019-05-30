@@ -125,6 +125,7 @@ import config from '@/config'
 
 import localize from '@/utils/localize'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { Bus } from '@/utils/state-bus'
 
 export default {
   data () {
@@ -238,7 +239,7 @@ export default {
         })
         await Sdk.horizon.transactions.submitOperations(...operations)
         this.fileInfo = []
-        this.$store.dispatch('SET_INFO', 'Successfully submitted')
+        Bus.success('Successfully submitted')
       } catch (error) {
         ErrorHandler.process(error)
       }

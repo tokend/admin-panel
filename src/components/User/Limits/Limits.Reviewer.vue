@@ -243,6 +243,7 @@ import get from 'lodash/get'
 import isEqual from 'lodash/isEqual'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { Bus } from '@/utils/state-bus'
 
 import 'mdi-vue/CloseIcon'
 import 'mdi-vue/ChevronLeftIcon'
@@ -432,10 +433,7 @@ export default {
         })
 
         this.$router.push({ name: 'limits.requests' })
-        this.$store.dispatch(
-          'SET_INFO',
-          'Request approved. Limits are changed'
-        )
+        Bus.success('Request approved. Limits are changed')
       } catch (error) {
         ErrorHandler.process(error)
       }
@@ -458,10 +456,7 @@ export default {
         }, this.request)
 
         this.$router.push({ name: 'limits.requests' })
-        this.$store.dispatch(
-          'SET_INFO',
-          'Request rejected. Limits are not changed'
-        )
+        Bus.success('Request rejected. Limits are not changed')
       } catch (error) {
         this.isPending = false
         ErrorHandler.process(error)
@@ -483,10 +478,7 @@ export default {
           reason: requireDocsDetails,
           isPermanent: false,
         })
-        this.$store.dispatch(
-          'SET_INFO',
-          'Upload additional documents requested.'
-        )
+        Bus.success('Upload additional documents requested.')
         this.isRequiringDocs = false
       } catch (error) {
         this.isPending = false

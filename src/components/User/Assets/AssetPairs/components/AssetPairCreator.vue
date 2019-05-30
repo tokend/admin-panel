@@ -187,6 +187,7 @@ import api from '@/api'
 import { confirmAction } from '@/js/modals/confirmation_message'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { Bus } from '@/utils/state-bus'
 
 export default {
   mixins: [FormMixin],
@@ -247,7 +248,7 @@ export default {
           policies: this.form.policies.reduce((sum, policy) => sum | policy, 0),
         })
 
-        this.$store.dispatch('SET_INFO', 'Pair has been created.')
+        Bus.success('Pair has been created.')
         this.$router.push({ name: 'assets.assetPairs.index' })
       } catch (error) {
         ErrorHandler.process(error)

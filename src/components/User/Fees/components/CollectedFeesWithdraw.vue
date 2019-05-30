@@ -148,6 +148,7 @@ import SelectField from '@comcom/fields/SelectField'
 
 import { ApiCallerFactory } from '@/api-caller-factory'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { Bus } from '@/utils/state-bus'
 import { formatAssetAmount } from '@/utils/formatters'
 
 import { EmailGetter } from '@comcom/getters'
@@ -287,7 +288,7 @@ export default {
 
         this.form.amount = ''
         this.form.meta = ''
-        this.$store.dispatch('SET_INFO', 'Request created successfully')
+        Bus.success('Request created successfully')
         this.$emit(EVENTS.submitted)
 
         await this.loadAssets()

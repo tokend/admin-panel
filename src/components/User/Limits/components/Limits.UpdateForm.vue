@@ -139,6 +139,7 @@ import { LimitsRecord } from '@/js/records/limits.record'
 
 import { ApiCallerFactory } from '@/api-caller-factory'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { Bus } from '@/utils/state-bus'
 
 const EVENTS = {
   limitsUpdated: 'limits-updated',
@@ -249,7 +250,7 @@ export default {
           .createCallerInstance()
           .postOperations(operation)
 
-        this.$store.dispatch('SET_INFO', 'Limits update saved')
+        Bus.success('Limits update saved')
         this.$emit(EVENTS.limitsUpdated)
       } catch (e) {
         ErrorHandler.process(e)
@@ -270,7 +271,7 @@ export default {
         await ApiCallerFactory
           .createCallerInstance()
           .postOperations(operation)
-        this.$store.dispatch('SET_INFO', 'Limits removed')
+        Bus.success('Limits removed')
         this.$emit(EVENTS.limitsUpdated)
       } catch (e) {
         ErrorHandler.process(e)

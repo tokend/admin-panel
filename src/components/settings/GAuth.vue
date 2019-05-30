@@ -53,6 +53,7 @@ import 'mdi-vue/AppleIcon'
 import 'mdi-vue/AndroidIcon'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { Bus } from '@/utils/state-bus'
 
 export default {
   components: { Qrcode },
@@ -131,7 +132,7 @@ export default {
         await Vue.api.tfa.enableGAuth(this.id)
 
         this.$store.commit('CLOSE_LOADER')
-        this.$store.dispatch('SET_INFO', 'Two-factor Authentication enabled')
+        Bus.success('Two-factor Authentication enabled')
 
         this.$emit('tfa-done')
       } catch (err) {

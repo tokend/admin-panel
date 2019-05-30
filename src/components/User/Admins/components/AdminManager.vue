@@ -137,6 +137,7 @@ import { confirmAction } from '@/js/modals/confirmation_message'
 import { Sdk } from '@/sdk'
 import { ApiCallerFactory } from '@/api-caller-factory'
 
+import { Bus } from '@/utils/state-bus'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 const MASTER_ROLE_ID = 1
@@ -306,7 +307,7 @@ export default {
         const operation = operationConstructor(opts)
         await Sdk.horizon.transactions.submitOperations(operation)
 
-        this.$store.dispatch('SET_INFO', 'Successfully submitted')
+        Bus.success('Successfully submitted')
         this.$router.push({ name: 'admins' })
       } catch (error) {
         ErrorHandler.process(error)

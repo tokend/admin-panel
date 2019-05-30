@@ -148,6 +148,7 @@ import api from '@/api'
 import { ASSET_POLICIES } from '@/constants'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { Bus } from '@/utils/state-bus'
 
 const REJECT_REASON_MAX_LENGTH = 255
 
@@ -204,7 +205,7 @@ export default {
       this.isSubmitting = true
       try {
         await api.requests.approveWithdraw(request)
-        this.$store.dispatch('SET_INFO', 'Request fulfilled succesfully.')
+        Bus.success('Request fulfilled succesfully.')
         this.$emit('close-request')
       } catch (error) {
         ErrorHandler.process(error)
@@ -225,7 +226,7 @@ export default {
           request
         )
 
-        this.$store.dispatch('SET_INFO', 'Request rejected succesfully.')
+        Bus.success('Request rejected succesfully.')
         this.$emit('close-request')
       } catch (error) {
         ErrorHandler.process(error)
