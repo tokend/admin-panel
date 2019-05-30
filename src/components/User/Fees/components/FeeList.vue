@@ -185,14 +185,14 @@
 import { SelectField, InputField } from '@comcom/fields'
 import FeeForm from './FeeForm'
 
-import api from '@/api'
 import { Sdk } from '@/sdk'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import config from '@/config'
 
 import throttle from 'lodash/throttle'
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api, loadingDataViaLoop } from '@/api'
+import apiHelper from '@/apiHelper'
 
 import {
   ASSET_POLICIES,
@@ -311,7 +311,7 @@ export default {
 
     'filters.assetCode': function () {
       this.fees = {}
-      this.getFees()
+      this.loadFees()
     },
 
     'filters.accountAddress': function (newValue) {
@@ -322,12 +322,12 @@ export default {
 
     'filters.feeType': function () {
       this.fees = {}
-      this.getFees()
+      this.loadFees()
     },
 
     'filters.paymentFeeSubtype': function () {
       this.fees = {}
-      this.getFees()
+      this.loadFees()
     },
 
     'filters.accountAlias': throttle(async function () {
@@ -339,7 +339,7 @@ export default {
         address = alias
       } else {
         try {
-          address = await api.users.getAccountIdByEmail(alias)
+          address = await apiHelper.users.getAccountIdByEmail(alias)
         } catch (error) {
           address = ''
         }
@@ -351,7 +351,7 @@ export default {
   async created () {
     this.isLoaded = false
     await this.getAssetsAndPairs()
-    await this.getFees()
+    await this.loadFees()
     this.isLoaded = true
   },
 
@@ -378,13 +378,11 @@ export default {
 
     async getAssetsAndPairs () {
       try {
-        const { data: assets } = await ApiCallerFactory
-          .createStubbornCallerInstance()
-          .stubbornGet('/v3/assets')
+        let response = await api.getWithSignature('/v3/assets')
+        let assets = await loadingDataViaLoop(response)
         this.assets = assets
-        const { data: assetPairs } = await ApiCallerFactory
-          .createStubbornCallerInstance()
-          .stubbornGet('/v3/asset_pairs')
+        let responseAssetPairs = await api.getWithSignature('/v3/asset_pairs')
+        let assetPairs = await loadingDataViaLoop(responseAssetPairs)
         this.assetPairs = assetPairs
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
@@ -395,15 +393,13 @@ export default {
       this.fees = {}
       try {
         const filters = this.composeRequestFilters(this.filters)
-        const { data } = await ApiCallerFactory
-          .createCallerInstance()
-          .getWithSignature('/v3/fees', {
-            filter: {
-              asset: this.filters.assetCode,
-              fee_type: this.filters.feeType,
-              ...filters,
-            },
-          })
+        const { data } = await api.getWithSignature('/v3/fees', {
+          filter: {
+            asset: this.filters.assetCode,
+            fee_type: this.filters.feeType,
+            ...filters,
+          },
+        })
         let newFees = _cloneDeep(data)
         newFees.push(DEFAULT_FEE)
 

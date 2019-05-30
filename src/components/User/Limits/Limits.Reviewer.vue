@@ -226,8 +226,8 @@ import UserLimits from './components/Limits.UserLimits'
 import DatalistField from './components/Datalist'
 import UploadedDocsList from './components/Limits.UploadedDocsList'
 
-import { ApiCallerFactory } from '@/api-caller-factory'
-import api from '@/api'
+import { api } from '@/api'
+import apiHelper from '@/apiHelper'
 
 import {
   REQUEST_STATES,
@@ -366,7 +366,7 @@ export default {
   async created () {
     try {
       await this.getRequest()
-      const limitRequest = await api.requests.get(this.id)
+      const limitRequest = await apiHelper.requests.get(this.id)
       this.desiredLimitDetails = limitRequest
         .requestDetails.creatorDetails ||
         '{}'
@@ -381,13 +381,12 @@ export default {
 
     async getRequest () {
       this.$store.commit('OPEN_LOADER')
-      const request = await api.requests.get(this.id)
+      const request = await apiHelper.requests.get(this.id)
       const requestDetails = request.requestDetails.creatorDetails
-      const { data } = await ApiCallerFactory
-        .createCallerInstance()
-        .getWithSignature(`/v3/accounts/${request.requestor.id}`, {
-          include: ['limits'],
-        })
+      const endpoint = `/v3/accounts/${request.requestor.id}`
+      const { data } = await api.getWithSignature(endpoint, {
+        include: ['limits'],
+      })
       this.request = request
       this.request.document = requestDetails.document
       this.request.asset = requestDetails.asset
@@ -421,7 +420,7 @@ export default {
               item.statsOpType === STATS_OPERATION_TYPES[limitsOpType]
           })
 
-        await api.requests.approveLimitsUpdate({
+        await apiHelper.requests.approveLimitsUpdate({
           request: this.request,
           oldLimits: oldLimits,
           newLimits: newLimits,
@@ -445,7 +444,7 @@ export default {
       this.hideRejectModal()
       this.isPending = true
       try {
-        await api.requests.rejectLimitsUpdate({
+        await apiHelper.requests.rejectLimitsUpdate({
           request: this.request,
           oldLimits: this.limits[0],
           newLimits: [this.newLimit],
@@ -472,7 +471,7 @@ export default {
         const requireDocsDetails = JSON.stringify({
           docsToUpload: this.uploadDocs,
         })
-        await api.requests.rejectLimitsUpdate({
+        await apiHelper.requests.rejectLimitsUpdate({
           request: this.request,
           oldLimits: this.limits[0],
           newLimits: [this.newLimit],

@@ -71,7 +71,7 @@
 import { CollectionLoader } from '@/components/common'
 
 import { Sdk } from '@/sdk'
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api } from '@/api'
 
 import trim from 'lodash/trim'
 
@@ -113,11 +113,9 @@ export default {
 
       let response = {}
       try {
-        response = await ApiCallerFactory
-          .createCallerInstance()
-          .getWithSignature('/v3/assets', {
-            filter: { owner: config.MASTER_ACCOUNT },
-          })
+        response = await api.getWithSignature('/v3/assets', {
+          filter: { owner: config.MASTER_ACCOUNT },
+        })
         this.$store.commit('CLOSE_LOADER')
       } catch (err) {
         this.$store.commit('CLOSE_LOADER')

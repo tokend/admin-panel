@@ -130,7 +130,6 @@ import InputField from '@comcom/fields/InputField'
 import Modal from '@comcom/modals/Modal'
 import WithdrawalDetails from './WithdrawalDetails'
 
-import api from '@/api'
 import { Sdk } from '@/sdk'
 
 import {
@@ -143,7 +142,8 @@ import localize from '@/utils/localize'
 import _ from 'lodash'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api, loadingDataViaLoop } from '@/api'
+import apiHelper from '@/apiHelper'
 import config from '@/config'
 
 export default {
@@ -190,9 +190,8 @@ export default {
 
     async getAssets () {
       try {
-        const { data } = await ApiCallerFactory
-          .createStubbornCallerInstance()
-          .stubbornGet('/v3/assets')
+        let response = await api.getWithSignature('/v3/assets')
+        let data = await loadingDataViaLoop(response)
         this.assets = data
           .filter(item => (item.policies.value & ASSET_POLICIES.withdrawable))
           .sort((assetA, assetB) => assetA.id > assetB.id ? 1 : -1)
@@ -211,16 +210,14 @@ export default {
       try {
         const requestor =
           await this.getRequestorAccountId(this.filters.requestor)
-        this.list = await ApiCallerFactory
-          .createCallerInstance()
-          .getWithSignature('/v3/create_withdraw_requests', {
-            filter: {
-              state: this.filters.state,
-              requestor: requestor,
-              reviewer: config.MASTER_ACCOUNT,
-            },
-            include: ['request_details'],
-          })
+        this.list = await api.getWithSignature('/v3/create_withdraw_requests', {
+          filter: {
+            state: this.filters.state,
+            requestor: requestor,
+            reviewer: config.MASTER_ACCOUNT,
+          },
+          include: ['request_details'],
+        })
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }
@@ -233,7 +230,7 @@ export default {
         return requestor
       } else {
         try {
-          const address = await api.users.getAccountIdByEmail(requestor)
+          const address = await apiHelper.users.getAccountIdByEmail(requestor)
           return address || requestor
         } catch (error) {
           return requestor

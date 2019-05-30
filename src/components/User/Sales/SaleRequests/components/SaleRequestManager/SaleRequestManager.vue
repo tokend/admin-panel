@@ -119,14 +119,13 @@ import DetailsTab from './SaleRequestManager.DetailsTab'
 import DescriptionTab from './SaleRequestManager.DescriptionTab'
 import SyndicateTab from '../../../components/SaleManager/SaleManager.SyndicateTab'
 
-import api from '@/api'
-
 import { REQUEST_STATES } from '@/constants'
 
 import cloneDeep from 'lodash/cloneDeep'
 import { snakeToCamelCase } from '@/utils/un-camel-case'
 import { ErrorHandler } from '@/utils/ErrorHandler'
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api } from '@/api'
+import apiHelper from '@/apiHelper'
 
 const REJECT_REASON_MAX_LENGTH = 255
 
@@ -193,11 +192,10 @@ export default {
     async getRequest (id) {
       try {
         this.request.sale = await this.getSaleRequest(id)
-        const { data } = await ApiCallerFactory
-          .createCallerInstance()
-          .getWithSignature(`/v3/assets/${this.getSaleDetails.baseAsset.id}`, {
-            include: ['owner'],
-          })
+        const endpoint = `/v3/assets/${this.getSaleDetails.baseAsset.id}`
+        const { data } = await api.getWithSignature(endpoint, {
+          include: ['owner'],
+        })
         this.request.asset = data
         this.request.isReady = true
       } catch (error) {
@@ -207,11 +205,10 @@ export default {
     },
 
     async getSaleRequest (id) {
-      const { data } = await ApiCallerFactory
-        .createCallerInstance()
-        .getWithSignature(`/v3/create_sale_requests/${id}`, {
-          include: ['request_details.quote_assets'],
-        })
+      const endpoint = `/v3/create_sale_requests/${id}`
+      const { data } = await api.getWithSignature(endpoint, {
+        include: ['request_details.quote_assets'],
+      })
       const sale = this.fixDetails(data)
       return sale
     },
@@ -228,7 +225,7 @@ export default {
       this.isSubmitting = true
       if (await confirmAction()) {
         try {
-          await api.requests.approve(this.request.sale)
+          await apiHelper.requests.approve(this.request.sale)
           this.$store.dispatch('SET_INFO', 'Sale request approved.')
           this.$router.push({ name: 'sales.requests' })
         } catch (error) {
@@ -244,7 +241,7 @@ export default {
       this.hideRejectForm()
       this.isSubmitting = true
       try {
-        await api.requests.reject(
+        await apiHelper.requests.reject(
           {
             reason: this.rejectForm.reason,
             isPermanent: this.rejectForm.isPermanentReject,

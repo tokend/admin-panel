@@ -47,7 +47,7 @@ import ParticipantsTab from './SaleManager.ParticipantsTab'
 import SyndicateTab from './SaleManager.SyndicateTab'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api } from '@/api'
 
 export default {
   components: {
@@ -78,11 +78,9 @@ export default {
   methods: {
     async getSale (id) {
       try {
-        const { data } = await ApiCallerFactory
-          .createCallerInstance()
-          .get(`/v3/sales/${id}`, {
-            include: ['base_asset', 'default_quote_asset', 'quote_assets'],
-          })
+        const { data } = await api.get(`/v3/sales/${id}`, {
+          include: ['base_asset', 'default_quote_asset', 'quote_assets'],
+        })
         this.sale = data
         this.isLoaded = true
       } catch (error) {

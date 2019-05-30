@@ -16,7 +16,7 @@ import DetailsReader from '@comcom/details/DetailsReader'
 import moment from 'moment'
 import get from 'lodash/get'
 import { ErrorHandler } from '@/utils/ErrorHandler'
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api } from '@/api'
 import { clearObject } from '@/utils/clearObject'
 
 export default {
@@ -38,15 +38,13 @@ export default {
     async getOperations (operationId) {
       let operationList = {}
       try {
-        const response = await ApiCallerFactory
-          .createCallerInstance()
-          .getWithSignature('/v3/history', {
-            page: { order: 'desc' },
-            filter: clearObject({
-              account: this.userId,
-            }),
-            include: ['operation.details'],
-          })
+        const response = await api.getWithSignature('/v3/history', {
+          page: { order: 'desc' },
+          filter: clearObject({
+            account: this.userId,
+          }),
+          include: ['operation.details'],
+        })
         operationList = response.data
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)

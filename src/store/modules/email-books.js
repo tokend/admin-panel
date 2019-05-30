@@ -1,5 +1,5 @@
 import { getters, actions, mutations } from '../types'
-import api from '@/api'
+import apiHelper from '@/apiHelper'
 
 const emailBooks = {
   state: {
@@ -18,7 +18,7 @@ const emailBooks = {
 
       state.busyAddresses.add(address)
       try {
-        const email = await api.users.getEmailByAccountId(address)
+        const email = await apiHelper.users.getEmailByAccountId(address)
         context.commit(mutations.PUSH_EMAIL_TO_ADDRESS_BOOK, { address, email })
       } catch (error) {
         throw error

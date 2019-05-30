@@ -126,7 +126,7 @@ import {
 } from '@/constants'
 
 import 'mdi-vue/ArrowUpIcon'
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api } from '@/api'
 
 const EVENTS = {
   feeUpdated: 'fee-updated',
@@ -234,9 +234,7 @@ export default {
         }
         const operation = Sdk.base.Operation.setFees(opts)
 
-        await ApiCallerFactory
-          .createCallerInstance()
-          .postOperations(operation)
+        await api.postOperations(operation)
         this.$store.dispatch('SET_INFO', 'Submitted successfully')
         this.$emit(EVENTS.feeUpdated)
       } catch (error) {

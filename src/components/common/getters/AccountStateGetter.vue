@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api } from '@/api'
 import config from '@/config'
 
 export default {
@@ -37,9 +37,8 @@ export default {
 
   methods: {
     async getAccount () {
-      const { data } = await ApiCallerFactory
-        .createCallerInstance()
-        .getWithSignature(`/v3/accounts/${this.accountId}`)
+      const endpoint = `/v3/accounts/${this.accountId}`
+      const { data } = await api.getWithSignature(endpoint)
       this.account = data
     },
   },

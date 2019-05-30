@@ -108,7 +108,7 @@ import { TickField } from '@comcom/fields'
 
 import config from '@/config'
 
-import { ChangeRoleRequest } from '@/api/responseHandlers/requests/ChangeRoleRequest'
+import { ChangeRoleRequest } from '@/apiHelper/responseHandlers/requests/ChangeRoleRequest'
 
 const EVENTS = {
   input: 'input',

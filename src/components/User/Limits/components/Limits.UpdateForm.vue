@@ -137,7 +137,7 @@ import { base } from '@tokend/js-sdk'
 import { DEFAULT_MAX_AMOUNT, DEFAULT_INPUT_STEP } from '@/constants'
 import { LimitsRecord } from '@/js/records/limits.record'
 
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api } from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 const EVENTS = {
@@ -245,9 +245,7 @@ export default {
           accountRole: this.accountRole || undefined,
           accountID: this.accountId || undefined,
         })
-        await ApiCallerFactory
-          .createCallerInstance()
-          .postOperations(operation)
+        await api.postOperations(operation)
 
         this.$store.dispatch('SET_INFO', 'Limits update saved')
         this.$emit(EVENTS.limitsUpdated)
@@ -267,9 +265,7 @@ export default {
         const operation = base.ManageLimitsBuilder.removeLimits({
           id: String(this.limits.id),
         })
-        await ApiCallerFactory
-          .createCallerInstance()
-          .postOperations(operation)
+        await api.postOperations(operation)
         this.$store.dispatch('SET_INFO', 'Limits removed')
         this.$emit(EVENTS.limitsUpdated)
       } catch (e) {

@@ -69,10 +69,10 @@ import { required, maxLength } from '@/validators'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { confirmAction } from '@/js/modals/confirmation_message'
 
-import { ChangeRoleRequest } from '@/api/responseHandlers/requests/ChangeRoleRequest'
+import { ChangeRoleRequest } from '@/apiHelper/responseHandlers/requests/ChangeRoleRequest'
 
 import config from '@/config'
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api } from '@/api'
 
 const EVENTS = {
   reset: 'reset',
@@ -146,9 +146,7 @@ export default {
             },
             allTasks: 0,
           })
-        await ApiCallerFactory
-          .createCallerInstance()
-          .postOperations(operation)
+        await api.postOperations(operation)
         this.$store.dispatch('SET_INFO', 'The user account was reset to unverified')
         this.$emit(EVENTS.reset)
       } catch (error) {

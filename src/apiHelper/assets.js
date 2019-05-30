@@ -1,5 +1,5 @@
 import { Sdk } from '@/sdk'
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api } from '@/api'
 
 export default {
   async createPair (params) {
@@ -12,9 +12,7 @@ export default {
       physicalPriceCorrection: '' + params.physicalPriceCorrection,
       maxPriceStep: '' + params.maxPriceStep,
     })
-    const response = await ApiCallerFactory
-      .createCallerInstance()
-      .postOperations(operation)
+    const response = await api.postOperations(operation)
     return response.data
   },
 
@@ -39,9 +37,7 @@ export default {
       physicalPriceCorrection: '' + params.physicalPriceCorrection,
       maxPriceStep: '' + params.maxPriceStep,
     })
-    const response = await ApiCallerFactory
-      .createCallerInstance()
-      .postOperations(operation)
+    const response = await api.postOperations(operation)
     return response.data
   },
 }

@@ -21,7 +21,7 @@
 <script>
 import LimitsList from './components/Limits.RequestList'
 
-import api from '@/api'
+import apiHelper from '@/apiHelper'
 import { REQUEST_STATES } from '@/constants'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
@@ -43,7 +43,7 @@ export default {
     async getList () {
       this.isLoading = true
       try {
-        this.list = await api.requests.getLimitsUpdateRequests({
+        this.list = await apiHelper.requests.getLimitsUpdateRequests({
           state: REQUEST_STATES.pending,
         })
       } catch (error) {

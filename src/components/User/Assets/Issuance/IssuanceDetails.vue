@@ -118,7 +118,7 @@ import { EmailGetter } from '@comcom/getters'
 import Modal from '@comcom/modals/Modal'
 import { confirmAction } from '../../../../js/modals/confirmation_message'
 
-import api from '@/api'
+import apiHelper from '@/apiHelper'
 import { REQUEST_STATES } from '@/constants'
 
 import localize from '@/utils/localize'
@@ -172,7 +172,7 @@ export default {
 
     async getIssuance (id) {
       try {
-        this.issuance = await api.requests.get(id)
+        this.issuance = await apiHelper.requests.get(id)
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }
@@ -186,7 +186,7 @@ export default {
           if (tasksToRemove & 1) tasksToRemove -= 1
           if (tasksToRemove & 4) tasksToRemove -= 4
 
-          await api.requests.approve({
+          await apiHelper.requests.approve({
             ...issuance,
             reviewDetails: { tasksToRemove },
           })
@@ -216,7 +216,7 @@ export default {
         if (tasksToRemove & 1) tasksToRemove -= 1
         if (tasksToRemove & 4) tasksToRemove -= 4
 
-        await api.requests.reject(
+        await apiHelper.requests.reject(
           { reason: this.rejectForm.reason, isPermanent: true },
           {
             ...issuance,

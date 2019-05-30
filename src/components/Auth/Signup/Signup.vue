@@ -132,7 +132,7 @@ import {
 import StellarWallet from 'tokend-wallet-js-sdk'
 
 import { base } from '@tokend/js-sdk'
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api } from '@/api'
 import config from '@/config'
 
 import GAuth from '../../settings/GAuth.vue'
@@ -187,9 +187,8 @@ export default {
   methods: {
     async isSigner () {
       try {
-        const { data } = await ApiCallerFactory
-          .createPublicCallerInstance()
-          .get(`/v3/accounts/${config.MASTER_ACCOUNT}/signers`)
+        const endpoint = `/v3/accounts/${config.MASTER_ACCOUNT}/signers`
+        const { data } = await api.get(endpoint)
         const isSignerExists = data
           .find(item => item.id === this.form.publicKey)
 

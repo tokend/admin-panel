@@ -267,7 +267,7 @@ import localize from '@/utils/localize'
 import { verbozify } from '@/utils/verbozify'
 import safeGet from 'lodash/get'
 
-import { AssetRequest } from '@/api/responseHandlers/requests/AssetRequest'
+import { AssetRequest } from '@/apiHelper/responseHandlers/requests/AssetRequest'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 import {
@@ -276,7 +276,7 @@ import {
   ASSET_REQUEST_TYPES,
 } from '@/constants'
 
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api } from '@/api'
 
 // TODO: extract to AssetRequestForm
 export default {
@@ -320,11 +320,9 @@ export default {
     this.isInitializing = true
 
     try {
-      const { data } = await ApiCallerFactory
-        .createCallerInstance()
-        .getWithSignature(`/v3/requests/${this.id}`, {
-          include: ['request_details'],
-        })
+      const { data } = await api.getWithSignature(`/v3/requests/${this.id}`, {
+        include: ['request_details'],
+      })
       this.assetRequest = new AssetRequest(data)
     } catch (error) {
       ErrorHandler.processWithoutFeedback(error)

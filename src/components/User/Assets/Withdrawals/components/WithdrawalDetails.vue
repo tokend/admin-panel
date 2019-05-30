@@ -119,7 +119,7 @@ import { VerboseFormatter, AssetAmountFormatter } from '@comcom/formatters'
 import Modal from '@comcom/modals/Modal'
 import { confirmAction } from '@/js/modals/confirmation_message'
 
-import api from '@/api'
+import apiHelper from '@/apiHelper'
 import { REQUEST_STATES } from '@/constants'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
@@ -176,7 +176,7 @@ export default {
 
       this.isSubmitting = true
       try {
-        await api.requests.approveWithdraw(request)
+        await apiHelper.requests.approveWithdraw(request)
         this.$store.dispatch('SET_INFO', 'Request fulfilled succesfully.')
         this.$emit('close-request')
       } catch (error) {
@@ -190,7 +190,7 @@ export default {
 
       this.disableForm()
       try {
-        await api.requests.rejectWithdraw(
+        await apiHelper.requests.rejectWithdraw(
           {
             reason: this.rejectForm.reason,
             isPermanent: true,

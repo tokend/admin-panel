@@ -87,7 +87,7 @@ import safeGet from 'lodash/get'
 import { OperationCounterparty } from '@comcom/getters'
 import { CollectionLoader } from '@/components/common'
 
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api } from '@/api'
 
 import { clearObject } from '@/utils/clearObject'
 import { ErrorHandler } from '@/utils/ErrorHandler'
@@ -124,15 +124,13 @@ export default {
       this.isLoading = true
       let response = {}
       try {
-        response = await ApiCallerFactory
-          .createCallerInstance()
-          .getWithSignature('/v3/history', {
-            page: { order: 'desc' },
-            filter: clearObject({
-              account: this.id,
-            }),
-            include: ['operation.details'],
-          })
+        response = await api.getWithSignature('/v3/history', {
+          page: { order: 'desc' },
+          filter: clearObject({
+            account: this.id,
+          }),
+          include: ['operation.details'],
+        })
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }

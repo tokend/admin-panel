@@ -8,7 +8,7 @@ import { AssetRequest } from './responseHandlers/requests/AssetRequest'
 import { IssuanceCreateRequest } from './responseHandlers/requests/IssuanceCreateRequest'
 
 import _get from 'lodash/get'
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api } from '@/api'
 
 export const requests = {
   _review ({ action, reason = '' }, ...requests) {
@@ -38,9 +38,7 @@ export const requests = {
         requestDetails: opts,
       })
     })
-    return ApiCallerFactory
-      .createCallerInstance()
-      .postOperations(...operations)
+    return api.postOperations(...operations)
   },
 
   _reviewWithdraw ({ action, reason = '' }, ...requests) {
@@ -64,9 +62,7 @@ export const requests = {
         requestDetails: JSON.stringify(opts),
       })
     })
-    return ApiCallerFactory
-      .createCallerInstance()
-      .postOperations(...operations)
+    return api.postOperations(...operations)
   },
 
   async approve (...requests) {
@@ -120,9 +116,7 @@ export const requests = {
           Sdk.base.ManageLimitsBuilder.createLimits(limits)
         )
       })
-    const response = await ApiCallerFactory
-      .createCallerInstance()
-      .postOperations(...operations)
+    const response = await api.postOperations(...operations)
     return response.data
   },
 
@@ -145,9 +139,7 @@ export const requests = {
       requestID: params.request.id,
       newLimits: newLimits[0],
     })
-    const response = await ApiCallerFactory
-      .createCallerInstance()
-      .postOperations(operation)
+    const response = await api.postOperations(operation)
     return response.data
   },
 
@@ -172,11 +164,9 @@ export const requests = {
   },
 
   async get (id) {
-    const { data } = await ApiCallerFactory
-      .createCallerInstance()
-      .getWithSignature(`/v3/requests/${id}`, {
-        include: ['request_details'],
-      })
+    const { data } = await api.getWithSignature(`/v3/requests/${id}`, {
+      include: ['request_details'],
+    })
     return data
   },
 
@@ -185,17 +175,15 @@ export const requests = {
     if (state) filters.state = state
     if (requestor) filters.requestor = requestor
 
-    const response = await ApiCallerFactory
-      .createCallerInstance()
-      .getWithSignature('/v3/create_sale_requests', {
-        filter: {
-          ...filters,
-        },
-        page: {
-          order: 'desc',
-        },
-        include: ['request_details'],
-      })
+    const response = await api.getWithSignature('/v3/create_sale_requests', {
+      filter: {
+        ...filters,
+      },
+      page: {
+        order: 'desc',
+      },
+      include: ['request_details'],
+    })
     return response
   },
 
@@ -204,17 +192,15 @@ export const requests = {
     if (state) filters.state = state
     if (requestor) filters.requestor = requestor
 
-    const response = await ApiCallerFactory
-      .createCallerInstance()
-      .getWithSignature('/v3/update_limits_requests', {
-        filter: {
-          ...filters,
-        },
-        page: {
-          order: 'desc',
-        },
-        include: ['request_details'],
-      })
+    const response = await api.getWithSignature('/v3/update_limits_requests', {
+      filter: {
+        ...filters,
+      },
+      page: {
+        order: 'desc',
+      },
+      include: ['request_details'],
+    })
     return response
   },
 
@@ -222,18 +208,17 @@ export const requests = {
     if (asset.toLowerCase() === 'all') {
       asset = ''
     }
-    const response = await ApiCallerFactory
-      .createCallerInstance()
-      .getWithSignature('/v3/create_pre_issuance_requests', {
-        filter: {
-          'request_details.asset': asset,
-          reviewer: config.MASTER_ACCOUNT,
-        },
-        page: {
-          order: 'desc',
-        },
-        include: ['request_details'],
-      })
+    const endpoint = '/v3/create_pre_issuance_requests'
+    const response = await api.getWithSignature(endpoint, {
+      filter: {
+        'request_details.asset': asset,
+        reviewer: config.MASTER_ACCOUNT,
+      },
+      page: {
+        order: 'desc',
+      },
+      include: ['request_details'],
+    })
     response.records = mapRequests(response.data)
     return response
   },

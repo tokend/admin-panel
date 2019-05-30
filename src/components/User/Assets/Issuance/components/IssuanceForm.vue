@@ -108,8 +108,9 @@
 <script>
 import FormMixin from '@/mixins/form.mixin'
 import { AssetAmountFormatter } from '@comcom/formatters'
-import api from '@/api'
-import { Sdk } from '@/sdk'
+import { api, loadingDataViaLoop } from '@/api'
+import apiHelper from '@/apiHelper'
+import { base } from '@tokend/js-sdk'
 
 import config from '@/config'
 import { ErrorHandler } from '@/utils/ErrorHandler'
@@ -126,7 +127,6 @@ import Bus from '@/utils/EventBus'
 import { DEFAULT_INPUT_STEP, DEFAULT_INPUT_MIN } from '@/constants'
 
 import { confirmAction } from '@/js/modals/confirmation_message'
-import { ApiCallerFactory } from '@/api-caller-factory'
 const REFERENCE_MAX_LENGTH = 255
 
 export default {
@@ -187,14 +187,13 @@ export default {
   methods: {
     async getAssets () {
       try {
-        const { data } = await ApiCallerFactory
-          .createStubbornCallerInstance()
-          .stubbornGet('/v3/assets', {
-            filter: {
-              owner: config.MASTER_ACCOUNT,
-            },
-          })
-        const list = data || []
+        let response = await api.getWithSignature('/v3/assets', {
+          filter: {
+            owner: config.MASTER_ACCOUNT,
+          },
+        })
+        let assets = await loadingDataViaLoop(response)
+        const list = assets || []
         const issuableAssets = list.filter(item => item.maxIssuanceAmount > 0)
         this.assets = issuableAssets
         this.form.asset = this.form.asset || (issuableAssets[0] || {}).id
@@ -205,21 +204,19 @@ export default {
 
     async getBalanceId () {
       let address
-      if (Sdk.base.Keypair.isValidPublicKey(this.form.receiver)) {
+      if (base.Keypair.isValidPublicKey(this.form.receiver)) {
         address = this.form.receiver
       } else {
-        address = await api.users.getAccountIdByEmail(this.form.receiver)
+        address = await apiHelper.users.getAccountIdByEmail(this.form.receiver)
       }
 
       if (!address) {
         // eslint-disable-next-line prefer-promise-reject-errors
         return Promise.reject(`Account doesn't exists in the system`)
       }
-      const { data } = await ApiCallerFactory
-        .createCallerInstance()
-        .getWithSignature(`/v3/accounts/${address}`, {
-          include: ['balances', 'balances.asset'],
-        })
+      const { data } = await api.getWithSignature(`/v3/accounts/${address}`, {
+        include: ['balances', 'balances.asset'],
+      })
       let account = data
       const balance = account.balances.find(
         item => item.asset.id === this.form.asset
@@ -227,22 +224,18 @@ export default {
 
       if (!balance) {
         try {
-          const operation = Sdk.base.Operation.manageBalance({
+          const operation = base.Operation.manageBalance({
             asset: this.form.asset,
-            action: Sdk.xdr.ManageBalanceAction.createUnique(),
+            action: base.xdr.ManageBalanceAction.createUnique(),
             destination: address,
           })
-          await ApiCallerFactory
-            .createCallerInstance()
-            .postOperations(operation)
+          await api.postOperations(operation)
         } catch (error) {
           ErrorHandler.process(error)
         }
-        const { data } = await ApiCallerFactory
-          .createCallerInstance()
-          .getWithSignature(`/v3/accounts/${address}`, {
-            include: ['balances', 'balances.asset'],
-          })
+        const { data } = await api.getWithSignature(`/v3/accounts/${address}`, {
+          include: ['balances', 'balances.asset'],
+        })
         account = data
         return account.balances.find(
           item => item.asset.id === this.form.asset
@@ -256,7 +249,7 @@ export default {
       if (receiver === '') {
         throw new Error(`The receiver has no ${this.form.asset} balance.`)
       }
-      const operation = Sdk.base.CreateIssuanceRequestBuilder
+      const operation = base.CreateIssuanceRequestBuilder
         .createIssuanceRequest({
           asset: this.form.asset,
           amount: this.form.amount,
@@ -266,13 +259,10 @@ export default {
           creatorDetails: {},
           allTasks: 0,
         })
-      await ApiCallerFactory
-        .createCallerInstance()
-        .postOperations(operation)
+      await api.postOperations(operation)
       this.form.amount = null
       this.form.receiver = null
       this.form.reference = null
-
       this.$store.dispatch('SET_INFO', 'Issued successfully')
       this.getAssets()
     },
@@ -283,8 +273,6 @@ export default {
       this.disableForm()
       if (await confirmAction()) {
         try {
-          await this.$validator.validateAll()
-
           const balanceId = await this.getBalanceId()
           await this.sendManualIssuance(balanceId)
 

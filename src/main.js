@@ -12,9 +12,9 @@ import App from './components/App/App.vue'
 
 /* Vue plugins */
 import Auth from './auth'
-import api from './api'
 import params from './config'
 import Vuelidate from 'vuelidate'
+import apiHelper from './apiHelper'
 
 /* Error tracker util */
 import { ErrorTracker } from '@/utils/ErrorTracker'
@@ -73,7 +73,7 @@ new Vue({
 Vue.use(Auth)
 Vue.use(params)
 Vue.use(Vuelidate)
-Vue.use(api)
+Vue.use(apiHelper)
 
 Vue.filter('dateTime', filterDateWithTime)
 Vue.filter('localizeIssuanceRequestState', localizeIssuanceRequestState)

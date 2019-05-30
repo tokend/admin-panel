@@ -55,8 +55,7 @@ import NoSupportMessage from './components/IERestrictionMessage.vue'
 
 import UAParser from 'ua-parser-js'
 
-import { Sdk } from '@/sdk'
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api } from '@/api'
 import config from '../../config'
 
 import { Wallet } from '@tokend/js-sdk'
@@ -118,7 +117,6 @@ export default {
       this.subscribeToStoreMutations()
       await this.loadConfigs()
 
-      await Sdk.init(config.HORIZON_SERVER)
       if (this.$store.getters.GET_USER.keys.seed) {
         const wallet = new Wallet(
           '',
@@ -126,8 +124,7 @@ export default {
           this.$store.getters.GET_USER.keys.accountId,
           this.$store.getters.GET_USER.wallet.id
         )
-        Sdk.sdk.useWallet(wallet)
-        ApiCallerFactory.setDefaultWallet(wallet)
+        api.useWallet(wallet)
         ErrorTracker.setLoggedInUser({
           'accountId': this.$store.getters.GET_USER.keys.accountId,
           'name': this.$store.getters.GET_USER.name,
@@ -153,15 +150,12 @@ export default {
     },
 
     async loadHorizonConfigs () {
-      const { body: horizonConfig } =
-        await this.$http.get(config.HORIZON_SERVER)
-
-      config.NETWORK_PASSPHRASE = horizonConfig.network_passphrase
-      config.MASTER_ACCOUNT = horizonConfig.master_account_id ||
-        horizonConfig.admin_account_id
-
-      ApiCallerFactory.setDefaultHorizonUrl(config.HORIZON_SERVER)
-      ApiCallerFactory.setDefaultNetworkPassphrase(config.NETWORK_PASSPHRASE)
+      api.useBaseURL(config.HORIZON_SERVER)
+      const { data: horizonConfig } = await api.getRaw('/')
+      api.useNetworkDetails(horizonConfig)
+      config.NETWORK_PASSPHRASE = horizonConfig.networkPassphrase
+      config.MASTER_ACCOUNT = horizonConfig.masterAccountId ||
+        horizonConfig.adminAccountId
     },
 
     async loadChangeRoleTasks () {

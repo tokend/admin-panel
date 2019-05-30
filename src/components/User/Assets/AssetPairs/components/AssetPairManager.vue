@@ -175,7 +175,7 @@ import { required, minValue, maxValue } from '@/validators'
 
 import { confirmAction } from '@/js/modals/confirmation_message'
 
-import api from '@/api'
+import apiHelper from '@/apiHelper'
 import { Sdk } from '@/sdk'
 
 import {
@@ -288,7 +288,7 @@ export default {
       if (!await confirmAction()) return
       this.disableForm()
       try {
-        await api.assets.updatePair({ ...this.pair, ...action })
+        await apiHelper.assets.updatePair({ ...this.pair, ...action })
         this.$store.dispatch('SET_INFO', 'Pair has been updated.')
         this.$router.push({ name: 'assets.assetPairs.index' })
       } catch (error) {

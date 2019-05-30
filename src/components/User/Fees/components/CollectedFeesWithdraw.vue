@@ -146,7 +146,7 @@ import { mapGetters, mapActions } from 'vuex'
 import InputField from '@comcom/fields/InputField'
 import SelectField from '@comcom/fields/SelectField'
 
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api } from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { formatAssetAmount } from '@/utils/formatters'
 
@@ -259,8 +259,7 @@ export default {
       this.isMasterBalancesFailed = false
 
       try {
-        const { data: { balances: masterBalances } } = await ApiCallerFactory
-          .createCallerInstance()
+        const { data: { balances: masterBalances } } = await api
           .getWithSignature(`/v3/accounts/${Vue.params.MASTER_ACCOUNT}`, {
             include: ['balances.state'],
           })
@@ -281,9 +280,7 @@ export default {
       this.isFormPending = true
       try {
         const operation = this.craftWithdrawalOperation()
-        await ApiCallerFactory
-          .createCallerInstance()
-          .postOperations(operation)
+        await api.postOperations(operation)
 
         this.form.amount = ''
         this.form.meta = ''
@@ -340,16 +337,12 @@ export default {
       if (!this.form.amount || !this.form.balanceId) {
         return
       }
-
-      const { data: fees } = await ApiCallerFactory
-        .createCallerInstance()
-        .getWithSignature(
-          `/v3/accounts/${Vue.params.MASTER_ACCOUNT}/calculated_fees`,
-          {
-            asset: this.selectedBalanceAttrs.assetCode,
-            fee_type: FEE_TYPES.withdrawalFee,
-            amount: this.form.amount,
-          })
+      const endpoint = `/v3/accounts/${Vue.params.MASTER_ACCOUNT}/calculated_fees`
+      const { data: fees } = await api.getWithSignature(endpoint, {
+        asset: this.selectedBalanceAttrs.assetCode,
+        fee_type: FEE_TYPES.withdrawalFee,
+        amount: this.form.amount,
+      })
 
       this.opAttrs.feeAssetCode = this.selectedBalanceAttrs.assetCode
       this.opAttrs.fixedFee = fees.fixed

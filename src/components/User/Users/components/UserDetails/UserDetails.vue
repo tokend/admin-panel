@@ -206,10 +206,10 @@ import BlockActions from './UserDetails.Block'
 
 import ExternalDetailsViewer from './UserDetails.ExternalDetailsViewer'
 
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api } from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
-import { ChangeRoleRequest } from '@/api/responseHandlers/requests/ChangeRoleRequest'
+import { ChangeRoleRequest } from '@/apiHelper/responseHandlers/requests/ChangeRoleRequest'
 import { fromKycTemplate } from '../../../../../utils/kyc-tempater'
 import deepCamelCase from 'camelcase-keys-deep'
 
@@ -318,18 +318,14 @@ export default {
       this.isFailed = false
       try {
         const [user, requests] = await Promise.all([
-          ApiCallerFactory
-            .createCallerInstance()
-            .getWithSignature('/identities', {
-              filter: { address: this.id },
-            }),
-          ApiCallerFactory
-            .createCallerInstance()
-            .getWithSignature('/v3/change_role_requests', {
-              page: { order: 'desc' },
-              filter: { requestor: this.id },
-              include: ['request_details'],
-            }),
+          api.getWithSignature('/identities', {
+            filter: { address: this.id },
+          }),
+          api.getWithSignature('/v3/change_role_requests', {
+            page: { order: 'desc' },
+            filter: { requestor: this.id },
+            include: ['request_details'],
+          }),
         ])
         this.user = user.data[0]
         this.requests = requests.data
@@ -348,11 +344,10 @@ export default {
         const requestId = this.latestApprovedRequest.relatedRequestId
 
         if (requestId && requestId !== '0') {
-          const { data } = await ApiCallerFactory
-            .createCallerInstance()
-            .getWithSignature(`/v3/change_role_requests/${requestId}`, {
-              include: ['request_details'],
-            })
+          const endpoint = `/v3/change_role_requests/${requestId}`
+          const { data } = await api.getWithSignature(endpoint, {
+            include: ['request_details'],
+          })
           this.verifiedRequest = new ChangeRoleRequest(data)
         } else if (!requestId) {
           this.verifiedRequest = this.latestApprovedRequest
@@ -376,9 +371,7 @@ export default {
 
       try {
         const endpoint = `/accounts/${this.user.address}/blobs/${blobId}`
-        const { data } = await ApiCallerFactory
-          .createCallerInstance()
-          .getWithSignature(endpoint)
+        const { data } = await api.getWithSignature(endpoint)
         const kycFormResponse = data
         this.kyc = deepCamelCase(
           fromKycTemplate(JSON.parse(kycFormResponse.value))

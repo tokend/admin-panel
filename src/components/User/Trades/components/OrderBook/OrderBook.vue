@@ -27,7 +27,7 @@ import OrderTable from './OrderBook.Table'
 import HistoryTable from './OrderBook.History'
 
 import { AssetPair } from '../../models/AssetPair'
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api } from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 const SECONDARY_MARKET_ORDER_BOOK_ID = '0'
@@ -69,22 +69,19 @@ export default {
       try {
         const orderBookId = SECONDARY_MARKET_ORDER_BOOK_ID
         const formatedOrderBookId = `${pair.base}:${pair.quote}:${orderBookId}`
-        const { data } = await ApiCallerFactory
-          .createCallerInstance()
-          .getWithSignature(`/v3/order_books/${formatedOrderBookId}`, {
-            include: ['buy_entries', 'sell_entries'],
-          })
+        const endpoint = `/v3/order_books/${formatedOrderBookId}`
+        const { data } = await api.getWithSignature(endpoint, {
+          include: ['buy_entries', 'sell_entries'],
+        })
         this.book.bids = data.buyEntries
         this.book.asks = data.sellEntries
 
-        const tradesResponse = await ApiCallerFactory
-          .createCallerInstance()
-          .getWithSignature('/v3/matches', {
-            filter: {
-              base_asset: pair.base,
-              quote_asset: pair.quote,
-            },
-          })
+        const tradesResponse = await api.getWithSignature('/v3/matches', {
+          filter: {
+            base_asset: pair.base,
+            quote_asset: pair.quote,
+          },
+        })
         this.book.history = tradesResponse.data
         this.isLoaded = true
       } catch (error) {

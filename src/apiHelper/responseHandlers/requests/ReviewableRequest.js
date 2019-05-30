@@ -1,4 +1,4 @@
-import api from '@/api/index'
+import apiHelper from '@/apiHelper'
 
 export class ReviewableRequest {
   constructor (record) {
@@ -22,10 +22,10 @@ export class ReviewableRequest {
   // actions:
 
   fulfill () {
-    return api.requests.approve(this._rawRequest)
+    return apiHelper.requests.approve(this._rawRequest)
   }
 
   reject (reason = '', isPermanent = false) {
-    return api.requests.reject({ reason, isPermanent }, this._rawRequest)
+    return apiHelper.requests.reject({ reason, isPermanent }, this._rawRequest)
   }
 }

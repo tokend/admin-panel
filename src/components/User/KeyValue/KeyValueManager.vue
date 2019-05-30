@@ -88,7 +88,7 @@ import { SelectField, InputField } from '@comcom/fields'
 
 import { Sdk } from '@/sdk'
 import { KEY_VALUE_ENTRY_TYPE } from '@/constants'
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api, loadingDataViaLoop } from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 const KEY_VALUE_TYPE_SHORT_NAME = {
@@ -137,9 +137,7 @@ export default {
         const operation = Sdk.base.ManageKeyValueBuilder
           .putKeyValue({ key, value, entryType })
 
-        await ApiCallerFactory
-          .createCallerInstance()
-          .postOperations(operation)
+        await api.postOperations(operation)
         await this.getList()
 
         this.$store.dispatch('SET_INFO', 'Submitted successfully')
@@ -150,9 +148,8 @@ export default {
     },
 
     async getList () {
-      const { data } = await ApiCallerFactory
-        .createStubbornCallerInstance()
-        .stubbornGet('/v3/key_values')
+      let response = await api.getWithSignature('/v3/key_values')
+      let data = await loadingDataViaLoop(response)
       this.list = data
 
       if (!this.list.length) {

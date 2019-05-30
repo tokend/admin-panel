@@ -139,7 +139,7 @@ import LimitsUpdateForm from './Limits.UpdateForm'
 import { base } from '@tokend/js-sdk'
 import { STATS_OPERATION_TYPES } from '@/constants'
 
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api, loadingDataViaLoop } from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 import config from '@/config'
@@ -301,15 +301,13 @@ export default {
       } else if (this.filters.scope === SCOPE_TYPES.accountRole) {
         filters.account_role = this.filters.accountRole
       }
-      const { data: limits } = await ApiCallerFactory
-        .createCallerInstance()
-        .getWithSignature('/v3/limits', {
-          filter: {
-            asset: this.filters.asset,
-            stats_op_type: statsOpType,
-            ...filters,
-          },
-        })
+      const { data: limits } = await api.getWithSignature('/v3/limits', {
+        filter: {
+          asset: this.filters.asset,
+          stats_op_type: statsOpType,
+          ...filters,
+        },
+      })
       if (this.filters.scope === SCOPE_TYPES.global) {
         const globalLimits = limits
           .filter((limit) => !(limit.accountRole || limit.account))
@@ -321,20 +319,17 @@ export default {
     },
 
     async getAssets () {
-      const { data } = await ApiCallerFactory
-        .createStubbornCallerInstance()
-        .stubbornGet('/v3/assets')
-      this.assets = data
+      let response = await api.getWithSignature('/v3/assets')
+      let assets = await loadingDataViaLoop(response)
+      this.assets = assets
     },
 
     async loadAccountIdByEmail (email) {
       try {
-        const { data } = await ApiCallerFactory
-          .createCallerInstance()
-          .getWithSignature('/identities', {
-            filter: { email: email },
-            page: { limit: 1 },
-          })
+        const { data } = await api.getWithSignature('/identities', {
+          filter: { email: email },
+          page: { limit: 1 },
+        })
         const userEmail = ((data || [])[0] || {}).email || email
         if (userEmail === email) {
           this.filters.userAddress = ((data || [])[0] || {}).address

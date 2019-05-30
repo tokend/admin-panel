@@ -260,7 +260,7 @@ import {
 } from '@comcom/formatters'
 
 import { SALE_STATES } from '@/constants'
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api } from '@/api'
 
 export default {
   components: {
@@ -292,11 +292,10 @@ export default {
   methods: {
     async getAsset ({ baseAsset }) {
       try {
-        const { data } = await ApiCallerFactory
-          .createCallerInstance()
-          .getWithSignature(`/v3/assets/${baseAsset.id}`, {
-            include: ['owner'],
-          })
+        const endpoint = `/v3/assets/${baseAsset.id}`
+        const { data } = await api.getWithSignature(endpoint, {
+          include: ['owner'],
+        })
         this.asset = data
         this.isAssetLoaded = true
       } catch (error) {

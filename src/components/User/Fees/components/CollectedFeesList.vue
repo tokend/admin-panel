@@ -87,7 +87,7 @@ import { mapGetters } from 'vuex'
 
 import { AssetAmountFormatter } from '@comcom/formatters'
 
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api } from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 import { Balance } from '@/store/wrappers/balance'
@@ -124,8 +124,7 @@ export default {
       this.isLoading = true
       this.isFailed = false
       try {
-        const { data: { balances: masterBalances } } = await ApiCallerFactory
-          .createCallerInstance()
+        const { data: { balances: masterBalances } } = await api
           .getWithSignature(`/v3/accounts/${Vue.params.MASTER_ACCOUNT}`, {
             include: ['balances.state'],
           })

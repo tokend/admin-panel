@@ -125,7 +125,7 @@ import config from '@/config'
 
 import localize from '@/utils/localize'
 import { ErrorHandler } from '@/utils/ErrorHandler'
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api, loadingDataViaLoop } from '@/api'
 
 export default {
   data () {
@@ -154,14 +154,13 @@ export default {
     async getAssets () {
       this.$store.commit('OPEN_LOADER')
       try {
-        const { data } = await ApiCallerFactory
-          .createStubbornCallerInstance()
-          .stubbornGet('/v3/assets', {
-            filter: {
-              owner: config.MASTER_ACCOUNT,
-            },
-          })
-        this.assets = data
+        let response = await api.getWithSignature('/v3/assets', {
+          filter: {
+            owner: config.MASTER_ACCOUNT,
+          },
+        })
+        let assets = await loadingDataViaLoop(response)
+        this.assets = assets
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }
@@ -237,9 +236,7 @@ export default {
           return Sdk.base.PreIssuanceRequestOpBuilder
             .createPreIssuanceRequestOp({ request: item })
         })
-        await ApiCallerFactory
-          .createCallerInstance()
-          .postOperations(...operations)
+        await api.postOperations(...operations)
         this.fileInfo = []
         this.$store.dispatch('SET_INFO', 'Successfully submitted')
       } catch (error) {

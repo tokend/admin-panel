@@ -24,9 +24,7 @@
  *
  * <collection-loader
  *    :first-page-loader="
- *      ApiCallerFactory
-          .createCallerInstance()
-          .getWithSignature('endpoint')
+ *      api.getWithSignature('endpoint')
       "
  *    :page-limit="10"
  *    @first-page-load="onFirstPageLoad"/>

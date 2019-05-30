@@ -48,7 +48,7 @@
 
 <script>
 import { MarkdownFormatter } from '@comcom/formatters'
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api } from '@/api'
 import _get from 'lodash/get'
 
 export default {
@@ -91,9 +91,7 @@ export default {
 
       try {
         const endpoint = `/accounts/${userId}/blobs/${blobId}`
-        const { data } = await ApiCallerFactory
-          .createCallerInstance()
-          .getWithSignature(endpoint)
+        const { data } = await api.getWithSignature(endpoint)
         this.description = JSON.parse(data.value)
         this.isLoaded = true
       } catch (error) {

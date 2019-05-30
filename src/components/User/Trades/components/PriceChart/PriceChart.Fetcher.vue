@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api } from '@/api'
 import { AssetPair } from '../../models/AssetPair'
 
 import PriceChart from './PriceChart.Renderer'
@@ -79,10 +79,8 @@ export default {
         this.isFailed = false
         this.priceHistory = {}
         const pair = new AssetPair(this.filters.pair)
-
-        const { _rawResponse: response } = await ApiCallerFactory
-          .createCallerInstance()
-          .getWithSignature(`/charts/${pair.base}-${pair.quote}`)
+        const endpoint = `/charts/${pair.base}-${pair.quote}`
+        const { _rawResponse: response } = await api.getWithSignature(endpoint)
         this.priceHistory = response.data
         this.isLoaded = true
       } catch (error) {

@@ -183,7 +183,7 @@ import {
   DEFAULT_MAX_AMOUNT,
   DEFAULT_INPUT_MIN,
 } from '@/constants'
-import api from '@/api'
+import apiHelper from '@/apiHelper'
 import { confirmAction } from '@/js/modals/confirmation_message'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
@@ -242,7 +242,7 @@ export default {
       if (!await confirmAction()) return
       this.disableForm()
       try {
-        await api.assets.createPair({
+        await apiHelper.assets.createPair({
           ...this.form,
           policies: this.form.policies.reduce((sum, policy) => sum | policy, 0),
         })

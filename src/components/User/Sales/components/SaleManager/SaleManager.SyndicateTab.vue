@@ -71,7 +71,7 @@ import { UserDocLinkGetter, UserDocGetter } from '@comcom/getters'
 
 import _get from 'lodash/get'
 import { ErrorHandler } from '@/utils/ErrorHandler'
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api } from '@/api'
 import _isEmpty from 'lodash/isEmpty'
 
 export default {
@@ -118,12 +118,8 @@ export default {
     async getCorporate ({ ownerId: owner, blobId }) {
       try {
         const response = blobId
-          ? await ApiCallerFactory
-            .createCallerInstance()
-            .getWithSignature(`/accounts/${owner}/blobs/${blobId}`)
-          : await ApiCallerFactory
-            .createCallerInstance()
-            .getWithSignature(`/blobs/${await this.getBlobId(owner)}`)
+          ? await api.getWithSignature(`/accounts/${owner}/blobs/${blobId}`)
+          : await api.getWithSignature(`/blobs/${await this.getBlobId(owner)}`)
         this.corporate = JSON.parse(
           response.data.value || response.data[0].value
         )
@@ -133,16 +129,14 @@ export default {
       }
     },
     async getBlobId (owner) {
-      const { data } = await ApiCallerFactory
-        .createCallerInstance()
-        .getWithSignature('/v3/change_role_requests', {
-          filter: { requestor: owner },
-          page: {
-            limit: 1,
-            order: 'desc',
-          },
-          include: ['request_details'],
-        })
+      const { data } = await api.getWithSignature('/v3/change_role_requests', {
+        filter: { requestor: owner },
+        page: {
+          limit: 1,
+          order: 'desc',
+        },
+        include: ['request_details'],
+      })
       let blobId = ''
       if (!_isEmpty(data[0].requestDetails.creatorDetails)) {
         blobId = data[0].requestDetails.creatorDetails.blobId

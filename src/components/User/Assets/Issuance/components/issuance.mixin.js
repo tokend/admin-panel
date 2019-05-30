@@ -6,7 +6,7 @@ import { REQUEST_STATES, ASSET_POLICIES } from '@/constants'
 import localize from '@/utils/localize'
 
 import config from '@/config'
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api, loadingDataViaLoop } from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
@@ -53,9 +53,8 @@ export default {
 
     async getAssets () {
       try {
-        const { data } = await ApiCallerFactory
-          .createStubbornCallerInstance()
-          .stubbornGet('/v3/assets')
+        let response = await api.getWithSignature('/v3/assets')
+        let data = await loadingDataViaLoop(response)
         this.assets = this.assets.concat(
           data
             .filter(item => (item.policies.value & ASSET_POLICIES.baseAsset))
@@ -71,19 +70,17 @@ export default {
       this.isLoaded = false
       let response = {}
       try {
-        response = await ApiCallerFactory
-          .createCallerInstance()
-          .getWithSignature('/v3/create_issuance_requests', {
-            filter: {
-              reviewer: config.MASTER_ACCOUNT,
-              state: this.filters.state,
-              'request_details.asset': this.filters.asset,
-            },
-            page: {
-              order: 'asc',
-            },
-            include: ['request_details'],
-          })
+        response = await api.getWithSignature('/v3/create_issuance_requests', {
+          filter: {
+            reviewer: config.MASTER_ACCOUNT,
+            state: this.filters.state,
+            'request_details.asset': this.filters.asset,
+          },
+          page: {
+            order: 'asc',
+          },
+          include: ['request_details'],
+        })
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }

@@ -147,7 +147,7 @@ import { verbozify } from '@/utils/verbozify'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { clearObject } from '@/utils/clearObject'
 
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api } from '@/api'
 import _throttle from 'lodash/throttle'
 
 export default {
@@ -190,18 +190,16 @@ export default {
       this.isListLoading = true
       let response = {}
       try {
-        response = await ApiCallerFactory
-          .createCallerInstance()
-          .getWithSignature(`/v3/create_withdraw_requests`, {
-            filter: clearObject({
-              requestor: Vue.params.MASTER_ACCOUNT,
-              state: this.filters.state,
-              'pending_tasks': /^\d+$/.test(this.filters.pendingTasks)
-                ? this.filters.pendingTasks
-                : null,
-            }),
-            include: ['request_details', 'request_details.balance'],
-          })
+        response = await api.getWithSignature(`/v3/create_withdraw_requests`, {
+          filter: clearObject({
+            requestor: Vue.params.MASTER_ACCOUNT,
+            state: this.filters.state,
+            'pending_tasks': /^\d+$/.test(this.filters.pendingTasks)
+              ? this.filters.pendingTasks
+              : null,
+          }),
+          include: ['request_details', 'request_details.balance'],
+        })
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
         this.isListFailed = true

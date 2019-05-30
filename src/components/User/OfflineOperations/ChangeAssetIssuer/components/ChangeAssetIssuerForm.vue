@@ -74,7 +74,7 @@
 <script>
 import { Sdk } from '@/sdk'
 import { ErrorHandler } from '@/utils/ErrorHandler'
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api } from '@/api'
 import config from '@/config'
 
 export default {
@@ -145,9 +145,7 @@ export default {
     async sendTx () {
       const transaction = new Sdk.base.Transaction(this.transaction)
       transaction.sign(this.$store.getters.keypair)
-      await ApiCallerFactory
-        .createCallerInstance()
-        .postOperations(transaction)
+      await api.postOperations(transaction)
     },
   },
 }

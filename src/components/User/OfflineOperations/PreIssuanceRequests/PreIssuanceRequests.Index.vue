@@ -29,7 +29,7 @@
 <script>
 import PreIssuanceRequestList from './components/PreIssuanceRequestList.vue'
 import SelectField from '@comcom/fields/SelectField'
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api, loadingDataViaLoop } from '@/api'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
@@ -70,12 +70,11 @@ export default {
     async getAssets () {
       this.$store.commit('OPEN_LOADER')
       try {
-        const { data } = await ApiCallerFactory
-          .createStubbornCallerInstance()
-          .stubbornGet('/v3/assets')
+        let response = await api.getWithSignature('/v3/assets')
+        let assets = await loadingDataViaLoop(response)
         this.assets = [{
           id: 'All',
-        }].concat(data)
+        }].concat(assets)
         this.asset = this.assets[0].id
         this.assetsLoaded = true
 

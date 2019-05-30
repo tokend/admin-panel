@@ -72,7 +72,7 @@ import { DateFormatter } from '@comcom/formatters'
 import { EmailGetter } from '@comcom/getters'
 import { SelectField } from '@comcom/fields'
 
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api } from '@/api'
 
 import get from 'lodash/get'
 
@@ -112,13 +112,11 @@ export default {
     async getParticipants () {
       try {
         const endpoint = `/v3/sales/${this.sale.id}/relationships/participation`
-        const { data } = await ApiCallerFactory
-          .createCallerInstance()
-          .getWithSignature(endpoint, {
-            filter: {
-              'quote_asset': this.filters.quoteAsset,
-            },
-          })
+        const { data } = await api.getWithSignature(endpoint, {
+          filter: {
+            'quote_asset': this.filters.quoteAsset,
+          },
+        })
         this.participants = data
         this.isLoaded = true
       } catch (error) {

@@ -130,7 +130,6 @@
 </template>
 
 <script>
-import api from '@/api'
 import _ from 'lodash'
 
 import InputField from '@comcom/fields/InputField'
@@ -144,7 +143,8 @@ import { clearObject } from '@/utils/clearObject'
 import { KYC_REQUEST_STATES } from '@/constants'
 
 import config from '@/config'
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api } from '@/api'
+import apiHelper from '@/apiHelper'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { CollectionLoader } from '@/components/common'
@@ -201,18 +201,16 @@ export default {
       try {
         const requestor =
           await this.getRequestorAccountId(this.filters.requestor)
-        response = await ApiCallerFactory
-          .createCallerInstance()
-          .getWithSignature('/v3/change_role_requests', {
-            page: { order: 'desc' },
-            filter: clearObject({
-              pending_tasks: this.filters.pendingTasks,
-              state: KYC_REQUEST_STATES[this.filters.state].state,
-              requestor: requestor,
-              'request_details.account_role_to_set': this.filters.roleToSet,
-            }),
-            include: ['request_details.account'],
-          })
+        response = await api.getWithSignature('/v3/change_role_requests', {
+          page: { order: 'desc' },
+          filter: clearObject({
+            pending_tasks: this.filters.pendingTasks,
+            state: KYC_REQUEST_STATES[this.filters.state].state,
+            requestor: requestor,
+            'request_details.account_role_to_set': this.filters.roleToSet,
+          }),
+          include: ['request_details.account'],
+        })
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }
@@ -225,7 +223,7 @@ export default {
         return requestor
       } else {
         try {
-          const address = await api.users.getAccountIdByEmail(requestor)
+          const address = await apiHelper.users.getAccountIdByEmail(requestor)
           return address || requestor
         } catch (error) {
           return requestor

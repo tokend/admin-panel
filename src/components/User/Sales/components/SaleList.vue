@@ -156,8 +156,8 @@ import {
 import { EmailGetter } from '@comcom/getters'
 import { CollectionLoader } from '@/components/common'
 
-import api from '@/api'
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api } from '@/api'
+import apiHelper from '@/apiHelper'
 
 import { SALE_STATES, SALE_TYPES } from '@/constants'
 
@@ -226,7 +226,7 @@ export default {
       let owner
       const emailRegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
       if (emailRegExp.test(this.owner)) {
-        owner = await api.users.getAccountIdByEmail(this.owner)
+        owner = await apiHelper.users.getAccountIdByEmail(this.owner)
       }
 
       return owner || this.owner
@@ -236,23 +236,21 @@ export default {
       this.isLoaded = false
       let response = {}
       try {
-        response = await ApiCallerFactory
-          .createCallerInstance()
-          .getWithSignature('/v3/sales', {
-            filter: {
-              base_asset: this.filters.baseAsset,
-              owner: this.filters.owner,
-              state: this.filters.state,
-              min_start_time: this.filters.startDate,
-              max_end_time: this.filters.endDate,
-              sale_type: this.filters.type,
-            },
-            page: {
-              limit: this.filters.limit || config.PAGE_LIMIT,
-              order: this.filters.order || 'desc',
-            },
-            include: ['base_asset', 'quote_assets', 'default_quote_asset'],
-          })
+        response = await api.getWithSignature('/v3/sales', {
+          filter: {
+            base_asset: this.filters.baseAsset,
+            owner: this.filters.owner,
+            state: this.filters.state,
+            min_start_time: this.filters.startDate,
+            max_end_time: this.filters.endDate,
+            sale_type: this.filters.type,
+          },
+          page: {
+            limit: this.filters.limit || config.PAGE_LIMIT,
+            order: this.filters.order || 'desc',
+          },
+          include: ['base_asset', 'quote_assets', 'default_quote_asset'],
+        })
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }

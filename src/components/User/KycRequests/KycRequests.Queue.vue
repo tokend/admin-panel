@@ -114,14 +114,14 @@ import QueueRequestActions from './queue/components/QueueRequestActions'
 import ReviewDecisionsList from './queue/components/ReviewDecisionsList'
 import ReviewDecisionViewer from './queue/components/ReviewDecisionViewer'
 
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api } from '@/api'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { REQUEST_STATES } from '@tokend/js-sdk'
 
 import config from '@/config'
 
-import { ChangeRoleRequest } from '@/api/responseHandlers/requests/ChangeRoleRequest'
+import { ChangeRoleRequest } from '@/apiHelper/responseHandlers/requests/ChangeRoleRequest'
 import { ReviewDecision } from './queue/wrappers/ReviewDecision'
 import { DECISION_ACTIONS } from './queue/constants/decision-actions'
 
@@ -218,17 +218,16 @@ export default {
     async loadList () {
       this.isLoading = true
       try {
-        const { data } = await ApiCallerFactory
-          .createCallerInstance()
-          .getWithSignature('/v3/change_role_requests', {
-            page: { order: 'desc' },
-            filter: {
-              state: REQUEST_STATES.pending,
-              'request_details.account_role_to_set':
+        const endpoint = '/v3/change_role_requests'
+        const { data } = await api.getWithSignature(endpoint, {
+          page: { order: 'desc' },
+          filter: {
+            state: REQUEST_STATES.pending,
+            'request_details.account_role_to_set':
                 this.filters.role === ALL_ROLES_FILTER ? '' : this.filters.role,
-            },
-            include: ['request_details'],
-          })
+          },
+          include: ['request_details'],
+        })
 
         this.pendingRequests = data.map(item => new ChangeRoleRequest(item))
         this.reviewDecisions = this.pendingRequests

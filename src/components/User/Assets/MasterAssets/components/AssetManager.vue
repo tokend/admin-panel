@@ -322,9 +322,9 @@ import {
   alphaNum,
 } from '@/validators'
 
-import api from '@/api'
 import { Sdk } from '@/sdk'
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api } from '@/api'
+import apiHelper from '@/apiHelper'
 
 import safeGet from 'lodash/get'
 
@@ -473,11 +473,10 @@ export default {
 
     async getAsset () {
       try {
-        const { data } = await ApiCallerFactory
-          .createCallerInstance()
-          .getWithSignature(`/v3/assets/${this.assetCode}`, {
-            include: ['owner'],
-          })
+        const endpoint = `/v3/assets/${this.assetCode}`
+        const { data } = await api.getWithSignature(endpoint, {
+          include: ['owner'],
+        })
         data.creatorDetails = data.creatorDetails || data.details
         Object.assign(this.asset, data)
       } catch (error) {
@@ -555,9 +554,7 @@ export default {
             },
           })
         }
-        await ApiCallerFactory
-          .createCallerInstance()
-          .postOperations(operation)
+        await api.postOperations(operation)
         Bus.$emit('recheckConfig')
 
         this.$store.dispatch('SET_INFO', 'Submitted successfully.')
@@ -580,20 +577,22 @@ export default {
     async uploadFile (type, mimeType) {
       if (!this[type].file) return
 
-      const { data: config } = await ApiCallerFactory
-        .createCallerInstance()
-        .postWithSignature('/documents', {
-          data: {
-            type,
-            attributes: { content_type: this[type].mime },
-            relationships: {
-              owner: {
-                data: { id: this.userAddress },
-              },
+      const { data: config } = await api.postWithSignature('/documents', {
+        data: {
+          type,
+          attributes: { content_type: this[type].mime },
+          relationships: {
+            owner: {
+              data: { id: this.userAddress },
             },
           },
-        })
-      await api.documents.uploadFile(this[type].file, config, this[type].mime)
+        },
+      })
+      await apiHelper.documents.uploadFile(
+        this[type].file,
+        config,
+        this[type].mime
+      )
 
       this.asset.creatorDetails[type === DOCUMENT_TYPES.assetTerms ? 'terms' : 'logo'] = {
         key: config.key,

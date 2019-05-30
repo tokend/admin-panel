@@ -120,7 +120,7 @@ import InputField from '@comcom/fields/InputField'
 import SelectField from '@comcom/fields/SelectField'
 
 import { REQUEST_STATES } from '@/constants'
-import api from '@/api'
+import apiHelper from '@/apiHelper'
 import { Sdk } from '@/sdk'
 
 import { EmailGetter } from '@comcom/getters'
@@ -172,7 +172,7 @@ export default {
           state: this.filters.state,
           requestor,
         }
-        response = await api.requests.getSaleCreateRequests(filters)
+        response = await apiHelper.requests.getSaleCreateRequests(filters)
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }
@@ -185,7 +185,7 @@ export default {
         return requestor
       } else {
         try {
-          const address = await api.users.getAccountIdByEmail(requestor)
+          const address = await apiHelper.users.getAccountIdByEmail(requestor)
           return address || requestor
         } catch (error) {
           return requestor

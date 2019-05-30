@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api } from '@/api'
 
 import config from '@/config'
 import { ErrorHandler } from '@/utils/ErrorHandler'
@@ -78,12 +78,10 @@ export default {
     async loadEmail () {
       try {
         const accountId = await this.getAccountId()
-        const { data } = await ApiCallerFactory
-          .createCallerInstance()
-          .getWithSignature('/identities', {
-            filter: { address: accountId },
-            page: { limit: 1 },
-          })
+        const { data } = await api.getWithSignature('/identities', {
+          filter: { address: accountId },
+          page: { limit: 1 },
+        })
         this.email = ((data || [])[0] || {}).email || this.email
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
@@ -94,9 +92,8 @@ export default {
       if (this.accountId) {
         return this.accountId
       } else if (this.balanceId) {
-        const { data } = await ApiCallerFactory
-          .createCallerInstance()
-          .getWithSignature(`/v3/balances/${this.balanceId}`)
+        const endpoint = `/v3/balances/${this.balanceId}`
+        const { data } = await api.getWithSignature(endpoint)
         return data.owner.id
       } else {
         return ''
