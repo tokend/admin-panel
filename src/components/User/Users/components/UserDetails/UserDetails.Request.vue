@@ -91,9 +91,6 @@ import Modal from '@comcom/modals/Modal'
 import FormMixin from '@/mixins/form.mixin'
 import { required, maxLength } from '@/validators'
 
-import 'mdi-vue/ChevronDownIcon'
-import 'mdi-vue/ChevronUpIcon'
-
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { confirmAction } from '@/js/modals/confirmation_message'
 import { Bus } from '@/utils/state-bus'

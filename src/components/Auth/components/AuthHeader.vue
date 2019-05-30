@@ -32,7 +32,6 @@
 
 <script>
 import config from '@/config'
-import 'mdi-vue/OpenInNewIcon'
 
 export default {
   data () {

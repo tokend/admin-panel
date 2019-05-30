@@ -39,7 +39,7 @@
         @click="form.upperBound = DEFAULT_MAX_AMOUNT"
         :disabled="formMixin.isDisabled"
       >
-        <mdi-arrow-up-icon />
+        <i class="mdi mdi-arrow-up" />
       </button>
     </span>
 
@@ -125,8 +125,6 @@ import {
   DEFAULT_INPUT_STEP,
   FEE_TYPES,
 } from '@/constants'
-
-import 'mdi-vue/ArrowUpIcon'
 
 const EVENTS = {
   feeUpdated: 'fee-updated',
@@ -288,9 +286,9 @@ export default {
     cursor: pointer;
   }
 
-  & > svg {
-    width: 1.8rem;
-    height: 1.8rem;
+  & > i {
+    font-size: 1.8rem;
+    vertical-align: middle;
   }
 
   &:disabled {

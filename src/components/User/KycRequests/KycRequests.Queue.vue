@@ -43,7 +43,7 @@
               class="kyc-requests-queue__nav-btn"
               @click="incrementRequestIndex"
             >
-              <mdi-chevron-left-icon />
+              <i class="mdi mdi-chevron-left kyc-requests-queue__icon" />
             </button>
             <p class="kyc-requests-queue__nav-title">
               {{ currentRequestIndex + 1 }} /
@@ -53,7 +53,7 @@
               class="kyc-requests-queue__nav-btn"
               @click="decrementRequestIndex"
             >
-              <mdi-chevron-right-icon />
+              <i class="mdi mdi-chevron-right kyc-requests-queue__icon" />
             </button>
           </div>
 
@@ -128,9 +128,6 @@ import { DECISION_ACTIONS } from './queue/constants/decision-actions'
 import { confirmAction } from '@/js/modals/confirmation_message'
 
 import _omit from 'lodash/omit'
-
-import 'mdi-vue/ChevronLeftIcon'
-import 'mdi-vue/ChevronRightIcon'
 
 const ALL_ROLES_FILTER = '0'
 
@@ -367,5 +364,11 @@ export default {
   border: solid 0.1rem;
   padding: 0.6rem;
   border-radius: 5rem;
+}
+
+.kyc-requests-queue__icon {
+  display: flex;
+  font-size: 2.4rem;
+  line-height: 1;
 }
 </style>

@@ -268,8 +268,14 @@
             class="app__btn-secondary app__btn-secondary--iconed"
             @click.prevent="isShownAdvanced = !isShownAdvanced"
           >
-            <mdi-chevron-up-icon v-if="isShownAdvanced" />
-            <mdi-chevron-down-icon v-else />
+            <i
+              v-if="isShownAdvanced"
+              class="mdi mdi-chevron-up asset-manager__icon"
+            />
+            <i
+              v-else
+              class="mdi mdi-chevron-down asset-manager__icon"
+            />
           </button>
         </div>
       </div>
@@ -346,9 +352,6 @@ import {
   DOCUMENT_TYPES,
   ASSET_POLICIES_VERBOSE,
 } from '@/constants'
-
-import 'mdi-vue/ChevronDownIcon'
-import 'mdi-vue/ChevronUpIcon'
 
 const ASSET_CODE_MAX_LENGTH = 16
 const ASSET_NAME_MAX_LENGTH = 255
@@ -686,5 +689,11 @@ export default {
 
 .asset-manager-advanced__block {
   margin: 2rem 0;
+}
+
+.asset-manager__icon {
+  display: flex;
+  justify-content: center;
+  font-size: 2.4rem;
 }
 </style>

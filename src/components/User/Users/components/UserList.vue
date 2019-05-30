@@ -129,8 +129,6 @@ import { ErrorHandler } from '@/utils/ErrorHandler'
 import api from '@/api'
 import { Sdk } from '@/sdk'
 
-import 'mdi-vue/DownloadIcon'
-
 export default {
   components: {
     SelectField,

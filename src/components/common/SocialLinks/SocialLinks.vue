@@ -6,13 +6,13 @@
       :key="link">
       <span class="socials__ico-wrp">
         <template v-if="/facebook|fb\./.test(link)">
-          <mdi-facebook-box-icon class="socials__ico socials__ico--facebook" />
+          <i class="mdi mdi-facebook-box socials__ico socials__ico--facebook" />
         </template>
         <template v-if="/linkedin/.test(link)">
-          <mdi-linkedin-box-icon class="socials__ico socials__ico--linkedin" />
+          <i class="mdi mdi-linkedin-box socials__ico socials__ico--linkedin" />
         </template>
         <template v-if="/twitter/.test(link)">
-          <mdi-twitter-box-icon class="socials__ico socials__ico--twitter" />
+          <i class="mdi mdi-twitter-box socials__ico socials__ico--twitter" />
         </template>
       </span>
       <a
@@ -27,10 +27,6 @@
 </template>
 
 <script>
-import 'mdi-vue/FacebookBoxIcon'
-import 'mdi-vue/LinkedinBoxIcon'
-import 'mdi-vue/TwitterBoxIcon'
-
 export default {
   props: {
     links: { type: String, required: true },
@@ -91,8 +87,7 @@ $color-twitter: #55acee;
 
 .socials__ico-wrp {
   display: inline-block;
-  width: 2.4rem;
-  height: 2.4rem;
+  font-size: 2.4rem;
 }
 
 .socials__ico {
@@ -100,15 +95,15 @@ $color-twitter: #55acee;
   height: 100%;
 
   &--facebook {
-    fill: $color-facebook;
+    color: $color-facebook;
   }
 
   &--linkedin {
-    fill: $color-linkedin;
+    color: $color-linkedin;
   }
 
   &--twitter {
-    fill:$color-twitter;
+    color: $color-twitter;
   }
 }
 </style>
