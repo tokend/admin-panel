@@ -173,7 +173,13 @@ export default {
       for (let i = 0; i < files.length; i++) {
         const extracted = await this.readFile(files[i])
         this.temporaryFileName = files[i].name
-        this.parsePreIssuances(JSON.parse(extracted).issuances)
+
+        try {
+          this.parsePreIssuances(JSON.parse(extracted).issuances)
+        } catch (e) {
+          ErrorHandler.process('Your file is corrupted. Please, select another file')
+          return
+        }
       }
     },
 

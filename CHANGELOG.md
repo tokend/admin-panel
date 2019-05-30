@@ -36,6 +36,7 @@ for further information about branching and tagging conventions.
 - Terms field appearance in asset request
 - Error message styles on text field
 - Select field arrow position
+- Displaying error message if offline app file parsing was failed
 
 ## [1.7.0-rc.2] - 2019-05-21
 ### "Under the hood" changes
