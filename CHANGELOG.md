@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
+## [Unreleased]
+#### Fixed
+- Pagination while loading limits on limits management page
+
 ## [1.7.0-rc.3] - 2019-05-30
 #### Fixed
 - Fixed Withdrawals screen list and review issues
