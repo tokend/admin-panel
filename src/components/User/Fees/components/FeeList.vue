@@ -170,8 +170,8 @@
           >
             <fee-form
               :fee="item"
-              :account-id="requestFilters.account_id"
-              :account-role="requestFilters.account_type"
+              :account-id="filters.accountAddress"
+              :account-role="filters.accountRole"
               @fee-updated="loadFees"
             />
           </li>
