@@ -5,10 +5,6 @@ import users from './users'
 import { requests } from './requests'
 
 export default {
-  install (Vue, options) {
-    Vue.api = this
-  },
-
   assets: assets,
   tfa: tfa,
   users: users,

@@ -1,13 +1,11 @@
-import { ApiCaller, FactorsManager, DocumentsManager } from '@tokend/js-sdk'
+import { ApiCaller, DocumentsManager } from '@tokend/js-sdk'
 import config from '@/config'
 
 export const api = new ApiCaller()
-export const factorsManager = new FactorsManager()
 export const documentsManager = new DocumentsManager()
 
 export function useWallet (newWallet) {
   api.useWallet(newWallet)
-  factorsManager.useApi(api)
   documentsManager.useApi(api)
   documentsManager.useStorageURL(config.FILE_STORAGE)
 }

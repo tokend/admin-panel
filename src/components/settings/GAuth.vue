@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import Vue from 'vue'
+import tfa from '@/apiHelper/tfa'
 import Qrcode from 'qrcode.vue'
 
 import 'mdi-vue/AppleIcon'
@@ -106,7 +106,7 @@ export default {
       this.$store.commit('OPEN_LOADER')
 
       try {
-        const response = await Vue.api.tfa.addGAuth()
+        const response = await tfa.addGAuth()
 
         this.gAuthLink = response.details.secret
         this.secret = response.details.secret_seed
@@ -128,7 +128,7 @@ export default {
       this.$store.commit('OPEN_LOADER')
 
       try {
-        await Vue.api.tfa.enableGAuth(this.id)
+        await tfa.enableGAuth(this.id)
 
         this.$store.commit('CLOSE_LOADER')
         this.$store.dispatch('SET_INFO', 'Two-factor Authentication enabled')

@@ -14,7 +14,6 @@ import App from './components/App/App.vue'
 import Auth from './auth'
 import params from './config'
 import Vuelidate from 'vuelidate'
-import apiHelper from './apiHelper'
 
 /* Error tracker util */
 import { ErrorTracker } from '@/utils/ErrorTracker'
@@ -73,7 +72,6 @@ new Vue({
 Vue.use(Auth)
 Vue.use(params)
 Vue.use(Vuelidate)
-Vue.use(apiHelper)
 
 Vue.filter('dateTime', filterDateWithTime)
 Vue.filter('localizeIssuanceRequestState', localizeIssuanceRequestState)

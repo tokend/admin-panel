@@ -55,7 +55,7 @@ import NoSupportMessage from './components/IERestrictionMessage.vue'
 
 import UAParser from 'ua-parser-js'
 
-import { api, factorsManager, documentsManager } from '@/api'
+import { api, documentsManager } from '@/api'
 import config from '../../config'
 
 import { Wallet } from '@tokend/js-sdk'
@@ -131,7 +131,6 @@ export default {
         })
         this.$store.dispatch('LOG_IN')
       }
-      factorsManager.useApi(api)
       documentsManager.useApi(api)
       documentsManager.useStorageURL(config.FILE_STORAGE)
 

@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import Vue from 'vue'
+import tfa from '@/apiHelper/tfa'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 import FormMixin from '@/mixins/form.mixin'
@@ -90,7 +90,7 @@ export default {
 
       this.disableForm()
       try {
-        await Vue.api.tfa.verifyTfaCode(
+        await tfa.verifyTfaCode(
           this.form.verificationCode,
           this.$store.getters.tfaToken
         )
