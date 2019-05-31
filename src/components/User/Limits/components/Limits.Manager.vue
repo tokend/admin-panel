@@ -63,7 +63,10 @@
         />
       </div>
     </div>
-    <div class="limits-manager__inner">
+    <div
+      v-if="!isLimitsLoading"
+      class="limits-manager__inner"
+    >
       <template
         v-if="filters.scope !== SCOPE_TYPES.account || filters.userAddress"
       >
@@ -243,6 +246,10 @@
         </div>
       </template>
     </div>
+
+    <p v-else>
+      Loading the limits…
+    </p>
   </div>
 </template>
 
@@ -260,7 +267,7 @@ import {
 import config from '@/config'
 import { confirmAction } from '@/js/modals/confirmation_message'
 import { ErrorHandler } from '@/utils/ErrorHandler'
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { ApiCallerFactory, StubbornApiCaller } from '@/api-caller-factory'
 import { LimitsRecord } from '@/js/records/limits.record'
 import cloneDeep from 'lodash/cloneDeep'
 
@@ -296,6 +303,7 @@ export default {
       deposit: {},
     },
     assets: [],
+    isLimitsLoading: false,
     isPending: false,
     isAddressLoading: false,
     LIMITS_TYPES,
@@ -364,6 +372,8 @@ export default {
   methods: {
     async getLimits () {
       if (!this.filters.asset) return
+
+      this.isLimitsLoading = true
       const [
         paymentLimits,
         withdrawalLimits,
@@ -397,6 +407,8 @@ export default {
           ...limitDetails,
         })
 
+      this.isLimitsLoading = false
+
       async function getLimit (statsOpType) {
         const filters = {}
         if (this.filters.scope === SCOPE_TYPES.account) {
@@ -404,9 +416,11 @@ export default {
         } else if (this.filters.scope === SCOPE_TYPES.accountRole) {
           filters.account_role = this.filters.accountRole
         }
-        const { data: limits } = await ApiCallerFactory
-          .createCallerInstance()
-          .getWithSignature('/v3/limits', {
+        const stubbornApiCaller = new StubbornApiCaller(
+          ApiCallerFactory.createCallerInstance()
+        )
+        const { data: limits } = await stubbornApiCaller
+          .stubbornGetWithSignature('/v3/limits', {
             filter: {
               asset: this.filters.asset,
               stats_op_type: statsOpType,
