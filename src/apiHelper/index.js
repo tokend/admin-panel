@@ -1,5 +1,4 @@
 import assets from './assets'
-import documents from './documents'
 import tfa from './tfa'
 import users from './users'
 // new
@@ -11,7 +10,6 @@ export default {
   },
 
   assets: assets,
-  documents: documents,
   tfa: tfa,
   users: users,
 

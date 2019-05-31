@@ -323,8 +323,7 @@ import {
 } from '@/validators'
 
 import { base } from '@tokend/js-sdk'
-import { api } from '@/api'
-import apiHelper from '@/apiHelper'
+import { api, documentsManager } from '@/api'
 
 import safeGet from 'lodash/get'
 
@@ -576,26 +575,15 @@ export default {
 
     async uploadFile (type, mimeType) {
       if (!this[type].file) return
-
-      const { data: config } = await api.postWithSignature('/documents', {
-        data: {
-          type,
-          attributes: { content_type: this[type].mime },
-          relationships: {
-            owner: {
-              data: { id: this.userAddress },
-            },
-          },
-        },
+      const key = await documentsManager.uploadDocument({
+        type: type,
+        mimeType: this[type].mime,
+        file: this[type].file,
+        accountId: this.userAddress,
       })
-      await apiHelper.documents.uploadFile(
-        this[type].file,
-        config,
-        this[type].mime
-      )
 
       this.asset.creatorDetails[type === DOCUMENT_TYPES.assetTerms ? 'terms' : 'logo'] = {
-        key: config.key,
+        key: key,
         name: this[type].name,
         type: this[type].mime,
       }
