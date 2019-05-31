@@ -176,7 +176,7 @@ import { required, minValue, maxValue } from '@/validators'
 import { confirmAction } from '@/js/modals/confirmation_message'
 
 import apiHelper from '@/apiHelper'
-import { Sdk } from '@/sdk'
+import { api } from '@/api'
 
 import {
   DEFAULT_INPUT_STEP,
@@ -186,6 +186,7 @@ import {
 import { ASSET_PAIR_POLICIES } from '@/constants/'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { AssetPairRecord } from '@/js/records/assetPair.record'
 
 export default {
   mixins: [FormMixin],
@@ -252,11 +253,12 @@ export default {
     async getPair () {
       this.isLoaded = false
       try {
-        const response = await Sdk.horizon.assetPairs.getAll()
-        this.pair = response.data
+        const { _rawResponse: response } = await api.get('/asset_pairs')
+        const pair = response.data
           .find(({ base, quote }) => {
             return base === this.base && quote === this.quote
           })
+        this.pair = new AssetPairRecord(pair)
         this.isLoaded = true
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
