@@ -1,8 +1,8 @@
-import { Sdk } from '@/sdk'
+import { base } from '@tokend/js-sdk'
 
 export function xdrTypeFromValue (xdrEnum, value) {
   xdrEnum = typeof xdrEnum === 'string'
-    ? Sdk.xdr[xdrEnum]
+    ? base.xdr[xdrEnum]
     : xdrEnum
 
   try {

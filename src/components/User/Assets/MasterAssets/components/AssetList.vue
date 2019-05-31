@@ -70,7 +70,7 @@
 <script>
 import { CollectionLoader } from '@/components/common'
 
-import { Sdk } from '@/sdk'
+import { base } from '@tokend/js-sdk'
 import { api } from '@/api'
 
 import trim from 'lodash/trim'
@@ -153,7 +153,7 @@ function decamelize (str, prefixForRemove = '') {
 }
 
 function convertPolicyToString (policy) {
-  const xdrEnumValues = Sdk.xdr.AssetPolicy.values()
+  const xdrEnumValues = base.xdr.AssetPolicy.values()
   return trim(xdrEnumValues
     .filter(pol => (pol.value & policy) !== 0)
     .map(pol => decamelize(pol.name, 'asset'))

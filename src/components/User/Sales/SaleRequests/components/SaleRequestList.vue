@@ -121,7 +121,7 @@ import SelectField from '@comcom/fields/SelectField'
 
 import { REQUEST_STATES } from '@/constants'
 import apiHelper from '@/apiHelper'
-import { Sdk } from '@/sdk'
+import { base } from '@tokend/js-sdk'
 
 import { EmailGetter } from '@comcom/getters'
 import { AssetAmountFormatter } from '@comcom/formatters'
@@ -181,7 +181,7 @@ export default {
     },
 
     async getRequestorAccountId (requestor) {
-      if (Sdk.base.Keypair.isValidPublicKey(requestor)) {
+      if (base.Keypair.isValidPublicKey(requestor)) {
         return requestor
       } else {
         try {

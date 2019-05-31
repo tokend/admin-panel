@@ -130,7 +130,7 @@ import InputField from '@comcom/fields/InputField'
 import Modal from '@comcom/modals/Modal'
 import WithdrawalDetails from './WithdrawalDetails'
 
-import { Sdk } from '@/sdk'
+import { base } from '@tokend/js-sdk'
 
 import {
   REQUEST_STATES,
@@ -226,7 +226,7 @@ export default {
     },
 
     async getRequestorAccountId (requestor) {
-      if (Sdk.base.Keypair.isValidPublicKey(requestor)) {
+      if (base.Keypair.isValidPublicKey(requestor)) {
         return requestor
       } else {
         try {

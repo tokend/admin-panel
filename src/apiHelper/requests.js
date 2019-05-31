@@ -1,5 +1,5 @@
 import config from '@/config'
-import { Sdk } from '@/sdk'
+import { base } from '@tokend/js-sdk'
 
 import { REQUEST_TYPES } from '@/constants'
 
@@ -31,7 +31,7 @@ export const requests = {
         reason,
       }
 
-      return Sdk.base.ReviewRequestBuilder.reviewRequest({
+      return base.ReviewRequestBuilder.reviewRequest({
         ...opts,
 
         // TODO: remove. added due to a bug in the @tokend/js-sdk
@@ -55,7 +55,7 @@ export const requests = {
         action,
         reason,
       }
-      return Sdk.base.ReviewRequestBuilder.reviewWithdrawRequest({
+      return base.ReviewRequestBuilder.reviewWithdrawRequest({
         ...opts,
 
         // TODO: remove. added due to a bug in the @tokend/js-sdk
@@ -66,13 +66,13 @@ export const requests = {
   },
 
   async approve (...requests) {
-    const action = Sdk.xdr.ReviewRequestOpAction.approve().value
+    const action = base.xdr.ReviewRequestOpAction.approve().value
     const { data } = await this._review({ action }, ...requests)
     return data
   },
 
   async approveWithdraw (...requests) {
-    const action = Sdk.xdr.ReviewRequestOpAction.approve().value
+    const action = base.xdr.ReviewRequestOpAction.approve().value
     const { data } = await this._reviewWithdraw({ action }, ...requests)
     return data
   },
@@ -95,10 +95,10 @@ export const requests = {
       }))
 
     const operations = []
-    operations.push(Sdk.base.ReviewRequestBuilder.reviewLimitsUpdateRequest({
+    operations.push(base.ReviewRequestBuilder.reviewLimitsUpdateRequest({
       requestHash: params.request.hash,
       requestType: params.request.xdrType.value,
-      action: Sdk.xdr.ReviewRequestOpAction.approve().value,
+      action: base.xdr.ReviewRequestOpAction.approve().value,
       reason: '',
       requestID: params.request.id,
       newLimits: newLimits[0],
@@ -113,7 +113,7 @@ export const requests = {
     newLimits
       .forEach(limits => {
         operations.push(
-          Sdk.base.ManageLimitsBuilder.createLimits(limits)
+          base.ManageLimitsBuilder.createLimits(limits)
         )
       })
     const response = await api.postOperations(...operations)
@@ -129,12 +129,12 @@ export const requests = {
         accountType: undefined,
       }))
 
-    const operation = Sdk.base.ReviewRequestBuilder.reviewLimitsUpdateRequest({
+    const operation = base.ReviewRequestBuilder.reviewLimitsUpdateRequest({
       requestHash: params.request.hash,
       requestType: params.request.xdrType.value,
       action: params.isPermanent
-        ? Sdk.xdr.ReviewRequestOpAction.permanentReject().value
-        : Sdk.xdr.ReviewRequestOpAction.reject().value,
+        ? base.xdr.ReviewRequestOpAction.permanentReject().value
+        : base.xdr.ReviewRequestOpAction.reject().value,
       reason: params.reason,
       requestID: params.request.id,
       newLimits: newLimits[0],
@@ -145,8 +145,8 @@ export const requests = {
 
   async reject ({ reason, isPermanent = false }, ...requests) {
     const action = isPermanent
-      ? Sdk.xdr.ReviewRequestOpAction.permanentReject().value
-      : Sdk.xdr.ReviewRequestOpAction.reject().value
+      ? base.xdr.ReviewRequestOpAction.permanentReject().value
+      : base.xdr.ReviewRequestOpAction.reject().value
 
     const { data } = await this._review({ action, reason }, ...requests)
     return data
@@ -154,8 +154,8 @@ export const requests = {
 
   async rejectWithdraw ({ reason, isPermanent = false }, ...requests) {
     const action = isPermanent
-      ? Sdk.xdr.ReviewRequestOpAction.permanentReject().value
-      : Sdk.xdr.ReviewRequestOpAction.reject().value
+      ? base.xdr.ReviewRequestOpAction.permanentReject().value
+      : base.xdr.ReviewRequestOpAction.reject().value
 
     const { data } = await this._reviewWithdraw(
       { action, reason }, ...requests

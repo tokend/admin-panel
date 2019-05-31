@@ -116,7 +116,7 @@ import { CollectionLoader } from '@/components/common'
 
 import { api } from '@/api'
 import apiHelper from '@/apiHelper'
-import { Sdk } from '@/sdk'
+import { base } from '@tokend/js-sdk'
 
 import { CREATE_ASSET_REQUEST_STATES, REQUEST_STATES_STR } from '@/constants'
 
@@ -210,7 +210,7 @@ export default {
     },
 
     async getRequestorAccountId (requestor) {
-      if (Sdk.base.Keypair.isValidPublicKey(requestor)) {
+      if (base.Keypair.isValidPublicKey(requestor)) {
         return requestor
       } else {
         try {

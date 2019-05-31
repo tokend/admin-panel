@@ -134,7 +134,7 @@ import { required, minValue, maxValue, accountId } from '@/validators'
 
 import { confirmAction } from '@/js/modals/confirmation_message'
 
-import { Sdk } from '@/sdk'
+import { base } from '@tokend/js-sdk'
 import { api, loadingDataViaLoop } from '@/api'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
@@ -281,17 +281,17 @@ export default {
     },
 
     async addAdmin () {
-      await this.submitTx(Sdk.base.ManageSignerBuilder.createSigner)
+      await this.submitTx(base.ManageSignerBuilder.createSigner)
     },
 
     async updateAdmin () {
-      await this.submitTx(Sdk.base.ManageSignerBuilder.updateSigner)
+      await this.submitTx(base.ManageSignerBuilder.updateSigner)
     },
 
     async deleteAdmin () {
       const confirmationTxt = 'Are you sure you want to delete this admin?'
       if (await confirmAction({ title: confirmationTxt })) {
-        await this.submitTx(Sdk.base.ManageSignerBuilder.deleteSigner)
+        await this.submitTx(base.ManageSignerBuilder.deleteSigner)
       }
     },
 

@@ -86,7 +86,7 @@
 <script>
 import { SelectField, InputField } from '@comcom/fields'
 
-import { Sdk } from '@/sdk'
+import { base } from '@tokend/js-sdk'
 import { KEY_VALUE_ENTRY_TYPE } from '@/constants'
 import { api, loadingDataViaLoop } from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
@@ -134,7 +134,7 @@ export default {
     async setKeyValue (key, value, entryType) {
       this.isPending = true
       try {
-        const operation = Sdk.base.ManageKeyValueBuilder
+        const operation = base.ManageKeyValueBuilder
           .putKeyValue({ key, value, entryType })
 
         await api.postOperations(operation)

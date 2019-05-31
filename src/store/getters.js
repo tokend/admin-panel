@@ -1,10 +1,10 @@
 import config from '../config'
-import { Sdk } from '@/sdk'
+import { base } from '@tokend/js-sdk'
 import get from 'lodash/get'
 
 export const keypair = (state) => {
   if (!state.user.keys.seed) return {}
-  return Sdk.base.Keypair.fromSecret(state.user.keys.seed)
+  return base.Keypair.fromSecret(state.user.keys.seed)
 }
 
 export const masterId = (state) => {

@@ -114,7 +114,7 @@ import { required, requiredIf, minValue, maxValue } from '@/validators'
 
 import { confirmAction } from '@/js/modals/confirmation_message'
 
-import { Sdk } from '@/sdk'
+import { base } from '@tokend/js-sdk'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 import { xdrTypeFromValue } from '@/utils/xdrTypeFromValue'
@@ -232,7 +232,7 @@ export default {
           },
           isDelete: isDeleteMode,
         }
-        const operation = Sdk.base.Operation.setFees(opts)
+        const operation = base.Operation.setFees(opts)
 
         await api.postOperations(operation)
         this.$store.dispatch('SET_INFO', 'Submitted successfully')

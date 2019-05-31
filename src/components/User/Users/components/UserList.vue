@@ -127,7 +127,7 @@ import apiHelper from '@/apiHelper'
 import config from '@/config'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
-import { Sdk } from '@/sdk'
+import { base } from '@tokend/js-sdk'
 
 import 'mdi-vue/DownloadIcon'
 
@@ -182,7 +182,7 @@ export default {
     },
 
     async getRequestorAccountId (requestor) {
-      if (Sdk.base.Keypair.isValidPublicKey(requestor)) {
+      if (base.Keypair.isValidPublicKey(requestor)) {
         return requestor
       } else {
         try {

@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import { Sdk } from '@/sdk'
+import { base } from '@tokend/js-sdk'
 
 import Modal from '@comcom/modals/Modal'
 
@@ -135,7 +135,7 @@ export default {
       }
       this.$emit(EVENTS.updateIsPending, true)
       try {
-        const operation = Sdk.base.CreateChangeRoleRequestBuilder
+        const operation = base.CreateChangeRoleRequestBuilder
           .createChangeRoleRequest({
             requestID: '0',
             destinationAccount: this.user.address,

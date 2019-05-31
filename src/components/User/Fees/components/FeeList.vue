@@ -185,7 +185,7 @@
 import { SelectField, InputField } from '@comcom/fields'
 import FeeForm from './FeeForm'
 
-import { Sdk } from '@/sdk'
+import { base } from '@tokend/js-sdk'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import config from '@/config'
@@ -335,7 +335,7 @@ export default {
       if (!alias) return
 
       let address = ''
-      if (Sdk.base.Keypair.isValidPublicKey(alias)) {
+      if (base.Keypair.isValidPublicKey(alias)) {
         address = alias
       } else {
         try {

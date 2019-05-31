@@ -6,11 +6,10 @@ import router from './router'
 
 import StellarWallet from 'tokend-wallet-js-sdk'
 
-import { Sdk } from '@/sdk'
 import config from '@/config'
 import { api } from '@/api'
 
-import { Wallet } from '@tokend/js-sdk'
+import { Wallet, base } from '@tokend/js-sdk'
 import _cloneDeep from 'lodash/cloneDeep'
 
 import { ErrorTracker } from '@/utils/ErrorTracker'
@@ -33,7 +32,7 @@ export default {
   },
 
   async createWallet (credentials, redirect) {
-    const signingKeys = Sdk.base.Keypair.fromSecret(credentials.seed)
+    const signingKeys = base.Keypair.fromSecret(credentials.seed)
     const keychainData = {
       seed: signingKeys.seed(),
       accountId: signingKeys.accountId(),
@@ -127,7 +126,7 @@ export default {
   },
 
   async seedLogin (seed) {
-    const keyPair = Sdk.base.Keypair.fromSecret(seed)
+    const keyPair = base.Keypair.fromSecret(seed)
     const accountId = keyPair.accountId()
 
     if (!await this._checkMasterSignerExists(accountId)) {

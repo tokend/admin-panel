@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import { Sdk } from '@/sdk'
+import { base } from '@tokend/js-sdk'
 
 import FormMixin from '@/mixins/form.mixin'
 import { required, maxLength } from '@/validators'
@@ -144,7 +144,7 @@ export default {
       }
       this.$emit(EVENTS.updateIsPending, true)
       try {
-        const operation = Sdk.base.CreateChangeRoleRequestBuilder
+        const operation = base.CreateChangeRoleRequestBuilder
           .createChangeRoleRequest({
             requestID: '0',
             destinationAccount: this.user.address,
@@ -174,7 +174,7 @@ export default {
         const accountRoleToSet = this.verifiedRequest.accountRoleToSet ||
           config.ACCOUNT_ROLES.notVerified
 
-        const operation = Sdk.base.CreateChangeRoleRequestBuilder
+        const operation = base.CreateChangeRoleRequestBuilder
           .createChangeRoleRequest({
             requestID: '0',
             destinationAccount: this.user.address,

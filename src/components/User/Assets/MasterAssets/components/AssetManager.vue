@@ -322,7 +322,7 @@ import {
   alphaNum,
 } from '@/validators'
 
-import { Sdk } from '@/sdk'
+import { base } from '@tokend/js-sdk'
 import { api } from '@/api'
 import apiHelper from '@/apiHelper'
 
@@ -510,7 +510,7 @@ export default {
             terms.name = this.asset.creatorDetails.terms.name
           }
 
-          operation = Sdk.base.ManageAssetBuilder.assetUpdateRequest({
+          operation = base.ManageAssetBuilder.assetUpdateRequest({
             requestID: '0',
             code: String(this.asset.id),
             policies: Number(this.asset.policies.value),
@@ -526,7 +526,7 @@ export default {
             },
           })
         } else {
-          operation = Sdk.base.ManageAssetBuilder.assetCreationRequest({
+          operation = base.ManageAssetBuilder.assetCreationRequest({
             requestID: '0',
             code: String(this.asset.id),
             preissuedAssetSigner: String(this.asset.preissuedAssetSigner),

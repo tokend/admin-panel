@@ -148,7 +148,7 @@ import apiHelper from '@/apiHelper'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { CollectionLoader } from '@/components/common'
-import { Sdk } from '@/sdk'
+import { base } from '@tokend/js-sdk'
 
 export default {
   name: 'kyc-request-list',
@@ -219,7 +219,7 @@ export default {
     },
 
     async getRequestorAccountId (requestor) {
-      if (Sdk.base.Keypair.isValidPublicKey(requestor)) {
+      if (base.Keypair.isValidPublicKey(requestor)) {
         return requestor
       } else {
         try {

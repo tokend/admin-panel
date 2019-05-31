@@ -1,12 +1,12 @@
-import { Sdk } from '@/sdk'
-import { api } from '@/api'
+import { base } from '@/sdk'
+import { api } from '@tokend/js-sdk'
 
 export default {
   async createPair (params) {
-    const operation = Sdk.base.Operation.manageAssetPair({
+    const operation = base.Operation.manageAssetPair({
       base: params.base,
       quote: params.quote,
-      action: Sdk.xdr.ManageAssetPairAction.create(),
+      action: base.xdr.ManageAssetPairAction.create(),
       policies: +params.policies,
       physicalPrice: '' + params.physicalPrice,
       physicalPriceCorrection: '' + params.physicalPriceCorrection,
@@ -19,16 +19,16 @@ export default {
   async updatePair (params) {
     let action
     if (params.create) {
-      action = Sdk.xdr.ManageAssetPairAction.create()
+      action = base.xdr.ManageAssetPairAction.create()
     } else if (params.updatePrice) {
-      action = Sdk.xdr.ManageAssetPairAction.updatePrice()
+      action = base.xdr.ManageAssetPairAction.updatePrice()
     } else if (params.updatePolicy) {
-      action = Sdk.xdr.ManageAssetPairAction.updatePolicy()
+      action = base.xdr.ManageAssetPairAction.updatePolicy()
     } else {
       throw new TypeError('manageAssetPair: Action is required')
     }
 
-    const operation = Sdk.base.Operation.manageAssetPair({
+    const operation = base.Operation.manageAssetPair({
       base: params.base,
       quote: params.quote,
       action: action,
