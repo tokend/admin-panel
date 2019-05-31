@@ -17,6 +17,8 @@ for further information about branching and tagging conventions.
 - Collected fees management page
 - Assets vuex module
 - Wrappers for assets and balances
+- Form confirmation component
+- State bus for handling status messages
 
 #### Changed
 - Align asset requests detail values to right side
@@ -27,9 +29,21 @@ for further information about branching and tagging conventions.
 - Extracted fees updating to a separate form
 - Extracted limits updating to a separate form
 - Now using $attrs property for input field proxies
+- Now using "@mdi/font" instead of "mdi-vue"
+- Status message design (now using top-right aligned card with iconed state)
+- Now using state bus for emitting status messages
+- Now using form confirmation in the forms:
+  - Manage admin form
+  - Create asset pait form
+  - Manage asset pair forms
+  - Issuance form
+  - Fee withdrawal form
+  - Limits update form
+  - Asset manager form
 
 #### Removed
 - Vee-validate plugin
+- Unnecessary vuex state mutations
 
 #### Fixed
 - Show dash, if line 2 is not specified in kyc request
