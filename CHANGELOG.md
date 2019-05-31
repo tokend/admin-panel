@@ -22,6 +22,8 @@ for further information about branching and tagging conventions.
   switching between routes
 - Form confirmation component
 - State bus for handling status messages
+- "Whitelisted" row to the sale details & sale request details
+- Whitelist tab to the sale details page
 
 #### Changed
 - Align asset requests detail values to right side

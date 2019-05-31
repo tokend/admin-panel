@@ -17,6 +17,13 @@
             <participants-tab :sale="sale" />
           </tab>
 
+          <tab
+            v-if="isSaleWhitelisted"
+            name="Whitelist"
+          >
+            <whitelist-tab :sale="sale" />
+          </tab>
+
           <tab name="Corporate user">
             <syndicate-tab :sale="sale" />
           </tab>
@@ -44,10 +51,13 @@ import { Tabs, Tab } from '@comcom/Tabs'
 import DetailsTab from './SaleManager.DetailsTab'
 import DescriptionTab from './SaleManager.DescriptionTab'
 import ParticipantsTab from './SaleManager.ParticipantsTab'
+import WhitelistTab from './SaleManager.WhitelistTab'
 import SyndicateTab from './SaleManager.SyndicateTab'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { api } from '@/api'
+
+import { SALE_DEFINITION_TYPES } from '@/constants'
 
 export default {
   components: {
@@ -56,6 +66,7 @@ export default {
     DetailsTab,
     DescriptionTab,
     ParticipantsTab,
+    WhitelistTab,
     SyndicateTab,
   },
 
@@ -69,6 +80,13 @@ export default {
       isLoaded: false,
       isFailed: false,
     }
+  },
+
+  computed: {
+    isSaleWhitelisted () {
+      return this.sale.accessDefinitionType.value ===
+        SALE_DEFINITION_TYPES.whitelist
+    },
   },
 
   created () {
