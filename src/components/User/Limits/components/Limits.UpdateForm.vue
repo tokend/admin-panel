@@ -1,7 +1,7 @@
 <template>
   <form
     class="update-limits-form"
-    @submit.prevent="updateLimit"
+    @submit.prevent="isFormValid() && showConfirmation()"
     novalidate
   >
     <div class="update-limits-form__row">
@@ -105,23 +105,35 @@
     </div>
 
     <div class="update-limits-form__actions">
-      <button
-        class="update-limits-form__update-btn app__btn app__btn--info"
-        :disabled="formMixin.isDisabled"
-      >
-        Update
-      </button>
+      <form-confirmation
+        v-if="formMixin.isConfirmationShown"
+        :is-pending="isFormSubmitting"
+        message="Sure?"
+        ok-button-text="Yes"
+        cancel-button-text="No"
+        @ok="submit"
+        @cancel="hideConfirmation"
+      />
 
-      <button
-        type="button"
-        class="update-limits-form__remove-btn
-               app__btn app__btn-outline
-               app__btn-outline--danger"
-        :disabled="formMixin.isDisabled || limits.id === 0"
-        @click="removeLimit"
-      >
-        Remove
-      </button>
+      <template v-else>
+        <button
+          class="update-limits-form__update-btn app__btn app__btn--info"
+          :disabled="formMixin.isDisabled"
+          @click="isDeleteMode = false"
+        >
+          Update
+        </button>
+
+        <button
+          class="update-limits-form__remove-btn
+                app__btn app__btn-outline
+                app__btn-outline--danger"
+          :disabled="formMixin.isDisabled || limits.id === 0"
+          @click="isDeleteMode = true"
+        >
+          Remove
+        </button>
+      </template>
     </div>
   </form>
 </template>
@@ -129,8 +141,6 @@
 <script>
 import FormMixin from '@/mixins/form.mixin'
 import { decimal, minValue, maxValue } from '@/validators'
-
-import { confirmAction } from '@/js/modals/confirmation_message'
 
 import { base } from '@tokend/js-sdk'
 
@@ -162,6 +172,8 @@ export default {
       monthlyOut: '',
       annualOut: '',
     },
+    isFormSubmitting: false,
+    isDeleteMode: false,
     DEFAULT_MAX_AMOUNT,
     DEFAULT_INPUT_STEP,
   }),
@@ -235,10 +247,20 @@ export default {
       }
     },
 
-    async updateLimit () {
-      if (!this.isFormValid() || !await confirmAction()) return
+    async submit () {
+      this.isFormSubmitting = true
 
-      this.disableForm()
+      if (this.isDeleteMode) {
+        await this.removeLimit()
+      } else {
+        await this.updateLimit()
+      }
+
+      this.isFormSubmitting = false
+      this.hideConfirmation()
+    },
+
+    async updateLimit () {
       try {
         const operation = base.ManageLimitsBuilder.createLimits({
           ...this.limits,
@@ -255,15 +277,9 @@ export default {
       } catch (e) {
         ErrorHandler.process(e)
       }
-      this.enableForm()
     },
 
     async removeLimit () {
-      if (!this.isFormValid() || !await confirmAction({
-        title: 'Are you sure you want to delete the limit rule?',
-      })) return
-
-      this.disableForm()
       try {
         const operation = base.ManageLimitsBuilder.removeLimits({
           id: String(this.limits.id),
@@ -276,7 +292,6 @@ export default {
       } catch (e) {
         ErrorHandler.process(e)
       }
-      this.enableForm()
     },
   },
 }
