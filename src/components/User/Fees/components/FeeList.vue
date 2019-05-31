@@ -170,8 +170,8 @@
           >
             <fee-form
               :fee="item"
-              :account-id="filters.accountAddress"
-              :account-role="filters.accountRole"
+              :account-id="composeRequestFilters.account"
+              :account-role="composeRequestFilters.account_role"
               @fee-updated="loadFees"
             />
           </li>
@@ -282,6 +282,25 @@ export default {
       }
       return result
     },
+    composeRequestFilters () {
+      if (!Object.keys(this.filters).length) return this.filters
+
+      const result = {}
+
+      if (this.filters.scope === SCOPE_TYPES.accountRole) {
+        // snake_case because sdk wait for it
+        result.account_role = this.filters.accountRole
+      } else if (this.filters.scope === SCOPE_TYPES.account) {
+        // snake_case because sdk wait for it
+        result.account = this.filters.accountAddress
+      }
+
+      if (+this.filters.feeType === FEE_TYPES.paymentFee) {
+        result.subtype = this.filters.paymentFeeSubtype
+      }
+
+      return result
+    },
   },
 
   watch: {
@@ -356,26 +375,6 @@ export default {
   },
 
   methods: {
-    composeRequestFilters (filters) {
-      if (!Object.keys(filters).length) return filters
-
-      const result = {}
-
-      if (filters.scope === SCOPE_TYPES.accountRole) {
-        // snake_case because sdk wait for it
-        result.account_role = filters.accountRole
-      } else if (filters.scope === SCOPE_TYPES.account) {
-        // snake_case because sdk wait for it
-        result.account = filters.accountAddress
-      }
-
-      if (+filters.feeType === FEE_TYPES.paymentFee) {
-        result.subtype = filters.paymentFeeSubtype
-      }
-
-      return result
-    },
-
     async getAssetsAndPairs () {
       try {
         let response = await api.getWithSignature('/v3/assets')
@@ -392,7 +391,7 @@ export default {
     async loadFees () {
       this.fees = {}
       try {
-        const filters = this.composeRequestFilters(this.filters)
+        const filters = this.composeRequestFilters
         const { data } = await api.getWithSignature('/v3/fees', {
           filter: {
             asset: this.filters.assetCode,
