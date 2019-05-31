@@ -25,7 +25,7 @@
     </div>
 
     <form
-      @submit.prevent="submit"
+      @submit.prevent="isFormValid() && showConfirmation()"
       novalidate
     >
       <div class="asset-manager__image-field-wrp">
@@ -304,7 +304,15 @@
       </template>
 
       <div class="app__form-actions">
+        <form-confirmation
+          v-if="formMixin.isConfirmationShown"
+          :is-pending="isFormSubmitting"
+          @ok="submit"
+          @cancel="hideConfirmation"
+        />
+
         <button
+          v-else
           class="app__btn"
           :disabled="formMixin.isDisabled"
         >
@@ -316,8 +324,6 @@
 </template>
 
 <script>
-import { confirmAction } from '@/js/modals/confirmation_message'
-
 import FormMixin from '@/mixins/form.mixin'
 import {
   required,
@@ -366,6 +372,7 @@ export default {
   data () {
     return {
       isShownAdvanced: false,
+      isFormSubmitting: false,
 
       asset: {
         code: '',
@@ -484,10 +491,7 @@ export default {
     },
 
     async submit () {
-      if (!this.isFormValid()) return
-      if (!await confirmAction()) return
-
-      this.disableForm()
+      this.isFormSubmitting = true
       try {
         await Promise.all([
           this.uploadFile(DOCUMENT_TYPES.assetTerms),
@@ -562,7 +566,9 @@ export default {
       } catch (error) {
         ErrorHandler.process(error)
       }
-      this.enableForm()
+
+      this.isFormSubmitting = false
+      this.hideConfirmation()
     },
 
     onFileChange (event, type) {

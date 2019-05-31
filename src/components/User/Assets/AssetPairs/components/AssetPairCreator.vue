@@ -2,7 +2,7 @@
   <div class="asset-pair-creator">
     <form
       class="asset-pair-creator__form app__block"
-      @submit.prevent="submit"
+      @submit.prevent="isFormValid() && showConfirmation()"
       novalidate
     >
       <h2>Create asset pair</h2>
@@ -163,9 +163,18 @@
       </div>
 
       <div class="app__form-actions">
+        <form-confirmation
+          v-if="formMixin.isConfirmationShown"
+          :is-pending="isFormSubmitting"
+          @ok="submit"
+          @cancel="hideConfirmation"
+        />
+
         <button
+          v-else
           class="asset-pair-creator__submit-btn app__btn"
-          :disabled="formMixin.isDisabled">
+          :disabled="formMixin.isDisabled"
+        >
           Create
         </button>
       </div>
@@ -184,7 +193,6 @@ import {
   DEFAULT_INPUT_MIN,
 } from '@/constants'
 import api from '@/api'
-import { confirmAction } from '@/js/modals/confirmation_message'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { Bus } from '@/utils/state-bus'
@@ -201,6 +209,7 @@ export default {
       physicalPrice: '',
       physicalPriceCorrection: '',
     },
+    isFormSubmitting: false,
     ASSET_PAIR_POLICIES,
     DEFAULT_INPUT_STEP,
     DEFAULT_INPUT_MIN,
@@ -239,9 +248,7 @@ export default {
 
   methods: {
     async submit () {
-      if (!this.isFormValid()) return
-      if (!await confirmAction()) return
-      this.disableForm()
+      this.isFormSubmitting = true
       try {
         await api.assets.createPair({
           ...this.form,
@@ -253,7 +260,8 @@ export default {
       } catch (error) {
         ErrorHandler.process(error)
       }
-      this.enableForm()
+      this.isFormSubmitting = false
+      this.hideConfirmation()
     },
   },
 }

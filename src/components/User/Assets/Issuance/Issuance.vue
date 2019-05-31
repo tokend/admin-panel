@@ -45,7 +45,7 @@ export default {
 
 <style scoped>
 .issuance__form-section {
-  max-width: 44rem;
+  max-width: 53rem;
 }
 
 .issuance__list-section {
