@@ -1,5 +1,5 @@
-import { base } from '@/sdk'
-import { api } from '@tokend/js-sdk'
+import { api } from '@/api'
+import { base } from '@tokend/js-sdk'
 
 export default {
   async createPair (params) {
