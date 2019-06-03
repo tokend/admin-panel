@@ -171,17 +171,6 @@
               :asset="saleDetails.baseAsset.id"
             />
           </li>
-
-          <label class="data-caption">
-            Prices (per one)
-          </label>
-          <li
-            v-for="(item, index) in saleDetails.quoteAssets"
-            :key="index"
-          >
-            <span>{{ item.id }}</span>
-            <span>{{ item.price }}</span>
-          </li>
         </ul>
 
         <label class="data-caption">
