@@ -19,10 +19,6 @@ export default {
     return {
       REQUEST_STATES,
       list: [],
-      listCounter: {
-        pending: null,
-        approved: null,
-      },
       assets: [''],
       isNoMoreEntries: false,
       isLoaded: false,
@@ -86,16 +82,6 @@ export default {
       }
       this.isLoaded = true
       return response
-    },
-
-    // TODO: Count issuance request
-    getListCounter (response) {
-      if (response) {
-        this.listCounter.pending = response._rawResponse.data
-          ._embedded.meta.count.pending
-        this.listCounter.approved = response._rawResponse.data
-          ._embedded.meta.count.approved
-      }
     },
 
     setList (data) {

@@ -20,8 +20,5 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
-.sale-manager-participants-tab__pending-wrp {
-  margin-bottom: 6rem;
-}
+<style lang="scss">
 </style>

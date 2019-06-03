@@ -33,14 +33,6 @@
       </div>
     </div>
 
-    <div class="issuance-rl__request-counter-wrapper">
-      <p class="issuance-rl__request-counter">
-        Pending requests: {{ listCounter.pending }}
-      </p>
-      <p class="issuance-rl__request-counter">
-        Fullfilled requests: {{ listCounter.approved }}
-      </p>
-    </div>
     <div class="issuance-rl__list-wrp">
       <template v-if="list && list.length">
         <ul class="app-list">
