@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
+## [1.7.0] - 2019-06-03
+### "Under the hood" changes
+#### Changed
+- Now using @tokend/js-sdk@1.7.0
+
 ## [1.7.0-rc.4] - 2019-05-31
 #### Fixed
 - Pagination while loading limits on limits management page
@@ -277,7 +282,8 @@ for further information about branching and tagging conventions.
 
 ## [1.3.0] - 2019-03-01
 
-[Unreleased]: https://github.com/tokend/admin-panel/compare/1.7.0-rc.4...HEAD
+[Unreleased]: https://github.com/tokend/admin-panel/compare/1.7.0...HEAD
+[1.7.0]: https://github.com/tokend/admin-panel/compare/1.7.0-rc.4...1.7.0
 [1.7.0-rc.4]: https://github.com/tokend/admin-panel/compare/1.7.0-rc.3...1.7.0-rc.4
 [1.7.0-rc.3]: https://github.com/tokend/admin-panel/compare/1.7.0-rc.2...1.7.0-rc.3
 [1.7.0-rc.2]: https://github.com/tokend/admin-panel/compare/1.7.0-rc.1...1.7.0-rc.2
