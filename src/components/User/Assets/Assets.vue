@@ -1,8 +1,8 @@
 <template>
   <div class="assets">
     <user-header>
-      <router-link :to="{ name: 'assets.masterAssets' }" slot="nav">
-        Master assets
+      <router-link :to="{ name: 'assets.systemAssets' }" slot="nav">
+        System assets
       </router-link>
       <router-link :to="{ name: 'assets.assetRequests' }" slot="nav">
         Asset requests

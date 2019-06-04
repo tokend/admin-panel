@@ -58,10 +58,7 @@
         <ul class="app-list">
           <div class="app-list__header">
             <span class="app-list__cell">
-              Source amount
-            </span>
-            <span class="app-list__cell">
-              Destination amount
+              Amount
             </span>
             <span class="app-list__cell">
               Status
@@ -77,22 +74,17 @@
             :key="item.id"
             @click="requestToShow = item">
             <!-- eslint-disable max-len -->
-            <span
-              class="app-list__cell"
-              :title="`${localize(item.details.withdraw.amount)} ${item.details.withdraw.destAssetCode}`"
-            >
-              {{ localize(item.details.withdraw.amount) }}&nbsp;{{ item.details.withdraw.destAssetCode }}
+            <span class="app-list__cell">
+              <asset-amount-formatter
+                :amount="item.details.createWithdraw.amount"
+                :asset="item.details.createWithdraw.asset"
+              />
             </span>
-            <span
-              class="app-list__cell"
-              :title="`${localize(item.destAssetAmount)} ${item.destAssetCode}`"
-            >
-              {{ localize(item.details.withdraw.destAssetAmount) }}&nbsp;{{ item.details.withdraw.destAssetCode }}
-            </span>
-            <!-- eslint-enable max-len -->
+
             <span class="app-list__cell" :title="verbozify(item.requestState)">
               {{ verbozify(item.requestState) }}
             </span>
+
             <span class="app-list__cell" :title="item.requestor">
               {{ item.requestor }}
             </span>
@@ -126,7 +118,6 @@
       max-width="60rem">
       <withdrawal-details
         :request="requestToShow"
-        :assets="assets"
         @close-request="refreshList" />
     </modal>
   </div>
@@ -135,6 +126,7 @@
 <script>
 import SelectField from '@comcom/fields/SelectField'
 import InputField from '@comcom/fields/InputField'
+import { AssetAmountFormatter } from '@comcom/formatters'
 
 import Modal from '@comcom/modals/Modal'
 import WithdrawalDetails from './WithdrawalDetails'
@@ -148,7 +140,6 @@ import {
 } from '@/constants'
 
 import { verbozify } from '@/utils/verbozify'
-import localize from '@/utils/localize'
 import _ from 'lodash'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
@@ -159,6 +150,7 @@ export default {
     InputField,
     Modal,
     WithdrawalDetails,
+    AssetAmountFormatter,
   },
 
   data () {
@@ -193,7 +185,6 @@ export default {
 
   methods: {
     verbozify,
-    localize,
 
     async getAssets () {
       try {
@@ -216,11 +207,33 @@ export default {
       try {
         const requestor =
           await this.getRequestorAccountId(this.filters.requestor)
-        this.list = await api.requests.getWithdrawalRequests({
+        const list = await api.requests.getWithdrawalRequests({
           state: this.filters.state,
           asset: this.filters.asset,
           requestor: requestor,
         })
+
+        // TODO: remove these dirty fixes
+        // the problem is that in the current implementation, back-end does
+        // not return us asset code of the withdrawn amount
+        list._data = list.data.map(item => {
+          const hackedKeys = {
+            details: {
+              ...item.details,
+              createWithdraw: {
+                ...item.details.createWithdraw,
+                asset: this.filters.asset,
+              },
+            },
+          }
+
+          return {
+            ...item,
+            ...hackedKeys,
+          }
+        })
+
+        this.list = list
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }
@@ -245,6 +258,27 @@ export default {
       try {
         const oldLength = (this.list.data || []).length
         const chunk = await this.list.fetchNext()
+
+        // TODO: remove these dirty fixes
+        // the problem is that in the current implementation, back-end does
+        // not return us asset code of the withdrawn amount
+        chunk._data = chunk.data.map(item => {
+          const hackedKeys = {
+            details: {
+              ...item.details,
+              createWithdraw: {
+                ...item.details.createWithdraw,
+                asset: this.filters.asset,
+              },
+            },
+          }
+
+          return {
+            ...item,
+            ...hackedKeys,
+          }
+        })
+
         this.list._data = this.list.data.concat(chunk.data)
         this.list.fetchNext = chunk.fetchNext
         this.isNoMoreEntries = oldLength === this.list.data.length
