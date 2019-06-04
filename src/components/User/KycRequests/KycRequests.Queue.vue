@@ -191,6 +191,8 @@ export default {
     const isConfirmed = !this.isReviewActive ||
       await confirmAction({
         title: 'Quit the review? All your decisions will be lost',
+        confirmText: 'Yes',
+        cancelText: 'No',
       })
 
     if (isConfirmed) {

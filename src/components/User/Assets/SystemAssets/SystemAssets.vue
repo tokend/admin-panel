@@ -1,11 +1,11 @@
 <template>
-  <div class="master-assets">
+  <div class="system-assets">
     <router-view />
   </div>
 </template>
 
 <script>
 export default {
-  name: 'master-assets',
+  name: 'system-assets',
 }
 </script>

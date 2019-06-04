@@ -3,6 +3,8 @@
 @import './info-blocks';
 @import '../../../node_modules/flatpickr/dist/flatpickr.css';
 @import '../../../node_modules/@mdi/font/css/materialdesignicons.min.css';
+@import '../../../node_modules/nprogress/nprogress.css';
+@import "../scss/colors";
 
 $brand-aluminium: #85898f;
 $brand-violet-lighten: #9e8291;
@@ -147,4 +149,9 @@ $brand-violet-lighten: #9e8291;
 input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill {
   background-color: #fff!important;
   -webkit-box-shadow: 0 0 0px 1000px white inset;
+}
+
+#nprogress .bar {
+  background: $color-active;
+  height: 0.4rem;
 }

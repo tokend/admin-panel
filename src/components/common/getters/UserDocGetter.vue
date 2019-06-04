@@ -50,7 +50,7 @@ export default {
   mixins: [LinkGetterMixin],
 
   props: {
-    mimeType: { type: String, required: true },
+    mimeType: { type: String, default: '' },
   },
 
   computed: {

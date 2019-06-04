@@ -16,63 +16,56 @@
         <email-getter :account-id="request.requestor" is-titled />
       </li>
       <li>
-        <span>Requestor id</span>
+        <span>Requestor ID</span>
         <span>{{ request.requestor }} </span>
       </li>
       <li>
         <span>Receiver address</span>
-        <span :title="request.details.withdraw.creatorDetails.address">
-          {{ request.details.withdraw.creatorDetails.address }}
+        <span :title="request.details.createWithdraw.externalDetails.address">
+          {{ request.details.createWithdraw.externalDetails.address }}
         </span>
       </li>
-      <template v-if="request.details.withdraw.reviewerDetails">
+      <template v-if="request.details.createWithdraw.reviewerDetails">
         <li>
           <span>Hash</span>
-          <span :title="request.details.withdraw.reviewerDetails.hash">
-            {{ request.details.withdraw.reviewerDetails.hash }}
+          <span :title="request.details.createWithdraw.reviewerDetails.hash">
+            {{ request.details.createWithdraw.reviewerDetails.hash }}
           </span>
         </li>
         <li>
           <span>Transaction</span>
-          <span :title="request.details.withdraw.reviewerDetails.tx">
-            {{ request.details.withdraw.reviewerDetails.tx }}
+          <span :title="request.details.createWithdraw.reviewerDetails.tx">
+            {{ request.details.createWithdraw.reviewerDetails.tx }}
           </span>
         </li>
       </template>
       <li>
-        <span>Source amount</span>
+        <span>Amount</span>
         <asset-amount-formatter
-          :amount="request.details.withdraw.amount"
-          :asset="request.details.withdraw.destAssetCode"
-        />
-      </li>
-      <li>
-        <span>Destination amount</span>
-        <asset-amount-formatter
-          :amount="request.details.withdraw.destAssetAmount"
-          :asset="request.details.withdraw.destAssetCode"
+          :amount="request.details.createWithdraw.amount"
+          :asset="request.details.createWithdraw.asset"
         />
       </li>
       <li>
         <span>Fixed fee</span>
         <asset-amount-formatter
-          :amount="request.details.withdraw.fixedFee"
-          :asset="request.details.withdraw.destAssetCode"
+          :amount="request.details.createWithdraw.fixedFee"
+          :asset="request.details.createWithdraw.asset"
         />
       </li>
       <li>
         <span>Percent fee</span>
         <asset-amount-formatter
-          :amount="request.details.withdraw.percentFee"
-          :asset="request.details.withdraw.destAssetCode"
+          :amount="request.details.createWithdraw.percentFee"
+          :asset="request.details.createWithdraw.asset"
         />
       </li>
       <li>
         <span>Total fee</span>
         <asset-amount-formatter
-          :amount="Number(request.details.withdraw.fixedFee) +
-            Number(request.details.withdraw.percentFee)"
-          :asset="request.details.withdraw.destAssetCode"
+          :amount="Number(request.details.createWithdraw.fixedFee) +
+            Number(request.details.createWithdraw.percentFee)"
+          :asset="request.details.createWithdraw.asset"
         />
       </li>
     </ul>
@@ -163,7 +156,6 @@ export default {
 
   props: {
     request: { type: Object, required: true },
-    assets: { type: Array, required: true },
   },
 
   data () {
@@ -191,9 +183,7 @@ export default {
 
   computed: {
     reviewAllowed () {
-      return this.assets
-        .find(item => item.code === this.request.details.withdraw.destAssetCode)
-        .policy & ASSET_POLICIES.withdrawable
+      return this.request.requestState === 'pending'
     },
   },
 
@@ -205,7 +195,7 @@ export default {
       this.isSubmitting = true
       try {
         await api.requests.approveWithdraw(request)
-        Bus.success('Request fulfilled succesfully.')
+        Bus.success('Request fulfilled successfully.')
         this.$emit('close-request')
       } catch (error) {
         ErrorHandler.process(error)

@@ -17,6 +17,9 @@ for further information about branching and tagging conventions.
 - Collected fees management page
 - Assets vuex module
 - Wrappers for assets and balances
+- External link icon to the "Learn more about pre-issuance" link
+- NProgress package for displaying loading progress while
+  switching between routes
 - Form confirmation component
 - State bus for handling status messages
 
@@ -29,6 +32,9 @@ for further information about branching and tagging conventions.
 - Extracted fees updating to a separate form
 - Extracted limits updating to a separate form
 - Now using $attrs property for input field proxies
+- Now displaying "Yes" and "No" buttons on KYC queue confirmation
+- Now providing only tasks to add to KYC reject request operation
+- Renamed "Master assets" to "System assets" on "Assets" menu
 - Now using "@mdi/font" instead of "mdi-vue"
 - Status message design (now using top-right aligned card with iconed state)
 - Now using state bus for emitting status messages
@@ -43,6 +49,7 @@ for further information about branching and tagging conventions.
 
 #### Removed
 - Vee-validate plugin
+- "Fiat asset" checkbox from asset creation form
 - Unnecessary vuex state mutations
 
 #### Fixed
@@ -50,6 +57,25 @@ for further information about branching and tagging conventions.
 - Terms field appearance in asset request
 - Error message styles on text field
 - Select field arrow position
+- Displaying asset request terms document
+- Displaying error message if offline app file parsing was failed
+
+## [1.7.0] - 2019-06-03
+### "Under the hood" changes
+#### Changed
+- Now using @tokend/js-sdk@1.7.0
+
+## [1.7.0-rc.4] - 2019-05-31
+#### Fixed
+- Pagination while loading limits on limits management page
+
+## [1.7.0-rc.3] - 2019-05-30
+#### Fixed
+- Fixed Withdrawals screen list and review issues
+
+### "Under the hood" changes
+#### Changed
+- Now using @tokend/js-sdk@1.7.0-rc.2
 
 ## [1.7.0-rc.2] - 2019-05-21
 ### "Under the hood" changes
@@ -310,7 +336,10 @@ for further information about branching and tagging conventions.
 
 ## [1.3.0] - 2019-03-01
 
-[Unreleased]: https://github.com/tokend/admin-panel/compare/1.7.0-rc.2...HEAD
+[Unreleased]: https://github.com/tokend/admin-panel/compare/1.7.0...HEAD
+[1.7.0]: https://github.com/tokend/admin-panel/compare/1.7.0-rc.4...1.7.0
+[1.7.0-rc.4]: https://github.com/tokend/admin-panel/compare/1.7.0-rc.3...1.7.0-rc.4
+[1.7.0-rc.3]: https://github.com/tokend/admin-panel/compare/1.7.0-rc.2...1.7.0-rc.3
 [1.7.0-rc.2]: https://github.com/tokend/admin-panel/compare/1.7.0-rc.1...1.7.0-rc.2
 [1.7.0-rc.1]: https://github.com/tokend/admin-panel/compare/1.7.0-rc.0...1.7.0-rc.1
 [1.7.0-rc.0]: https://github.com/tokend/admin-panel/compare/1.6.0...1.7.0-rc.0
