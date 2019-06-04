@@ -63,7 +63,11 @@
         />
       </div>
     </div>
-    <div class="limits-manager__inner">
+
+    <div
+      v-if="!isLimitsLoading"
+      class="limits-manager__inner"
+    >
       <template
         v-if="filters.scope !== SCOPE_TYPES.account || filters.userAddress"
       >
@@ -129,6 +133,10 @@
         </div>
       </template>
     </div>
+
+    <p v-else>
+      Loading the limits…
+    </p>
   </div>
 </template>
 
@@ -139,7 +147,7 @@ import LimitsUpdateForm from './Limits.UpdateForm'
 import { base } from '@tokend/js-sdk'
 import { STATS_OPERATION_TYPES } from '@/constants'
 
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { ApiCallerFactory, StubbornApiCaller } from '@/api-caller-factory'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 import config from '@/config'
@@ -178,6 +186,7 @@ export default {
     },
 
     assets: [],
+    isLimitsLoading: false,
     isAddressLoading: false,
     ACCOUNT_ROLES: config.ACCOUNT_ROLES,
     SCOPE_TYPES,
@@ -258,6 +267,8 @@ export default {
   methods: {
     async getLimits () {
       if (!this.filters.asset) return
+
+      this.isLimitsLoading = true
       const [paymentLimits, withdrawalLimits, depositLimits] =
         await Promise.all([
           this.getLimit(STATS_OPERATION_TYPES.paymentOut),
@@ -292,6 +303,8 @@ export default {
           ...limitDetails,
         }
       )
+
+      this.isLimitsLoading = false
     },
 
     async getLimit (statsOpType) {
@@ -301,9 +314,11 @@ export default {
       } else if (this.filters.scope === SCOPE_TYPES.accountRole) {
         filters.account_role = this.filters.accountRole
       }
-      const { data: limits } = await ApiCallerFactory
-        .createCallerInstance()
-        .getWithSignature('/v3/limits', {
+      const stubbornApiCaller = new StubbornApiCaller(
+        ApiCallerFactory.createCallerInstance()
+      )
+      const { data: limits } = await stubbornApiCaller
+        .stubbornGetWithSignature('/v3/limits', {
           filter: {
             asset: this.filters.asset,
             stats_op_type: statsOpType,

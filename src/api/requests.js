@@ -9,6 +9,7 @@ import { IssuanceCreateRequest } from './responseHandlers/requests/IssuanceCreat
 
 import { clearObject } from '@/utils/clearObject'
 import _get from 'lodash/get'
+import { ApiCallerFactory } from '@/api-caller-factory'
 
 export const requests = {
   _review ({ action, reason = '' }, ...requests) {
@@ -46,23 +47,21 @@ export const requests = {
       const opts = {
         requestID: item.id,
         requestHash: item.hash,
-        requestType: item.request_type_i || item.requestTypeI,
+        requestType: REQUEST_TYPES.createWithdraw,
         reviewDetails: {
           tasksToAdd: 0,
           tasksToRemove: item.pendingTasks || item.pending_tasks,
-          externalDetails: '{}',
+          externalDetails: {},
         },
         action,
         reason,
       }
-      return Sdk.base.ReviewRequestBuilder.reviewWithdrawRequest({
-        ...opts,
-
-        // TODO: remove. added due to a bug in the @tokend/js-sdk
-        requestDetails: opts,
-      })
+      return Sdk.base.ReviewRequestBuilder.reviewWithdrawRequest(opts)
     })
-    return Sdk.horizon.transactions.submitOperations(...operations)
+
+    return ApiCallerFactory
+      .createCallerInstance()
+      .postOperations(...operations)
   },
 
   async approve (...requests) {
