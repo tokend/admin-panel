@@ -6,7 +6,7 @@
       <div class="system-assets-index__actions">
         <router-link
           class="system-assets-index__create-btn app__btn app__btn--iconed"
-          :to="{ name: 'assets.masterAssets.new' }"
+          :to="{ name: 'assets.systemAssets.new' }"
         >
           <i class="mdi mdi-plus" />
           Create asset

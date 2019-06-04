@@ -554,7 +554,7 @@ export default {
         Bus.$emit('recheckConfig')
 
         this.$store.dispatch('SET_INFO', 'Submitted successfully.')
-        this.$router.push({ name: 'assets.masterAssets.index' })
+        this.$router.push({ name: 'assets.systemAssets.index' })
       } catch (error) {
         ErrorHandler.process(error)
       }
