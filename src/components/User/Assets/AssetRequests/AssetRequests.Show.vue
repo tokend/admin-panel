@@ -158,6 +158,10 @@
               assetRequest,
               'operationDetails.details.terms.key'
             )"
+            :mime-type="safeGet(
+              assetRequest,
+              'operationDetails.details.terms.mimeType'
+            )"
           >
             Open file
           </user-doc-link-getter>

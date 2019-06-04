@@ -29,6 +29,7 @@
     "loglevel": "1.6.1",
     "mdi-vue": "0.2.7",
     "moment": "2.23.0",
+    "nprogress": "0.2.0",
     "numeral": "2.0.6",
     "qrcode.vue": "1.6.1",
     "tokend-wallet-js-sdk": "git+https://github.com/tokend/wallet-js-sdk.git#ec401cabdb6d9a4e122f54bf1332cf1957e80956",

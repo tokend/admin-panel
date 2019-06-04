@@ -17,6 +17,9 @@ for further information about branching and tagging conventions.
 - Collected fees management page
 - Assets vuex module
 - Wrappers for assets and balances
+- External link icon to the "Learn more about pre-issuance" link
+- NProgress package for displaying loading progress while
+  switching between routes
 
 #### Changed
 - Align asset requests detail values to right side
@@ -27,15 +30,20 @@ for further information about branching and tagging conventions.
 - Extracted fees updating to a separate form
 - Extracted limits updating to a separate form
 - Now using $attrs property for input field proxies
+- Now displaying "Yes" and "No" buttons on KYC queue confirmation
+- Now providing only tasks to add to KYC reject request operation
+- Renamed "Master assets" to "System assets" on "Assets" menu
 
 #### Removed
 - Vee-validate plugin
+- "Fiat asset" checkbox from asset creation form
 
 #### Fixed
 - Show dash, if line 2 is not specified in kyc request
 - Terms field appearance in asset request
 - Error message styles on text field
 - Select field arrow position
+- Displaying asset request terms document
 
 ## [1.7.0] - 2019-06-03
 ### "Under the hood" changes
