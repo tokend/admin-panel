@@ -32,7 +32,7 @@
       v-if="$slots.help"
       class="tick-field__tip"
     >
-      <mdi-help-circle-icon class="tick-field__tip-icon" />
+      <i class="tick-field__tip-icon mdi mdi-help-circle" />
       <div class="tick-field__tip-content">
         <slot name="help" />
       </div>
@@ -245,7 +245,7 @@ export default {
 .tick-field__tip-icon {
   cursor: help;
   display: flex;
-  width: 1.8rem;
-  fill: $field-color-unfocused;
+  font-size: 1.8rem;
+  color: $field-color-unfocused;
 }
 </style>

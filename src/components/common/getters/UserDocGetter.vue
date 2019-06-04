@@ -7,7 +7,7 @@
           target="_blank"
           rel="noopener"
         >
-          Open file <mdi-open-in-new-icon class="user-doc-getter__ico" />
+          Open file <i class="mdi mdi-open-in-new user-doc-getter__ico" />
         </a>
       </div>
 
@@ -103,11 +103,10 @@ export default {
 }
 
 .user-doc-getter__ico {
-  width: 1rem;
-  height: 1rem;
+  font-size: 1rem;
   vertical-align: middle;
   margin-left: 0.5rem;
-  fill: $color-active;
+  color: $color-active;
 }
 
 embed, img {

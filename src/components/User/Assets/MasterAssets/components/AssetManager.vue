@@ -25,7 +25,7 @@
     </div>
 
     <form
-      @submit.prevent="isFormValid() && showConfirmation()"
+      @submit.prevent="submit"
       novalidate
     >
       <div class="asset-manager__image-field-wrp">
@@ -109,7 +109,7 @@
           class="app__form-field app__form-field--halved"
           type="number"
           min="0"
-          :step="DEFAULT_INPUT_STEP"
+          :step="selectedAssetStep(trailingDigitsCount)"
           label="Maximum assets"
           v-model="asset.maxIssuanceAmount"
           :disabled="isExistingAsset || formMixin.isDisabled"
@@ -126,7 +126,7 @@
 
         <!--
           the field is disabled due to omitted testing
-          session of trailingDigitsCount
+          session of trailingDigits
         -->
         <input-field
           class="app__form-field app__form-field--halved"
@@ -135,12 +135,12 @@
           step="1"
           max="6"
           label="Trailing digits count"
-          v-model="asset.trailingDigitsCount"
-          :disabled="true || isExistingAsset || formMixin.isDisabled"
+          v-model="asset.trailingDigits"
+          :disabled="isExistingAsset || formMixin.isDisabled"
           name="trailing-digits-count"
-          @blur="touchField('asset.trailingDigitsCount')"
+          @blur="touchField('asset.trailingDigits')"
           :error-message="getFieldErrorMessage(
-            'asset.trailingDigitsCount',
+            'asset.trailingDigits',
             { minValue: 0, maxValue: 6 }
           )"
         />
@@ -252,6 +252,15 @@
       </div>
       <!-- eslint-enable max-len -->
 
+      <div class="app__form-row">
+        <tick-field
+          class="app__form-field"
+          v-model="asset.creatorDetails.isFiat"
+          label="Fiat asset"
+          :disabled="formMixin.isDisabled"
+        />
+      </div>
+
       <div class="asset-manager-advanced__block">
         <div class="asset-manager-advanced__heading">
           <h3>Advanced</h3>
@@ -259,14 +268,8 @@
             class="app__btn-secondary app__btn-secondary--iconed"
             @click.prevent="isShownAdvanced = !isShownAdvanced"
           >
-            <i
-              v-if="isShownAdvanced"
-              class="mdi mdi-chevron-up asset-manager__icon"
-            />
-            <i
-              v-else
-              class="mdi mdi-chevron-down asset-manager__icon"
-            />
+            <mdi-chevron-up-icon v-if="isShownAdvanced" />
+            <mdi-chevron-down-icon v-else />
           </button>
         </div>
       </div>
@@ -295,15 +298,7 @@
       </template>
 
       <div class="app__form-actions">
-        <form-confirmation
-          v-if="formMixin.isConfirmationShown"
-          :is-pending="isFormSubmitting"
-          @ok="submit"
-          @cancel="hideConfirmation"
-        />
-
         <button
-          v-else
           class="app__btn"
           :disabled="formMixin.isDisabled"
         >
@@ -315,6 +310,8 @@
 </template>
 
 <script>
+import { confirmAction } from '@/js/modals/confirmation_message'
+
 import FormMixin from '@/mixins/form.mixin'
 import {
   required,
@@ -332,8 +329,7 @@ import safeGet from 'lodash/get'
 
 import config from '@/config'
 
-import EventBus from '@/utils/EventBus'
-import { Bus } from '@/utils/state-bus'
+import Bus from '@/utils/EventBus'
 import { fileReader } from '@/utils/file-reader'
 
 import { mapGetters } from 'vuex'
@@ -362,7 +358,6 @@ export default {
   data () {
     return {
       isShownAdvanced: false,
-      isFormSubmitting: false,
 
       asset: {
         id: '',
@@ -373,9 +368,10 @@ export default {
         initialPreissuedAmount: '0',
         maxIssuanceAmount: '0',
         availableForIssuance: '0',
-        trailingDigitsCount: '6',
+        trailingDigits: '6',
         assetType: '0',
         creatorDetails: {
+          isFiat: false,
           name: '',
           logo: {},
           terms: {},
@@ -427,7 +423,7 @@ export default {
           minValue: minValue(0),
           maxValue: maxValue(this.asset.maxIssuanceAmount),
         },
-        trailingDigitsCount: {
+        trailingDigits: {
           required,
           minValue: minValue(0),
           maxValue: maxValue(6),
@@ -485,7 +481,10 @@ export default {
     },
 
     async submit () {
-      this.isFormSubmitting = true
+      if (!this.isFormValid()) return
+      if (!await confirmAction()) return
+
+      this.disableForm()
       try {
         await Promise.all([
           this.uploadFile(DOCUMENT_TYPES.assetTerms),
@@ -514,6 +513,7 @@ export default {
             allTasks: 0,
             creatorDetails: {
               name: this.asset.creatorDetails.name,
+              isFiat: this.asset.creatorDetails.isFiat,
               external_system_type: this.asset
                 .creatorDetails.externalSystemType,
               is_coinpayments: this.asset.creatorDetails.isCoinpayments,
@@ -530,10 +530,11 @@ export default {
             policies: Number(this.asset.policies.value),
             assetType: String(this.asset.type),
             initialPreissuedAmount: String(this.asset.initialPreissuedAmount),
-            trailingDigitsCount: Number(this.asset.trailingDigitsCount),
+            trailingDigitsCount: Number(this.asset.trailingDigits),
             allTasks: 0,
             creatorDetails: {
               name: this.asset.creatorDetails.name,
+              isFiat: this.asset.creatorDetails.isFiat,
               external_system_type: this.asset
                 .creatorDetails.externalSystemType,
               is_coinpayments: this.asset.creatorDetails.isCoinpayments,
@@ -549,18 +550,15 @@ export default {
             },
           })
         }
-
         await api.postOperations(operation)
-        EventBus.$emit('recheckConfig')
+        Bus.$emit('recheckConfig')
 
-        Bus.success('Submitted successfully.')
-        this.$router.push({ name: 'assets.systemAssets.index' })
+        this.$store.dispatch('SET_INFO', 'Submitted successfully.')
+        this.$router.push({ name: 'assets.masterAssets.index' })
       } catch (error) {
         ErrorHandler.process(error)
       }
-
-      this.isFormSubmitting = false
-      this.hideConfirmation()
+      this.enableForm()
     },
 
     onFileChange (event, type) {
@@ -678,11 +676,5 @@ export default {
 
 .asset-manager-advanced__block {
   margin: 2rem 0;
-}
-
-.asset-manager__icon {
-  display: flex;
-  justify-content: center;
-  font-size: 2.4rem;
 }
 </style>

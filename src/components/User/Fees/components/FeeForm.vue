@@ -39,7 +39,7 @@
         @click="form.upperBound = DEFAULT_MAX_AMOUNT"
         :disabled="formMixin.isDisabled"
       >
-        <mdi-arrow-up-icon />
+        <i class="mdi mdi-arrow-up" />
       </button>
     </span>
 
@@ -116,6 +116,7 @@ import { confirmAction } from '@/js/modals/confirmation_message'
 
 import { base } from '@tokend/js-sdk'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { Bus } from '@/utils/state-bus'
 
 import { xdrTypeFromValue } from '@/utils/xdrTypeFromValue'
 import {
@@ -125,7 +126,6 @@ import {
   FEE_TYPES,
 } from '@/constants'
 
-import 'mdi-vue/ArrowUpIcon'
 import { api } from '@/api'
 
 const EVENTS = {
@@ -235,7 +235,7 @@ export default {
         const operation = base.Operation.setFees(opts)
 
         await api.postOperations(operation)
-        this.$store.dispatch('SET_INFO', 'Submitted successfully')
+        Bus.success('Submitted successfully')
         this.$emit(EVENTS.feeUpdated)
       } catch (error) {
         ErrorHandler.process(error)
@@ -288,9 +288,9 @@ export default {
     cursor: pointer;
   }
 
-  & > svg {
-    width: 1.8rem;
-    height: 1.8rem;
+  & > i {
+    font-size: 1.8rem;
+    vertical-align: middle;
   }
 
   &:disabled {

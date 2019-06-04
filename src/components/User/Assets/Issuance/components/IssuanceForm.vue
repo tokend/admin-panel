@@ -2,7 +2,7 @@
   <div class="issuance-form">
     <template v-if="assets && assets.length">
       <form
-        @submit.prevent="submit"
+        @submit.prevent="isFormValid() && showConfirmation()"
         novalidate
       >
         <div class="app__form-row">
@@ -88,7 +88,16 @@
         </div>
 
         <div class="issuance-form__form-actions app__form-actions">
+          <form-confirmation
+            v-if="formMixin.isConfirmationShown"
+            :is-pending="isFormSubmitting"
+            message="Please, recheck all the fields"
+            @ok="submit"
+            @cancel="hideConfirmation"
+          />
+
           <button
+            v-else
             class="app__btn"
             :disabled="formMixin.isDisabled || !isIssuanceAllowed"
           >
@@ -114,6 +123,7 @@ import { base } from '@tokend/js-sdk'
 
 import config from '@/config'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { Bus } from '@/utils/state-bus'
 
 import {
   required,
@@ -123,10 +133,9 @@ import {
   maxLength,
 } from '@/validators'
 
-import Bus from '@/utils/EventBus'
+import EventBus from '@/utils/EventBus'
 import { DEFAULT_INPUT_STEP, DEFAULT_INPUT_MIN } from '@/constants'
 
-import { confirmAction } from '@/js/modals/confirmation_message'
 const REFERENCE_MAX_LENGTH = 255
 
 export default {
@@ -141,6 +150,7 @@ export default {
         reference: '',
         asset: '',
       },
+      isFormSubmitting: false,
       assets: [],
       DEFAULT_INPUT_STEP,
       DEFAULT_INPUT_MIN,
@@ -171,7 +181,7 @@ export default {
   computed: {
     availableForIssuance () {
       const asset = this.assets.find(item => item.id === this.form.asset)
-      return asset.availableForIssuance
+      return asset ? asset.availableForIssuance : ''
     },
 
     isIssuanceAllowed () {
@@ -180,7 +190,7 @@ export default {
   },
 
   created () {
-    Bus.$on('issuance:updateAssets', _ => this.getAssets())
+    EventBus.$on('issuance:updateAssets', _ => this.getAssets())
     this.getAssets()
   },
 
@@ -260,29 +270,27 @@ export default {
           allTasks: 0,
         })
       await api.postOperations(operation)
-      this.form.amount = null
-      this.form.receiver = null
-      this.form.reference = null
-      this.$store.dispatch('SET_INFO', 'Issued successfully')
+
+      Bus.success('Issued successfully')
       this.getAssets()
     },
 
     async submit () {
-      if (!this.isFormValid()) return
+      this.isFormSubmitting = true
+      try {
+        const balanceId = await this.getBalanceId()
+        await this.sendManualIssuance(balanceId)
 
-      this.disableForm()
-      if (await confirmAction()) {
-        try {
-          const balanceId = await this.getBalanceId()
-          await this.sendManualIssuance(balanceId)
-
-          Bus.$emit('issuance:updateRequestList')
-          await this.getAssets()
-        } catch (error) {
-          ErrorHandler.process(error)
-        }
+        this.clearFieldsWithOverriding({
+          asset: this.form.asset,
+        })
+        EventBus.$emit('issuance:updateRequestList')
+        await this.getAssets()
+      } catch (error) {
+        ErrorHandler.process(error)
       }
-      this.enableForm()
+      this.isFormSubmitting = false
+      this.hideConfirmation()
     },
   },
 }

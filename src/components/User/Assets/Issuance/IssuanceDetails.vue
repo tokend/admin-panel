@@ -124,6 +124,7 @@ import { REQUEST_STATES } from '@/constants'
 import localize from '@/utils/localize'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { Bus } from '@/utils/state-bus'
 
 const REJECT_REASON_MAX_LENGTH = 255
 
@@ -192,7 +193,7 @@ export default {
           })
 
           await this.getIssuance(this.id)
-          this.$store.dispatch('SET_INFO', 'Request fulfilled successfully.')
+          Bus.success('Request fulfilled successfully.')
         } catch (error) {
           ErrorHandler.processWithoutFeedback(error)
         }
@@ -226,7 +227,7 @@ export default {
 
         await this.getIssuance(this.id)
         this.clearRejectionSelection()
-        this.$store.dispatch('SET_INFO', 'Request rejected successfully.')
+        Bus.success('Request rejected successfully.')
       } catch (error) {
         ErrorHandler.process(error)
       }

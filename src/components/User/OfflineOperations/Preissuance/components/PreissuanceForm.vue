@@ -14,7 +14,7 @@
       >
         <p class="preissuance-form__link-content">
           Learn more about pre-issuance
-          <mdi-open-in-new-icon class="preissuance-form__link-icon" />
+          <i class="mdi mdi-open-in-new preissuance-form__link-icon" />
         </p>
       </a>
     </div>
@@ -130,7 +130,7 @@ import localize from '@/utils/localize'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { api, loadingDataViaLoop } from '@/api'
 
-import 'mdi-vue/OpenInNewIcon'
+import { Bus } from '@/utils/state-bus'
 
 export default {
   data () {
@@ -249,7 +249,7 @@ export default {
         })
         await api.postOperations(...operations)
         this.fileInfo = []
-        this.$store.dispatch('SET_INFO', 'Successfully submitted')
+        Bus.success('Successfully submitted')
       } catch (error) {
         ErrorHandler.process(error)
       }
@@ -306,8 +306,8 @@ $width-without-indentation: calc(100% + 2 * #{$paddind-in-tab});
 }
 
 .preissuance-form__link-icon {
-  width: 1.4rem;
-  fill: $color-info;
+  font-size: 1.2rem;
+  color: $color-info;
   vertical-align: middle;
   margin-left: 0.2rem;
 }

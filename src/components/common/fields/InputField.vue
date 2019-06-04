@@ -7,7 +7,7 @@
       v-if="$slots.help"
       class="input-field__tip"
     >
-      <mdi-help-circle-icon class="input-field__tip-icon" />
+      <i class="input-field__tip-icon mdi mdi-help-circle" />
       <div class="input-field__tip-content">
         <slot name="help" />
       </div>
@@ -51,8 +51,6 @@
 
 <script>
 import InputFieldAutocomplete from './InputFieldAutocomplete'
-
-import 'mdi-vue/HelpCircleIcon'
 
 const EVENTS = {
   input: 'input',

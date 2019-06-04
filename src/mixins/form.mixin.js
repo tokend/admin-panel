@@ -7,6 +7,7 @@ import {
   TickField,
   ImageField,
 } from '@comcom/fields'
+import { FormConfirmation } from '@/components/common'
 
 import _get from 'lodash/get'
 import _isObject from 'lodash/isObject'
@@ -40,12 +41,14 @@ export default {
     TextField,
     TickField,
     ImageField,
+    FormConfirmation,
   },
   mixins: [validationMixin],
 
   data: _ => ({
     formMixin: {
       isDisabled: false,
+      isConfirmationShown: false,
     },
   }),
 
@@ -150,6 +153,14 @@ export default {
 
     enableForm () {
       this.formMixin.isDisabled = false
+    },
+    showConfirmation () {
+      this.disableForm()
+      this.formMixin.isConfirmationShown = true
+    },
+    hideConfirmation () {
+      this.enableForm()
+      this.formMixin.isConfirmationShown = false
     },
   },
 }

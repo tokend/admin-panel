@@ -201,7 +201,6 @@ import {
   DEFAULT_BASE_ASSET,
 } from '@/constants'
 
-import 'mdi-vue/ArrowUpIcon'
 import { FeesRecord } from '@/js/records/fees.record'
 import _cloneDeep from 'lodash/cloneDeep'
 

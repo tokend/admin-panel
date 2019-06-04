@@ -3,14 +3,14 @@
     <div class="app__block">
       <h2>Withdrawal</h2>
 
-      <form @submit.prevent="submit">
+      <form @submit.prevent="isFormValid() && showConfirmation()">
         <div class="app__form-row">
           <template v-if="masterBalances.length">
             <select-field
               class="app__form-field"
               v-model="form.balanceId"
               label="Asset"
-              :disabled="isFormPending"
+              :disabled="formMixin.isDisabled"
               :error-message="isSelectedAssetWithdrawable
                 ? ''
                 : 'Asset is not withdrawable. Please, select another asset'"
@@ -30,7 +30,7 @@
               class="app__form-field"
               value="_empty"
               label="Asset"
-              :disabled="isFormPending"
+              :disabled="formMixin.isDisabled"
             >
               <option
                 :value="'_empty'"
@@ -59,10 +59,19 @@
             type="number"
             v-model.trim="form.amount"
             label="Amount"
-            name="amount"
-            step="0.000001"
+            name="withdrawal-amount"
+            :min="DEFAULT_INPUT_MIN"
+            :step="DEFAULT_INPUT_STEP"
             :max="maxWithdrawalAmount"
-            :disabled="isFormPending"
+            @blur="touchField('form.physicalPrice')"
+            :error-message="getFieldErrorMessage(
+              'form.amount',
+              {
+                minValue: DEFAULT_INPUT_MIN,
+                maxValue: maxWithdrawalAmount
+              }
+            )"
+            :disabled="formMixin.isDisabled"
           >
             <p slot="hint">
               {{ maxWithdrawalAmountHint }}
@@ -79,8 +88,10 @@
               ? 'Destination address'
               : 'Comment'
             "
-            name="meta"
-            :disabled="isFormPending"
+            name="withdrawal-meta"
+            @blur="touchField('form.meta')"
+            :error-message="getFieldErrorMessage('form.meta')"
+            :disabled="formMixin.isDisabled"
           />
         </div>
 
@@ -127,9 +138,18 @@
         </div>
 
         <div class="app__form-actions">
+          <form-confirmation
+            v-if="formMixin.isConfirmationShown"
+            :is-pending="isFormSubmitting"
+            message="Please, recheck the form"
+            @ok="submit"
+            @cancel="hideConfirmation"
+          />
+
           <button
+            v-else
             class="app__btn collected-fees-withdraw__submit-btn"
-            :disabled="isFormPending || !isSelectedAssetWithdrawable"
+            :disabled="formMixin.isDisabled || !isSelectedAssetWithdrawable"
           >
             Withdraw
           </button>
@@ -143,16 +163,17 @@
 import Vue from 'vue'
 import { mapGetters, mapActions } from 'vuex'
 
-import InputField from '@comcom/fields/InputField'
-import SelectField from '@comcom/fields/SelectField'
+import FormMixin from '@/mixins/form.mixin'
+import { required, minValue, maxValue } from '@/validators'
+import { DEFAULT_INPUT_STEP, DEFAULT_INPUT_MIN } from '@/constants'
 
 import { api } from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { Bus } from '@/utils/state-bus'
 import { formatAssetAmount } from '@/utils/formatters'
 
 import { EmailGetter } from '@comcom/getters'
 import { AssetAmountFormatter } from '@comcom/formatters'
-import { confirmAction } from '@/js/modals/confirmation_message'
 
 import _pick from 'lodash/pick'
 import _throttle from 'lodash/throttle'
@@ -166,11 +187,10 @@ const EVENTS = {
 
 export default {
   components: {
-    InputField,
-    SelectField,
     EmailGetter,
     AssetAmountFormatter,
   },
+  mixins: [FormMixin],
 
   data () {
     return {
@@ -186,12 +206,28 @@ export default {
         totalFee: '',
         feeAssetCode: '',
       },
-      isFormPending: false,
+      isFormSubmitting: false,
       isMasterBalancesLoading: false,
       isMasterBalancesFailed: false,
       isOpAttrsLoading: false,
       isOpAttrsFailed: false,
       masterBalances: [],
+      DEFAULT_INPUT_STEP,
+      DEFAULT_INPUT_MIN,
+    }
+  },
+
+  validations () {
+    return {
+      form: {
+        balanceId: { required },
+        amount: {
+          required,
+          minValue: minValue(DEFAULT_INPUT_MIN),
+          maxValue: maxValue(this.maxWithdrawalAmount),
+        },
+        meta: { required },
+      },
     }
   },
 
@@ -275,16 +311,15 @@ export default {
     },
 
     async submit () {
-      if (!await confirmAction()) return
-
-      this.isFormPending = true
+      this.isFormSubmitting = true
       try {
         const operation = this.craftWithdrawalOperation()
         await api.postOperations(operation)
 
-        this.form.amount = ''
-        this.form.meta = ''
-        this.$store.dispatch('SET_INFO', 'Request created successfully')
+        this.clearFieldsWithOverriding({
+          balanceId: this.form.balanceId,
+        })
+        Bus.success('Request created successfully')
         this.$emit(EVENTS.submitted)
 
         await this.loadAssets()
@@ -292,7 +327,8 @@ export default {
       } catch (error) {
         ErrorHandler.process(error)
       }
-      this.isFormPending = false
+      this.isFormSubmitting = false
+      this.hideConfirmation()
     },
 
     craftWithdrawalOperation () {

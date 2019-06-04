@@ -57,6 +57,7 @@ import FormMixin from '@/mixins/form.mixin'
 import { required, maxLength } from '@/validators'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { Bus } from '@/utils/state-bus'
 
 const REJECT_REASON_MAX_LENGTH = 255
 
@@ -96,7 +97,7 @@ export default {
       try {
         await this.assetRequest
           .reject(this.form.rejectReason, this.isPermanentReject)
-        this.$store.dispatch('SET_INFO', 'Request successfully rejected')
+        Bus.success('Request successfully rejected')
         this.$router.push({ name: 'assets' })
       } catch (err) {
         ErrorHandler.process('Failed to reject asset creation')

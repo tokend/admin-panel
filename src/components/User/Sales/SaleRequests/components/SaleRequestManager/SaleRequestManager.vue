@@ -126,6 +126,7 @@ import { snakeToCamelCase } from '@/utils/un-camel-case'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { api } from '@/api'
 import apiHelper from '@/apiHelper'
+import { Bus } from '@/utils/state-bus'
 
 const REJECT_REASON_MAX_LENGTH = 255
 
@@ -226,7 +227,7 @@ export default {
       if (await confirmAction()) {
         try {
           await apiHelper.requests.approve(this.request.sale)
-          this.$store.dispatch('SET_INFO', 'Sale request approved.')
+          Bus.success('Sale request approved.')
           this.$router.push({ name: 'sales.requests' })
         } catch (error) {
           ErrorHandler.process(error)
@@ -248,7 +249,7 @@ export default {
           },
           this.request.sale
         )
-        this.$store.dispatch('SET_INFO', 'Sale request rejected successfully.')
+        Bus.success('Sale request rejected successfully.')
         this.$router.push({ name: 'sales.requests' })
       } catch (error) {
         ErrorHandler.process(error)

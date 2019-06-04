@@ -5,7 +5,7 @@
       v-if="foundIssues.length"
       @click="togglePane"
     >
-      <mdi-alert-outline-icon />
+      <i class="mdi mdi-alert-outline" />
     </button>
     <div
       class="config-checker__pane"
@@ -30,7 +30,6 @@ import { ASSET_POLICIES } from '@/constants'
 import config from '@/config'
 
 import { api, loadingDataViaLoop } from '@/api'
-import 'mdi-vue/AlertOutlineIcon'
 import store from '@/store'
 
 const CHECK_LIST = [
@@ -109,8 +108,9 @@ export default {
 
 .config-checker__icon {
   cursor: pointer;
-  svg {
-    fill: orangered;
+  i {
+    color: orangered;
+    font-size: 2.4rem;
   }
 }
 

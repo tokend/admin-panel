@@ -6,7 +6,7 @@
       </h2>
 
       <form
-        @submit.prevent="submit"
+        @submit.prevent="isFormValid() && showConfirmation()"
         id="admin-manager-form"
         novalidate
       >
@@ -102,26 +102,35 @@
             </div>
           </div>
         </div>
+
+        <div class="admin-manager__form-actions app__form-actions">
+          <form-confirmation
+            v-if="formMixin.isConfirmationShown"
+            :is-pending="isFormSubmitting"
+            @ok="submit"
+            @cancel="hideConfirmation"
+          />
+
+          <template v-else>
+            <button
+              class="app__btn"
+              @click="isDeleteMode = false"
+              :disabled="isMaster || formMixin.isDisabled"
+            >
+              {{ addNew ? 'Add' : 'Update' }}
+            </button>
+
+            <button
+              v-if="!addNew"
+              class="app__btn-secondary app__btn-secondary--danger"
+              :disabled="isMaster || formMixin.isDisabled"
+              @click="isDeleteMode = true"
+            >
+              Delete
+            </button>
+          </template>
+        </div>
       </form>
-
-      <div class="admin-manager__form-actions app__form-actions">
-        <button
-          class="app__btn"
-          form="admin-manager-form"
-          :disabled="isMaster || formMixin.isDisabled"
-        >
-          {{ addNew ? 'Add' : 'Update' }}
-        </button>
-
-        <button
-          class="app__btn-secondary app__btn-secondary--danger"
-          :disabled="isMaster || formMixin.isDisabled"
-          @click="deleteAdmin"
-          v-if="!addNew"
-        >
-          Delete
-        </button>
-      </div>
     </div>
   </div>
 </template>
@@ -137,6 +146,7 @@ import { confirmAction } from '@/js/modals/confirmation_message'
 import { base } from '@tokend/js-sdk'
 import { api, loadingDataViaLoop } from '@/api'
 
+import { Bus } from '@/utils/state-bus'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 const MASTER_ROLE_ID = 1
@@ -172,6 +182,9 @@ export default {
       },
 
       signerRoles: [],
+
+      isDeleteMode: false,
+      isFormSubmitting: false,
 
       masterPubKey: Vue.params.MASTER_ACCOUNT,
       MASTER_ROLE_ID,
@@ -272,12 +285,26 @@ export default {
     },
 
     async submit () {
-      if (!this.isFormValid()) return
-      if (!await confirmAction()) return
+      this.isFormSubmitting = true
 
-      return this.addNew
-        ? this.addAdmin()
-        : this.updateAdmin()
+      let action
+      if (this.isDeleteMode) {
+        action = this.deleteAdmin
+      } else {
+        action = this.addNew ? this.addAdmin : this.updateAdmin
+      }
+
+      try {
+        await action()
+      } catch (error) {
+        ErrorHandler.process(error)
+      }
+
+      this.isFormSubmitting = false
+      this.hideConfirmation()
+
+      Bus.success('Successfully submitted')
+      this.$router.push({ name: 'admins' })
     },
 
     async addAdmin () {
@@ -296,22 +323,9 @@ export default {
     },
 
     async submitTx (operationConstructor) {
-      this.disableForm()
-      this.$store.commit('OPEN_LOADER')
-
-      try {
-        const opts = this.buildManageSignerOperationOpts()
-        const operation = operationConstructor(opts)
-        await api.postOperations(operation)
-
-        this.$store.dispatch('SET_INFO', 'Successfully submitted')
-        this.$router.push({ name: 'admins' })
-      } catch (error) {
-        ErrorHandler.process(error)
-      }
-
-      this.enableForm()
-      this.$store.commit('CLOSE_LOADER')
+      const opts = this.buildManageSignerOperationOpts()
+      const operation = operationConstructor(opts)
+      await api.postOperations(operation)
     },
 
     buildManageSignerOperationOpts () {

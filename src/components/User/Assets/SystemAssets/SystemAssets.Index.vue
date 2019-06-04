@@ -6,8 +6,10 @@
       <div class="system-assets-index__actions">
         <router-link
           class="system-assets-index__create-btn app__btn app__btn--iconed"
-          :to="{ name: 'assets.systemAssets.new' }">
-          <mdi-plus-icon /> Create asset
+          :to="{ name: 'assets.masterAssets.new' }"
+        >
+          <i class="mdi mdi-plus" />
+          Create asset
         </router-link>
       </div>
     </div>
@@ -19,8 +21,6 @@
 </template>
 
 <script>
-import 'mdi-vue/PlusIcon'
-
 import AssetList from './components/AssetList'
 
 export default {
@@ -57,9 +57,12 @@ export default {
     padding: 0.9rem;
   }
 
-  & > svg {
+  & > i {
+    display: flex;
+    line-height: 1;
     margin-left: -1rem;
     margin-right: 0.7rem;
+    font-size: 2.4rem;
   }
 }
 </style>

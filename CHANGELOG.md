@@ -20,6 +20,8 @@ for further information about branching and tagging conventions.
 - External link icon to the "Learn more about pre-issuance" link
 - NProgress package for displaying loading progress while
   switching between routes
+- Form confirmation component
+- State bus for handling status messages
 
 #### Changed
 - Align asset requests detail values to right side
@@ -33,11 +35,23 @@ for further information about branching and tagging conventions.
 - Now displaying "Yes" and "No" buttons on KYC queue confirmation
 - Now providing only tasks to add to KYC reject request operation
 - Renamed "Master assets" to "System assets" on "Assets" menu
+- Now using "@mdi/font" instead of "mdi-vue"
+- Status message design (now using top-right aligned card with iconed state)
+- Now using state bus for emitting status messages
+- Now using form confirmation in the forms:
+  - Manage admin form
+  - Create asset pait form
+  - Manage asset pair forms
+  - Issuance form
+  - Fee withdrawal form
+  - Limits update form
+  - Asset manager form
 - Moved horizon resources to "/v3" endpoints
 
 #### Removed
 - Vee-validate plugin
 - "Fiat asset" checkbox from asset creation form
+- Unnecessary vuex state mutations
 
 #### Fixed
 - Show dash, if line 2 is not specified in kyc request

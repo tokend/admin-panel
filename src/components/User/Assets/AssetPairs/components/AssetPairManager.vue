@@ -2,7 +2,7 @@
   <div class="asset-pair-manager">
     <template v-if="isLoaded">
       <form
-        @submit.prevent="updatePrice"
+        @submit.prevent="isFormValid('priceForm') && showConfirmation()"
         class="asset-pair-manager__form app__block"
       >
         <h2>Update {{ base }}/{{ quote }} pair price</h2>
@@ -28,9 +28,22 @@
         </div>
 
         <div class="app__form-actions">
+          <form-confirmation
+            v-if="!isAttributesFormSelected && formMixin.isConfirmationShown"
+            :is-pending="isFormSubmitting"
+            message="Sure?"
+            ok-button-text="Yes"
+            cancel-button-text="No"
+            @ok="updatePrice"
+            @cancel="hideConfirmation"
+          />
+
           <button
+            v-else
             class="asset-pair-manager__submit-btn app__btn"
-            :disabled="formMixin.isDisabled">
+            :disabled="formMixin.isDisabled"
+            @click="isAttributesFormSelected = false"
+          >
             Update
           </button>
         </div>
@@ -39,7 +52,7 @@
 
     <template v-if="isLoaded">
       <form
-        @submit.prevent="updateAttributes"
+        @submit.prevent="isFormValid('attributesForm') && showConfirmation()"
         class="asset-pair-manager__form app__block"
       >
         <h2>Update {{ base }}/{{ quote }} pair attributes</h2>
@@ -152,12 +165,26 @@
           </tick-field>
         </div>
 
-        <button
-          class="asset-pair-manager__submit-btn app__btn"
-          :disabled="formMixin.isDisabled"
-        >
-          Update policy
-        </button>
+        <div class="app__form-actions">
+          <form-confirmation
+            v-if="isAttributesFormSelected && formMixin.isConfirmationShown"
+            :is-pending="isFormSubmitting"
+            message="Sure?"
+            ok-button-text="Yes"
+            cancel-button-text="No"
+            @ok="updateAttributes"
+            @cancel="hideConfirmation"
+          />
+
+          <button
+            v-else
+            class="asset-pair-manager__submit-btn app__btn"
+            :disabled="formMixin.isDisabled"
+            @click="isAttributesFormSelected = true"
+          >
+            Update policy
+          </button>
+        </div>
       </form>
     </template>
 
@@ -173,8 +200,6 @@
 import FormMixin from '@/mixins/form.mixin'
 import { required, minValue, maxValue } from '@/validators'
 
-import { confirmAction } from '@/js/modals/confirmation_message'
-
 import apiHelper from '@/apiHelper'
 import { api } from '@/api'
 
@@ -187,6 +212,7 @@ import { ASSET_PAIR_POLICIES } from '@/constants/'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { AssetPairRecord } from '@/js/records/assetPair.record'
+import { Bus } from '@/utils/state-bus'
 
 export default {
   mixins: [FormMixin],
@@ -208,6 +234,8 @@ export default {
         policies: [],
       },
       isLoaded: false,
+      isAttributesFormSelected: false,
+      isFormSubmitting: false,
       ASSET_PAIR_POLICIES,
       DEFAULT_INPUT_STEP,
       DEFAULT_INPUT_MIN,
@@ -266,8 +294,6 @@ export default {
     },
 
     async updatePrice () {
-      if (!this.isFormValid('priceForm')) return
-
       this.pair.physicalPrice = this.priceForm.price
       this.pair.policies = this.attributesForm.policies
         .reduce((sum, policy) => sum | policy, 0)
@@ -275,8 +301,6 @@ export default {
     },
 
     async updateAttributes () {
-      if (!this.isFormValid('attributesForm')) return
-
       this.pair.physicalPriceCorrection =
         this.attributesForm.physicalPriceCorrection
       this.pair.maxPriceStep = this.attributesForm.maxPriceStep
@@ -287,16 +311,17 @@ export default {
     },
 
     async submit (action) {
-      if (!await confirmAction()) return
-      this.disableForm()
+      this.isFormSubmitting = true
       try {
         await apiHelper.assets.updatePair({ ...this.pair, ...action })
-        this.$store.dispatch('SET_INFO', 'Pair has been updated.')
+        Bus.success('Pair has been updated.')
         this.$router.push({ name: 'assets.assetPairs.index' })
       } catch (error) {
         ErrorHandler.process(error)
       }
-      this.enableForm()
+
+      this.isFormSubmitting = false
+      this.hideConfirmation()
     },
   },
 }

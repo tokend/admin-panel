@@ -141,6 +141,7 @@ import { verbozify } from '@/utils/verbozify'
 import apiHelper from '@/apiHelper'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { CreatePreIssuanceRequest } from '@/apiHelper/responseHandlers/requests/CreatePreIssuanceRequest'
+import { Bus } from '@/utils/state-bus'
 
 export default {
   components: { InputField },
@@ -276,7 +277,7 @@ export default {
         await request.reject(this.rejectReason, true)
 
         this.clear()
-        this.$store.dispatch('SET_INFO', 'Pending transaction for rejected request submitted')
+        Bus.success('Pending transaction for rejected request submitted')
 
         await this.getRequests()
       } catch (error) {
@@ -292,7 +293,7 @@ export default {
         await request.fulfill()
 
         this.$store.commit('CLOSE_LOADER')
-        this.$store.dispatch('SET_INFO', 'Pending transaction for fulfill request submitted')
+        Bus.success('Pending transaction for fulfill request submitted')
         this.$emit('need-to-update')
 
         await this.getRequests()

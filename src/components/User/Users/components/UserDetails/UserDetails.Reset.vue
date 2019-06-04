@@ -68,6 +68,7 @@ import { required, maxLength } from '@/validators'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { confirmAction } from '@/js/modals/confirmation_message'
+import { Bus } from '@/utils/state-bus'
 
 import { ChangeRoleRequest } from '@/apiHelper/responseHandlers/requests/ChangeRoleRequest'
 
@@ -147,7 +148,7 @@ export default {
             allTasks: 0,
           })
         await api.postOperations(operation)
-        this.$store.dispatch('SET_INFO', 'The user account was reset to unverified')
+        Bus.success('The user account was reset to unverified')
         this.$emit(EVENTS.reset)
       } catch (error) {
         ErrorHandler.process(error)

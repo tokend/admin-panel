@@ -5,7 +5,7 @@
       @click="back"
     >
       <span class="limits-reviewer__back-btn-inner">
-        <mdi-chevron-left-icon />
+        <i class="mdi mdi-chevron-left" />
       </span>
       Back
     </button>
@@ -146,7 +146,7 @@
             />
             <div class="limits-reviewer__doc-close-btn-wrapper">
               <button @click="removeDoc(i)">
-                <mdi-close-icon />
+                <i class="mdi mdi-close limits-reviewer__doc-close-btn" />
               </button>
             </div>
           </div>
@@ -242,9 +242,7 @@ import get from 'lodash/get'
 import isEqual from 'lodash/isEqual'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
-
-import 'mdi-vue/CloseIcon'
-import 'mdi-vue/ChevronLeftIcon'
+import { Bus } from '@/utils/state-bus'
 
 const DEFAULT_LIMIT_STRUCT = {
   'id': 0,
@@ -428,10 +426,7 @@ export default {
         })
 
         this.$router.push({ name: 'limits.requests' })
-        this.$store.dispatch(
-          'SET_INFO',
-          'Request approved. Limits are changed'
-        )
+        Bus.success('Request approved. Limits are changed')
       } catch (error) {
         ErrorHandler.process(error)
       }
@@ -454,10 +449,7 @@ export default {
         }, this.request)
 
         this.$router.push({ name: 'limits.requests' })
-        this.$store.dispatch(
-          'SET_INFO',
-          'Request rejected. Limits are not changed'
-        )
+        Bus.success('Request rejected. Limits are not changed')
       } catch (error) {
         this.isPending = false
         ErrorHandler.process(error)
@@ -479,10 +471,7 @@ export default {
           reason: requireDocsDetails,
           isPermanent: false,
         })
-        this.$store.dispatch(
-          'SET_INFO',
-          'Upload additional documents requested.'
-        )
+        Bus.success('Upload additional documents requested.')
         this.isRequiringDocs = false
       } catch (error) {
         this.isPending = false
@@ -613,11 +602,16 @@ export default {
     box-shadow: 0 2px 6.6px 0.6px rgba(170, 170, 170, 0.72);
   }
 
-  svg {
+  i {
     position: absolute;
+    font-size: 2.4rem;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
   }
+}
+
+.limits-reviewer__doc-close-btn {
+  font-size: 2.4rem;
 }
 </style>
