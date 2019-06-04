@@ -46,21 +46,16 @@ export const requests = {
       const opts = {
         requestID: item.id,
         requestHash: item.hash,
-        requestType: item.xdrType.value,
+        requestType: REQUEST_TYPES.createWithdraw,
         reviewDetails: {
           tasksToAdd: 0,
           tasksToRemove: item.pendingTasks || item.pending_tasks,
-          externalDetails: '{}',
+          externalDetails: {},
         },
         action,
         reason,
       }
-      return base.ReviewRequestBuilder.reviewWithdrawRequest({
-        ...opts,
-
-        // TODO: remove. added due to a bug in the @tokend/js-sdk
-        requestDetails: JSON.stringify(opts),
-      })
+      return base.ReviewRequestBuilder.reviewWithdrawRequest(opts)
     })
     return api.postOperations(...operations)
   },

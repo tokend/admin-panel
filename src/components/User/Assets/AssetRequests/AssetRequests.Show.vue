@@ -163,6 +163,10 @@
             v-if="safeGet(
               assetRequest, 'operationDetails.creatorDetails.terms.key'
             )"
+            :mime-type="safeGet(
+              assetRequest,
+              'operationDetails.details.terms.mimeType'
+            )"
           >
             <user-doc-link-getter
               :file-key="assetRequest.operationDetails.creatorDetails.terms.key"

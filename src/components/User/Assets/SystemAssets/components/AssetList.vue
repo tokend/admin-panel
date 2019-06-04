@@ -24,7 +24,7 @@
         <router-link
           class="asset-list__li-a"
           :to="{
-            name: 'assets.masterAssets.show',
+            name: 'assets.systemAssets.show',
             params: { asset: asset.id }
           }"
         >

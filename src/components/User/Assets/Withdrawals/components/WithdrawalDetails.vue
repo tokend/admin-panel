@@ -16,31 +16,50 @@
         <email-getter :account-id="request.requestor.id" is-titled />
       </li>
       <li>
-        <span>Requestor id</span>
+        <span>Requestor ID</span>
         <span>{{ request.requestor.id }} </span>
       </li>
+      <template v-if="request.requestDetails.creatorDetails.comment">
+        <li>
+          <span>Comment</span>
+          <span :title="request.requestDetails.creatorDetails.comment">
+            {{ request.requestDetails.creatorDetails.comment }}
+          </span>
+        </li>
+        <li>
+          <span>Hash</span>
+          <span :title="request.hash">
+            {{ request.hash }}
+          </span>
+        </li>
+      </template>
+      <template v-if="request.requestDetails.creatorDetails.address">
+        <li>
+          <span>Receiver address</span>
+          <span :title="request.requestDetails.creatorDetails.address">
+            {{ request.requestDetails.creatorDetails.address }}
+          </span>
+        </li>
+      </template>
       <li>
-        <span>Receiver address</span>
-        <span :title="request.requestDetails.creatorDetails.address">
-          {{ request.requestDetails.creatorDetails.address }}
-        </span>
-      </li>
-      <li>
-        <span>Source amount</span>
+        <span>Amount</span>
         <asset-amount-formatter
           :amount="request.requestDetails.amount"
+          :asset="request.requestDetails.asset"
         />
       </li>
       <li>
         <span>Fixed fee</span>
         <asset-amount-formatter
           :amount="request.requestDetails.fee.fixed"
+          :asset="request.requestDetails.asset"
         />
       </li>
       <li>
         <span>Percent fee</span>
         <asset-amount-formatter
           :amount="request.requestDetails.fee.calculatedPercent"
+          :asset="request.requestDetails.asset"
         />
       </li>
       <li>
@@ -48,6 +67,7 @@
         <asset-amount-formatter
           :amount="Number(request.requestDetails.fee.fixed) +
             Number(request.requestDetails.fee.calculatedPercent)"
+          :asset="request.requestDetails.asset"
         />
       </li>
     </ul>
@@ -137,7 +157,6 @@ export default {
 
   props: {
     request: { type: Object, required: true },
-    assets: { type: Array, required: true },
   },
 
   data () {

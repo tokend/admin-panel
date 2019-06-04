@@ -98,12 +98,17 @@ export default {
     async onFileChange (event) {
       const files = event.target.files || event.dataTransfer.files
       if (!files.length) return
-      const extracted = await this.readFile(files[0])
-      const fileData = JSON.parse(extracted)
-      this.accountId = fileData.accountId
-      this.asset = fileData.asset
-      this.transaction = fileData.transaction
-      this.source = fileData.source
+
+      try {
+        const extracted = await this.readFile(files[0])
+        const fileData = JSON.parse(extracted)
+        this.accountId = fileData.accountId
+        this.asset = fileData.asset
+        this.transaction = fileData.transaction
+        this.source = fileData.source
+      } catch (e) {
+        ErrorHandler.process('Your file is corrupted. Please, select another file')
+      }
     },
 
     readFile (file) {

@@ -12,7 +12,10 @@
         target="_blank"
         rel="noopener"
       >
-        Learn more about pre-issuance
+        <p class="preissuance-form__link-content">
+          Learn more about pre-issuance
+          <mdi-open-in-new-icon class="preissuance-form__link-icon" />
+        </p>
       </a>
     </div>
 
@@ -127,6 +130,8 @@ import localize from '@/utils/localize'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { api, loadingDataViaLoop } from '@/api'
 
+import 'mdi-vue/OpenInNewIcon'
+
 export default {
   data () {
     return {
@@ -175,7 +180,13 @@ export default {
       for (let i = 0; i < files.length; i++) {
         const extracted = await this.readFile(files[i])
         this.temporaryFileName = files[i].name
-        this.parsePreIssuances(JSON.parse(extracted).issuances)
+
+        try {
+          this.parsePreIssuances(JSON.parse(extracted).issuances)
+        } catch (e) {
+          ErrorHandler.process('Your file is corrupted. Please, select another file')
+          return
+        }
       }
     },
 
@@ -250,7 +261,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../../../../assets/scss/colors";
+@import "~@/assets/scss/colors";
 
 $paddind-in-tab: 4rem;
 $width-without-indentation: calc(100% + 2 * #{$paddind-in-tab});
@@ -289,8 +300,16 @@ $width-without-indentation: calc(100% + 2 * #{$paddind-in-tab});
   margin-bottom: 2rem;
 }
 
-.preissuance-form__link {
+.preissuance-form__link-content {
+  margin-top: 0.6rem;
   font-size: 1.4rem;
+}
+
+.preissuance-form__link-icon {
+  width: 1.4rem;
+  fill: $color-info;
+  vertical-align: middle;
+  margin-left: 0.2rem;
 }
 
 .preissuance-form__list {

@@ -63,7 +63,11 @@
         />
       </div>
     </div>
-    <div class="limits-manager__inner">
+
+    <div
+      v-if="!isLimitsLoading"
+      class="limits-manager__inner"
+    >
       <template
         v-if="filters.scope !== SCOPE_TYPES.account || filters.userAddress"
       >
@@ -129,6 +133,10 @@
         </div>
       </template>
     </div>
+
+    <p v-else>
+      Loading the limits…
+    </p>
   </div>
 </template>
 
@@ -178,6 +186,7 @@ export default {
     },
 
     assets: [],
+    isLimitsLoading: false,
     isAddressLoading: false,
     ACCOUNT_ROLES: config.ACCOUNT_ROLES,
     SCOPE_TYPES,
@@ -258,6 +267,8 @@ export default {
   methods: {
     async getLimits () {
       if (!this.filters.asset) return
+
+      this.isLimitsLoading = true
       const [paymentLimits, withdrawalLimits, depositLimits] =
         await Promise.all([
           this.getLimit(STATS_OPERATION_TYPES.paymentOut),
@@ -292,6 +303,8 @@ export default {
           ...limitDetails,
         }
       )
+
+      this.isLimitsLoading = false
     },
 
     async getLimit (statsOpType) {
@@ -301,13 +314,14 @@ export default {
       } else if (this.filters.scope === SCOPE_TYPES.accountRole) {
         filters.account_role = this.filters.accountRole
       }
-      const { data: limits } = await api.getWithSignature('/v3/limits', {
+      let response = await api.getWithSignature('/v3/limits', {
         filter: {
           asset: this.filters.asset,
           stats_op_type: statsOpType,
           ...filters,
         },
       })
+      let limits = await loadingDataViaLoop(response)
       if (this.filters.scope === SCOPE_TYPES.global) {
         const globalLimits = limits
           .filter((limit) => !(limit.accountRole || limit.account))

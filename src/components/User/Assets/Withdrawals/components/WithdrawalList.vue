@@ -58,7 +58,7 @@
         <ul class="app-list">
           <div class="app-list__header">
             <span class="app-list__cell">
-              Source amount
+              Amount
             </span>
             <span class="app-list__cell">
               Status
@@ -74,16 +74,17 @@
             :key="item.id"
             @click="requestToShow = item">
             <!-- eslint-disable max-len -->
-            <span
-              class="app-list__cell"
-              :title="`${localize(item.requestDetails.amount)}`"
-            >
-              {{ localize(item.requestDetails.amount) }}
+            <span class="app-list__cell">
+              <asset-amount-formatter
+                :amount="item.requestDetails.amount"
+                :asset="item.requestDetails.asset"
+              />
             </span>
-            <!-- eslint-enable max-len -->
+
             <span class="app-list__cell" :title="verbozify(item.state)">
               {{ verbozify(item.state) }}
             </span>
+
             <span class="app-list__cell" :title="item.requestor.id">
               {{ item.requestor.id }}
             </span>
@@ -117,7 +118,6 @@
       max-width="60rem">
       <withdrawal-details
         :request="requestToShow"
-        :assets="assets"
         @close-request="refreshList" />
     </modal>
   </div>
@@ -126,6 +126,7 @@
 <script>
 import SelectField from '@comcom/fields/SelectField'
 import InputField from '@comcom/fields/InputField'
+import { AssetAmountFormatter } from '@comcom/formatters'
 
 import Modal from '@comcom/modals/Modal'
 import WithdrawalDetails from './WithdrawalDetails'
@@ -138,13 +139,11 @@ import {
 } from '@/constants'
 
 import { verbozify } from '@/utils/verbozify'
-import localize from '@/utils/localize'
 import _ from 'lodash'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { api, loadingDataViaLoop } from '@/api'
 import apiHelper from '@/apiHelper'
-import config from '@/config'
 
 export default {
   components: {
@@ -152,6 +151,7 @@ export default {
     InputField,
     Modal,
     WithdrawalDetails,
+    AssetAmountFormatter,
   },
 
   data () {
@@ -186,7 +186,6 @@ export default {
 
   methods: {
     verbozify,
-    localize,
 
     async getAssets () {
       try {
@@ -214,7 +213,6 @@ export default {
           filter: {
             state: this.filters.state,
             requestor: requestor,
-            reviewer: config.MASTER_ACCOUNT,
           },
           include: ['request_details'],
         })
@@ -242,6 +240,27 @@ export default {
       try {
         const oldLength = (this.list.data || []).length
         const chunk = await this.list.fetchNext()
+
+        // TODO: remove these dirty fixes
+        // the problem is that in the current implementation, back-end does
+        // not return us asset code of the withdrawn amount
+        chunk._data = chunk.data.map(item => {
+          const hackedKeys = {
+            details: {
+              ...item.details,
+              createWithdraw: {
+                ...item.details.createWithdraw,
+                asset: this.filters.asset,
+              },
+            },
+          }
+
+          return {
+            ...item,
+            ...hackedKeys,
+          }
+        })
+
         this.list._data = this.list.data.concat(chunk.data)
         this.list.fetchNext = chunk.fetchNext
         this.isNoMoreEntries = oldLength === this.list.data.length

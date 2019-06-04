@@ -8,10 +8,10 @@ const template = `
     <p class="modal__title">{{ title }}</p>
     <div class="issuance-rl__reject-form-actions app__form-actions">
       <button class="app__btn app__btn--color-theme" @click="confirm">
-        Submit
+        {{ confirmText }}
       </button>
       <button class="app__btn-secondary" @click="cancel">
-        Cancel
+        {{ cancelText }}
       </button>
     </div>
   </modal>
@@ -27,6 +27,8 @@ const template = `
  */
 export function confirmAction (opts = {}) {
   const title = opts.title || 'Are you sure?'
+  const confirmText = opts.confirmText || 'Submit'
+  const cancelText = opts.cancelText || 'Cancel'
 
   const container = document.createElement('div')
   document.querySelector('#app').appendChild(container)
@@ -40,6 +42,8 @@ export function confirmAction (opts = {}) {
       data () {
         return {
           title,
+          confirmText,
+          cancelText,
         }
       },
 
