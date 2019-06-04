@@ -109,7 +109,7 @@
           class="app__form-field app__form-field--halved"
           type="number"
           min="0"
-          :step="selectedAssetStep(trailingDigitsCount)"
+          :step="selectedAssetStep(trailingDigits)"
           label="Maximum assets"
           v-model="asset.maxIssuanceAmount"
           :disabled="isExistingAsset || formMixin.isDisabled"

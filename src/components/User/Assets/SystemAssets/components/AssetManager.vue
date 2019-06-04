@@ -126,7 +126,7 @@
 
         <!--
           the field is disabled due to omitted testing
-          session of trailingDigitsCount
+          session of trailingDigits
         -->
         <input-field
           class="app__form-field app__form-field--halved"
@@ -135,12 +135,12 @@
           step="1"
           max="6"
           label="Trailing digits count"
-          v-model="asset.trailingDigitsCount"
-          :disabled="true || isExistingAsset || formMixin.isDisabled"
+          v-model="asset.trailingDigits"
+          :disabled="isExistingAsset || formMixin.isDisabled"
           name="trailing-digits-count"
-          @blur="touchField('asset.trailingDigitsCount')"
+          @blur="touchField('asset.trailingDigits')"
           :error-message="getFieldErrorMessage(
-            'asset.trailingDigitsCount',
+            'asset.trailingDigits',
             { minValue: 0, maxValue: 6 }
           )"
         />
@@ -373,7 +373,7 @@ export default {
         initialPreissuedAmount: '0',
         maxIssuanceAmount: '0',
         availableForIssuance: '0',
-        trailingDigitsCount: '6',
+        trailingDigits: '6',
         assetType: '0',
         creatorDetails: {
           name: '',
@@ -427,7 +427,7 @@ export default {
           minValue: minValue(0),
           maxValue: maxValue(this.asset.maxIssuanceAmount),
         },
-        trailingDigitsCount: {
+        trailingDigits: {
           required,
           minValue: minValue(0),
           maxValue: maxValue(6),
@@ -530,7 +530,7 @@ export default {
             policies: Number(this.asset.policies.value),
             assetType: String(this.asset.type),
             initialPreissuedAmount: String(this.asset.initialPreissuedAmount),
-            trailingDigitsCount: Number(this.asset.trailingDigitsCount),
+            trailingDigitsCount: Number(this.asset.trailingDigits),
             allTasks: 0,
             creatorDetails: {
               name: this.asset.creatorDetails.name,
