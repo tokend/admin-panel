@@ -90,6 +90,7 @@ import { Sdk } from '@/sdk'
 import { KEY_VALUE_ENTRY_TYPE } from '../../../constants'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { Bus } from '@/utils/state-bus'
 
 export default {
   components: {
@@ -133,7 +134,7 @@ export default {
         await Sdk.horizon.transactions.submitOperations(operation)
         await this.getList()
 
-        this.$store.dispatch('SET_INFO', 'Submitted successfully')
+        Bus.success('Submitted successfully')
       } catch (error) {
         ErrorHandler.process('Failed to submit operation')
       }

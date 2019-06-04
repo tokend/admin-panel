@@ -74,6 +74,7 @@
 <script>
 import { Sdk } from '@/sdk'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { Bus } from '@/utils/state-bus'
 import config from '@/config'
 
 export default {
@@ -139,7 +140,7 @@ export default {
       try {
         await this.sendTx()
         this.clear()
-        this.$store.dispatch('SET_INFO', 'Submitted successfully')
+        Bus.success('Submitted successfully')
       } catch (error) {
         ErrorHandler.process(error)
       }

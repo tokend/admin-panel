@@ -6,7 +6,7 @@
     :href="href"
   >
     <slot />
-    <mdi-open-in-new-icon class="doc-link-getter__ico" />
+    <i class="mdi mdi-open-in-new doc-link-getter__ico" />
   </a>
 </template>
 
@@ -16,8 +16,6 @@ import { DOCUMENTS_POLICIES } from '@/constants'
 
 import config from '@/config'
 import { ErrorHandler } from '@/utils/ErrorHandler'
-
-import 'mdi-vue/OpenInNewIcon'
 
 export default {
   props: {
@@ -88,10 +86,9 @@ export default {
 }
 
 .doc-link-getter__ico {
-  width: 1.2rem;
-  height: 1.2rem;
+  font-size: 1.2rem;
   vertical-align: middle;
   margin-left: 0.5rem;
-  fill: rgba($color: $color-text, $alpha: 0.5);
+  color: rgba($color: $color-text, $alpha: 0.5);
 }
 </style>

@@ -25,7 +25,7 @@
     </div>
 
     <form
-      @submit.prevent="submit"
+      @submit.prevent="isFormValid() && showConfirmation()"
       novalidate
     >
       <div class="asset-manager__image-field-wrp">
@@ -259,8 +259,14 @@
             class="app__btn-secondary app__btn-secondary--iconed"
             @click.prevent="isShownAdvanced = !isShownAdvanced"
           >
-            <mdi-chevron-up-icon v-if="isShownAdvanced" />
-            <mdi-chevron-down-icon v-else />
+            <i
+              v-if="isShownAdvanced"
+              class="mdi mdi-chevron-up asset-manager__icon"
+            />
+            <i
+              v-else
+              class="mdi mdi-chevron-down asset-manager__icon"
+            />
           </button>
         </div>
       </div>
@@ -289,7 +295,15 @@
       </template>
 
       <div class="app__form-actions">
+        <form-confirmation
+          v-if="formMixin.isConfirmationShown"
+          :is-pending="isFormSubmitting"
+          @ok="submit"
+          @cancel="hideConfirmation"
+        />
+
         <button
+          v-else
           class="app__btn"
           :disabled="formMixin.isDisabled"
         >
@@ -301,8 +315,6 @@
 </template>
 
 <script>
-import { confirmAction } from '@/js/modals/confirmation_message'
-
 import FormMixin from '@/mixins/form.mixin'
 import {
   required,
@@ -322,7 +334,8 @@ import safeGet from 'lodash/get'
 import config from '@/config'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
-import Bus from '@/utils/EventBus'
+import EventBus from '@/utils/EventBus'
+import { Bus } from '@/utils/state-bus'
 import { fileReader } from '@/utils/file-reader'
 
 import { mapGetters } from 'vuex'
@@ -337,9 +350,6 @@ import {
   ASSET_POLICIES_VERBOSE,
 } from '@/constants'
 
-import 'mdi-vue/ChevronDownIcon'
-import 'mdi-vue/ChevronUpIcon'
-
 const ASSET_CODE_MAX_LENGTH = 16
 const ASSET_NAME_MAX_LENGTH = 255
 
@@ -353,6 +363,7 @@ export default {
   data () {
     return {
       isShownAdvanced: false,
+      isFormSubmitting: false,
 
       asset: {
         code: '',
@@ -470,10 +481,7 @@ export default {
     },
 
     async submit () {
-      if (!this.isFormValid()) return
-      if (!await confirmAction()) return
-
-      this.disableForm()
+      this.isFormSubmitting = true
       try {
         await Promise.all([
           this.uploadFile(DOCUMENT_TYPES.assetTerms),
@@ -539,14 +547,16 @@ export default {
         }
 
         await Sdk.horizon.transactions.submitOperations(operation)
-        Bus.$emit('recheckConfig')
+        EventBus.$emit('recheckConfig')
 
-        this.$store.dispatch('SET_INFO', 'Submitted successfully.')
+        Bus.success('Submitted successfully.')
         this.$router.push({ name: 'assets.systemAssets.index' })
       } catch (error) {
         ErrorHandler.process(error)
       }
-      this.enableForm()
+
+      this.isFormSubmitting = false
+      this.hideConfirmation()
     },
 
     onFileChange (event, type) {
@@ -673,5 +683,11 @@ export default {
 
 .asset-manager-advanced__block {
   margin: 2rem 0;
+}
+
+.asset-manager__icon {
+  display: flex;
+  justify-content: center;
+  font-size: 2.4rem;
 }
 </style>

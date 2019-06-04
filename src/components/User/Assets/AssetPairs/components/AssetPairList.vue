@@ -40,7 +40,7 @@
           <span class="app-list__cell app-list__cell--policy app-list__cell--right">
             {{ item.policies.value }}
             <span class="asset-pair__policy-tip">
-              <mdi-help-circle-icon class="asset-pairs__tip-icon" />
+              <i class="mdi mdi-help-circle asset-pairs__tip-icon" />
               <span class="asset-pairs__policies-list">
                 <span
                   class="asset-pairs__policies-list-item"
@@ -106,8 +106,6 @@ import { ApiCallerFactory } from '@/api-caller-factory'
 import { ASSET_PAIR_POLICIES_VERBOSE } from '@/constants'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
-
-import 'mdi-vue/HelpCircleIcon'
 
 export default {
   components: {

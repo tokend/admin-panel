@@ -72,6 +72,7 @@ import Modal from '@comcom/modals/Modal'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { confirmAction } from '@/js/modals/confirmation_message'
+import { Bus } from '@/utils/state-bus'
 
 import { ChangeRoleRequest } from '@/api/responseHandlers/requests/ChangeRoleRequest'
 
@@ -156,7 +157,7 @@ export default {
           })
         await Sdk.horizon.transactions.submitOperations(operation)
 
-        this.$store.dispatch('SET_INFO', 'The user account was blocked')
+        Bus.success('The user account was blocked')
         this.$emit(EVENTS.updated)
       } catch (error) {
         ErrorHandler.process(error)
@@ -185,7 +186,7 @@ export default {
           })
         await Sdk.horizon.transactions.submitOperations(operation)
 
-        this.$store.dispatch('SET_INFO', 'The user account was unblocked')
+        Bus.success('The user account was unblocked')
         this.$emit(EVENTS.updated)
       } catch (error) {
         ErrorHandler.process(error)

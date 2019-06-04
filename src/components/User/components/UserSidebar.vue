@@ -10,70 +10,70 @@
     <nav class="user-sidebar__nav user-sidebar__nav--full-height">
       <li class="user-sidebar__nav-li">
         <router-link :to="{ name: 'users' }">
-          <mdi-account-icon />
+          <i class="mdi mdi-account user-sidebar__icon" />
           <span>Users</span>
         </router-link>
       </li>
 
       <li class="user-sidebar__nav-li">
         <router-link :to="{ name: 'admins' }">
-          <mdi-account-star-icon />
+          <i class="mdi mdi-account-star user-sidebar__icon" />
           <span>Admins</span>
         </router-link>
       </li>
 
       <li class="user-sidebar__nav-li">
         <router-link :to="{ name: 'assets' }">
-          <mdi-coin-icon />
+          <i class="mdi mdi-coin user-sidebar__icon" />
           <span>Assets</span>
         </router-link>
       </li>
 
       <li class="user-sidebar__nav-li">
         <router-link :to="{ name: 'sales' }">
-          <mdi-coins-icon />
+          <i class="mdi mdi-coins user-sidebar__icon" />
           <span>Sales</span>
         </router-link>
       </li>
 
       <li class="user-sidebar__nav-li">
         <router-link :to="{ name: 'offlineOperations' }">
-          <mdi-sync-off-icon />
+          <i class="mdi mdi-sync-off user-sidebar__icon" />
           <span>Offline operations</span>
         </router-link>
       </li>
 
       <li class="user-sidebar__nav-li">
         <router-link :to="{ name: 'kycRequests' }">
-          <mdi-account-plus-icon />
+          <i class="mdi mdi-account-plus user-sidebar__icon" />
           <span>KYC Requests</span>
         </router-link>
       </li>
 
       <li class="user-sidebar__nav-li">
         <router-link :to="{ name: 'limits' }">
-          <mdi-chart-bar-icon />
+          <i class="mdi mdi-chart-bar user-sidebar__icon" />
           <span>Limits</span>
         </router-link>
       </li>
 
       <li class="user-sidebar__nav-li">
         <router-link :to="{ name: 'trades' }">
-          <mdi-chart-line-variant-icon />
+          <i class="mdi mdi-chart-line-variant user-sidebar__icon" />
           <span>Trades</span>
         </router-link>
       </li>
 
       <li class="user-sidebar__nav-li">
         <router-link :to="{ name: 'fees' }">
-          <mdi-percent-icon />
+          <i class="mdi mdi-percent user-sidebar__icon" />
           <span>Fees</span>
         </router-link>
       </li>
 
       <li class="user-sidebar__nav-li">
         <router-link :to="{ name: 'keyValue' }">
-          <mdi-table-icon />
+          <i class="mdi mdi-table user-sidebar__icon" />
           <span>Key Value</span>
         </router-link>
       </li>
@@ -82,7 +82,7 @@
     <nav class="user-sidebar__nav">
       <li class="user-sidebar__nav-li">
         <router-link :to="{ name: 'settings' }">
-          <mdi-settings-icon />
+          <i class="mdi mdi-settings user-sidebar__icon" />
           <span>Settings</span>
         </router-link>
       </li>
@@ -91,21 +91,6 @@
 </template>
 
 <script>
-import 'mdi-vue/AccountIcon'
-import 'mdi-vue/SettingsIcon'
-import 'mdi-vue/PercentIcon'
-import 'mdi-vue/CoinsIcon'
-import 'mdi-vue/CoinIcon'
-import 'mdi-vue/BookIcon'
-import 'mdi-vue/OpenInNewIcon'
-import 'mdi-vue/ChartLineVariantIcon'
-import 'mdi-vue/AccountPlusIcon'
-import 'mdi-vue/ChartBarIcon'
-import 'mdi-vue/TableIcon'
-import 'mdi-vue/SyncOffIcon'
-
-import '@/assets/mdi/AccountStarIcon'
-
 import config from '@/config'
 
 export default {
@@ -179,11 +164,6 @@ export default {
     text-decoration: none;
     padding: 0.7rem 0 0.7rem 1.8rem;
 
-    & > .mdi-icon {
-      fill: $color-text-secondary;
-      margin-right: 2.5rem;
-    }
-
     & > .user-sidebar__inline-ico {
       fill: rgba($color: $color-text-secondary, $alpha: 0.5);
       width: 1.4rem;
@@ -209,5 +189,13 @@ export default {
   letter-spacing: 0.12rem;
   opacity: 0.51;
   padding-left: 1.6rem;
+}
+
+.user-sidebar__icon {
+  color: $color-text-secondary;
+  margin-right: 2.5rem;
+  font-size: 2.4rem;
+  line-height: 1;
+  display: flex;
 }
 </style>

@@ -197,6 +197,6 @@
 .input-field__tip-icon {
   cursor: help;
   display: flex;
-  width: 1.8rem;
-  fill: $field-color-unfocused;
+  font-size: 1.8rem;
+  color: $field-color-unfocused;
 }

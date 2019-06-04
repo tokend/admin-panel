@@ -91,11 +91,9 @@ import Modal from '@comcom/modals/Modal'
 import FormMixin from '@/mixins/form.mixin'
 import { required, maxLength } from '@/validators'
 
-import 'mdi-vue/ChevronDownIcon'
-import 'mdi-vue/ChevronUpIcon'
-
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { confirmAction } from '@/js/modals/confirmation_message'
+import { Bus } from '@/utils/state-bus'
 
 import { ChangeRoleRequest } from '@/api/responseHandlers/requests/ChangeRoleRequest'
 
@@ -168,7 +166,7 @@ export default {
           reviewDetails,
         })
 
-        this.$store.dispatch('SET_INFO', 'Request approved successfully')
+        Bus.success('Request approved successfully')
         this.$emit(EVENTS.reviewed)
       } catch (error) {
         ErrorHandler.process(error)
@@ -191,7 +189,7 @@ export default {
             reviewDetails: { tasksToRemove: 0 },
           }
         )
-        this.$store.dispatch('SET_INFO', `Request rejected successfully`)
+        Bus.success(`Request rejected successfully`)
         this.$emit(EVENTS.reviewed)
       } catch (error) {
         this.isPending = false

@@ -263,6 +263,7 @@ import safeGet from 'lodash/get'
 
 import { AssetRequest } from '@/api/responseHandlers/requests/AssetRequest'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { Bus } from '@/utils/state-bus'
 
 import {
   ASSET_POLICIES_VERBOSE,
@@ -331,7 +332,7 @@ export default {
       if (await confirmAction()) {
         try {
           await this.assetRequest.fulfill()
-          this.$store.dispatch('SET_INFO', 'Asset successfully created')
+          Bus.success('Asset successfully created')
           this.$router.push({ name: 'assets' })
         } catch (error) {
           ErrorHandler.process(error)

@@ -1,4 +1,4 @@
-import store from '@/store'
+import { Bus } from '@/utils/state-bus'
 import log from 'loglevel'
 import _get from 'lodash/get'
 import { ErrorTracker } from '@/utils/ErrorTracker'
@@ -7,7 +7,7 @@ export class ErrorHandler {
   static process (error, errorTrackerConfig = {}) {
     ErrorHandler.processWithoutFeedback(error, errorTrackerConfig)
     const message = ErrorHandler.extractErrorMessage(error)
-    ErrorHandler.showFeedback(message)
+    Bus.error(message)
   }
 
   static processWithoutFeedback (error, errorTrackerConfig = {}) {
@@ -21,10 +21,6 @@ export class ErrorHandler {
       const msg = message || ErrorHandler.extractErrorMessage(error)
       ErrorTracker.trackMessage(msg)
     }
-  }
-
-  static showFeedback (message) {
-    store.dispatch('SET_ERROR', message)
   }
 
   static extractErrorMessage (error) {

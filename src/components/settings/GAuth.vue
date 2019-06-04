@@ -13,10 +13,10 @@
     <br class="text small">
     <p class="g-auth__app-links">
       <a target="_blank" href="https://itunes.apple.com/app/google-authenticator/id388497605?mt=8">
-        <mdi-apple-icon /><span>iOS</span>
+        <i class="mdi mdi-apple g-auth__icon" /><span>iOS</span>
       </a>
       <a target="_blank" href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">
-        <mdi-android-icon /><span>Android</span>
+        <i class="mdi mdi-android g-auth__icon" /><span>Android</span>
       </a>
     </p>
 
@@ -49,10 +49,8 @@
 import Vue from 'vue'
 import Qrcode from 'qrcode.vue'
 
-import 'mdi-vue/AppleIcon'
-import 'mdi-vue/AndroidIcon'
-
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { Bus } from '@/utils/state-bus'
 
 export default {
   components: { Qrcode },
@@ -131,7 +129,7 @@ export default {
         await Vue.api.tfa.enableGAuth(this.id)
 
         this.$store.commit('CLOSE_LOADER')
-        this.$store.dispatch('SET_INFO', 'Two-factor Authentication enabled')
+        Bus.success('Two-factor Authentication enabled')
 
         this.$emit('tfa-done')
       } catch (err) {
@@ -180,12 +178,12 @@ export default {
     margin-left: 1.8rem;
   }
 
-  & > a > svg {
+  & > a > i {
     margin-right: .5rem;
   }
 
   & > a > span,
-  & > a > svg {
+  & > a > i {
     vertical-align: middle;
   }
 }
@@ -201,5 +199,10 @@ export default {
   font-size: 2rem;
   align-self: stretch;
   text-align: center;
+}
+
+.g-auth__icon {
+  font-size: 2.4rem;
+  color: $color-text;
 }
 </style>
