@@ -1,4 +1,4 @@
-ya<template>
+<template>
   <div class="g-auth">
     <h2 class="g-auth__heading">
       Two-factor authentication
