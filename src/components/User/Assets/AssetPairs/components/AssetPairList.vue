@@ -102,7 +102,7 @@
 import { CollectionLoader } from '@/components/common'
 import { AssetAmountFormatter } from '@comcom/formatters'
 
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api } from '@/api'
 import { ASSET_PAIR_POLICIES_VERBOSE } from '@/constants'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
@@ -129,9 +129,7 @@ export default {
       this.isFailed = false
       let response = {}
       try {
-        response = await ApiCallerFactory
-          .createCallerInstance()
-          .getWithSignature('/v3/asset_pairs')
+        response = await api.getWithSignature('/v3/asset_pairs')
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
         this.isFailed = true

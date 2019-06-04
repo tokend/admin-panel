@@ -20,7 +20,7 @@
 
         <div
           class="sale-rm__actions app__form-actions"
-          v-if="request.sale.requestStateI === REQUEST_STATES.pending"
+          v-if="request.sale.stateI === REQUEST_STATES.pending"
         >
           <button
             class="app__btn"
@@ -119,14 +119,13 @@ import DetailsTab from './SaleRequestManager.DetailsTab'
 import DescriptionTab from './SaleRequestManager.DescriptionTab'
 import SyndicateTab from '../../../components/SaleManager/SaleManager.SyndicateTab'
 
-import { Sdk } from '@/sdk'
-import api from '@/api'
-
 import { REQUEST_STATES } from '@/constants'
 
 import cloneDeep from 'lodash/cloneDeep'
 import { snakeToCamelCase } from '@/utils/un-camel-case'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { api } from '@/api'
+import apiHelper from '@/apiHelper'
 import { Bus } from '@/utils/state-bus'
 
 const REJECT_REASON_MAX_LENGTH = 255
@@ -178,7 +177,7 @@ export default {
 
   computed: {
     getSaleDetails () {
-      return this.request.sale.details[this.request.sale.details.requestType]
+      return this.request.sale.requestDetails
     },
   },
 
@@ -194,9 +193,11 @@ export default {
     async getRequest (id) {
       try {
         this.request.sale = await this.getSaleRequest(id)
-        const response = await Sdk.horizon.assets
-          .get(this.getSaleDetails.baseAsset)
-        this.request.asset = response.data
+        const endpoint = `/v3/assets/${this.getSaleDetails.baseAsset.id}`
+        const { data } = await api.getWithSignature(endpoint, {
+          include: ['owner'],
+        })
+        this.request.asset = data
         this.request.isReady = true
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
@@ -205,8 +206,11 @@ export default {
     },
 
     async getSaleRequest (id) {
-      const response = await api.requests.get(id)
-      const sale = this.fixDetails(response)
+      const endpoint = `/v3/create_sale_requests/${id}`
+      const { data } = await api.getWithSignature(endpoint, {
+        include: ['request_details.quote_assets'],
+      })
+      const sale = this.fixDetails(data)
       return sale
     },
 
@@ -222,7 +226,7 @@ export default {
       this.isSubmitting = true
       if (await confirmAction()) {
         try {
-          await api.requests.approve(this.request.sale)
+          await apiHelper.requests.approve(this.request.sale)
           Bus.success('Sale request approved.')
           this.$router.push({ name: 'sales.requests' })
         } catch (error) {
@@ -238,7 +242,7 @@ export default {
       this.hideRejectForm()
       this.isSubmitting = true
       try {
-        await api.requests.reject(
+        await apiHelper.requests.reject(
           {
             reason: this.rejectForm.reason,
             isPermanent: this.rejectForm.isPermanentReject,
@@ -255,14 +259,8 @@ export default {
 
     fixDetails (record) {
       const newRecord = cloneDeep(record)
-
-      const valuableRequestDetailsKey = Object.keys(record.details)
-        .find(item => !/request_type|requestType/gi.test(item))
-
-      newRecord.details.requestType =
-        snakeToCamelCase(record.details.requestType)
-      newRecord.details[newRecord.details.requestType] =
-        record.details[valuableRequestDetailsKey] || {}
+      newRecord.requestDetails.requestType =
+        snakeToCamelCase(record.xdrType.name)
 
       return newRecord
     },

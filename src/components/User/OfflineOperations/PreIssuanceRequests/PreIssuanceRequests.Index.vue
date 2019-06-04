@@ -9,9 +9,10 @@
         label="Asset">
         <option
           v-for="a in assets"
-          :value="a.code"
-          :key="a.code">
-          {{ a.code }}
+          :value="a.id"
+          :key="a.id"
+        >
+          {{ a.id }}
         </option>
       </select-field>
 
@@ -28,7 +29,7 @@
 <script>
 import PreIssuanceRequestList from './components/PreIssuanceRequestList.vue'
 import SelectField from '@comcom/fields/SelectField'
-import { Sdk } from '@/sdk'
+import { api, loadingDataViaLoop } from '@/api'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
@@ -40,7 +41,7 @@ export default {
 
   data () {
     return {
-      asset: [{ code: 'All' }],
+      asset: [{ id: 'All' }],
       assets: undefined,
       assetsLoaded: false,
     }
@@ -49,7 +50,7 @@ export default {
   computed: {
     assetInfo () {
       const selectedAsset = this.assets
-        .filter(asset => asset.code === this.asset)[0]
+        .filter(asset => asset.id === this.asset)[0]
       return selectedAsset || {}
     },
 
@@ -69,11 +70,12 @@ export default {
     async getAssets () {
       this.$store.commit('OPEN_LOADER')
       try {
-        const response = await Sdk.horizon.assets.getAll()
+        let response = await api.getWithSignature('/v3/assets')
+        let assets = await loadingDataViaLoop(response)
         this.assets = [{
-          code: 'All',
-        }].concat(response.data)
-        this.asset = this.assets[0].code
+          id: 'All',
+        }].concat(assets)
+        this.asset = this.assets[0].id
         this.assetsLoaded = true
 
         this.$store.commit('CLOSE_LOADER')

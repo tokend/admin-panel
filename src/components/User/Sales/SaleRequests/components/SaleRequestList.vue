@@ -64,25 +64,25 @@
           >
             <span
               class="app-list__cell app-list__cell--important"
-              :title="item.baseAsset"
+              :title="item.requestDetails.baseAsset.id"
             >
-              {{ extractDetails(item).baseAsset }}
+              {{ item.requestDetails.baseAsset.id }}
             </span>
             <span
               class="app-list__cell"
-              :title="extractDetails(item).details.name"
+              :title="item.requestDetails.creatorDetails.name"
             >
-              {{ extractDetails(item).details.name }}
+              {{ item.requestDetails.creatorDetails.name }}
             </span>
             <span class="app-list__cell">
               <asset-amount-formatter
-                :amount="extractDetails(item).hardCap"
-                :asset="extractDetails(item).defaultQuoteAsset"
+                :amount="item.requestDetails.hardCap"
+                :asset="item.requestDetails.defaultQuoteAsset.id"
               />
             </span>
             <span class="app-list__cell">
               <email-getter
-                :account-id="item.requestor"
+                :account-id="item.requestor.id"
                 is-titled
               />
             </span>
@@ -120,8 +120,8 @@ import InputField from '@comcom/fields/InputField'
 import SelectField from '@comcom/fields/SelectField'
 
 import { REQUEST_STATES } from '@/constants'
-import api from '@/api'
-import { Sdk } from '@/sdk'
+import apiHelper from '@/apiHelper'
+import { base } from '@tokend/js-sdk'
 
 import { EmailGetter } from '@comcom/getters'
 import { AssetAmountFormatter } from '@comcom/formatters'
@@ -172,21 +172,20 @@ export default {
           state: this.filters.state,
           requestor,
         }
-        response = await api.requests.getSaleRequests(filters)
+        response = await apiHelper.requests.getSaleCreateRequests(filters)
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }
-
       this.isLoaded = true
       return response
     },
 
     async getRequestorAccountId (requestor) {
-      if (Sdk.base.Keypair.isValidPublicKey(requestor)) {
+      if (base.Keypair.isValidPublicKey(requestor)) {
         return requestor
       } else {
         try {
-          const address = await api.users.getAccountIdByEmail(requestor)
+          const address = await apiHelper.users.getAccountIdByEmail(requestor)
           return address || requestor
         } catch (error) {
           return requestor
@@ -200,12 +199,6 @@ export default {
 
     async extendList (data) {
       this.list = this.list.concat(data)
-    },
-
-    extractDetails (record) {
-      const valuableRequestDetailsKey = Object.keys(record.details)
-        .find(item => !/request_type|requestType/gi.test(item))
-      return record.details[valuableRequestDetailsKey] || {}
     },
 
     reloadCollectionLoader () {

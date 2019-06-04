@@ -141,8 +141,10 @@ import Vue from 'vue'
 import FormMixin from '@/mixins/form.mixin'
 import { required, minValue, maxValue, accountId } from '@/validators'
 
-import { Sdk } from '@/sdk'
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { confirmAction } from '@/js/modals/confirmation_message'
+
+import { base } from '@tokend/js-sdk'
+import { api, loadingDataViaLoop } from '@/api'
 
 import { Bus } from '@/utils/state-bus'
 import { ErrorHandler } from '@/utils/ErrorHandler'
@@ -232,17 +234,15 @@ export default {
 
   methods: {
     async getSignerByAccountId (accountId) {
-      const { data } = await ApiCallerFactory
-        .createCallerInstance()
-        .getWithSignature(`/v3/accounts/${this.masterPubKey}/signers`)
+      const endpoint = `/v3/accounts/${this.masterPubKey}/signers`
+      const { data } = await api.getWithSignature(endpoint)
       return (data || []).find(item => item.id === accountId)
     },
 
     async initSignerRolesPicker () {
-      const signerRoles = await ApiCallerFactory
-        .createStubbornCallerInstance()
-        .stubbornGet('/v3/signer_roles')
-      this.signerRoles = signerRoles.data
+      let response = await api.getWithSignature('/v3/signer_roles')
+      let signerRoles = await loadingDataViaLoop(response)
+      this.signerRoles = signerRoles
         .filter(item => {
           return (item.details || {}).adminRole || +item.id === +MASTER_ROLE_ID
         })
@@ -308,21 +308,24 @@ export default {
     },
 
     async addAdmin () {
-      await this.submitTx(Sdk.base.ManageSignerBuilder.createSigner)
+      await this.submitTx(base.ManageSignerBuilder.createSigner)
     },
 
     async updateAdmin () {
-      await this.submitTx(Sdk.base.ManageSignerBuilder.updateSigner)
+      await this.submitTx(base.ManageSignerBuilder.updateSigner)
     },
 
     async deleteAdmin () {
-      await this.submitTx(Sdk.base.ManageSignerBuilder.deleteSigner)
+      const confirmationTxt = 'Are you sure you want to delete this admin?'
+      if (await confirmAction({ title: confirmationTxt })) {
+        await this.submitTx(base.ManageSignerBuilder.deleteSigner)
+      }
     },
 
     async submitTx (operationConstructor) {
       const opts = this.buildManageSignerOperationOpts()
       const operation = operationConstructor(opts)
-      await Sdk.horizon.transactions.submitOperations(operation)
+      await api.postOperations(operation)
     },
 
     buildManageSignerOperationOpts () {

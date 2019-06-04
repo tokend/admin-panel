@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import tfa from '@/api/tfa'
+import tfa from '@/apiHelper/tfa'
 import UserHeader from '@/components/User/components/UserHeader'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 

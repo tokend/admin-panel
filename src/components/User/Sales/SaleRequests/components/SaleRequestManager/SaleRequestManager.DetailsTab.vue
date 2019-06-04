@@ -9,14 +9,14 @@
           <li>
             <span>Requestor</span>
             <email-getter
-              :account-id="request.sale.requestor"
+              :account-id="request.sale.requestor.id"
               is-titled
             />
           </li>
           <li>
             <span>Request state</span>
             <request-state-formatter
-              :state="request.sale.requestState"
+              :state="request.sale.state"
               is-colored
             />
           </li>
@@ -62,7 +62,7 @@
           </li>
           <li>
             <span>Code</span>
-            <span>{{ request.asset.code }}</span>
+            <span>{{ request.asset.id }}</span>
           </li>
           <li>
             <span>Initial preissued amount</span>
@@ -75,13 +75,15 @@
           <li>
             <span>Preissuance signer</span>
             <email-getter
-              :account-id="request.asset.preissuedAssetSigner"
+              :account-id="request.asset.preIssuanceAssetSigner"
               is-titled
             />
           </li>
           <li>
             <span>Policies</span>
-            <asset-policies-formatter :policies="request.asset.policies" />
+            <asset-policies-formatter
+              :policy-mask="request.asset.policies.value"
+            />
           </li>
           <li>
             <span>Terms</span>
@@ -126,8 +128,8 @@
           <li>
             <span>Name</span>
             <span>
-              <template v-if="safeGet(saleDetails, 'details.name')">
-                {{ saleDetails.details.name }}
+              <template v-if="safeGet(saleDetails, 'creatorDetails.name')">
+                {{ saleDetails.creatorDetails.name }}
               </template>
               <template v-else>
                 (Not provided yet)
@@ -152,33 +154,22 @@
             <span>Soft cap</span>
             <asset-amount-formatter
               :amount="saleDetails.softCap"
-              :asset="saleDetails.defaultQuoteAsset"
+              :asset="saleDetails.defaultQuoteAsset.id"
             />
           </li>
           <li>
             <span>Hard cap</span>
             <asset-amount-formatter
               :amount="saleDetails.hardCap"
-              :asset="saleDetails.defaultQuoteAsset"
+              :asset="saleDetails.defaultQuoteAsset.id"
             />
           </li>
           <li>
-            <span>Max {{ saleDetails.baseAsset }} amount to be sold</span>
+            <span>Max {{ saleDetails.baseAsset.id }} amount to be sold</span>
             <asset-amount-formatter
               :amount="saleDetails.baseAssetForHardCap"
-              :asset="saleDetails.baseAsset"
+              :asset="saleDetails.baseAsset.id"
             />
-          </li>
-
-          <label class="data-caption">
-            Prices (per one)
-          </label>
-          <li
-            v-for="(item, index) in saleDetails.quoteAssets"
-            :key="index"
-          >
-            <span>{{ item.quoteAsset }}</span>
-            <span>{{ item.price }}</span>
           </li>
         </ul>
 
@@ -187,10 +178,12 @@
         </label>
         <p
           class="text sale-rm-details-tab__short-description"
-          :title="safeGet(saleDetails, 'details.shortDescription')"
+          :title="safeGet(saleDetails, 'creatorDetails.shortDescription')"
         >
-          <template v-if="safeGet(saleDetails, 'details.shortDescription')">
-            {{ saleDetails.details.shortDescription }}
+          <template
+            v-if="safeGet(saleDetails, 'creatorDetails.shortDescription')"
+          >
+            {{ saleDetails.creatorDetails.shortDescription }}
           </template>
           <template v-else>
             (Not provided yet)
@@ -202,10 +195,10 @@
         <label class="data-caption">
           Sale logo
         </label>
-        <template v-if="safeGet(saleDetails, 'details.logo.key')">
+        <template v-if="safeGet(saleDetails, 'creatorDetails.logo.key')">
           <img-getter
             class="sale-rm-details-tab__sale-logo"
-            :file-key="saleDetails.details.logo.key"
+            :file-key="saleDetails.creatorDetails.logo.key"
             alt="Sale logo"
           />
         </template>
@@ -245,7 +238,7 @@ export default {
 
   computed: {
     saleDetails () {
-      return this.request.sale.details[this.request.sale.details.requestType]
+      return this.request.sale.requestDetails
     },
   },
   methods: {

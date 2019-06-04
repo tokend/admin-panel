@@ -1,4 +1,4 @@
-<template>
+ya<template>
   <div class="g-auth">
     <h2 class="g-auth__heading">
       Two-factor authentication
@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import Vue from 'vue'
+import tfa from '@/apiHelper/tfa'
 import Qrcode from 'qrcode.vue'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
@@ -104,7 +104,7 @@ export default {
       this.$store.commit('OPEN_LOADER')
 
       try {
-        const response = await Vue.api.tfa.addGAuth()
+        const response = await tfa.addGAuth()
 
         this.gAuthLink = response.details.secret
         this.secret = response.details.secret_seed
@@ -126,7 +126,7 @@ export default {
       this.$store.commit('OPEN_LOADER')
 
       try {
-        await Vue.api.tfa.enableGAuth(this.id)
+        await tfa.enableGAuth(this.id)
 
         this.$store.commit('CLOSE_LOADER')
         Bus.success('Two-factor Authentication enabled')

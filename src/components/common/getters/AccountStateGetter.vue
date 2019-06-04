@@ -10,7 +10,8 @@
 </template>
 
 <script>
-import { Sdk } from '@/sdk'
+import { api } from '@/api'
+import config from '@/config'
 
 export default {
   props: {
@@ -24,7 +25,9 @@ export default {
   computed: {
     accountState () {
       if (!this.account) return null
-      return this.account.isBlocked ? 'Blocked' : 'Active'
+      return this.account.role.id === +config.ACCOUNT_ROLES.blocked
+        ? 'Blocked'
+        : 'Active'
     },
   },
 
@@ -34,8 +37,9 @@ export default {
 
   methods: {
     async getAccount () {
-      const response = await Sdk.horizon.account.get(this.accountId)
-      this.account = response.data
+      const endpoint = `/v3/accounts/${this.accountId}`
+      const { data } = await api.getWithSignature(endpoint)
+      this.account = data
     },
   },
 }

@@ -1,8 +1,8 @@
-import { Sdk } from '@/sdk'
+import { base } from '@tokend/js-sdk'
 
 export function xdrEnumToConstant (xdrEnum) {
   xdrEnum = typeof xdrEnum === 'string'
-    ? Sdk.xdr[xdrEnum]
+    ? base.xdr[xdrEnum]
     : xdrEnum
 
   try {

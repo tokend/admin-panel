@@ -114,7 +114,7 @@ import { required, requiredIf, minValue, maxValue } from '@/validators'
 
 import { confirmAction } from '@/js/modals/confirmation_message'
 
-import { Sdk } from '@/sdk'
+import { base } from '@tokend/js-sdk'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { Bus } from '@/utils/state-bus'
 
@@ -125,6 +125,8 @@ import {
   DEFAULT_INPUT_STEP,
   FEE_TYPES,
 } from '@/constants'
+
+import { api } from '@/api'
 
 const EVENTS = {
   feeUpdated: 'fee-updated',
@@ -230,9 +232,9 @@ export default {
           },
           isDelete: isDeleteMode,
         }
-        const operation = Sdk.base.Operation.setFees(opts)
+        const operation = base.Operation.setFees(opts)
 
-        await Sdk.horizon.transactions.submitOperations(operation)
+        await api.postOperations(operation)
         Bus.success('Submitted successfully')
         this.$emit(EVENTS.feeUpdated)
       } catch (error) {

@@ -1,5 +1,5 @@
 import { Asset } from '../wrappers/asset'
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api, loadingDataViaLoop } from '@/api'
 
 const ASSETS_PAGE_LIMIT = 100
 
@@ -15,20 +15,10 @@ const mutations = {
 
 const actions = {
   async LOAD_ASSETS ({ commit }) {
-    let pageResponse
-    let assets
-
-    pageResponse = await ApiCallerFactory
-      .createCallerInstance()
-      .get('/v3/assets', {
-        page: { limit: ASSETS_PAGE_LIMIT },
-      })
-    assets = pageResponse.data
-
-    while (pageResponse.data.length) {
-      pageResponse = await pageResponse.fetchNext()
-      assets.push(...pageResponse.data)
-    }
+    let pageResponse = await api.get('/v3/assets', {
+      page: { limit: ASSETS_PAGE_LIMIT },
+    })
+    let assets = await loadingDataViaLoop(pageResponse)
 
     commit('SET_ASSETS', assets)
   },

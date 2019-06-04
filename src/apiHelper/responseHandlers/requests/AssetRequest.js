@@ -2,25 +2,19 @@ import { ReviewableRequest } from './ReviewableRequest'
 
 export class AssetRequest extends ReviewableRequest {
   get code () {
-    return this.operationDetails.code
-  }
-
-  get externalLink () {
-    return this.operationDetails.externalResourceLink
+    return this.operationDetails.asset.id || this.operationDetails.asset
   }
 
   get policies () {
     return this.operationDetails.policies
-      .map(policy => policy.value)
-      .reduce((sum, policy) => sum + policy, 0)
   }
 
   get name () {
-    return this.operationDetails.name
+    return this.operationDetails.creatorDetails.name
   }
 
   get signer () {
-    return this.operationDetails.preIssuedAssetSigner
+    return this.operationDetails.preIssuanceAssetSigner
   }
 
   get maxAmount () {
@@ -28,11 +22,11 @@ export class AssetRequest extends ReviewableRequest {
   }
 
   get requestor () {
-    return this.record.requestor
+    return this.record.requestor.id
   }
 
   get type () {
-    return this.record.requestType
+    return this.record.xdrType.name
   }
 
   get assetType () {

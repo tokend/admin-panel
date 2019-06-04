@@ -1,5 +1,5 @@
 import config from '@/config'
-import { Sdk } from '@/sdk'
+import { base } from '@tokend/js-sdk'
 
 import { REQUEST_TYPES } from '@/constants'
 
@@ -7,9 +7,8 @@ import { CreatePreIssuanceRequest } from './responseHandlers/requests/CreatePreI
 import { AssetRequest } from './responseHandlers/requests/AssetRequest'
 import { IssuanceCreateRequest } from './responseHandlers/requests/IssuanceCreateRequest'
 
-import { clearObject } from '@/utils/clearObject'
 import _get from 'lodash/get'
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api } from '@/api'
 
 export const requests = {
   _review ({ action, reason = '' }, ...requests) {
@@ -32,14 +31,14 @@ export const requests = {
         reason,
       }
 
-      return Sdk.base.ReviewRequestBuilder.reviewRequest({
+      return base.ReviewRequestBuilder.reviewRequest({
         ...opts,
 
         // TODO: remove. added due to a bug in the @tokend/js-sdk
         requestDetails: opts,
       })
     })
-    return Sdk.horizon.transactions.submitOperations(...operations)
+    return api.postOperations(...operations)
   },
 
   _reviewWithdraw ({ action, reason = '' }, ...requests) {
@@ -56,22 +55,19 @@ export const requests = {
         action,
         reason,
       }
-      return Sdk.base.ReviewRequestBuilder.reviewWithdrawRequest(opts)
+      return base.ReviewRequestBuilder.reviewWithdrawRequest(opts)
     })
-
-    return ApiCallerFactory
-      .createCallerInstance()
-      .postOperations(...operations)
+    return api.postOperations(...operations)
   },
 
   async approve (...requests) {
-    const action = Sdk.xdr.ReviewRequestOpAction.approve().value
+    const action = base.xdr.ReviewRequestOpAction.approve().value
     const { data } = await this._review({ action }, ...requests)
     return data
   },
 
   async approveWithdraw (...requests) {
-    const action = Sdk.xdr.ReviewRequestOpAction.approve().value
+    const action = base.xdr.ReviewRequestOpAction.approve().value
     const { data } = await this._reviewWithdraw({ action }, ...requests)
     return data
   },
@@ -94,11 +90,10 @@ export const requests = {
       }))
 
     const operations = []
-    operations.push(Sdk.base.ReviewRequestBuilder.reviewLimitsUpdateRequest({
+    operations.push(base.ReviewRequestBuilder.reviewLimitsUpdateRequest({
       requestHash: params.request.hash,
-      requestType: params.request.details.request_type_i ||
-        params.request.details.requestTypeI,
-      action: Sdk.xdr.ReviewRequestOpAction.approve().value,
+      requestType: params.request.xdrType.value,
+      action: base.xdr.ReviewRequestOpAction.approve().value,
       reason: '',
       requestID: params.request.id,
       newLimits: newLimits[0],
@@ -113,13 +108,11 @@ export const requests = {
     newLimits
       .forEach(limits => {
         operations.push(
-          Sdk.base.ManageLimitsBuilder.createLimits(limits)
+          base.ManageLimitsBuilder.createLimits(limits)
         )
       })
-
-    const { data } = await Sdk.horizon.transactions
-      .submitOperations(...operations)
-    return data
+    const response = await api.postOperations(...operations)
+    return response.data
   },
 
   async rejectLimitsUpdate (params) {
@@ -131,25 +124,24 @@ export const requests = {
         accountType: undefined,
       }))
 
-    const operation = Sdk.base.ReviewRequestBuilder.reviewLimitsUpdateRequest({
+    const operation = base.ReviewRequestBuilder.reviewLimitsUpdateRequest({
       requestHash: params.request.hash,
-      requestType: params.request.request_type_i || params.request.requestTypeI,
+      requestType: params.request.xdrType.value,
       action: params.isPermanent
-        ? Sdk.xdr.ReviewRequestOpAction.permanentReject().value
-        : Sdk.xdr.ReviewRequestOpAction.reject().value,
+        ? base.xdr.ReviewRequestOpAction.permanentReject().value
+        : base.xdr.ReviewRequestOpAction.reject().value,
       reason: params.reason,
       requestID: params.request.id,
       newLimits: newLimits[0],
     })
-
-    const { data } = await Sdk.horizon.transactions.submitOperations(operation)
-    return data
+    const response = await api.postOperations(operation)
+    return response.data
   },
 
   async reject ({ reason, isPermanent = false }, ...requests) {
     const action = isPermanent
-      ? Sdk.xdr.ReviewRequestOpAction.permanentReject().value
-      : Sdk.xdr.ReviewRequestOpAction.reject().value
+      ? base.xdr.ReviewRequestOpAction.permanentReject().value
+      : base.xdr.ReviewRequestOpAction.reject().value
 
     const { data } = await this._review({ action, reason }, ...requests)
     return data
@@ -157,8 +149,8 @@ export const requests = {
 
   async rejectWithdraw ({ reason, isPermanent = false }, ...requests) {
     const action = isPermanent
-      ? Sdk.xdr.ReviewRequestOpAction.permanentReject().value
-      : Sdk.xdr.ReviewRequestOpAction.reject().value
+      ? base.xdr.ReviewRequestOpAction.permanentReject().value
+      : base.xdr.ReviewRequestOpAction.reject().value
 
     const { data } = await this._reviewWithdraw(
       { action, reason }, ...requests
@@ -167,75 +159,42 @@ export const requests = {
   },
 
   async get (id) {
-    const { data } = await Sdk.horizon.request.get(id)
+    const { data } = await api.getWithSignature(`/v3/requests/${id}`, {
+      include: ['request_details'],
+    })
     return data
   },
 
-  async getIssuanceRequests ({ asset, state }) {
-    const filters = {}
-    if (state) filters.state = state
-    if (asset) filters.asset = asset
-
-    const response = await Sdk.horizon.request.getAllForIssuances({
-      order: 'desc',
-      reviewer: config.MASTER_ACCOUNT,
-      limit: 1000,
-      ...filters,
-    })
-    return response
-  },
-
-  async getWithdrawalRequests ({ asset, state, requestor }) {
-    const filters = {}
-    if (asset) filters.dest_asset_code = asset
-    if (state) filters.state = state
-    if (requestor) filters.requestor = requestor
-
-    const response = await Sdk.horizon.request.getAllForWithdrawals({
-      order: 'desc',
-      limit: 1000,
-      ...filters,
-    })
-    return response
-  },
-
-  async getSaleRequests ({ state, requestor }) {
+  async getSaleCreateRequests ({ state, requestor }) {
     const filters = {}
     if (state) filters.state = state
     if (requestor) filters.requestor = requestor
 
-    const response = await Sdk.horizon.request.getAllForSales({
-      order: 'desc',
-      limit: 1000,
-      ...filters,
+    const response = await api.getWithSignature('/v3/create_sale_requests', {
+      filter: {
+        ...filters,
+      },
+      page: {
+        order: 'desc',
+      },
+      include: ['request_details'],
     })
     return response
   },
 
-  async getAssetRequests (filters) {
-    const params = clearObject({
-      asset: filters.code,
-      requestor: filters.requestor,
-      state: filters.state,
-      reviewer: filters.reviewer,
-      order: 'desc',
-      limit: 1000,
-    })
-
-    const response = await Sdk.horizon.request.getAllForAssets(params)
-    return response
-  },
-
-  async getLimitsUpdateRequests ({ asset, state, requestor }) {
+  async getLimitsUpdateRequests ({ state, requestor }) {
     const filters = {}
-    if (asset) filters.dest_asset_code = asset
     if (state) filters.state = state
     if (requestor) filters.requestor = requestor
 
-    const response = await Sdk.horizon.request.getAllForLimitsUpdates({
-      order: 'desc',
-      limit: 1000,
-      ...filters,
+    const response = await api.getWithSignature('/v3/update_limits_requests', {
+      filter: {
+        ...filters,
+      },
+      page: {
+        order: 'desc',
+      },
+      include: ['request_details'],
     })
     return response
   },
@@ -244,11 +203,16 @@ export const requests = {
     if (asset.toLowerCase() === 'all') {
       asset = ''
     }
-    const response = await Sdk.horizon.request.getAllForPreissuances({
-      asset: asset,
-      order: 'desc',
-      limit: 1000,
-      reviewer: config.MASTER_ACCOUNT,
+    const endpoint = '/v3/create_pre_issuance_requests'
+    const response = await api.getWithSignature(endpoint, {
+      filter: {
+        'request_details.asset': asset,
+        reviewer: config.MASTER_ACCOUNT,
+      },
+      page: {
+        order: 'desc',
+      },
+      include: ['request_details'],
     })
     response.records = mapRequests(response.data)
     return response
@@ -259,7 +223,7 @@ export const requests = {
 
 function mapRequests (records) {
   return records.map(record => {
-    const type = record.details.requestTypeI
+    const type = record.xdrType.value
     switch (type) {
       case REQUEST_TYPES.createAsset:
       case REQUEST_TYPES.updateAsset:

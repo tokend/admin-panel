@@ -9,63 +9,65 @@
       </li>
       <li>
         <span>Request state</span>
-        <verbose-formatter :string="request.requestState" />
+        <verbose-formatter :string="request.state" />
       </li>
       <li>
         <span>Requestor</span>
-        <email-getter :account-id="request.requestor" is-titled />
+        <email-getter :account-id="request.requestor.id" is-titled />
       </li>
       <li>
         <span>Requestor ID</span>
-        <span>{{ request.requestor }} </span>
+        <span>{{ request.requestor.id }} </span>
       </li>
-      <li>
-        <span>Receiver address</span>
-        <span :title="request.details.createWithdraw.externalDetails.address">
-          {{ request.details.createWithdraw.externalDetails.address }}
-        </span>
-      </li>
-      <template v-if="request.details.createWithdraw.reviewerDetails">
+      <template v-if="request.requestDetails.creatorDetails.comment">
         <li>
-          <span>Hash</span>
-          <span :title="request.details.createWithdraw.reviewerDetails.hash">
-            {{ request.details.createWithdraw.reviewerDetails.hash }}
+          <span>Comment</span>
+          <span :title="request.requestDetails.creatorDetails.comment">
+            {{ request.requestDetails.creatorDetails.comment }}
           </span>
         </li>
         <li>
-          <span>Transaction</span>
-          <span :title="request.details.createWithdraw.reviewerDetails.tx">
-            {{ request.details.createWithdraw.reviewerDetails.tx }}
+          <span>Hash</span>
+          <span :title="request.hash">
+            {{ request.hash }}
+          </span>
+        </li>
+      </template>
+      <template v-if="request.requestDetails.creatorDetails.address">
+        <li>
+          <span>Receiver address</span>
+          <span :title="request.requestDetails.creatorDetails.address">
+            {{ request.requestDetails.creatorDetails.address }}
           </span>
         </li>
       </template>
       <li>
         <span>Amount</span>
         <asset-amount-formatter
-          :amount="request.details.createWithdraw.amount"
-          :asset="request.details.createWithdraw.asset"
+          :amount="request.requestDetails.amount"
+          :asset="request.requestDetails.asset"
         />
       </li>
       <li>
         <span>Fixed fee</span>
         <asset-amount-formatter
-          :amount="request.details.createWithdraw.fixedFee"
-          :asset="request.details.createWithdraw.asset"
+          :amount="request.requestDetails.fee.fixed"
+          :asset="request.requestDetails.asset"
         />
       </li>
       <li>
         <span>Percent fee</span>
         <asset-amount-formatter
-          :amount="request.details.createWithdraw.percentFee"
-          :asset="request.details.createWithdraw.asset"
+          :amount="request.requestDetails.fee.calculatedPercent"
+          :asset="request.requestDetails.asset"
         />
       </li>
       <li>
         <span>Total fee</span>
         <asset-amount-formatter
-          :amount="Number(request.details.createWithdraw.fixedFee) +
-            Number(request.details.createWithdraw.percentFee)"
-          :asset="request.details.createWithdraw.asset"
+          :amount="Number(request.requestDetails.fee.fixed) +
+            Number(request.requestDetails.fee.calculatedPercent)"
+          :asset="request.requestDetails.asset"
         />
       </li>
     </ul>
@@ -137,8 +139,8 @@ import { VerboseFormatter, AssetAmountFormatter } from '@comcom/formatters'
 import Modal from '@comcom/modals/Modal'
 import { confirmAction } from '@/js/modals/confirmation_message'
 
-import api from '@/api'
-import { ASSET_POLICIES } from '@/constants'
+import apiHelper from '@/apiHelper'
+import { REQUEST_STATES } from '@/constants'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { Bus } from '@/utils/state-bus'
@@ -165,7 +167,7 @@ export default {
       rejectForm: {
         reason: '',
       },
-      ASSET_POLICIES,
+      REQUEST_STATES,
       REJECT_REASON_MAX_LENGTH,
     }
   },
@@ -183,7 +185,7 @@ export default {
 
   computed: {
     reviewAllowed () {
-      return this.request.requestState === 'pending'
+      return this.request.stateI === REQUEST_STATES.pending
     },
   },
 
@@ -194,7 +196,7 @@ export default {
 
       this.isSubmitting = true
       try {
-        await api.requests.approveWithdraw(request)
+        await apiHelper.requests.approveWithdraw(request)
         Bus.success('Request fulfilled successfully.')
         this.$emit('close-request')
       } catch (error) {
@@ -208,7 +210,7 @@ export default {
 
       this.disableForm()
       try {
-        await api.requests.rejectWithdraw(
+        await apiHelper.requests.rejectWithdraw(
           {
             reason: this.rejectForm.reason,
             isPermanent: true,

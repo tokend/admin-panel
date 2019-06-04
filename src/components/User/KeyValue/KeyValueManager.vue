@@ -10,10 +10,10 @@
           >
             <option
               v-for="item in list"
-              :value="item.key"
-              :key="item.key"
+              :value="item.id"
+              :key="item.id"
             >
-              {{ item.key }}
+              {{ item.id }}
             </option>
           </select-field>
 
@@ -86,11 +86,17 @@
 <script>
 import { SelectField, InputField } from '@comcom/fields'
 
-import { Sdk } from '@/sdk'
-import { KEY_VALUE_ENTRY_TYPE } from '../../../constants'
-
+import { base } from '@tokend/js-sdk'
+import { KEY_VALUE_ENTRY_TYPE } from '@/constants'
+import { api, loadingDataViaLoop } from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { Bus } from '@/utils/state-bus'
+
+const KEY_VALUE_TYPE_SHORT_NAME = {
+  uint32: 'u32',
+  string: 'str',
+  uint64: 'u64',
+}
 
 export default {
   components: {
@@ -108,7 +114,6 @@ export default {
       key: '',
       value: '',
     },
-
     list: [],
     isPending: false,
     KEY_VALUE_ENTRY_TYPE,
@@ -116,8 +121,9 @@ export default {
 
   watch: {
     'updateForm.key' (key) {
-      const item = this.list.find(elem => elem.key === key)
-      this.updateForm.value = item[`${item.type.name}Value`]
+      const item = this.list.find(elem => elem.id === key)
+      const name = KEY_VALUE_TYPE_SHORT_NAME[item.value.type.name]
+      this.updateForm.value = item.value[name]
     },
   },
 
@@ -129,35 +135,33 @@ export default {
     async setKeyValue (key, value, entryType) {
       this.isPending = true
       try {
-        const operation = Sdk.base.ManageKeyValueBuilder
+        const operation = base.ManageKeyValueBuilder
           .putKeyValue({ key, value, entryType })
-        await Sdk.horizon.transactions.submitOperations(operation)
+
+        await api.postOperations(operation)
         await this.getList()
 
         Bus.success('Submitted successfully')
       } catch (error) {
-        ErrorHandler.process('Failed to submit operation')
+        ErrorHandler.process(error)
       }
       this.isPending = false
     },
 
     async getList () {
-      try {
-        const response = await Sdk.horizon.keyValue.getAll()
-        this.list = response.data
+      let response = await api.getWithSignature('/v3/key_values')
+      let data = await loadingDataViaLoop(response)
+      this.list = data
 
-        if (!this.list.length) {
-          return
-        }
+      if (!this.list.length) {
+        return
+      }
 
-        if (!this.updateForm.key) {
-          const item = this.list[0]
-
-          this.updateForm.key = item.key
-          this.updateForm.value = item[`${item.type.name}Value`]
-        }
-      } catch (e) {
-        ErrorHandler.processWithoutFeedback(e)
+      if (!this.updateForm.key) {
+        const item = this.list[0]
+        const name = KEY_VALUE_TYPE_SHORT_NAME[item.value.type.name]
+        this.updateForm.key = item.id
+        this.updateForm.value = item.value[name]
       }
     },
   },

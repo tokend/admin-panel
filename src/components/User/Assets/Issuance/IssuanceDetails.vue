@@ -14,35 +14,35 @@
           </li>
           <li class="issuance-details__list-item">
             <span>Initiator</span>
-            <span>{{ issuance.requestor }}</span>
+            <span>{{ issuance.requestor.id }}</span>
           </li>
           <li class="issuance-details__list-item">
             <span>Initiator (Email)</span>
             <span>
-              <email-getter :account-id="issuance.requestor" is-titled />
+              <email-getter :account-id="issuance.requestor.id" is-titled />
             </span>
           </li>
           <li class="issuance-details__list-item">
             <span>Value</span>
             <span>
-              {{ localize(issuance.amount) }}
-              {{ issuance.details.createIssuance.asset }}
+              {{ localize(issuance.requestDetails.amount) }}
+              {{ issuance.requestDetails.asset.id }}
             </span>
           </li>
           <li class="issuance-details__list-item">
             <span>State</span>
             <span>
-              {{ issuance.requestState | localizeIssuanceRequestState }}
+              {{ issuance.state | localizeIssuanceRequestState }}
             </span>
           </li>
         </ul>
-        <template v-if="issuance.requestStateI === REQUEST_STATES.pending">
+        <template v-if="issuance.stateI === REQUEST_STATES.pending">
           <div class="issuance-details__action-btns">
             <!-- eslint-disable max-len -->
             <button
               class="app__btn issuance-details__action-btn"
               @click="fulfill(issuance)"
-              :disabled="isSubmitting || issuance.requestStateI !== REQUEST_STATES.pending"
+              :disabled="isSubmitting || issuance.stateI !== REQUEST_STATES.pending"
             >
               Fulfill
             </button>
@@ -50,7 +50,7 @@
             <button
               class="app__btn app__btn--danger issuance-details__action-btn"
               @click="selectForRejection(issuance)"
-              :disabled="isSubmitting || issuance.requestStateI !== REQUEST_STATES.pending"
+              :disabled="isSubmitting || issuance.stateI !== REQUEST_STATES.pending"
             >
               Reject
             </button>
@@ -118,7 +118,7 @@ import { EmailGetter } from '@comcom/getters'
 import Modal from '@comcom/modals/Modal'
 import { confirmAction } from '../../../../js/modals/confirmation_message'
 
-import api from '@/api'
+import apiHelper from '@/apiHelper'
 import { REQUEST_STATES } from '@/constants'
 
 import localize from '@/utils/localize'
@@ -173,7 +173,7 @@ export default {
 
     async getIssuance (id) {
       try {
-        this.issuance = await api.requests.get(id)
+        this.issuance = await apiHelper.requests.get(id)
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }
@@ -187,7 +187,7 @@ export default {
           if (tasksToRemove & 1) tasksToRemove -= 1
           if (tasksToRemove & 4) tasksToRemove -= 4
 
-          await api.requests.approve({
+          await apiHelper.requests.approve({
             ...issuance,
             reviewDetails: { tasksToRemove },
           })
@@ -217,7 +217,7 @@ export default {
         if (tasksToRemove & 1) tasksToRemove -= 1
         if (tasksToRemove & 4) tasksToRemove -= 4
 
-        await api.requests.reject(
+        await apiHelper.requests.reject(
           { reason: this.rejectForm.reason, isPermanent: true },
           {
             ...issuance,

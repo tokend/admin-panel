@@ -21,7 +21,7 @@
           />
           <detail
             label="Account role"
-            :value="account.roleId | roleIdToString"
+            :value="account.role.id | roleIdToString"
           />
           <detail
             label="Request type"
@@ -32,7 +32,7 @@
           </detail>
           <detail
             label="Account ID"
-            :value="request.requestor"
+            :value="request.requestor.id"
           />
           <detail
             label="Note"
@@ -85,7 +85,7 @@
           />
         </div>
         <user-details
-          :id="request.requestor"
+          :id="request.requestor.id"
           :is-reviewing="false"
         />
       </template>
@@ -102,7 +102,7 @@
           @click="isRequiringDocs = true"
           :disabled="isPending ||
             desiredLimitDetails.requestType === 'docsUploading' ||
-            request.requestState === REQUEST_STATES.pending"
+            request.state === REQUEST_STATES.pending"
         >
           Request docs
         </button>
@@ -226,8 +226,8 @@ import UserLimits from './components/Limits.UserLimits'
 import DatalistField from './components/Datalist'
 import UploadedDocsList from './components/Limits.UploadedDocsList'
 
-import { Sdk } from '@/sdk'
-import api from '@/api'
+import { api } from '@/api'
+import apiHelper from '@/apiHelper'
 
 import {
   REQUEST_STATES,
@@ -236,7 +236,6 @@ import {
 } from '@/constants'
 import { STATS_OPERATION_TYPES } from '@tokend/js-sdk'
 
-import { snakeToCamelCase } from '@/utils/un-camel-case'
 import { formatDateWithTime } from '../../../utils/formatters'
 
 import get from 'lodash/get'
@@ -322,7 +321,7 @@ export default {
     currentLimits () {
       if (!this.limits) return null
       const limits = this.limits
-        .filter(limit => limit.assetCode === this.assetCode)
+        .filter(limit => limit.asset.id === this.assetCode)
       const operationTypeLimits = limits
         .find(limit => {
           return limit.statsOpType === this.desiredLimitDetails.statsOpType
@@ -346,7 +345,7 @@ export default {
       return {
         ...DEFAULT_LIMIT_STRUCT,
         ...limits,
-        accountId: this.request.requestor,
+        accountId: this.request.requestor.id,
         assetCode: this.assetCode,
         statsOpType: STATS_OPERATION_TYPES[operationType],
       }
@@ -358,16 +357,16 @@ export default {
     },
 
     requestType () {
-      return LIMITS_REQUEST_STATES_STR[get(this.request, 'details.requestType')]
+      return LIMITS_REQUEST_STATES_STR[get(this.desiredLimitDetails, 'requestType')]
     },
   },
 
   async created () {
     try {
       await this.getRequest()
-      const limitRequest = await api.requests.get(this.id)
+      const limitRequest = await apiHelper.requests.get(this.id)
       this.desiredLimitDetails = limitRequest
-        .details[snakeToCamelCase(limitRequest.details.requestType)].details ||
+        .requestDetails.creatorDetails ||
         '{}'
     } catch (error) {
       ErrorHandler.process(error)
@@ -380,22 +379,19 @@ export default {
 
     async getRequest () {
       this.$store.commit('OPEN_LOADER')
-      const request = await api.requests.get(this.id)
-      const camelCasedRequestType = snakeToCamelCase(
-        request.details.requestType
-      )
-      const requestDetails = request.details[camelCasedRequestType].details
-      const [account, limits] = await Promise.all([
-        Sdk.horizon.account.get(request.requestor),
-        Sdk.horizon.account.getLimits(request.requestor),
-      ])
+      const request = await apiHelper.requests.get(this.id)
+      const requestDetails = request.requestDetails.creatorDetails
+      const endpoint = `/v3/accounts/${request.requestor.id}`
+      const { data } = await api.getWithSignature(endpoint, {
+        include: ['limits'],
+      })
       this.request = request
       this.request.document = requestDetails.document
       this.request.asset = requestDetails.asset
       this.assetCode = requestDetails.asset
-      this.account = account.data
-      this.limits = (get(limits, 'data.limits') || [])
-        .map(limit => limit.limit)
+      this.account = data
+      this.limits = (get(data, 'limits') || [])
+        .map(limit => limit)
       this.isLoaded = true
       this.$store.commit('CLOSE_LOADER')
     },
@@ -414,19 +410,19 @@ export default {
         }
         const oldLimits = this.limits
           .find(item => {
-            const requestOpType = this.request.details.updateLimits
-              .details.operationType
+            const requestOpType = this.request.requestDetails.creatorDetails
+              .operationType
             const limitsOpType = OPERATION_TYPES[requestOpType]
 
             return item.assetCode === this.request.asset &&
               item.statsOpType === STATS_OPERATION_TYPES[limitsOpType]
           })
 
-        await api.requests.approveLimitsUpdate({
+        await apiHelper.requests.approveLimitsUpdate({
           request: this.request,
           oldLimits: oldLimits,
           newLimits: newLimits,
-          accountId: this.request.requestor,
+          accountId: this.request.requestor.id,
         })
 
         this.$router.push({ name: 'limits.requests' })
@@ -443,11 +439,11 @@ export default {
       this.hideRejectModal()
       this.isPending = true
       try {
-        await api.requests.rejectLimitsUpdate({
+        await apiHelper.requests.rejectLimitsUpdate({
           request: this.request,
           oldLimits: this.limits[0],
           newLimits: [this.newLimit],
-          accountId: this.request.requestor,
+          accountId: this.request.requestor.id,
           reason: this.rejectForm.reason,
           isPermanent: true,
         }, this.request)
@@ -467,11 +463,11 @@ export default {
         const requireDocsDetails = JSON.stringify({
           docsToUpload: this.uploadDocs,
         })
-        await api.requests.rejectLimitsUpdate({
+        await apiHelper.requests.rejectLimitsUpdate({
           request: this.request,
           oldLimits: this.limits[0],
           newLimits: [this.newLimit],
-          accountId: this.request.requestor,
+          accountId: this.request.requestor.id,
           reason: requireDocsDetails,
           isPermanent: false,
         })

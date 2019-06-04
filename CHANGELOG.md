@@ -46,6 +46,7 @@ for further information about branching and tagging conventions.
   - Fee withdrawal form
   - Limits update form
   - Asset manager form
+- Moved horizon resources to "/v3" endpoints
 
 #### Removed
 - Vee-validate plugin

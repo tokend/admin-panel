@@ -1,4 +1,4 @@
-import { Sdk } from '@/sdk'
+import { documentsManager } from '@/api'
 
 export default {
   props: {
@@ -34,8 +34,9 @@ export default {
           return
         }
 
-        const { data } = await Sdk.api.documents.get(this.fileKey)
-        this.href = data.url
+        const data = await documentsManager
+          .getDocumentUrlByKey(this.fileKey)
+        this.href = data
         this.isLoaded = true
       } catch (error) {
         this.isFailed = true

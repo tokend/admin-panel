@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import { Sdk } from '@/sdk'
+import { base } from '@tokend/js-sdk'
 
 import Modal from '@comcom/modals/Modal'
 
@@ -70,9 +70,10 @@ import { ErrorHandler } from '@/utils/ErrorHandler'
 import { confirmAction } from '@/js/modals/confirmation_message'
 import { Bus } from '@/utils/state-bus'
 
-import { ChangeRoleRequest } from '@/api/responseHandlers/requests/ChangeRoleRequest'
+import { ChangeRoleRequest } from '@/apiHelper/responseHandlers/requests/ChangeRoleRequest'
 
 import config from '@/config'
+import { api } from '@/api'
 
 const EVENTS = {
   reset: 'reset',
@@ -135,7 +136,7 @@ export default {
       }
       this.$emit(EVENTS.updateIsPending, true)
       try {
-        const operation = Sdk.base.CreateChangeRoleRequestBuilder
+        const operation = base.CreateChangeRoleRequestBuilder
           .createChangeRoleRequest({
             requestID: '0',
             destinationAccount: this.user.address,
@@ -146,7 +147,7 @@ export default {
             },
             allTasks: 0,
           })
-        await Sdk.horizon.transactions.submitOperations(operation)
+        await api.postOperations(operation)
         Bus.success('The user account was reset to unverified')
         this.$emit(EVENTS.reset)
       } catch (error) {

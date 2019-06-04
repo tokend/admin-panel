@@ -99,13 +99,12 @@ import AccreditedKycViewer from '@/components/User/Users/components/UserDetails/
 import QueueRequestDocuments from './QueueRequestDocuments'
 import ExternalDetailsViewer from '@/components/User/Users/components/UserDetails/UserDetails.ExternalDetailsViewer'
 
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api } from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
-import { ChangeRoleRequest } from '@/api/responseHandlers/requests/ChangeRoleRequest'
+import { ChangeRoleRequest } from '@/apiHelper/responseHandlers/requests/ChangeRoleRequest'
 import { fromKycTemplate } from '@/utils/kyc-tempater'
 import deepCamelCase from 'camelcase-keys-deep'
-import { Sdk } from '@/sdk'
 
 import config from '@/config'
 
@@ -156,11 +155,9 @@ export default {
       this.isFailed = false
 
       try {
-        const { data: users } = await ApiCallerFactory
-          .createCallerInstance()
-          .getWithSignature('/identities', {
-            filter: { address: this.request.requestor },
-          })
+        const { data: users } = await api.getWithSignature('/identities', {
+          filter: { address: this.request.requestor },
+        })
         this.user = users[0]
         this.isLoaded = true
       } catch (error) {
@@ -169,12 +166,13 @@ export default {
       }
     },
 
-    async getKyc (blodId) {
+    async getKyc (blobId) {
       this.isKycLoaded = false
       this.isKycLoadFailed = false
 
       try {
-        const { data } = await Sdk.api.blobs.get(blodId, this.user.address)
+        const endpoint = `/accounts/${this.user.address}/blobs/${blobId}`
+        const { data } = await api.getWithSignature(endpoint)
         this.kyc = deepCamelCase(fromKycTemplate(JSON.parse(data.value)))
         this.kycDocuments = deepCamelCase(JSON.parse(data.value)).documents
         this.isKycLoaded = true

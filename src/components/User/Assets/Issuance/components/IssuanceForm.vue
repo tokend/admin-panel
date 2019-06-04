@@ -64,9 +64,10 @@
             >
               <option
                 v-for="item in assets"
-                :value="item.code"
-                :key="item.code">
-                {{ item.code }}
+                :value="item.id"
+                :key="item.id"
+              >
+                {{ item.id }}
               </option>
             </select-field>
           </div>
@@ -116,9 +117,9 @@
 <script>
 import FormMixin from '@/mixins/form.mixin'
 import { AssetAmountFormatter } from '@comcom/formatters'
-
-import api from '@/api'
-import { Sdk } from '@/sdk'
+import { api, loadingDataViaLoop } from '@/api'
+import apiHelper from '@/apiHelper'
+import { base } from '@tokend/js-sdk'
 
 import config from '@/config'
 import { ErrorHandler } from '@/utils/ErrorHandler'
@@ -179,7 +180,7 @@ export default {
 
   computed: {
     availableForIssuance () {
-      const asset = this.assets.find(item => item.code === this.form.asset)
+      const asset = this.assets.find(item => item.id === this.form.asset)
       return asset ? asset.availableForIssuance : ''
     },
 
@@ -196,12 +197,16 @@ export default {
   methods: {
     async getAssets () {
       try {
-        const response = await Sdk.horizon.assets
-          .getAll({ owner: config.MASTER_ACCOUNT })
-        const list = response.data || []
+        let response = await api.getWithSignature('/v3/assets', {
+          filter: {
+            owner: config.MASTER_ACCOUNT,
+          },
+        })
+        let assets = await loadingDataViaLoop(response)
+        const list = assets || []
         const issuableAssets = list.filter(item => item.maxIssuanceAmount > 0)
         this.assets = issuableAssets
-        this.form.asset = this.form.asset || (issuableAssets[0] || {}).code
+        this.form.asset = this.form.asset || (issuableAssets[0] || {}).id
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }
@@ -209,39 +214,44 @@ export default {
 
     async getBalanceId () {
       let address
-      if (Sdk.base.Keypair.isValidPublicKey(this.form.receiver)) {
+      if (base.Keypair.isValidPublicKey(this.form.receiver)) {
         address = this.form.receiver
       } else {
-        address = await api.users.getAccountIdByEmail(this.form.receiver)
+        address = await apiHelper.users.getAccountIdByEmail(this.form.receiver)
       }
 
       if (!address) {
-        throw new Error(`Account doesn't exists in the systen`)
+        // eslint-disable-next-line prefer-promise-reject-errors
+        return Promise.reject(`Account doesn't exists in the system`)
       }
-
-      const response = await Sdk.horizon.account.get(address)
-      let account = response.data
-      const balance = account.balances
-        .find(item => item.asset === this.form.asset)
+      const { data } = await api.getWithSignature(`/v3/accounts/${address}`, {
+        include: ['balances', 'balances.asset'],
+      })
+      let account = data
+      const balance = account.balances.find(
+        item => item.asset.id === this.form.asset
+      )
 
       if (!balance) {
         try {
-          const operation = Sdk.base.Operation.manageBalance({
+          const operation = base.Operation.manageBalance({
             asset: this.form.asset,
-            action: Sdk.xdr.ManageBalanceAction.createUnique(),
+            action: base.xdr.ManageBalanceAction.createUnique(),
             destination: address,
           })
-          await Sdk.horizon.transactions.submitOperations(operation)
+          await api.postOperations(operation)
         } catch (error) {
           ErrorHandler.process(error)
         }
-
-        const response = await Sdk.horizon.account.get(address)
-        account = response.data
-        return account.balances
-          .find(item => item.asset === this.form.asset).balanceId
+        const { data } = await api.getWithSignature(`/v3/accounts/${address}`, {
+          include: ['balances', 'balances.asset'],
+        })
+        account = data
+        return account.balances.find(
+          item => item.asset.id === this.form.asset
+        ).id
       } else {
-        return balance.balanceId
+        return balance.id
       }
     },
 
@@ -249,7 +259,7 @@ export default {
       if (receiver === '') {
         throw new Error(`The receiver has no ${this.form.asset} balance.`)
       }
-      const operation = Sdk.base.CreateIssuanceRequestBuilder
+      const operation = base.CreateIssuanceRequestBuilder
         .createIssuanceRequest({
           asset: this.form.asset,
           amount: this.form.amount,
@@ -259,7 +269,7 @@ export default {
           creatorDetails: {},
           allTasks: 0,
         })
-      await Sdk.horizon.transactions.submitOperations(operation)
+      await api.postOperations(operation)
 
       Bus.success('Issued successfully')
       this.getAssets()

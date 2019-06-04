@@ -29,19 +29,23 @@ import Bus from '@/utils/EventBus'
 import { ASSET_POLICIES } from '@/constants'
 import config from '@/config'
 
-import api from '@/api'
-import { Sdk } from '@/sdk'
-
+import { api, loadingDataViaLoop } from '@/api'
 import store from '@/store'
 
 const CHECK_LIST = [
   {
     message: 'Please set exactly 1 quote asset',
     async check ({ store, api }) {
-      const response = (await Sdk.horizon.assets
-        .getAll({ owner: config.MASTER_ACCOUNT }))
-      return (response.data || [])
-        .filter(item => item && item.policy & ASSET_POLICIES.statsQuoteAsset)
+      let response = await api.getWithSignature('/v3/assets', {
+        filter: {
+          owner: config.MASTER_ACCOUNT,
+        },
+      })
+      let assets = await loadingDataViaLoop(response)
+      return (assets || [])
+        .filter(
+          item => item && item.policies.value & ASSET_POLICIES.statsQuoteAsset
+        )
         .length !== 1
     },
   },

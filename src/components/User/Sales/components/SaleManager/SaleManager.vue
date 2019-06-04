@@ -20,10 +20,6 @@
           <tab name="Corporate user">
             <syndicate-tab :sale="sale" />
           </tab>
-
-          <tab name="Updates">
-            <updates-tab :sale="sale" />
-          </tab>
         </tabs>
       </template>
 
@@ -49,10 +45,9 @@ import DetailsTab from './SaleManager.DetailsTab'
 import DescriptionTab from './SaleManager.DescriptionTab'
 import ParticipantsTab from './SaleManager.ParticipantsTab'
 import SyndicateTab from './SaleManager.SyndicateTab'
-import UpdatesTab from './SaleManager.UpdatesTab'
 
-import { Sdk } from '@/sdk'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { api } from '@/api'
 
 export default {
   components: {
@@ -62,7 +57,6 @@ export default {
     DescriptionTab,
     ParticipantsTab,
     SyndicateTab,
-    UpdatesTab,
   },
 
   props: {
@@ -84,8 +78,10 @@ export default {
   methods: {
     async getSale (id) {
       try {
-        const response = await Sdk.horizon.sales.get(id)
-        this.sale = response.data
+        const { data } = await api.get(`/v3/sales/${id}`, {
+          include: ['base_asset', 'default_quote_asset', 'quote_assets'],
+        })
+        this.sale = data
         this.isLoaded = true
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)

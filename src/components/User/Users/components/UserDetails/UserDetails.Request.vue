@@ -83,7 +83,7 @@
 </template>
 
 <script>
-import api from '@/api'
+import apiHelper from '@/apiHelper'
 
 import TasksManager from './UserDetails.TasksManager'
 import Modal from '@comcom/modals/Modal'
@@ -95,7 +95,7 @@ import { ErrorHandler } from '@/utils/ErrorHandler'
 import { confirmAction } from '@/js/modals/confirmation_message'
 import { Bus } from '@/utils/state-bus'
 
-import { ChangeRoleRequest } from '@/api/responseHandlers/requests/ChangeRoleRequest'
+import { ChangeRoleRequest } from '@/apiHelper/responseHandlers/requests/ChangeRoleRequest'
 
 const EVENTS = {
   reviewed: 'reviewed',
@@ -161,7 +161,7 @@ export default {
         reviewDetails.tasksToAdd = this.tasks.toAdd
         reviewDetails.tasksToRemove = this.tasks.toRemove
 
-        await api.requests.approve({
+        await apiHelper.requests.approve({
           ...this.requestToReview.record,
           reviewDetails,
         })
@@ -182,7 +182,7 @@ export default {
       const rejectReason = this.rejectForm.reason ||
         this.requestToReview.rejectReason
       try {
-        await api.requests.reject(
+        await apiHelper.requests.reject(
           { reason: rejectReason, isPermanent },
           {
             ...this.requestToReview.record,

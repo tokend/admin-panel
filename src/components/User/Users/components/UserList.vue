@@ -122,12 +122,12 @@ import { CollectionLoader } from '@/components/common'
 
 import _ from 'lodash'
 
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api } from '@/api'
+import apiHelper from '@/apiHelper'
 import config from '@/config'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
-import api from '@/api'
-import { Sdk } from '@/sdk'
+import { base } from '@tokend/js-sdk'
 
 export default {
   components: {
@@ -166,14 +166,12 @@ export default {
       try {
         const requestor =
           await this.getRequestorAccountId(this.filters.requestor)
-        response = await ApiCallerFactory
-          .createCallerInstance()
-          .getWithSignature('/identities', {
-            filter: clearObject({
-              role: this.filters.role,
-              address: requestor,
-            }),
-          })
+        response = await api.getWithSignature('/identities', {
+          filter: clearObject({
+            role: this.filters.role,
+            address: requestor,
+          }),
+        })
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }
@@ -182,11 +180,11 @@ export default {
     },
 
     async getRequestorAccountId (requestor) {
-      if (Sdk.base.Keypair.isValidPublicKey(requestor)) {
+      if (base.Keypair.isValidPublicKey(requestor)) {
         return requestor
       } else {
         try {
-          const address = await api.users.getAccountIdByEmail(requestor)
+          const address = await apiHelper.users.getAccountIdByEmail(requestor)
           return address || requestor
         } catch (error) {
           return requestor

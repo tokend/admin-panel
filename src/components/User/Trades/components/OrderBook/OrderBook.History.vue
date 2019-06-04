@@ -69,7 +69,7 @@
           <span>Amount</span>
           <asset-amount-formatter
             :amount="itemDetails.baseAmount"
-            :asset="itemDetails.baseAsset"
+            :asset="itemDetails.baseAsset.id"
           />
         </li>
         <li>
@@ -118,6 +118,12 @@ export default {
       isDetailsShown: false,
       itemDetails: Object.assign({}, EMPTY_DETAILS),
     }
+  },
+
+  watch: {
+    list () {
+      this.parsePair()
+    },
   },
 
   created () {

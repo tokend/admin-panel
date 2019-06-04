@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import { Sdk } from '@/sdk'
+import { base } from '@tokend/js-sdk'
 
 import FormMixin from '@/mixins/form.mixin'
 import { required, maxLength } from '@/validators'
@@ -74,9 +74,10 @@ import { ErrorHandler } from '@/utils/ErrorHandler'
 import { confirmAction } from '@/js/modals/confirmation_message'
 import { Bus } from '@/utils/state-bus'
 
-import { ChangeRoleRequest } from '@/api/responseHandlers/requests/ChangeRoleRequest'
+import { ChangeRoleRequest } from '@/apiHelper/responseHandlers/requests/ChangeRoleRequest'
 
 import config from '@/config'
+import { api } from '@/api'
 
 const EVENTS = {
   updated: 'updated',
@@ -144,7 +145,7 @@ export default {
       }
       this.$emit(EVENTS.updateIsPending, true)
       try {
-        const operation = Sdk.base.CreateChangeRoleRequestBuilder
+        const operation = base.CreateChangeRoleRequestBuilder
           .createChangeRoleRequest({
             requestID: '0',
             destinationAccount: this.user.address,
@@ -155,7 +156,7 @@ export default {
             },
             allTasks: 0,
           })
-        await Sdk.horizon.transactions.submitOperations(operation)
+        await api.postOperations(operation)
 
         Bus.success('The user account was blocked')
         this.$emit(EVENTS.updated)
@@ -174,7 +175,7 @@ export default {
         const accountRoleToSet = this.verifiedRequest.accountRoleToSet ||
           config.ACCOUNT_ROLES.notVerified
 
-        const operation = Sdk.base.CreateChangeRoleRequestBuilder
+        const operation = base.CreateChangeRoleRequestBuilder
           .createChangeRoleRequest({
             requestID: '0',
             destinationAccount: this.user.address,
@@ -184,7 +185,7 @@ export default {
             },
             allTasks: 0,
           })
-        await Sdk.horizon.transactions.submitOperations(operation)
+        await api.postOperations(operation)
 
         Bus.success('The user account was unblocked')
         this.$emit(EVENTS.updated)

@@ -6,11 +6,10 @@ import router from './router'
 
 import StellarWallet from 'tokend-wallet-js-sdk'
 
-import { Sdk } from '@/sdk'
 import config from '@/config'
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api } from '@/api'
 
-import { Wallet } from '@tokend/js-sdk'
+import { Wallet, base } from '@tokend/js-sdk'
 import _cloneDeep from 'lodash/cloneDeep'
 
 import { ErrorTracker } from '@/utils/ErrorTracker'
@@ -33,7 +32,7 @@ export default {
   },
 
   async createWallet (credentials, redirect) {
-    const signingKeys = Sdk.base.Keypair.fromSecret(credentials.seed)
+    const signingKeys = base.Keypair.fromSecret(credentials.seed)
     const keychainData = {
       seed: signingKeys.seed(),
       accountId: signingKeys.accountId(),
@@ -127,7 +126,7 @@ export default {
   },
 
   async seedLogin (seed) {
-    const keyPair = Sdk.base.Keypair.fromSecret(seed)
+    const keyPair = base.Keypair.fromSecret(seed)
     const accountId = keyPair.accountId()
 
     if (!await this._checkMasterSignerExists(accountId)) {
@@ -148,8 +147,7 @@ export default {
       user.keys.seed,
       user.keys.accountId
     )
-    Sdk.sdk.useWallet(signingWallet)
-    ApiCallerFactory.setDefaultWallet(signingWallet)
+    api.useWallet(signingWallet)
 
     store.commit('UPDATE_USER', user)
     store.commit('UPDATE_AUTH', auth)
@@ -181,8 +179,7 @@ export default {
       user.keys.accountId,
       wallet.getWalletId()
     )
-    Sdk.sdk.useWallet(signingWallet)
-    ApiCallerFactory.setDefaultWallet(signingWallet)
+    api.useWallet(signingWallet)
 
     store.commit('UPDATE_USER', user)
     store.commit('UPDATE_AUTH', auth)
@@ -191,8 +188,7 @@ export default {
   },
 
   async _checkMasterSignerExists (accountId) {
-    const { data: signers } = await ApiCallerFactory
-      .createPublicCallerInstance()
+    const { data: signers } = await api
       .get(`/v3/accounts/${config.MASTER_ACCOUNT}/signers`)
 
     return Boolean(signers.find(item => item.id === accountId))

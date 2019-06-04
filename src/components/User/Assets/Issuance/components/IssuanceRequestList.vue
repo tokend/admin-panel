@@ -33,14 +33,6 @@
       </div>
     </div>
 
-    <div class="issuance-rl__request-counter-wrapper">
-      <p class="issuance-rl__request-counter">
-        Pending requests: {{ listCounter.pending }}
-      </p>
-      <p class="issuance-rl__request-counter">
-        Fullfilled requests: {{ listCounter.approved }}
-      </p>
-    </div>
     <div class="issuance-rl__list-wrp">
       <template v-if="list && list.length">
         <ul class="app-list">
@@ -67,10 +59,13 @@
             >
               <span
                 class="app-list__cell app-list__cell--important"
-                :title="`${localize(item.amount)} ${item.asset}`"
+                :title="
+                  // eslint-disable-next-line max-len
+                  `${localize(item.requestDetails.amount)} ${item.requestDetails.asset.id}`
+                "
               >
-                {{ localize(item.details.createIssuance.amount) }}
-                {{ item.details.createIssuance.asset }}
+                {{ localize(item.requestDetails.amount) }}
+                {{ item.requestDetails.asset.id }}
               </span>
 
               <span
@@ -81,8 +76,8 @@
 
               <span
                 class="app-list__cell"
-                :title="item.requestor">
-                {{ item.requestor }}
+                :title="item.requestor.id">
+                {{ item.requestor.id }}
               </span>
             </router-link>
           </li>

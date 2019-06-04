@@ -72,8 +72,9 @@
 </template>
 
 <script>
-import { Sdk } from '@/sdk'
+import { base } from '@tokend/js-sdk'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { api } from '@/api'
 import { Bus } from '@/utils/state-bus'
 import config from '@/config'
 
@@ -148,9 +149,9 @@ export default {
     },
 
     async sendTx () {
-      const transaction = new Sdk.base.Transaction(this.transaction)
+      const transaction = new base.Transaction(this.transaction)
       transaction.sign(this.$store.getters.keypair)
-      await Sdk.horizon.transactions.submit(transaction)
+      await api.postOperations(transaction)
     },
   },
 }

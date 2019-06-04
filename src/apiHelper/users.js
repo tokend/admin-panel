@@ -1,16 +1,14 @@
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api } from '@/api'
 
 export default {
   async getAccountIdByEmail (email) {
     if (!email) return ''
 
     try {
-      const { data } = await ApiCallerFactory
-        .createCallerInstance()
-        .get('/identities', {
-          filter: { email },
-          page: { limit: 1 },
-        })
+      const { data } = await api.get('/identities', {
+        filter: { email },
+        page: { limit: 1 },
+      })
 
       return ((data || [])[0] || {}).address
     } catch (error) {
@@ -23,16 +21,14 @@ export default {
   },
   async getEmailByAccountId (accountId) {
     try {
-      const { data } = await ApiCallerFactory
-        .createCallerInstance()
-        .get('/identities', {
-          filter: {
-            address: accountId,
-          },
-          page: {
-            limit: 1,
-          },
-        })
+      const { data } = await api.get('/identities', {
+        filter: {
+          address: accountId,
+        },
+        page: {
+          limit: 1,
+        },
+      })
       return ((data || [])[0] || {}).email
     } catch (error) {
       if (error.httpStatus === 404) {

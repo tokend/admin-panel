@@ -23,14 +23,14 @@
 </template>
 
 <script>
-import { Sdk } from '@/sdk'
-
 import OrderTable from './OrderBook.Table'
 import HistoryTable from './OrderBook.History'
 
 import { AssetPair } from '../../models/AssetPair'
-
+import { api } from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+
+const SECONDARY_MARKET_ORDER_BOOK_ID = '0'
 
 export default {
   components: {
@@ -66,27 +66,26 @@ export default {
     async getBook () {
       this.isLoaded = false
       const pair = new AssetPair(this.filters.pair)
-      const params = {
-        order_book_id: 0,
-        base_asset: pair.base,
-        quote_asset: pair.quote,
-      }
       try {
-        const response = await Sdk.horizon.orderBook.getAll({
-          ...params,
-          is_buy: true,
+        const orderBookId = SECONDARY_MARKET_ORDER_BOOK_ID
+        const formatedOrderBookId = `${pair.base}:${pair.quote}:${orderBookId}`
+        const endpoint = `/v3/order_books/${formatedOrderBookId}`
+        const { data } = await api.getWithSignature(endpoint, {
+          include: ['buy_entries', 'sell_entries'],
         })
-        this.book.bids = response.data
-        const orderBookResponse = await Sdk.horizon.orderBook.getAll({
-          ...params,
-          is_buy: false,
+        this.book.bids = data.buyEntries
+        this.book.asks = data.sellEntries
+
+        const tradesResponse = await api.getWithSignature('/v3/matches', {
+          filter: {
+            base_asset: pair.base,
+            quote_asset: pair.quote,
+          },
         })
-        this.book.asks = orderBookResponse.data
-        const tradesResponse = await Sdk.horizon.trades.getPage(params)
         this.book.history = tradesResponse.data
         this.isLoaded = true
       } catch (error) {
-        ErrorHandler.processWithoutFeedback(error)
+        ErrorHandler.process(error)
         this.isFailed = true
       }
     },

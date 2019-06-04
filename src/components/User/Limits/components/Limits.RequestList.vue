@@ -32,18 +32,22 @@
 
           <span
             class="app-list__cell"
-            :title="item.details.requestType"
+            :title="item.requestDetails.creatorDetails.requestType"
           >
-            {{ LIMITS_REQUEST_STATES_STR[item.details.requestType] }}
+            {{
+              LIMITS_REQUEST_STATES_STR[
+                item.requestDetails.creatorDetails.requestType
+              ]
+            }}
           </span>
 
           <span class="app-list__cell">
-            {{ item.requestor }}
+            {{ item.requestor.id }}
           </span>
 
           <span class="app-list__cell">
             <email-getter
-              :account-id="item.requestor"
+              :account-id="item.requestor.id"
               is-titled
             />
           </span>

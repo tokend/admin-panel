@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api } from '@/api'
 import { DOCUMENTS_POLICIES } from '@/constants'
 
 import config from '@/config'
@@ -64,9 +64,7 @@ export default {
   methods: {
     async getPrivateDocumentUrl (key) {
       try {
-        const { data } = await ApiCallerFactory
-          .createCallerInstance()
-          .getWithSignature(`/documents/${key}`)
+        const { data } = await api.getWithSignature(`/documents/${key}`)
         this.privateFileUrl = data.url
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)

@@ -57,7 +57,7 @@
 <script>
 import ReviewDecisionsListItem from './ReviewDecisionsListItem'
 
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api } from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 import { confirmAction } from '@/js/modals/confirmation_message'
@@ -126,9 +126,7 @@ export default {
         decision.setProcessing()
 
         const operation = this.convertDecisionToReviewOperation(decision)
-        await ApiCallerFactory
-          .createCallerInstance()
-          .postOperations(operation)
+        await api.postOperations(operation)
 
         decision.setReviewed()
       } catch (e) {

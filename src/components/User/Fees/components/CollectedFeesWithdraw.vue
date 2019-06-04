@@ -167,7 +167,7 @@ import FormMixin from '@/mixins/form.mixin'
 import { required, minValue, maxValue } from '@/validators'
 import { DEFAULT_INPUT_STEP, DEFAULT_INPUT_MIN } from '@/constants'
 
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api } from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { Bus } from '@/utils/state-bus'
 import { formatAssetAmount } from '@/utils/formatters'
@@ -295,8 +295,7 @@ export default {
       this.isMasterBalancesFailed = false
 
       try {
-        const { data: { balances: masterBalances } } = await ApiCallerFactory
-          .createCallerInstance()
+        const { data: { balances: masterBalances } } = await api
           .getWithSignature(`/v3/accounts/${Vue.params.MASTER_ACCOUNT}`, {
             include: ['balances.state'],
           })
@@ -315,9 +314,7 @@ export default {
       this.isFormSubmitting = true
       try {
         const operation = this.craftWithdrawalOperation()
-        await ApiCallerFactory
-          .createCallerInstance()
-          .postOperations(operation)
+        await api.postOperations(operation)
 
         this.clearFieldsWithOverriding({
           balanceId: this.form.balanceId,
@@ -376,16 +373,12 @@ export default {
       if (!this.form.amount || !this.form.balanceId) {
         return
       }
-
-      const { data: fees } = await ApiCallerFactory
-        .createCallerInstance()
-        .getWithSignature(
-          `/v3/accounts/${Vue.params.MASTER_ACCOUNT}/calculated_fees`,
-          {
-            asset: this.selectedBalanceAttrs.assetCode,
-            fee_type: FEE_TYPES.withdrawalFee,
-            amount: this.form.amount,
-          })
+      const endpoint = `/v3/accounts/${Vue.params.MASTER_ACCOUNT}/calculated_fees`
+      const { data: fees } = await api.getWithSignature(endpoint, {
+        asset: this.selectedBalanceAttrs.assetCode,
+        fee_type: FEE_TYPES.withdrawalFee,
+        amount: this.form.amount,
+      })
 
       this.opAttrs.feeAssetCode = this.selectedBalanceAttrs.assetCode
       this.opAttrs.fixedFee = fees.fixed

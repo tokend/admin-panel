@@ -53,26 +53,24 @@
             <!-- eslint-disable max-len -->
             <span
               class="app-list__cell app-list__cell--right app-list__cell--important"
-              :title="`${localize(item.details.createIssuance.amount)} ${item.details.createIssuance.asset}`"
+              :title="`${localize(item.requestDetails.amount)} ${item.requestDetails.asset.id}`"
             >
-              {{ localize(item.details.createIssuance.amount) }} {{ item.details.createIssuance.asset }}
+              {{ localize(item.requestDetails.amount) }} {{ item.requestDetails.asset.id }}
             </span>
             <!-- eslint-enable max-len -->
 
             <span
               class="app-list__cell app-list__cell--right "
-              :title="item.requestor"
+              :title="item.requestor.id"
             >
-              <email-getter :account-id="item.requestor" />
+              <email-getter :account-id="item.requestor.id" />
             </span>
 
             <span
               class="app-list__cell app-list__cell--right "
-              :title="item.details.createIssuance.receiver"
+              :title="item.requestDetails.receiver.id"
             >
-              <email-getter
-                :balance-id="item.details.createIssuance.receiver"
-              />
+              <email-getter :balance-id="item.requestDetails.receiver.id" />
             </span>
 
             <span

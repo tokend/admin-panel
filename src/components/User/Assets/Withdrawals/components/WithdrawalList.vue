@@ -23,11 +23,11 @@
           label="Asset"
           v-model="filters.asset">
           <option
-            :value="item.code"
+            :value="item.id"
             v-for="item in assets"
-            :key="item.code"
+            :key="item.id"
           >
-            {{ item.code }}
+            {{ item.id }}
           </option>
         </select-field>
 
@@ -76,17 +76,17 @@
             <!-- eslint-disable max-len -->
             <span class="app-list__cell">
               <asset-amount-formatter
-                :amount="item.details.createWithdraw.amount"
-                :asset="item.details.createWithdraw.asset"
+                :amount="item.requestDetails.amount"
+                :asset="item.requestDetails.asset"
               />
             </span>
 
-            <span class="app-list__cell" :title="verbozify(item.requestState)">
-              {{ verbozify(item.requestState) }}
+            <span class="app-list__cell" :title="verbozify(item.state)">
+              {{ verbozify(item.state) }}
             </span>
 
-            <span class="app-list__cell" :title="item.requestor">
-              {{ item.requestor }}
+            <span class="app-list__cell" :title="item.requestor.id">
+              {{ item.requestor.id }}
             </span>
           </button>
         </ul>
@@ -131,8 +131,7 @@ import { AssetAmountFormatter } from '@comcom/formatters'
 import Modal from '@comcom/modals/Modal'
 import WithdrawalDetails from './WithdrawalDetails'
 
-import api from '@/api'
-import { Sdk } from '@/sdk'
+import { base } from '@tokend/js-sdk'
 
 import {
   REQUEST_STATES,
@@ -143,6 +142,8 @@ import { verbozify } from '@/utils/verbozify'
 import _ from 'lodash'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { api, loadingDataViaLoop } from '@/api'
+import apiHelper from '@/apiHelper'
 
 export default {
   components: {
@@ -188,13 +189,14 @@ export default {
 
     async getAssets () {
       try {
-        const response = await Sdk.horizon.assets.getAll()
-        this.assets = response.data
-          .filter(item => (item.policy & ASSET_POLICIES.withdrawable))
-          .sort((assetA, assetB) => assetA.code > assetB.code ? 1 : -1)
+        let response = await api.getWithSignature('/v3/assets')
+        let data = await loadingDataViaLoop(response)
+        this.assets = data
+          .filter(item => (item.policies.value & ASSET_POLICIES.withdrawable))
+          .sort((assetA, assetB) => assetA.id > assetB.id ? 1 : -1)
 
         if (this.assets.length) {
-          this.filters.asset = this.assets[0].code
+          this.filters.asset = this.assets[0].id
         }
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
@@ -207,33 +209,13 @@ export default {
       try {
         const requestor =
           await this.getRequestorAccountId(this.filters.requestor)
-        const list = await api.requests.getWithdrawalRequests({
-          state: this.filters.state,
-          asset: this.filters.asset,
-          requestor: requestor,
+        this.list = await api.getWithSignature('/v3/create_withdraw_requests', {
+          filter: {
+            state: this.filters.state,
+            requestor: requestor,
+          },
+          include: ['request_details'],
         })
-
-        // TODO: remove these dirty fixes
-        // the problem is that in the current implementation, back-end does
-        // not return us asset code of the withdrawn amount
-        list._data = list.data.map(item => {
-          const hackedKeys = {
-            details: {
-              ...item.details,
-              createWithdraw: {
-                ...item.details.createWithdraw,
-                asset: this.filters.asset,
-              },
-            },
-          }
-
-          return {
-            ...item,
-            ...hackedKeys,
-          }
-        })
-
-        this.list = list
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }
@@ -242,11 +224,11 @@ export default {
     },
 
     async getRequestorAccountId (requestor) {
-      if (Sdk.base.Keypair.isValidPublicKey(requestor)) {
+      if (base.Keypair.isValidPublicKey(requestor)) {
         return requestor
       } else {
         try {
-          const address = await api.users.getAccountIdByEmail(requestor)
+          const address = await apiHelper.users.getAccountIdByEmail(requestor)
           return address || requestor
         } catch (error) {
           return requestor

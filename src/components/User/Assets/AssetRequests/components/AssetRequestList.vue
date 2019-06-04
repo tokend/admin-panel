@@ -114,9 +114,9 @@ import SelectField from '@comcom/fields/SelectField'
 
 import { CollectionLoader } from '@/components/common'
 
-import api from '@/api'
-import { Sdk } from '@/sdk'
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api } from '@/api'
+import apiHelper from '@/apiHelper'
+import { base } from '@tokend/js-sdk'
 
 import { CREATE_ASSET_REQUEST_STATES, REQUEST_STATES_STR } from '@/constants'
 
@@ -184,16 +184,15 @@ export default {
         const requestor = await this.getRequestorAccountId(
           this.filters.requestor
         )
-        response = await ApiCallerFactory
-          .createCallerInstance()
-          .getWithSignature(`/v3/${this.filters.requestType}`, {
-            page: { order: 'desc' },
-            filter: clearObject({
-              state: CREATE_ASSET_REQUEST_STATES[this.filters.state].code,
-              requestor: requestor,
-              'request_details.asset': this.filters.asset,
-            }),
-          })
+        const endpoint = `/v3/${this.filters.requestType}`
+        response = await api.getWithSignature(endpoint, {
+          page: { order: 'desc' },
+          filter: clearObject({
+            state: CREATE_ASSET_REQUEST_STATES[this.filters.state].code,
+            requestor: requestor,
+            'request_details.asset': this.filters.asset,
+          }),
+        })
         this.isListEnded = !(this.list || []).length
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
@@ -211,11 +210,11 @@ export default {
     },
 
     async getRequestorAccountId (requestor) {
-      if (Sdk.base.Keypair.isValidPublicKey(requestor)) {
+      if (base.Keypair.isValidPublicKey(requestor)) {
         return requestor
       } else {
         try {
-          const address = await api.users.getAccountIdByEmail(requestor)
+          const address = await apiHelper.users.getAccountIdByEmail(requestor)
           return address || requestor
         } catch (error) {
           return requestor

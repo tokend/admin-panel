@@ -1,23 +1,17 @@
 <template>
   <div class="sale-manager-participants-tab">
     <div class="sale-manager-participants-tab__pending-wrp">
-      <pending-participants :sale="sale" />
-    </div>
-
-    <div class="sale-manager-participants-tab__closed-wrp">
-      <closed-participants :sale="sale" />
+      <participants :sale="sale" />
     </div>
   </div>
 </template>
 
 <script>
-import PendingParticipants from './PendingParticipants'
-import ClosedParticipants from './ClosedParticipants'
+import Participants from './Participants'
 
 export default {
   components: {
-    PendingParticipants,
-    ClosedParticipants,
+    Participants,
   },
 
   props: {
@@ -26,8 +20,5 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
-.sale-manager-participants-tab__pending-wrp {
-  margin-bottom: 6rem;
-}
+<style lang="scss">
 </style>

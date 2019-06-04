@@ -86,9 +86,9 @@
         </span>
         <span
           class="app-list__cell"
-          :title="item.preissuedAssetSigner"
+          :title="item.preIssuanceAssetSigner"
         >
-          {{ item.preissuedAssetSigner | cropAddress }}
+          {{ item.preIssuanceAssetSigner | cropAddress }}
         </span>
         <span class="app-list__cell" :title="1">
           1
@@ -123,11 +123,13 @@
 </template>
 
 <script>
-import { Sdk } from '@/sdk'
+import { base } from '@tokend/js-sdk'
 import config from '@/config'
 
 import localize from '@/utils/localize'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { api, loadingDataViaLoop } from '@/api'
+
 import { Bus } from '@/utils/state-bus'
 
 export default {
@@ -151,21 +153,22 @@ export default {
   created () {
     this.getAssets()
   },
-
   methods: {
     localize,
 
     async getAssets () {
       this.$store.commit('OPEN_LOADER')
       try {
-        const response = await Sdk.horizon.assets.getAll({
-          owner: config.MASTER_ACCOUNT,
+        let response = await api.getWithSignature('/v3/assets', {
+          filter: {
+            owner: config.MASTER_ACCOUNT,
+          },
         })
-        this.assets = response.data
+        let assets = await loadingDataViaLoop(response)
+        this.assets = assets
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }
-
       this.$store.commit('CLOSE_LOADER')
     },
 
@@ -195,24 +198,22 @@ export default {
         reader.onload = function (event) {
           resolve(event.target.result)
         }
-
         reader.readAsText(file)
       })
     },
 
     getAsset (assetCode) {
-      return this.assets.filter(item => item.code === assetCode)[0]
+      return this.assets.filter(item => item.id === assetCode)[0]
     },
 
     parsePreIssuances (issuances) {
       const items = issuances
         .map(function (item) {
-          const _xdr = Sdk.xdr.PreIssuanceRequest.fromXDR(item.preEmission, 'hex')
-          const result = Sdk.base.PreIssuanceRequest.dataFromXdr(_xdr)
+          const _xdr = base.xdr.PreIssuanceRequest.fromXDR(item.preEmission, 'hex')
+          const result = base.PreIssuanceRequest.dataFromXdr(_xdr)
 
           result.xdr = _xdr
           result.isUsed = item.used
-
           return result
         }).filter(item => {
           return !this.issuances.find(el => el.reference === item.reference)
@@ -230,7 +231,7 @@ export default {
         } else {
           this.fileInfo.push({
             fileName: this.temporaryFileName,
-            preissuedAssetSigner: asset.preissuedAssetSigner,
+            preIssuanceAssetSigner: asset.preIssuanceAssetSigner,
             issuance: items[i],
           })
         }
@@ -243,10 +244,10 @@ export default {
       try {
         const preIssuances = this.fileInfo.map(item => item.issuance.xdr)
         const operations = preIssuances.map(item => {
-          return Sdk.base.PreIssuanceRequestOpBuilder
+          return base.PreIssuanceRequestOpBuilder
             .createPreIssuanceRequestOp({ request: item })
         })
-        await Sdk.horizon.transactions.submitOperations(...operations)
+        await api.postOperations(...operations)
         this.fileInfo = []
         Bus.success('Successfully submitted')
       } catch (error) {

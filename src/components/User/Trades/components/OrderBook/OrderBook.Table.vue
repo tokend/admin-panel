@@ -65,7 +65,7 @@
       <ul class="key-value-list">
         <li>
           <span>ID</span>
-          <span>{{ itemDetails.offerId }}</span>
+          <span>{{ itemDetails.id }}</span>
         </li>
         <li>
           <span>Type</span>
@@ -150,7 +150,10 @@ export default {
   },
 
   watch: {
-    list () { this.calcSummedList() },
+    list () {
+      this.calcSummedList()
+      this.parsePair()
+    },
   },
 
   created () {

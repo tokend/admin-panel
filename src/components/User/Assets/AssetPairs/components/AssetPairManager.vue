@@ -200,8 +200,8 @@
 import FormMixin from '@/mixins/form.mixin'
 import { required, minValue, maxValue } from '@/validators'
 
-import api from '@/api'
-import { Sdk } from '@/sdk'
+import apiHelper from '@/apiHelper'
+import { api } from '@/api'
 
 import {
   DEFAULT_INPUT_STEP,
@@ -211,6 +211,7 @@ import {
 import { ASSET_PAIR_POLICIES } from '@/constants/'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { AssetPairRecord } from '@/js/records/assetPair.record'
 import { Bus } from '@/utils/state-bus'
 
 export default {
@@ -280,11 +281,12 @@ export default {
     async getPair () {
       this.isLoaded = false
       try {
-        const response = await Sdk.horizon.assetPairs.getAll()
-        this.pair = response.data
+        const { _rawResponse: response } = await api.get('/asset_pairs')
+        const pair = response.data
           .find(({ base, quote }) => {
             return base === this.base && quote === this.quote
           })
+        this.pair = new AssetPairRecord(pair)
         this.isLoaded = true
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
@@ -311,7 +313,7 @@ export default {
     async submit (action) {
       this.isFormSubmitting = true
       try {
-        await api.assets.updatePair({ ...this.pair, ...action })
+        await apiHelper.assets.updatePair({ ...this.pair, ...action })
         Bus.success('Pair has been updated.')
         this.$router.push({ name: 'assets.assetPairs.index' })
       } catch (error) {

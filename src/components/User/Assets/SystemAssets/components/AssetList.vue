@@ -70,8 +70,8 @@
 <script>
 import { CollectionLoader } from '@/components/common'
 
-import { Sdk } from '@/sdk'
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { base } from '@tokend/js-sdk'
+import { api } from '@/api'
 
 import trim from 'lodash/trim'
 
@@ -113,11 +113,9 @@ export default {
 
       let response = {}
       try {
-        response = await ApiCallerFactory
-          .createCallerInstance()
-          .getWithSignature('/v3/assets', {
-            filter: { owner: config.MASTER_ACCOUNT },
-          })
+        response = await api.getWithSignature('/v3/assets', {
+          filter: { owner: config.MASTER_ACCOUNT },
+        })
         this.$store.commit('CLOSE_LOADER')
       } catch (err) {
         this.$store.commit('CLOSE_LOADER')
@@ -155,7 +153,7 @@ function decamelize (str, prefixForRemove = '') {
 }
 
 function convertPolicyToString (policy) {
-  const xdrEnumValues = Sdk.xdr.AssetPolicy.values()
+  const xdrEnumValues = base.xdr.AssetPolicy.values()
   return trim(xdrEnumValues
     .filter(pol => (pol.value & policy) !== 0)
     .map(pol => decamelize(pol.name, 'asset'))
