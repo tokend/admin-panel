@@ -28,19 +28,12 @@
         <thead>
           <tr>
             <th>Investor</th>
-            <th>Invested at</th>
             <th>{{ filters.quoteAsset }} invested</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(item, index) in participants" :key="index">
             <td><email-getter :account-id="item.participant.id" /></td>
-            <td>
-              <date-formatter
-                :date="item.createdAt"
-                format="DD MMM YYYY HH:mm:ss"
-              />
-            </td>
             <td>{{ item.amount }}</td>
           </tr>
         </tbody>
@@ -68,7 +61,6 @@
 </template>
 
 <script>
-import { DateFormatter } from '@comcom/formatters'
 import { EmailGetter } from '@comcom/getters'
 import { SelectField } from '@comcom/fields'
 
@@ -78,7 +70,6 @@ import get from 'lodash/get'
 
 export default {
   components: {
-    DateFormatter,
     EmailGetter,
     SelectField,
   },
