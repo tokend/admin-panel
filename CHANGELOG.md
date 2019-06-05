@@ -9,13 +9,137 @@ for further information about branching and tagging conventions.
 
 ## [Unreleased]
 #### Added
-- New "Capital deployment" fee type
-- "Unblocked" change role request detection in user operation list
+- Security asset type to config
+- Security asset type string to assetTypeToString filter
+- Postal code field in kyc request
+- Usage of Unix line endings rule
+- Vuelidate plugin for validating forms
+- Collected fees management page
+- Assets vuex module
+- Wrappers for assets and balances
+- External link icon to the "Learn more about pre-issuance" link
+- NProgress package for displaying loading progress while
+  switching between routes
+- Form confirmation component
+- State bus for handling status messages
+
+#### Changed
+- Align asset requests detail values to right side
+- Add datetime filter to kyc user's birthdate
+- Web client url in config changed to localhost:8060
+- Now using Vuelidate and form mixin instead of
+  native browser tools for validating forms
+- Extracted fees updating to a separate form
+- Extracted limits updating to a separate form
+- Now using $attrs property for input field proxies
+- Now displaying "Yes" and "No" buttons on KYC queue confirmation
+- Now providing only tasks to add to KYC reject request operation
+- Renamed "Master assets" to "System assets" on "Assets" menu
+- Now using "@mdi/font" instead of "mdi-vue"
+- Status message design (now using top-right aligned card with iconed state)
+- Now using state bus for emitting status messages
+- Now using form confirmation in the forms:
+  - Manage admin form
+  - Create asset pait form
+  - Manage asset pair forms
+  - Issuance form
+  - Fee withdrawal form
+  - Limits update form
+  - Asset manager form
+- Moved horizon resources to "/v3" endpoints
+
+#### Removed
+- Vee-validate plugin
+- "Fiat asset" checkbox from asset creation form
+- Unnecessary vuex state mutations
 
 #### Fixed
-- Fixed a bug when we confirm a request for changes in limits,
-  at which we received empty values and could not confirm or cancel the request.
-  - Displaying of US-related roles in KYC verification
+- Show dash, if line 2 is not specified in kyc request
+- Terms field appearance in asset request
+- Error message styles on text field
+- Select field arrow position
+- Displaying asset request terms document
+- Displaying error message if offline app file parsing was failed
+
+## [1.7.0] - 2019-06-03
+### "Under the hood" changes
+#### Changed
+- Now using @tokend/js-sdk@1.7.0
+
+## [1.7.0-rc.4] - 2019-05-31
+#### Fixed
+- Pagination while loading limits on limits management page
+
+## [1.7.0-rc.3] - 2019-05-30
+#### Fixed
+- Fixed Withdrawals screen list and review issues
+
+### "Under the hood" changes
+#### Changed
+- Now using @tokend/js-sdk@1.7.0-rc.2
+
+## [1.7.0-rc.2] - 2019-05-21
+### "Under the hood" changes
+#### Changed
+- Some DevOps changes
+
+## [1.7.0-rc.1] - 2019-05-21
+### "Under the hood" changes
+#### Changed
+- Now using @tokend/js-sdk@1.7.0-rc.1
+
+## [1.7.0-rc.0] - 2019-05-21
+#### Added
+- New "Capital deployment" fee type
+- New KYC verification queue feature for quick requests review
+- New links to pre-issuance guide on pre-issuance related pages
+- New Sentry error tracking integration
+- Displaying of "Unblocked" instead of "Change role request" in users operation
+  list if the request performed by an admin
+- Restored Terms field in asset details
+
+#### Changed
+- Limits management form:
+  - Merged "specific account" and "scoped" tabs
+  - Now showing "Not set" and "Unlimited" values accordingly
+  - Added limits removal button
+- Asset pair pages:
+  - Added help messages to asset pair forms
+  - Added "Physical price correction" and "Max price step" fields to asset pair
+    management form
+  - Now using custom confirmation message instead of the native one on asset
+    pair creation submit
+
+#### Changed
+- Routing to UserDetails and OperationDetails pages from User and KYCRequest
+
+#### Fixed
+- Fixed a bug when we confirm a request for limits changes,
+  at which we received empty values and could not confirm or cancel the request
+- Fixed a bug with displaying of multiple overlayed confirmation modals on the
+  issuance form
+- Fixed uploading documents on create asset form
+- Displaying of US-related roles on KYC review
+- Displaying of asset filter on withdrawal list
+
+#### Removed
+- Removed "dev: " prefix from displayed version
+
+### "Under the hood" changes
+#### Added
+- "US Verified" & "US Accredited" roles to the `roleIdToString` filter
+- New "hash", "type", & "requestor" fields to `ChangeRoleRequest` wrapper
+- New PDF documents preview to the `UserDocGetter` component
+- New `help` prop to `<input-field>` and `<tick-field>`
+
+#### Changed
+- Now using @tokend/js-sdk@1.7.0-rc.0
+- Extracted change role request tasks manager to a separate component
+
+## [1.6.0] - 2019-05-09
+### "Under the hood" changes
+#### Changed
+- Now using @tokend/js-sdk@1.6.0
 
 ## [1.6.0-rc.1] - 2019-05-02
 #### Added
@@ -213,7 +337,14 @@ for further information about branching and tagging conventions.
 
 ## [1.3.0] - 2019-03-01
 
-[Unreleased]: https://github.com/tokend/admin-panel/compare/1.6.0-rc.1...HEAD
+[Unreleased]: https://github.com/tokend/admin-panel/compare/1.7.0...HEAD
+[1.7.0]: https://github.com/tokend/admin-panel/compare/1.7.0-rc.4...1.7.0
+[1.7.0-rc.4]: https://github.com/tokend/admin-panel/compare/1.7.0-rc.3...1.7.0-rc.4
+[1.7.0-rc.3]: https://github.com/tokend/admin-panel/compare/1.7.0-rc.2...1.7.0-rc.3
+[1.7.0-rc.2]: https://github.com/tokend/admin-panel/compare/1.7.0-rc.1...1.7.0-rc.2
+[1.7.0-rc.1]: https://github.com/tokend/admin-panel/compare/1.7.0-rc.0...1.7.0-rc.1
+[1.7.0-rc.0]: https://github.com/tokend/admin-panel/compare/1.6.0...1.7.0-rc.0
+[1.6.0]: https://github.com/tokend/admin-panel/compare/1.6.0-rc.1...1.6.0
 [1.6.0-rc.1]: https://github.com/tokend/admin-panel/compare/1.6.0-rc.0...1.6.0-rc.1
 [1.6.0-rc.0]: https://github.com/tokend/admin-panel/compare/1.5.0...1.6.0-rc.0
 [1.5.0]: https://github.com/tokend/admin-panel/compare/1.5.0-rc.3...1.5.0

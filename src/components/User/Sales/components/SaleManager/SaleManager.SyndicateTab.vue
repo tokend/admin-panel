@@ -44,6 +44,7 @@
               <user-doc-getter
                 class="sale-manager-corporate-tab__doc-view"
                 :file-key="kycAvatarKey"
+                :mime-type="kycAvatarMimeType"
               />
             </div>
           </li>
@@ -67,10 +68,11 @@
 
 <script>
 import { UserDocLinkGetter, UserDocGetter } from '@comcom/getters'
-import { Sdk } from '@/sdk'
 
 import _get from 'lodash/get'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { api } from '@/api'
+import _isEmpty from 'lodash/isEmpty'
 
 export default {
   components: {
@@ -97,12 +99,16 @@ export default {
     kycAvatarKey () {
       return _get(this.corporate, 'documents.kyc_avatar.key')
     },
+
+    kycAvatarMimeType () {
+      return _get(this.corporate, 'documents.kyc_avatar.mime_type')
+    },
   },
 
   created () {
     this.getCorporate({
-      ownerId: _get(this.sale, 'ownerId') ||
-        _get(this.saleRequest, 'requestor') ||
+      ownerId: _get(this.sale, 'owner.id') ||
+        _get(this.saleRequest, 'requestor.id') ||
         _get(this.user, 'address'),
       blobId: this.blobId,
     })
@@ -112,11 +118,8 @@ export default {
     async getCorporate ({ ownerId: owner, blobId }) {
       try {
         const response = blobId
-          ? await Sdk.api.blobs.get(blobId, owner)
-          : await Sdk.api.blobs.get(
-            (await Sdk.horizon.account.getAccountKyc(owner))
-              .data.kycData.blobId
-          )
+          ? await api.getWithSignature(`/accounts/${owner}/blobs/${blobId}`)
+          : await api.getWithSignature(`/blobs/${await this.getBlobId(owner)}`)
         this.corporate = JSON.parse(
           response.data.value || response.data[0].value
         )
@@ -125,12 +128,21 @@ export default {
         ErrorHandler.processWithoutFeedback(error)
       }
     },
+    async getBlobId (owner) {
+      const { data } = await api.getWithSignature('/v3/change_role_requests', {
+        filter: { requestor: owner },
+        page: {
+          limit: 1,
+          order: 'desc',
+        },
+        include: ['request_details'],
+      })
+      let blobId = ''
+      if (!_isEmpty(data[0].requestDetails.creatorDetails)) {
+        blobId = data[0].requestDetails.creatorDetails.blobId
+      }
+      return blobId
+    },
   },
 }
 </script>
-
-<style scoped lang="scss">
-.sale-manager-corporate-tab__details-wrp {
-  max-width: 48rem;
-}
-</style>

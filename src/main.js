@@ -10,14 +10,13 @@ import './assets/style/app.scss'
 /* App component */
 import App from './components/App/App.vue'
 
-import moment from 'moment'
-import { Sdk } from '@/sdk'
-
 /* Vue plugins */
 import Auth from './auth'
-import api from './api'
 import params from './config'
-import VeeValidate, { Validator } from 'vee-validate'
+import Vuelidate from 'vuelidate'
+
+/* Error tracker util */
+import { ErrorTracker } from '@/utils/ErrorTracker'
 
 /* Vue filters */
 
@@ -54,6 +53,9 @@ Object.isEmpty = function (obj) {
   return JSON.stringify(obj) === JSON.stringify({})
 }
 
+/* Init Sentry */
+ErrorTracker.init(params)
+
 /* Create and Mount our Vue instance */
 new Vue({
   components: { App },
@@ -67,16 +69,9 @@ new Vue({
   template: '<App/>',
 }).$mount('#app')
 
-Validator.installDateTimeValidators(moment)
-Validator.extend('accountId', {
-  getMessage: field => 'The ' + field + ' invalid.',
-  validate: value => Sdk.base.Keypair.isValidPublicKey(value),
-})
-
 Vue.use(Auth)
 Vue.use(params)
-Vue.use(VeeValidate)
-Vue.use(api)
+Vue.use(Vuelidate)
 
 Vue.filter('dateTime', filterDateWithTime)
 Vue.filter('localizeIssuanceRequestState', localizeIssuanceRequestState)

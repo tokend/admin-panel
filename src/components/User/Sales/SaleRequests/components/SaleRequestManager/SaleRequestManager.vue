@@ -20,7 +20,7 @@
 
         <div
           class="sale-rm__actions app__form-actions"
-          v-if="request.sale.requestStateI === REQUEST_STATES.pending"
+          v-if="request.sale.stateI === REQUEST_STATES.pending"
         >
           <button
             class="app__btn"
@@ -63,12 +63,19 @@
       <form
         class="sale-rm__reject-form"
         id="sale-reject-form"
-        @submit.prevent="reject() & hideRejectForm()"
+        @submit.prevent="reject"
+        novalidate
       >
         <div class="app__form-row">
           <text-field
             v-model="rejectForm.reason"
             :label="null"
+            :disabled="formMixin.isDisabled"
+            @blur="touchField('rejectForm.reason')"
+            :error-message="getFieldErrorMessage(
+              'rejectForm.reason',
+              { maxLength: REJECT_REASON_MAX_LENGTH }
+            )"
           />
         </div>
 
@@ -84,12 +91,14 @@
         <button
           class="app__btn app__btn--danger"
           form="sale-reject-form"
+          :disabled="formMixin.isDisabled"
         >
           Reject
         </button>
         <button
           class="app__btn-secondary"
           @click="hideRejectForm"
+          :disabled="formMixin.isDisabled"
         >
           Cancel
         </button>
@@ -99,8 +108,8 @@
 </template>
 
 <script>
-import TextField from '@comcom/fields/TextField'
-import TickField from '@comcom/fields/TickField'
+import FormMixin from '@/mixins/form.mixin'
+import { required, maxLength } from '@/validators'
 
 import Modal from '@comcom/modals/Modal'
 import { Tabs, Tab } from '@comcom/Tabs'
@@ -110,26 +119,27 @@ import DetailsTab from './SaleRequestManager.DetailsTab'
 import DescriptionTab from './SaleRequestManager.DescriptionTab'
 import SyndicateTab from '../../../components/SaleManager/SaleManager.SyndicateTab'
 
-import { Sdk } from '@/sdk'
-import api from '@/api'
-
 import { REQUEST_STATES } from '@/constants'
 
 import cloneDeep from 'lodash/cloneDeep'
 import { snakeToCamelCase } from '@/utils/un-camel-case'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { api } from '@/api'
+import apiHelper from '@/apiHelper'
+import { Bus } from '@/utils/state-bus'
+
+const REJECT_REASON_MAX_LENGTH = 255
 
 export default {
   components: {
     Tabs,
     Tab,
-    TextField,
-    TickField,
     Modal,
     DetailsTab,
     DescriptionTab,
     SyndicateTab,
   },
+  mixins: [FormMixin],
 
   props: {
     id: { type: String, required: true },
@@ -137,7 +147,6 @@ export default {
 
   data () {
     return {
-      REQUEST_STATES,
       request: {
         sale: {},
         asset: {},
@@ -150,12 +159,25 @@ export default {
         isPermanentReject: false,
       },
       isSubmitting: false,
+      REQUEST_STATES,
+      REJECT_REASON_MAX_LENGTH,
+    }
+  },
+
+  validations () {
+    return {
+      rejectForm: {
+        reason: {
+          required,
+          maxLength: maxLength(REJECT_REASON_MAX_LENGTH),
+        },
+      },
     }
   },
 
   computed: {
     getSaleDetails () {
-      return this.request.sale.details[this.request.sale.details.requestType]
+      return this.request.sale.requestDetails
     },
   },
 
@@ -171,9 +193,11 @@ export default {
     async getRequest (id) {
       try {
         this.request.sale = await this.getSaleRequest(id)
-        const response = await Sdk.horizon.assets
-          .get(this.getSaleDetails.baseAsset)
-        this.request.asset = response.data
+        const endpoint = `/v3/assets/${this.getSaleDetails.baseAsset.id}`
+        const { data } = await api.getWithSignature(endpoint, {
+          include: ['owner'],
+        })
+        this.request.asset = data
         this.request.isReady = true
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
@@ -182,8 +206,11 @@ export default {
     },
 
     async getSaleRequest (id) {
-      const response = await api.requests.get(id)
-      const sale = this.fixDetails(response)
+      const endpoint = `/v3/create_sale_requests/${id}`
+      const { data } = await api.getWithSignature(endpoint, {
+        include: ['request_details.quote_assets'],
+      })
+      const sale = this.fixDetails(data)
       return sale
     },
 
@@ -199,8 +226,8 @@ export default {
       this.isSubmitting = true
       if (await confirmAction()) {
         try {
-          await api.requests.approve(this.request.sale)
-          this.$store.dispatch('SET_INFO', 'Sale request approved.')
+          await apiHelper.requests.approve(this.request.sale)
+          Bus.success('Sale request approved.')
           this.$router.push({ name: 'sales.requests' })
         } catch (error) {
           ErrorHandler.process(error)
@@ -210,16 +237,19 @@ export default {
     },
 
     async reject () {
+      if (!this.isFormValid()) return
+
+      this.hideRejectForm()
       this.isSubmitting = true
       try {
-        await api.requests.reject(
+        await apiHelper.requests.reject(
           {
             reason: this.rejectForm.reason,
             isPermanent: this.rejectForm.isPermanentReject,
           },
           this.request.sale
         )
-        this.$store.dispatch('SET_INFO', 'Sale request rejected successfully.')
+        Bus.success('Sale request rejected successfully.')
         this.$router.push({ name: 'sales.requests' })
       } catch (error) {
         ErrorHandler.process(error)
@@ -229,14 +259,8 @@ export default {
 
     fixDetails (record) {
       const newRecord = cloneDeep(record)
-
-      const valuableRequestDetailsKey = Object.keys(record.details)
-        .find(item => !/request_type|requestType/gi.test(item))
-
-      newRecord.details.requestType =
-        snakeToCamelCase(record.details.requestType)
-      newRecord.details[newRecord.details.requestType] =
-        record.details[valuableRequestDetailsKey] || {}
+      newRecord.requestDetails.requestType =
+        snakeToCamelCase(record.xdrType.name)
 
       return newRecord
     },

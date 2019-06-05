@@ -6,8 +6,9 @@
       </h2>
 
       <form
-        @submit.prevent="submit"
+        @submit.prevent="isFormValid() && showConfirmation()"
         id="admin-manager-form"
+        novalidate
       >
         <div class="admin-manager__short-section">
           <div class="app__form-row">
@@ -15,8 +16,9 @@
               class="app__form-field"
               label="Account ID"
               v-model="form.accountId"
-              :error-message="formErrors.accountId.message"
-              :disabled="!addNew || isPending"
+              :disabled="!addNew || formMixin.isDisabled"
+              @blur="touchField('form.accountId')"
+              :error-message="getFieldErrorMessage('form.accountId')"
             />
           </div>
 
@@ -25,7 +27,9 @@
               class="app__form-field"
               label="Name"
               v-model="form.name"
-              :disabled="isMaster || isPending"
+              :disabled="isMaster || formMixin.isDisabled"
+              @blur="touchField('form.name')"
+              :error-message="getFieldErrorMessage('form.name')"
             />
           </div>
 
@@ -37,7 +41,12 @@
               min="0"
               max="255"
               v-model="form.identity"
-              :disabled="isMaster || isPending"
+              :disabled="isMaster || formMixin.isDisabled"
+              @blur="touchField('form.identity')"
+              :error-message="getFieldErrorMessage(
+                'form.identity',
+                { minValue: 0, maxValue: 255 }
+              )"
             />
 
             <input-field
@@ -47,7 +56,12 @@
               min="1"
               max="1000"
               v-model="form.weight"
-              :disabled="isMaster || isPending"
+              :disabled="isMaster || formMixin.isDisabled"
+              @blur="touchField('form.weight')"
+              :error-message="getFieldErrorMessage(
+                'form.weight',
+                { minValue: 1, maxValue: 1000 }
+              )"
             />
           </div>
 
@@ -60,7 +74,9 @@
                 class="app__form-field"
                 label="Signer role"
                 v-model="form.signerRoleId"
-                :disabled="isMaster || isPending"
+                :disabled="isMaster || formMixin.isDisabled"
+                @blur="touchField('form.signerRoleId')"
+                :error-message="getFieldErrorMessage('form.signerRoleId')"
               >
                 <option
                   v-for="item in signerRoles"
@@ -77,7 +93,7 @@
                   class="admin-manager__role-description"
                   :class="{
                     'admin-manager__role-description--grayscale':
-                      isMaster || isPending
+                      isMaster || formMixin.isDisabled
                   }"
                 >
                   {{ form.signerRoleId | deriveRoleDescription(signerRoles) }}
@@ -86,26 +102,35 @@
             </div>
           </div>
         </div>
+
+        <div class="admin-manager__form-actions app__form-actions">
+          <form-confirmation
+            v-if="formMixin.isConfirmationShown"
+            :is-pending="isFormSubmitting"
+            @ok="submit"
+            @cancel="hideConfirmation"
+          />
+
+          <template v-else>
+            <button
+              class="app__btn"
+              @click="isDeleteMode = false"
+              :disabled="isMaster || formMixin.isDisabled"
+            >
+              {{ addNew ? 'Add' : 'Update' }}
+            </button>
+
+            <button
+              v-if="!addNew"
+              class="app__btn-secondary app__btn-secondary--danger"
+              :disabled="isMaster || formMixin.isDisabled"
+              @click="isDeleteMode = true"
+            >
+              Delete
+            </button>
+          </template>
+        </div>
       </form>
-
-      <div class="admin-manager__form-actions app__form-actions">
-        <button
-          class="app__btn"
-          form="admin-manager-form"
-          :disabled="isPending"
-        >
-          {{ addNew ? 'Add' : 'Update' }}
-        </button>
-
-        <button
-          class="app__btn-secondary app__btn-secondary--danger"
-          :disabled="isPending"
-          @click="deleteAdmin"
-          v-if="!addNew"
-        >
-          Delete
-        </button>
-      </div>
     </div>
   </div>
 </template>
@@ -113,14 +138,15 @@
 <script>
 import Vue from 'vue'
 
-import InputField from '@comcom/fields/InputField'
-import SelectField from '@comcom/fields/SelectField'
+import FormMixin from '@/mixins/form.mixin'
+import { required, minValue, maxValue, accountId } from '@/validators'
 
 import { confirmAction } from '@/js/modals/confirmation_message'
 
-import { Sdk } from '@/sdk'
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { base } from '@tokend/js-sdk'
+import { api, loadingDataViaLoop } from '@/api'
 
+import { Bus } from '@/utils/state-bus'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 const MASTER_ROLE_ID = 1
@@ -128,16 +154,13 @@ const MASTER_ROLE_ID = 1
 export default {
   name: 'admin-manager',
 
-  components: {
-    InputField,
-    SelectField,
-  },
-
   filters: {
     deriveRoleDescription (roleId, signerRoles = []) {
       return (signerRoles.find(item => +item.id === +roleId) || {}).description
     },
   },
+
+  mixins: [FormMixin],
 
   props: {
     id: { type: String, default: '' },
@@ -148,8 +171,8 @@ export default {
       form: {
         accountId: '',
         name: '',
-        weight: '',
         identity: '',
+        weight: '',
         signerRoleId: '',
       },
 
@@ -160,13 +183,31 @@ export default {
 
       signerRoles: [],
 
-      formErrors: {
-        accountId: { error: false, message: '' },
-      },
+      isDeleteMode: false,
+      isFormSubmitting: false,
 
       masterPubKey: Vue.params.MASTER_ACCOUNT,
       MASTER_ROLE_ID,
-      isPending: false,
+    }
+  },
+
+  validations () {
+    return {
+      form: {
+        accountId: { required, accountId },
+        name: { required },
+        identity: {
+          required,
+          minValue: minValue(0),
+          maxValue: maxValue(255),
+        },
+        weight: {
+          required,
+          minValue: minValue(1),
+          maxValue: maxValue(1000),
+        },
+        signerRoleId: { required },
+      },
     }
   },
 
@@ -193,17 +234,15 @@ export default {
 
   methods: {
     async getSignerByAccountId (accountId) {
-      const { data } = await ApiCallerFactory
-        .createCallerInstance()
-        .getWithSignature(`/v3/accounts/${this.masterPubKey}/signers`)
+      const endpoint = `/v3/accounts/${this.masterPubKey}/signers`
+      const { data } = await api.getWithSignature(endpoint)
       return (data || []).find(item => item.id === accountId)
     },
 
     async initSignerRolesPicker () {
-      const signerRoles = await ApiCallerFactory
-        .createStubbornCallerInstance()
-        .stubbornGet('/v3/signer_roles')
-      this.signerRoles = signerRoles.data
+      let response = await api.getWithSignature('/v3/signer_roles')
+      let signerRoles = await loadingDataViaLoop(response)
+      this.signerRoles = signerRoles
         .filter(item => {
           return (item.details || {}).adminRole || +item.id === +MASTER_ROLE_ID
         })
@@ -246,46 +285,47 @@ export default {
     },
 
     async submit () {
-      if (!this.validate()) return
-      if (!await confirmAction()) return
+      this.isFormSubmitting = true
 
-      return this.addNew
-        ? this.addAdmin()
-        : this.updateAdmin()
+      let action
+      if (this.isDeleteMode) {
+        action = this.deleteAdmin
+      } else {
+        action = this.addNew ? this.addAdmin : this.updateAdmin
+      }
+
+      try {
+        await action()
+      } catch (error) {
+        ErrorHandler.process(error)
+      }
+
+      this.isFormSubmitting = false
+      this.hideConfirmation()
+
+      Bus.success('Successfully submitted')
+      this.$router.push({ name: 'admins' })
     },
 
     async addAdmin () {
-      await this.submitTx(Sdk.base.ManageSignerBuilder.createSigner)
+      await this.submitTx(base.ManageSignerBuilder.createSigner)
     },
 
     async updateAdmin () {
-      await this.submitTx(Sdk.base.ManageSignerBuilder.updateSigner)
+      await this.submitTx(base.ManageSignerBuilder.updateSigner)
     },
 
     async deleteAdmin () {
       const confirmationTxt = 'Are you sure you want to delete this admin?'
       if (await confirmAction({ title: confirmationTxt })) {
-        await this.submitTx(Sdk.base.ManageSignerBuilder.deleteSigner)
+        await this.submitTx(base.ManageSignerBuilder.deleteSigner)
       }
     },
 
     async submitTx (operationConstructor) {
-      this.isPending = true
-      this.$store.commit('OPEN_LOADER')
-
-      try {
-        const opts = this.buildManageSignerOperationOpts()
-        const operation = operationConstructor(opts)
-        await Sdk.horizon.transactions.submitOperations(operation)
-
-        this.$store.dispatch('SET_INFO', 'Successfully submitted')
-        this.$router.push({ name: 'admins' })
-      } catch (error) {
-        ErrorHandler.process(error)
-      }
-
-      this.isPending = false
-      this.$store.commit('CLOSE_LOADER')
+      const opts = this.buildManageSignerOperationOpts()
+      const operation = operationConstructor(opts)
+      await api.postOperations(operation)
     },
 
     buildManageSignerOperationOpts () {
@@ -296,18 +336,6 @@ export default {
         identity: this.form.identity,
         details: { name: this.form.name },
       }
-    },
-
-    validate () {
-      let valid = true
-      this.formErrors.accountId.message = ''
-
-      if (!Sdk.base.Keypair.isValidPublicKey(this.form.accountId)) {
-        this.formErrors.accountId.message = 'Enter a valid account address'
-        valid = false
-      }
-
-      return valid
     },
   },
 }

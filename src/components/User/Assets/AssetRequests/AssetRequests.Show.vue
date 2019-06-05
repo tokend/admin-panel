@@ -36,13 +36,18 @@
           Asset logo
         </span>
         <template
-          v-if="safeGet(assetRequest, 'operationDetails.details.logo.key')"
+          v-if="safeGet(
+            assetRequest, 'operationDetails.creatorDetails.logo.key'
+          )"
         >
           <img-getter
             class="asset-requests-show__asset-logo"
-            :file-key="assetRequest.operationDetails.details.logo.key"
+            :file-key="assetRequest.operationDetails.creatorDetails.logo.key"
             alt="Asset logo"
           />
+        </template>
+        <template v-else>
+          &mdash;
         </template>
       </div>
       <div class="asset-requests-show__row">
@@ -51,9 +56,9 @@
         </span>
         <span
           class="asset-requests-show__value"
-          :title="assetRequest.operationDetails.details.name"
+          :title="assetRequest.operationDetails.creatorDetails.name"
         >
-          {{ assetRequest.operationDetails.details.name || '—' }}
+          {{ assetRequest.operationDetails.creatorDetails.name || '—' }}
         </span>
       </div>
 
@@ -134,19 +139,46 @@
             Policies
           </span>
           <div class="asset-requests-show__policies-wrapper">
-            <template v-for="policy in assetRequest.operationDetails.policies">
+            <template v-for="(policy, key) in ASSET_POLICIES_VERBOSE">
               <!-- eslint-disable max-len -->
               <span
-                :key="policy.value"
+                :key="key"
                 class="asset-requests-show__key asset-requests-show__key--informative"
+                v-if="assetRequest.policies & key"
               >
-                {{ ASSET_POLICIES_VERBOSE[policy.value] }}
+                {{ policy }}
               </span>
               <!-- eslint-enable max-len -->
             </template>
           </div>
         </div>
       </template>
+
+      <div class="asset-requests-show__row">
+        <span class="asset-requests-show__key">
+          Terms
+        </span>
+        <span class="asset-requests-show__value">
+          <template
+            v-if="safeGet(
+              assetRequest, 'operationDetails.creatorDetails.terms.key'
+            )"
+            :mime-type="safeGet(
+              assetRequest,
+              'operationDetails.details.terms.mimeType'
+            )"
+          >
+            <user-doc-link-getter
+              :file-key="assetRequest.operationDetails.creatorDetails.terms.key"
+            >
+              Open file
+            </user-doc-link-getter>
+          </template>
+          <template v-else>
+            &mdash;
+          </template>
+        </span>
+      </div>
 
       <div class="asset-requests-show__row">
         <span class="asset-requests-show__key">
@@ -230,25 +262,26 @@
 import TextField from '@comcom/fields/TextField'
 import AssetRequestRejectForm from './components/AssetRequestRejectForm'
 
-import { ImgGetter, EmailGetter } from '@comcom/getters'
+import { ImgGetter, EmailGetter, UserDocLinkGetter } from '@comcom/getters'
 import { DateFormatter } from '@comcom/formatters'
 
 import { confirmAction } from '@/js/modals/confirmation_message'
-
-import { Sdk } from '@/sdk'
 
 import localize from '@/utils/localize'
 import { verbozify } from '@/utils/verbozify'
 import safeGet from 'lodash/get'
 
-import { AssetRequest } from '@/api/responseHandlers/requests/AssetRequest'
+import { AssetRequest } from '@/apiHelper/responseHandlers/requests/AssetRequest'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { Bus } from '@/utils/state-bus'
 
 import {
   ASSET_POLICIES_VERBOSE,
   CREATE_ASSET_REQUEST_STATES,
   ASSET_REQUEST_TYPES,
 } from '@/constants'
+
+import { api } from '@/api'
 
 // TODO: extract to AssetRequestForm
 export default {
@@ -258,6 +291,7 @@ export default {
     ImgGetter,
     EmailGetter,
     DateFormatter,
+    UserDocLinkGetter,
   },
 
   props: {
@@ -291,8 +325,10 @@ export default {
     this.isInitializing = true
 
     try {
-      const response = await Sdk.horizon.request.get(this.id)
-      this.assetRequest = new AssetRequest(response.data)
+      const { data } = await api.getWithSignature(`/v3/requests/${this.id}`, {
+        include: ['request_details'],
+      })
+      this.assetRequest = new AssetRequest(data)
     } catch (error) {
       ErrorHandler.processWithoutFeedback(error)
       this.isInitFailed = true
@@ -310,7 +346,7 @@ export default {
       if (await confirmAction()) {
         try {
           await this.assetRequest.fulfill()
-          this.$store.dispatch('SET_INFO', 'Asset successfully created')
+          Bus.success('Asset successfully created')
           this.$router.push({ name: 'assets' })
         } catch (error) {
           ErrorHandler.process(error)
@@ -340,6 +376,7 @@ export default {
 .asset-requests-show__key {
   &--informative {
     color: $color-info;
+    text-align: right;
 
     &:before {
       content: "\2713";
@@ -351,6 +388,7 @@ export default {
   max-width: 24rem;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-align: right;
 }
 
 .asset-requests-show__buttons {

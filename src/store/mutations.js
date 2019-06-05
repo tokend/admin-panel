@@ -9,17 +9,6 @@ export const UPDATE_USER = (state, user) => {
   state.user = user
 }
 
-export const SET_MESSAGE = (state, msg) => {
-  if (typeof msg.text !== 'string') return
-  state.message.type = msg.type
-  state.message.text = msg.text
-}
-
-export const CLEAN_MESSAGE = (state) => {
-  state.message.type = ''
-  state.message.text = ''
-}
-
 // MODALS
 export const OPEN_MODAL = (state) => {
   state.isModalOpen = true

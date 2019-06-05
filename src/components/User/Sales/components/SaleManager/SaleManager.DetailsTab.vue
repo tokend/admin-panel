@@ -13,19 +13,19 @@
             </li>
             <li>
               <span>Code</span>
-              <span>{{ asset.code }}</span>
+              <span>{{ asset.id }}</span>
             </li>
             <li>
               <span>Owner</span>
               <email-getter
-                :account-id="asset.owner"
+                :account-id="asset.owner.id"
                 is-titled
               />
             </li>
             <li>
               <span>Preissued asset signer</span>
               <email-getter
-                :account-id="asset.preissuedAssetSigner"
+                :account-id="asset.preIssuanceAssetSigner"
                 is-titled
               />
             </li>
@@ -47,7 +47,7 @@
             </li>
             <li>
               <span>Policies</span>
-              <asset-policies-formatter :policies="asset.policies" />
+              <asset-policies-formatter :policy-mask="asset.policies.value" />
             </li>
             <li>
               <span>Terms</span>
@@ -109,13 +109,15 @@
           <li>
             <span>State</span>
             <span>
-              <template v-if="sale.state.value === SALE_STATES.open">
+              <template v-if="sale.saleState.value === SALE_STATES.open">
                 Open
               </template>
-              <template v-else-if="sale.state.value === SALE_STATES.closed">
+              <template v-else-if="sale.saleState.value === SALE_STATES.closed">
                 Closed
               </template>
-              <template v-else-if="sale.state.value === SALE_STATES.cancelled">
+              <template
+                v-else-if="sale.saleState.value === SALE_STATES.cancelled"
+              >
                 Cancelled
               </template>
             </span>
@@ -123,7 +125,7 @@
           <li>
             <span>Owner</span>
             <email-getter
-              :account-id="sale.ownerId"
+              :account-id="sale.owner.id"
               is-titled
             />
           </li>
@@ -145,17 +147,17 @@
 
         <ul
           class="key-value-list"
-          v-for="(item, index) in sale.quoteAssets.quoteAssets"
+          v-for="(item, index) in sale.quoteAssets"
           :key="index"
         >
           <span>
             <!-- to padding of label.data-caption -->
           </span>
           <label class="data-caption">
-            {{ item.asset }} progress
+            {{ item.asset.id }} progress
           </label>
           <li>
-            <span>Price (per {{ sale.baseAsset }})</span>
+            <span>Price (per {{ sale.baseAsset.id }})</span>
             <asset-amount-formatter :amount="item.price" />
           </li>
           <li>
@@ -164,14 +166,14 @@
           </li>
           <li>
             <!-- eslint-disable-next-line max-len -->
-            <span :title="`Current cap + current caps of the other acceptable assets in the ${item.asset} equivalent`">
+            <span :title="`Current cap + current caps of the other acceptable assets in the ${item.asset.id} equivalent`">
               Total current cap
             </span>
             <asset-amount-formatter :amount="item.totalCurrentCap" />
           </li>
           <li>
             <!-- eslint-disable-next-line max-len -->
-            <span :title="`Hard cap of the sale in the ${item.asset} equivalent`">
+            <span :title="`Hard cap of the sale in the ${item.asset.id} equivalent`">
               Hard cap
             </span>
             <asset-amount-formatter :amount="item.hardCap" />
@@ -189,35 +191,35 @@
             <span>Assets sold</span>
             <asset-amount-formatter
               :amount="sale.baseCurrentCap"
-              :asset="sale.baseAsset"
+              :asset="sale.baseAsset.id"
             />
           </li>
           <li>
             <span>Current cap</span>
             <asset-amount-formatter
-              :amount="sale.currentCap"
-              :asset="sale.defaultQuoteAsset"
+              :amount="sale.defaultQuoteAsset.currentCap"
+              :asset="sale.defaultQuoteAsset.asset.id"
             />
           </li>
           <li>
             <span>Soft cap</span>
             <asset-amount-formatter
-              :amount="sale.softCap"
-              :asset="sale.defaultQuoteAsset"
+              :amount="sale.defaultQuoteAsset.softCap"
+              :asset="sale.defaultQuoteAsset.asset.id"
             />
           </li>
           <li>
             <span>Hard cap</span>
             <asset-amount-formatter
-              :amount="sale.hardCap"
-              :asset="sale.defaultQuoteAsset"
+              :amount="sale.defaultQuoteAsset.hardCap"
+              :asset="sale.defaultQuoteAsset.asset.id"
             />
           </li>
           <li>
-            <span>Max {{ sale.baseAsset }} amount to be sold</span>
+            <span>Max {{ sale.baseAsset.id }} amount to be sold</span>
             <asset-amount-formatter
               :amount="sale.baseHardCap"
-              :asset="sale.baseAsset"
+              :asset="sale.baseAsset.id"
             />
           </li>
         </ul>
@@ -257,8 +259,8 @@ import {
   AssetPoliciesFormatter,
 } from '@comcom/formatters'
 
-import { Sdk } from '@/sdk'
 import { SALE_STATES } from '@/constants'
+import { api } from '@/api'
 
 export default {
   components: {
@@ -290,7 +292,10 @@ export default {
   methods: {
     async getAsset ({ baseAsset }) {
       try {
-        const { data } = await Sdk.horizon.assets.get(baseAsset)
+        const endpoint = `/v3/assets/${baseAsset.id}`
+        const { data } = await api.getWithSignature(endpoint, {
+          include: ['owner'],
+        })
         this.asset = data
         this.isAssetLoaded = true
       } catch (error) {

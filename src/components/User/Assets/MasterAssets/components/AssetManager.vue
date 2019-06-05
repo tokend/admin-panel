@@ -24,7 +24,10 @@
       </div>
     </div>
 
-    <form @submit.prevent="submit">
+    <form
+      @submit.prevent="submit"
+      novalidate
+    >
       <div class="asset-manager__image-field-wrp">
         <label class="asset-manager__image-lbl">
           Upload asset logo
@@ -40,20 +43,26 @@
           class="app__form-field"
           label="Asset name"
           v-model="asset.creatorDetails.name"
-          :disabled="isPending"
-          v-validate="'required|max:255'"
           name="asset-name"
-          :error-message="errors.first('asset-name')"
+          @blur="touchField('asset.creatorDetails.name')"
+          :error-message="getFieldErrorMessage(
+            'asset.creatorDetails.name',
+            { maxLength: ASSET_NAME_MAX_LENGTH }
+          )"
+          :disabled="formMixin.isDisabled"
         />
 
         <input-field
           class="app__form-field"
           label="Asset code"
-          v-model="asset.code"
-          :disabled="isExistingAsset || isPending"
-          v-validate="'required|alpha_num|max:16'"
+          v-model="asset.id"
+          :disabled="isExistingAsset || formMixin.isDisabled"
           name="asset-code"
-          :error-message="errors.first('asset-code')"
+          @blur="touchField('asset.id')"
+          :error-message="getFieldErrorMessage(
+            'asset.id',
+            { maxLength: ASSET_CODE_MAX_LENGTH }
+          )"
         />
       </div>
 
@@ -62,21 +71,27 @@
           class="app__form-field"
           label="Issuer public key"
           v-model="asset.preissuedAssetSigner"
-          :disabled="isExistingAsset || isPending"
-          v-validate="'required|alpha_num'"
+          :disabled="isExistingAsset || formMixin.isDisabled"
           name="issuer-key"
-          :error-message="errors.first('issuer-key')"
+          @blur="touchField('asset.preissuedAssetSigner')"
+          :error-message="getFieldErrorMessage('asset.preissuedAssetSigner')"
         />
 
         <input-field
           v-if="!isExistingAsset"
+          type="number"
+          min="0"
+          :max="asset.maxIssuanceAmount"
           class="app__form-field"
           label="Initial preissued amount"
           v-model="asset.initialPreissuedAmount"
-          :disabled="isExistingAsset || isPending"
-          v-validate="'required|decimal'"
+          :disabled="isExistingAsset || formMixin.isDisabled"
           name="initial-preissued"
-          :error-message="errors.first('initial-preissued')"
+          @blur="touchField('asset.initialPreissuedAmount')"
+          :error-message="getFieldErrorMessage(
+            'asset.initialPreissuedAmount',
+            { minValue: 0, maxValue: asset.maxIssuanceAmount }
+          )"
         />
 
         <input-field
@@ -85,9 +100,7 @@
           class="app__form-field"
           label="Available for issuance"
           :disabled="true"
-          v-validate="'required|decimal'"
           name="available-issuance"
-          :error-message="errors.first('available-issuance')"
         />
       </div>
 
@@ -95,31 +108,41 @@
         <input-field
           class="app__form-field app__form-field--halved"
           type="number"
-          :min="0"
-          :step="DEFAULT_INPUT_STEP"
+          min="0"
+          :step="selectedAssetStep(trailingDigitsCount)"
           label="Maximum assets"
           v-model="asset.maxIssuanceAmount"
-          :disabled="isExistingAsset || isPending"
-          v-validate="'required|decimal'"
+          :disabled="isExistingAsset || formMixin.isDisabled"
           name="max-assets"
-          :error-message="errors.first('max-assets')"
+          @blur="touchField('asset.maxIssuanceAmount')"
+          :error-message="getFieldErrorMessage(
+            'asset.maxIssuanceAmount',
+            {
+              minValue: DEFAULT_INPUT_MIN,
+              maxValue: DEFAULT_MAX_AMOUNT
+            }
+          )"
         />
 
         <!--
           the field is disabled due to omitted testing
-          session of trailingDigitsCount
+          session of trailingDigits
         -->
         <input-field
           class="app__form-field app__form-field--halved"
           type="number"
-          :min="0"
-          :step="0"
+          min="0"
+          step="1"
+          max="6"
           label="Trailing digits count"
-          v-model="asset.trailingDigitsCount"
-          :disabled="true || isExistingAsset || isPending"
-          v-validate="'required|numeric|max_value:6'"
+          v-model="asset.trailingDigits"
+          :disabled="isExistingAsset || formMixin.isDisabled"
           name="trailing-digits-count"
-          :error-message="errors.first('trailing-digits-count')"
+          @blur="touchField('asset.trailingDigits')"
+          :error-message="getFieldErrorMessage(
+            'asset.trailingDigits',
+            { minValue: 0, maxValue: 6 }
+          )"
         />
       </div>
 
@@ -127,11 +150,11 @@
         <select-field
           class="app__form-field app__form-field--halved"
           label="Asset type"
-          v-model="asset.assetType"
-          :disabled="isExistingAsset || isPending"
+          v-model="asset.type"
+          :disabled="isExistingAsset || formMixin.isDisabled"
           name="asset-type"
-          v-validate="'required'"
-          :error-message="errors.first('asset-type')"
+          @blur="touchField('asset.type')"
+          :error-message="getFieldErrorMessage('asset.type')"
         >
           <option :value="ASSET_TYPES.default">
             Default
@@ -155,68 +178,65 @@
             class="app__upload-input"
             id="file-select"
             type="file"
+            :disabled="formMixin.isDisabled"
             accept="application/pdf, image/*"
             @change="onFileChange($event, DOCUMENT_TYPES.assetTerms)"
           >
-          <span
-            v-if="safeGet(asset, 'creatorDetails.terms.name')"
-            class="asset-manager__file-name"
-          >
-            {{ safeGet(asset, 'creatorDetails.terms.name') }}
+          <span class="asset-manager__file-name">
+            <template v-if="termsSelectedFileName">
+              {{ termsSelectedFileName }}
+            </template>
+
+            <template v-else-if="termsUrl">
+              <a
+                :href="termsUrl"
+                target="_blank"
+                rel="noopener"
+              >
+                {{ safeGet(asset, 'creatorDetails.terms.name') }}
+              </a>
+            </template>
           </span>
-          <span
-            v-else-if="termsUrl"
-            class="asset-manager__file-name"
-          >
-            <a
-              :href="termsUrl"
-              target="_blank"
-              rel="noopener"
-            >
-              {{ safeGet(asset, 'creatorDetails.terms.name') }}
-            </a>
-          </span>
-          <!--<span v-else-if="safeGet(asset, 'terms..')"></span>-->
         </div>
       </div>
 
       <div class="app__form-row">
         <tick-field
           class="app__form-field"
-          v-model="asset.policy"
+          v-model="asset.policies.value"
           :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.transferable]"
           :cb-value="ASSET_POLICIES.transferable"
-          :disabled="isPending"
+          :disabled="formMixin.isDisabled"
         />
       </div>
 
       <div class="app__form-row">
         <tick-field
           class="app__form-field"
-          v-model="asset.policy"
+          v-model="asset.policies.value"
           :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.baseAsset]"
           :cb-value="ASSET_POLICIES.baseAsset"
-          :disabled="isPending"
+          :disabled="formMixin.isDisabled"
         />
       </div>
 
       <div class="app__form-row">
         <tick-field
           class="app__form-field"
-          v-model="asset.policy"
+          v-model="asset.policies.value"
           :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.statsQuoteAsset]"
           :cb-value="ASSET_POLICIES.statsQuoteAsset"
-          :disabled="isPending"
+          :disabled="formMixin.isDisabled"
         />
       </div>
 
       <div class="app__form-row">
         <tick-field
           class="app__form-field"
-          v-model="asset.policy"
+          v-model="asset.policies.value"
           :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.withdrawable]"
           :cb-value="ASSET_POLICIES.withdrawable"
-          :disabled="isPending"
+          :disabled="formMixin.isDisabled"
         />
       </div>
 
@@ -224,10 +244,10 @@
       <div class="app__form-row">
         <tick-field
           class="app__form-field"
-          v-model="asset.policy"
+          v-model="asset.policies.value"
           :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.issuanceManualReviewRequired]"
           :cb-value="ASSET_POLICIES.issuanceManualReviewRequired"
-          :disabled="isPending"
+          :disabled="formMixin.isDisabled"
         />
       </div>
       <!-- eslint-enable max-len -->
@@ -237,7 +257,7 @@
           class="app__form-field"
           v-model="asset.creatorDetails.isFiat"
           label="Fiat asset"
-          :disabled="isPending"
+          :disabled="formMixin.isDisabled"
         />
       </div>
 
@@ -261,7 +281,7 @@
             class="app__form-field"
             v-model="asset.creatorDetails.isCoinpayments"
             label="Use Coinpayments"
-            :disabled="isPending"
+            :disabled="formMixin.isDisabled"
           />
         </div>
         <div class="app__form-row">
@@ -272,8 +292,7 @@
             name="External system type"
             v-model="asset.creatorDetails.externalSystemType"
             :required="false"
-            :disabled="isPending"
-            v-validate="{max_value: int32}"
+            :disabled="formMixin.isDisabled"
           />
         </div>
       </template>
@@ -281,7 +300,7 @@
       <div class="app__form-actions">
         <button
           class="app__btn"
-          :disabled="isPending"
+          :disabled="formMixin.isDisabled"
         >
           {{ isExistingAsset ? 'Update asset' : 'Create asset' }}
         </button>
@@ -291,55 +310,65 @@
 </template>
 
 <script>
-import { ImageField, TickField, InputField, SelectField } from '@comcom/fields'
 import { confirmAction } from '@/js/modals/confirmation_message'
 
-import api from '@/api'
-import { Sdk } from '@/sdk'
+import FormMixin from '@/mixins/form.mixin'
+import {
+  required,
+  accountId,
+  minValue,
+  maxValue,
+  maxLength,
+  alphaNum,
+} from '@/validators'
+
+import { base } from '@tokend/js-sdk'
+import { api, documentsManager } from '@/api'
 
 import safeGet from 'lodash/get'
 
 import config from '@/config'
-import { ErrorHandler } from '@/utils/ErrorHandler'
 
 import Bus from '@/utils/EventBus'
 import { fileReader } from '@/utils/file-reader'
 
+import { mapGetters } from 'vuex'
+import { getters } from '@/store/types'
+
 import {
   ASSET_POLICIES,
   DEFAULT_INPUT_STEP,
+  DEFAULT_INPUT_MIN,
+  DEFAULT_MAX_AMOUNT,
   DOCUMENT_TYPES,
   ASSET_POLICIES_VERBOSE,
 } from '@/constants'
 
-import 'mdi-vue/ChevronDownIcon'
-import 'mdi-vue/ChevronUpIcon'
+import { ErrorHandler } from '@/utils/ErrorHandler'
+const ASSET_CODE_MAX_LENGTH = 16
+const ASSET_NAME_MAX_LENGTH = 255
 
 export default {
-  components: {
-    InputField,
-    SelectField,
-    TickField,
-    ImageField,
-  },
+  mixins: [FormMixin],
 
   props: {
-    assetCode: { type: String, required: true },
+    assetCode: { type: String, default: '' },
   },
 
   data () {
     return {
-      ASSET_POLICIES,
-      DEFAULT_INPUT_STEP,
-      ASSET_POLICIES_VERBOSE,
       isShownAdvanced: false,
-      ASSET_TYPES: config.ASSET_TYPES,
 
       asset: {
+        id: '',
         preissuedAssetSigner: config.MASTER_ACCOUNT,
-        policy: 0,
+        policies: {
+          value: 0,
+        },
         initialPreissuedAmount: '0',
-        trailingDigitsCount: '6',
+        maxIssuanceAmount: '0',
+        availableForIssuance: '0',
+        trailingDigits: '6',
         assetType: '0',
         creatorDetails: {
           isFiat: false,
@@ -363,14 +392,62 @@ export default {
         name: null,
       },
 
-      isPending: false,
       DOCUMENT_TYPES,
+      ASSET_POLICIES,
+      DEFAULT_INPUT_STEP,
+      DEFAULT_INPUT_MIN,
+      DEFAULT_MAX_AMOUNT,
+      ASSET_POLICIES_VERBOSE,
+      ASSET_TYPES: config.ASSET_TYPES,
+      ASSET_CODE_MAX_LENGTH,
+      ASSET_NAME_MAX_LENGTH,
+    }
+  },
+
+  validations () {
+    return {
+      asset: {
+        id: {
+          required,
+          maxLength: maxLength(ASSET_CODE_MAX_LENGTH),
+          alphaNum,
+        },
+        preissuedAssetSigner: { required, accountId },
+        maxIssuanceAmount: {
+          required,
+          minValue: minValue(DEFAULT_INPUT_MIN),
+          maxValue: maxValue(DEFAULT_MAX_AMOUNT),
+        },
+        initialPreissuedAmount: {
+          required,
+          minValue: minValue(0),
+          maxValue: maxValue(this.asset.maxIssuanceAmount),
+        },
+        trailingDigits: {
+          required,
+          minValue: minValue(0),
+          maxValue: maxValue(6),
+        },
+        type: { required },
+        creatorDetails: {
+          name: {
+            required,
+            maxLength: maxLength(ASSET_NAME_MAX_LENGTH),
+          },
+        },
+      },
     }
   },
 
   computed: {
+    ...mapGetters({ userAddress: getters.GET_USER_ADDRESS }),
+
     isExistingAsset () {
       return !!this.assetCode
+    },
+
+    termsSelectedFileName () {
+      return this[DOCUMENT_TYPES.assetTerms].name
     },
 
     termsUrl () {
@@ -392,7 +469,10 @@ export default {
 
     async getAsset () {
       try {
-        const { data } = await Sdk.horizon.assets.get(this.assetCode)
+        const endpoint = `/v3/assets/${this.assetCode}`
+        const { data } = await api.getWithSignature(endpoint, {
+          include: ['owner'],
+        })
         data.creatorDetails = data.creatorDetails || data.details
         Object.assign(this.asset, data)
       } catch (error) {
@@ -401,10 +481,10 @@ export default {
     },
 
     async submit () {
-      if (!this.isValid()) return
+      if (!this.isFormValid()) return
       if (!await confirmAction()) return
 
-      this.isPending = true
+      this.disableForm()
       try {
         await Promise.all([
           this.uploadFile(DOCUMENT_TYPES.assetTerms),
@@ -426,10 +506,10 @@ export default {
             terms.name = this.asset.creatorDetails.terms.name
           }
 
-          operation = Sdk.base.ManageAssetBuilder.assetUpdateRequest({
+          operation = base.ManageAssetBuilder.assetUpdateRequest({
             requestID: '0',
-            code: String(this.asset.code),
-            policies: Number(this.asset.policy),
+            code: String(this.asset.id),
+            policies: Number(this.asset.policies.value),
             allTasks: 0,
             creatorDetails: {
               name: this.asset.creatorDetails.name,
@@ -442,15 +522,15 @@ export default {
             },
           })
         } else {
-          operation = Sdk.base.ManageAssetBuilder.assetCreationRequest({
+          operation = base.ManageAssetBuilder.assetCreationRequest({
             requestID: '0',
-            code: String(this.asset.code),
+            code: String(this.asset.id),
             preissuedAssetSigner: String(this.asset.preissuedAssetSigner),
             maxIssuanceAmount: String(this.asset.maxIssuanceAmount),
-            policies: Number(this.asset.policy),
-            assetType: String(this.asset.assetType),
+            policies: Number(this.asset.policies.value),
+            assetType: String(this.asset.type),
             initialPreissuedAmount: String(this.asset.initialPreissuedAmount),
-            trailingDigitsCount: Number(this.asset.trailingDigitsCount),
+            trailingDigitsCount: Number(this.asset.trailingDigits),
             allTasks: 0,
             creatorDetails: {
               name: this.asset.creatorDetails.name,
@@ -470,46 +550,37 @@ export default {
             },
           })
         }
-
-        await Sdk.horizon.transactions.submitOperations(operation)
+        await api.postOperations(operation)
         Bus.$emit('recheckConfig')
 
         this.$store.dispatch('SET_INFO', 'Submitted successfully.')
-        this.$router.push({ name: 'assets.masterAssets.index' })
+        this.$router.push({ name: 'assets.systemAssets.index' })
       } catch (error) {
         ErrorHandler.process(error)
       }
-      this.isPending = false
+      this.enableForm()
     },
 
-    isValid () {
-      if (this.errors.errors.lenght) {
-        ErrorHandler.process('Some field is invalid')
-        return false
-      }
-
-      if (!Sdk.base.Keypair.isValidPublicKey(this.asset.preissuedAssetSigner)) {
-        ErrorHandler.process('Issuer public key is invalid')
-        return false
-      }
-      return true
-    },
-
-    async onFileChange (event, type) {
+    onFileChange (event, type) {
       const file = fileReader.deriveFileFromChangeEvent(event)
-      this[type].file = file
-      this[type].mime = file.type
-      this[type].name = file.name
+      this[type] = {
+        file,
+        mime: file.type,
+        name: file.name,
+      }
     },
 
-    async uploadFile (type) {
+    async uploadFile (type, mimeType) {
       if (!this[type].file) return
-
-      const config = await Sdk.api.documents.masterCreate(type, this[type].mime)
-      await api.documents.uploadFile(this[type].file, config, this[type].mime)
+      const key = await documentsManager.uploadDocument({
+        type: type,
+        mimeType: this[type].mime,
+        file: this[type].file,
+        accountId: this.userAddress,
+      })
 
       this.asset.creatorDetails[type === DOCUMENT_TYPES.assetTerms ? 'terms' : 'logo'] = {
-        key: config.formData.key,
+        key: key,
         name: this[type].name,
         type: this[type].mime,
       }

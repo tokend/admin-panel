@@ -17,6 +17,7 @@ $_abbey: rgba(0, 0, 0, .54);
 $_scampi: #5F5894;
 $_emerald: #51CA90;
 $_koromiko: #FFB95F;
+$_medium-gray: #999999;
 
 // Use these ones instead
 $color-text: $_east-bay;
@@ -45,3 +46,4 @@ $color-shadow-secondary-text: $_white;
 $color-text-init-loading-failed: rgb(200, 40, 40);
 $color-shadow-init-loading-failed: white;
 $color-banner-bg: $_koromiko;
+$color-disabled: $_medium-gray;

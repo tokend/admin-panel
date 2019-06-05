@@ -9,70 +9,65 @@
       </li>
       <li>
         <span>Request state</span>
-        <verbose-formatter :string="request.requestState" />
+        <verbose-formatter :string="request.state" />
       </li>
       <li>
         <span>Requestor</span>
-        <email-getter :account-id="request.requestor" is-titled />
+        <email-getter :account-id="request.requestor.id" is-titled />
       </li>
       <li>
-        <span>Requestor id</span>
-        <span>{{ request.requestor }} </span>
+        <span>Requestor ID</span>
+        <span>{{ request.requestor.id }} </span>
       </li>
-      <li>
-        <span>Receiver address</span>
-        <span :title="request.details.withdraw.creatorDetails.address">
-          {{ request.details.withdraw.creatorDetails.address }}
-        </span>
-      </li>
-      <template v-if="request.details.withdraw.reviewerDetails">
+      <template v-if="request.requestDetails.creatorDetails.comment">
         <li>
-          <span>Hash</span>
-          <span :title="request.details.withdraw.reviewerDetails.hash">
-            {{ request.details.withdraw.reviewerDetails.hash }}
+          <span>Comment</span>
+          <span :title="request.requestDetails.creatorDetails.comment">
+            {{ request.requestDetails.creatorDetails.comment }}
           </span>
         </li>
         <li>
-          <span>Transaction</span>
-          <span :title="request.details.withdraw.reviewerDetails.tx">
-            {{ request.details.withdraw.reviewerDetails.tx }}
+          <span>Hash</span>
+          <span :title="request.hash">
+            {{ request.hash }}
+          </span>
+        </li>
+      </template>
+      <template v-if="request.requestDetails.creatorDetails.address">
+        <li>
+          <span>Receiver address</span>
+          <span :title="request.requestDetails.creatorDetails.address">
+            {{ request.requestDetails.creatorDetails.address }}
           </span>
         </li>
       </template>
       <li>
-        <span>Source amount</span>
+        <span>Amount</span>
         <asset-amount-formatter
-          :amount="request.details.withdraw.amount"
-          :asset="request.details.withdraw.destAssetCode"
-        />
-      </li>
-      <li>
-        <span>Destination amount</span>
-        <asset-amount-formatter
-          :amount="request.details.withdraw.destAssetAmount"
-          :asset="request.details.withdraw.destAssetCode"
+          :amount="request.requestDetails.amount"
+          :asset="request.requestDetails.asset"
         />
       </li>
       <li>
         <span>Fixed fee</span>
         <asset-amount-formatter
-          :amount="request.details.withdraw.fixedFee"
-          :asset="request.details.withdraw.destAssetCode"
+          :amount="request.requestDetails.fee.fixed"
+          :asset="request.requestDetails.asset"
         />
       </li>
       <li>
         <span>Percent fee</span>
         <asset-amount-formatter
-          :amount="request.details.withdraw.percentFee"
-          :asset="request.details.withdraw.destAssetCode"
+          :amount="request.requestDetails.fee.calculatedPercent"
+          :asset="request.requestDetails.asset"
         />
       </li>
       <li>
         <span>Total fee</span>
         <asset-amount-formatter
-          :amount="Number(request.details.withdraw.fixedFee) +
-            Number(request.details.withdraw.percentFee)"
-          :asset="request.details.withdraw.destAssetCode"
+          :amount="Number(request.requestDetails.fee.fixed) +
+            Number(request.requestDetails.fee.calculatedPercent)"
+          :asset="request.requestDetails.asset"
         />
       </li>
     </ul>
@@ -95,12 +90,24 @@
     <modal
       v-if="itemToReject"
       @close-request="clearRejectionSelection()"
-      max-width="40rem">
+      max-width="40rem"
+    >
       <form
         id="withdrawal-details-reject-form"
-        @submit.prevent="reject(itemToReject) && clearRejectionSelection()">
+        @submit.prevent="reject(itemToReject) && clearRejectionSelection()"
+        novalidate
+      >
         <div class="app__form-row">
-          <text-field label="Enter reject reason" v-model="rejectForm.reason" />
+          <text-field
+            label="Enter reject reason"
+            v-model="rejectForm.reason"
+            :disabled="formMixin.isDisabled"
+            @blur="touchField('rejectForm.reason')"
+            :error-message="getFieldErrorMessage(
+              'rejectForm.reason',
+              { maxLength: REJECT_REASON_MAX_LENGTH }
+            )"
+          />
         </div>
       </form>
 
@@ -108,13 +115,13 @@
         <button
           class="app__btn app__btn--danger"
           form="withdrawal-details-reject-form"
-          :disabled="isSubmitting">
+          :disabled="formMixin.isDisabled">
           Reject
         </button>
         <button
           class="app__btn-secondary"
           @click="clearRejectionSelection"
-          :disabled="isSubmitting">
+          :disabled="formMixin.isDisabled">
           Cancel
         </button>
       </div>
@@ -123,7 +130,8 @@
 </template>
 
 <script>
-import TextField from '@comcom/fields/TextField'
+import FormMixin from '@/mixins/form.mixin'
+import { required, maxLength } from '@/validators'
 
 import { EmailGetter } from '@comcom/getters'
 import { VerboseFormatter, AssetAmountFormatter } from '@comcom/formatters'
@@ -131,10 +139,13 @@ import { VerboseFormatter, AssetAmountFormatter } from '@comcom/formatters'
 import Modal from '@comcom/modals/Modal'
 import { confirmAction } from '@/js/modals/confirmation_message'
 
-import api from '@/api'
-import { ASSET_POLICIES } from '@/constants'
+import apiHelper from '@/apiHelper'
+import { REQUEST_STATES } from '@/constants'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { Bus } from '@/utils/state-bus'
+
+const REJECT_REASON_MAX_LENGTH = 255
 
 export default {
   components: {
@@ -142,12 +153,11 @@ export default {
     VerboseFormatter,
     AssetAmountFormatter,
     Modal,
-    TextField,
   },
+  mixins: [FormMixin],
 
   props: {
     request: { type: Object, required: true },
-    assets: { type: Array, required: true },
   },
 
   data () {
@@ -157,15 +167,25 @@ export default {
       rejectForm: {
         reason: '',
       },
-      ASSET_POLICIES,
+      REQUEST_STATES,
+      REJECT_REASON_MAX_LENGTH,
+    }
+  },
+
+  validations () {
+    return {
+      rejectForm: {
+        reason: {
+          required,
+          maxLength: maxLength(REJECT_REASON_MAX_LENGTH),
+        },
+      },
     }
   },
 
   computed: {
     reviewAllowed () {
-      return this.assets
-        .find(item => item.code === this.request.details.withdraw.destAssetCode)
-        .policy & ASSET_POLICIES.withdrawable
+      return this.request.stateI === REQUEST_STATES.pending
     },
   },
 
@@ -176,8 +196,8 @@ export default {
 
       this.isSubmitting = true
       try {
-        await api.requests.approveWithdraw(request)
-        this.$store.dispatch('SET_INFO', 'Request fulfilled succesfully.')
+        await apiHelper.requests.approveWithdraw(request)
+        Bus.success('Request fulfilled successfully.')
         this.$emit('close-request')
       } catch (error) {
         ErrorHandler.process(error)
@@ -186,11 +206,11 @@ export default {
     },
 
     async reject (request) {
-      if (!this.reviewAllowed) return
+      if (!this.reviewAllowed || !this.isFormValid()) return
 
-      this.isSubmitting = true
+      this.disableForm()
       try {
-        await api.requests.rejectWithdraw(
+        await apiHelper.requests.rejectWithdraw(
           {
             reason: this.rejectForm.reason,
             isPermanent: true,
@@ -198,12 +218,12 @@ export default {
           request
         )
 
-        this.$store.dispatch('SET_INFO', 'Request rejected succesfully.')
+        Bus.success('Request rejected succesfully.')
         this.$emit('close-request')
       } catch (error) {
         ErrorHandler.process(error)
       }
-      this.isSubmitting = false
+      this.enableForm()
     },
 
     selectForRejection (item) {

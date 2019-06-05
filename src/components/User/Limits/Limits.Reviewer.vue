@@ -5,7 +5,7 @@
       @click="back"
     >
       <span class="limits-reviewer__back-btn-inner">
-        <mdi-chevron-left-icon />
+        <i class="mdi mdi-chevron-left" />
       </span>
       Back
     </button>
@@ -21,7 +21,7 @@
           />
           <detail
             label="Account role"
-            :value="account.roleId | roleIdToString"
+            :value="account.role.id | roleIdToString"
           />
           <detail
             label="Request type"
@@ -32,7 +32,7 @@
           </detail>
           <detail
             label="Account ID"
-            :value="request.requestor"
+            :value="request.requestor.id"
           />
           <detail
             label="Note"
@@ -85,7 +85,7 @@
           />
         </div>
         <user-details
-          :id="request.requestor"
+          :id="request.requestor.id"
           :is-reviewing="false"
         />
       </template>
@@ -102,7 +102,7 @@
           @click="isRequiringDocs = true"
           :disabled="isPending ||
             desiredLimitDetails.requestType === 'docsUploading' ||
-            request.requestState === REQUEST_STATES.pending"
+            request.state === REQUEST_STATES.pending"
         >
           Request docs
         </button>
@@ -146,7 +146,7 @@
             />
             <div class="limits-reviewer__doc-close-btn-wrapper">
               <button @click="removeDoc(i)">
-                <mdi-close-icon />
+                <i class="mdi mdi-close limits-reviewer__doc-close-btn" />
               </button>
             </div>
           </div>
@@ -178,7 +178,8 @@
       <form
         class="limits-reviewer__reject-form"
         id="limits-reviewer__reject-form"
-        @submit.prevent="hideRejectModal() || rejectRequest()"
+        @submit.prevent="rejectRequest"
+        novalidate
       >
         <div class="app__form-row">
           <text-field
@@ -186,6 +187,11 @@
             class="limits-reviewer__reject-form-textfield"
             :autofocus="true"
             v-model="rejectForm.reason"
+            @blur="touchField('rejectForm.reason')"
+            :error-message="getFieldErrorMessage(
+              'rejectForm.reason',
+              { maxLength: REJECT_REASON_MAX_LENGTH }
+            )"
           />
         </div>
       </form>
@@ -208,7 +214,8 @@
 </template>
 
 <script>
-import { TextField } from '@comcom/fields'
+import FormMixin from '@/mixins/form.mixin'
+import { required, maxLength } from '@/validators'
 
 import { EmailGetter } from '@comcom/getters'
 import Detail from '../../common/details/Detail.Row'
@@ -219,8 +226,8 @@ import UserLimits from './components/Limits.UserLimits'
 import DatalistField from './components/Datalist'
 import UploadedDocsList from './components/Limits.UploadedDocsList'
 
-import { Sdk } from '@/sdk'
-import api from '@/api'
+import { api } from '@/api'
+import apiHelper from '@/apiHelper'
 
 import {
   REQUEST_STATES,
@@ -229,16 +236,13 @@ import {
 } from '@/constants'
 import { STATS_OPERATION_TYPES } from '@tokend/js-sdk'
 
-import { snakeToCamelCase } from '@/utils/un-camel-case'
 import { formatDateWithTime } from '../../../utils/formatters'
 
 import get from 'lodash/get'
 import isEqual from 'lodash/isEqual'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
-
-import 'mdi-vue/CloseIcon'
-import 'mdi-vue/ChevronLeftIcon'
+import { Bus } from '@/utils/state-bus'
 
 const DEFAULT_LIMIT_STRUCT = {
   'id': 0,
@@ -258,17 +262,19 @@ const OPERATION_TYPES = {
   withdraw: 'withdraw',
 }
 
+const REJECT_REASON_MAX_LENGTH = 255
+
 export default {
   components: {
     Detail,
     Modal,
-    TextField,
     DatalistField,
     UserDetails,
     UserLimits,
     UploadedDocsList,
     EmailGetter,
   },
+  mixins: [FormMixin],
 
   props: {
     id: { type: String, required: true },
@@ -286,6 +292,7 @@ export default {
     REQUEST_STATES,
     DOCUMENT_TYPES_STR,
     LIMITS_REQUEST_STATES_STR,
+    REJECT_REASON_MAX_LENGTH,
     uploadDocs: [
       {
         label: '',
@@ -298,11 +305,23 @@ export default {
       isReset: false,
     },
   }),
+
+  validations () {
+    return {
+      rejectForm: {
+        reason: {
+          required,
+          maxLength: maxLength(REJECT_REASON_MAX_LENGTH),
+        },
+      },
+    }
+  },
+
   computed: {
     currentLimits () {
       if (!this.limits) return null
       const limits = this.limits
-        .filter(limit => limit.assetCode === this.assetCode)
+        .filter(limit => limit.asset.id === this.assetCode)
       const operationTypeLimits = limits
         .find(limit => {
           return limit.statsOpType === this.desiredLimitDetails.statsOpType
@@ -326,7 +345,7 @@ export default {
       return {
         ...DEFAULT_LIMIT_STRUCT,
         ...limits,
-        accountId: this.request.requestor,
+        accountId: this.request.requestor.id,
         assetCode: this.assetCode,
         statsOpType: STATS_OPERATION_TYPES[operationType],
       }
@@ -336,16 +355,18 @@ export default {
       if (!this.desiredLimitDetails.documents) return
       return this.desiredLimitDetails.documents
     },
+
     requestType () {
-      return LIMITS_REQUEST_STATES_STR[get(this.request, 'details.requestType')]
+      return LIMITS_REQUEST_STATES_STR[get(this.desiredLimitDetails, 'requestType')]
     },
   },
+
   async created () {
     try {
       await this.getRequest()
-      const limitRequest = await api.requests.get(this.id)
+      const limitRequest = await apiHelper.requests.get(this.id)
       this.desiredLimitDetails = limitRequest
-        .details[snakeToCamelCase(limitRequest.details.requestType)].details ||
+        .requestDetails.creatorDetails ||
         '{}'
     } catch (error) {
       ErrorHandler.process(error)
@@ -358,22 +379,19 @@ export default {
 
     async getRequest () {
       this.$store.commit('OPEN_LOADER')
-      const request = await api.requests.get(this.id)
-      const camelCasedRequestType = snakeToCamelCase(
-        request.details.requestType
-      )
-      const requestDetails = request.details[camelCasedRequestType].details
-      const [account, limits] = await Promise.all([
-        Sdk.horizon.account.get(request.requestor),
-        Sdk.horizon.account.getLimits(request.requestor),
-      ])
+      const request = await apiHelper.requests.get(this.id)
+      const requestDetails = request.requestDetails.creatorDetails
+      const endpoint = `/v3/accounts/${request.requestor.id}`
+      const { data } = await api.getWithSignature(endpoint, {
+        include: ['limits'],
+      })
       this.request = request
       this.request.document = requestDetails.document
       this.request.asset = requestDetails.asset
       this.assetCode = requestDetails.asset
-      this.account = account.data
-      this.limits = (get(limits, 'data.limits') || [])
-        .map(limit => limit.limit)
+      this.account = data
+      this.limits = (get(data, 'limits') || [])
+        .map(limit => limit)
       this.isLoaded = true
       this.$store.commit('CLOSE_LOADER')
     },
@@ -392,26 +410,23 @@ export default {
         }
         const oldLimits = this.limits
           .find(item => {
-            const requestOpType = this.request.details.updateLimits
-              .details.operationType
+            const requestOpType = this.request.requestDetails.creatorDetails
+              .operationType
             const limitsOpType = OPERATION_TYPES[requestOpType]
 
             return item.assetCode === this.request.asset &&
               item.statsOpType === STATS_OPERATION_TYPES[limitsOpType]
           })
 
-        await api.requests.approveLimitsUpdate({
+        await apiHelper.requests.approveLimitsUpdate({
           request: this.request,
           oldLimits: oldLimits,
           newLimits: newLimits,
-          accountId: this.request.requestor,
+          accountId: this.request.requestor.id,
         })
 
         this.$router.push({ name: 'limits.requests' })
-        this.$store.dispatch(
-          'SET_INFO',
-          'Request approved. Limits are changed'
-        )
+        Bus.success('Request approved. Limits are changed')
       } catch (error) {
         ErrorHandler.process(error)
       }
@@ -419,22 +434,22 @@ export default {
     },
 
     async rejectRequest () {
+      if (!this.isFormValid()) return
+
+      this.hideRejectModal()
       this.isPending = true
       try {
-        await api.requests.rejectLimitsUpdate({
+        await apiHelper.requests.rejectLimitsUpdate({
           request: this.request,
           oldLimits: this.limits[0],
           newLimits: [this.newLimit],
-          accountId: this.request.requestor,
+          accountId: this.request.requestor.id,
           reason: this.rejectForm.reason,
           isPermanent: true,
         }, this.request)
 
         this.$router.push({ name: 'limits.requests' })
-        this.$store.dispatch(
-          'SET_INFO',
-          'Request rejected. Limits are not changed'
-        )
+        Bus.success('Request rejected. Limits are not changed')
       } catch (error) {
         this.isPending = false
         ErrorHandler.process(error)
@@ -448,18 +463,15 @@ export default {
         const requireDocsDetails = JSON.stringify({
           docsToUpload: this.uploadDocs,
         })
-        await api.requests.rejectLimitsUpdate({
+        await apiHelper.requests.rejectLimitsUpdate({
           request: this.request,
           oldLimits: this.limits[0],
           newLimits: [this.newLimit],
-          accountId: this.request.requestor,
+          accountId: this.request.requestor.id,
           reason: requireDocsDetails,
           isPermanent: false,
         })
-        this.$store.dispatch(
-          'SET_INFO',
-          'Upload additional documents requested.'
-        )
+        Bus.success('Upload additional documents requested.')
         this.isRequiringDocs = false
       } catch (error) {
         this.isPending = false
@@ -590,11 +602,16 @@ export default {
     box-shadow: 0 2px 6.6px 0.6px rgba(170, 170, 170, 0.72);
   }
 
-  svg {
+  i {
     position: absolute;
+    font-size: 2.4rem;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
   }
+}
+
+.limits-reviewer__doc-close-btn {
+  font-size: 2.4rem;
 }
 </style>

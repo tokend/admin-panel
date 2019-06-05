@@ -1,4 +1,4 @@
-@import '../../../../assets/scss/colors';
+@import '~@/assets/scss/colors';
 
 $field-color-text: $color-text;
 $field-color-focused: $color-text;
@@ -16,6 +16,17 @@ $field-input-padding-top: 1.7rem;
 $field-input-padding-bottom: .6rem;
 $field-input-padding: $field-input-padding-top 0 $field-input-padding-bottom 0;
 $field-placeholder-color: $field-color-unfocused;
+
+@mixin field-hints {
+  line-height: 1.5;
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-top: 0.4rem;
+
+  &--unfocused {
+    color: $field-color-unfocused;
+  }
+}
 
 @mixin input-paddings {
   font-size: $field-text-font-size;
@@ -48,4 +59,3 @@ $field-placeholder-color: $field-color-unfocused;
     background-size: 100% .2rem;
   }
 }
-

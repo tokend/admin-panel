@@ -7,7 +7,7 @@
         <router-link
           class="admins-index__create-btn app__btn app__btn--iconed"
           :to="{ name: 'admins.new' }">
-          <mdi-plus-icon /> New admin
+          <i class="mdi mdi-plus" /> New admin
         </router-link>
       </div>
     </div>
@@ -20,7 +20,6 @@
 
 <script>
 import AdminList from './components/AdminList'
-import 'mdi-vue/PlusIcon'
 
 export default {
   name: 'admins',
@@ -57,9 +56,12 @@ export default {
     padding: 0.9rem;
   }
 
-  & > svg {
+  & > i {
+    display: flex;
+    line-height: 1;
     margin-left: -1rem;
     margin-right: 0.7rem;
+    font-size: 2.4rem;
   }
 }
 </style>

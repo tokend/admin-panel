@@ -24,12 +24,18 @@
         class="user-reset__form"
         id="user-reset-form"
         @submit.prevent="submitResetForm"
+        novalidate
       >
         <div class="app__form-row">
           <text-field
             label="Reset reason"
             :autofocus="true"
             v-model="resetForm.reason"
+            @blur="touchField('resetForm.reason')"
+            :error-message="getFieldErrorMessage(
+              'resetForm.reason',
+              { maxLength: REJECT_REASON_MAX_LENGTH }
+            )"
           />
         </div>
       </form>
@@ -53,29 +59,33 @@
 </template>
 
 <script>
-import { Sdk } from '@/sdk'
+import { base } from '@tokend/js-sdk'
 
-import { TextField } from '@comcom/fields'
 import Modal from '@comcom/modals/Modal'
+
+import FormMixin from '@/mixins/form.mixin'
+import { required, maxLength } from '@/validators'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { confirmAction } from '@/js/modals/confirmation_message'
+import { Bus } from '@/utils/state-bus'
 
-import { ChangeRoleRequest } from '@/api/responseHandlers/requests/ChangeRoleRequest'
+import { ChangeRoleRequest } from '@/apiHelper/responseHandlers/requests/ChangeRoleRequest'
 
 import config from '@/config'
+import { api } from '@/api'
 
 const EVENTS = {
   reset: 'reset',
   updateIsPending: 'update:isPending',
 }
 
+const REJECT_REASON_MAX_LENGTH = 255
+
 export default {
   name: 'user-details-request',
-  components: {
-    Modal,
-    TextField,
-  },
+  components: { Modal },
+  mixins: [FormMixin],
 
   props: {
     user: {
@@ -98,6 +108,18 @@ export default {
         reason: '',
         isShown: false,
       },
+      REJECT_REASON_MAX_LENGTH,
+    }
+  },
+
+  validations () {
+    return {
+      resetForm: {
+        reason: {
+          required,
+          maxLength: maxLength(REJECT_REASON_MAX_LENGTH),
+        },
+      },
     }
   },
 
@@ -114,7 +136,7 @@ export default {
       }
       this.$emit(EVENTS.updateIsPending, true)
       try {
-        const operation = Sdk.base.CreateChangeRoleRequestBuilder
+        const operation = base.CreateChangeRoleRequestBuilder
           .createChangeRoleRequest({
             requestID: '0',
             destinationAccount: this.user.address,
@@ -125,8 +147,8 @@ export default {
             },
             allTasks: 0,
           })
-        await Sdk.horizon.transactions.submitOperations(operation)
-        this.$store.dispatch('SET_INFO', 'The user account was reset to unverified')
+        await api.postOperations(operation)
+        Bus.success('The user account was reset to unverified')
         this.$emit(EVENTS.reset)
       } catch (error) {
         ErrorHandler.process(error)
@@ -144,6 +166,8 @@ export default {
     },
 
     async submitResetForm () {
+      if (!this.isFormValid()) return
+
       this.hideResetModal()
       await this.resetToUnverified()
     },

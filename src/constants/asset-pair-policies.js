@@ -1,12 +1,12 @@
 import { xdrEnumToConstant } from '@/utils/xdrEnumToConstant'
-import { Sdk } from '@/sdk'
+import { base } from '@tokend/js-sdk'
 
 export const ASSET_PAIR_POLICIES = Object.freeze(
   xdrEnumToConstant('AssetPairPolicy')
 )
 
 export const ASSET_PAIR_POLICIES_VERBOSE = {
-  [Sdk.xdr.AssetPairPolicy.tradeableSecondaryMarket().value]: 'Tradable on secondary market',
-  [Sdk.xdr.AssetPairPolicy.physicalPriceRestriction().value]: '',
-  [Sdk.xdr.AssetPairPolicy.currentPriceRestriction().value]: '',
+  [base.xdr.AssetPairPolicy.tradeableSecondaryMarket().value]: 'Tradable on secondary market',
+  [base.xdr.AssetPairPolicy.physicalPriceRestriction().value]: '',
+  [base.xdr.AssetPairPolicy.currentPriceRestriction().value]: '',
 }

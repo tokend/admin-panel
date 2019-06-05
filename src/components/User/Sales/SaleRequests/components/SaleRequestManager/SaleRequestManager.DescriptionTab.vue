@@ -48,7 +48,7 @@
 
 <script>
 import { MarkdownFormatter } from '@comcom/formatters'
-import { Sdk } from '@/sdk'
+import { api } from '@/api'
 import _get from 'lodash/get'
 
 export default {
@@ -70,11 +70,9 @@ export default {
 
   computed: {
     videoId () {
-      const valuableRequestDetailsKey = Object.keys(this.saleRequest.details)
-        .find(item => !/request_type|requestType/gi.test(item))
       return _get(
         this.saleRequest,
-        `details.${valuableRequestDetailsKey}.details.youtubeVideoId`
+        `requestDetails.creatorDetails.youtubeVideoId`
       )
     },
   },
@@ -85,17 +83,16 @@ export default {
 
   methods: {
     async loadDescription () {
-      const userId = this.saleRequest.requestor
-
-      const requestType = this.saleRequest.details.requestType
+      const userId = this.saleRequest.requestor.id
       const blobId = _get(
         this.saleRequest,
-        `details.${requestType}.details.description`
+        `requestDetails.creatorDetails.description`
       )
 
       try {
-        const response = await Sdk.api.blobs.get(blobId, userId)
-        this.description = JSON.parse(response.data.value)
+        const endpoint = `/accounts/${userId}/blobs/${blobId}`
+        const { data } = await api.getWithSignature(endpoint)
+        this.description = JSON.parse(data.value)
         this.isLoaded = true
       } catch (error) {
         if (error.status === 404) {

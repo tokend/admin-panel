@@ -7,7 +7,7 @@
         <router-link
           class="assets-pairs-index__create-btn app__btn app__btn--iconed"
           :to="{ name: 'assets.assetPairs.new' }">
-          <mdi-plus-icon /> Create pair
+          <i class="mdi mdi-plus" /> Create pair
         </router-link>
       </div>
     </div>
@@ -20,7 +20,6 @@
 
 <script>
 import AssetPairList from './components/AssetPairList'
-import 'mdi-vue/PlusIcon'
 
 export default {
   components: { AssetPairList },
@@ -56,9 +55,12 @@ export default {
     padding: 0.9rem;
   }
 
-& > svg {
+& > i {
+    display: flex;
+    line-height: 1;
     margin-left: -1rem;
     margin-right: 0.7rem;
+    font-size: 2.4rem;
   }
 }
 </style>

@@ -138,9 +138,10 @@ import moment from 'moment'
 import localize from '@/utils/localize'
 import { verbozify } from '@/utils/verbozify'
 
-import api from '@/api'
+import apiHelper from '@/apiHelper'
 import { ErrorHandler } from '@/utils/ErrorHandler'
-import { CreatePreIssuanceRequest } from '@/api/responseHandlers/requests/CreatePreIssuanceRequest'
+import { CreatePreIssuanceRequest } from '@/apiHelper/responseHandlers/requests/CreatePreIssuanceRequest'
+import { Bus } from '@/utils/state-bus'
 
 export default {
   components: { InputField },
@@ -207,7 +208,7 @@ export default {
         const response = await this.pages.fetchNext(this.$store.getters.keypair)
 
         if (response.data.length > 0) {
-          const mappedRequests = api.requests.mapRequests(response.data)
+          const mappedRequests = apiHelper.requests.mapRequests(response.data)
           this.requests = this.requests.concat(mappedRequests)
           this.pages = response
           return
@@ -248,7 +249,7 @@ export default {
       this.isLoading = true
       let response
       try {
-        response = await api.requests.getPreissuanceRequests(this.asset)
+        response = await apiHelper.requests.getPreissuanceRequests(this.asset)
         this.requests = []
         this.requests = response.records
         this.pages = response
@@ -276,7 +277,7 @@ export default {
         await request.reject(this.rejectReason, true)
 
         this.clear()
-        this.$store.dispatch('SET_INFO', 'Pending transaction for rejected request submitted')
+        Bus.success('Pending transaction for rejected request submitted')
 
         await this.getRequests()
       } catch (error) {
@@ -292,7 +293,7 @@ export default {
         await request.fulfill()
 
         this.$store.commit('CLOSE_LOADER')
-        this.$store.dispatch('SET_INFO', 'Pending transaction for fulfill request submitted')
+        Bus.success('Pending transaction for fulfill request submitted')
         this.$emit('need-to-update')
 
         await this.getRequests()

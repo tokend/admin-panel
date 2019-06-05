@@ -1,20 +1,26 @@
-import store from '@/store'
+import { Bus } from '@/utils/state-bus'
 import log from 'loglevel'
 import _get from 'lodash/get'
+import { ErrorTracker } from '@/utils/ErrorTracker'
 
 export class ErrorHandler {
-  static process (error) {
-    ErrorHandler.processWithoutFeedback(error)
-    ErrorHandler.showFeedback(error)
-  }
-
-  static processWithoutFeedback (error) {
-    log.error(error)
-  }
-
-  static showFeedback (error) {
+  static process (error, errorTrackerConfig = {}) {
+    ErrorHandler.processWithoutFeedback(error, errorTrackerConfig)
     const message = ErrorHandler.extractErrorMessage(error)
-    store.dispatch('SET_ERROR', message)
+    Bus.error(message)
+  }
+
+  static processWithoutFeedback (error, errorTrackerConfig = {}) {
+    log.error(error)
+    ErrorHandler.trackMessage(error, errorTrackerConfig)
+  }
+
+  static trackMessage (error, opts = {}) {
+    const { message = '', skipTrack = false } = opts
+    if (!skipTrack) {
+      const msg = message || ErrorHandler.extractErrorMessage(error)
+      ErrorTracker.trackMessage(msg)
+    }
   }
 
   static extractErrorMessage (error) {

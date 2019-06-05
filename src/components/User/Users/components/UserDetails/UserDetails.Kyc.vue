@@ -28,7 +28,7 @@
       <li>
         <span>Date of birth</span>
         <span :title="kyc.dateOfBirth">
-          {{ kyc.dateOfBirth }}
+          {{ kyc.dateOfBirth | dateTime }}
         </span>
       </li>
       <li>
@@ -40,7 +40,18 @@
       <li>
         <span>Address Line 2</span>
         <span :title="kyc.address.line2">
-          {{ kyc.address.line2 }}
+          <template v-if="kyc.address.line2">
+            {{ kyc.address.line2 }}
+          </template>
+          <template v-else>
+            -
+          </template>
+        </span>
+      </li>
+      <li>
+        <span>Postal code</span>
+        <span :title="kyc.address.postalCode">
+          {{ kyc.address.postalCode }}
         </span>
       </li>
       <li>
@@ -158,7 +169,7 @@ export default {
       const country = Object
         .keys(byAlpha2)
         .find(country => country === this.kyc.address.country)
-      return byAlpha2[country].name
+      return country ? byAlpha2[country].name : ''
     },
   },
 }

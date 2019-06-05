@@ -20,10 +20,16 @@
     <label class="data-caption">
       Sale description
     </label>
-    <template v-if="isLoaded">
+    <template v-if="description">
       <div class="sale-manager-description-tab__description-wrp">
         <markdown-formatter :source="description" />
       </div>
+    </template>
+
+    <template v-else-if="isLoaded">
+      <p class="text">
+        (Not provided yet)
+      </p>
     </template>
 
     <template v-else-if="isFailed">
@@ -42,7 +48,7 @@
 
 <script>
 import { MarkdownFormatter } from '@comcom/formatters'
-import { Sdk } from '@/sdk'
+import { api } from '@/api'
 
 export default {
   components: {
@@ -68,10 +74,11 @@ export default {
   methods: {
     async loadDescription () {
       try {
-        const { ownerId: userId, description: blobId } = this.sale.details
-        const response = await Sdk.api.blobs.get(blobId, userId)
-        const blob = response.data
-        this.description = JSON.parse(blob.value)
+        const { description: blobId } = this.sale.details
+        const userId = this.sale.owner.id
+        const endpoint = `/accounts/${userId}/blobs/${blobId}`
+        const { data } = await api.getWithSignature(endpoint)
+        this.description = JSON.parse(data.value)
         this.isLoaded = true
       } catch (error) {
         this.isFailed = true

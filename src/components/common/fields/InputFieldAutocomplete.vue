@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api } from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { debounce } from 'lodash'
 
@@ -62,13 +62,11 @@ export default {
       let response = []
       if (this.inputValue) {
         try {
-          response = await ApiCallerFactory
-            .createCallerInstance()
-            .getWithSignature('/identities', {
-              filter: {
-                [this.autocompleteType]: this.inputValue,
-              },
-            })
+          response = await api.getWithSignature('/identities', {
+            filter: {
+              [this.autocompleteType]: this.inputValue,
+            },
+          })
           this.list = response.data
         } catch (error) {
           ErrorHandler.processWithoutFeedback(error)

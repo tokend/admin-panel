@@ -42,7 +42,14 @@
     <p class="change-asset-issuer-form__expiration-date-note text">
       <i>Note: </i>Transaction is valid for one week since the file was created
     </p>
-
+    <a
+      class="change-asset-issuer-form__link"
+      :href="preissuanceGuideURL"
+      target="_blank"
+      rel="noopener"
+    >
+      Learn more about pre-issuance
+    </a>
     <div
       class="change-asset-issuer-form__summary-actions"
       v-if="asset && accountId"
@@ -65,8 +72,11 @@
 </template>
 
 <script>
-import { Sdk } from '@/sdk'
+import { base } from '@tokend/js-sdk'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { api } from '@/api'
+import { Bus } from '@/utils/state-bus'
+import config from '@/config'
 
 export default {
   data () {
@@ -79,16 +89,27 @@ export default {
     }
   },
 
+  computed: {
+    preissuanceGuideURL () {
+      return config.WEB_CLIENT_URL + '/pre-issuance-guide'
+    },
+  },
+
   methods: {
     async onFileChange (event) {
       const files = event.target.files || event.dataTransfer.files
       if (!files.length) return
-      const extracted = await this.readFile(files[0])
-      const fileData = JSON.parse(extracted)
-      this.accountId = fileData.accountId
-      this.asset = fileData.asset
-      this.transaction = fileData.transaction
-      this.source = fileData.source
+
+      try {
+        const extracted = await this.readFile(files[0])
+        const fileData = JSON.parse(extracted)
+        this.accountId = fileData.accountId
+        this.asset = fileData.asset
+        this.transaction = fileData.transaction
+        this.source = fileData.source
+      } catch (e) {
+        ErrorHandler.process('Your file is corrupted. Please, select another file')
+      }
     },
 
     readFile (file) {
@@ -120,7 +141,7 @@ export default {
       try {
         await this.sendTx()
         this.clear()
-        this.$store.dispatch('SET_INFO', 'Submitted successfully')
+        Bus.success('Submitted successfully')
       } catch (error) {
         ErrorHandler.process(error)
       }
@@ -128,9 +149,9 @@ export default {
     },
 
     async sendTx () {
-      const transaction = new Sdk.base.Transaction(this.transaction)
+      const transaction = new base.Transaction(this.transaction)
       transaction.sign(this.$store.getters.keypair)
-      await Sdk.horizon.transactions.submit(transaction)
+      await api.postOperations(transaction)
     },
   },
 }
@@ -177,5 +198,9 @@ export default {
 
 .change-asset-issuer-form__expiration-date-note {
   margin-top: 1rem;
+}
+
+.change-asset-issuer-form__link {
+  font-size: 1.4rem;
 }
 </style>

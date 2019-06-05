@@ -14,35 +14,35 @@
           </li>
           <li class="issuance-details__list-item">
             <span>Initiator</span>
-            <span>{{ issuance.requestor }}</span>
+            <span>{{ issuance.requestor.id }}</span>
           </li>
           <li class="issuance-details__list-item">
             <span>Initiator (Email)</span>
             <span>
-              <email-getter :account-id="issuance.requestor" is-titled />
+              <email-getter :account-id="issuance.requestor.id" is-titled />
             </span>
           </li>
           <li class="issuance-details__list-item">
             <span>Value</span>
             <span>
-              {{ localize(issuance.amount) }}
-              {{ issuance.details.createIssuance.asset }}
+              {{ localize(issuance.requestDetails.amount) }}
+              {{ issuance.requestDetails.asset.id }}
             </span>
           </li>
           <li class="issuance-details__list-item">
             <span>State</span>
             <span>
-              {{ issuance.requestState | localizeIssuanceRequestState }}
+              {{ issuance.state | localizeIssuanceRequestState }}
             </span>
           </li>
         </ul>
-        <template v-if="issuance.requestStateI === REQUEST_STATES.pending">
+        <template v-if="issuance.stateI === REQUEST_STATES.pending">
           <div class="issuance-details__action-btns">
             <!-- eslint-disable max-len -->
             <button
               class="app__btn issuance-details__action-btn"
               @click="fulfill(issuance)"
-              :disabled="isSubmitting || issuance.requestStateI !== REQUEST_STATES.pending"
+              :disabled="isSubmitting || issuance.stateI !== REQUEST_STATES.pending"
             >
               Fulfill
             </button>
@@ -50,7 +50,7 @@
             <button
               class="app__btn app__btn--danger issuance-details__action-btn"
               @click="selectForRejection(issuance)"
-              :disabled="isSubmitting || issuance.requestStateI !== REQUEST_STATES.pending"
+              :disabled="isSubmitting || issuance.stateI !== REQUEST_STATES.pending"
             >
               Reject
             </button>
@@ -71,12 +71,19 @@
         <form
           class="issuance-rl__reject-form"
           id="issuance-rl-reject-form"
-          @submit.prevent="reject(itemToReject) && clearRejectionSelection()"
+          @submit.prevent="reject(itemToReject)"
+          novalidate
         >
           <div class="app__form-row">
             <text-field
               label="Enter reject reason"
               v-model="rejectForm.reason"
+              :disabled="formMixin.isDisabled"
+              @blur="touchField('rejectForm.reason')"
+              :error-message="getFieldErrorMessage(
+                'rejectForm.reason',
+                { maxLength: REJECT_REASON_MAX_LENGTH }
+              )"
             />
           </div>
         </form>
@@ -85,12 +92,14 @@
           <button
             class="app__btn app__btn--danger"
             form="issuance-rl-reject-form"
+            :disabled="formMixin.isDisabled"
           >
             Reject
           </button>
           <button
             class="app__btn-secondary"
             @click="clearRejectionSelection"
+            :disabled="formMixin.isDisabled"
           >
             Cancel
           </button>
@@ -101,25 +110,30 @@
 </template>
 
 <script>
-import TextField from '@comcom/fields/TextField'
+import FormMixin from '@/mixins/form.mixin'
+import { required, maxLength } from '@/validators'
+
 import { EmailGetter } from '@comcom/getters'
 
 import Modal from '@comcom/modals/Modal'
 import { confirmAction } from '../../../../js/modals/confirmation_message'
 
-import api from '@/api'
+import apiHelper from '@/apiHelper'
 import { REQUEST_STATES } from '@/constants'
 
 import localize from '@/utils/localize'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { Bus } from '@/utils/state-bus'
+
+const REJECT_REASON_MAX_LENGTH = 255
 
 export default {
   components: {
     EmailGetter,
     Modal,
-    TextField,
   },
+  mixins: [FormMixin],
 
   props: {
     id: { type: String, required: true },
@@ -135,7 +149,19 @@ export default {
     rejectForm: {
       reason: '',
     },
+    REJECT_REASON_MAX_LENGTH,
   }),
+
+  validations () {
+    return {
+      rejectForm: {
+        reason: {
+          required,
+          maxLength: maxLength(REJECT_REASON_MAX_LENGTH),
+        },
+      },
+    }
+  },
 
   async created () {
     await this.getIssuance(this.id)
@@ -147,7 +173,7 @@ export default {
 
     async getIssuance (id) {
       try {
-        this.issuance = await api.requests.get(id)
+        this.issuance = await apiHelper.requests.get(id)
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }
@@ -161,13 +187,13 @@ export default {
           if (tasksToRemove & 1) tasksToRemove -= 1
           if (tasksToRemove & 4) tasksToRemove -= 4
 
-          await api.requests.approve({
+          await apiHelper.requests.approve({
             ...issuance,
             reviewDetails: { tasksToRemove },
           })
 
           await this.getIssuance(this.id)
-          this.$store.dispatch('SET_INFO', 'Request fulfilled successfully.')
+          Bus.success('Request fulfilled successfully.')
         } catch (error) {
           ErrorHandler.processWithoutFeedback(error)
         }
@@ -183,13 +209,15 @@ export default {
     },
 
     async reject (issuance) {
-      this.isSubmitting = true
+      if (!this.isFormValid()) return
+
+      this.disableForm()
       try {
         let tasksToRemove = issuance.pendingTasks
         if (tasksToRemove & 1) tasksToRemove -= 1
         if (tasksToRemove & 4) tasksToRemove -= 4
 
-        await api.requests.reject(
+        await apiHelper.requests.reject(
           { reason: this.rejectForm.reason, isPermanent: true },
           {
             ...issuance,
@@ -198,11 +226,12 @@ export default {
         )
 
         await this.getIssuance(this.id)
-        this.$store.dispatch('SET_INFO', 'Request rejected successfully.')
+        this.clearRejectionSelection()
+        Bus.success('Request rejected successfully.')
       } catch (error) {
         ErrorHandler.process(error)
       }
-      this.isSubmitting = false
+      this.enableForm()
     },
 
     clearRejectionSelection () {

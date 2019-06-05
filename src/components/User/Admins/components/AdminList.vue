@@ -110,7 +110,7 @@ import Vue from 'vue'
 import { mapGetters } from 'vuex'
 import { getters } from '@/store/types'
 
-import { ApiCallerFactory } from '@/api-caller-factory'
+import { api, loadingDataViaLoop } from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
@@ -150,17 +150,15 @@ export default {
 
   methods: {
     async loadSignerRoles () {
-      const signerRoles = await ApiCallerFactory
-        .createStubbornCallerInstance()
-        .stubbornGet('/v3/signer_roles')
-      this.signerRoles = signerRoles.data
+      let response = await api.getWithSignature('/v3/signer_roles')
+      let signerRoles = await loadingDataViaLoop(response)
+      this.signerRoles = signerRoles
     },
 
     async loadSignerList () {
       this.isLoading = true
-      const { data } = await ApiCallerFactory
-        .createCallerInstance()
-        .getWithSignature(`/v3/accounts/${this.masterPubKey}/signers`)
+      const endpoint = `/v3/accounts/${this.masterPubKey}/signers`
+      const { data } = await api.getWithSignature(endpoint)
       this.list = data
       this.isLoading = false
     },

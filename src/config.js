@@ -33,7 +33,7 @@ export default Object.assign(
      * Should be populated by DevOps team during the deployment
      * The field being displayed on login screen.
      */
-    BUILD_VERSION: 'dev: ' + packageJson.version,
+    BUILD_VERSION: packageJson.version,
 
     ACCOUNT_ROLES: {
       // Will be updated on init
@@ -54,6 +54,7 @@ export default Object.assign(
       // Will be updated on init
       default: '0',
       kycRequired: '1',
+      security: '2',
     },
 
     CHANGE_ROLE_TASKS: {
@@ -62,6 +63,16 @@ export default Object.assign(
       manualReviewRequired: -1,
       default: 1,
     },
+    /**
+     * URL of the Sentry DSN. It’s a representation of the configuration
+     * required by the Sentry SDKs.
+     */
+    SENTRY_DSN: '',
+
+    /**
+     * URL of the web client
+     */
+    WEB_CLIENT_URL: 'http://localhost:8060',
   },
   process.env,
   document.ENV

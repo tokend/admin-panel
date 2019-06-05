@@ -1,9 +1,23 @@
 <template>
   <div class="preissuance-form">
-    <p class="preissuance-form__hint">
-      Select file(s) with preissued asset and click <strong>Upload</strong>.<br>
-      <em>Note:</em> you cannot upload the same preissuance twice
-    </p>
+    <div class="preissuance-form__header">
+      <p class="preissuance-form__hint">
+        Select file(s) with preissued asset and click
+        <strong>Upload</strong>.<br>
+        <em>Note:</em> you cannot upload the same preissuance twice
+      </p>
+      <a
+        class="preissuance-form__link"
+        :href="preissuanceGuideURL"
+        target="_blank"
+        rel="noopener"
+      >
+        <p class="preissuance-form__link-content">
+          Learn more about pre-issuance
+          <i class="mdi mdi-open-in-new preissuance-form__link-icon" />
+        </p>
+      </a>
+    </div>
 
     <div class="preissuance-form__upload-wrp">
       <template v-if="assets.length">
@@ -72,9 +86,9 @@
         </span>
         <span
           class="app-list__cell"
-          :title="item.preissuedAssetSigner"
+          :title="item.preIssuanceAssetSigner"
         >
-          {{ item.preissuedAssetSigner | cropAddress }}
+          {{ item.preIssuanceAssetSigner | cropAddress }}
         </span>
         <span class="app-list__cell" :title="1">
           1
@@ -109,11 +123,14 @@
 </template>
 
 <script>
-import { Sdk } from '@/sdk'
+import { base } from '@tokend/js-sdk'
 import config from '@/config'
 
 import localize from '@/utils/localize'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { api, loadingDataViaLoop } from '@/api'
+
+import { Bus } from '@/utils/state-bus'
 
 export default {
   data () {
@@ -127,24 +144,31 @@ export default {
     }
   },
 
+  computed: {
+    preissuanceGuideURL () {
+      return config.WEB_CLIENT_URL + '/pre-issuance-guide'
+    },
+  },
+
   created () {
     this.getAssets()
   },
-
   methods: {
     localize,
 
     async getAssets () {
       this.$store.commit('OPEN_LOADER')
       try {
-        const response = await Sdk.horizon.assets.getAll({
-          owner: config.MASTER_ACCOUNT,
+        let response = await api.getWithSignature('/v3/assets', {
+          filter: {
+            owner: config.MASTER_ACCOUNT,
+          },
         })
-        this.assets = response.data
+        let assets = await loadingDataViaLoop(response)
+        this.assets = assets
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }
-
       this.$store.commit('CLOSE_LOADER')
     },
 
@@ -156,7 +180,13 @@ export default {
       for (let i = 0; i < files.length; i++) {
         const extracted = await this.readFile(files[i])
         this.temporaryFileName = files[i].name
-        this.parsePreIssuances(JSON.parse(extracted).issuances)
+
+        try {
+          this.parsePreIssuances(JSON.parse(extracted).issuances)
+        } catch (e) {
+          ErrorHandler.process('Your file is corrupted. Please, select another file')
+          return
+        }
       }
     },
 
@@ -168,24 +198,22 @@ export default {
         reader.onload = function (event) {
           resolve(event.target.result)
         }
-
         reader.readAsText(file)
       })
     },
 
     getAsset (assetCode) {
-      return this.assets.filter(item => item.code === assetCode)[0]
+      return this.assets.filter(item => item.id === assetCode)[0]
     },
 
     parsePreIssuances (issuances) {
       const items = issuances
         .map(function (item) {
-          const _xdr = Sdk.xdr.PreIssuanceRequest.fromXDR(item.preEmission, 'hex')
-          const result = Sdk.base.PreIssuanceRequest.dataFromXdr(_xdr)
+          const _xdr = base.xdr.PreIssuanceRequest.fromXDR(item.preEmission, 'hex')
+          const result = base.PreIssuanceRequest.dataFromXdr(_xdr)
 
           result.xdr = _xdr
           result.isUsed = item.used
-
           return result
         }).filter(item => {
           return !this.issuances.find(el => el.reference === item.reference)
@@ -203,7 +231,7 @@ export default {
         } else {
           this.fileInfo.push({
             fileName: this.temporaryFileName,
-            preissuedAssetSigner: asset.preissuedAssetSigner,
+            preIssuanceAssetSigner: asset.preIssuanceAssetSigner,
             issuance: items[i],
           })
         }
@@ -216,12 +244,12 @@ export default {
       try {
         const preIssuances = this.fileInfo.map(item => item.issuance.xdr)
         const operations = preIssuances.map(item => {
-          return Sdk.base.PreIssuanceRequestOpBuilder
+          return base.PreIssuanceRequestOpBuilder
             .createPreIssuanceRequestOp({ request: item })
         })
-        await Sdk.horizon.transactions.submitOperations(...operations)
+        await api.postOperations(...operations)
         this.fileInfo = []
-        this.$store.dispatch('SET_INFO', 'Successfully submitted')
+        Bus.success('Successfully submitted')
       } catch (error) {
         ErrorHandler.process(error)
       }
@@ -233,7 +261,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../../../../assets/scss/colors";
+@import "~@/assets/scss/colors";
 
 $paddind-in-tab: 4rem;
 $width-without-indentation: calc(100% + 2 * #{$paddind-in-tab});
@@ -268,8 +296,20 @@ $width-without-indentation: calc(100% + 2 * #{$paddind-in-tab});
   margin-top: 4.5rem;
 }
 
-.preissuance-form__hint {
+.preissuance-form__header {
   margin-bottom: 2rem;
+}
+
+.preissuance-form__link-content {
+  margin-top: 0.6rem;
+  font-size: 1.4rem;
+}
+
+.preissuance-form__link-icon {
+  font-size: 1.2rem;
+  color: $color-info;
+  vertical-align: middle;
+  margin-left: 0.2rem;
 }
 
 .preissuance-form__list {

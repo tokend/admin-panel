@@ -15,8 +15,8 @@ export class AssetPair {
   }
 
   _parseObject (obj) {
-    const base = obj.base || obj.baseAsset
-    const quote = obj.quote || obj.quoteAsset
+    const base = obj.base || obj.baseAsset.id
+    const quote = obj.quote || obj.quoteAsset.id
 
     if (!base || !quote) throw new Error(UNKNOWN_SOURCE_TYPE_ERROR)
 

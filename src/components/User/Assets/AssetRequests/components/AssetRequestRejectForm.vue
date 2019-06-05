@@ -8,12 +8,18 @@
     <form
       @submit.prevent="reject"
       id="trrf-form"
+      novalidate
     >
       <div class="app__form-row">
         <text-field
           label="Describe reject reason"
-          v-model="rejectReason"
-          :disabled="isPending"
+          v-model="form.rejectReason"
+          :disabled="formMixin.isDisabled"
+          @blur="touchField('form.rejectReason')"
+          :error-message="getFieldErrorMessage(
+            'form.rejectReason',
+            { maxLength: REJECT_REASON_MAX_LENGTH }
+          )"
           rows="5"
         />
       </div>
@@ -22,7 +28,7 @@
         <tick-field
           label="Reject permanently"
           v-model="isPermanentReject"
-          :disabled="isPending"
+          :disabled="formMixin.isDisabled"
         />
       </div>
     </form>
@@ -31,14 +37,14 @@
       <button
         class="app__btn app__btn--danger"
         form="trrf-form"
-        :disabled="isPending"
+        :disabled="formMixin.isDisabled"
       >
         Reject
       </button>
       <button
         class="app__btn-secondary"
         @click="$emit('close')"
-        :disabled="isPending"
+        :disabled="formMixin.isDisabled"
       >
         Cancel
       </button>
@@ -47,16 +53,16 @@
 </template>
 
 <script>
-import TextField from '@comcom/fields/TextField'
-import TickField from '@comcom/fields/TickField'
+import FormMixin from '@/mixins/form.mixin'
+import { required, maxLength } from '@/validators'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { Bus } from '@/utils/state-bus'
+
+const REJECT_REASON_MAX_LENGTH = 255
 
 export default {
-  components: {
-    TextField,
-    TickField,
-  },
+  mixins: [FormMixin],
 
   props: {
     assetRequest: { type: Object, required: true },
@@ -64,24 +70,39 @@ export default {
 
   data () {
     return {
-      isPending: false,
-      rejectReason: '',
+      form: {
+        rejectReason: '',
+      },
       isPermanentReject: false,
+      REJECT_REASON_MAX_LENGTH,
+    }
+  },
+
+  validations () {
+    return {
+      form: {
+        rejectReason: {
+          required,
+          maxLength: maxLength(REJECT_REASON_MAX_LENGTH),
+        },
+      },
     }
   },
 
   methods: {
     async reject () {
-      this.isPending = true
+      if (!this.isFormValid()) return
+
+      this.disableForm()
       try {
         await this.assetRequest
-          .reject(this.rejectReason, this.isPermanentReject)
-        this.$store.dispatch('SET_INFO', 'Request successfully rejected')
+          .reject(this.form.rejectReason, this.isPermanentReject)
+        Bus.success('Request successfully rejected')
         this.$router.push({ name: 'assets' })
       } catch (err) {
         ErrorHandler.process('Failed to reject asset creation')
       }
-      this.isPending = false
+      this.enableForm()
     },
   },
 }
