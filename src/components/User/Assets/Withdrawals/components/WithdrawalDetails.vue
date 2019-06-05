@@ -45,21 +45,21 @@
         <span>Amount</span>
         <asset-amount-formatter
           :amount="request.requestDetails.amount"
-          :asset="request.requestDetails.asset"
+          :asset="request.requestDetails.asset.id"
         />
       </li>
       <li>
         <span>Fixed fee</span>
         <asset-amount-formatter
           :amount="request.requestDetails.fee.fixed"
-          :asset="request.requestDetails.asset"
+          :asset="request.requestDetails.asset.id"
         />
       </li>
       <li>
         <span>Percent fee</span>
         <asset-amount-formatter
           :amount="request.requestDetails.fee.calculatedPercent"
-          :asset="request.requestDetails.asset"
+          :asset="request.requestDetails.asset.id"
         />
       </li>
       <li>
@@ -67,7 +67,7 @@
         <asset-amount-formatter
           :amount="Number(request.requestDetails.fee.fixed) +
             Number(request.requestDetails.fee.calculatedPercent)"
-          :asset="request.requestDetails.asset"
+          :asset="request.requestDetails.asset.id"
         />
       </li>
     </ul>
