@@ -122,7 +122,7 @@ import api from '@/api'
 import cloneDeep from 'lodash/cloneDeep'
 import { snakeToCamelCase } from '@/utils/un-camel-case'
 import { ErrorHandler } from '@/utils/ErrorHandler'
-import { TokenRequest } from '@/api/responseHandlers/requests/TokenRequest'
+import { AssetRequest } from '@/api/responseHandlers/requests/AssetRequest'
 import { ASSET_PAIR_POLICIES, REQUEST_STATES } from '@/constants'
 import { ApiCallerFactory } from '@/api-caller-factory'
 
@@ -195,7 +195,7 @@ export default {
     async getAsset () {
       const response = await api.requests.getAssetRequests({})
       const asset = response.data
-        .map(response => new TokenRequest(response))
+        .map(response => new AssetRequest(response))
         .filter(response => {
           return response.code === this.getSaleDetails.baseAsset
         })
