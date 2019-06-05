@@ -22,6 +22,7 @@ for further information about branching and tagging conventions.
   switching between routes
 - Form confirmation component
 - State bus for handling status messages
+- Remove asset pair action to asset pair manager
 
 #### Changed
 - Align asset requests detail values to right side
