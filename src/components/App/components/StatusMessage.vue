@@ -1,9 +1,12 @@
 <template>
-    <div v-if="message.text" class="status-modal" @click="close()">
-        <p :class="'status-message status-message--' + message.type">
-            {{ message.text }}
-        </p>
-    </div>
+  <div
+    v-if="message.text"
+    class="status-modal"
+    @click="close()">
+    <p :class="'status-message status-message--' + message.type">
+      {{ message.text }}
+    </p>
+  </div>
 </template>
 
 <script>
@@ -11,16 +14,18 @@ import store from '@store'
 
 export default {
   name: 'status-message',
+
   computed: {
     message () {
       return store.getters.message
-    }
+    },
   },
+
   methods: {
     close () {
       store.commit('CLEAN_MESSAGE')
-    }
-  }
+    },
+  },
 }
 </script>
 

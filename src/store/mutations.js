@@ -34,8 +34,8 @@ export const WANT_CLOSE_MODAL = (state) => {}
 /**
  * Clear each property, one by one, so reactivity still works.
  *
- * (ie. clear out state.auth.isLoggedIn so Navbar component automatically reacts to logged out state,
- * and the Navbar menu adjusts accordingly)
+ * (ie. clear out state.auth.isLoggedIn so Navbar component automatically
+ * reacts to logged out state, and the Navbar menu adjusts accordingly)
  *
  * TODO: use a common import of default state to reset these values with.
  */
@@ -45,15 +45,14 @@ export const CLEAR_ALL_DATA = (state) => {
 
   // User
   state.user.name = ''
-  state.user.keys = { seed: '', accountId: '' }
+  state.user.address = ''
+  state.user.keys.seed = ''
+  state.user.keys.accountId = ''
   state.user.wallet = {}
-  state.user.accountCreator = false
-  state.user.admin = false
 
   // Status messages
-  state.message = {}
-  state.message.info = ''
-  state.message.error = ''
+  state.message.type = ''
+  state.message.text = ''
 
   location.reload()
 }

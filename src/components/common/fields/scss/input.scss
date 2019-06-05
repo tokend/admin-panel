@@ -14,13 +14,22 @@
   padding: $field-input-padding;
   @include material-border($field-color-focused);
   @include text-font-sizes;
+
+  // HACK: Do not show default box-shadow for invalid fields on Firefox
+  &:invalid {
+    box-shadow: none;
+  }
+}
+
+.input-field__tip ~ .input-field__input {
+  padding-right: 2rem;
 }
 
 .input-field__input {
   // HACK: do not merge these rulesets
 
   @mixin placeholder {
-    color: $field-placeholer-color;
+    color: $field-placeholder-color;
     transition: opacity $field-transition-duration;
   }
 
@@ -43,6 +52,10 @@
   &::placeholder {
     @include placeholder;
   }
+}
+
+.input-field__input--placeholder-auto-hidden {
+  // HACK: do not merge these rulesets
 
   &:placeholder-shown:not(:focus)::-webkit-input-placeholder {
     opacity: 0;
@@ -96,8 +109,7 @@
 }
 
 // Hide number spinner
-.input-field__input[type="number"]:not(:hover):not(:focus),
-.input-field__input[type="number"]:not(:hover):not(:focus) {
+.input-field__input[type="number"] {
   -moz-appearance: textfield;
 
   &::-webkit-inner-spin-button,
@@ -146,4 +158,35 @@
     margin-top: $field-error-margin-top;
     overflow: hidden;
   }
+}
+
+.input-field__tip {
+  position: absolute;
+  top: 1.6rem;
+  right: 0;
+
+  &:hover {
+    .input-field__tip-content {
+      display: flex;
+    }
+  }
+}
+
+.input-field__tip-content {
+  z-index: 1;
+  background-color: rgba($color-text, 0.95);
+  border-radius: 0.3rem;
+  top: 2rem;
+  color: $color-text-inverse;
+  display: none;
+  right: 0;
+  position: absolute;
+  padding: 1rem;
+}
+
+.input-field__tip-icon {
+  cursor: help;
+  display: flex;
+  width: 1.8rem;
+  fill: $field-color-unfocused;
 }

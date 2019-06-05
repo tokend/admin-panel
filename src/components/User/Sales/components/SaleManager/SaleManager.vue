@@ -43,13 +43,15 @@
 </template>
 
 <script>
-import { Sdk } from '@/sdk'
 import { Tabs, Tab } from '@comcom/Tabs'
+
 import DetailsTab from './SaleManager.DetailsTab'
 import DescriptionTab from './SaleManager.DescriptionTab'
 import ParticipantsTab from './SaleManager.ParticipantsTab'
 import SyndicateTab from './SaleManager.SyndicateTab'
 import UpdatesTab from './SaleManager.UpdatesTab'
+
+import { Sdk } from '@/sdk'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
@@ -60,18 +62,20 @@ export default {
     DescriptionTab,
     ParticipantsTab,
     SyndicateTab,
-    UpdatesTab
+    UpdatesTab,
+  },
+
+  props: {
+    id: { type: String, required: true },
   },
 
   data () {
     return {
       sale: {},
       isLoaded: false,
-      isFailed: false
+      isFailed: false,
     }
   },
-
-  props: ['id'],
 
   created () {
     this.getSale(this.id)
@@ -84,13 +88,10 @@ export default {
         this.sale = response.data
         this.isLoaded = true
       } catch (error) {
-        ErrorHandler.process(error)
+        ErrorHandler.processWithoutFeedback(error)
         this.isFailed = true
       }
-    }
-  }
+    },
+  },
 }
 </script>
-
-<style scoped lang="scss">
-</style>

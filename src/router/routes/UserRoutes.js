@@ -2,8 +2,12 @@
 
 import { authorizedGuard } from '../helpers/navigationGuards'
 
-// Each of these routes are loaded asynchronously, when a user first navigates to each corresponding endpoint.
-// The route will load once into memory, the first time it's called, and no more on future calls.
+// Each of these routes are loaded asynchronously,
+// when a user first navigates to each corresponding endpoint.
+//
+// The route will load once into memory, the first time it's called,
+// and no more on future calls.
+//
 // This behavior can be observed on the network tab of your browser dev tools.
 
 export const UserRoutes = {
@@ -26,7 +30,7 @@ export const UserRoutes = {
           name: 'users.index',
           component: function (resolve) {
             require(['../../components/User/Users/Users.Index.vue'], resolve)
-          }
+          },
         },
         {
           path: ':id',
@@ -34,9 +38,9 @@ export const UserRoutes = {
           component: function (resolve) {
             require(['../../components/User/Users/Users.Show.vue'], resolve)
           },
-          props: true
-        }
-      ]
+          props: true,
+        },
+      ],
     },
     {
       path: '/kyc-requests',
@@ -51,9 +55,16 @@ export const UserRoutes = {
           name: 'kycRequests.index',
           component: function (resolve) {
             require(['../../components/User/KycRequests/KycRequests.Index.vue'], resolve)
-          }
-        }
-      ]
+          },
+        },
+        {
+          path: 'queue',
+          name: 'kycRequests.queue',
+          component: function (resolve) {
+            require(['../../components/User/KycRequests/KycRequests.Queue.vue'], resolve)
+          },
+        },
+      ],
     },
     {
       path: '/limits',
@@ -68,14 +79,14 @@ export const UserRoutes = {
           name: 'limits.index',
           component: function (resolve) {
             require(['../../components/User/Limits/Limits.Index.vue'], resolve)
-          }
+          },
         },
         {
           path: 'requests',
           name: 'limits.requests',
           component: function (resolve) {
             require(['../../components/User/Limits/Limits.Requests.vue'], resolve)
-          }
+          },
         },
         {
           path: 'requests/:id',
@@ -83,9 +94,9 @@ export const UserRoutes = {
           component: function (resolve) {
             require(['../../components/User/Limits/Limits.Reviewer.vue'], resolve)
           },
-          props: true
-        }
-      ]
+          props: true,
+        },
+      ],
     },
     {
       path: '/admins',
@@ -100,14 +111,14 @@ export const UserRoutes = {
           name: 'admins.new',
           component: function (resolve) {
             require(['../../components/User/Admins/Admins.New.vue'], resolve)
-          }
+          },
         },
         {
           path: '',
           name: 'admins.index',
           component: function (resolve) {
             require(['../../components/User/Admins/Admins.Index.vue'], resolve)
-          }
+          },
         },
         {
           path: ':id',
@@ -115,174 +126,184 @@ export const UserRoutes = {
           component: function (resolve) {
             require(['../../components/User/Admins/Admins.Show.vue'], resolve)
           },
-          props: true
-        }
-      ]
+          props: true,
+        },
+      ],
     },
 
     {
-      path: '/system-assets',
-      name: 'systemAssets',
-      redirect: { name: 'systemAssets.index' },
+      path: '/offline-operations',
+      name: 'offlineOperations',
+      redirect: { name: 'offlineOperations.preIssuance' },
       component: function (resolve) {
-        require(['../../components/User/SystemAssets/SystemAssets.vue'], resolve)
+        require(['../../components/User/OfflineOperations/OfflineOperations.vue'], resolve)
+      },
+      children: [
+        {
+          path: 'pre-issuance',
+          name: 'offlineOperations.preIssuance',
+          component: function (resolve) {
+            require(['../../components/User/OfflineOperations/Preissuance/Preissuance.vue'], resolve)
+          },
+        },
+        {
+          path: 'change-asset-issuer',
+          name: 'offlineOperations.changeAssetIssuer',
+          component: function (resolve) {
+            require(['../../components/User/OfflineOperations/ChangeAssetIssuer/ChangeAssetIssuer.vue'], resolve)
+          },
+        },
+        {
+          path: 'pre-issuance-requests',
+          name: 'offlineOperations.preIssuanceRequests',
+          redirect: { name: 'offlineOperations.preIssuanceRequests.index' },
+          component: function (resolve) {
+            require(['../../components/User/OfflineOperations/PreIssuanceRequests/PreIssuanceRequests.vue'], resolve)
+          },
+          children: [
+            {
+              path: '',
+              name: 'offlineOperations.preIssuanceRequests.index',
+              component: function (resolve) {
+                require(['../../components/User/OfflineOperations/PreIssuanceRequests/PreIssuanceRequests.Index.vue'], resolve)
+              },
+            },
+          ],
+        },
+      ],
+    },
+
+    {
+      path: '/assets',
+      name: 'assets',
+      redirect: { name: 'assets.masterAssets' },
+      component: function (resolve) {
+        require(['../../components/User/Assets/Assets.vue'], resolve)
       },
       children: [
         {
           path: 'issuance',
-          name: 'systemAssets.issuance',
+          name: 'assets.issuance',
           component: function (resolve) {
-            require(['../../components/User/SystemAssets/Issuance/Issuance.vue'], resolve)
-          }
+            require(['../../components/User/Assets/Issuance/Issuance.vue'], resolve)
+          },
         },
         {
           path: 'issuance/:id',
-          name: 'systemAssets.issuance.props',
+          name: 'assets.issuance.props',
           component: function (resolve) {
-            require(['../../components/User/SystemAssets/Issuance/IssuanceDetails.vue'], resolve)
+            require(['../../components/User/Assets/Issuance/IssuanceDetails.vue'], resolve)
           },
-          props: true
-        },
-        {
-          path: 'preissuance',
-          name: 'systemAssets.preissuance',
-          component: function (resolve) {
-            require(['../../components/User/SystemAssets/Preissuance/Preissuance.vue'], resolve)
-          }
-        },
-        {
-          path: '/change-asset-issuer',
-          name: 'systemAssets.change-asset-issuer',
-          component: function (resolve) {
-            require(['../../components/User/SystemAssets/ChangeAssetIssuer/ChangeAssetIssuer.vue'], resolve)
-          }
+          props: true,
         },
         {
           path: 'withdrawals',
-          name: 'systemAssets.withdrawals',
-          redirect: { name: 'systemAssets.withdrawals.index' },
+          name: 'assets.withdrawals',
+          redirect: { name: 'assets.withdrawals.index' },
           component: function (resolve) {
-            require(['../../components/User/SystemAssets/Withdrawals/Withdrawals.vue'], resolve)
+            require(['../../components/User/Assets/Withdrawals/Withdrawals.vue'], resolve)
           },
           children: [
             {
               path: '',
-              name: 'systemAssets.withdrawals.index',
+              name: 'assets.withdrawals.index',
               component: function (resolve) {
-                require(['../../components/User/SystemAssets/Withdrawals/Withdrawals.Index.vue'], resolve)
-              }
-            }
-          ]
+                require(['../../components/User/Assets/Withdrawals/Withdrawals.Index.vue'], resolve)
+              },
+            },
+          ],
         },
         {
           path: 'pairs',
-          name: 'systemAssets.assetPairs',
-          redirect: { name: 'systemAssets.assetPairs.index' },
+          name: 'assets.assetPairs',
+          redirect: { name: 'assets.assetPairs.index' },
           component: function (resolve) {
-            require(['../../components/User/SystemAssets/AssetPairs/AssetPairs.vue'], resolve)
+            require(['../../components/User/Assets/AssetPairs/AssetPairs.vue'], resolve)
           },
           children: [
             {
               path: '',
-              name: 'systemAssets.assetPairs.index',
+              name: 'assets.assetPairs.index',
               component: function (resolve) {
-                require(['../../components/User/SystemAssets/AssetPairs/AssetPairs.Index.vue'], resolve)
-              }
+                require(['../../components/User/Assets/AssetPairs/AssetPairs.Index.vue'], resolve)
+              },
             },
             {
               path: ':base-:quote',
-              name: 'systemAssets.assetPairs.show',
+              name: 'assets.assetPairs.show',
               component: function (resolve) {
-                require(['../../components/User/SystemAssets/AssetPairs/AssetPairs.Show.vue'], resolve)
+                require(['../../components/User/Assets/AssetPairs/AssetPairs.Show.vue'], resolve)
               },
-              props: true
+              props: true,
             },
             {
               path: 'new',
-              name: 'systemAssets.assetPairs.new',
+              name: 'assets.assetPairs.new',
               component: function (resolve) {
-                require(['../../components/User/SystemAssets/AssetPairs/AssetPairs.New.vue'], resolve)
+                require(['../../components/User/Assets/AssetPairs/AssetPairs.New.vue'], resolve)
               },
-              props: true
-            }
-          ]
+              props: true,
+            },
+          ],
         },
         {
-          path: 'new',
-          name: 'systemAssets.new',
+          path: 'master-assets',
+          name: 'assets.masterAssets',
+          redirect: { name: 'assets.masterAssets.index' },
           component: function (resolve) {
-            require(['../../components/User/SystemAssets/SystemAssets.New.vue'], resolve)
-          }
-        },
-        {
-          path: '',
-          name: 'systemAssets.index',
-          component: function (resolve) {
-            require(['../../components/User/SystemAssets/SystemAssets.Index.vue'], resolve)
-          }
-        },
-        {
-          path: ':asset',
-          name: 'systemAssets.show',
-          component: function (resolve) {
-            require(['../../components/User/SystemAssets/SystemAssets.Show.vue'], resolve)
-          },
-          props: true
-        }
-      ]
-    },
-
-    {
-      path: '/tokens',
-      name: 'tokens',
-      redirect: { name: 'tokens.requests' },
-      component: function (resolve) {
-        require(['../../components/User/Tokens/Tokens.vue'], resolve)
-      },
-      children: [
-        {
-          path: 'requests',
-          name: 'tokens.requests',
-          redirect: { name: 'tokens.requests.index' },
-          component: function (resolve) {
-            require(['../../components/User/Tokens/TokenRequests/TokenRequests.vue'], resolve)
+            require(['../../components/User/Assets/MasterAssets/MasterAssets.vue'], resolve)
           },
           children: [
             {
               path: '',
-              name: 'tokens.requests.index',
+              name: 'assets.masterAssets.index',
               component: function (resolve) {
-                require(['../../components/User/Tokens/TokenRequests/TokenRequests.Index.vue'], resolve)
-              }
+                require(['../../components/User/Assets/MasterAssets/MasterAssets.Index.vue'], resolve)
+              },
+            },
+            {
+              path: 'new',
+              name: 'assets.masterAssets.new',
+              component: function (resolve) {
+                require(['../../components/User/Assets/MasterAssets/MasterAssets.New.vue'], resolve)
+              },
+            },
+            {
+              path: ':asset',
+              name: 'assets.masterAssets.show',
+              component: function (resolve) {
+                require(['../../components/User/Assets/MasterAssets/MasterAssets.Show.vue'], resolve)
+              },
+              props: true,
+            },
+          ],
+        },
+        {
+          path: 'requests',
+          name: 'assets.assetRequests',
+          redirect: { name: 'assets.requests.index' },
+          component: function (resolve) {
+            require(['../../components/User/Assets/AssetRequests/AssetRequests.vue'], resolve)
+          },
+          children: [
+            {
+              path: '',
+              name: 'assets.requests.index',
+              component: function (resolve) {
+                require(['../../components/User/Assets/AssetRequests/AssetRequests.Index.vue'], resolve)
+              },
             },
             {
               path: ':id',
-              name: 'tokens.requests.show',
+              name: 'assets.requests.show',
               component: function (resolve) {
-                require(['../../components/User/Tokens/TokenRequests/TokenRequests.Show.vue'], resolve)
+                require(['../../components/User/Assets/AssetRequests/AssetRequests.Show.vue'], resolve)
               },
-              props: true
-            }
-          ]
+              props: true,
+            },
+          ],
         },
-        {
-          path: 'preissuance-requests',
-          name: 'tokens.preissuanceRequests',
-          redirect: { name: 'tokens.preissuanceRequests.index' },
-          component: function (resolve) {
-            require(['../../components/User/Tokens/PreissuanceRequests/PreissuanceRequests.vue'], resolve)
-          },
-          children: [
-            {
-              path: '',
-              name: 'tokens.preissuanceRequests.index',
-              component: function (resolve) {
-                require(['../../components/User/Tokens/PreissuanceRequests/PreissuanceRequests.Index.vue'], resolve)
-              }
-            }
-          ]
-        }
-      ]
+      ],
     },
 
     {
@@ -306,7 +327,7 @@ export const UserRoutes = {
               name: 'sales.requests.index',
               component: function (resolve) {
                 require(['../../components/User/Sales/SaleRequests/SaleRequests.Index.vue'], resolve)
-              }
+              },
             },
             {
               path: ':id',
@@ -314,16 +335,16 @@ export const UserRoutes = {
               component: function (resolve) {
                 require(['../../components/User/Sales/SaleRequests/SaleRequests.Show.vue'], resolve)
               },
-              props: true
-            }
-          ]
+              props: true,
+            },
+          ],
         },
         {
           path: '',
           name: 'sales.index',
           component: function (resolve) {
             require(['../../components/User/Sales/Sales.Index.vue'], resolve)
-          }
+          },
         },
         {
           path: ':id',
@@ -331,9 +352,9 @@ export const UserRoutes = {
           component: function (resolve) {
             require(['../../components/User/Sales/Sales.Show.vue'], resolve)
           },
-          props: true
-        }
-      ]
+          props: true,
+        },
+      ],
     },
 
     {
@@ -349,9 +370,9 @@ export const UserRoutes = {
           name: 'keyValue.index',
           component: function (resolve) {
             require(['../../components/User/KeyValue/KeyValue.Index.vue'], resolve)
-          }
-        }
-      ]
+          },
+        },
+      ],
     },
 
     {
@@ -367,9 +388,9 @@ export const UserRoutes = {
           name: 'fees.index',
           component: function (resolve) {
             require(['../../components/User/Fees/Fees.Index.vue'], resolve)
-          }
-        }
-      ]
+          },
+        },
+      ],
     },
 
     {
@@ -385,32 +406,23 @@ export const UserRoutes = {
           name: 'trades.index',
           component: function (resolve) {
             require(['../../components/User/Trades/Trades.Index.vue'], resolve)
-          }
-        }
-      ]
+          },
+        },
+      ],
     },
-
-    {
-      path: '/signing-rules',
-      name: 'signing-rules',
-      component: function (resolve) {
-        require(['../../components/User/SigningRules/SigningRules.vue'], resolve)
-      }
-    },
-
     {
       path: '/settings',
       name: 'settings',
       component: function (resolve) {
         require(['../../components/settings/Settings.vue'], resolve)
-      }
+      },
     },
     {
       path: '/settings/tfa',
       name: 'settings.tfa',
       component: function (resolve) {
         require(['../../components/settings/GAuth.vue'], resolve)
-      }
-    }
-  ]
+      },
+    },
+  ],
 }

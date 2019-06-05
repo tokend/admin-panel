@@ -11,36 +11,54 @@
           label="State"
           v-model="filters.state"
         >
-          <option :value="REQUEST_STATES.pending">Pending</option>
-          <option :value="REQUEST_STATES.cancelled">Cancelled</option>
-          <option :value="REQUEST_STATES.approved">Approved</option>
-          <option :value="REQUEST_STATES.rejected">Rejected</option>
-          <option :value="REQUEST_STATES.permanentlyRejected">Permanently rejected</option>
+          <option :value="REQUEST_STATES.pending">
+            Pending
+          </option>
+          <option :value="REQUEST_STATES.cancelled">
+            Cancelled
+          </option>
+          <option :value="REQUEST_STATES.approved">
+            Approved
+          </option>
+          <option :value="REQUEST_STATES.rejected">
+            Rejected
+          </option>
+          <option :value="REQUEST_STATES.permanentlyRejected">
+            Permanently rejected
+          </option>
         </select-field>
 
         <input-field
           class="app-list-filters__field sale-rl__requestor-filter"
           label="Requestor"
-          placeholder="Address (full match)"
+          placeholder="Address or email"
           v-model="filters.requestor"
+          autocomplete-type="email"
         />
       </div>
     </div>
 
     <div class="sale-rl__list-wrp">
-      <template v-if="list.data && list.data.length">
+      <template v-if="list && list.length">
         <ul class="app-list">
           <div class="app-list__header">
             <span class="app-list__cell">
-              <!-- empty --></span>
-            <span class="app-list__cell">Name</span>
-            <span class="app-list__cell">Hard cap</span>
-            <span class="app-list__cell">Requestor</span>
+              <!-- empty -->
+            </span>
+            <span class="app-list__cell">
+              Name
+            </span>
+            <span class="app-list__cell">
+              Hard cap
+            </span>
+            <span class="app-list__cell">
+              Requestor
+            </span>
           </div>
 
           <router-link
             class="app-list__li"
-            v-for="item in list.data"
+            v-for="item in list"
             :key="item.id"
             :to="{ name: 'sales.requests.show', params: { id: item.id }}"
           >
@@ -54,7 +72,7 @@
               class="app-list__cell"
               :title="extractDetails(item).details.name"
             >
-              {{extractDetails(item).details.name}}
+              {{ extractDetails(item).details.name }}
             </span>
             <span class="app-list__cell">
               <asset-amount-formatter
@@ -70,40 +88,47 @@
             </span>
           </router-link>
         </ul>
-
-        <div
-          class="app__more-btn-wrp"
-          v-if="!isNoMoreEntries"
-        >
-          <button
-            class="app__btn-secondary"
-            @click="getMoreEntries"
-          >
-            More
-          </button>
-        </div>
       </template>
 
       <template v-else>
         <ul class="app-list">
           <li class="app-list__li-like">
-            <template v-if="isLoaded">Nothing here yet</template>
-            <template v-else>Loading...</template>
+            <template v-if="isLoaded">
+              Nothing here yet
+            </template>
+            <template v-else>
+              Loading...
+            </template>
           </li>
         </ul>
       </template>
+
+      <div class="app__more-btn-wrp">
+        <collection-loader
+          :first-page-loader="getList"
+          @first-page-load="setList"
+          @next-page-load="extendList"
+          ref="collectionLoaderBtn"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import api from '@/api'
-import { REQUEST_STATES } from '@/constants'
-import SelectField from '@comcom/fields/SelectField'
 import InputField from '@comcom/fields/InputField'
+import SelectField from '@comcom/fields/SelectField'
+
+import { REQUEST_STATES } from '@/constants'
+import api from '@/api'
+import { Sdk } from '@/sdk'
+
 import { EmailGetter } from '@comcom/getters'
 import { AssetAmountFormatter } from '@comcom/formatters'
+import { CollectionLoader } from '@/components/common'
+
 import _ from 'lodash'
+
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
@@ -111,65 +136,82 @@ export default {
     SelectField,
     InputField,
     EmailGetter,
-    AssetAmountFormatter
+    AssetAmountFormatter,
+    CollectionLoader,
   },
 
   data () {
     return {
       REQUEST_STATES,
 
-      list: {},
+      list: [],
       filters: {
         state: REQUEST_STATES.pending,
-        requestor: ''
+        requestor: '',
       },
       isLoaded: false,
-      isNoMoreEntries: false
     }
   },
 
-  created () {
-    this.getList()
+  watch: {
+    'filters.state' () { this.reloadCollectionLoader() },
+
+    'filters.requestor': _.throttle(function () {
+      this.reloadCollectionLoader()
+    }, 1000),
   },
 
   methods: {
     async getList () {
       this.isLoaded = false
-      this.isNoMoreEntries = false
-
+      let response = {}
       try {
-        const filters = { ...this.filters }
-        this.list = await api.requests.getSaleRequests(filters)
+        const requestor =
+          await this.getRequestorAccountId(this.filters.requestor)
+        const filters = {
+          state: this.filters.state,
+          requestor,
+        }
+        response = await api.requests.getSaleRequests(filters)
       } catch (error) {
-        error.showMessage('Cannot get opportunity request list. Please try again later')
+        ErrorHandler.processWithoutFeedback(error)
       }
 
       this.isLoaded = true
+      return response
     },
 
-    async getMoreEntries () {
-      try {
-        const oldLength = (this.list.data || []).length
-        const chunk = await this.list.fetchNext()
-        this.list._data = this.list.data.concat(chunk.data)
-        this.list.fetchNext = chunk.fetchNext
-        this.isNoMoreEntries = oldLength === this.list.data.length
-      } catch (error) {
-        ErrorHandler.process(error)
+    async getRequestorAccountId (requestor) {
+      if (Sdk.base.Keypair.isValidPublicKey(requestor)) {
+        return requestor
+      } else {
+        try {
+          const address = await api.users.getAccountIdByEmail(requestor)
+          return address || requestor
+        } catch (error) {
+          return requestor
+        }
       }
+    },
+
+    setList (data) {
+      this.list = data
+    },
+
+    async extendList (data) {
+      this.list = this.list.concat(data)
     },
 
     extractDetails (record) {
       const valuableRequestDetailsKey = Object.keys(record.details)
         .find(item => !/request_type|requestType/gi.test(item))
       return record.details[valuableRequestDetailsKey] || {}
-    }
-  },
+    },
 
-  watch: {
-    'filters.state' () { this.getList() },
-    'filters.requestor': _.throttle(function () { this.getList() }, 1000)
-  }
+    reloadCollectionLoader () {
+      this.$refs.collectionLoaderBtn.loadFirstPage()
+    },
+  },
 }
 </script>
 

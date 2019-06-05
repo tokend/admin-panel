@@ -9,31 +9,37 @@
         Enter your verification code to proceed.
       </p>
 
-      <form class="verify-tfa__form" id="verify-tfa-form" @submit.prevent="verifyTFACode">
+      <form
+        class="verify-tfa__form"
+        id="verify-tfa-form"
+        @submit.prevent="verifyTFACode">
         <div class="app__form-row">
-          <input-field class="app__form-field"
-                       :disabled="submitButtonDisabled"
-                       v-model.trim="verificationCode"
-                       label="Verification Code"
-                       autofocus
+          <input-field
+            class="app__form-field"
+            :disabled="submitButtonDisabled"
+            v-model.trim="verificationCode"
+            label="Verification Code"
+            autofocus
           />
         </div>
 
         <div class="verify-tfa__form-actions app__form-actions">
-          <button class="app__btn-secondary app__btn-secondary--danger" type="button" @click="close()">
+          <button
+            class="app__btn-secondary app__btn-secondary--danger"
+            type="button"
+            @click="close()">
             Cancel
           </button>
-          <button class="verify-tfa__btn-wide app__btn"
-                  form="verify-tfa-form"
-                  :disabled="submitButtonDisabled"
-                  type="submit"
+          <button
+            class="verify-tfa__btn-wide app__btn"
+            form="verify-tfa-form"
+            :disabled="submitButtonDisabled"
+            type="submit"
           >
             Submit
           </button>
         </div>
-
       </form>
-
     </div>
   </div>
 </template>
@@ -41,6 +47,7 @@
 <script>
 import Vue from 'vue'
 import { InputField } from '@comcom/fields'
+import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   name: 'verify-tfa',
@@ -49,41 +56,46 @@ export default {
   data () {
     return {
       submitButtonDisabled: false,
-      verificationCode: ''
+      verificationCode: '',
     }
   },
 
   computed: {
     isRequired () {
       return this.$store.getters.tfaIsRequired
-    }
+    },
   },
 
   methods: {
-    verifyTFACode () {
+    async verifyTFACode () {
       if (this.verificationCode === '') {
-        this.$store.dispatch('SET_ERROR', 'Enter a verification code')
+        ErrorHandler.process('Enter a verification code')
         return false
       }
-      this.submitButtonDisabled = true
-      return Vue.api.tfa.verifyTfaCode(this.verificationCode, this.$store.getters.tfaToken)
-        .then(() => {
-          this.submitButtonDisabled = false
-          this.verificationCode = ''
-          this.$store.commit('TFA_FORM_DONE')
-          this.$store.dispatch('CLOSE_TFA')
-        }).catch(err => {
-          console.error(err)
-          this.submitButtonDisabled = false
-          this.verificationCode = ''
 
-          if (err.status !== 400) {
-            this.$store.dispatch('SET_ERROR', 'Verification failed')
-          } else {
-            this.$store.dispatch('SET_ERROR', 'Verification code mismatched')
-            this.$store.commit('TFA_FORM_FALSE')
-          }
-        })
+      this.submitButtonDisabled = true
+      try {
+        await Vue.api.tfa.verifyTfaCode(
+          this.verificationCode,
+          this.$store.getters.tfaToken
+        )
+
+        this.submitButtonDisabled = false
+        this.verificationCode = ''
+
+        this.$store.commit('TFA_FORM_DONE')
+        this.$store.dispatch('CLOSE_TFA')
+      } catch (err) {
+        this.submitButtonDisabled = false
+        this.verificationCode = ''
+
+        if (err.status !== 400) {
+          ErrorHandler.process('Verification failed')
+        } else {
+          ErrorHandler.process('Verification code mismatched')
+          this.$store.commit('TFA_FORM_FALSE')
+        }
+      }
     },
 
     requestNew () {
@@ -94,8 +106,8 @@ export default {
     close () {
       this.verificationCode = ''
       this.$store.dispatch('CLOSE_TFA')
-    }
-  }
+    },
+  },
 }
 </script>
 

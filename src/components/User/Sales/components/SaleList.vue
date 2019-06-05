@@ -8,7 +8,7 @@
       <div class="app-list-filters sale-list__filters">
         <input-field
           class="app-list-filters__field sale-list__field"
-          label="Token code"
+          label="Asset code"
           v-model="filters.baseAsset"
         />
         <input-field
@@ -21,17 +21,19 @@
           label="Owner"
           placeholder="Address (full match)"
           v-model="owner"
+          autocomplete-type="email"
         />
         <input-date-field
           label="Start date"
           class="sale-list__field sale-list__field-margin-top"
-          :enableTime="false"
+          :enable-time="false"
           v-model="filtersDate.startDate"
         />
+        <!-- eslint-disable max-len -->
         <input-date-field
           label="End date"
           class="sale-list__field sale-list__field-margin-left sale-list__field-margin-top"
-          :enableTime="false"
+          :enable-time="false"
           v-model="filtersDate.endDate"
         />
         <tick-field
@@ -39,24 +41,31 @@
           label="Open only"
           v-model="filters.openOnly"
         />
+        <!-- eslint-enable max-len -->
       </div>
     </div>
 
     <div class="sale-list__list-wrp">
-      <template v-if="list.data && list.data.length">
+      <template v-if="list && list.length">
         <ul class="app-list">
           <div class="app-list__header">
             <span class="app-list__cell">
               <!-- empty -->
             </span>
-            <span class="app-list__cell">Name</span>
-            <span class="app-list__cell">State</span>
-            <span class="app-list__cell">Owner</span>
+            <span class="app-list__cell">
+              Name
+            </span>
+            <span class="app-list__cell">
+              State
+            </span>
+            <span class="app-list__cell">
+              Owner
+            </span>
           </div>
 
           <router-link
             class="app-list__li"
-            v-for="item in list.data"
+            v-for="item in list"
             :key="item.id"
             :to="{ name: 'sales.show', params: { id: item.id }}"
           >
@@ -91,50 +100,54 @@
             </span>
           </router-link>
         </ul>
-
-        <div
-          class="app__more-btn-wrp"
-          v-if="!isNoMoreEntries"
-        >
-          <button
-            class="app__btn-secondary"
-            @click="getMoreEntries"
-          >
-            More
-          </button>
-        </div>
       </template>
 
       <template v-else>
         <ul class="app-list">
           <li class="app-list__li-like">
-            <template v-if="isLoaded">Nothing here yet</template>
-            <template v-else>Loading...</template>
+            <template v-if="isLoaded">
+              Nothing here yet
+            </template>
+            <template v-else>
+              Loading...
+            </template>
           </li>
         </ul>
       </template>
+      <div class="app__more-btn-wrp">
+        <collection-loader
+          :first-page-loader="getList"
+          @first-page-load="setList"
+          @next-page-load="extendList"
+          ref="collectionLoaderBtn"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import api from '@/api'
-import { AssetAmountFormatter } from '@comcom/formatters'
-import { SALE_STATES } from '@/constants'
 import { InputField, TickField, InputDateField } from '@comcom/fields'
 import { EmailGetter } from '@comcom/getters'
-import _ from 'lodash'
+import { CollectionLoader } from '@/components/common'
+
+import api from '@/api'
 import { Sdk } from '@/sdk'
+
+import { SALE_STATES } from '@/constants'
+
+import _ from 'lodash'
+
 import config from '@/config'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   components: {
-    AssetAmountFormatter,
     InputField,
     TickField,
     EmailGetter,
-    InputDateField
+    InputDateField,
+    CollectionLoader,
   },
 
   data () {
@@ -149,99 +162,108 @@ export default {
         baseAsset: '',
         owner: '',
         openOnly: false,
-        name: ''
+        name: '',
       },
       filtersDate: {
         startDate: '',
-        endDate: ''
+        endDate: '',
       },
-      isNoMoreEntries: false
-    }
-  },
-
-  created () {
-    this.getList()
-  },
-
-  methods: {
-    async getOwner () {
-      const emailRegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-      if (Sdk.base.Keypair.isValidPublicKey(this.owner)) {
-        this.filters.owner = this.owner
-      } else if (emailRegExp.test(this.owner)) {
-        this.filters.owner = await api.users.getAccountIdByEmail(this.owner)
-      } else {
-        this.filters.owner = this.owner
-      }
-    },
-
-    async getList () {
-      this.isLoaded = false
-      this.isNoMoreEntries = false
-      try {
-        const response = await Sdk.horizon.sales.getPage({
-          base_asset: this.filters.baseAsset,
-          owner: this.filters.owner,
-          open_only: this.filters.openOnly,
-          name: this.filters.name,
-          order: this.filters.order || 'desc',
-          limit: this.filters.limit || config.PAGE_LIMIT
-        })
-        this.list = response
-        this.rawList = response
-        this.filterByDate()
-      } catch (error) {
-        ErrorHandler.process(error)
-      }
-
-      this.isLoaded = true
-    },
-
-    filterByDate () {
-      let sortedList = this.rawList.data
-      if (this.filtersDate.startDate) {
-        sortedList = sortedList.filter(sale => +new Date(sale.startTime) >= +new Date(this.filtersDate.startDate))
-      }
-      if (this.filtersDate.endDate) {
-        sortedList = sortedList.filter(sale => +new Date(sale.endTime) <= +new Date(this.filtersDate.endDate))
-      }
-      this.list._data = sortedList
-    },
-
-    async getMoreEntries () {
-      try {
-        const oldLength = this.list.data.length
-        const chunk = await this.list.fetchNext()
-        this.list._data = this.list.data.concat(chunk.data)
-        this.list.fetchNext = chunk.fetchNext
-        this.isNoMoreEntries = oldLength === this.list.data.length
-      } catch (error) {
-        ErrorHandler.process(error)
-      }
     }
   },
 
   watch: {
     'filters.openOnly' () {
-      this.getList()
+      this.reloadCollectionLoader()
     },
-    'owner': _.throttle(function () {
-      this.getOwner()
-      this.getList()
+
+    'owner': _.throttle(async function () {
+      this.filters.owner = await this.getOwner()
+      this.reloadCollectionLoader()
     }, 1000),
+
     'filters.name': _.throttle(function () {
-      this.getList()
+      this.reloadCollectionLoader()
     }, 1000),
+
     'filters.baseAsset': _.throttle(function () {
-      this.getList()
+      this.reloadCollectionLoader()
     }, 1000),
+
     'filtersDate.startDate' () {
-      this.filterByDate()
+      this.filterByDate(this.rawList)
     },
+
     'filtersDate.endDate' () {
-      this.filterByDate()
-    }
-  }
+      this.filterByDate(this.rawList)
+    },
+  },
+
+  methods: {
+    async getOwner () {
+      let owner
+      const emailRegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      if (emailRegExp.test(this.owner)) {
+        owner = await api.users.getAccountIdByEmail(this.owner)
+      }
+
+      return owner || this.owner
+    },
+
+    async getList () {
+      this.isLoaded = false
+      let response = {}
+      try {
+        response = await Sdk.horizon.sales.getPage({
+          base_asset: this.filters.baseAsset,
+          owner: this.filters.owner,
+          open_only: this.filters.openOnly,
+          name: this.filters.name,
+          order: this.filters.order || 'desc',
+          limit: this.filters.limit || config.PAGE_LIMIT,
+        })
+      } catch (error) {
+        ErrorHandler.processWithoutFeedback(error)
+      }
+      this.isLoaded = true
+      return response
+    },
+
+    setList (data) {
+      this.list = data
+      this.rawList = data
+    },
+
+    filterByDate (filteredList) {
+      let sortedList = filteredList
+      if (this.filtersDate.startDate) {
+        sortedList = sortedList.filter(sale => {
+          return +new Date(sale.startTime) >=
+            +new Date(this.filtersDate.startDate)
+        })
+      }
+
+      if (this.filtersDate.endDate) {
+        sortedList = sortedList.filter(sale => {
+          return +new Date(sale.endTime) <=
+            +new Date(this.filtersDate.endDate)
+        })
+      }
+      this.list = sortedList
+    },
+
+    async extendList (data) {
+      this.rawList = this.rawList.concat(data)
+      if (this.filtersDate.startDate || this.filtersDate.endDate) {
+        this.filterByDate(this.rawList)
+      } else {
+        this.list = this.list.concat(data)
+      }
+    },
+
+    reloadCollectionLoader () {
+      this.$refs.collectionLoaderBtn.loadFirstPage()
+    },
+  },
 }
 </script>
 

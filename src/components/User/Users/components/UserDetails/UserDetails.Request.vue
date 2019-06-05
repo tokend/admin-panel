@@ -1,15 +1,17 @@
 <template>
   <div class="user-request">
-    <h3>Latest request</h3>
-    <p class="user-request__block text">
-      Create a {{ requestToReview.requestDetails.accountRoleToSet | roleIdToString | lowerCase }} account:
-      {{ requestToReview.state }}
-    </p>
+    <template v-if="requestToReview.isPending">
+      <div class="user-details-request__manage-tasks-section">
+        <tasks-manager
+          v-model="tasks"
+          :request="requestToReview"
+          :is-pending="isPending"
+        />
+      </div>
 
-    <template v-if="isRequestPending">
       <div class="app__form-actions user-details-request__form-actions">
         <button
-          class="app__btn"
+          class="app__btn user-request__btn"
           @click="approve"
           :disabled="isPending"
         >
@@ -17,13 +19,23 @@
         </button>
 
         <button
-          class="app__btn app__btn--danger"
+          class="app__btn app__btn--danger user-request__btn"
           @click="showRejectModal"
           :disabled="isPending"
         >
           Reject
         </button>
       </div>
+    </template>
+
+    <template v-else-if="requestToReview.isRejected">
+      <button
+        class="app__btn app__btn--danger user-request__btn"
+        @click="reject(true)"
+        :disabled="isPending"
+      >
+        Reject permanently
+      </button>
     </template>
 
     <modal
@@ -35,7 +47,7 @@
       <form
         class="user-request__reject-form"
         id="user-request-reject-form"
-        @submit.prevent="hideRejectModal() || reject()"
+        @submit.prevent="submitRejectForm"
       >
         <div class="app__form-row">
           <text-field
@@ -66,55 +78,56 @@
 
 <script>
 import api from '@/api'
-import {
-  USER_STATES_STR,
-  USER_TYPES_STR,
-  REQUEST_STATES_STR,
-  ACCOUNT_TYPES,
-  ACCOUNT_TYPES_VERBOSE
-} from '@/constants'
-import { TextField, TickField } from '@comcom/fields'
+
+import TasksManager from './UserDetails.TasksManager'
+
+import { TextField } from '@comcom/fields'
 import Modal from '@comcom/modals/Modal'
 
 import 'mdi-vue/ChevronDownIcon'
 import 'mdi-vue/ChevronUpIcon'
+
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { confirmAction } from '@/js/modals/confirmation_message'
 
-const EMPTY_REASON = ''
+import { ChangeRoleRequest } from '@/api/responseHandlers/requests/ChangeRoleRequest'
+
+const EVENTS = {
+  reviewed: 'reviewed',
+}
 
 export default {
   name: 'user-details-request',
   components: {
     Modal,
     TextField,
-    TickField
+    TasksManager,
   },
 
-  inject: ['kycRequestsList'],
+  props: {
+    requestToReview: {
+      type: ChangeRoleRequest,
+      default: () => new ChangeRoleRequest({}),
+    },
+    latestApprovedRequest: {
+      type: ChangeRoleRequest,
+      default: () => new ChangeRoleRequest({}),
+    },
+    user: {
+      type: Object,
+      default: () => ({}),
+    },
+  },
 
   data () {
     return {
-      USER_STATES_STR,
-      USER_TYPES_STR,
-      REQUEST_STATES_STR,
-      ACCOUNT_TYPES,
-      ACCOUNT_TYPES_VERBOSE,
       rejectForm: {
-        reason: '' + EMPTY_REASON,
+        reason: '',
         isShown: false,
-        isReset: false
       },
       isShownAdvanced: false,
-      isPending: false
-    }
-  },
-
-  props: ['requestToReview', 'updateRequestEvent'],
-
-  computed: {
-    isRequestPending () {
-      return this.requestToReview.state === REQUEST_STATES_STR.pending
+      isPending: false,
+      tasks: {},
     }
   },
 
@@ -125,29 +138,40 @@ export default {
       }
       this.isPending = true
       try {
-        await api.requests.approve(this.requestToReview)
+        const reviewDetails = this.requestToReview.record.reviewDetails || {}
+        reviewDetails.tasksToAdd = this.tasks.toAdd
+        reviewDetails.tasksToRemove = this.tasks.toRemove
+
+        await api.requests.approve({
+          ...this.requestToReview.record,
+          reviewDetails,
+        })
+
         this.$store.dispatch('SET_INFO', 'Request approved successfully')
-        this.kycRequestsList.updateAsk = true
-        this.$emit(this.updateRequestEvent)
+        this.$emit(EVENTS.reviewed)
       } catch (error) {
         ErrorHandler.process(error)
       }
       this.isPending = false
     },
 
-    async reject () {
+    async reject (isPermanent = false) {
       if (!await confirmAction('Are you sure? This action cannot be undone')) {
         return
       }
       this.isPending = true
+      const rejectReason = this.rejectForm.reason ||
+        this.requestToReview.rejectReason
       try {
         await api.requests.reject(
-          { reason: this.rejectForm.reason },
-          { ...this.requestToReview, reviewDetails: { tasksToRemove: 0 }}
+          { reason: rejectReason, isPermanent },
+          {
+            ...this.requestToReview.record,
+            reviewDetails: { tasksToRemove: 0 },
+          }
         )
         this.$store.dispatch('SET_INFO', `Request rejected successfully`)
-        this.kycRequestsList.updateAsk = true
-        this.$emit(this.updateRequestEvent)
+        this.$emit(EVENTS.reviewed)
       } catch (error) {
         this.isPending = false
         ErrorHandler.process(error)
@@ -156,51 +180,24 @@ export default {
     },
 
     showRejectModal () {
-      this.rejectForm.reason = '' + EMPTY_REASON
+      this.rejectForm.reason = ''
       this.rejectForm.isShown = true
     },
 
     hideRejectModal () {
       this.rejectForm.isShown = false
-    }
-  }
+    },
+
+    async submitRejectForm () {
+      this.hideRejectModal()
+      await this.reject()
+    },
+  },
 }
 </script>
 
-<style scoped lang="scss">
-@import "../../../../../assets/scss/colors";
-
-.user-request__actions {
-  display: flex;
-  margin-top: 3.5rem;
-
-  & > .app__btn + .app__btn-secondary,
-  & > .app__btn + .app__btn,
-  & > .app__btn-secondary + .app__btn {
-    margin-left: 1rem;
-  }
-}
-
-.user-request__heading {
-  color: $color-active;
-  display: flex;
-  line-height: 100%;
-  align-items: center;
-
-  h3 {
-    margin-right: 1rem;
-  }
-}
-
-.user-request__block {
-  margin-bottom: 2rem;
-}
-
-.user-request__tick-field {
-  margin-bottom: 0.5rem;
-}
-
-.user-details-request__form-actions {
-  max-width: 48rem;
+<style scoped>
+.user-request__btn {
+  width: 15rem;
 }
 </style>

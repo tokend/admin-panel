@@ -3,14 +3,14 @@
     <button class="user-account-widget__btn" @click="togglePane()">
       <span class="user-account-widget__btn-content">
         <span class="user-account-widget__initials">
-          {{initials}}
+          {{ initials }}
         </span>
 
         <p class="user-account-widget__name">
-          {{fullName}}
+          {{ fullName }}
         </p>
 
-        <span class="user-account-widget__expand-art"></span>
+        <span class="user-account-widget__expand-art" />
       </span>
     </button>
 
@@ -33,29 +33,35 @@ import { getters } from '@store/types'
 export default {
   data () {
     return {
-      isPaneActive: false
+      isPaneActive: false,
     }
   },
+
   computed: {
     ...mapGetters({
-      user: getters.GET_USER
+      user: getters.GET_USER,
     }),
+
     initials () {
       return `${this.user.name.charAt(0).toUpperCase()}`
     },
+
     fullName () {
       return `${this.user.name}`
-    }
+    },
   },
+
   methods: {
     togglePane () {
       this.isPaneActive = !this.isPaneActive
       this.detectOpenedModals()
     },
+
     signOut () {
       this.$store.dispatch('LOG_OUT')
       this.$router.push({ name: 'login' })
     },
+
     detectOpenedModals () {
       const listener = (e) => {
         if (e.target.closest('.user-account-widget')) return
@@ -63,8 +69,8 @@ export default {
         document.removeEventListener('click', listener)
       }
       document.addEventListener('click', listener)
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -133,6 +139,7 @@ export default {
   min-width: 12rem;
   padding: 0.5rem 0;
   box-shadow: 0.07rem 0.07rem 0.56rem 0.04rem rgba(170, 170, 170, 0.72);
+  z-index: 1;
 }
 
 .user-account-widget__action-btn {

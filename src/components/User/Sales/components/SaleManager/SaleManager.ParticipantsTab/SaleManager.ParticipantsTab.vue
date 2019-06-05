@@ -13,13 +13,16 @@
 <script>
 import PendingParticipants from './PendingParticipants'
 import ClosedParticipants from './ClosedParticipants'
+
 export default {
   components: {
     PendingParticipants,
-    ClosedParticipants
+    ClosedParticipants,
   },
 
-  props: ['sale']
+  props: {
+    sale: { type: Object, required: true },
+  },
 }
 </script>
 

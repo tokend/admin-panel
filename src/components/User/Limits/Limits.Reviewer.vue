@@ -11,7 +11,9 @@
     </button>
     <template v-if="isLoaded && desiredLimitDetails">
       <div class="limits-reviewer__card">
-        <h3 class="limits-reviewer__heading">Request information</h3>
+        <h3 class="limits-reviewer__heading">
+          Request information
+        </h3>
         <div class="limits-reviewer__content-section">
           <detail
             label="Request date & time"
@@ -23,14 +25,10 @@
           />
           <detail
             label="Request type"
-            :value="LIMITS_REQUEST_STATES_STR[get(request, 'details.requestType')]"
+            :value="requestType"
           />
           <detail label="Account email">
-            <email-getter
-              class="app-list__cell app-list__cell--important"
-              :account-id="account.id"
-              is-titled
-            />
+            <email-getter :account-id="account.id" />
           </detail>
           <detail
             label="Account ID"
@@ -51,7 +49,9 @@
         </div>
         <div class="limits-reviewer__limits-wrapper">
           <div class="limits-review__limits-item">
-            <h3 class="limits-reviewer__heading">Current limits</h3>
+            <h3 class="limits-reviewer__heading">
+              Current limits
+            </h3>
             <div class="limits-reviewer__content-section">
               <user-limits
                 :limits="currentLimits"
@@ -60,7 +60,9 @@
             </div>
           </div>
           <div class="limits-review__limits-item">
-            <h3 class="limits-reviewer__heading">Desired limits</h3>
+            <h3 class="limits-reviewer__heading">
+              Desired limits
+            </h3>
             <div class="limits-reviewer__content-section">
               <user-limits
                 :limits="desiredLimitDetails.limits"
@@ -72,16 +74,19 @@
       </div>
       <template v-if="desiredLimitDetails.requestType === 'docsUploading'">
         <div class="limits-reviewer__uploaded-docs-list-wrapper">
-          <h3 class="limits-reviewer__heading">Uploaded documents</h3>
+          <h3 class="limits-reviewer__heading">
+            Uploaded documents
+          </h3>
           <uploaded-docs-list
+            v-if="uploadedDocuments"
             :list="uploadedDocuments"
-            :uploadDate="request.updatedAt"
-            :userAccountId="account.id"
+            :upload-date="request.updatedAt"
+            :user-account-id="account.id"
           />
         </div>
         <user-details
           :id="request.requestor"
-          :isReviewing="false"
+          :is-reviewing="false"
         />
       </template>
       <div class="app__form-actions limits-reviewer__btn-outer">
@@ -96,8 +101,8 @@
           class="app__btn"
           @click="isRequiringDocs = true"
           :disabled="isPending ||
-          desiredLimitDetails.requestType === 'docsUploading' ||
-          request.requestState === REQUEST_STATES.pending"
+            desiredLimitDetails.requestType === 'docsUploading' ||
+            request.requestState === REQUEST_STATES.pending"
         >
           Request docs
         </button>
@@ -111,7 +116,7 @@
       </div>
     </template>
     <template v-else>
-      <template v-if="!loaded">
+      <template v-if="!isLoaded">
         <p>
           Loading...
         </p>
@@ -129,7 +134,7 @@
           >
             <div class="limits-reviewer__doc-label">
               <datalist-field
-                :docItem="item"
+                :doc-item="item"
                 :key="i"
               />
             </div>
@@ -203,35 +208,37 @@
 </template>
 
 <script>
+import { TextField } from '@comcom/fields'
+
 import { EmailGetter } from '@comcom/getters'
 import Detail from '../../common/details/Detail.Row'
+import Modal from '@comcom/modals/Modal'
+
 import UserDetails from '../Users/components/UserDetails/UserDetails'
 import UserLimits from './components/Limits.UserLimits'
 import DatalistField from './components/Datalist'
 import UploadedDocsList from './components/Limits.UploadedDocsList'
 
-import { UserDocLinkGetter } from '@comcom/getters'
-import { DateFormatter } from '@comcom/formatters'
-import { InputField, TextField } from '@comcom/fields'
-import Modal from '@comcom/modals/Modal'
 import { Sdk } from '@/sdk'
-import { snakeToCamelCase } from '@/utils/un-camel-case'
+import api from '@/api'
 
 import {
   REQUEST_STATES,
   DOCUMENT_TYPES_STR,
-  LIMITS_REQUEST_STATES_STR
+  LIMITS_REQUEST_STATES_STR,
 } from '@/constants'
 import { STATS_OPERATION_TYPES } from '@tokend/js-sdk'
+
+import { snakeToCamelCase } from '@/utils/un-camel-case'
 import { formatDateWithTime } from '../../../utils/formatters'
-import api from '@/api'
+
 import get from 'lodash/get'
 import isEqual from 'lodash/isEqual'
-import 'mdi-vue/CloseIcon'
-import 'mdi-vue/ChevronLeftIcon'
+
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
-const MAX_LIMIT_INT64 = '9223372036854.775807'
+import 'mdi-vue/CloseIcon'
+import 'mdi-vue/ChevronLeftIcon'
 
 const DEFAULT_LIMIT_STRUCT = {
   'id': 0,
@@ -239,16 +246,16 @@ const DEFAULT_LIMIT_STRUCT = {
   'statsOpType': null,
   'assetCode': null,
   'isConvertNeeded': false,
-  'dailyOut': MAX_LIMIT_INT64,
-  'weeklyOut': MAX_LIMIT_INT64,
-  'monthlyOut': MAX_LIMIT_INT64,
-  'annualOut': MAX_LIMIT_INT64
+  'dailyOut': '9223372036854.775807',
+  'weeklyOut': '9223372036854.775807',
+  'monthlyOut': '9223372036854.775807',
+  'annualOut': '9223372036854.775807',
 }
 
 const OPERATION_TYPES = {
   payment: 'paymentOut',
   deposit: 'deposit',
-  withdraw: 'withdraw'
+  withdraw: 'withdraw',
 }
 
 export default {
@@ -256,16 +263,17 @@ export default {
     Detail,
     Modal,
     TextField,
-    InputField,
     DatalistField,
     UserDetails,
     UserLimits,
-    DateFormatter,
-    UserDocLinkGetter,
     UploadedDocsList,
-    EmailGetter
+    EmailGetter,
   },
-  props: ['id'],
+
+  props: {
+    id: { type: String, required: true },
+  },
+
   data: _ => ({
     request: null,
     account: null,
@@ -281,73 +289,93 @@ export default {
     uploadDocs: [
       {
         label: '',
-        description: ''
-      }
+        description: '',
+      },
     ],
     rejectForm: {
       reason: '',
       isShown: false,
-      isReset: false
-    }
+      isReset: false,
+    },
   }),
-  async created () {
-    await this.getRequest()
-  },
   computed: {
     currentLimits () {
       if (!this.limits) return null
-      const limits = this.limits.filter(limit => limit.assetCode === this.assetCode)
-      const operationTypeLimits = limits.find(limit => limit.statsOpType === this.desiredLimitDetails.statsOpType)
+      const limits = this.limits
+        .filter(limit => limit.assetCode === this.assetCode)
+      const operationTypeLimits = limits
+        .find(limit => {
+          return limit.statsOpType === this.desiredLimitDetails.statsOpType
+        })
       return operationTypeLimits || {
         ...DEFAULT_LIMIT_STRUCT,
         accountId: this.request.requestor,
         assetCode: this.assetCode,
-        statsOpType: this.desiredLimitDetails.operationType
+        statsOpType: this.desiredLimitDetails.operationType,
       }
     },
+
     newLimit () {
+      const requestDetails = this.desiredLimitDetails
+      const operationType = OPERATION_TYPES[requestDetails.operationType]
+      const limitsList = Object.entries(requestDetails.limits)
+      const limits = {}
+      for (let limit of limitsList) {
+        limits[limit[0]] = limit[1] || DEFAULT_LIMIT_STRUCT[limit[0]]
+      }
       return {
         ...DEFAULT_LIMIT_STRUCT,
-        ...this.desiredLimitDetails.limits,
+        ...limits,
         accountId: this.request.requestor,
         assetCode: this.assetCode,
-        statsOpType: STATS_OPERATION_TYPES[OPERATION_TYPES[this.desiredLimitDetails.operationType]]
+        statsOpType: STATS_OPERATION_TYPES[operationType],
       }
     },
+
     uploadedDocuments () {
       if (!this.desiredLimitDetails.documents) return
       return this.desiredLimitDetails.documents
+    },
+    requestType () {
+      return LIMITS_REQUEST_STATES_STR[get(this.request, 'details.requestType')]
+    },
+  },
+  async created () {
+    try {
+      await this.getRequest()
+      const limitRequest = await api.requests.get(this.id)
+      this.desiredLimitDetails = limitRequest
+        .details[snakeToCamelCase(limitRequest.details.requestType)].details ||
+        '{}'
+    } catch (error) {
+      ErrorHandler.process(error)
     }
   },
+
   methods: {
     get,
     formatDateWithTime,
+
     async getRequest () {
       this.$store.commit('OPEN_LOADER')
       const request = await api.requests.get(this.id)
-      const requestDetails = request.details[snakeToCamelCase(request.details.requestType)].details
-      this.desiredLimitDetails = requestDetails
-      this.desiredLimitDetails.limits = this.normalizeLimit(this.desiredLimitDetails.limits)
+      const camelCasedRequestType = snakeToCamelCase(
+        request.details.requestType
+      )
+      const requestDetails = request.details[camelCasedRequestType].details
       const [account, limits] = await Promise.all([
         Sdk.horizon.account.get(request.requestor),
-        Sdk.horizon.account.getLimits(request.requestor)
+        Sdk.horizon.account.getLimits(request.requestor),
       ])
       this.request = request
       this.request.document = requestDetails.document
       this.request.asset = requestDetails.asset
       this.assetCode = requestDetails.asset
       this.account = account.data
-      this.limits = (get(limits, 'data.limits') || []).map(limit => limit.limit)
+      this.limits = (get(limits, 'data.limits') || [])
+        .map(limit => limit.limit)
       this.isLoaded = true
       this.$store.commit('CLOSE_LOADER')
-    },
-    normalizeLimit (limit) {
-      return {
-        annualOut: limit.annualOut || MAX_LIMIT_INT64,
-        dailyOut: limit.dailyOut || MAX_LIMIT_INT64,
-        monthlyOut: limit.monthlyOut || MAX_LIMIT_INT64,
-        weeklyOut: limit.weeklyOut || MAX_LIMIT_INT64
-      }
     },
     async approveRequest () {
       this.isPending = true
@@ -357,28 +385,38 @@ export default {
           newLimits.push(this.newLimit)
         }
         if (!newLimits.length) {
-          this.$store.dispatch('SET_ERROR', 'Please update user limits before approving request')
+          ErrorHandler.process('Please update user limits before approving request')
           this.isPending = false
           return
         }
         const oldLimits = this.limits
           .find(item => {
+            const requestOpType = this.request.details.updateLimits
+              .details.operationType
+            const limitsOpType = OPERATION_TYPES[requestOpType]
+
             return item.assetCode === this.request.asset &&
-              item.statsOpType === STATS_OPERATION_TYPES[OPERATION_TYPES[this.request.details.updateLimits.details.operationType]]
+              item.statsOpType === STATS_OPERATION_TYPES[limitsOpType]
           })
+
         await api.requests.approveLimitsUpdate({
           request: this.request,
           oldLimits: oldLimits,
           newLimits: newLimits,
-          accountId: this.request.requestor
+          accountId: this.request.requestor,
         })
+
         this.$router.push({ name: 'limits.requests' })
-        this.$store.dispatch('SET_INFO', 'Request approved. Limits are changed')
+        this.$store.dispatch(
+          'SET_INFO',
+          'Request approved. Limits are changed'
+        )
       } catch (error) {
         ErrorHandler.process(error)
       }
       this.isPending = false
     },
+
     async rejectRequest () {
       this.isPending = true
       try {
@@ -388,10 +426,14 @@ export default {
           newLimits: [this.newLimit],
           accountId: this.request.requestor,
           reason: this.rejectForm.reason,
-          isPermanent: true
+          isPermanent: true,
         }, this.request)
+
         this.$router.push({ name: 'limits.requests' })
-        this.$store.dispatch('SET_INFO', 'Request rejected. Limits are not changed')
+        this.$store.dispatch(
+          'SET_INFO',
+          'Request rejected. Limits are not changed'
+        )
       } catch (error) {
         this.isPending = false
         ErrorHandler.process(error)
@@ -403,7 +445,7 @@ export default {
       this.isPending = true
       try {
         const requireDocsDetails = JSON.stringify({
-          docsToUpload: this.uploadDocs
+          docsToUpload: this.uploadDocs,
         })
         await api.requests.rejectLimitsUpdate({
           request: this.request,
@@ -411,9 +453,12 @@ export default {
           newLimits: [this.newLimit],
           accountId: this.request.requestor,
           reason: requireDocsDetails,
-          isPermanent: false
+          isPermanent: false,
         })
-        this.$store.dispatch('SET_INFO', 'Upload additional documents requested.')
+        this.$store.dispatch(
+          'SET_INFO',
+          'Upload additional documents requested.'
+        )
         this.isRequiringDocs = false
       } catch (error) {
         this.isPending = false
@@ -438,9 +483,10 @@ export default {
     addMoreDoc () {
       this.uploadDocs.push({
         label: '',
-        description: ''
+        description: '',
       })
     },
+
     removeDoc (doc) {
       if (this.uploadDocs.length === 1) {
         this.isRequiringDocs = false
@@ -448,13 +494,13 @@ export default {
       }
       this.uploadDocs.splice(doc, 1)
     },
+
     back () {
       this.$router.push({ name: 'limits.requests' })
-    }
-  }
+    },
+  },
 }
 </script>
-
 
 <style lang="scss" scoped>
 @import "../../../assets/scss/colors";

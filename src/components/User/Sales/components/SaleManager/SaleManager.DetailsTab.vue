@@ -1,57 +1,59 @@
 <template>
   <div class="sale-manager-details-tab">
     <div class="sale-manager-details-tab__row">
-      <template v-if="isTokenLoaded">
+      <template v-if="isAssetLoaded">
         <div class="sale-manager-details-tab__row-item">
           <ul class="key-value-list">
-            <label class="data-caption">Token details</label>
+            <label class="data-caption">
+              Asset details
+            </label>
             <li>
               <span>Name</span>
-              <span>{{ token.details.name || '&mdash;' }}</span>
+              <span>{{ asset.details.name || '&mdash;' }}</span>
             </li>
             <li>
               <span>Code</span>
-              <span>{{ token.code }}</span>
+              <span>{{ asset.code }}</span>
             </li>
             <li>
               <span>Owner</span>
               <email-getter
-                :account-id="token.owner"
+                :account-id="asset.owner"
                 is-titled
               />
             </li>
             <li>
               <span>Preissued asset signer</span>
               <email-getter
-                :account-id="token.preissuedAssetSigner"
+                :account-id="asset.preissuedAssetSigner"
                 is-titled
               />
             </li>
             <li>
               <span>Max issuance amount</span>
-              <asset-amount-formatter :amount="token.maxIssuanceAmount" />
+              <asset-amount-formatter :amount="asset.maxIssuanceAmount" />
             </li>
             <li>
               <span>Pending issuance</span>
-              <asset-amount-formatter :amount="token.pendingIssuance" />
+              <asset-amount-formatter :amount="asset.pendingIssuance" />
             </li>
             <li>
               <span>Issued</span>
-              <asset-amount-formatter :amount="token.issued" />
+              <asset-amount-formatter :amount="asset.issued" />
             </li>
             <li>
               <span>Available for issuance</span>
-              <asset-amount-formatter :amount="token.availableForIssuance" />
+              <asset-amount-formatter :amount="asset.availableForIssuance" />
             </li>
             <li>
               <span>Policies</span>
-              <asset-policies-formatter :policies="token.policies" />
+              <asset-policies-formatter :policies="asset.policies" />
             </li>
             <li>
               <span>Terms</span>
               <span>
-                <template v-if="token.details.terms && token.details.terms.key">
-                  <doc-link-getter :file-key="token.details.terms.key">
+                <template v-if="asset.details.terms && asset.details.terms.key">
+                  <doc-link-getter :file-key="asset.details.terms.key">
                     Open file
                   </doc-link-getter>
                 </template>
@@ -65,12 +67,14 @@
         </div>
 
         <div class="sale-manager-details-tab__row-item">
-          <label class="data-caption">Token logo</label>
-          <template v-if="token.details.logo && token.details.logo.key">
+          <label class="data-caption">
+            Asset logo
+          </label>
+          <template v-if="asset.details.logo && asset.details.logo.key">
             <img-getter
-              class="sale-manager-details-tab__token-logo"
-              :file-key="token.details.logo.key"
-              alt="Token logo"
+              class="sale-manager-details-tab__asset-logo"
+              :file-key="asset.details.logo.key"
+              alt="Asset logo"
             />
           </template>
           <template v-else>
@@ -79,9 +83,9 @@
         </div>
       </template>
 
-      <template v-else-if="isTokenFailed">
+      <template v-else-if="isAssetFailed">
         <p class="text danger">
-          An error occurred while fetching token. Please try again later.
+          An error occurred while fetching asset. Please try again later.
         </p>
       </template>
 
@@ -95,7 +99,9 @@
     <div class="sale-manager-details-tab__row">
       <div class="sale-manager-details-tab__row-item">
         <ul class="key-value-list">
-          <label class="data-caption">Opportunity details</label>
+          <label class="data-caption">
+            Opportunity details
+          </label>
           <li>
             <span>Name</span>
             <span>{{ sale.details.name || '&mdash;' }}</span>
@@ -145,7 +151,9 @@
           <span>
             <!-- to padding of label.data-caption -->
           </span>
-          <label class="data-caption">{{ item.asset }} progress</label>
+          <label class="data-caption">
+            {{ item.asset }} progress
+          </label>
           <li>
             <span>Price (per {{ sale.baseAsset }})</span>
             <asset-amount-formatter :amount="item.price" />
@@ -156,12 +164,16 @@
           </li>
           <li>
             <!-- eslint-disable-next-line max-len -->
-            <span :title="`Current cap + current caps of the other acceptable assets in the ${item.asset} equivalent`">Total current cap</span>
+            <span :title="`Current cap + current caps of the other acceptable assets in the ${item.asset} equivalent`">
+              Total current cap
+            </span>
             <asset-amount-formatter :amount="item.totalCurrentCap" />
           </li>
           <li>
             <!-- eslint-disable-next-line max-len -->
-            <span :title="`Hard cap of the opportunity in the ${item.asset} equivalent`">Hard cap</span>
+            <span :title="`Hard cap of the opportunity in the ${item.asset} equivalent`">
+              Hard cap
+            </span>
             <asset-amount-formatter :amount="item.hardCap" />
           </li>
         </ul>
@@ -170,9 +182,11 @@
           <span>
             <!-- to padding of label.data-caption -->
           </span>
-          <label class="data-caption">Total progress</label>
+          <label class="data-caption">
+            Total progress
+          </label>
           <li>
-            <span>Tokens sold</span>
+            <span>Assets sold</span>
             <asset-amount-formatter
               :amount="sale.baseCurrentCap"
               :asset="sale.baseAsset"
@@ -208,12 +222,18 @@
           </li>
         </ul>
 
-        <label class="data-caption">Short description</label>
-        <p class="text">{{ sale.details.shortDescription }}</p>
+        <label class="data-caption">
+          Short description
+        </label>
+        <p class="text">
+          {{ sale.details.shortDescription }}
+        </p>
       </div>
 
       <div class="sale-manager-details-tab__row-item">
-        <label class="data-caption">Opportunity logo</label>
+        <label class="data-caption">
+          Opportunity logo
+        </label>
         <template v-if="sale.details.logo && sale.details.logo.key">
           <img-getter
             class="sale-manager-details-tab__sale-logo"
@@ -230,13 +250,14 @@
 </template>
 
 <script>
-import { Sdk } from '@/sdk'
 import { EmailGetter, ImgGetter, DocLinkGetter } from '@comcom/getters'
 import {
   AssetAmountFormatter,
   DateFormatter,
-  AssetPoliciesFormatter
+  AssetPoliciesFormatter,
 } from '@comcom/formatters'
+
+import { Sdk } from '@/sdk'
 import { SALE_STATES } from '@/constants'
 
 export default {
@@ -246,37 +267,37 @@ export default {
     AssetPoliciesFormatter,
     EmailGetter,
     ImgGetter,
-    DocLinkGetter
+    DocLinkGetter,
   },
 
   props: {
-    sale: { type: Object, required: true }
+    sale: { type: Object, required: true },
   },
 
   data () {
     return {
       SALE_STATES,
-      token: {},
-      isTokenLoaded: false,
-      isTokenFailed: false
+      asset: {},
+      isAssetLoaded: false,
+      isAssetFailed: false,
     }
   },
 
   created () {
-    this.getToken(this.sale)
+    this.getAsset(this.sale)
   },
 
   methods: {
-    async getToken ({ baseAsset }) {
+    async getAsset ({ baseAsset }) {
       try {
         const { data } = await Sdk.horizon.assets.get(baseAsset)
-        this.token = data
-        this.isTokenLoaded = true
+        this.asset = data
+        this.isAssetLoaded = true
       } catch (error) {
-        this.isTokenFailed = true
+        this.isAssetFailed = true
       }
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -297,12 +318,12 @@ export default {
   }
 }
 
-.sale-manager-details-tab__token-logo,
+.sale-manager-details-tab__asset-logo,
 .sale-manager-details-tab__sale-logo {
   margin-top: 0.5rem;
 }
 
-.sale-manager-details-tab__token-logo {
+.sale-manager-details-tab__asset-logo {
   max-width: 6.4rem;
   max-height: 6.4rem;
 }

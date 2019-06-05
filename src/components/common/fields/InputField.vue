@@ -1,7 +1,21 @@
 <template>
-  <div class="input-field"
-    :class="{'input-field--error': errorMessage}">
-    <input class="input-field__input"
+  <div
+    class="input-field"
+    :class="{'input-field--error': errorMessage}"
+  >
+    <div
+      v-if="$slots.help"
+      class="input-field__tip"
+    >
+      <mdi-help-circle-icon class="input-field__tip-icon" />
+      <div class="input-field__tip-content">
+        <slot name="help" />
+      </div>
+    </div>
+
+    <input
+      class="input-field__input"
+      :class="{ 'input-field__input--placeholder-auto-hidden': label }"
       :type="type"
       :placeholder="placeholder || ' '"
       :value="value"
@@ -14,35 +28,48 @@
       :step="step"
       :required="required"
       :readonly="readonly"
-      :class="'text-align-' + align"
       :title="title"
       :form="form"
       @input="onInput"
+      @focus="isInputFocused = true"
+      @blur="isInputFocused = false"
     >
 
+    <input-field-autocomplete
+      v-if="autocompleteType"
+      :input-value="value"
+      @option-selected="$emit('input', $event)"
+      :autocomplete-type="autocompleteType"
+      :is-input-focused="isInputFocused"
+    />
+
     <span class="input-field__label">
-      {{label}}
+      {{ label }}
     </span>
 
     <transition name="input-field__err-transition">
       <p class="input-field__err-mes" v-if="errorMessage">
-        {{errorMessage}}
+        {{ errorMessage }}
       </p>
     </transition>
   </div>
 </template>
 
 <script>
+import InputFieldAutocomplete from './InputFieldAutocomplete'
+
+import 'mdi-vue/HelpCircleIcon'
+
 export default {
   components: {
-    // components
+    InputFieldAutocomplete,
   },
 
   props: {
-    label: { type: String, default: 'Label' },
+    label: { type: String, default: '' },
     value: { type: [String, Number], default: undefined },
     errorMessage: { type: String, default: undefined },
-    align: { type: String, default: 'left' },
+    autocompleteType: { type: String, default: '' },
     // proxies
     autocomplete: { type: String, default: 'off' },
     autofocus: { type: Boolean, default: false },
@@ -58,21 +85,13 @@ export default {
     // [type="number"] proxies
     min: { type: [String, Number], default: undefined },
     max: { type: [String, Number], default: undefined },
-    step: { type: [String, Number], default: undefined }
+    step: { type: [String, Number], default: undefined },
   },
 
   data () {
     return {
-      // data
+      isInputFocused: false,
     }
-  },
-
-  created () {
-    // created
-  },
-
-  computed: {
-    // computed
   },
 
   methods: {
@@ -104,7 +123,7 @@ export default {
       const min = '' + this.min
 
       if (value === '') {
-        return
+
       } else if (value > +max) {
         target.value = max
       } else if (value < +min) {
@@ -123,7 +142,7 @@ export default {
       }
 
       if (!precision) {
-        return
+
       } else {
         const detectRe = new RegExp(`(?:\\.|,)\\d{${precision + 1},}$`)
         if (detectRe.test(value)) {
@@ -131,11 +150,11 @@ export default {
           target.value = value.replace(replaceRe, '$1')
         }
       }
-    }
-  }
+    },
+  },
 }
 </script>
 
 <style lang="scss">
-  @import "./scss/input";
+@import "./scss/input";
 </style>

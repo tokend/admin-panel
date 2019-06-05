@@ -123,6 +123,41 @@
   }
 }
 
+.app__btn-outline {
+  @extend %base;
+
+  color: $color-info;
+  background-color: $color-content-bg;
+  border: 0.2rem solid $color-info;
+  padding: 1.085rem 0;
+  min-width: 11.6rem;
+
+  &:disabled {
+    color: $color-text-inverse;
+    border-color: rgba($color-active, .40);
+  }
+
+  &:enabled:hover {
+    background-color: $color-info;
+    color: $color-text-inverse;
+  }
+
+  &--danger {
+    color: $color-danger;
+    border-color: $color-danger;
+
+    &:enabled:hover {
+      background-color: $color-danger;
+    }
+
+    &:disabled {
+      background-color: transparent;
+      color: $color-disabled;
+      border-color: rgba($color-disabled, .5);
+    }
+  }
+}
+
 .app__upload-btn.app__btn {
   display: block;
   cursor: pointer;

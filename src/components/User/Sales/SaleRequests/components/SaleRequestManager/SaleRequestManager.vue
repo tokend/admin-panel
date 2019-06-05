@@ -41,13 +41,19 @@
 
       <template v-else>
         <p>
+          <!-- eslint-disable-next-line max-len -->
           <template v-if="request.isFailedLoadAsset || request.isFailedLoadSale">
             <template v-if="request.isFailedLoadAsset">
-              Please сonfirm token creation request: {{ getSaleDetails.baseAsset }}
+              Please сonfirm token creation request:
+              {{ getSaleDetails.baseAsset }}
             </template>
-            <template v-else>An error occurred</template>
+            <template v-else>
+              An error occurred
+            </template>
           </template>
-          <template v-else>Loading...</template>
+          <template v-else>
+            Loading...
+          </template>
         </p>
       </template>
     </div>
@@ -57,7 +63,9 @@
       @close-request="hideRejectForm"
       max-width="40rem"
     >
-      <p class="text">Reject reason</p>
+      <p class="text">
+        Reject reason
+      </p>
 
       <form
         class="sale-rm__reject-form"
@@ -98,21 +106,24 @@
 </template>
 
 <script>
-import api from '@/api'
 import TextField from '@comcom/fields/TextField'
 import TickField from '@comcom/fields/TickField'
+
 import Modal from '@comcom/modals/Modal'
-import { REQUEST_STATES } from '@/constants'
+import { Tabs, Tab } from '@comcom/Tabs'
+import { confirmAction } from '../../../../../../js/modals/confirmation_message'
+
 import DetailsTab from './SaleRequestManager.DetailsTab'
 import DescriptionTab from './SaleRequestManager.DescriptionTab'
-import { confirmAction } from '@/js/modals/confirmation_message'
 import SyndicateTab from '../../../components/SaleManager/SaleManager.SyndicateTab'
-import { Tabs, Tab } from '@comcom/Tabs'
+
+import api from '@/api'
+
 import cloneDeep from 'lodash/cloneDeep'
 import { snakeToCamelCase } from '@/utils/un-camel-case'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { TokenRequest } from '@/api/responseHandlers/requests/TokenRequest'
-import { ASSET_PAIR_POLICIES } from '@/constants'
+import { ASSET_PAIR_POLICIES, REQUEST_STATES } from '@/constants'
 import { ApiCallerFactory } from '@/api-caller-factory'
 
 export default {
@@ -124,7 +135,11 @@ export default {
     Modal,
     DetailsTab,
     DescriptionTab,
-    SyndicateTab
+    SyndicateTab,
+  },
+
+  props: {
+    id: { type: String, required: true },
   },
 
   data () {
@@ -132,28 +147,28 @@ export default {
       REQUEST_STATES,
       request: {
         sale: {},
-        token: {},
+        asset: {},
         isReady: false,
         isFailedLoadAsset: false,
-        isFailedLoadSale: false
+        isFailedLoadSale: false,
       },
       rejectForm: {
         reason: '',
         isShown: false,
-        isPermanentReject: false
+        isPermanentReject: false,
       },
-      token: {},
+      asset: {},
       ASSET_PAIR_POLICIES,
-      isSubmitting: false
+      isSubmitting: false,
     }
   },
 
-  props: ['id'],
   computed: {
     getSaleDetails () {
       return this.request.sale.details[this.request.sale.details.requestType]
-    }
+    },
   },
+
   created () {
     if (this.id) {
       this.getRequest(this.id)
@@ -167,24 +182,24 @@ export default {
     async getRequest (id) {
       try {
         this.request.sale = await this.getSaleRequest(id)
-        const token = await this.getToken()
-        this.token = token
-        this.request.token = token.operationDetails
+        const asset = await this.getAsset()
+        this.asset = asset
+        this.request.asset = asset
         this.request.isReady = true
       } catch (error) {
-        ErrorHandler.process(error)
+        ErrorHandler.processWithoutFeedback(error)
         this.request.isFailedLoadAsset = true
       }
     },
 
-    async getToken () {
+    async getAsset () {
       const response = await api.requests.getAssetRequests({})
-      const token = response.data
-          .map(response => new TokenRequest(response))
-          .filter(response => {
-            return response.code === this.getSaleDetails.baseAsset
-          })
-      return token[0]
+      const asset = response.data
+        .map(response => new TokenRequest(response))
+        .filter(response => {
+          return response.code === this.getSaleDetails.baseAsset
+        })
+      return asset[0]
     },
 
     async getSaleRequest (id) {
@@ -205,7 +220,7 @@ export default {
       this.isSubmitting = true
       if (await confirmAction()) {
         try {
-          await api.requests.approve(this.token._rawRequest, this.request.sale)
+          await api.requests.approve(this.asset._rawRequest, this.request.sale)
           await this.makePairTradeable()
           this.$store.dispatch('SET_INFO', 'Opportunity request approved.')
           this.$router.push({ name: 'sales.requests' })
@@ -221,7 +236,7 @@ export default {
         const { data: pairs } = await ApiCallerFactory
           .createCallerInstance()
           .get('/v3/asset_pairs', {
-            filter: { base_asset: this.request.token.code }
+            filter: { base_asset: this.request.token.code },
           })
 
         pairs.forEach(async item => {
@@ -235,7 +250,7 @@ export default {
             updatePolicy: true,
             // `0` because of xdr-operation requires for it
             physicalPriceCorrection: '0',
-            maxPriceStep: '0'
+            maxPriceStep: '0',
           })
         })
       } catch (error) {
@@ -249,9 +264,9 @@ export default {
         await api.requests.reject(
           {
             reason: this.rejectForm.reason,
-            isPermanent: this.rejectForm.isPermanentReject
+            isPermanent: this.rejectForm.isPermanentReject,
           },
-          this.token._rawRequest,
+          this.asset._rawRequest,
           this.request.sale
         )
         this.$store.dispatch('SET_INFO', 'Opportunity request rejected successfully.')
@@ -274,8 +289,8 @@ export default {
         record.details[valuableRequestDetailsKey] || {}
 
       return newRecord
-    }
-  }
+    },
+  },
 }
 </script>
 

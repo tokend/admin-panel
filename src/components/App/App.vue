@@ -13,18 +13,18 @@
             class="modal-background"
             v-if="isModalOpen"
             @click="$store.commit('WANT_CLOSE_MODAL')"
-          > </div>
+          />
         </transition>
 
         <transition name="fade">
           <loading-screen v-if="showLoader" />
         </transition>
 
-        <verify-tfa></verify-tfa>
+        <verify-tfa />
 
-        <idle-logout></idle-logout>
+        <idle-logout />
 
-        <router-view></router-view>
+        <router-view />
       </template>
     </template>
 
@@ -47,19 +47,24 @@
 </template>
 
 <script>
-import config from '../../config'
 import StatusMessage from './components/StatusMessage'
 import IdleLogout from './components/IdleLogout.vue'
 import VerifyTfa from './components/VerifyTfa'
 import LoadingScreen from './components/Loader'
-import UAParser from 'ua-parser-js'
 import NoSupportMessage from './components/IERestrictionMessage.vue'
+
+import UAParser from 'ua-parser-js'
+
 import { Sdk } from '@/sdk'
+import { ApiCallerFactory } from '@/api-caller-factory'
+import config from '../../config'
+
 import { Wallet } from '@tokend/js-sdk'
 
 import './scss/app.scss'
-import { ApiCallerFactory } from '@/api-caller-factory'
+
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { ErrorTracker } from '@/utils/ErrorTracker'
 import { snakeToCamelCase } from '@/utils/un-camel-case'
 
 function isIE () {
@@ -76,7 +81,16 @@ export default {
     VerifyTfa,
     StatusMessage,
     IdleLogout,
-    NoSupportMessage
+    NoSupportMessage,
+  },
+
+  data () {
+    return {
+      sessionKeeperInterval: null,
+      isGoodBrowser: true,
+      isAppInitialized: false,
+      isConfigLoadingFailed: false,
+    }
   },
 
   computed: {
@@ -90,16 +104,7 @@ export default {
 
     isLoggedIn () {
       return this.$store.state.auth.isLoggedIn
-    }
-  },
-
-  data () {
-    return {
-      sessionKeeperInterval: null,
-      isGoodBrowser: true,
-      isAppInitialized: false,
-      isConfigLoadingFailed: false
-    }
+    },
   },
 
   async created () {
@@ -123,6 +128,10 @@ export default {
         )
         Sdk.sdk.useWallet(wallet)
         ApiCallerFactory.setDefaultWallet(wallet)
+        ErrorTracker.setLoggedInUser({
+          'accountId': this.$store.getters.GET_USER.keys.accountId,
+          'name': this.$store.getters.GET_USER.name,
+        })
         this.$store.dispatch('LOG_IN')
       }
 
@@ -136,9 +145,10 @@ export default {
         await this.loadHorizonConfigs()
         await this.loadAccountRolesConfigs()
         await this.loadAssetTypesConfigs()
+        await this.loadChangeRoleTasks()
       } catch (error) {
         this.isConfigLoadingFailed = true
-        ErrorHandler.process(error)
+        ErrorHandler.processWithoutFeedback(error)
       }
     },
 
@@ -154,6 +164,20 @@ export default {
       ApiCallerFactory.setDefaultNetworkPassphrase(config.NETWORK_PASSPHRASE)
     },
 
+    async loadChangeRoleTasks () {
+      const { body: tasks } =
+        await this.$http.get(`${config.HORIZON_SERVER}/key_value`)
+      config.CHANGE_ROLE_TASKS.completeAutoVerification = tasks
+        .find(item => item.key === 'change_role_task:complete_auto_verification')
+        .uint32_value
+      config.CHANGE_ROLE_TASKS.submitAutoVerification = tasks
+        .find(item => item.key === 'change_role_task:submit_auto_verification')
+        .uint32_value
+      config.CHANGE_ROLE_TASKS.manualReviewRequired = tasks
+        .find(item => item.key === 'change_role_task:manual_review_required')
+        .uint32_value
+    },
+
     async loadAccountRolesConfigs () {
       const { body: roles } =
         await this.$http.get(`${config.HORIZON_SERVER}/key_value`)
@@ -162,6 +186,12 @@ export default {
         .uint32_value
       config.ACCOUNT_ROLES.general = roles
         .find(item => item.key === 'account_role:general')
+        .uint32_value
+      config.ACCOUNT_ROLES.usAccredited = roles
+        .find(item => item.key === 'account_role:us_accredited')
+        .uint32_value
+      config.ACCOUNT_ROLES.usVerified = roles
+        .find(item => item.key === 'account_role:us_verified')
         .uint32_value
       config.ACCOUNT_ROLES.corporate = roles
         .find(item => item.key === 'account_role:corporate')
@@ -207,7 +237,9 @@ export default {
             break
           }
           default: {
-            if (this.$store.state.auth.isLoggedIn && this.$store.getters.logoutTimer === null) {
+            const shouldIdleBeStarted = this.$store.state.auth.isLoggedIn &&
+              this.$store.getters.logoutTimer === null
+            if (shouldIdleBeStarted) {
               this.$store.dispatch('START_IDLE')
             }
           }
@@ -220,11 +252,10 @@ export default {
       this.sessionKeeperInterval = setInterval(() => {
         this.$store.commit('KEEP_SESSION')
       }, 10 * 1000)
-    }
-  }
+    },
+  },
 }
 </script>
-
 
 <style lang="scss">
 @import "../../assets/scss/colors";

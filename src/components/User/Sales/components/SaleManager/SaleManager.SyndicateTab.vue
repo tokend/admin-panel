@@ -2,31 +2,51 @@
   <div class="sale-manager-corporate-tab">
     <template v-if="isLoaded">
       <div class="sale-manager-corporate-tab__details-wrp">
-        <label class="data-caption">Corporate user details</label>
+        <label class="data-caption">
+          Corporate user details
+        </label>
         <ul class="key-value-list">
           <li>
             <span>Name</span>
-            <span>{{corporate.name}}</span>
+            <span>{{ corporate.name }}</span>
           </li>
           <li>
             <span>Headquarters</span>
-            <span>{{corporate.headquarters}}</span>
+            <span>{{ corporate.headquarters }}</span>
+          </li>
+          <li v-if="kycAvatarKey">
+            <span>Avatar</span>
+            <span>
+              <user-doc-link-getter :file-key="kycAvatarKey">
+                Open file
+              </user-doc-link-getter>
+            </span>
           </li>
           <li>
             <span>Homepage</span>
-            <span>{{corporate.homepage}}</span>
+            <span>{{ corporate.homepage }}</span>
           </li>
           <li>
             <span>Industry</span>
-            <span>{{corporate.industry}}</span>
+            <span>{{ corporate.industry }}</span>
           </li>
           <li>
             <span>Team size</span>
-            <span>{{corporate.team_size}}</span>
+            <span>{{ corporate.team_size }}</span>
           </li>
           <li>
             <span>Company</span>
-            <span>{{corporate.company}}</span>
+            <span>{{ corporate.company }}</span>
+          </li>
+          <li v-if="kycAvatarKey">
+            <div class="sale-manager-corporate-tab__doc-view-wrp">
+              <h3>Avatar</h3>
+              <user-doc-getter
+                class="sale-manager-corporate-tab__doc-view"
+                :file-key="kycAvatarKey"
+                :mime-type="kycAvatarMimeType"
+              />
+            </div>
           </li>
         </ul>
       </div>
@@ -47,36 +67,49 @@
 </template>
 
 <script>
+import { UserDocLinkGetter, UserDocGetter } from '@comcom/getters'
 import { Sdk } from '@/sdk'
-import { DateFormatter } from '@comcom/formatters'
-import SyndicateMember from '@comcom/SyndicateMember'
-import SocialLinks from '@comcom/SocialLinks'
 
 import _get from 'lodash/get'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   components: {
-    DateFormatter,
-    SyndicateMember,
-    SocialLinks
+    UserDocLinkGetter,
+    UserDocGetter,
   },
 
-  props: ['sale', 'saleRequest', 'user', 'blobId'],
+  props: {
+    sale: { type: Object, default: _ => ({}) },
+    saleRequest: { type: Object, default: _ => ({}) },
+    user: { type: Object, default: _ => ({}) },
+    blobId: { type: String, default: '' },
+  },
 
   data () {
     return {
       corporate: {},
       isLoaded: false,
-      isFailed: false
+      isFailed: false,
     }
   },
+
+  computed: {
+    kycAvatarKey () {
+      return _get(this.corporate, 'documents.kyc_avatar.key')
+    },
+
+    kycAvatarMimeType () {
+      return _get(this.corporate, 'documents.kyc_avatar.mime_type')
+    },
+  },
+
   created () {
     this.getCorporate({
       ownerId: _get(this.sale, 'ownerId') ||
         _get(this.saleRequest, 'requestor') ||
         _get(this.user, 'address'),
-      blobId: this.blobId
+      blobId: this.blobId,
     })
   },
 
@@ -96,13 +129,7 @@ export default {
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }
-    }
-  }
+    },
+  },
 }
 </script>
-
-<style scoped lang="scss">
-.sale-manager-corporate-tab__details-wrp {
-  max-width: 48rem;
-}
-</style>

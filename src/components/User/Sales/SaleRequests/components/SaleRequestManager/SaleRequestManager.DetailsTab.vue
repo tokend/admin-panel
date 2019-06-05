@@ -2,7 +2,9 @@
   <div class="sale-rm-details-tab">
     <div class="sale-rm-details-tab__row">
       <div class="sale-rm-details-tab__row-item">
-        <label class="data-caption">Request details</label>
+        <label class="data-caption">
+          Request details
+        </label>
         <ul class="key-value-list">
           <li>
             <span>Requestor</span>
@@ -29,25 +31,29 @@
         </ul>
 
         <template v-if="request.sale.rejectReason">
-          <label class="data-caption danger">Reject reason</label>
+          <label class="data-caption danger">
+            Reject reason
+          </label>
           <p class="text">
-            {{request.sale.rejectReason}}
+            {{ request.sale.rejectReason }}
           </p>
         </template>
       </div>
 
-      <div class="sale-rm-details-tab__row-item"></div>
+      <div class="sale-rm-details-tab__row-item" />
     </div>
 
     <div class="sale-rm-details-tab__row">
       <div class="sale-rm-details-tab__row-item">
-        <label class="data-caption">Token details</label>
+        <label class="data-caption">
+          Asset details
+        </label>
         <ul class="key-value-list">
           <li>
             <span>Name</span>
             <span>
-              <template v-if="safeGet(request, 'token.details.name')">
-                {{request.token.details.name}}
+              <template v-if="safeGet(request, 'asset.details.name')">
+                {{ request.asset.details.name }}
               </template>
               <template v-else>
                 &mdash;
@@ -56,32 +62,32 @@
           </li>
           <li>
             <span>Code</span>
-            <span>{{request.token.code}}</span>
+            <span>{{ request.asset.code }}</span>
           </li>
           <li>
             <span>Initial preissued amount</span>
-            <asset-amount-formatter :amount="request.token.maxIssuanceAmount" />
+            <asset-amount-formatter :amount="request.asset.maxIssuanceAmount" />
           </li>
           <li>
             <span>Max issuance amount</span>
-            <asset-amount-formatter :amount="request.token.maxIssuanceAmount" />
+            <asset-amount-formatter :amount="request.asset.maxIssuanceAmount" />
           </li>
           <li>
             <span>Preissuance signer</span>
             <email-getter
-              :account-id="request.token.preissuedAssetSigner || request.token.preIssuedAssetSigner "
+              :account-id="request.asset.preissuedAssetSigner"
               is-titled
             />
           </li>
           <li>
             <span>Policies</span>
-            <asset-policies-formatter :policies="request.token.policies" />
+            <asset-policies-formatter :policies="request.asset.policies" />
           </li>
           <li>
             <span>Terms</span>
             <span>
-              <template v-if="safeGet(request, 'token.details.terms.key')">
-                <doc-link-getter :file-key="request.token.details.terms.key">
+              <template v-if="safeGet(request, 'asset.details.terms.key')">
+                <doc-link-getter :file-key="request.asset.details.terms.key">
                   Open file
                 </doc-link-getter>
               </template>
@@ -95,12 +101,14 @@
       </div>
 
       <div class="sale-rm-details-tab__row-item">
-        <label class="data-caption">Token logo</label>
-        <template v-if="safeGet(request, 'token.details.logo.key')">
+        <label class="data-caption">
+          Asset logo
+        </label>
+        <template v-if="safeGet(request, 'asset.details.logo.key')">
           <img-getter
-            class="sale-rm-details-tab__token-logo"
-            :file-key="request.token.details.logo.key"
-            alt="Token logo"
+            class="sale-rm-details-tab__asset-logo"
+            :file-key="request.asset.details.logo.key"
+            alt="Asset logo"
           />
         </template>
         <template v-else>
@@ -111,13 +119,15 @@
 
     <div class="sale-rm-details-tab__row">
       <div class="sale-rm-details-tab__row-item">
-        <label class="data-caption">Opportunity details</label>
+        <label class="data-caption">
+          Opportunity details
+        </label>
         <ul class="key-value-list">
           <li>
             <span>Name</span>
             <span>
               <template v-if="safeGet(saleDetails, 'details.name')">
-                {{saleDetails.details.name}}
+                {{ saleDetails.details.name }}
               </template>
               <template v-else>
                 (Not provided yet)
@@ -160,20 +170,27 @@
             />
           </li>
 
-          <label class="data-caption">Prices (per token) </label>
+          <label class="data-caption">
+            Prices (per one)
+          </label>
           <li
             v-for="(item, index) in saleDetails.quoteAssets"
             :key="index"
           >
-            <span>{{item.quoteAsset}}</span>
-            <span>{{item.price}}</span>
+            <span>{{ item.quoteAsset }}</span>
+            <span>{{ item.price }}</span>
           </li>
         </ul>
 
-        <label class="data-caption">Short description</label>
-        <p class="text">
+        <label class="data-caption">
+          Short description
+        </label>
+        <p
+          class="text sale-rm-details-tab__short-description"
+          :title="safeGet(saleDetails, 'details.shortDescription')"
+        >
           <template v-if="safeGet(saleDetails, 'details.shortDescription')">
-            {{saleDetails.details.shortDescription}}
+            {{ saleDetails.details.shortDescription }}
           </template>
           <template v-else>
             (Not provided yet)
@@ -182,7 +199,9 @@
       </div>
 
       <div class="sale-rm-details-tab__row-item">
-        <label class="data-caption">Opportunity logo</label>
+        <label class="data-caption">
+          Opportunity logo
+        </label>
         <template v-if="safeGet(saleDetails, 'details.logo.key')">
           <img-getter
             class="sale-rm-details-tab__sale-logo"
@@ -204,13 +223,12 @@ import {
   AssetAmountFormatter,
   DateFormatter,
   AssetPoliciesFormatter,
-  RequestStateFormatter
+  RequestStateFormatter,
 } from '@comcom/formatters'
+
 import get from 'lodash/get'
 
 export default {
-  props: ['request'],
-
   components: {
     EmailGetter,
     ImgGetter,
@@ -218,16 +236,21 @@ export default {
     AssetAmountFormatter,
     DateFormatter,
     AssetPoliciesFormatter,
-    RequestStateFormatter
+    RequestStateFormatter,
   },
+
+  props: {
+    request: { type: Object, required: true },
+  },
+
   computed: {
     saleDetails () {
       return this.request.sale.details[this.request.sale.details.requestType]
-    }
+    },
   },
   methods: {
-    safeGet: get
-  }
+    safeGet: get,
+  },
 }
 </script>
 
@@ -242,18 +265,19 @@ export default {
 
 .sale-rm-details-tab__row-item {
   flex: 1;
+  min-width: 0;
 
   & + & {
     margin-left: 4rem;
   }
 }
 
-.sale-rm-details-tab__token-logo,
+.sale-rm-details-tab__asset-logo,
 .sale-rm-details-tab__sale-logo {
   margin-top: 0.5rem;
 }
 
-.sale-rm-details-tab__token-logo {
+.sale-rm-details-tab__asset-logo {
   max-width: 6.4rem;
   max-height: 6.4rem;
 }
@@ -261,5 +285,10 @@ export default {
 .sale-rm-details-tab__sale-logo {
   max-width: 20rem;
   max-height: 20rem;
+}
+
+.sale-rm-details-tab__short-description {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>

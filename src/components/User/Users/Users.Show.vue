@@ -11,7 +11,10 @@
     </button>
     <template v-if="view.mode === VIEW_MODES_VERBOSE.user">
       <div class="users-show__details-wrp">
-        <user-details :id="id" />
+        <user-details
+          :id="id"
+          @reviewed="$emit(EVENTS.reviewed)"
+        />
       </div>
 
       <div class="users-show__list-wrp">
@@ -39,24 +42,31 @@ import 'mdi-vue/ChevronLeftIcon'
 
 const VIEW_MODES_VERBOSE = {
   user: 'user',
-  operation: 'operation'
+  operation: 'operation',
+}
+const EVENTS = {
+  reviewed: 'reviewed',
+  back: 'back',
 }
 
 export default {
   components: {
     UserOpList,
     UserDetails,
-    OpDetails
+    OpDetails,
   },
 
-  props: ['id'],
+  props: {
+    id: { type: String, required: true },
+  },
 
   data: _ => ({
     view: {
       mode: VIEW_MODES_VERBOSE.user,
-      operation: null
+      operation: null,
     },
-    VIEW_MODES_VERBOSE
+    VIEW_MODES_VERBOSE,
+    EVENTS,
   }),
 
   methods: {
@@ -69,14 +79,15 @@ export default {
       this.view.mode = VIEW_MODES_VERBOSE.user
       this.view.operation = null
     },
+
     back () {
       if (this.view.mode === VIEW_MODES_VERBOSE.user) {
-        this.$emit('back')
+        this.$emit(EVENTS.back)
         return
       }
       this.view.mode = VIEW_MODES_VERBOSE.user
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -114,6 +125,7 @@ export default {
     transform: translate(-50%, -50%);
   }
 }
+
 .users-show__details-wrp {
   max-width: 104rem;
   margin-bottom: 7rem;

@@ -1,497 +1,657 @@
 <template>
   <div class="limits-manager__wrapper">
-    <tabs>
-      <tab name="Specific account type">
-        <div class="limits-manager">
-          <h2>Limits management</h2>
-          <div class="limits-manager__inner">
-            <div class="limits-manager__limits-list-wrp">
-              <select-field
-                v-model="filters.accountRole"
-                class="limits-manager__filter"
-                label="Account type"
-              >
-                <option
-                  v-for="type in Object.values(ACCOUNT_ROLES)"
-                  v-show="ACCOUNT_ROLES_VERBOSE[type]"
-                  :key="type"
-                  :value="type"
-                  :selected="type === +filters.accountRole"
-                >
-                  {{ ACCOUNT_ROLES_VERBOSE[type] }}
-                </option>
-              </select-field>
-            </div>
-            <div class="limits-manager__limits-list-wrp">
-              <select-field
-                v-model="filters.asset"
-                class="limits-manager__filter"
-                label="Asset"
-              >
-                <option
-                  v-for="item in assets"
-                  :key="item.code"
-                  :value="item.code"
-                  :selected="item.code === filters.asset"
-                >
-                  {{ item.details.name }} ({{ item.code }})
-                </option>
-              </select-field>
-            </div>
-          </div>
-        </div>
-      </tab>
-      <tab name="Specific account">
-        <div class="limits-manager">
-          <h2>Limits management</h2>
-          <div class="limits-manager-filters">
-            <input-field
-              class="limits-manager-filters__field
-                    limits-manager-filters__specific-user-field"
-              v-model.trim="specificUserAddress"
-              label="Email or Account ID"
-            />
-
-            <select-field v-model="filters.asset"
-              class="limits-manager-filters__specific-user-field"
-              label="Asset"
-            >
-              <option
-                v-for="item in assets"
-                :key="item.code"
-                :value="item.code"
-                :selected="item.code === filters.asset"
-              >
-                {{ item.details.name }} ({{ item.code }})
-              </option>
-            </select-field>
-          </div>
-        </div>
-      </tab>
-    </tabs>
-    <div class="limits-manager__inner">
-      <div class="limits-manager__limits-list-wrp">
-        <template v-if="limits.payment">
-          <div class="limits-manager__limits-list">
-            <h3 class="limits-manager__content-title">Payment</h3>
-            <div class="limits-manager__limits-list-inner">
-              <template v-for="(type,i) in LIMITS_TYPES">
-                <div class="limits-manager__limit-row" :key="i">
-                  <span class="limits-manager__limit-type">
-                    {{ type.replace('Out', '') }} limit
-                  </span>
-                  <input-field
-                    v-model="limits.payment[type]"
-                    class="limits-manager__limit-field"
-                    :step="DEFAULT_INPUT_STEP"
-                    :label="' '"
-                    min="0"
-                  />
-                  <switch-field v-model="switchValues.payment[type]" />
-                </div>
-              </template>
-            </div>
-          </div>
-
-          <div class="limits-manager__limits-action">
-            <button
-              class="limits-manager__update-btn app__btn"
-              :disabled="isPending"
-              @click="updateLimits(limits.payment)"
-            >
-              Update payment limits
-            </button>
-          </div>
-        </template>
-      </div>
-      <div class="limits-manager__limits-list-wrp">
-        <template v-if="limits.withdrawal">
-          <div class="limits-manager__limits-list">
-            <h3 class="limits-manager__content-title">Withdrawal</h3>
-            <div class="limits-manager__limits-list-inner">
-              <template v-for="(type,i) in LIMITS_TYPES">
-                <div class="limits-manager__limit-row" :key="i">
-                  <span class="limits-manager__limit-type">
-                    {{ type.replace('Out', '') }} limit
-                  </span>
-                  <input-field
-                    v-model="limits.withdrawal[type]"
-                    class="limits-manager__limit-field"
-                    :step="DEFAULT_INPUT_STEP"
-                    :label="' '"
-                    min="0"
-                  />
-                  <switch-field v-model="switchValues.withdrawal[type]" />
-                </div>
-              </template>
-            </div>
-          </div>
-
-          <div class="limits-manager__limits-action">
-            <button
-              class="limits-manager__update-btn app__btn"
-              :disabled="isPending"
-              @click="updateLimits(limits.withdrawal)"
-            >
-              Update withdrawal limits
-            </button>
-          </div>
-        </template>
-      </div>
-      <div class="limits-manager__limits-list-wrp">
-        <template v-if="limits.deposit">
-          <div class="limits-manager__limits-list">
-            <h3 class="limits-manager__content-title">Deposit</h3>
-            <div class="limits-manager__limits-list-inner">
-              <template v-for="(type,i) in LIMITS_TYPES">
-                <div class="limits-manager__limit-row" :key="i">
-                  <span class="limits-manager__limit-type">
-                    {{ type.replace('Out', '') }} limit
-                  </span>
-                  <input-field
-                    v-model="limits.deposit[type]"
-                    class="limits-manager__limit-field"
-                    :step="DEFAULT_INPUT_STEP"
-                    :label="' '"
-                    min="0"
-                  />
-                  <switch-field v-model="switchValues.deposit[type]" />
-                </div>
-              </template>
-            </div>
-          </div>
-
-          <div class="limits-manager__limits-action">
-            <button
-              class="limits-manager__update-btn app__btn"
-              :disabled="isPending"
-              @click="updateLimits(limits.deposit)"
-            >
-              Update deposit limits
-            </button>
-          </div>
-        </template>
+    <div class="limits-manager">
+      <h2>Limits management</h2>
+      <div
+        class="limits-manager__filters"
+        :class="{
+          'limits-manager__filters--global':
+            filters.scope === SCOPE_TYPES.global
+        }"
+      >
+        <select-field
+          v-model="filters.asset"
+          class="limits-manager__filter"
+          label="Asset"
+        >
+          <option
+            v-for="item in assets"
+            :key="item.id"
+            :value="item.id"
+            :selected="item.id === filters.asset"
+          >
+            {{ item.details.name }} ({{ item.id }})
+          </option>
+        </select-field>
+        <select-field
+          class="limits-manager__filter"
+          label="Scope"
+          v-model="filters.scope"
+        >
+          <option :value="SCOPE_TYPES.global">
+            Global
+          </option>
+          <option :value="SCOPE_TYPES.accountRole">
+            Account type
+          </option>
+          <option :value="SCOPE_TYPES.account">
+            Account
+          </option>
+        </select-field>
+        <select-field
+          v-model="filters.accountRole"
+          class="limits-manager__filter"
+          label="Account type"
+          v-if="filters.scope === SCOPE_TYPES.accountRole"
+        >
+          <option :value="ACCOUNT_ROLES.general">
+            General
+          </option>
+          <option :value="ACCOUNT_ROLES.notVerified">
+            Not verified
+          </option>
+          <option :value="ACCOUNT_ROLES.corporate">
+            Corporate
+          </option>
+        </select-field>
+        <input-field
+          class="limits-manager__filter"
+          v-model.trim="filters.account"
+          label="Email or Account ID"
+          autocomplete-type="email"
+          v-if="filters.scope === SCOPE_TYPES.account"
+        />
       </div>
     </div>
+    <div
+      v-if="!isLimitsLoading"
+      class="limits-manager__inner"
+    >
+      <template
+        v-if="filters.scope !== SCOPE_TYPES.account || filters.userAddress"
+      >
+        <div class="limits-manager__limits-list-wrp">
+          <template v-if="limits.payment">
+            <div class="limits-manager__limits-list">
+              <h3 class="limits-manager__content-title">
+                Payment limits
+              </h3>
+              <div class="limits-manager__limits-list-inner">
+                <template v-for="(type, i) in LIMITS_TYPES">
+                  <div class="limits-manager__limit-row" :key="i">
+                    <span class="limits-manager__limit-type">
+                      {{ type.replace('Out', '') }}
+                    </span>
+                    <input-field
+                      type="number"
+                      :value="normalizeLimitAmount(limits.payment[type])"
+                      @input="setLimitValue($event, limits.payment[type])"
+                      class="limits-manager__limit-field"
+                      :placeholder="getLimitLabel(limits.payment, type)"
+                      :class="{
+                        'limits-manager__limit-field--unlimited':
+                          isMaxLimitValue(limits.payment[type])
+                      }"
+                      :step="DEFAULT_INPUT_STEP"
+                      :max="DEFAULT_MAX_AMOUNT"
+                    />
+                  </div>
+                </template>
+              </div>
+            </div>
+
+            <div class="limits-manager__limits-action">
+              <button
+                class="limits-manager__update-btn app__btn app__btn--info"
+                :disabled="isPending"
+                @click="updateLimits(limits.payment)"
+              >
+                Update
+              </button>
+
+              <button
+                class="
+                limits-manager__remove-btn
+                app__btn app__btn-outline
+                app__btn-outline--danger
+              "
+                :disabled="isPending || limits.payment.id === 0"
+                @click="removeLimits(limits.payment, 'payment')"
+              >
+                Remove
+              </button>
+            </div>
+          </template>
+        </div>
+        <div class="limits-manager__limits-list-wrp">
+          <template v-if="limits.withdrawal">
+            <div class="limits-manager__limits-list">
+              <h3 class="limits-manager__content-title">
+                Withdrawal limits
+              </h3>
+              <div class="limits-manager__limits-list-inner">
+                <template v-for="(type,i) in LIMITS_TYPES">
+                  <div class="limits-manager__limit-row" :key="i">
+                    <span class="limits-manager__limit-type">
+                      {{ type.replace('Out', '') }}
+                    </span>
+                    <input-field
+                      type="number"
+                      :value="normalizeLimitAmount(limits.withdrawal[type])"
+                      @input="setLimitValue($event, limits.withdrawal[type])"
+                      class="limits-manager__limit-field"
+                      :placeholder="getLimitLabel(limits.withdrawal, type)"
+                      :class="{
+                        'limits-manager__limit-field--unlimited':
+                          isMaxLimitValue(limits.withdrawal[type])
+                      }"
+                      :step="DEFAULT_INPUT_STEP"
+                      :max="DEFAULT_MAX_AMOUNT"
+                    />
+                  </div>
+                </template>
+              </div>
+            </div>
+
+            <div class="limits-manager__limits-action">
+              <button
+                class="limits-manager__update-btn app__btn app__btn--info"
+                :disabled="isPending"
+                @click="updateLimits(limits.withdrawal)"
+              >
+                Update
+              </button>
+
+              <button
+                class="
+                limits-manager__remove-btn
+                app__btn app__btn-outline
+                app__btn-outline--danger
+               "
+                :disabled="isPending || limits.withdrawal.id === 0"
+                @click="removeLimits(limits.withdrawal, 'withdrawal')"
+              >
+                Remove
+              </button>
+            </div>
+          </template>
+        </div>
+        <div class="limits-manager__limits-list-wrp">
+          <template v-if="limits.deposit">
+            <div class="limits-manager__limits-list">
+              <h3 class="limits-manager__content-title">
+                Deposit limits
+              </h3>
+              <div class="limits-manager__limits-list-inner">
+                <template v-for="(type,i) in LIMITS_TYPES">
+                  <div class="limits-manager__limit-row" :key="i">
+                    <span class="limits-manager__limit-type">
+                      {{ type.replace('Out', '') }}
+                    </span>
+                    <input-field
+                      type="number"
+                      :value="normalizeLimitAmount(limits.deposit[type])"
+                      @input="setLimitValue($event, limits.deposit[type])"
+                      class="limits-manager__limit-field"
+                      :placeholder="getLimitLabel(limits.deposit, type)"
+                      :class="{
+                        'limits-manager__limit-field--unlimited':
+                          isMaxLimitValue(limits.deposit[type])
+                      }"
+                      :step="DEFAULT_INPUT_STEP"
+                      :max="DEFAULT_MAX_AMOUNT"
+                    />
+                  </div>
+                </template>
+              </div>
+            </div>
+
+            <div class="limits-manager__limits-action">
+              <button
+                class="limits-manager__update-btn app__btn app__btn--info"
+                :disabled="isPending"
+                @click="updateLimits(limits.deposit)"
+              >
+                Update
+              </button>
+
+              <button
+                class="
+                limits-manager__remove-btn
+                app__btn app__btn-outline
+                app__btn-outline--danger
+              "
+                :disabled="isPending || limits.deposit.id === 0"
+                @click="removeLimits(limits.deposit, 'deposit')"
+              >
+                Remove
+              </button>
+            </div>
+          </template>
+        </div>
+      </template>
+      <template v-else-if="isAddressLoading">
+        <div class="limits-manager__message-wrp">
+          <p>Loading ...</p>
+        </div>
+      </template>
+      <template v-else-if="!filters.account">
+        <div class="limits-manager__message-wrp">
+          <p>Please specify account</p>
+        </div>
+      </template>
+      <template v-else>
+        <div class="limits-manager__message-wrp">
+          <p>Such account not found</p>
+        </div>
+      </template>
+    </div>
+
+    <p v-else>
+      Loading the limits…
+    </p>
   </div>
 </template>
 
 <script>
-  import api from '@/api'
-  import { Sdk } from '@/sdk'
-  import get from 'lodash/get'
-  import throttle from 'lodash/throttle'
-  import pick from 'lodash/pick'
-  import {
+import { SelectField, InputField } from '@comcom/fields'
+import get from 'lodash/get'
+import throttle from 'lodash/throttle'
+import pick from 'lodash/pick'
+import { Sdk } from '@/sdk'
+import {
+  STATS_OPERATION_TYPES,
+  DEFAULT_MAX_AMOUNT,
+  DEFAULT_INPUT_STEP,
+} from '@/constants'
+import config from '@/config'
+import { confirmAction } from '@/js/modals/confirmation_message'
+import { ErrorHandler } from '@/utils/ErrorHandler'
+import { ApiCallerFactory, StubbornApiCaller } from '@/api-caller-factory'
+import { LimitsRecord } from '@/js/records/limits.record'
+import cloneDeep from 'lodash/cloneDeep'
+
+const LIMITS_TYPES = [
+  'dailyOut',
+  'weeklyOut',
+  'monthlyOut',
+  'annualOut',
+]
+
+const SCOPE_TYPES = Object.freeze({ // non-xdr values, internal use only
+  account: 'USER',
+  accountRole: 'ACCOUNT_TYPE',
+  global: 'GLOBAL',
+})
+
+export default {
+  components: {
     SelectField,
     InputField,
-    SwitchField,
-    TickField
-  } from '@comcom/fields'
-
-  import {
-    Tabs,
-    Tab
-  } from '@comcom/Tabs'
-
-  import { STATS_OPERATION_TYPES, DEFAULT_MAX_AMOUNT } from '@/constants'
-  import config from '@/config'
-
-  const ACCOUNT_ROLES_VERBOSE = Object.freeze({
-    [config.ACCOUNT_ROLES.notVerified]: 'Unverified user',
-    [config.ACCOUNT_ROLES.general]: 'General user',
-    [config.ACCOUNT_ROLES.corporate]: 'Corporate user'
-  })
-
-  const LIMIT_OPS_STR = Object.freeze({
-    payment: 'paymentOut',
-    withdrawal: 'withdraw',
-    deposit: 'deposit'
-  })
-
-  const LIMITS_TYPES = [
-    'dailyOut',
-    'weeklyOut',
-    'monthlyOut',
-    'annualOut'
-  ]
-
-  export default {
-    components: {
-      SelectField,
-      SwitchField,
-      InputField,
-      TickField,
-      Tabs,
-      Tab
+  },
+  data: _ => ({
+    filters: {
+      asset: '',
+      accountRole: '',
+      userAddress: '',
+      account: '',
+      scope: SCOPE_TYPES.global,
     },
-    data: _ => ({
-      filters: {
-        asset: '',
-        accountRole: '',
-        email: '',
-        address: ''
-      },
-      specificUserAddress: '',
-      limits: {
-        withdrawal: null,
-        payment: null,
-        deposit: null
-      },
-      switchValues: {
-        payment: {
-          dailyOut: false,
-          weeklyOut: false,
-          monthlyOut: false,
-          annualOut: false
-        },
-        withdrawal: {
-          dailyOut: false,
-          weeklyOut: false,
-          monthlyOut: false,
-          annualOut: false
-        },
-        deposit: {
-          dailyOut: false,
-          weeklyOut: false,
-          monthlyOut: false,
-          annualOut: false
-        }
-      },
-      assets: [],
-      isPending: false,
-      LIMITS_TYPES,
-      ACCOUNT_ROLES: config.ACCOUNT_ROLES,
-      ACCOUNT_ROLES_VERBOSE,
-      numericValueRegExp: /^\d*\.?\d*$/
+    limits: {
+      withdrawal: {},
+      payment: {},
+      deposit: {},
+    },
+    assets: [],
+    isLimitsLoading: false,
+    isPending: false,
+    isAddressLoading: false,
+    LIMITS_TYPES,
+    DEFAULT_MAX_AMOUNT,
+    DEFAULT_INPUT_STEP,
+    ACCOUNT_ROLES: config.ACCOUNT_ROLES,
+    ACCOUNT_ROLES_VERBOSE: Object.freeze({
+      [config.ACCOUNT_ROLES.notVerified]: 'Unverified user',
+      [config.ACCOUNT_ROLES.general]: 'General user',
+      [config.ACCOUNT_ROLES.corporate]: 'Corporate user',
     }),
-    async created () {
-      await this.getAssets()
+    numericValueRegExp: /^[+-]?\d+(\.\d+)?$/,
+    SCOPE_TYPES,
+  }),
+  watch: {
+    assets: {
+      handler: function () {
+        this.setFilters()
+        this.getLimits()
+      },
+      immediate: true,
     },
-    methods: {
-      async getLimits () {
-        if (!this.filters.asset) return
-        const [paymentLimits, withdrawalLimits, depositLimits] = await Promise.all([
-          getLimit.apply(this, [STATS_OPERATION_TYPES.paymentOut]),
-          getLimit.apply(this, [STATS_OPERATION_TYPES.withdraw]),
-          getLimit.apply(this, [STATS_OPERATION_TYPES.deposit])
-        ])
-        this.limits.payment = paymentLimits
-        this.limits.withdrawal = withdrawalLimits
-        this.limits.deposit = depositLimits
+    'filters.accountRole': {
+      handler: function (value) {
+        if (value) {
+          this.filters.account = ''
+          this.filters.userAddress = ''
+          this.setFilters()
+          this.getLimits()
+        }
+      },
+      immediate: true,
+    },
+    'filters.asset': {
+      handler: function () {
+        this.setFilters()
+        this.getLimits()
+      },
+      immediate: true,
+    },
+    'filters.account': {
+      handler: throttle(function () {
+        this.setFilters()
+      }, 1000),
+      immediate: true,
+    },
+    'filters.scope': function (value) {
+      if (!value) return
+      this.filters.accountRole = value === SCOPE_TYPES.accountRole
+        ? String(config.ACCOUNT_ROLES.general)
+        : null
+      this.filters.account = ''
+      if (value !== SCOPE_TYPES.account) {
+        this.setFilters()
+        this.getLimits()
+      }
+    },
+    'filters.userAddress': function (value) {
+      if (!value) return
+      this.getLimits()
+    },
+  },
+  async created () {
+    await this.getAssets()
+  },
+  methods: {
+    async getLimits () {
+      if (!this.filters.asset) return
 
-        const pickedPaymentLimits = pick(
-          this.limits.payment,
-          Object.keys(this.switchValues.payment)
+      this.isLimitsLoading = true
+      const [
+        paymentLimits,
+        withdrawalLimits,
+        depositLimits,
+      ] = await Promise.all([
+        getLimit.apply(this, [STATS_OPERATION_TYPES.paymentOut]),
+        getLimit.apply(this, [STATS_OPERATION_TYPES.withdraw]),
+        getLimit.apply(this, [STATS_OPERATION_TYPES.deposit]),
+      ])
+
+      const limitDetails = {
+        assetCode: this.filters.asset,
+        accountId: this.filters.userAddress,
+        accountRole: this.filters.accountRole,
+      }
+
+      this.limits.payment = new LimitsRecord(paymentLimits, {
+        statsOpType: STATS_OPERATION_TYPES.paymentOut,
+        ...limitDetails,
+      })
+
+      this.limits.withdrawal = new LimitsRecord(
+        withdrawalLimits, {
+          statsOpType: STATS_OPERATION_TYPES.withdraw,
+          ...limitDetails,
+        })
+
+      this.limits.deposit = new LimitsRecord(
+        depositLimits, {
+          statsOpType: STATS_OPERATION_TYPES.deposit,
+          ...limitDetails,
+        })
+
+      this.isLimitsLoading = false
+
+      async function getLimit (statsOpType) {
+        const filters = {}
+        if (this.filters.scope === SCOPE_TYPES.account) {
+          filters.account = this.filters.userAddress
+        } else if (this.filters.scope === SCOPE_TYPES.accountRole) {
+          filters.account_role = this.filters.accountRole
+        }
+        const stubbornApiCaller = new StubbornApiCaller(
+          ApiCallerFactory.createCallerInstance()
         )
-        const pickedWithdrawLimits = pick(
-          this.limits.withdrawal,
-          Object.keys(this.switchValues.withdrawal)
-        )
-        const pickedDepositLimits = pick(
-          this.limits.deposit,
-          Object.keys(this.switchValues.deposit)
-        )
-        this.switchValues.payment = Object.keys(this.switchValues.payment)
-          .reduce((newObj, key) => {
-            return {
-              ...newObj,
-              // If not equal to DEFAULT_MAX_AMOUNT, limits are enabled
-              [key]: pickedPaymentLimits[key] !== DEFAULT_MAX_AMOUNT
-            }
-          }, {})
-
-        this.switchValues.withdrawal = Object.keys(this.switchValues.withdrawal)
-          .reduce((newObj, key) => {
-            return {
-              ...newObj,
-              [key]: pickedWithdrawLimits[key] !== DEFAULT_MAX_AMOUNT
-            }
-          }, {})
-
-        this.switchValues.deposit = Object.keys(this.switchValues.deposit)
-          .reduce((newObj, key) => {
-            return {
-              ...newObj,
-              [key]: pickedDepositLimits[key] !== DEFAULT_MAX_AMOUNT
-            }
-          }, {})
-
-        async function getLimit (statsOpType) {
-          const { data } = await Sdk.horizon.limits.get({
-            account_id: this.filters.address,
-            account_type: this.filters.accountRole,
-            stats_op_type: statsOpType,
-            asset: this.filters.asset,
-            email: this.filters.email
+        const { data: limits } = await stubbornApiCaller
+          .stubbornGetWithSignature('/v3/limits', {
+            filter: {
+              asset: this.filters.asset,
+              stats_op_type: statsOpType,
+              ...filters,
+            },
           })
+        if (this.filters.scope === SCOPE_TYPES.global) {
+          const globalLimits = limits
+            .filter((limit) => !(limit.accountRole || limit.account))
 
-          // TODO: remove legacy consistency fix
-          if (data.accountType || data.accountType === null) {
-            const role = data.accountType === null
-              ? null
-              : String(data.accountType)
-            data.accountRole = role
-            delete data.accountType
-          }
-
-          return data
+          return globalLimits[0]
+        } else {
+          return limits[0]
         }
-      },
-
-      async updateLimits (limits) {
-        this.isPending = true
-        const limitsStatsOpTypeStr = Object.keys(STATS_OPERATION_TYPES)
-          .find(key => STATS_OPERATION_TYPES[key] === limits.statsOpType)
-        const limitsOpStr = Object.keys(LIMIT_OPS_STR)
-          .find(key => LIMIT_OPS_STR[key] === limitsStatsOpTypeStr)
-        const disabledLimits = Object.keys(this.switchValues[limitsOpStr])
-          .filter(item => item)
-          .reduce((newObj, item) => {
-            return {
-              ...newObj,
-              [item]: this.switchValues[limitsOpStr][item] ? limits[item] : DEFAULT_MAX_AMOUNT
-            }
-          }, {})
-
-        if (!this.isValidLimits(disabledLimits)) {
-          this.isPending = false
-          return false
+      }
+    },
+    async updateLimits (limits) {
+      const newLimits = cloneDeep(limits)
+      LIMITS_TYPES.forEach(
+        type => {
+          if (newLimits[type].value === '' && !this.isLimitsEmpty(newLimits)) {
+            newLimits[type] = DEFAULT_MAX_AMOUNT
+          } else {
+            newLimits[type] = newLimits[type].value
+          }
         }
-        try {
-          if (limits.accountRole == null) {
-            // managelimitbuilder somehow doesnt accept opts.accountRole NULL value
-            delete limits.accountRole
+      )
+      if (!this.isValidLimits(newLimits) || !this.isAccountAddressValid()) {
+        return
+      }
+      this.isPending = true
+      try {
+        if (newLimits.accountRole == null) {
+          // managelimitbuilder doesnt accept opts.accountRole NULL value
+          delete newLimits.accountRole
+        }
+
+        if (newLimits.accountID == null) {
+          // managelimitbuilder doesnt accept opts.accountID NULL value
+          delete newLimits.accountID
+        }
+        const operation = Sdk.base.ManageLimitsBuilder.createLimits({
+          ...newLimits,
+        })
+        await ApiCallerFactory
+          .createCallerInstance()
+          .postOperations(operation)
+        await this.getAssets()
+        this.$store.dispatch('SET_INFO', 'Limits update saved')
+      } catch (e) {
+        ErrorHandler.process(e)
+      }
+      this.isPending = false
+    },
+    isLimitsEmpty (limits) {
+      const totalCountLimits = 4
+      let countEmptyLimits = 0
+      LIMITS_TYPES.forEach(
+        type => {
+          if (limits[type].value === '') {
+            countEmptyLimits++
           }
-          let accountID
-          // managelimitbuilder somehow doesnt accept opts.accountId NULL value
-          if (limits.accountId) {
-            accountID = limits.accountId
-          }
-          const operation = Sdk.base.ManageLimitsBuilder.createLimits({
-            ...limits,
-            ...disabledLimits,
-            accountID
+        }
+      )
+      return countEmptyLimits === totalCountLimits
+    },
+    async removeLimits (limits, type) {
+      if (limits.id === 0) {
+        return false
+      }
+      if (!await confirmAction({
+        title: this.getTitleConfirmAction(type),
+      })) return
+      this.isPending = true
+      try {
+        const operation = Sdk.base.ManageLimitsBuilder.removeLimits({
+          id: (limits.id).toString(),
+        })
+        await ApiCallerFactory
+          .createCallerInstance()
+          .postOperations(operation)
+        await this.getLimits()
+        this.$store.dispatch('SET_INFO', 'Limits removed')
+      } catch (e) {
+        ErrorHandler.process(e)
+      }
+      this.isPending = false
+    },
+    getTitleConfirmAction (type) {
+      if (this.filters.scope === SCOPE_TYPES.accountRole) {
+        const accountRole = this.ACCOUNT_ROLES_VERBOSE[this.filters.accountRole]
+          .toLowerCase()
+
+        return `Delete ${accountRole} ${type} limits?`
+      } else if (this.filters.scope === SCOPE_TYPES.account) {
+        return `Delete ${this.filters.account} ${type} limits?`
+      } else {
+        return `Delete global ${type} limits?`
+      }
+    },
+    async getAssets () {
+      const { data } = await ApiCallerFactory
+        .createStubbornCallerInstance()
+        .stubbornGet('/v3/assets')
+      this.assets = data
+    },
+    async loadAccountIdByEmail (email) {
+      try {
+        const { data } = await ApiCallerFactory
+          .createCallerInstance()
+          .getWithSignature('/identities', {
+            filter: { email: email },
+            page: { limit: 1 },
           })
-          await Sdk.horizon.transactions.submitOperations(operation)
-          await this.getAssets()
-          this.$store.dispatch('SET_INFO', 'Limits update saved')
-        } catch (e) {
-          console.error(e)
-          e.showMessage()
+        const userEmail = ((data || [])[0] || {}).email || email
+        if (userEmail === email) {
+          this.filters.userAddress = ((data || [])[0] || {}).address
+        } else {
+          this.filters.userAddress = ''
         }
-        this.isPending = false
-      },
+      } catch (error) {
+        ErrorHandler.processWithoutFeedback(error)
+      }
+    },
+    // it's a quick fix of the limits validation. Need to refactor it ASAP
+    isValidLimits (limits) {
+      for (const limit of Object.values(pick(limits, LIMITS_TYPES))) {
+        if (!this.numericValueRegExp.test(limit)) {
+          ErrorHandler.process('Only numeric value allowed')
+          return false
+        }
+      }
+      if (+limits.weeklyOut < +limits.dailyOut) {
+        ErrorHandler.process('Weekly out limits should be more or equal to daily out')
+        return false
+      }
+      const isMonthlyLimitsValid =
+        +limits.monthlyOut < +limits.dailyOut ||
+        +limits.monthlyOut < +limits.weeklyOut
+      if (isMonthlyLimitsValid) {
+        ErrorHandler.process('Monthly out limits should be more or equal to daily and/or weekly out')
+        return false
+      }
+      const isAnnualLimitsValid =
+        +limits.annualOut < +limits.dailyOut ||
+        +limits.annualOut < +limits.weeklyOut ||
+        +limits.annualOut < +limits.monthlyOut
+      if (isAnnualLimitsValid) {
+        ErrorHandler.process('Annual out limits should be more or equal to daily, weekly and/or monthly out')
+        return false
+      }
+      return true
+    },
 
-      async getAssets () {
-        const response = await Sdk.horizon.assets.getAll()
-        this.assets = response.data
-      },
-      async getAccountIdByEmail (email) {
-        this.filters.address = await api.users.getAccountIdByEmail(email)
-      },
-      // it's a quick fix of the limits validation. Need to refactor it ASAP
-      isValidLimits (limits) {
-        for (const limit of Object.values(limits)) {
-          if (!this.numericValueRegExp.test(limit)) {
-            this.$store.dispatch('SET_ERROR', 'Only numeric value allowed')
-            return false
-          }
-        }
-        if (+limits.weeklyOut < +limits.dailyOut) {
-          this.$store.dispatch('SET_ERROR', 'Weekly out limits should be more or equal to daily out')
-          return false
-        }
-        if (+limits.monthlyOut < +limits.dailyOut || +limits.monthlyOut < +limits.weeklyOut) {
-          this.$store.dispatch('SET_ERROR', 'Monthly out limits should be more or equal to daily and/or weekly out')
-          return false
-        }
-        if (+limits.annualOut < +limits.dailyOut || +limits.annualOut < +limits.weeklyOut || +limits.annualOut < +limits.monthlyOut) {
-          this.$store.dispatch('SET_ERROR', 'Annual out limits should be more or equal to daily, weekly and/or monthly out')
-          return false
-        }
+    isAccountAddressValid () {
+      const isAddressInvalid = !this.filters.userAddress &&
+        this.filters.scope === SCOPE_TYPES.account
+
+      if (isAddressInvalid) {
+        ErrorHandler.process('Such account does not exist in the system')
+        return false
+      } else {
         return true
-      },
-      setFilters () {
-        if (!this.filters.asset) this.filters.asset = get(this.assets, '[0].code')
-        if (!this.filters.accountRole) {
-          this.filters.accountRole = config.ACCOUNT_ROLES.general + ''
-        }
-        if (this.specificUserAddress) {
-          // Both accountRole and accountId cant be requested at same time
-          this.filters.accountRole = ''
-          const emailRegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-          const idLength = 56
-          if (emailRegExp.test(this.specificUserAddress)) {
-            this.getAccountIdByEmail(this.specificUserAddress)
-          } else if (this.specificUserAddress.length === idLength) {
-            this.filters.address = this.specificUserAddress
-          }
-        }
       }
     },
-    watch: {
-      assets: {
-        handler: function () {
-          this.setFilters()
-          this.getLimits()
-        },
-        immediate: true
-      },
-      'filters.accountRole': {
-        handler: function (value) {
-          if (value) {
-            this.specificUserAddress = ''
-            this.filters.address = ''
-          }
-          this.setFilters()
-          this.getLimits()
-        },
-        immediate: true
-      },
-      'filters.asset': {
-        handler: function () {
-          this.setFilters()
-          this.getLimits()
-        },
-        immediate: true
-      },
-      'specificUserAddress': {
-        handler: throttle(function (value) {
-          if (!value) return
-          this.setFilters()
-          this.getLimits()
-        }, 1000),
-        immediate: true
+    async setFilters () {
+      if (!this.filters.asset) this.filters.asset = get(this.assets, '[0].id')
+      const emailRegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      this.isAddressLoading = true
+      if (this.filters.account) {
+        if (Sdk.base.Keypair.isValidPublicKey(this.filters.account)) {
+          this.filters.userAddress = this.filters.account
+        } else if (emailRegExp.test(this.filters.account)) {
+          await this.loadAccountIdByEmail(this.filters.account)
+        }
+      } else {
+        this.filters.userAddress = ''
       }
-    }
-  }
+      this.isAddressLoading = false
+    },
+    normalizeLimitAmount (limit) {
+      if (limit) {
+        return this.isMaxLimitValue(limit)
+          ? limit.isChanged ? DEFAULT_MAX_AMOUNT : ''
+          : limit.value
+      }
+    },
+    getLimitLabel (limit, type) {
+      if (limit[type]) {
+        return limit[type].value === ''
+          ? 'Not set'
+          : 'Unlimited'
+      }
+    },
+    setLimitValue (value, limit) {
+      limit.isChanged = true
+      limit.value = value
+      if (this.isMaxLimitValue(limit)) limit.value = DEFAULT_MAX_AMOUNT
+    },
+    isMaxLimitValue (limit) {
+      if (limit) {
+        return +limit.value >= +DEFAULT_MAX_AMOUNT
+      }
+    },
+  },
+}
 </script>
 
 <style lang="scss">
+  @import "@/assets/scss/_colors.scss";
+
   .limits-manager {
-    /*max-width: 80rem;*/
     margin-top: 2rem;
   }
 
-  .limits-manager__filters,
   .limits-manager__inner {
     display: flex;
+    justify-content: center;
   }
-
   .limits-manager__filter {
-    margin-bottom: 5rem;
-    width: 100%;
-    &:first-child { margin-right: 2rem }
+    width: calc(33.333333% - 3.4rem);
+    &:not(:last-child) {
+      margin-right: 5rem;
+    }
   }
 
-  .limits-manager-filters,
   .limits-manager__limit-row {
     display: flex;
-    align-items: flex-end;
+    align-items: center;
   }
 
-  .limits-manager-filters__field,
   .limits-manager__limits-list-wrp {
     &:first-child:not(:only-child),
     &:not(:last-child) {
@@ -500,27 +660,52 @@
     width: 100%;
   }
 
-  .limits-manager-filters__field {
-    margin-bottom: 5rem;
-  }
-
   .limits-manager__limits-list {
-    margin-bottom: 4rem;
+    margin-bottom: 1.7rem;
+  }
+  .limits-manager__message-wrp {
+    display: flex;
+    justify-content: center;
   }
 
   .limits-manager__limit-type {
     margin-right: 1rem;
-    min-width: 7.5rem;
+    min-width: 5rem;
     font-size: 1.2rem;
     font-weight: 600;
+    padding: 1.7rem 0 0.6rem 0;
   }
 
-  .limits-manager-filters__specific-user-field {
+  .limits-manager__remove-btn {
+    margin-left: 0.5rem;
+  }
+
+  .limits-manager__filters {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
     margin-bottom: 5rem;
-    width: 50%;
+
+    &--global {
+      justify-content: flex-start;
+    }
   }
 
-  .limits-manager__limit-field {
-    margin-right: 1rem;
+  .limits-manager__limits-action {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .limits-manager__update-btn,
+  .limits-manager__remove-btn {
+    min-width: 9rem;
+  }
+
+  .limits-manager__limit-field--unlimited {
+    & .input-field__input {
+      &::placeholder {
+        color: $color-text;
+      }
+    }
   }
 </style>

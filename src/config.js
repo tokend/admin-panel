@@ -7,7 +7,7 @@ const defaultFeatures = {
   SEED_AUTH: true,
 
   PHOTO_VERIFICATION: true,
-  KYC_REQUEST_STATES: ['approved', 'rejected', 'pending']
+  KYC_REQUEST_STATES: ['approved', 'rejected', 'pending'],
 }
 
 export default Object.assign(
@@ -33,26 +33,45 @@ export default Object.assign(
      * Should be populated by DevOps team during the deployment
      * The field being displayed on login screen.
      */
-    BUILD_VERSION: 'dev: ' + packageJson.version,
+    BUILD_VERSION: packageJson.version,
 
     ACCOUNT_ROLES: {
       // Will be updated on init
       notVerified: '',
       general: '',
       corporate: '',
-      blocked: ''
+      blocked: '',
+      usAccredited: '',
+      usVerified: '',
     },
 
     SIGNER_ROLES: {
       // Will be updated on init
-      default: ''
+      default: '',
     },
 
     ASSET_TYPES: {
       // Will be updated on init
       default: '0',
-      kycRequired: '1'
-    }
+      kycRequired: '1',
+    },
+
+    CHANGE_ROLE_TASKS: {
+      submitAutoVerification: -1,
+      completeAutoVerification: -1,
+      manualReviewRequired: -1,
+      default: 1,
+    },
+    /**
+     * URL of the Sentry DSN. It’s a representation of the configuration
+     * required by the Sentry SDKs.
+     */
+    SENTRY_DSN: '',
+
+    /**
+     * URL of the web client
+     */
+    WEB_CLIENT_URL: 'http://localhost:8095',
   },
   process.env,
   document.ENV

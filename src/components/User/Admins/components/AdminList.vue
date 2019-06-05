@@ -25,7 +25,10 @@
       </span>
     </div>
 
-    <ul class="admin-list__ul">
+    <ul
+      class="admin-list__ul"
+      v-if="list && list.length"
+    >
       <li
         class="admin-list__li"
         v-for="item in list"
@@ -47,7 +50,9 @@
             </template>
 
             <template v-if="item.id === userAddress">
-              <span class="secondary">(you)</span>
+              <span class="secondary">
+                (you)
+              </span>
             </template>
           </span>
 
@@ -81,25 +86,34 @@
         </router-link>
       </li>
     </ul>
+    <template v-else>
+      <div class="app-list__li-like">
+        <template v-if="isLoading">
+          <p>
+            Loading...
+          </p>
+        </template>
+
+        <template v-else>
+          <p>
+            Nothing here yet
+          </p>
+        </template>
+      </div>
+    </template>
   </div>
 </template>
 
 <script>
 import Vue from 'vue'
+
 import { mapGetters } from 'vuex'
 import { getters } from '@/store/types'
+
 import { ApiCallerFactory } from '@/api-caller-factory'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
-  data () {
-    return {
-      list: [],
-      masterPubKey: Vue.params.MASTER_ACCOUNT,
-      signerRoles: []
-    }
-  },
-
   filters: {
     deriveRoleName (roleId, signerRoles = []) {
       if (+roleId === 1) {
@@ -107,11 +121,20 @@ export default {
       }
       const role = signerRoles.find(item => item.id === roleId) || {}
       return (role.details || {}).name || `Unnamed (${roleId})`
+    },
+  },
+
+  data () {
+    return {
+      list: [],
+      masterPubKey: Vue.params.MASTER_ACCOUNT,
+      signerRoles: [],
+      isLoading: false,
     }
   },
 
   computed: {
-    ...mapGetters({ userAddress: getters.GET_USER_ADDRESS })
+    ...mapGetters({ userAddress: getters.GET_USER_ADDRESS }),
   },
 
   async created () {
@@ -120,7 +143,7 @@ export default {
       await this.loadSignerRoles()
       await this.loadSignerList()
     } catch (error) {
-      ErrorHandler.process(error)
+      ErrorHandler.processWithoutFeedback(error)
     }
     this.$store.commit('CLOSE_LOADER')
   },
@@ -134,12 +157,14 @@ export default {
     },
 
     async loadSignerList () {
+      this.isLoading = true
       const { data } = await ApiCallerFactory
         .createCallerInstance()
         .getWithSignature(`/v3/accounts/${this.masterPubKey}/signers`)
       this.list = data
-    }
-  }
+      this.isLoading = false
+    },
+  },
 }
 </script>
 

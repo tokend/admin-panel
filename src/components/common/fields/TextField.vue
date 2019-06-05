@@ -1,13 +1,19 @@
 <template>
-  <div class="text-field" :class="{
+  <div
+    class="text-field"
+    :class="{
       'text-field--error': errorMessage,
       'text-field--disabled': disabled
     }">
-    <span class="text-field__label" :class="{'text-field__label--hidden': isNoLabel}">
-      {{label}}
+    <span
+      class="text-field__label"
+      :class="{'text-field__label--hidden': isNoLabel}"
+    >
+      {{ label }}
     </span>
 
-    <textarea class="text-field__input"
+    <textarea
+      class="text-field__input"
       :placeholder="placeholder || ' '"
       :value="value"
       :disabled="disabled"
@@ -20,14 +26,14 @@
       :rows="rows"
       :cols="cols"
       @input="onInput"
-    ></textarea>
+    />
 
     <!-- TODO: add maxlength indicator -->
     <!-- TODO: enter key event handle -->
 
     <transition name="text-field__err-transition">
       <p class="text-field__err-mes" v-if="errorMessage">
-        {{errorMessage}}
+        {{ errorMessage }}
       </p>
     </transition>
   </div>
@@ -57,30 +63,20 @@ export default {
 
     // textarea proxies
     rows: { type: [String, Number], default: 4 },
-    cols: { type: [String, Number], default: undefined }
-  },
-
-  data () {
-    return {
-      // data
-    }
-  },
-
-  created () {
-    // created
+    cols: { type: [String, Number], default: undefined },
   },
 
   computed: {
     isNoLabel () {
       return this.label === null || this.label === '' || this.label === undefined
-    }
+    },
   },
 
   methods: {
     onInput (event) {
       this.$emit('input', event.target.value)
-    }
-  }
+    },
+  },
 }
 </script>
 

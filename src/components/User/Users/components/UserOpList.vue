@@ -4,7 +4,10 @@
       Operations
     </h2>
 
-    <ul class="app-list">
+    <ul
+      class="app-list"
+      v-if="records && records.length"
+    >
       <div class="app-list__header">
         <span class="app-list__cell">
           Type
@@ -23,15 +26,19 @@
         </span>
       </div>
 
-      <button class="app-list__li" v-for="item in records" :key="item.id" @click="$emit('op-select', item)">
-        <span class="app-list__cell" :title="item.type">
-          {{item.type}}
+      <button
+        class="app-list__li"
+        v-for="item in records"
+        :key="item.id"
+        @click="$emit('op-select', item)">
+        <span class="app-list__cell" :title="item.operationType">
+          {{ getOperationType(item) }}
         </span>
-        <span class="app-list__cell" :title="item.ledger_close_time">
-          {{item.ledgerCloseTime}}
+        <span class="app-list__cell" :title="item.appliedAt">
+          {{ item.appliedAt }}
         </span>
-        <span class="app-list__cell" :title="item.source_account">
-          {{item.sourceAccount}}
+        <span class="app-list__cell" :title="item.sourceAccount">
+          {{ item.sourceAccount }}
         </span>
         <span class="app-list__cell">
           <operation-counterparty :operation="item" />
@@ -39,83 +46,152 @@
       </button>
     </ul>
 
+    <template v-else>
+      <ul class="app-list">
+        <li class="app-list__li-like">
+          {{ isLoading ? 'Loading...' : 'Nothing here yet' }}
+        </li>
+      </ul>
+    </template>
+
     <div class="app__more-btn-wrp">
-      <button class="app__btn-secondary" v-if="!isListEnded && records" @click="getNextPage">
-        More
-      </button>
+      <collection-loader
+        :first-page-loader="getList"
+        @first-page-load="setList"
+        @next-page-load="extendList"
+      />
     </div>
   </div>
 </template>
 
 <script>
 import Vue from 'vue'
-import { Sdk } from '@/sdk'
+
 import moment from 'moment'
-import { formatAssetAmount } from '@/utils/formatters'
+
+import safeGet from 'lodash/get'
+
 import { OperationCounterparty } from '@comcom/getters'
+import { CollectionLoader } from '@/components/common'
+
+import { ApiCallerFactory } from '@/api-caller-factory'
+
+import { formatAssetAmount } from '@/utils/formatters'
+import { clearObject } from '@/utils/clearObject'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+
+import config from '@/config'
 
 export default {
   components: {
-    OperationCounterparty
+    OperationCounterparty,
+    CollectionLoader,
   },
+
+  props: {
+    id: { type: String, required: true },
+  },
+
   data () {
     return {
       formatAssetAmount,
-      list: undefined,
-      isListEnded: false,
-      masterPubKey: Vue.params.MASTER_ACCOUNT
+      list: [],
+      masterPubKey: Vue.params.MASTER_ACCOUNT,
+      isLoading: false,
     }
   },
-
-  props: ['id'],
 
   computed: {
     records () {
       if (!this.list) return undefined
-      return this.normalizeRecords(this.list.data)
-    }
-  },
-
-  created () {
-    this.getList()
+      return this.normalizeRecords(this.list)
+    },
   },
 
   methods: {
     async getList () {
+      this.isLoading = true
+      let response = {}
       try {
-        this.list = (await Sdk.horizon.account.getOperations(this.id))
+        response = await ApiCallerFactory
+          .createCallerInstance()
+          .getWithSignature('/v3/history', {
+            page: { order: 'desc' },
+            filter: clearObject({
+              account: this.id,
+            }),
+            include: ['operation.details'],
+          })
       } catch (error) {
-        this.$store.dispatch('SET_ERROR', 'Cannot load transaction list')
+        ErrorHandler.processWithoutFeedback(error)
+      }
+      this.isLoading = false
+      return response
+    },
+
+    getOperationType (record) {
+      switch (record.operationType) {
+        case 'Create change role request':
+          return this.getChangeRoleOperationType(record)
+        default:
+          return record.operationType
       }
     },
 
-    async getNextPage () {
-      try {
-        const oldLength = this.list.data.length
-        const chunk = await this.list.fetchNext()
-        this.list._data = this.list.data.concat(chunk.data)
-        this.list.fetchNext = chunk.fetchNext
-        this.isListEnded = oldLength === this.list.data.length
-      } catch (error) {
-        ErrorHandler.process(error)
+    getChangeRoleOperationType (record) {
+      const roleToSet = safeGet(
+        record, 'operation.details.roleToSet.id'
+      )
+      const isBlocked = Number(roleToSet) === config.ACCOUNT_ROLES.blocked
+      const isReset = Boolean(safeGet(
+        record, 'operation.details.creatorDetails.resetReason'
+      ))
+
+      // Currently the only non-blocking and non-resetting change role performed
+      // by the admin is unblocking. A small workaround of detecting Unblocked
+      // state, in the future replace to more robust solution if needed.
+      const isUnblocked =
+        !isBlocked && !isReset &&
+        safeGet(record, 'operation.source.id', '') === this.masterPubKey
+
+      let operationType
+      if (isBlocked) {
+        operationType = 'Block'
+      } else if (isReset) {
+        operationType = 'Reset to unverified'
+      } else if (isUnblocked) {
+        operationType = 'Unblock'
+      } else {
+        operationType = 'Change role request'
       }
+
+      return operationType
+    },
+
+    setList (data) {
+      this.list = data
+    },
+
+    async extendList (data) {
+      this.list = this.list.concat(data)
     },
 
     normalizeRecords (records) {
       return records.map((item) => {
-        return Object.assign({}, item, {
-          // Capitalize and remove underscores
-          type: item.type.charAt(0).toUpperCase() + item.type.split('_').join(' ').slice(1),
+        const operationType = item.operation.details.type
+          .replace(/operations-/g, '').split('-').join(' ')
 
-          ledgerCloseTime: moment(item.ledgerCloseTime).format('DD MMM YYYY [at] hh:mm:ss'),
-          sourceAccount: item.sourceAccount === this.masterPubKey ? 'Master' : item.sourceAccount
+        return Object.assign({}, item, {
+          // Capitalize and remove dashes
+          operationType: operationType.charAt(0).toUpperCase() +
+            operationType.slice(1),
+          appliedAt: moment(item.operation.appliedAt).format('DD MMM YYYY [at] hh:mm:ss'),
+          sourceAccount: item.operation.source.id === this.masterPubKey ? 'Master' : item.operation.source.id,
+          receiverAccount: safeGet(item, 'operation.details.receiverAccount.id'),
+          accountTo: safeGet(item, 'operation.details.accountTo.id'),
         })
       })
-    }
-  }
+    },
+  },
 }
 </script>
-
-<style scoped lang="scss">
-</style>

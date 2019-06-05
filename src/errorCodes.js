@@ -33,7 +33,6 @@ const OpInvoiceBalanceMismatch = 'This account id has no such balance'
 const OpInvoiceAccountMismatch = 'This account id has no such balance'
 const OpInvoiceAlreadyPaid = 'Error. Invoice have already been paid'
 const OpTooManySigners = 'Error. Signers limit is exceeded'
-const OpThresholdOutOfRange = 'Threshold out of range'
 const OpBadSigner = 'Invalid signer'
 const OpTooManyTrustLines = 'Error. Too many trust lines'
 const OpInvalidReference = 'Error. Invalid Reference'
@@ -53,8 +52,8 @@ const OpSignerAlreadyExists = 'Signer already exist'
 const OpDestinationNotFound = 'Destination not found'
 const OpAnotherExchange = 'Another exchange'
 const OpDemurrageRejectionNotAllowed = 'Demurrage rejection not allowed'
-const OpTokenAlreadyExists = 'Token already exists'
-const OpAssetTokenAlreadySet = 'Asset token already set'
+const OpAssetAlreadyExists = 'Asset already exists'
+const OpAssetAlreadySet = 'Asset already set'
 const OpSerialDuplication = 'Serial is duplicated'
 const OpMalformedPreemissions = 'Malformed preissuances'
 const OpNoTrust = 'No trust'
@@ -136,7 +135,6 @@ export const OpErrorCodes = new Map([
   ['op_invoice_account_mismatch', OpInvoiceAccountMismatch],
   ['op_invoice_already_paid', OpInvoiceAlreadyPaid],
   ['op_too_many_signers', OpTooManySigners],
-  ['op_threshold_out_of_range', OpThresholdOutOfRange],
   ['op_bad_signer', OpBadSigner],
   ['op_too_many_trust_lines', OpTooManyTrustLines],
   ['invalid_reference', OpInvalidReference],
@@ -156,8 +154,8 @@ export const OpErrorCodes = new Map([
   ['op_destination_not_found', OpDestinationNotFound],
   ['op_another_exchange', OpAnotherExchange],
   ['demurrage_rejection_not_allowed', OpDemurrageRejectionNotAllowed],
-  ['op_token_already_exists', OpTokenAlreadyExists],
-  ['op_asset_token_already_set', OpAssetTokenAlreadySet],
+  ['op_asset_already_exists', OpAssetAlreadyExists],
+  ['op_asset_token_already_set', OpAssetAlreadySet],
   ['serial_duplication', OpSerialDuplication],
   ['malformed_preemissions', OpMalformedPreemissions],
   ['op_no_trust', OpNoTrust],

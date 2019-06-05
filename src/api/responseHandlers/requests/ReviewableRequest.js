@@ -10,7 +10,7 @@ export class ReviewableRequest {
       .find(item => !/request_type|requestType/gi.test(item))
     this.operationDetails = {
       id: this.id,
-      ...this.record[valuableRequestDetailsKey]
+      ...this.record[valuableRequestDetailsKey],
     }
   }
 

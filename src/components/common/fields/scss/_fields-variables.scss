@@ -15,7 +15,7 @@ $field-error-margin-top: .4rem;
 $field-input-padding-top: 1.7rem;
 $field-input-padding-bottom: .6rem;
 $field-input-padding: $field-input-padding-top 0 $field-input-padding-bottom 0;
-$field-placeholer-color: $field-color-unfocused;
+$field-placeholder-color: $field-color-unfocused;
 
 @mixin input-paddings {
   font-size: $field-text-font-size;
@@ -48,4 +48,3 @@ $field-placeholer-color: $field-color-unfocused;
     background-size: 100% .2rem;
   }
 }
-
