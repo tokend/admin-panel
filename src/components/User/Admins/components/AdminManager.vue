@@ -146,7 +146,7 @@ import { confirmAction } from '@/js/modals/confirmation_message'
 import { base } from '@tokend/js-sdk'
 import { api, loadingDataViaLoop } from '@/api'
 
-import { Bus } from '@/utils/state-bus'
+import { Bus } from '@/utils/bus'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 const MASTER_ROLE_ID = 1

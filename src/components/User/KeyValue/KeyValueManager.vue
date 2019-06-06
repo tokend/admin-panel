@@ -90,7 +90,7 @@ import { base } from '@tokend/js-sdk'
 import { KEY_VALUE_ENTRY_TYPE } from '@/constants'
 import { api, loadingDataViaLoop } from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
-import { Bus } from '@/utils/state-bus'
+import { Bus } from '@/utils/bus'
 
 const KEY_VALUE_TYPE_SHORT_NAME = {
   uint32: 'u32',

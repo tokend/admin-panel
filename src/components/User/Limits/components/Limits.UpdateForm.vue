@@ -149,7 +149,7 @@ import { LimitsRecord } from '@/js/records/limits.record'
 
 import { api } from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
-import { Bus } from '@/utils/state-bus'
+import { Bus } from '@/utils/bus'
 
 const EVENTS = {
   limitsUpdated: 'limits-updated',

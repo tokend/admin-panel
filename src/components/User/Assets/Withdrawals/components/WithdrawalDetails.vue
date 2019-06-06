@@ -143,7 +143,7 @@ import apiHelper from '@/apiHelper'
 import { REQUEST_STATES } from '@/constants'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
-import { Bus } from '@/utils/state-bus'
+import { Bus } from '@/utils/bus'
 
 const REJECT_REASON_MAX_LENGTH = 255
 

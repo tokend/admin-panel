@@ -72,7 +72,7 @@ import Modal from '@comcom/modals/Modal'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { confirmAction } from '@/js/modals/confirmation_message'
-import { Bus } from '@/utils/state-bus'
+import { Bus } from '@/utils/bus'
 
 import { ChangeRoleRequest } from '@/apiHelper/responseHandlers/requests/ChangeRoleRequest'
 

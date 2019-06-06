@@ -123,7 +123,7 @@ import { base } from '@tokend/js-sdk'
 
 import config from '@/config'
 import { ErrorHandler } from '@/utils/ErrorHandler'
-import { Bus } from '@/utils/state-bus'
+import { Bus } from '@/utils/bus'
 
 import {
   required,

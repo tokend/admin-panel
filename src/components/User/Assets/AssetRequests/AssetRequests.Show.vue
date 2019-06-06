@@ -273,7 +273,7 @@ import safeGet from 'lodash/get'
 
 import { AssetRequest } from '@/apiHelper/responseHandlers/requests/AssetRequest'
 import { ErrorHandler } from '@/utils/ErrorHandler'
-import { Bus } from '@/utils/state-bus'
+import { Bus } from '@/utils/bus'
 
 import {
   ASSET_POLICIES_VERBOSE,

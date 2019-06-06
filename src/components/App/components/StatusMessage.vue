@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { Bus } from '@/utils/state-bus'
+import { Bus } from '@/utils/bus'
 
 const CLOSE_TIMEOUT_MS = 10000
 const MESSAGE_TYPES = Object.freeze({

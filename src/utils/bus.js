@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import log from 'loglevel'
 
-export class StateBus extends Vue {
+export class EventBus extends Vue {
   constructor () {
     super()
     this._backlog = []
@@ -9,7 +9,7 @@ export class StateBus extends Vue {
 
   on (eventName, handlerFn) {
     if (!this.eventExists(eventName)) {
-      throw new Error(`StateBus.list has no ${eventName} event`)
+      throw new Error(`EventBus.list has no ${eventName} event`)
     }
 
     const backloggedEvents = this._backlog.filter(e => e.name === eventName)
@@ -25,7 +25,7 @@ export class StateBus extends Vue {
 
   emit (eventName, payload) {
     if (!this.eventExists(eventName)) {
-      throw new Error(`StateBus.list has no ${eventName} event`)
+      throw new Error(`EventBus.list has no ${eventName} event`)
     }
 
     if (!this._events[eventName]) {
@@ -67,4 +67,4 @@ export class StateBus extends Vue {
   }
 }
 
-export const Bus = new StateBus()
+export const Bus = new EventBus()

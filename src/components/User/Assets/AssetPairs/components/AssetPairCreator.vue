@@ -195,7 +195,7 @@ import {
 import apiHelper from '@/apiHelper'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
-import { Bus } from '@/utils/state-bus'
+import { Bus } from '@/utils/bus'
 
 export default {
   mixins: [FormMixin],

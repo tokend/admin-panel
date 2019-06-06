@@ -1,4 +1,4 @@
-import { Bus } from '@/utils/state-bus'
+import { Bus } from '@/utils/bus'
 import log from 'loglevel'
 import _get from 'lodash/get'
 import { ErrorTracker } from '@/utils/ErrorTracker'

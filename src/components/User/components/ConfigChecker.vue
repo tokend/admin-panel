@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { Bus } from '@/utils/state-bus'
+import { Bus } from '@/utils/bus'
 
 import { ASSET_POLICIES } from '@/constants'
 import config from '@/config'
