@@ -63,6 +63,10 @@ for further information about branching and tagging conventions.
 - Displaying asset request terms document
 - Displaying error message if offline app file parsing was failed
 
+### "Under the hood" changes
+#### Changed
+- Now using @tokend/js-sdk@1.8.0-rc.0
+
 ## [1.7.0] - 2019-06-03
 ### "Under the hood" changes
 #### Changed
