@@ -329,7 +329,7 @@ import safeGet from 'lodash/get'
 
 import config from '@/config'
 
-import Bus from '@/utils/EventBus'
+import { Bus } from '@/utils/state-bus'
 import { fileReader } from '@/utils/file-reader'
 
 import { mapGetters } from 'vuex'

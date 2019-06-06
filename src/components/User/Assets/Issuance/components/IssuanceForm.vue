@@ -133,7 +133,6 @@ import {
   maxLength,
 } from '@/validators'
 
-import EventBus from '@/utils/EventBus'
 import { DEFAULT_INPUT_STEP, DEFAULT_INPUT_MIN } from '@/constants'
 
 const REFERENCE_MAX_LENGTH = 255
@@ -190,7 +189,7 @@ export default {
   },
 
   created () {
-    EventBus.$on('issuance:updateAssets', _ => this.getAssets())
+    Bus.$on('issuance:updateAssets', _ => this.getAssets())
     this.getAssets()
   },
 
@@ -284,7 +283,7 @@ export default {
         this.clearFieldsWithOverriding({
           asset: this.form.asset,
         })
-        EventBus.$emit('issuance:updateRequestList')
+        Bus.$emit('issuance:updateRequestList')
         await this.getAssets()
       } catch (error) {
         ErrorHandler.process(error)

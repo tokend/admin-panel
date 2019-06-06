@@ -106,7 +106,7 @@
 <script>
 import IssuanceMixin from './issuance.mixin'
 import { EmailGetter } from '@comcom/getters'
-import Bus from '@/utils/EventBus'
+import { Bus } from '@/utils/state-bus'
 
 export default {
   components: { EmailGetter },
