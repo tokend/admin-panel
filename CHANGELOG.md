@@ -7,53 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
-## [Unreleased]
+## [1.8.0-rc.0] - 2019-06-06
 #### Added
-- Security asset type to config
-- Security asset type string to assetTypeToString filter
-- Postal code field in kyc request
-- Usage of Unix line endings rule
-- Vuelidate plugin for validating forms
+- Postal code field in kyc request review
 - Collected fees management page
-- Assets vuex module
-- Wrappers for assets and balances
 - External link icon to the "Learn more about pre-issuance" link
-- NProgress package for displaying loading progress while
-  switching between routes
-- Form confirmation component
-- State bus for handling status messages
+- Route-to-route loading bar
 - "Whitelisted" row to the sale details & sale request details
-- Whitelist tab to the sale details page
+- "Whitelist" tab to the sale details page
 
 #### Changed
 - Align asset requests detail values to right side
-- Add datetime filter to kyc user's birthdate
-- Web client url in config changed to localhost:8060
-- Now using Vuelidate and form mixin instead of
-  native browser tools for validating forms
-- Extracted fees updating to a separate form
-- Extracted limits updating to a separate form
-- Now using $attrs property for input field proxies
+- Format kyc user's birthdate
 - Now displaying "Yes" and "No" buttons on KYC queue confirmation
-- Now providing only tasks to add to KYC reject request operation
 - Renamed "Master assets" to "System assets" on "Assets" menu
-- Now using "@mdi/font" instead of "mdi-vue"
-- Status message design (now using top-right aligned card with iconed state)
-- Now using state bus for emitting status messages
-- Now using form confirmation in the forms:
+- Status message redesign
+- Now using new form confirmation in the forms:
   - Manage admin form
-  - Create asset pait form
+  - Create asset pair form
   - Manage asset pair forms
   - Issuance form
   - Fee withdrawal form
   - Limits update form
   - Asset manager form
-- Moved horizon resources to "/v3" endpoints
 
 #### Removed
-- Vee-validate plugin
 - "Fiat asset" checkbox from asset creation form
-- Unnecessary vuex state mutations
 
 #### Fixed
 - Show dash, if line 2 is not specified in kyc request
@@ -64,8 +43,33 @@ for further information about branching and tagging conventions.
 - Displaying error message if offline app file parsing was failed
 
 ### "Under the hood" changes
+#### Added
+- Usage of Unix line endings rule
+- Vuelidate plugin for validating forms
+- Security asset type to config
+- Security asset type string to assetTypeToString filter
+- Assets vuex module
+- Wrappers for assets and balances
+- Form confirmation component
+- State bus for handling status messages
+
 #### Changed
 - Now using @tokend/js-sdk@1.8.0-rc.0
+- Web client url in config changed to localhost:8060
+- Now using Vuelidate and form mixin instead of
+  native browser tools for validating forms
+- Extracted fees updating to a separate form
+- Extracted limits updating to a separate form
+- Now using $attrs property for input field proxies
+- Now providing only tasks to add to KYC reject request operation
+- Now using "@mdi/font" instead of "mdi-vue"
+- Now using the bus for emitting status messages
+- Moved horizon resources to "/v3" endpoints
+- Updated `package.json` dependencies
+
+#### Removed
+- Vee-validate plugin
+- Unused vuex state mutations
 
 ## [1.7.0] - 2019-06-03
 ### "Under the hood" changes
@@ -343,7 +347,8 @@ for further information about branching and tagging conventions.
 
 ## [1.3.0] - 2019-03-01
 
-[Unreleased]: https://github.com/tokend/admin-panel/compare/1.7.0...HEAD
+[Unreleased]: https://github.com/tokend/admin-panel/compare/1.8.0-rc.0...HEAD
+[1.8.0-rc.0]: https://github.com/tokend/admin-panel/compare/1.7.0...1.8.0-rc.0
 [1.7.0]: https://github.com/tokend/admin-panel/compare/1.7.0-rc.4...1.7.0
 [1.7.0-rc.4]: https://github.com/tokend/admin-panel/compare/1.7.0-rc.3...1.7.0-rc.4
 [1.7.0-rc.3]: https://github.com/tokend/admin-panel/compare/1.7.0-rc.2...1.7.0-rc.3
