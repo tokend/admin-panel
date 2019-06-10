@@ -184,6 +184,15 @@
           >
             Update policy
           </button>
+
+          <button
+            type="button"
+            class="asset-pair-manager__remove-btn app__btn app__btn--danger"
+            @click.prevent="removeAssetPair"
+            :disabled="formMixin.isDisabled"
+          >
+            Remove pair
+          </button>
         </div>
       </form>
     </template>
@@ -200,8 +209,11 @@
 import FormMixin from '@/mixins/form.mixin'
 import { required, minValue, maxValue } from '@/validators'
 
+import { confirmAction } from '@/js/modals/confirmation_message'
+
 import apiHelper from '@/apiHelper'
 import { api } from '@/api'
+import { base } from '@tokend/js-sdk'
 
 import {
   DEFAULT_INPUT_STEP,
@@ -322,6 +334,29 @@ export default {
 
       this.isFormSubmitting = false
       this.hideConfirmation()
+    },
+
+    async removeAssetPair () {
+      const isConfirmed = await confirmAction({
+        title: 'Are you sure? This action cannot be undone',
+      })
+
+      if (isConfirmed) {
+        this.disableForm()
+        try {
+          const operation = base.RemoveAssetPairOpBuilder.removeAssetPairOp({
+            base: this.base,
+            quote: this.quote,
+          })
+
+          await api.postOperations(operation)
+          Bus.success('Asset pair was successfully removed')
+          this.$router.push({ name: 'assets.assetPairs.index' })
+        } catch (e) {
+          ErrorHandler.process(e)
+        }
+        this.enableForm()
+      }
     },
   },
 }

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
+## [Unreleased]
+#### Added
+- Remove asset pair action to asset pair manager
+
 ## [1.8.0-rc.0] - 2019-06-06
 #### Added
 - Postal code field in kyc request review
