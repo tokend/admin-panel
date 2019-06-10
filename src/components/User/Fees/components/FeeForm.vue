@@ -116,7 +116,7 @@ import { confirmAction } from '@/js/modals/confirmation_message'
 
 import { base } from '@tokend/js-sdk'
 import { ErrorHandler } from '@/utils/ErrorHandler'
-import { Bus } from '@/utils/state-bus'
+import { Bus } from '@/utils/bus'
 
 import { xdrTypeFromValue } from '@/utils/xdrTypeFromValue'
 import {

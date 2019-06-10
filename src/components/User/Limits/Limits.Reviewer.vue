@@ -242,7 +242,7 @@ import get from 'lodash/get'
 import isEqual from 'lodash/isEqual'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
-import { Bus } from '@/utils/state-bus'
+import { Bus } from '@/utils/bus'
 
 const DEFAULT_LIMIT_STRUCT = {
   'id': 0,

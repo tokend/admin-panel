@@ -54,7 +54,7 @@
     </div>
 
     <div class="withdrawal-list__list-wrp">
-      <template v-if="list.data && list.data.length">
+      <template v-if="list && list.length">
         <ul class="app-list">
           <div class="app-list__header">
             <span class="app-list__cell">
@@ -70,14 +70,14 @@
 
           <button
             class="app-list__li"
-            v-for="item in list.data"
+            v-for="item in list"
             :key="item.id"
             @click="requestToShow = item">
             <!-- eslint-disable max-len -->
             <span class="app-list__cell">
               <asset-amount-formatter
                 :amount="item.requestDetails.amount"
-                :asset="item.requestDetails.asset"
+                :asset="item.requestDetails.asset.id"
               />
             </span>
 
@@ -90,12 +90,6 @@
             </span>
           </button>
         </ul>
-
-        <div class="app__more-btn-wrp" v-if="!isNoMoreEntries">
-          <button class="app__btn-secondary" @click="extendList">
-            More
-          </button>
-        </div>
       </template>
 
       <template v-else>
@@ -110,6 +104,16 @@
           </li>
         </ul>
       </template>
+
+      <div class="app__more-btn-wrp">
+        <collection-loader
+          :first-page-loader="getList"
+          @first-page-load="setList"
+          @next-page-load="extendList"
+          ref="collectionLoaderBtn"
+          :page-limit="pageLimit"
+        />
+      </div>
     </div>
 
     <modal
@@ -127,6 +131,7 @@
 import SelectField from '@comcom/fields/SelectField'
 import InputField from '@comcom/fields/InputField'
 import { AssetAmountFormatter } from '@comcom/formatters'
+import { CollectionLoader } from '@/components/common'
 
 import Modal from '@comcom/modals/Modal'
 import WithdrawalDetails from './WithdrawalDetails'
@@ -152,11 +157,13 @@ export default {
     Modal,
     WithdrawalDetails,
     AssetAmountFormatter,
+    CollectionLoader,
   },
 
   data () {
     return {
       REQUEST_STATES,
+      pageLimit: 15,
 
       assets: [],
       list: {},
@@ -172,16 +179,17 @@ export default {
   },
 
   watch: {
-    'filters.state' () { this.getList() },
+    'filters.state' () { this.reloadCollectionLoader() },
 
-    'filters.asset' () { this.getList() },
+    'filters.asset' () { this.reloadCollectionLoader() },
 
-    'filters.requestor': _.throttle(function () { this.getList() }, 1000),
+    'filters.requestor': _.throttle(function () {
+      this.reloadCollectionLoader()
+    }, 1000),
   },
 
   created () {
     this.getAssets()
-    this.getList()
   },
 
   methods: {
@@ -206,13 +214,15 @@ export default {
     async getList () {
       this.isLoaded = false
       this.isNoMoreEntries = false
+      let response = {}
       try {
         const requestor =
           await this.getRequestorAccountId(this.filters.requestor)
-        this.list = await api.getWithSignature('/v3/create_withdraw_requests', {
+        response = await api.getWithSignature('/v3/create_withdraw_requests', {
           filter: {
             state: this.filters.state,
             requestor: requestor,
+            'request_details.asset': this.filters.asset,
           },
           include: ['request_details'],
         })
@@ -221,6 +231,11 @@ export default {
       }
 
       this.isLoaded = true
+      return response
+    },
+
+    setList (data) {
+      this.list = data
     },
 
     async getRequestorAccountId (requestor) {
@@ -236,42 +251,17 @@ export default {
       }
     },
 
-    async extendList () {
-      try {
-        const oldLength = (this.list.data || []).length
-        const chunk = await this.list.fetchNext()
-
-        // TODO: remove these dirty fixes
-        // the problem is that in the current implementation, back-end does
-        // not return us asset code of the withdrawn amount
-        chunk._data = chunk.data.map(item => {
-          const hackedKeys = {
-            details: {
-              ...item.details,
-              createWithdraw: {
-                ...item.details.createWithdraw,
-                asset: this.filters.asset,
-              },
-            },
-          }
-
-          return {
-            ...item,
-            ...hackedKeys,
-          }
-        })
-
-        this.list._data = this.list.data.concat(chunk.data)
-        this.list.fetchNext = chunk.fetchNext
-        this.isNoMoreEntries = oldLength === this.list.data.length
-      } catch (error) {
-        ErrorHandler.processWithoutFeedback(error)
-      }
+    async extendList (data) {
+      this.list = this.list.concat(data)
     },
 
     refreshList () {
       this.getList()
       this.requestToShow = null
+    },
+
+    reloadCollectionLoader () {
+      this.$refs.collectionLoaderBtn.loadFirstPage()
     },
   },
 }

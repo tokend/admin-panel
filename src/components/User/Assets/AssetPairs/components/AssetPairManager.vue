@@ -224,7 +224,7 @@ import { ASSET_PAIR_POLICIES } from '@/constants/'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { AssetPairRecord } from '@/js/records/assetPair.record'
-import { Bus } from '@/utils/state-bus'
+import { Bus } from '@/utils/bus'
 
 export default {
   mixins: [FormMixin],

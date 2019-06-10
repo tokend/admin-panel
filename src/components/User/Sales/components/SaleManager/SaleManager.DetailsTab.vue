@@ -123,6 +123,10 @@
             </span>
           </li>
           <li>
+            <span>Whitelisted</span>
+            <span>{{ isSaleWhitelisted ? 'Yes' : 'No' }}</span>
+          </li>
+          <li>
             <span>Owner</span>
             <email-getter
               :account-id="sale.owner.id"
@@ -188,13 +192,6 @@
             Total progress
           </label>
           <li>
-            <span>Assets sold</span>
-            <asset-amount-formatter
-              :amount="sale.baseCurrentCap"
-              :asset="sale.baseAsset.id"
-            />
-          </li>
-          <li>
             <span>Current cap</span>
             <asset-amount-formatter
               :amount="sale.defaultQuoteAsset.currentCap"
@@ -259,7 +256,7 @@ import {
   AssetPoliciesFormatter,
 } from '@comcom/formatters'
 
-import { SALE_STATES } from '@/constants'
+import { SALE_STATES, SALE_DEFINITION_TYPES } from '@/constants'
 import { api } from '@/api'
 
 export default {
@@ -285,8 +282,15 @@ export default {
     }
   },
 
-  created () {
-    this.getAsset(this.sale)
+  computed: {
+    isSaleWhitelisted () {
+      return this.sale.accessDefinitionType.value ===
+        SALE_DEFINITION_TYPES.whitelist
+    },
+  },
+
+  async created () {
+    await this.getAsset(this.sale)
   },
 
   methods: {

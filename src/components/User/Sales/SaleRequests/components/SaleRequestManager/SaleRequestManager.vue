@@ -126,7 +126,7 @@ import { snakeToCamelCase } from '@/utils/un-camel-case'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { api } from '@/api'
 import apiHelper from '@/apiHelper'
-import { Bus } from '@/utils/state-bus'
+import { Bus } from '@/utils/bus'
 
 const REJECT_REASON_MAX_LENGTH = 255
 

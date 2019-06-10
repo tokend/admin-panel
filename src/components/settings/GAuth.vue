@@ -50,7 +50,7 @@ import tfa from '@/apiHelper/tfa'
 import Qrcode from 'qrcode.vue'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
-import { Bus } from '@/utils/state-bus'
+import { Bus } from '@/utils/bus'
 
 export default {
   components: { Qrcode },

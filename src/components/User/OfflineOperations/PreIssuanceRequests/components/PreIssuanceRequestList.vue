@@ -141,7 +141,7 @@ import { verbozify } from '@/utils/verbozify'
 import apiHelper from '@/apiHelper'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { CreatePreIssuanceRequest } from '@/apiHelper/responseHandlers/requests/CreatePreIssuanceRequest'
-import { Bus } from '@/utils/state-bus'
+import { Bus } from '@/utils/bus'
 
 export default {
   components: { InputField },

@@ -332,8 +332,7 @@ import safeGet from 'lodash/get'
 
 import config from '@/config'
 
-import EventBus from '@/utils/EventBus'
-import { Bus } from '@/utils/state-bus'
+import { Bus } from '@/utils/bus'
 import { fileReader } from '@/utils/file-reader'
 
 import { mapGetters } from 'vuex'
@@ -551,8 +550,7 @@ export default {
         }
 
         await api.postOperations(operation)
-        EventBus.$emit('recheckConfig')
-
+        Bus.$emit('recheckConfig')
         Bus.success('Submitted successfully.')
         this.$router.push({ name: 'assets.systemAssets.index' })
       } catch (error) {

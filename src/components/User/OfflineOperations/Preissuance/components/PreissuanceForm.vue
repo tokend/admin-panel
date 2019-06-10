@@ -130,7 +130,7 @@ import localize from '@/utils/localize'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { api, loadingDataViaLoop } from '@/api'
 
-import { Bus } from '@/utils/state-bus'
+import { Bus } from '@/utils/bus'
 
 export default {
   data () {

@@ -137,6 +137,10 @@
             </span>
           </li>
           <li>
+            <span>Whitelisted</span>
+            <span>{{ isSaleWhitelisted ? 'Yes' : 'No' }}</span>
+          </li>
+          <li>
             <span>Start time</span>
             <date-formatter
               :date="saleDetails.startTime"
@@ -219,6 +223,8 @@ import {
   RequestStateFormatter,
 } from '@comcom/formatters'
 
+import { SALE_DEFINITION_TYPES } from '@/constants'
+
 import get from 'lodash/get'
 
 export default {
@@ -239,6 +245,11 @@ export default {
   computed: {
     saleDetails () {
       return this.request.sale.requestDetails
+    },
+
+    isSaleWhitelisted () {
+      return this.saleDetails.accessDefinitionType.value ===
+        SALE_DEFINITION_TYPES.whitelist
     },
   },
   methods: {
