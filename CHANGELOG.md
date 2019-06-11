@@ -11,6 +11,9 @@ for further information about branching and tagging conventions.
 #### Added
 - Remove asset pair action to asset pair manager
 
+#### Fixed
+- Bug with fulfilling not system asset withdrawal requests
+
 ## [1.8.0-rc.0] - 2019-06-06
 #### Added
 - Postal code field in kyc request review
