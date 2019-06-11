@@ -145,6 +145,9 @@ import { REQUEST_STATES } from '@/constants'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { Bus } from '@/utils/bus'
 
+import { mapGetters } from 'vuex'
+import { getters } from '@store/types'
+
 const REJECT_REASON_MAX_LENGTH = 255
 
 export default {
@@ -184,8 +187,10 @@ export default {
   },
 
   computed: {
+    ...mapGetters({ userAddress: getters.GET_USER_ADDRESS }),
     reviewAllowed () {
-      return this.request.stateI === REQUEST_STATES.pending
+      return this.request.stateI === REQUEST_STATES.pending &&
+        this.userAddress === this.request.reviewer.id
     },
   },
 
