@@ -438,6 +438,58 @@ export const UserRoutes = {
         },
       ],
     },
+
+    {
+      path: '/polls',
+      name: 'polls',
+      redirect: { name: 'polls.index' },
+      component: function (resolve) {
+        require(['../../components/User/Polls/Polls.vue'], resolve)
+      },
+      children: [
+        {
+          path: 'requests',
+          name: 'polls.requests',
+          redirect: { name: 'polls.requests.index' },
+          component: function (resolve) {
+            require(['../../components/User/Polls/PollRequests/PollRequests.vue'], resolve)
+          },
+          children: [
+            {
+              path: '',
+              name: 'polls.requests.index',
+              component: function (resolve) {
+                require(['../../components/User/Polls/PollRequests/PollRequests.Index.vue'], resolve)
+              },
+            },
+            {
+              path: ':id',
+              name: 'polls.requests.show',
+              component: function (resolve) {
+                require(['../../components/User/Polls/PollRequests/PollRequests.Show.vue'], resolve)
+              },
+              props: true,
+            },
+          ],
+        },
+        {
+          path: '',
+          name: 'polls.index',
+          component: function (resolve) {
+            require(['../../components/User/Polls/Polls.Index.vue'], resolve)
+          },
+        },
+        {
+          path: ':id',
+          name: 'polls.show',
+          component: function (resolve) {
+            require(['../../components/User/Polls/Polls.Show.vue'], resolve)
+          },
+          props: true,
+        },
+      ],
+    },
+
     {
       path: '/settings',
       name: 'settings',
