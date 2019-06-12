@@ -57,6 +57,11 @@ export default Object.assign(
       security: '2',
     },
 
+    POLL_TYPES: {
+      // Will be updated on init
+      restricted: '3',
+    },
+
     CHANGE_ROLE_TASKS: {
       submitAutoVerification: -1,
       completeAutoVerification: -1,

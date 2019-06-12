@@ -210,6 +210,16 @@ export default {
           result[assetTypeName] = String(item.uint32_value)
           return result
         }, config.ASSET_TYPES)
+
+      // TODO: refactor, should not be here, key_values should be fetched
+      // stubbornly
+      config.POLL_TYPES = keyValues
+        .filter(item => /poll_type/ig.test(item.key))
+        .reduce((result, item) => {
+          const assetTypeName = snakeToCamelCase(item.key.split(':')[1])
+          result[assetTypeName] = String(item.uint32_value)
+          return result
+        }, config.ASSET_TYPES)
     },
 
     subscribeToStoreMutations () {

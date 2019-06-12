@@ -46,6 +46,12 @@ export function assetTypeToString (assetType) {
   }[+assetType]
 }
 
+export function pollTypeToString (value) {
+  return {
+    [+config.POLL_TYPES.restricted]: 'Restricted',
+  }[+value]
+}
+
 export function lowerCase (string) {
   return String(string).toLowerCase()
 }
