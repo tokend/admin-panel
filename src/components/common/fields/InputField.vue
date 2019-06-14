@@ -37,12 +37,18 @@
       {{ label }}
     </span>
 
-    <div class="input-field__hints">
+    <div
+      class="input-field__hints"
+      v-if="$slots.hint"
+    >
       <slot name="hint" />
     </div>
 
     <transition name="input-field__err-transition">
-      <p class="input-field__err-mes" v-if="errorMessage">
+      <p
+        class="input-field__err-mes"
+        v-if="errorMessage"
+      >
         {{ errorMessage }}
       </p>
     </transition>
@@ -86,7 +92,7 @@ export default {
   },
 
   methods: {
-    onInput (event) {},
+    onInput (event) { },
 
     beforeEmit (target) {
       if (this.type === 'number') {
@@ -144,5 +150,5 @@ export default {
 </script>
 
 <style lang="scss">
-@import "./scss/input";
+@import './scss/input';
 </style>
