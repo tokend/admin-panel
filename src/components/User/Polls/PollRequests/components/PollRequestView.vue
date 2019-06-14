@@ -75,7 +75,7 @@
           </li>
 
           <li>
-            <span>Starts at</span>
+            <span>Start time</span>
             <date-formatter
               :date="request.requestDetails.startTime"
               format="DD MMM YYYY HH:mm:ss"
@@ -83,7 +83,7 @@
           </li>
 
           <li>
-            <span>Ends at</span>
+            <span>End time</span>
             <date-formatter
               :date="request.requestDetails.endTime"
               format="DD MMM YYYY HH:mm:ss"
