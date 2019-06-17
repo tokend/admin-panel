@@ -49,6 +49,12 @@
           <span>KYC Requests</span>
         </router-link>
       </li>
+      <li class="user-sidebar__nav-li">
+        <router-link :to="{ name: 'kycRecoveryRequests' }">
+          <i class="mdi mdi-account-plus user-sidebar__icon" />
+          <span>KYC Recovery Requests</span>
+        </router-link>
+      </li>
 
       <li class="user-sidebar__nav-li">
         <router-link :to="{ name: 'limits' }">

@@ -86,6 +86,23 @@ export const UserRoutes = {
       ],
     },
     {
+      path: '/kyc-recovery-requests',
+      name: 'kycRecoveryRequests',
+      redirect: { name: 'kycRecoveryRequests.index' },
+      component: function (resolve) {
+        require(['../../components/User/KycRecoveryRequests/KycRecoveryRequests.vue'], resolve)
+      },
+      children: [
+        {
+          path: 'index',
+          name: 'kycRecoveryRequests.index',
+          component: function (resolve) {
+            require(['../../components/User/KycRecoveryRequests/KycRecoveryRequests.Index.vue'], resolve)
+          },
+        },
+      ],
+    },
+    {
       path: '/limits',
       name: 'limits',
       redirect: { name: 'limits.index' },
