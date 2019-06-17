@@ -52,14 +52,15 @@ export default Object.assign(
 
     ASSET_TYPES: {
       // Will be updated on init
-      default: '0',
-      kycRequired: '1',
-      security: '2',
+      default: '',
+      kycRequired: '',
+      security: '',
     },
 
     POLL_TYPES: {
       // Will be updated on init
-      restricted: '3',
+      restricted: '',
+      unrestricted: '',
     },
 
     CHANGE_ROLE_TASKS: {
