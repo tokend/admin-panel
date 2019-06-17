@@ -1,4 +1,4 @@
-import { documentsManager } from '@/api'
+import { api } from '@/api'
 
 export default {
   props: {
@@ -33,10 +33,9 @@ export default {
           this.isFailed = true
           return
         }
-
-        const data = await documentsManager
-          .getDocumentUrlByKey(this.fileKey)
-        this.href = data
+        const { data } = await api
+          .getWithSignature(`/documents/${this.fileKey}`)
+        this.href = data.url
         this.isLoaded = true
       } catch (error) {
         this.isFailed = true
