@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
+## [Unreleased]
+#### Added
+- New polls feature:
+  - Poll requests browse page
+  - Poll review page
+  - Polls browse page
+  - Poll and participants view page
+
+#### Fixed
+- Resolved issue with display of input and input date fields when they have no
+  errors but allocated some space for errors at the bottom
+
+### "Under the hood" changes
+#### Added
+- New `getAccountIdBy` to `apiHelper/users.js` that can detect argument as
+  email or account Id and act accordingly
+
 ## [1.8.0-rc.1] - 2019-06-17
 #### Added
 - Asset pair removal button to asset pair manager

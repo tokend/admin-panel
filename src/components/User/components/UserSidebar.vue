@@ -37,6 +37,13 @@
       </li>
 
       <li class="user-sidebar__nav-li">
+        <router-link :to="{ name: 'polls' }">
+          <i class="mdi mdi-vote user-sidebar__icon" />
+          <span>Polls</span>
+        </router-link>
+      </li>
+
+      <li class="user-sidebar__nav-li">
         <router-link :to="{ name: 'offlineOperations' }">
           <i class="mdi mdi-sync-off user-sidebar__icon" />
           <span>Offline operations</span>

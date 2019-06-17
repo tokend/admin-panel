@@ -15,7 +15,7 @@
     </span>
 
     <transition name="input-field__err-transition">
-      <p class="input-field__err-mes">
+      <p class="input-field__err-mes" v-if="error">
         {{ error }}
       </p>
     </transition>
