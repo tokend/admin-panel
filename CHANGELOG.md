@@ -7,14 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
-## [Unreleased]
+## [1.8.0-rc.1] - 2019-06-17
 #### Added
-- Remove asset pair action to asset pair manager
+- Asset pair removal button to asset pair manager
 
 #### Fixed
-- Bug with fulfilling not system asset withdrawal requests
-- "Pending tasks" field caption on selected value
-- Bug with getting private doc
+- Resolved bug with fulfilling non-system asset withdrawal requests
+- Resolved "Pending tasks" field label overlap if no value selected
+- Resolved bug with getting private documents
+
+### "Under the hood" changes
+#### Changed
+- Now using @tokend/js-sdk@1.8.0-rc.1
 
 ## [1.8.0-rc.0] - 2019-06-06
 #### Added
@@ -356,7 +360,8 @@ for further information about branching and tagging conventions.
 
 ## [1.3.0] - 2019-03-01
 
-[Unreleased]: https://github.com/tokend/admin-panel/compare/1.8.0-rc.0...HEAD
+[Unreleased]: https://github.com/tokend/admin-panel/compare/1.8.0-rc.1...HEAD
+[1.8.0-rc.1]: https://github.com/tokend/admin-panel/compare/1.8.0-rc.0...1.8.0-rc.1
 [1.8.0-rc.0]: https://github.com/tokend/admin-panel/compare/1.7.0...1.8.0-rc.0
 [1.7.0]: https://github.com/tokend/admin-panel/compare/1.7.0-rc.4...1.7.0
 [1.7.0-rc.4]: https://github.com/tokend/admin-panel/compare/1.7.0-rc.3...1.7.0-rc.4
