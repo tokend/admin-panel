@@ -13,6 +13,7 @@ for further information about branching and tagging conventions.
 
 #### Fixed
 - Bug with fulfilling not system asset withdrawal requests
+- "Pending tasks" field caption on selected value
 - Bug with getting private doc
 
 ## [1.8.0-rc.0] - 2019-06-06

@@ -7,7 +7,7 @@
           label="Role to set"
           v-model="filters.roleToSet"
         >
-          <option :value="''" />
+          <option value="''" />
           <option :value="ACCOUNT_ROLES.general">
             General
           </option>
@@ -43,7 +43,7 @@
           <option :value="CHANGE_ROLE_TASKS.manualReviewRequired">
             Manual review requried
           </option>
-          <option value="">
+          <option value="''">
             Any
           </option>
         </select-field>
