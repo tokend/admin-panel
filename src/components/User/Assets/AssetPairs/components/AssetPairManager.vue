@@ -281,12 +281,9 @@ export default {
     async getPair () {
       this.isLoaded = false
       try {
-        const { _rawResponse: response } = await api.get('/asset_pairs')
-        const pair = response.data
-          .find(({ base, quote }) => {
-            return base === this.base && quote === this.quote
-          })
-        this.pair = new AssetPairRecord(pair)
+        const endpoint = `/v3/asset_pairs/${this.base}:${this.quote}`
+        const { data } = await api.get(endpoint)
+        this.pair = new AssetPairRecord(data)
         this.isLoaded = true
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
