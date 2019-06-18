@@ -188,13 +188,6 @@
             Total progress
           </label>
           <li>
-            <span>Assets sold</span>
-            <asset-amount-formatter
-              :amount="sale.baseCurrentCap"
-              :asset="sale.baseAsset.id"
-            />
-          </li>
-          <li>
             <span>Current cap</span>
             <asset-amount-formatter
               :amount="sale.defaultQuoteAsset.currentCap"
