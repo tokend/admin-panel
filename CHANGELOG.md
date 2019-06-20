@@ -14,6 +14,7 @@ for further information about branching and tagging conventions.
   - Poll review page
   - Polls browse page
   - Poll and participants view page
+- Stellar integration
 
 #### Fixed
 - Resolved issue with display of input and input date fields when they have no
