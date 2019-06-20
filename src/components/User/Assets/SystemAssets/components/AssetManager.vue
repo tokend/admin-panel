@@ -165,6 +165,79 @@
         </select-field>
       </div>
 
+      <div class="app__form-row">
+        <tick-field
+          class="app__form-field"
+          v-model="isStellarIntegrationEnabled"
+          label="Integration with stellar"
+          :cb-value="true"
+          :disabled="formMixin.isDisabled"
+        />
+      </div>
+
+      <template v-if="isStellarIntegrationEnabled">
+        <div class="app__form-row">
+          <div class="app__form-field">
+            <tick-field
+              v-model="asset.creatorDetails.stellar.deposit"
+              :disabled="formMixin.isDisabled"
+              :cb-value="true"
+              label="Deposit"
+            />
+          </div>
+        </div>
+
+        <div class="app__form-row">
+          <div class="app__form-field">
+            <tick-field
+              v-model="asset.creatorDetails.stellar.withdraw"
+              :disabled="formMixin.isDisabled"
+              :cb-value="true"
+              label="Withdraw"
+            />
+          </div>
+        </div>
+
+        <div class="app__form-row">
+          <select-field
+            v-model="asset.creatorDetails.stellar.assetType"
+            name="create-stellar-asset-type"
+            class="app__form-field"
+            label="Asset type"
+            @blur="touchField('asset.creatorDetails.stellar.assetType')"
+            :error-message="getFieldErrorMessage(
+              'asset.creatorDetails.stellar.assetType',
+            )"
+            :disabled="formMixin.isDisabled"
+          >
+            <option
+              v-for="assetType in STELLAR_ASSET_TYPES"
+              :key="assetType.value"
+              :value="assetType.value"
+            >
+              {{ assetType.label }}
+            </option>
+          </select-field>
+
+          <!-- eslint-disable max-len -->
+          <input-field
+            white-autofill
+            v-model="asset.creatorDetails.stellar.assetCode"
+            class="app__form-field"
+            name="create-stellar-asset-code"
+            label="Asset code"
+            @blur="touchField('asset.creatorDetails.stellar.assetCode')"
+            :error-message="getFieldErrorMessage('asset.creatorDetails.stellar.assetCode', {
+              maxLength: getAssetCodeMaxLength(),
+              minLength: CREDIT_ALPHANUM12_MIN_LENGTH
+            })"
+            :disabled="formMixin.isDisabled ||
+              asset.creatorDetails.stellar.assetType === STELLAR_TYPES.native"
+          />
+        </div>
+      <!-- eslint-enable max-len -->
+      </template>
+
       <div class="asset-manager__file-input-wrp">
         <span>Terms</span>
         <div class="asset-manager__file-input-inner">
@@ -323,6 +396,8 @@ import {
   maxValue,
   maxLength,
   alphaNum,
+  minLength,
+  requiredIf,
 } from '@/validators'
 
 import { base } from '@tokend/js-sdk'
@@ -337,6 +412,7 @@ import { fileReader } from '@/utils/file-reader'
 
 import { mapGetters } from 'vuex'
 import { getters } from '@/store/types'
+import _isEmpty from 'lodash/isEmpty'
 
 import {
   ASSET_POLICIES,
@@ -351,6 +427,32 @@ import { ErrorHandler } from '@/utils/ErrorHandler'
 const ASSET_CODE_MAX_LENGTH = 16
 const ASSET_NAME_MAX_LENGTH = 255
 
+const STELLAR_ASSET_TYPES = [
+  {
+    label: 'Alphanumeric 4',
+    value: 'credit_alphanum4',
+  },
+  {
+    label: 'Alphanumeric 12',
+    value: 'credit_alphanum12',
+  },
+  {
+    label: 'Native',
+    value: 'native',
+  },
+]
+
+const STELLAR_TYPES = {
+  creditAlphanum4: 'credit_alphanum4',
+  creditAlphanum12: 'credit_alphanum12',
+  native: 'native',
+}
+
+const CREDIT_ALPHANUM4_MAX_LENGTH = 4
+const CREDIT_ALPHANUM12_MIN_LENGTH = 5
+const CREDIT_ALPHANUM12_MAX_LENGTH = 12
+const NATIVE_XLM_TYPE = 'XLM'
+
 export default {
   mixins: [FormMixin],
 
@@ -362,7 +464,7 @@ export default {
     return {
       isShownAdvanced: false,
       isFormSubmitting: false,
-
+      isStellarIntegrationEnabled: false,
       asset: {
         id: '',
         preissuedAssetSigner: config.MASTER_ACCOUNT,
@@ -380,6 +482,12 @@ export default {
           terms: {},
           externalSystemType: '',
           isCoinpayments: false,
+          stellar: {
+            withdraw: false,
+            deposit: false,
+            assetType: '',
+            assetCode: '',
+          },
         },
       },
 
@@ -404,11 +512,14 @@ export default {
       ASSET_TYPES: config.ASSET_TYPES,
       ASSET_CODE_MAX_LENGTH,
       ASSET_NAME_MAX_LENGTH,
+      STELLAR_ASSET_TYPES,
+      STELLAR_TYPES,
+      CREDIT_ALPHANUM12_MIN_LENGTH,
     }
   },
 
   validations () {
-    return {
+    let validations = {
       asset: {
         id: {
           required,
@@ -437,9 +548,41 @@ export default {
             required,
             maxLength: maxLength(ASSET_NAME_MAX_LENGTH),
           },
+          stellar: {
+            assetType: {
+              required: requiredIf(function () {
+                return this.isStellarIntegrationEnabled
+              }),
+            },
+            assetCode: {
+              required: requiredIf(function () {
+                return this.isStellarIntegrationEnabled
+              }),
+            },
+          },
         },
       },
     }
+    /* eslint-disable max-len */
+    switch (this.asset.creatorDetails.stellar.assetType) {
+      case STELLAR_TYPES.creditAlphanum4:
+        validations.asset.creatorDetails.stellar.assetCode.maxLength = maxLength(
+          CREDIT_ALPHANUM4_MAX_LENGTH
+        )
+        validations.asset.creatorDetails.stellar.assetCode.alphaNum = alphaNum
+        break
+      case STELLAR_TYPES.creditAlphanum12:
+        validations.asset.creatorDetails.stellar.assetCode.minLength = minLength(
+          CREDIT_ALPHANUM12_MIN_LENGTH
+        )
+        validations.asset.creatorDetails.stellar.assetCode.maxLength = maxLength(
+          CREDIT_ALPHANUM12_MAX_LENGTH
+        )
+        validations.asset.creatorDetails.stellar.assetCode.alphaNum = alphaNum
+        break
+    }
+    /* eslint-enable max-len */
+    return validations
   },
 
   computed: {
@@ -461,6 +604,16 @@ export default {
     },
   },
 
+  watch: {
+    'asset.creatorDetails.stellar.assetType' (val) {
+      if (val === STELLAR_TYPES.native) {
+        this.asset.creatorDetails.stellar.assetCode = NATIVE_XLM_TYPE
+      } else {
+        this.asset.creatorDetails.stellar.assetCode = ''
+      }
+    },
+  },
+
   created () {
     if (this.isExistingAsset) {
       this.getAsset()
@@ -477,6 +630,9 @@ export default {
           include: ['owner'],
         })
         data.creatorDetails = data.creatorDetails || data.details
+        if (!_isEmpty(data.creatorDetails.stellar)) {
+          this.isStellarIntegrationEnabled = true
+        }
         Object.assign(this.asset, data)
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
@@ -518,6 +674,7 @@ export default {
               is_coinpayments: this.asset.creatorDetails.isCoinpayments,
               logo,
               terms,
+              stellar: this.getStellarData(),
             },
           })
         } else {
@@ -545,6 +702,7 @@ export default {
                 type: this.asset.creatorDetails.terms.type,
                 name: this.asset.creatorDetails.terms.name,
               },
+              stellar: this.getStellarData(),
             },
           })
         }
@@ -584,6 +742,26 @@ export default {
         name: this[type].name,
         type: this[type].mime,
       }
+    },
+    getAssetCodeMaxLength () {
+      /* eslint-disable max-len */
+      if (this.asset.creatorDetails.stellar.assetType === STELLAR_TYPES.creditAlphanum4) {
+        return CREDIT_ALPHANUM4_MAX_LENGTH
+      } else if (this.asset.creatorDetails.stellar.assetType === STELLAR_TYPES.creditAlphanum12) {
+        return CREDIT_ALPHANUM12_MAX_LENGTH
+      }
+      /* eslint-enable max-len */
+    },
+
+    getStellarData () {
+      return this.isStellarIntegrationEnabled
+        ? {
+          withdraw: this.asset.creatorDetails.stellar.withdraw,
+          deposit: this.asset.creatorDetails.stellar.deposit,
+          assetType: this.asset.creatorDetails.stellar.assetType,
+          assetCode: this.asset.creatorDetails.stellar.assetCode,
+        }
+        : {}
     },
   },
 }

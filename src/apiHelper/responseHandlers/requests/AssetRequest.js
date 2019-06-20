@@ -48,4 +48,20 @@ export class AssetRequest extends ReviewableRequest {
   get updateDate () {
     return this.record.updatedAt
   }
+
+  get stellarAssetCode () {
+    return this.operationDetails.creatorDetails.stellar.assetCode || ''
+  }
+
+  get stellarAssetType () {
+    return this.operationDetails.creatorDetails.stellar.assetType || ''
+  }
+
+  get stellarWithdraw () {
+    return this.operationDetails.creatorDetails.stellar.withdraw || false
+  }
+
+  get stellarDeposit () {
+    return this.operationDetails.creatorDetails.stellar.deposit || false
+  }
 }
