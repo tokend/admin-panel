@@ -63,6 +63,26 @@
                 </template>
               </span>
             </li>
+            <template
+              v-if="get(asset, 'details.stellar.assetCode')"
+            >
+              <li>
+                <span>Stellar asset code</span>
+                <span>{{ asset.details.stellar.assetCode }}</span>
+              </li>
+              <li>
+                <span>Stellar asset type</span>
+                <span>{{ stellarAssetType }}</span>
+              </li>
+              <li>
+                <span>Stellar withdraw</span>
+                <span>{{ asset.details.stellar.withdraw ? 'Yes' : 'No' }}</span>
+              </li>
+              <li>
+                <span>Stellar deposit</span>
+                <span>{{ asset.details.stellar.deposit ? 'Yes' : 'No' }}</span>
+              </li>
+            </template>
           </ul>
         </div>
 
@@ -258,6 +278,13 @@ import {
 
 import { SALE_STATES, SALE_DEFINITION_TYPES } from '@/constants'
 import { api } from '@/api'
+import get from 'lodash/get'
+
+const STELLAR_TYPES = {
+  creditAlphanum4: 'credit_alphanum4',
+  creditAlphanum12: 'credit_alphanum12',
+  native: 'native',
+}
 
 export default {
   components: {
@@ -287,6 +314,30 @@ export default {
       return this.sale.accessDefinitionType.value ===
         SALE_DEFINITION_TYPES.whitelist
     },
+
+    stellarAssetType () {
+      let label
+
+      switch (this.asset.details.stellar.assetType) {
+        case STELLAR_TYPES.creditAlphanum4:
+          label = 'Alphanumeric 4'
+          break
+
+        case STELLAR_TYPES.creditAlphanum12:
+          label = 'Alphanumeric 12'
+          break
+
+        case STELLAR_TYPES.native:
+          label = 'Native'
+          break
+
+        default:
+          label = '[UNKNOWN_STELLAR_ASSET_TYPE]'
+          break
+      }
+
+      return label
+    },
   },
 
   async created () {
@@ -294,6 +345,8 @@ export default {
   },
 
   methods: {
+    get,
+
     async getAsset ({ baseAsset }) {
       try {
         const endpoint = `/v3/assets/${baseAsset.id}`
