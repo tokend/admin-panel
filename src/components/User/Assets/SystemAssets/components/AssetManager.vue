@@ -171,7 +171,7 @@
           v-model="isStellarIntegrationEnabled"
           label="Integration with stellar"
           :cb-value="true"
-          :disabled="formMixin.isDisabled"
+          :disabled="true || formMixin.isDisabled"
         />
       </div>
 
