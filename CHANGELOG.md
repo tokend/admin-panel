@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
+## [1.8.0-rc.2] - 2019-06-21
+#### Fixed
+- Resolved an issue of invalidly shown limits if they followed pattern like 99,
+  999, 9999 and so on.
+- Stopped overriding of user input when entered value was lesser than "min"
+  attribute of the field
+
 ## [1.8.0-rc.1] - 2019-06-17
 #### Added
 - Asset pair removal button to asset pair manager
@@ -360,7 +367,8 @@ for further information about branching and tagging conventions.
 
 ## [1.3.0] - 2019-03-01
 
-[Unreleased]: https://github.com/tokend/admin-panel/compare/1.8.0-rc.1...HEAD
+[Unreleased]: https://github.com/tokend/admin-panel/compare/1.8.0-rc.2...HEAD
+[1.8.0-rc.2]: https://github.com/tokend/admin-panel/compare/1.8.0-rc.1...1.8.0-rc.2
 [1.8.0-rc.1]: https://github.com/tokend/admin-panel/compare/1.8.0-rc.0...1.8.0-rc.1
 [1.8.0-rc.0]: https://github.com/tokend/admin-panel/compare/1.7.0...1.8.0-rc.0
 [1.7.0]: https://github.com/tokend/admin-panel/compare/1.7.0-rc.4...1.7.0
