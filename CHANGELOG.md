@@ -9,6 +9,13 @@ for further information about branching and tagging conventions.
 
 ## [Unreleased]
 #### Added
+- `canBeBaseInAtomicSwap` and `canBeQuoteInAtomicSwap` policy for assets
+
+#### Fixed
+- Resolved issue when you can't update init assets(BTC, DOGE, USD)
+
+## [1.9.0-rc.0] - 2019-06-24
+#### Added
 - New polls feature:
   - Poll requests browse page
   - Poll review page
@@ -24,6 +31,18 @@ for further information about branching and tagging conventions.
 #### Added
 - New `getAccountIdBy` to `apiHelper/users.js` that can detect argument as
   email or account Id and act accordingly
+
+## [1.8.0] - 2019-06-22
+### "Under the hood" changes
+#### Changed
+- Now using @tokend/js-sdk@1.8.0
+
+## [1.8.0-rc.2] - 2019-06-21
+#### Fixed
+- Resolved an issue of invalidly shown limits if they followed pattern like 99,
+  999, 9999 and so on.
+- Stopped overriding of user input when entered value was lesser than "min"
+  attribute of the field
 
 ## [1.8.0-rc.1] - 2019-06-17
 #### Added
@@ -378,7 +397,10 @@ for further information about branching and tagging conventions.
 
 ## [1.3.0] - 2019-03-01
 
-[Unreleased]: https://github.com/tokend/admin-panel/compare/1.8.0-rc.1...HEAD
+[Unreleased]: https://github.com/tokend/admin-panel/compare/1.9.0-rc.0...HEAD
+[1.9.0-rc.0]: https://github.com/tokend/admin-panel/compare/1.8.0...1.9.0-rc.0
+[1.8.0]: https://github.com/tokend/admin-panel/compare/1.8.0-rc.2...1.8.0
+[1.8.0-rc.2]: https://github.com/tokend/admin-panel/compare/1.8.0-rc.1...1.8.0-rc.2
 [1.8.0-rc.1]: https://github.com/tokend/admin-panel/compare/1.8.0-rc.0...1.8.0-rc.1
 [1.8.0-rc.0]: https://github.com/tokend/admin-panel/compare/1.7.0...1.8.0-rc.0
 [1.7.0]: https://github.com/tokend/admin-panel/compare/1.7.0-rc.4...1.7.0

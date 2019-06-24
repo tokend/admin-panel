@@ -1,6 +1,6 @@
 {
   "name": "admin-panel",
-  "version": "1.8.0-rc.1",
+  "version": "1.9.0-rc.0",
   "description": "A TokenD admin client",
   "author": "Distributed Lab <contact@distributedlab.com>",
   "private": true,
@@ -21,8 +21,9 @@
     "@mdi/font": "3.6.95",
     "@sentry/browser": "5.4.0",
     "@sentry/integrations": "5.4.1",
-    "@tokend/js-sdk": "1.8.0-rc.1",
+    "@tokend/js-sdk": "1.8.0",
     "axios": "0.19.0",
+    "bignumber.js": "8.0.1",
     "camelcase-keys-deep": "0.1.0",
     "d3": "5.9.2",
     "iso-country-codes": "0.0.5",
