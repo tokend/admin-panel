@@ -584,22 +584,24 @@ export default {
       },
     }
     /* eslint-disable max-len */
-    switch (this.asset.creatorDetails.stellar.assetType) {
-      case STELLAR_TYPES.creditAlphanum4:
-        validations.asset.creatorDetails.stellar.assetCode.maxLength = maxLength(
-          CREDIT_ALPHANUM4_MAX_LENGTH
-        )
-        validations.asset.creatorDetails.stellar.assetCode.alphaNum = alphaNum
-        break
-      case STELLAR_TYPES.creditAlphanum12:
-        validations.asset.creatorDetails.stellar.assetCode.minLength = minLength(
-          CREDIT_ALPHANUM12_MIN_LENGTH
-        )
-        validations.asset.creatorDetails.stellar.assetCode.maxLength = maxLength(
-          CREDIT_ALPHANUM12_MAX_LENGTH
-        )
-        validations.asset.creatorDetails.stellar.assetCode.alphaNum = alphaNum
-        break
+    if (this.asset.creatorDetails.stellar) {
+      switch (this.asset.creatorDetails.stellar.assetType) {
+        case STELLAR_TYPES.creditAlphanum4:
+          validations.asset.creatorDetails.stellar.assetCode.maxLength = maxLength(
+            CREDIT_ALPHANUM4_MAX_LENGTH
+          )
+          validations.asset.creatorDetails.stellar.assetCode.alphaNum = alphaNum
+          break
+        case STELLAR_TYPES.creditAlphanum12:
+          validations.asset.creatorDetails.stellar.assetCode.minLength = minLength(
+            CREDIT_ALPHANUM12_MIN_LENGTH
+          )
+          validations.asset.creatorDetails.stellar.assetCode.maxLength = maxLength(
+            CREDIT_ALPHANUM12_MAX_LENGTH
+          )
+          validations.asset.creatorDetails.stellar.assetCode.alphaNum = alphaNum
+          break
+      }
     }
     /* eslint-enable max-len */
     return validations
