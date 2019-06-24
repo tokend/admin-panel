@@ -57,6 +57,7 @@
 
 <script>
 import InputFieldAutocomplete from './InputFieldAutocomplete'
+import { MathUtil } from '@/utils/math.util'
 
 const EVENTS = {
   input: 'input',
@@ -97,7 +98,7 @@ export default {
     beforeEmit (target) {
       if (this.type === 'number') {
         this.normalizeNumberFormat(target)
-        this.normalizeMinMax(target)
+        this.normalizeMax(target)
         this.normalizeDecimalPrecision(target)
       }
     },
@@ -111,17 +112,16 @@ export default {
       }
     },
 
-    normalizeMinMax (target) {
+    normalizeMax (target) {
       const { value } = target
-      const max = '' + this.$attrs.max
-      const min = '' + this.$attrs.min
 
-      if (value === '') {
+      if (!value) {
+        return
+      }
 
-      } else if (value > +max) {
+      const max = this.$attrs.max
+      if (MathUtil.compare(value, max) > 0) {
         target.value = max
-      } else if (value < +min) {
-        target.value = min
       }
     },
 
