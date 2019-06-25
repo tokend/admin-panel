@@ -57,15 +57,12 @@
             <span class="app-list__cell app-list__cell--right">
               Last updated
             </span>
-            <span class="app-list__cell app-list__cell--right">
-              Role to set
-            </span>
           </div>
           <button
             class="app-list__li"
             v-for="item in list"
             :key="item.id"
-            @click="showUserDetails(item.requestor.id)"
+            @click="showReqestDetails(item.requestor.id)"
           >
             <email-getter
               class="app-list__cell app-list__cell--important"
@@ -210,10 +207,10 @@ export default {
       this.list = this.list.concat(data)
     },
 
-    showUserDetails (id) {
+    showReqestDetails (id) {
       if (id) {
         this.$router.push({
-          name: 'users.show',
+          name: 'kycRecoveryRequests.show',
           params: {
             id: id,
           },

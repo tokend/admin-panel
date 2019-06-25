@@ -100,6 +100,14 @@ export const UserRoutes = {
             require(['../../components/User/KycRecoveryRequests/KycRecoveryRequests.Index.vue'], resolve)
           },
         },
+        {
+          path: ':id',
+          name: 'kycRecoveryRequests.show',
+          props: true,
+          component: function (resolve) {
+            require(['../../components/User/KycRecoveryRequests/KycRecoveryRequest.vue'], resolve)
+          },
+        },
       ],
     },
     {

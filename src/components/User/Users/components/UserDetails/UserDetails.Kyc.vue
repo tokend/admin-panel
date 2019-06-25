@@ -172,6 +172,9 @@ export default {
       return country ? byAlpha2[country].name : ''
     },
   },
+  created () {
+    // console.log(this.kyc)
+  },
 }
 </script>
 
