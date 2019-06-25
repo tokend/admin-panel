@@ -325,6 +325,26 @@
       </div>
       <!-- eslint-enable max-len -->
 
+      <div class="app__form-row">
+        <tick-field
+          class="app__form-field"
+          v-model="asset.policies.value"
+          :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.canBeBaseInAtomicSwap]"
+          :cb-value="ASSET_POLICIES.canBeBaseInAtomicSwap"
+          :disabled="formMixin.isDisabled"
+        />
+      </div>
+
+      <div class="app__form-row">
+        <tick-field
+          class="app__form-field"
+          v-model="asset.policies.value"
+          :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.canBeQuoteInAtomicSwap]"
+          :cb-value="ASSET_POLICIES.canBeQuoteInAtomicSwap"
+          :disabled="formMixin.isDisabled"
+        />
+      </div>
+
       <div class="asset-manager-advanced__block">
         <div class="asset-manager-advanced__heading">
           <h3>Advanced</h3>
@@ -564,22 +584,24 @@ export default {
       },
     }
     /* eslint-disable max-len */
-    switch (this.asset.creatorDetails.stellar.assetType) {
-      case STELLAR_TYPES.creditAlphanum4:
-        validations.asset.creatorDetails.stellar.assetCode.maxLength = maxLength(
-          CREDIT_ALPHANUM4_MAX_LENGTH
-        )
-        validations.asset.creatorDetails.stellar.assetCode.alphaNum = alphaNum
-        break
-      case STELLAR_TYPES.creditAlphanum12:
-        validations.asset.creatorDetails.stellar.assetCode.minLength = minLength(
-          CREDIT_ALPHANUM12_MIN_LENGTH
-        )
-        validations.asset.creatorDetails.stellar.assetCode.maxLength = maxLength(
-          CREDIT_ALPHANUM12_MAX_LENGTH
-        )
-        validations.asset.creatorDetails.stellar.assetCode.alphaNum = alphaNum
-        break
+    if (this.asset.creatorDetails.stellar) {
+      switch (this.asset.creatorDetails.stellar.assetType) {
+        case STELLAR_TYPES.creditAlphanum4:
+          validations.asset.creatorDetails.stellar.assetCode.maxLength = maxLength(
+            CREDIT_ALPHANUM4_MAX_LENGTH
+          )
+          validations.asset.creatorDetails.stellar.assetCode.alphaNum = alphaNum
+          break
+        case STELLAR_TYPES.creditAlphanum12:
+          validations.asset.creatorDetails.stellar.assetCode.minLength = minLength(
+            CREDIT_ALPHANUM12_MIN_LENGTH
+          )
+          validations.asset.creatorDetails.stellar.assetCode.maxLength = maxLength(
+            CREDIT_ALPHANUM12_MAX_LENGTH
+          )
+          validations.asset.creatorDetails.stellar.assetCode.alphaNum = alphaNum
+          break
+      }
     }
     /* eslint-enable max-len */
     return validations

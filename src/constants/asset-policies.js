@@ -10,4 +10,6 @@ export const ASSET_POLICIES_VERBOSE = {
   [ base.xdr.AssetPolicy.statsQuoteAsset().value ]: 'Stats quote asset',
   [ base.xdr.AssetPolicy.withdrawable().value ]: 'Withdrawable',
   [ base.xdr.AssetPolicy.issuanceManualReviewRequired().value ]: 'Issuance manual review required',
+  [ base.xdr.AssetPolicy.canBeBaseInAtomicSwap().value ]: 'Can be base in atomic swap',
+  [ base.xdr.AssetPolicy.canBeQuoteInAtomicSwap().value ]: 'Can be quote in atomic swap',
 }
