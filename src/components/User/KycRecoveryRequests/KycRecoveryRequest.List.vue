@@ -16,25 +16,6 @@
           </option>
         </select-field>
 
-        <select-field
-          class="app-list-filters__field"
-          v-model="filters.pendingTasks"
-          label="Pending tasks"
-        >
-          <option :value="CHANGE_ROLE_TASKS.submitAutoVerification">
-            Submit auto verification
-          </option>
-          <option :value="CHANGE_ROLE_TASKS.completeAutoVerification">
-            Complete auto verification
-          </option>
-          <option :value="CHANGE_ROLE_TASKS.manualReviewRequired">
-            Manual review requried
-          </option>
-          <option value="">
-            Any
-          </option>
-        </select-field>
-
         <input-field
           class="app-list-filters__field"
           v-model.trim="filters.requestor"
@@ -123,7 +104,6 @@ import { clearObject } from '@/utils/clearObject'
 
 import { KYC_REQUEST_STATES } from '@/constants'
 
-import config from '@/config'
 import { api } from '@/api'
 import apiHelper from '@/apiHelper'
 
@@ -151,8 +131,6 @@ export default {
         pendingTasks: '',
       },
       KYC_REQUEST_STATES,
-      CHANGE_ROLE_TASKS: config.CHANGE_ROLE_TASKS,
-      ACCOUNT_ROLES: config.ACCOUNT_ROLES,
     }
   },
 

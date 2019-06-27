@@ -1,7 +1,7 @@
 <template>
   <div class="kyc-recovery-request">
     <div class="app__block">
-      <h2>User details</h2>
+      <h2>Kyc recovery request</h2>
 
       <template v-if="isLoaded">
         <section class="kyc-recovery-request__section">
@@ -54,13 +54,18 @@
 
         <div class="kyc-recovery-request__data-from-request">
           <template v-if="verifiedRequest.accountRoleToSet">
-            <p class="kyc-recovery-request__heading">
+            <h2>
               Data from KYC recovery request
-            </p>
+            </h2>
             <general-kyc-viewer
               v-if="verifiedRequest.accountRoleToSet === ACCOUNT_ROLES.general"
-              :kyc="kycRecoveryRequestDetails"
+              :kyc="generalRecoveryKycData"
               :user="user"
+            />
+            <kyc-syndicate-section
+              v-if="verifiedRequest.accountRoleToSet === ACCOUNT_ROLES.corporate"
+              :user="user"
+              :blob-id="kycRecoveryRequest.creatorDetails.blobId"
             />
           </template>
           <template v-else>
@@ -152,6 +157,7 @@ export default {
       verifiedRequest: {},
       kycRecoveryRequests: [],
       kyc: {},
+      generalRecoveryKycData: {},
       ROLE_TYPE_VERBOSE,
     }
   },
@@ -191,21 +197,22 @@ export default {
       return this.kycRecoveryRequests
         .find(item => item.isPending || item.isRejected)
     },
-
-    kycRecoveryRequestDetails () {
-      return deepCamelCase(
-        fromKycTemplate(
-          JSON.parse(this.kycRecoveryRequest.creatorDetails.verificationData)
-        )
-      )
-    },
   },
 
   async created () {
     await this.getUser()
 
     if (this.verifiedRequest.state) {
-      await this.getKyc(this.verifiedRequest.blobId)
+      this.isKycLoaded = false
+      this.kyc = await this.getKyc(this.verifiedRequest.blobId)
+      this.isKycLoaded = true
+    }
+    if (
+      this.verifiedRequest.accountRoleToSet === config.ACCOUNT_ROLES.general &&
+      this.kycRecoveryRequest.creatorDetails.blobId
+    ) {
+      this.generalRecoveryKycData =
+        await this.getKyc(this.kycRecoveryRequest.creatorDetails.blobId)
     }
   },
 
@@ -271,16 +278,14 @@ export default {
     },
 
     async getKyc (blobId) {
-      this.isKycLoaded = false
       this.isKycLoadFailed = false
 
       try {
         const endpoint = `/accounts/${this.user.address}/blobs/${blobId}`
         const { data } = await api.getWithSignature(endpoint)
-        this.kyc = deepCamelCase(
+        return deepCamelCase(
           fromKycTemplate(JSON.parse(data.value))
         )
-        this.isKycLoaded = true
       } catch (error) {
         ErrorHandler.process(error)
         this.isKycLoadFailed = true
@@ -305,16 +310,12 @@ export default {
     margin-top: 3rem;
   }
 
-  .kyc-recovery-request__heading {
-    display: flex;
-    line-height: 100%;
-    align-items: center;
-    font-size: 2rem;
-    font-weight: 600;
-  }
-
   .kyc-recovery-request__data-from-request {
     margin-top: 5rem;
+
+    & > h1, & > h2, & > h3 {
+      margin-bottom: 1.2rem;
+    }
   }
 
   .kyc-recovery-request__actions {
