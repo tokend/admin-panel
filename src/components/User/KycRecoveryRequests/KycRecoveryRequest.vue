@@ -53,7 +53,9 @@
         </template>
 
         <div class="kyc-recovery-request__data-from-request">
-          <template v-if="verifiedRequest.accountRoleToSet">
+          <template
+            v-if="verifiedRequest.accountRoleToSet &&
+              kycRecoveryRequestBlobId">
             <h2>
               Data from KYC recovery request
             </h2>
@@ -65,17 +67,19 @@
             <kyc-syndicate-section
               v-if="verifiedRequest.accountRoleToSet === ACCOUNT_ROLES.corporate"
               :user="user"
-              :blob-id="kycRecoveryRequest.creatorDetails.blobId"
+              :blob-id="kycRecoveryRequestBlobId"
             />
           </template>
-          <template v-else>
+          <template v-if="!verifiedRequest.accountRoleToSet">
             <p>This user has not yet been verified.</p>
           </template>
           <request-actions
+            v-if="kycRecoveryRequestBlobId"
             class="kyc-recovery-request__actions"
             :request-to-review="kycRecoveryRequest"
             :latest-approved-request="verifiedRequest"
             :user="user"
+            @reviewed="loadKycAndUserData"
           />
         </div>
       </template>
@@ -193,6 +197,12 @@ export default {
       )
     },
 
+    kycRecoveryRequestBlobId () {
+      return this.kycRecoveryRequest
+        ? this.kycRecoveryRequest.creatorDetails.blobId
+        : null
+    },
+
     kycRecoveryRequest () {
       return this.kycRecoveryRequests
         .find(item => item.isPending || item.isRejected)
@@ -200,23 +210,27 @@ export default {
   },
 
   async created () {
-    await this.getUser()
-
-    if (this.verifiedRequest.state) {
-      this.isKycLoaded = false
-      this.kyc = await this.getKyc(this.verifiedRequest.blobId)
-      this.isKycLoaded = true
-    }
-    if (
-      this.verifiedRequest.accountRoleToSet === config.ACCOUNT_ROLES.general &&
-      this.kycRecoveryRequest.creatorDetails.blobId
-    ) {
-      this.generalRecoveryKycData =
-        await this.getKyc(this.kycRecoveryRequest.creatorDetails.blobId)
-    }
+    await this.loadKycAndUserData()
   },
 
   methods: {
+    async loadKycAndUserData () {
+      await this.getUser()
+
+      if (this.verifiedRequest.state) {
+        this.isKycLoaded = false
+        this.kyc = await this.getKyc(this.verifiedRequest.blobId)
+        this.isKycLoaded = true
+      }
+      if (
+        this.verifiedRequest.accountRoleToSet ===
+        config.ACCOUNT_ROLES.general &&
+        this.kycRecoveryRequestBlobId
+      ) {
+        this.generalRecoveryKycData =
+          await this.getKyc(this.kycRecoveryRequestBlobId)
+      }
+    },
     async getUser () {
       this.isLoaded = false
       this.isFailed = false
