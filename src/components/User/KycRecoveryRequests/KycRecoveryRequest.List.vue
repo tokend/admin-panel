@@ -112,7 +112,7 @@ import { CollectionLoader } from '@/components/common'
 import { base } from '@tokend/js-sdk'
 
 export default {
-  name: 'kyc-request-list',
+  name: 'kyc-recovery-request-list',
   components: {
     EmailGetter,
     SelectField,
