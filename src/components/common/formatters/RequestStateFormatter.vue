@@ -30,7 +30,8 @@ export default {
   &[is-colored] {
     &[data-code="rejected"],
     &[data-code="permanently_rejected"],
-    &[data-code="cancelled"] {
+    &[data-code="cancelled"],
+    &[data-code="canceled"] {
       color: $color-danger;
     }
 

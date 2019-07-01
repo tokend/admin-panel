@@ -26,6 +26,10 @@
         )"
         :placeholder="limits.id ? 'Unlimited' : 'Not set'"
         :disabled="formMixin.isDisabled"
+        type="number"
+        step="0.000001"
+        :max="form.weeklyOut || DEFAULT_MAX_AMOUNT"
+        min="0"
       />
     </div>
 
@@ -51,6 +55,10 @@
         )"
         :placeholder="limits.id ? 'Unlimited' : 'Not set'"
         :disabled="formMixin.isDisabled"
+        type="number"
+        step="0.000001"
+        :max="form.monthlyOut || DEFAULT_MAX_AMOUNT"
+        min="0"
       />
     </div>
 
@@ -76,6 +84,10 @@
         )"
         :placeholder="limits.id ? 'Unlimited' : 'Not set'"
         :disabled="formMixin.isDisabled"
+        type="number"
+        step="0.000001"
+        :max="form.annualOut || DEFAULT_MAX_AMOUNT"
+        min="0"
       />
     </div>
 
@@ -101,6 +113,10 @@
         )"
         :placeholder="limits.id ? 'Unlimited' : 'Not set'"
         :disabled="formMixin.isDisabled"
+        type="number"
+        step="0.000001"
+        :max="DEFAULT_MAX_AMOUNT"
+        min="0"
       />
     </div>
 
@@ -150,6 +166,8 @@ import { LimitsRecord } from '@/js/records/limits.record'
 import { api } from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { Bus } from '@/utils/bus'
+
+import { MathUtil } from '@/utils/math.util'
 
 const EVENTS = {
   limitsUpdated: 'limits-updated',
@@ -233,15 +251,17 @@ export default {
 
   methods: {
     populateForm () {
-      this.form.dailyOut = this.convertLimitAmount(this.limits.dailyOut)
-      this.form.weeklyOut = this.convertLimitAmount(this.limits.weeklyOut)
-      this.form.monthlyOut = this.convertLimitAmount(this.limits.monthlyOut)
-      this.form.annualOut = this.convertLimitAmount(this.limits.annualOut)
+      this.form.dailyOut = this.normalizeLimitAmount(this.limits.dailyOut)
+      this.form.weeklyOut = this.normalizeLimitAmount(this.limits.weeklyOut)
+      this.form.monthlyOut = this.normalizeLimitAmount(this.limits.monthlyOut)
+      this.form.annualOut = this.normalizeLimitAmount(this.limits.annualOut)
     },
 
-    convertLimitAmount (limit) {
-      if (limit) {
-        return limit >= DEFAULT_MAX_AMOUNT ? '' : limit
+    normalizeLimitAmount (amount) {
+      if (amount) {
+        return MathUtil.compare(amount, DEFAULT_MAX_AMOUNT) >= 0
+          ? ''
+          : amount
       } else {
         return ''
       }

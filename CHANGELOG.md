@@ -9,13 +9,57 @@ for further information about branching and tagging conventions.
 
 ## [Unreleased]
 #### Added
-- Remove asset pair action to asset pair manager
+- `canBeBaseInAtomicSwap` and `canBeQuoteInAtomicSwap` policy for assets
 
 #### Fixed
+- Resolved issue when you can't update init assets(BTC, DOGE, USD)
 - Bug with fulfilling not system asset withdrawal requests
 - Bug with getting private doc
 - Add kyc recovery requests list
 - Add kyc recovery request revue
+
+## [1.9.0-rc.0] - 2019-06-24
+#### Added
+- New polls feature:
+  - Poll requests browse page
+  - Poll review page
+  - Polls browse page
+  - Poll and participants view page
+- Stellar integration
+
+#### Fixed
+- Resolved issue with display of input and input date fields when they have no
+  errors but allocated some space for errors at the bottom
+
+### "Under the hood" changes
+#### Added
+- New `getAccountIdBy` to `apiHelper/users.js` that can detect argument as
+  email or account Id and act accordingly
+
+## [1.8.0] - 2019-06-22
+### "Under the hood" changes
+#### Changed
+- Now using @tokend/js-sdk@1.8.0
+
+## [1.8.0-rc.2] - 2019-06-21
+#### Fixed
+- Resolved an issue of invalidly shown limits if they followed pattern like 99,
+  999, 9999 and so on.
+- Stopped overriding of user input when entered value was lesser than "min"
+  attribute of the field
+
+## [1.8.0-rc.1] - 2019-06-17
+#### Added
+- Asset pair removal button to asset pair manager
+
+#### Fixed
+- Resolved bug with fulfilling non-system asset withdrawal requests
+- Resolved "Pending tasks" field label overlap if no value selected
+- Resolved bug with getting private documents
+
+### "Under the hood" changes
+#### Changed
+- Now using @tokend/js-sdk@1.8.0-rc.1
 
 ## [1.8.0-rc.0] - 2019-06-06
 #### Added
@@ -357,7 +401,11 @@ for further information about branching and tagging conventions.
 
 ## [1.3.0] - 2019-03-01
 
-[Unreleased]: https://github.com/tokend/admin-panel/compare/1.8.0-rc.0...HEAD
+[Unreleased]: https://github.com/tokend/admin-panel/compare/1.9.0-rc.0...HEAD
+[1.9.0-rc.0]: https://github.com/tokend/admin-panel/compare/1.8.0...1.9.0-rc.0
+[1.8.0]: https://github.com/tokend/admin-panel/compare/1.8.0-rc.2...1.8.0
+[1.8.0-rc.2]: https://github.com/tokend/admin-panel/compare/1.8.0-rc.1...1.8.0-rc.2
+[1.8.0-rc.1]: https://github.com/tokend/admin-panel/compare/1.8.0-rc.0...1.8.0-rc.1
 [1.8.0-rc.0]: https://github.com/tokend/admin-panel/compare/1.7.0...1.8.0-rc.0
 [1.7.0]: https://github.com/tokend/admin-panel/compare/1.7.0-rc.4...1.7.0
 [1.7.0-rc.4]: https://github.com/tokend/admin-panel/compare/1.7.0-rc.3...1.7.0-rc.4

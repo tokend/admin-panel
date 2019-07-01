@@ -1,4 +1,5 @@
 import { api } from '@/api'
+import { base } from '@tokend/js-sdk'
 
 export default {
   async getAccountIdByEmail (email) {
@@ -9,7 +10,6 @@ export default {
         filter: { email },
         page: { limit: 1 },
       })
-
       return ((data || [])[0] || {}).address
     } catch (error) {
       if (error.httpStatus === 404) {
@@ -19,15 +19,14 @@ export default {
       }
     }
   },
+
   async getEmailByAccountId (accountId) {
+    if (!accountId) return ''
+
     try {
       const { data } = await api.get('/identities', {
-        filter: {
-          address: accountId,
-        },
-        page: {
-          limit: 1,
-        },
+        filter: { address: accountId },
+        page: { limit: 1 },
       })
       return ((data || [])[0] || {}).email
     } catch (error) {
@@ -35,6 +34,21 @@ export default {
         return ''
       } else {
         throw error
+      }
+    }
+  },
+
+  async getAccountIdBy (emailOrAccountId) {
+    const value = emailOrAccountId
+
+    if (base.Keypair.isValidPublicKey(value)) {
+      return value
+    } else {
+      try {
+        const address = await this.getAccountIdByEmail(value)
+        return address || value
+      } catch (error) {
+        return value
       }
     }
   },

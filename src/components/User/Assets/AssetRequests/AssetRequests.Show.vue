@@ -180,6 +180,52 @@
         </span>
       </div>
 
+      <template v-if="assetRequest.stellarAssetCode">
+        <div
+          class="asset-requests-show__row"
+        >
+          <span class="asset-requests-show__key">
+            Stellar asset code
+          </span>
+          <span class="asset-requests-show__value">
+            {{ assetRequest.stellarAssetCode }}
+          </span>
+        </div>
+
+        <div
+          class="asset-requests-show__row"
+        >
+          <span class="asset-requests-show__key">
+            Stellar asset type
+          </span>
+          <span class="asset-requests-show__value">
+            {{ stellarAssetType }}
+          </span>
+        </div>
+
+        <div
+          class="asset-requests-show__row"
+        >
+          <span class="asset-requests-show__key">
+            Stellar withdraw
+          </span>
+          <span class="asset-requests-show__value">
+            {{ assetRequest.stellarWithdraw ? 'Yes' : 'No' }}
+          </span>
+        </div>
+
+        <div
+          class="asset-requests-show__row"
+        >
+          <span class="asset-requests-show__key">
+            Stellar deposit
+          </span>
+          <span class="asset-requests-show__value">
+            {{ assetRequest.stellarDeposit ? 'Yes' : 'No' }}
+          </span>
+        </div>
+      </template>
+
       <div class="asset-requests-show__row">
         <span class="asset-requests-show__key">
           Creation date
@@ -283,6 +329,12 @@ import {
 
 import { api } from '@/api'
 
+const STELLAR_TYPES = {
+  creditAlphanum4: 'credit_alphanum4',
+  creditAlphanum12: 'credit_alphanum12',
+  native: 'native',
+}
+
 // TODO: extract to AssetRequestForm
 export default {
   components: {
@@ -318,6 +370,29 @@ export default {
       const isCancellableRequestor =
         this.assetRequest.requestor === this.$store.getters.masterId
       return isPending && isCancellableRequestor
+    },
+    stellarAssetType () {
+      let label
+
+      switch (this.assetRequest.stellarAssetType) {
+        case STELLAR_TYPES.creditAlphanum4:
+          label = 'Alphanumeric 4'
+          break
+
+        case STELLAR_TYPES.creditAlphanum12:
+          label = 'Alphanumeric 12'
+          break
+
+        case STELLAR_TYPES.native:
+          label = 'Native'
+          break
+
+        default:
+          label = '[UNKNOWN_STELLAR_ASSET_TYPE]'
+          break
+      }
+
+      return label
     },
   },
 

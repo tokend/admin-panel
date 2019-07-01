@@ -27,6 +27,7 @@ import {
   cropAddress,
   roleIdToString,
   assetTypeToString,
+  pollTypeToString,
   lowerCase,
   formatVersion,
 } from './components/App/filters/filters'
@@ -79,6 +80,7 @@ Vue.filter('adminSignerType', adminSignerType)
 Vue.filter('cropAddress', cropAddress)
 Vue.filter('roleIdToString', roleIdToString)
 Vue.filter('assetTypeToString', assetTypeToString)
+Vue.filter('pollTypeToString', pollTypeToString)
 Vue.filter('lowerCase', lowerCase)
 Vue.filter('formatVersion', formatVersion)
 log.setDefaultLevel(params.LOG_LEVEL)

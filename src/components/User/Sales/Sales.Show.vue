@@ -1,5 +1,5 @@
 <template>
-  <div class="sales-index">
+  <div class="sales-show">
     <div class="sales-show__manager-wrp">
       <sale-manager :id="id" />
     </div>

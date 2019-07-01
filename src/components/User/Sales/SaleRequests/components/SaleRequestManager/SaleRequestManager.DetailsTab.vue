@@ -99,6 +99,28 @@
               </template>
             </span>
           </li>
+          <template v-if="safeGet(request, 'asset.details.stellar.assetCode')">
+            <li>
+              <span>Stellar asset code</span>
+              <span>{{ request.asset.details.stellar.assetCode }}</span>
+            </li>
+            <li>
+              <span>Stellar asset type</span>
+              <span>{{ stellarAssetType }}</span>
+            </li>
+            <li>
+              <span>Stellar withdraw</span>
+              <span>
+                {{ request.asset.details.stellar.withdraw ? 'Yes' : 'No' }}
+              </span>
+            </li>
+            <li>
+              <span>Stellar deposit</span>
+              <span>
+                {{ request.asset.details.stellar.deposit ? 'Yes' : 'No' }}
+              </span>
+            </li>
+          </template>
         </ul>
       </div>
 
@@ -227,6 +249,12 @@ import { SALE_DEFINITION_TYPES } from '@/constants'
 
 import get from 'lodash/get'
 
+const STELLAR_TYPES = {
+  creditAlphanum4: 'credit_alphanum4',
+  creditAlphanum12: 'credit_alphanum12',
+  native: 'native',
+}
+
 export default {
   components: {
     EmailGetter,
@@ -250,6 +278,30 @@ export default {
     isSaleWhitelisted () {
       return this.saleDetails.accessDefinitionType.value ===
         SALE_DEFINITION_TYPES.whitelist
+    },
+
+    stellarAssetType () {
+      let label
+
+      switch (this.request.asset.details.stellar.assetType) {
+        case STELLAR_TYPES.creditAlphanum4:
+          label = 'Alphanumeric 4'
+          break
+
+        case STELLAR_TYPES.creditAlphanum12:
+          label = 'Alphanumeric 12'
+          break
+
+        case STELLAR_TYPES.native:
+          label = 'Native'
+          break
+
+        default:
+          label = '[UNKNOWN_STELLAR_ASSET_TYPE]'
+          break
+      }
+
+      return label
     },
   },
   methods: {
