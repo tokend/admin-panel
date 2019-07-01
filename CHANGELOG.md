@@ -13,6 +13,10 @@ for further information about branching and tagging conventions.
 
 #### Fixed
 - Resolved issue when you can't update init assets(BTC, DOGE, USD)
+- Bug with fulfilling not system asset withdrawal requests
+- Bug with getting private doc
+- Add kyc recovery requests list
+- Add kyc recovery request revue
 
 ## [1.9.0-rc.0] - 2019-06-24
 #### Added
