@@ -4,7 +4,9 @@ export function clearObject (object) {
   for (const key in objectCopy) {
     if (objectCopy.hasOwnProperty(key)) {
       const element = objectCopy[key]
-      if (element === undefined || element === null || element === '') {
+      if (element === undefined || element === null || element === '' ||
+        element === "''" || element === '""'
+      ) {
         delete objectCopy[key]
       }
     }
