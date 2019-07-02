@@ -17,6 +17,8 @@ for further information about branching and tagging conventions.
 - Bug with getting private doc
 - Add kyc recovery requests list
 - Add kyc recovery request revue
+- Resolved issue with values like `%27%27` send to horizon
+- Resolved issue with status message shown under modal background
 
 ## [1.9.0-rc.0] - 2019-06-24
 #### Added
