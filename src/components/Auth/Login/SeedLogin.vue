@@ -16,6 +16,7 @@
             v-model.trim="form.seed"
             name="seed"
             label="Seed"
+            @blur="touchField('form.seed')"
             :error-message="getFieldErrorMessage('form.seed')"
             :disabled="formMixin.isDisabled"
           />
