@@ -156,11 +156,6 @@ export default {
     }
   },
 
-  mounted () {
-    const input = document.querySelector('#login-field input')
-    if (input) input.focus()
-  },
-
   methods: {
     async login () {
       if (!this.isFormValid()) return
