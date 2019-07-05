@@ -175,24 +175,24 @@
             @ok="updateAttributes"
             @cancel="hideConfirmation"
           />
+          <template v-else>
+            <button
+              class="asset-pair-manager__submit-btn app__btn"
+              :disabled="formMixin.isDisabled"
+              @click="isAttributesFormSelected = true"
+            >
+              Update policy
+            </button>
 
-          <button
-            v-else
-            class="asset-pair-manager__submit-btn app__btn"
-            :disabled="formMixin.isDisabled"
-            @click="isAttributesFormSelected = true"
-          >
-            Update policy
-          </button>
-
-          <button
-            type="button"
-            class="asset-pair-manager__remove-btn app__btn app__btn--danger"
-            @click.prevent="removeAssetPair"
-            :disabled="formMixin.isDisabled"
-          >
-            Remove pair
-          </button>
+            <button
+              type="button"
+              class="asset-pair-manager__remove-btn app__btn app__btn--danger"
+              @click.prevent="removeAssetPair"
+              :disabled="formMixin.isDisabled"
+            >
+              Remove pair
+            </button>
+          </template>
         </div>
       </form>
     </template>
@@ -293,12 +293,9 @@ export default {
     async getPair () {
       this.isLoaded = false
       try {
-        const { _rawResponse: response } = await api.get('/asset_pairs')
-        const pair = response.data
-          .find(({ base, quote }) => {
-            return base === this.base && quote === this.quote
-          })
-        this.pair = new AssetPairRecord(pair)
+        const endpoint = `/v3/asset_pairs/${this.base}:${this.quote}`
+        const { data } = await api.get(endpoint)
+        this.pair = new AssetPairRecord(data)
         this.isLoaded = true
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
