@@ -7,14 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
-## [Unreleased]
+## [1.9.0-rc.1] - 2019-07-08
 #### Fixed
-- Resolved issue with values like `%27%27` send to horizon
-- Resolved issue with status message shown under modal background
-- Resolved issue when on click `sign in with seed` was validation error
-  in the username field
-- Resolved issue when you can't change asset issuer
-- Resolved issue when shows error message after unblock new user
+- Resolved the issue with invalid query param `''` sent to Horizon
+- Resolved the issue with the status message shown under a modal background
+- Resolved the issue when after clicking `sign in with seed` the Login field
+  validation error occurred
+- Resolved the issue when you can't upload and apply a "change asset issuer"
+  offline operation
+- Resolved the issue with an error shown after unblocking of a user and visiting
+  their page again
 
 ## [1.9.0-rc.0] - 2019-06-24
 #### Added
@@ -399,7 +401,8 @@ for further information about branching and tagging conventions.
 
 ## [1.3.0] - 2019-03-01
 
-[Unreleased]: https://github.com/tokend/admin-panel/compare/1.9.0-rc.0...HEAD
+[Unreleased]: https://github.com/tokend/admin-panel/compare/1.9.0-rc.1...HEAD
+[1.9.0-rc.1]: https://github.com/tokend/admin-panel/compare/1.9.0-rc.0...1.9.0-rc.1
 [1.9.0-rc.0]: https://github.com/tokend/admin-panel/compare/1.8.0...1.9.0-rc.0
 [1.8.0]: https://github.com/tokend/admin-panel/compare/1.8.0-rc.2...1.8.0
 [1.8.0-rc.2]: https://github.com/tokend/admin-panel/compare/1.8.0-rc.1...1.8.0-rc.2
