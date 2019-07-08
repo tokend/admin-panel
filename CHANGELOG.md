@@ -11,6 +11,8 @@ for further information about branching and tagging conventions.
 #### Fixed
 - Resolved issue with values like `%27%27` send to horizon
 - Resolved issue with status message shown under modal background
+- Resolved issue when on click `sign in with seed` was validation error
+  in the username field
 
 ## [1.9.0-rc.0] - 2019-06-24
 #### Added
