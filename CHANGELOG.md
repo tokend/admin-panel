@@ -22,6 +22,7 @@ for further information about branching and tagging conventions.
 - Resolved issue when on click `sign in with seed` was validation error
   in the username field
 - Resolved issue when you can't change asset issuer
+- Resolved issue when shows error message after unblock new user
 
 ## [1.9.0-rc.0] - 2019-06-24
 #### Added
