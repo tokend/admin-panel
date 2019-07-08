@@ -65,6 +65,7 @@ import './scss/app.scss'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { ErrorTracker } from '@/utils/ErrorTracker'
 import { snakeToCamelCase } from '@/utils/un-camel-case'
+import { mapActions, mapGetters } from 'vuex'
 
 function isIE () {
   const parser = new UAParser()
@@ -93,6 +94,10 @@ export default {
   },
 
   computed: {
+    ...mapGetters([
+      'kvEntries',
+    ]),
+
     isModalOpen () {
       return this.$store.state.isModalOpen
     },
@@ -113,6 +118,10 @@ export default {
   },
 
   methods: {
+    ...mapActions({
+      loadKvEntries: 'LOAD_KV_ENTRIES',
+    }),
+
     async initApp () {
       this.subscribeToStoreMutations()
       await this.loadConfigs()
@@ -142,6 +151,7 @@ export default {
     async loadConfigs () {
       try {
         await this.loadHorizonConfigs()
+        await this.loadKvEntries()
         await this.loadAccountRolesConfigs()
         await this.loadAssetTypesConfigs()
         await this.loadChangeRoleTasks()
@@ -161,63 +171,55 @@ export default {
     },
 
     async loadChangeRoleTasks () {
-      const { body: tasks } =
-        await this.$http.get(`${config.HORIZON_SERVER}/key_value`)
-      config.CHANGE_ROLE_TASKS.completeAutoVerification = tasks
-        .find(item => item.key === 'change_role_task:complete_auto_verification')
-        .uint32_value
-      config.CHANGE_ROLE_TASKS.submitAutoVerification = tasks
-        .find(item => item.key === 'change_role_task:submit_auto_verification')
-        .uint32_value
-      config.CHANGE_ROLE_TASKS.manualReviewRequired = tasks
-        .find(item => item.key === 'change_role_task:manual_review_required')
-        .uint32_value
+      config.CHANGE_ROLE_TASKS.completeAutoVerification = this.kvEntries
+        .find(item => item.id === 'change_role_task:complete_auto_verification')
+        .value.u32
+      config.CHANGE_ROLE_TASKS.submitAutoVerification = this.kvEntries
+        .find(item => item.id === 'change_role_task:submit_auto_verification')
+        .value.u32
+      config.CHANGE_ROLE_TASKS.manualReviewRequired = this.kvEntries
+        .find(item => item.id === 'change_role_task:manual_review_required')
+        .value.u32
     },
 
     async loadAccountRolesConfigs () {
-      const { body: roles } =
-        await this.$http.get(`${config.HORIZON_SERVER}/key_value`)
-      config.ACCOUNT_ROLES.notVerified = roles
-        .find(item => item.key === 'account_role:unverified')
-        .uint32_value
-      config.ACCOUNT_ROLES.general = roles
-        .find(item => item.key === 'account_role:general')
-        .uint32_value
-      config.ACCOUNT_ROLES.usAccredited = roles
-        .find(item => item.key === 'account_role:us_accredited')
-        .uint32_value
-      config.ACCOUNT_ROLES.usVerified = roles
-        .find(item => item.key === 'account_role:us_verified')
-        .uint32_value
-      config.ACCOUNT_ROLES.corporate = roles
-        .find(item => item.key === 'account_role:corporate')
-        .uint32_value
-      config.ACCOUNT_ROLES.blocked = roles
-        .find(item => item.key === 'account_role:blocked')
-        .uint32_value
-      config.SIGNER_ROLES.default = roles
-        .find(item => item.key === 'signer_role:default')
-        .uint32_value
+      config.ACCOUNT_ROLES.notVerified = this.kvEntries
+        .find(item => item.id === 'account_role:unverified')
+        .value.u32
+      config.ACCOUNT_ROLES.general = this.kvEntries
+        .find(item => item.id === 'account_role:general')
+        .value.u32
+      config.ACCOUNT_ROLES.usAccredited = this.kvEntries
+        .find(item => item.id === 'account_role:us_accredited')
+        .value.u32
+      config.ACCOUNT_ROLES.usVerified = this.kvEntries
+        .find(item => item.id === 'account_role:us_verified')
+        .value.u32
+      config.ACCOUNT_ROLES.corporate = this.kvEntries
+        .find(item => item.id === 'account_role:corporate')
+        .value.u32
+      config.ACCOUNT_ROLES.blocked = this.kvEntries
+        .find(item => item.id === 'account_role:blocked')
+        .value.u32
+      config.SIGNER_ROLES.default = this.kvEntries
+        .find(item => item.id === 'signer_role:default')
+        .value.u32
     },
 
     async loadAssetTypesConfigs () {
-      const { body: keyValues } =
-        await this.$http.get(`${config.HORIZON_SERVER}/key_value`)
-      config.ASSET_TYPES = keyValues
-        .filter(item => /asset_type/ig.test(item.key))
+      config.ASSET_TYPES = this.kvEntries
+        .filter(item => /asset_type/ig.test(item.id))
         .reduce((result, item) => {
-          const assetTypeName = snakeToCamelCase(item.key.split(':')[1])
-          result[assetTypeName] = String(item.uint32_value)
+          const assetTypeName = snakeToCamelCase(item.id.split(':')[1])
+          result[assetTypeName] = String(item.value.u32)
           return result
         }, config.ASSET_TYPES)
 
-      // TODO: refactor, should not be here, key_values should be fetched
-      // stubbornly from key_values
-      config.POLL_TYPES = keyValues
-        .filter(item => /poll_type/ig.test(item.key))
+      config.POLL_TYPES = this.kvEntries
+        .filter(item => /poll_type/ig.test(item.id))
         .reduce((result, item) => {
-          const assetTypeName = snakeToCamelCase(item.key.split(':')[1])
-          result[assetTypeName] = String(item.uint32_value)
+          const assetTypeName = snakeToCamelCase(item.id.split(':')[1])
+          result[assetTypeName] = String(item.value.u32)
           return result
         }, config.POLL_TYPES)
     },
