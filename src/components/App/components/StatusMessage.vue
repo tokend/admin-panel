@@ -122,7 +122,7 @@ $icon-padding: 2.4rem;
   position: fixed;
   right: 4rem;
   top: 4rem;
-  z-index: 11;
+  z-index: 1000;
   max-width: 42rem;
   min-width: 32rem;
   display: flex;
