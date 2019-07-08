@@ -10,6 +10,7 @@ for further information about branching and tagging conventions.
 ## [Unreleased]
 #### Added
 - `canBeBaseInAtomicSwap` and `canBeQuoteInAtomicSwap` policy for assets
+- Migrated `Asset pairs` to v3 endpoint
 
 #### Fixed
 - Resolved issue when you can't update init assets(BTC, DOGE, USD)
