@@ -10,6 +10,7 @@ for further information about branching and tagging conventions.
 ## [Unreleased]
 #### Added
 - `canBeBaseInAtomicSwap` and `canBeQuoteInAtomicSwap` policy for assets
+- Added key values to vuex
 
 #### Fixed
 - Resolved issue when you can't update init assets(BTC, DOGE, USD)
