@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
+## [Unreleased]
+#### Removed
+- Display of "available for issuance" and "issued" fields at top of asset
+  "Manage asset" page
+
+#### Fixed
+- Display of asset code for existing assets on "Manage asset" page
+- Display of asset type for existing assets on "Manage asset" page
+
+### "Under the hood" changes
+#### Removed
+- Deleted unused `MasterAssets` components
+
 ## [1.9.0-rc.1] - 2019-07-08
 #### Fixed
 - Resolved the issue with invalid query param `''` sent to Horizon

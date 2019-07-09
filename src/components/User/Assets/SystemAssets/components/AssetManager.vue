@@ -1,28 +1,6 @@
 <template>
   <div class="asset-manager">
-    <div
-      class="asset-manager__current-wrp"
-      v-if="asset.availableForIssuance && asset.issued"
-    >
-      <div class="asset-manager__current-issuance-details">
-        <span class="available">
-          <span class="highlight amount text">
-            {{ asset.availableForIssuance }}&nbsp;•&nbsp;
-          </span>
-          <label class="label">
-            available for issuance
-          </label>
-        </span>
-        <span class="issued">
-          <span class="highlight amount text">
-            {{ asset.issued }}&nbsp;•&nbsp;
-          </span>
-          <label class="label">
-            issued
-          </label>
-        </span>
-      </div>
-    </div>
+    <h2>Manage {{ assetCode }}</h2>
 
     <form
       @submit.prevent="isFormValid() && showConfirmation()"
@@ -78,10 +56,33 @@
         />
 
         <input-field
+          class="app__form-field"
+          type="number"
+          min="0"
+          :max="DEFAULT_MAX_AMOUNT"
+          :step="DEFAULT_INPUT_STEP"
+          label="Maximum assets"
+          v-model="asset.maxIssuanceAmount"
+          :disabled="isExistingAsset || formMixin.isDisabled"
+          name="max-assets"
+          @blur="touchField('asset.maxIssuanceAmount')"
+          :error-message="getFieldErrorMessage(
+            'asset.maxIssuanceAmount',
+            {
+              minValue: DEFAULT_INPUT_MIN,
+              maxValue: DEFAULT_MAX_AMOUNT
+            }
+          )"
+        />
+      </div>
+
+      <div class="app__form-row">
+        <input-field
           v-if="!isExistingAsset"
           type="number"
           min="0"
           :max="asset.maxIssuanceAmount"
+          :step="DEFAULT_INPUT_STEP"
           class="app__form-field"
           label="Initial preissued amount"
           v-model="asset.initialPreissuedAmount"
@@ -102,34 +103,13 @@
           :disabled="true"
           name="available-issuance"
         />
-      </div>
-
-      <div class="app__form-row">
-        <input-field
-          class="app__form-field app__form-field--halved"
-          type="number"
-          min="0"
-          :step="DEFAULT_INPUT_STEP"
-          label="Maximum assets"
-          v-model="asset.maxIssuanceAmount"
-          :disabled="isExistingAsset || formMixin.isDisabled"
-          name="max-assets"
-          @blur="touchField('asset.maxIssuanceAmount')"
-          :error-message="getFieldErrorMessage(
-            'asset.maxIssuanceAmount',
-            {
-              minValue: DEFAULT_INPUT_MIN,
-              maxValue: DEFAULT_MAX_AMOUNT
-            }
-          )"
-        />
 
         <!--
           the field is disabled due to omitted testing
           session of trailingDigitsCount
         -->
         <input-field
-          class="app__form-field app__form-field--halved"
+          class="app__form-field"
           type="number"
           min="0"
           step="1"
@@ -235,7 +215,7 @@
               asset.creatorDetails.stellar.assetType === STELLAR_TYPES.native"
           />
         </div>
-      <!-- eslint-enable max-len -->
+        <!-- eslint-enable max-len -->
       </template>
 
       <div class="asset-manager__file-input-wrp">
@@ -475,7 +455,7 @@ export default {
         maxIssuanceAmount: '0',
         availableForIssuance: '0',
         trailingDigitsCount: '6',
-        assetType: '0',
+        type: '0',
         creatorDetails: {
           name: '',
           logo: {},
@@ -564,22 +544,21 @@ export default {
       },
     }
     /* eslint-disable max-len */
-    switch (this.asset.creatorDetails.stellar.assetType) {
-      case STELLAR_TYPES.creditAlphanum4:
-        validations.asset.creatorDetails.stellar.assetCode.maxLength = maxLength(
-          CREDIT_ALPHANUM4_MAX_LENGTH
-        )
-        validations.asset.creatorDetails.stellar.assetCode.alphaNum = alphaNum
-        break
-      case STELLAR_TYPES.creditAlphanum12:
-        validations.asset.creatorDetails.stellar.assetCode.minLength = minLength(
-          CREDIT_ALPHANUM12_MIN_LENGTH
-        )
-        validations.asset.creatorDetails.stellar.assetCode.maxLength = maxLength(
-          CREDIT_ALPHANUM12_MAX_LENGTH
-        )
-        validations.asset.creatorDetails.stellar.assetCode.alphaNum = alphaNum
-        break
+    if (this.asset.creatorDetails.stellar) {
+      const stellarAssetCode =
+        validations.asset.creatorDetails.stellar.assetCode
+
+      switch (this.asset.creatorDetails.stellar.assetType) {
+        case STELLAR_TYPES.creditAlphanum4:
+          stellarAssetCode.maxLength = maxLength(CREDIT_ALPHANUM4_MAX_LENGTH)
+          stellarAssetCode.alphaNum = alphaNum
+          break
+        case STELLAR_TYPES.creditAlphanum12:
+          stellarAssetCode.minLength = minLength(CREDIT_ALPHANUM12_MIN_LENGTH)
+          stellarAssetCode.maxLength = maxLength(CREDIT_ALPHANUM12_MAX_LENGTH)
+          stellarAssetCode.alphaNum = alphaNum
+          break
+      }
     }
     /* eslint-enable max-len */
     return validations
@@ -632,6 +611,9 @@ export default {
         data.creatorDetails = data.creatorDetails || data.details
         if (!_isEmpty(data.creatorDetails.stellar)) {
           this.isStellarIntegrationEnabled = true
+        }
+        if (data.type !== undefined) {
+          data.type = String(data.type)
         }
         Object.assign(this.asset, data)
       } catch (error) {
@@ -768,25 +750,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "~@/assets/scss/colors";
+@import '~@/assets/scss/colors';
 
 .asset-manager {
   position: relative;
-  padding-top: 3rem;
-}
-
-.asset-manager__current-wrp {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  position: absolute;
-  width: 30rem;
-  top: -7rem; // WARN: magic number
-  right: 0;
-
-  .highlight {
-    color: $color-info;
-  }
 }
 
 .asset-manager__file-input-inner {
@@ -814,31 +781,6 @@ export default {
   text-overflow: ellipsis;
   font-size: 1.2rem;
   white-space: nowrap;
-}
-
-.asset-manager__current-issuance-details {
-  flex: 1;
-}
-
-.asset-manager__current-issuance-details {
-  display: flex;
-  flex-direction: column;
-
-  .available,
-  .issued {
-    display: flex;
-    line-height: 2.1rem;
-
-    .amount {
-      flex: 0.4;
-      // margin-right: 0.7rem;
-      text-align: right;
-    }
-
-    label {
-      flex: 0.6;
-    }
-  }
 }
 
 .asset-manager-advanced__heading {
