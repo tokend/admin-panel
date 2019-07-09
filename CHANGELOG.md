@@ -11,10 +11,12 @@ for further information about branching and tagging conventions.
 #### Added
 - `canBeBaseInAtomicSwap` and `canBeQuoteInAtomicSwap` policy for assets
 - Added key values to vuex
+
+#### Changed
 - Replaced using `ACCOUNT_ROLES`, `SIGNER_ROLES`, `ASSET_TYPES`, `POLL_TYPES` and `CHANGE_ROLE_TASKS` 
   to fields from vuex storage
 
-### Removed
+#### Removed
 - Remove fields `ACCOUNT_ROLES`, `SIGNER_ROLES`, `ASSET_TYPES`, `POLL_TYPES` and `CHANGE_ROLE_TASKS` from config
 
 #### Fixed
