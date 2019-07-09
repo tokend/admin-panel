@@ -72,8 +72,8 @@ import { Bus } from '@/utils/bus'
 
 import { ChangeRoleRequest } from '@/apiHelper/responseHandlers/requests/ChangeRoleRequest'
 
-import config from '@/config'
 import { api } from '@/api'
+import { mapGetters } from 'vuex'
 
 const EVENTS = {
   reset: 'reset',
@@ -124,8 +124,12 @@ export default {
   },
 
   computed: {
+    ...mapGetters([
+      'kvEntryUnverifiedRoleId',
+    ]),
+
     canResetToUnverified () {
-      return this.user.role !== config.ACCOUNT_ROLES.notVerified
+      return this.user.role !== this.kvEntryUnverifiedRoleId
     },
   },
 
@@ -140,7 +144,7 @@ export default {
           .createChangeRoleRequest({
             requestID: '0',
             destinationAccount: this.user.address,
-            accountRoleToSet: config.ACCOUNT_ROLES.notVerified.toString(),
+            accountRoleToSet: this.kvEntryUnverifiedRoleId.toString(),
             creatorDetails: {
               resetReason: this.resetForm.reason,
               latestApprovedRequestId: this.verifiedRequest.id,

@@ -119,8 +119,6 @@ import { api } from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { REQUEST_STATES } from '@tokend/js-sdk'
 
-import config from '@/config'
-
 import { ChangeRoleRequest } from '@/apiHelper/responseHandlers/requests/ChangeRoleRequest'
 import { ReviewDecision } from './queue/wrappers/ReviewDecision'
 import { DECISION_ACTIONS } from './queue/constants/decision-actions'
@@ -128,6 +126,7 @@ import { DECISION_ACTIONS } from './queue/constants/decision-actions'
 import { confirmAction } from '@/js/modals/confirmation_message'
 
 import _omit from 'lodash/omit'
+import { mapGetters } from 'vuex'
 
 const ALL_ROLES_FILTER = '0'
 
@@ -159,6 +158,10 @@ export default {
   },
 
   computed: {
+    ...mapGetters([
+      'kvAccountRoles',
+    ]),
+
     currentRequest () {
       return this.pendingRequests[this.currentRequestIndex]
     },
@@ -173,7 +176,7 @@ export default {
     },
 
     verifiedAccountRoles () {
-      return _omit(config.ACCOUNT_ROLES, ['notVerified', 'blocked'])
+      return _omit(this.kvAccountRoles, ['unverified', 'blocked'])
     },
   },
 

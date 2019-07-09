@@ -11,6 +11,11 @@ for further information about branching and tagging conventions.
 #### Added
 - `canBeBaseInAtomicSwap` and `canBeQuoteInAtomicSwap` policy for assets
 - Added key values to vuex
+- Replaced using `ACCOUNT_ROLES`, `SIGNER_ROLES`, `ASSET_TYPES`, `POLL_TYPES` and `CHANGE_ROLE_TASKS` 
+  to fields from vuex storage
+
+### Removed
+- Remove fields `ACCOUNT_ROLES`, `SIGNER_ROLES`, `ASSET_TYPES`, `POLL_TYPES` and `CHANGE_ROLE_TASKS` from config
 
 #### Fixed
 - Resolved issue when you can't update init assets(BTC, DOGE, USD)

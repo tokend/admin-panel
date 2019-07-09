@@ -8,13 +8,13 @@
           v-model="filters.role"
         >
           <option :value="''" />
-          <option :value="ACCOUNT_ROLES.notVerified">
+          <option :value="kvAccountRoles.unverified">
             Unverified
           </option>
-          <option :value="ACCOUNT_ROLES.general">
+          <option :value="kvAccountRoles.general">
             General
           </option>
-          <option :value="ACCOUNT_ROLES.corporate">
+          <option :value="kvAccountRoles.corporate">
             Сorporate
           </option>
         </select-field>
@@ -124,10 +124,10 @@ import _ from 'lodash'
 
 import { api } from '@/api'
 import apiHelper from '@/apiHelper'
-import config from '@/config'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { base } from '@tokend/js-sdk'
+import { mapGetters } from 'vuex'
 
 export default {
   components: {
@@ -145,8 +145,13 @@ export default {
       },
       list: [],
       isLoading: false,
-      ACCOUNT_ROLES: config.ACCOUNT_ROLES,
     }
+  },
+
+  computed: {
+    ...mapGetters([
+      'kvAccountRoles',
+    ]),
   },
 
   watch: {

@@ -76,8 +76,8 @@ import { Bus } from '@/utils/bus'
 
 import { ChangeRoleRequest } from '@/apiHelper/responseHandlers/requests/ChangeRoleRequest'
 
-import config from '@/config'
 import { api } from '@/api'
+import { mapGetters } from 'vuex'
 
 const EVENTS = {
   updated: 'updated',
@@ -116,7 +116,6 @@ export default {
         reason: '',
         isShown: false,
       },
-      ACCOUNT_ROLES: config.ACCOUNT_ROLES,
       REJECT_REASON_MAX_LENGTH,
     }
   },
@@ -133,8 +132,12 @@ export default {
   },
 
   computed: {
+    ...mapGetters([
+      'kvAccountRoles',
+    ]),
+
     isUserBlocked () {
-      return this.user.role === config.ACCOUNT_ROLES.blocked
+      return this.user.role === this.kvAccountRoles.blocked
     },
   },
 
@@ -149,7 +152,7 @@ export default {
           .createChangeRoleRequest({
             requestID: '0',
             destinationAccount: this.user.address,
-            accountRoleToSet: config.ACCOUNT_ROLES.blocked.toString(),
+            accountRoleToSet: this.kvAccountRoles.blocked.toString(),
             creatorDetails: {
               blockReason: this.blockForm.reason,
               latestApprovedRequestId: this.latestApprovedRequest.id,
@@ -173,7 +176,7 @@ export default {
       this.$emit(EVENTS.updateIsPending, true)
       try {
         const accountRoleToSet = this.verifiedRequest.accountRoleToSet ||
-          config.ACCOUNT_ROLES.notVerified
+          this.kvAccountRoles.unverified
 
         const operation = base.CreateChangeRoleRequestBuilder
           .createChangeRoleRequest({

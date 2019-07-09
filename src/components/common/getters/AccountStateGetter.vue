@@ -11,7 +11,7 @@
 
 <script>
 import { api } from '@/api'
-import config from '@/config'
+import { mapGetters } from 'vuex'
 
 export default {
   props: {
@@ -23,9 +23,13 @@ export default {
   }),
 
   computed: {
+    ...mapGetters([
+      'kvAccountRoles',
+    ]),
+
     accountState () {
       if (!this.account) return null
-      return this.account.role.id === +config.ACCOUNT_ROLES.blocked
+      return this.account.role.id === +this.kvAccountRoles.blocked
         ? 'Blocked'
         : 'Active'
     },

@@ -51,7 +51,7 @@ import { EmailGetter } from '@comcom/getters'
 import { ReviewDecision } from '../wrappers/ReviewDecision'
 import { DECISION_STATES } from '../constants/decision-states'
 
-import config from '@/config'
+import { mapGetters } from 'vuex'
 
 const EVENTS = {
   click: 'click',
@@ -79,16 +79,16 @@ export default {
     localizeTasks (tasks) {
       let tasksDescriptions = []
 
-      if (tasks & config.CHANGE_ROLE_TASKS.submitAutoVerification) {
+      if (tasks & this.kvChangeRoleTasks.submitAutoVerification) {
         tasksDescriptions.push('Submit auto verification request')
       }
-      if (tasks & config.CHANGE_ROLE_TASKS.completeAutoVerification) {
+      if (tasks & this.kvChangeRoleTasks.completeAutoVerification) {
         tasksDescriptions.push('Complete auto verification request')
       }
-      if (tasks & config.CHANGE_ROLE_TASKS.manualReviewRequired) {
+      if (tasks & this.kvChangeRoleTasks.manualReviewRequired) {
         tasksDescriptions.push('Manual review required')
       }
-      if (tasks & config.CHANGE_ROLE_TASKS.default) {
+      if (tasks & this.kvChangeRoleTasks.default) {
         tasksDescriptions.push('Default')
       }
 
@@ -104,6 +104,12 @@ export default {
     return {
       EVENTS,
     }
+  },
+
+  computed: {
+    ...mapGetters([
+      'kvChangeRoleTasks',
+    ]),
   },
 }
 </script>

@@ -15,23 +15,23 @@
         <template v-if="verifiedRequest.state">
           <!-- eslint-disable max-len -->
           <section
-            v-if="verifiedRequest.accountRoleToSet !== ACCOUNT_ROLES.notVerified && !isUserBlocked"
+            v-if="verifiedRequest.accountRoleToSet !== kvAccountRoles.unverified && !isUserBlocked"
             class="kyc-recovery-request__section"
           >
             <template v-if="isKycLoaded">
               <h2>Previous approved KYC Request</h2>
               <general-kyc-viewer
-                v-if="verifiedRequest.accountRoleToSet === ACCOUNT_ROLES.general"
+                v-if="verifiedRequest.accountRoleToSet === kvAccountRoles.general"
                 :kyc="kyc"
                 :user="user"
               />
               <verified-kyc-viewer
-                v-if="verifiedRequest.accountRoleToSet === ACCOUNT_ROLES.usVerified"
+                v-if="verifiedRequest.accountRoleToSet === kvAccountRoles.usVerified"
                 :kyc="kyc"
                 :user="user"
               />
               <accredited-kyc-viewer
-                v-if="verifiedRequest.accountRoleToSet === ACCOUNT_ROLES.usAccredited"
+                v-if="verifiedRequest.accountRoleToSet === kvAccountRoles.usAccredited"
                 :kyc="kyc"
                 :user="user"
               />
@@ -45,7 +45,7 @@
               <p>Loading...</p>
             </template>
             <kyc-syndicate-section
-              v-if="verifiedRequest.accountRoleToSet === ACCOUNT_ROLES.corporate"
+              v-if="verifiedRequest.accountRoleToSet === kvAccountRoles.corporate"
               :user="user"
               :blob-id="verifiedRequest.blobId"
             />
@@ -60,12 +60,12 @@
               Data from KYC recovery request
             </h2>
             <general-kyc-viewer
-              v-if="verifiedRequest.accountRoleToSet === ACCOUNT_ROLES.general"
+              v-if="verifiedRequest.accountRoleToSet === kvAccountRoles.general"
               :kyc="generalRecoveryKycData"
               :user="user"
             />
             <kyc-syndicate-section
-              v-if="verifiedRequest.accountRoleToSet === ACCOUNT_ROLES.corporate"
+              v-if="verifiedRequest.accountRoleToSet === kvAccountRoles.corporate"
               :user="user"
               :blob-id="kycRecoveryRequestBlobId"
             />
@@ -116,15 +116,7 @@ import { KycRecoveryRequest } from '@/apiHelper/responseHandlers/requests/KycRec
 import { fromKycTemplate } from '../../../utils/kyc-tempater'
 import deepCamelCase from 'camelcase-keys-deep'
 
-import config from '@/config'
-
-const ROLE_TYPE_VERBOSE = {
-  [ config.ACCOUNT_ROLES.general ]: 'General',
-  [ config.ACCOUNT_ROLES.usVerified ]: 'US Verified',
-  [ config.ACCOUNT_ROLES.usAccredited ]: 'US Accredited',
-  [ config.ACCOUNT_ROLES.corporate ]: 'Corporate',
-  [ config.ACCOUNT_ROLES.notVerified ]: 'Not Verified',
-}
+import { mapGetters } from 'vuex'
 
 const OPERATION_TYPE = {
   createKycRequest: '22',
@@ -149,7 +141,6 @@ export default {
 
   data () {
     return {
-      ACCOUNT_ROLES: config.ACCOUNT_ROLES,
       OPERATION_TYPE,
       isLoaded: false,
       isFailed: false,
@@ -162,13 +153,16 @@ export default {
       kycRecoveryRequests: [],
       kyc: {},
       generalRecoveryKycData: {},
-      ROLE_TYPE_VERBOSE,
     }
   },
 
   computed: {
+    ...mapGetters([
+      'kvAccountRoles',
+    ]),
+
     isUserBlocked () {
-      return this.user.role === config.ACCOUNT_ROLES.blocked
+      return this.user.role === this.kvAccountRoles.blocked
     },
 
     latestApprovedRequest () {
@@ -179,21 +173,21 @@ export default {
 
     latestBlockedRequest () {
       return this.requests.find(item => {
-        return item.accountRoleToSet === config.ACCOUNT_ROLES.blocked
+        return item.accountRoleToSet === this.kvAccountRoles.blocked
       }) || new ChangeRoleRequest({})
     },
 
     latestNonBlockedRequest () {
       return this.requests.find(item => {
         return item.isApproved &&
-            item.accountRoleToSet !== config.ACCOUNT_ROLES.blocked
+            item.accountRoleToSet !== this.kvAccountRoles.blocked
       }) || new ChangeRoleRequest({})
     },
 
     userRole () {
       return String(
         this.latestNonBlockedRequest.accountRoleToSet ||
-          config.ACCOUNT_ROLES.notVerified
+          this.kvAccountRoles.unverified
       )
     },
 
@@ -224,7 +218,7 @@ export default {
       }
       if (
         this.verifiedRequest.accountRoleToSet ===
-        config.ACCOUNT_ROLES.general &&
+        this.kvAccountRoles.general &&
         this.kycRecoveryRequestBlobId
       ) {
         this.generalRecoveryKycData =

@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import config from '@/config'
+import { mapGetters } from 'vuex'
 
 export default {
   props: {
@@ -71,8 +71,12 @@ export default {
   },
 
   computed: {
+    ...mapGetters([
+      'kvEntryBlockedRoleId',
+    ]),
+
     isUserBlocked () {
-      return this.user.role === config.ACCOUNT_ROLES.blocked
+      return this.user.role === this.kvEntryBlockedRoleId
     },
 
     accountState () {

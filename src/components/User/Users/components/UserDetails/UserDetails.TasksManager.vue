@@ -22,8 +22,8 @@
       <tick-field
         class="app__form-field"
         v-model="tasks.toAdd"
-        :label="`Submit auto verification request (${CHANGE_ROLE_TASKS.submitAutoVerification})`"
-        :cb-value="CHANGE_ROLE_TASKS.submitAutoVerification"
+        :label="`Submit auto verification request (${kvChangeRoleTasks.submitAutoVerification})`"
+        :cb-value="kvChangeRoleTasks.submitAutoVerification"
         :disabled="isPending"
       />
       <!--eslint-enable max-len-->
@@ -32,8 +32,8 @@
       <tick-field
         class="app__form-field"
         v-model="tasks.toAdd"
-        :label="`Complete auto verification request (${CHANGE_ROLE_TASKS.completeAutoVerification})`"
-        :cb-value="CHANGE_ROLE_TASKS.completeAutoVerification"
+        :label="`Complete auto verification request (${kvChangeRoleTasks.completeAutoVerification})`"
+        :cb-value="kvChangeRoleTasks.completeAutoVerification"
         :disabled="isPending"
       />
       <!--eslint-enable max-len-->
@@ -42,8 +42,8 @@
       <tick-field
         class="app__form-field"
         v-model="tasks.toAdd"
-        :label="`Manual review required (${CHANGE_ROLE_TASKS.manualReviewRequired})`"
-        :cb-value="CHANGE_ROLE_TASKS.manualReviewRequired"
+        :label="`Manual review required (${kvChangeRoleTasks.manualReviewRequired})`"
+        :cb-value="kvChangeRoleTasks.manualReviewRequired"
         :disabled="isPending"
       />
       <!--eslint-enable max-len-->
@@ -51,8 +51,8 @@
       <tick-field
         class="app__form-field"
         v-model="tasks.toAdd"
-        :label="`Default (${CHANGE_ROLE_TASKS.default})`"
-        :cb-value="CHANGE_ROLE_TASKS.default"
+        :label="`Default (${kvChangeRoleTasks.default})`"
+        :cb-value="kvChangeRoleTasks.default"
         :disabled="isPending"
       />
     </div>
@@ -66,8 +66,8 @@
       <tick-field
         class="app__form-field"
         v-model="tasks.toRemove"
-        :label="`Submit auto verification request (${CHANGE_ROLE_TASKS.submitAutoVerification})`"
-        :cb-value="CHANGE_ROLE_TASKS.submitAutoVerification"
+        :label="`Submit auto verification request (${kvChangeRoleTasks.submitAutoVerification})`"
+        :cb-value="kvChangeRoleTasks.submitAutoVerification"
         :disabled="isPending"
       />
       <!--eslint-enable max-len-->
@@ -76,8 +76,8 @@
       <tick-field
         class="app__form-field"
         v-model="tasks.toRemove"
-        :label="`Complete auto verification request (${CHANGE_ROLE_TASKS.completeAutoVerification})`"
-        :cb-value="CHANGE_ROLE_TASKS.completeAutoVerification"
+        :label="`Complete auto verification request (${kvChangeRoleTasks.completeAutoVerification})`"
+        :cb-value="kvChangeRoleTasks.completeAutoVerification"
         :disabled="isPending"
       />
       <!--eslint-enable max-len-->
@@ -86,8 +86,8 @@
       <tick-field
         class="app__form-field"
         v-model="tasks.toRemove"
-        :label="`Manual review required (${CHANGE_ROLE_TASKS.manualReviewRequired})`"
-        :cb-value="CHANGE_ROLE_TASKS.manualReviewRequired"
+        :label="`Manual review required (${kvChangeRoleTasks.manualReviewRequired})`"
+        :cb-value="kvChangeRoleTasks.manualReviewRequired"
         :disabled="isPending"
       />
       <!--eslint-enable max-len-->
@@ -95,8 +95,8 @@
       <tick-field
         class="app__form-field"
         v-model="tasks.toRemove"
-        :label="`Default (${CHANGE_ROLE_TASKS.default})`"
-        :cb-value="CHANGE_ROLE_TASKS.default"
+        :label="`Default (${kvChangeRoleTasks.default})`"
+        :cb-value="kvChangeRoleTasks.default"
         :disabled="isPending"
       />
     </div>
@@ -106,9 +106,8 @@
 <script>
 import { TickField } from '@comcom/fields'
 
-import config from '@/config'
-
 import { ChangeRoleRequest } from '@/apiHelper/responseHandlers/requests/ChangeRoleRequest'
+import { mapGetters } from 'vuex'
 
 const EVENTS = {
   input: 'input',
@@ -136,8 +135,13 @@ export default {
   data () {
     return {
       tasks: {},
-      CHANGE_ROLE_TASKS: config.CHANGE_ROLE_TASKS,
     }
+  },
+
+  computed: {
+    ...mapGetters([
+      'kvChangeRoleTasks',
+    ]),
   },
 
   watch: {

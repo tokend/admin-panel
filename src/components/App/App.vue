@@ -64,7 +64,6 @@ import './scss/app.scss'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { ErrorTracker } from '@/utils/ErrorTracker'
-import { snakeToCamelCase } from '@/utils/un-camel-case'
 import { mapActions, mapGetters } from 'vuex'
 
 function isIE () {
@@ -152,9 +151,6 @@ export default {
       try {
         await this.loadHorizonConfigs()
         await this.loadKvEntries()
-        await this.loadAccountRolesConfigs()
-        await this.loadAssetTypesConfigs()
-        await this.loadChangeRoleTasks()
       } catch (error) {
         this.isConfigLoadingFailed = true
         ErrorHandler.processWithoutFeedback(error)
@@ -168,60 +164,6 @@ export default {
       config.NETWORK_PASSPHRASE = horizonConfig.networkPassphrase
       config.MASTER_ACCOUNT = horizonConfig.masterAccountId ||
         horizonConfig.adminAccountId
-    },
-
-    async loadChangeRoleTasks () {
-      config.CHANGE_ROLE_TASKS.completeAutoVerification = this.kvEntries
-        .find(item => item.id === 'change_role_task:complete_auto_verification')
-        .value.u32
-      config.CHANGE_ROLE_TASKS.submitAutoVerification = this.kvEntries
-        .find(item => item.id === 'change_role_task:submit_auto_verification')
-        .value.u32
-      config.CHANGE_ROLE_TASKS.manualReviewRequired = this.kvEntries
-        .find(item => item.id === 'change_role_task:manual_review_required')
-        .value.u32
-    },
-
-    async loadAccountRolesConfigs () {
-      config.ACCOUNT_ROLES.notVerified = this.kvEntries
-        .find(item => item.id === 'account_role:unverified')
-        .value.u32
-      config.ACCOUNT_ROLES.general = this.kvEntries
-        .find(item => item.id === 'account_role:general')
-        .value.u32
-      config.ACCOUNT_ROLES.usAccredited = this.kvEntries
-        .find(item => item.id === 'account_role:us_accredited')
-        .value.u32
-      config.ACCOUNT_ROLES.usVerified = this.kvEntries
-        .find(item => item.id === 'account_role:us_verified')
-        .value.u32
-      config.ACCOUNT_ROLES.corporate = this.kvEntries
-        .find(item => item.id === 'account_role:corporate')
-        .value.u32
-      config.ACCOUNT_ROLES.blocked = this.kvEntries
-        .find(item => item.id === 'account_role:blocked')
-        .value.u32
-      config.SIGNER_ROLES.default = this.kvEntries
-        .find(item => item.id === 'signer_role:default')
-        .value.u32
-    },
-
-    async loadAssetTypesConfigs () {
-      config.ASSET_TYPES = this.kvEntries
-        .filter(item => /asset_type/ig.test(item.id))
-        .reduce((result, item) => {
-          const assetTypeName = snakeToCamelCase(item.id.split(':')[1])
-          result[assetTypeName] = String(item.value.u32)
-          return result
-        }, config.ASSET_TYPES)
-
-      config.POLL_TYPES = this.kvEntries
-        .filter(item => /poll_type/ig.test(item.id))
-        .reduce((result, item) => {
-          const assetTypeName = snakeToCamelCase(item.id.split(':')[1])
-          result[assetTypeName] = String(item.value.u32)
-          return result
-        }, config.POLL_TYPES)
     },
 
     subscribeToStoreMutations () {
