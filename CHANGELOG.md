@@ -17,6 +17,19 @@ for further information about branching and tagging conventions.
 #### Fixed
 - Resolved issue when you can't update init assets(BTC, DOGE, USD)
 
+## [1.9.0-rc.2] - 2019-07-09
+#### Removed
+- Display of "available for issuance" and "issued" fields at top of asset
+  "Manage asset" page
+
+#### Fixed
+- Display of asset code for existing assets on "Manage asset" page
+- Display of asset type for existing assets on "Manage asset" page
+
+### "Under the hood" changes
+#### Removed
+- Deleted unused `MasterAssets` components
+
 ## [1.9.0-rc.1] - 2019-07-08
 #### Fixed
 - Resolved the issue with invalid query param `''` sent to Horizon
@@ -411,7 +424,8 @@ for further information about branching and tagging conventions.
 
 ## [1.3.0] - 2019-03-01
 
-[Unreleased]: https://github.com/tokend/admin-panel/compare/1.9.0-rc.1...HEAD
+[Unreleased]: https://github.com/tokend/admin-panel/compare/1.9.0-rc.2...HEAD
+[1.9.0-rc.2]: https://github.com/tokend/admin-panel/compare/1.9.0-rc.1...1.9.0-rc.2
 [1.9.0-rc.1]: https://github.com/tokend/admin-panel/compare/1.9.0-rc.0...1.9.0-rc.1
 [1.9.0-rc.0]: https://github.com/tokend/admin-panel/compare/1.8.0...1.9.0-rc.0
 [1.8.0]: https://github.com/tokend/admin-panel/compare/1.8.0-rc.2...1.8.0
