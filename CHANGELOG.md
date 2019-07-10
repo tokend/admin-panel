@@ -25,6 +25,8 @@ for further information about branching and tagging conventions.
   - Replaced usages of `ACCOUNT_ROLES`, `SIGNER_ROLES`, `ASSET_TYPES`,
     `POLL_TYPES` and `CHANGE_ROLE_TASKS` width new fields from vuex storage
 
+## [1.9.0] - 2019-07-10
+
 ## [1.9.0-rc.2] - 2019-07-09
 #### Removed
 - Display of "available for issuance" and "issued" fields at top of asset
@@ -432,7 +434,8 @@ for further information about branching and tagging conventions.
 
 ## [1.3.0] - 2019-03-01
 
-[Unreleased]: https://github.com/tokend/admin-panel/compare/1.9.0-rc.2...HEAD
+[Unreleased]: https://github.com/tokend/admin-panel/compare/1.9.0...HEAD
+[1.9.0]: https://github.com/tokend/admin-panel/compare/1.9.0-rc.2...1.9.0
 [1.9.0-rc.2]: https://github.com/tokend/admin-panel/compare/1.9.0-rc.1...1.9.0-rc.2
 [1.9.0-rc.1]: https://github.com/tokend/admin-panel/compare/1.9.0-rc.0...1.9.0-rc.1
 [1.9.0-rc.0]: https://github.com/tokend/admin-panel/compare/1.8.0...1.9.0-rc.0
