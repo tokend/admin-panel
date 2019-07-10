@@ -44,13 +44,13 @@
           label="Account type"
           v-if="filters.scope === SCOPE_TYPES.accountRole"
         >
-          <option :value="ACCOUNT_ROLES.general">
+          <option :value="kvAccountRoles.general">
             General
           </option>
-          <option :value="ACCOUNT_ROLES.notVerified">
+          <option :value="kvAccountRoles.unverified">
             Not verified
           </option>
-          <option :value="ACCOUNT_ROLES.corporate">
+          <option :value="kvAccountRoles.corporate">
             Corporate
           </option>
         </select-field>
@@ -150,11 +150,11 @@ import { STATS_OPERATION_TYPES } from '@/constants'
 import { api, loadingDataViaLoop } from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
-import config from '@/config'
 import { LimitsRecord } from '@/js/records/limits.record'
 
 import get from 'lodash/get'
 import throttle from 'lodash/throttle'
+import { mapGetters } from 'vuex'
 
 // non-xdr values, internal use only
 const SCOPE_TYPES = Object.freeze({
@@ -188,11 +188,14 @@ export default {
     assets: [],
     isLimitsLoading: false,
     isAddressLoading: false,
-    ACCOUNT_ROLES: config.ACCOUNT_ROLES,
     SCOPE_TYPES,
   }),
 
   computed: {
+    ...mapGetters([
+      'kvAccountRoles',
+    ]),
+
     limitsAccountRole () {
       return this.filters.scope === SCOPE_TYPES.accountRole
         ? this.filters.accountRole
@@ -245,7 +248,7 @@ export default {
     'filters.scope': function (value) {
       if (!value) return
       this.filters.accountRole = value === SCOPE_TYPES.accountRole
-        ? String(config.ACCOUNT_ROLES.general)
+        ? String(this.kvAccountRoles.general)
         : null
       this.filters.account = ''
       if (value !== SCOPE_TYPES.account) {

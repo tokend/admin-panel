@@ -32,31 +32,31 @@
         <section class="queue-request-viewer__section">
           <template v-if="isKycLoaded">
             <queue-request-documents
-              v-if="request.accountRoleToSet !== ACCOUNT_ROLES.corporate"
+              v-if="request.accountRoleToSet !== kvAccountRoles.corporate"
               class="queue-request-viewer__documents"
               :documents="kycDocuments"
               :user-account-id="user.address"
             />
 
             <general-kyc-viewer
-              v-if=" request.accountRoleToSet === ACCOUNT_ROLES.general"
+              v-if=" request.accountRoleToSet === kvAccountRoles.general"
               :kyc="kyc"
               :user="user"
             />
             <verified-kyc-viewer
-              v-else-if="request.accountRoleToSet === ACCOUNT_ROLES.usVerified"
+              v-else-if="request.accountRoleToSet === kvAccountRoles.usVerified"
               :kyc="kyc"
               :user="user"
             />
             <!-- eslint-disable max-len -->
             <accredited-kyc-viewer
-              v-else-if="request.accountRoleToSet === ACCOUNT_ROLES.usAccredited"
+              v-else-if="request.accountRoleToSet === kvAccountRoles.usAccredited"
               :kyc="kyc"
               :user="user"
             />
             <!-- eslint-enable max-len -->
             <kyc-syndicate-section
-              v-else-if="request.accountRoleToSet === ACCOUNT_ROLES.corporate"
+              v-else-if="request.accountRoleToSet === kvAccountRoles.corporate"
               :user="user"
               :blob-id="request.blobId"
             />
@@ -106,7 +106,7 @@ import { ChangeRoleRequest } from '@/apiHelper/responseHandlers/requests/ChangeR
 import { fromKycTemplate } from '@/utils/kyc-tempater'
 import deepCamelCase from 'camelcase-keys-deep'
 
-import config from '@/config'
+import { mapGetters } from 'vuex'
 
 export default {
   components: {
@@ -125,7 +125,6 @@ export default {
 
   data () {
     return {
-      ACCOUNT_ROLES: config.ACCOUNT_ROLES,
       isLoaded: false,
       isFailed: false,
       isPending: false,
@@ -135,6 +134,12 @@ export default {
       kyc: {},
       kycDocuments: {},
     }
+  },
+
+  computed: {
+    ...mapGetters([
+      'kvAccountRoles',
+    ]),
   },
 
   watch: {

@@ -1,5 +1,5 @@
 import moment from 'moment'
-import config from '@/config'
+import store from '../../../store'
 
 export function filterDateWithTime (date, format = 'DD MMM YYYY [at] hh:mm:ss') {
   try {
@@ -27,29 +27,27 @@ export function cropAddress (value) {
 
 export function roleIdToString (roleId) {
   return {
-    [+config.ACCOUNT_ROLES.notVerified]: 'Unverified',
-    [+config.ACCOUNT_ROLES.general]: 'General',
-    [+config.ACCOUNT_ROLES.usVerified]: 'US Verified',
-    [+config.ACCOUNT_ROLES.usAccredited]: 'US Accredited',
-    [+config.ACCOUNT_ROLES.corporate]: 'Corporate',
-    [+config.ACCOUNT_ROLES.blocked]: 'Blocked',
-    [+config.ACCOUNT_ROLES.usAccredited]: 'US accredited investor',
-    [+config.ACCOUNT_ROLES.usVerified]: 'US verified',
+    [+store.getters.kvEntryUnverifiedRoleId]: 'Unverified',
+    [+store.getters.kvEntryGeneralRoleId]: 'General',
+    [+store.getters.kvEntryUsVerifiedRoleId]: 'US Verified',
+    [+store.getters.kvEntryUsAccreditedRoleId]: 'US Accredited',
+    [+store.getters.kvEntryCorporateRoleId]: 'Corporate',
+    [+store.getters.kvEntryBlockedRoleId]: 'Blocked',
   }[+roleId]
 }
 
 export function assetTypeToString (assetType) {
   return {
-    [+config.ASSET_TYPES.default]: 'Does not require KYC',
-    [+config.ASSET_TYPES.kycRequired]: 'Requires KYC',
-    [+config.ASSET_TYPES.security]: 'Security',
+    [+store.getters.kvAssetTypeDefault]: 'Does not require KYC',
+    [+store.getters.kvAssetTypeKycRequired]: 'Requires KYC',
+    [+store.getters.kvAssetTypeSecurity]: 'Security',
   }[+assetType]
 }
 
 export function pollTypeToString (value) {
   return {
-    [+config.POLL_TYPES.restricted]: 'Restricted',
-    [+config.POLL_TYPES.unrestricted]: 'Unrestricted',
+    [+store.getters.kvPollTypeRestricted]: 'Restricted',
+    [+store.getters.kvPollTypeUnrestricted]: 'Unrestricted',
   }[+value]
 }
 

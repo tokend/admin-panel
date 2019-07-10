@@ -8,10 +8,10 @@
           v-model="filters.roleToSet"
         >
           <option value="''" />
-          <option :value="ACCOUNT_ROLES.general">
+          <option :value="kvAccountRoles.general">
             General
           </option>
-          <option :value="ACCOUNT_ROLES.corporate">
+          <option :value="kvAccountRoles.corporate">
             Сorporate
           </option>
         </select-field>
@@ -34,13 +34,13 @@
           v-model="filters.pendingTasks"
           label="Pending tasks"
         >
-          <option :value="CHANGE_ROLE_TASKS.submitAutoVerification">
+          <option :value="kvChangeRoleTasks.submitAutoVerification">
             Submit auto verification
           </option>
-          <option :value="CHANGE_ROLE_TASKS.completeAutoVerification">
+          <option :value="kvChangeRoleTasks.completeAutoVerification">
             Complete auto verification
           </option>
-          <option :value="CHANGE_ROLE_TASKS.manualReviewRequired">
+          <option :value="kvChangeRoleTasks.manualReviewRequired">
             Manual review requried
           </option>
           <option value="''">
@@ -92,7 +92,7 @@
               {{ formatDate(item.updatedAt) }}
             </span>
             <span class="app-list__cell app-list__cell--right">
-              {{ item | deriveRoleToSet }}
+              {{ item | deriveRoleToSet(kvAccountRoles) }}
             </span>
           </button>
         </div>
@@ -142,13 +142,13 @@ import { clearObject } from '@/utils/clearObject'
 
 import { KYC_REQUEST_STATES } from '@/constants'
 
-import config from '@/config'
 import { api } from '@/api'
 import apiHelper from '@/apiHelper'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { CollectionLoader } from '@/components/common'
 import { base } from '@tokend/js-sdk'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'kyc-request-list',
@@ -160,11 +160,11 @@ export default {
   },
 
   filters: {
-    deriveRoleToSet (item) {
+    deriveRoleToSet (item, accountRoles) {
       return {
-        [config.ACCOUNT_ROLES.notVerified]: 'Unverified',
-        [config.ACCOUNT_ROLES.general]: 'General',
-        [config.ACCOUNT_ROLES.corporate]: 'Corporate',
+        [accountRoles.unverified]: 'Unverified',
+        [accountRoles.general]: 'General',
+        [accountRoles.corporate]: 'Corporate',
       }[item.requestDetails.accountRoleToSet]
     },
   },
@@ -180,9 +180,14 @@ export default {
         pendingTasks: '',
       },
       KYC_REQUEST_STATES,
-      CHANGE_ROLE_TASKS: config.CHANGE_ROLE_TASKS,
-      ACCOUNT_ROLES: config.ACCOUNT_ROLES,
     }
+  },
+
+  computed: {
+    ...mapGetters([
+      'kvAccountRoles',
+      'kvChangeRoleTasks',
+    ]),
   },
 
   watch: {

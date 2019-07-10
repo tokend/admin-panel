@@ -92,7 +92,7 @@ import { api } from '@/api'
 import { clearObject } from '@/utils/clearObject'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
-import config from '@/config'
+import { mapGetters } from 'vuex'
 
 export default {
   components: {
@@ -113,6 +113,9 @@ export default {
   },
 
   computed: {
+    ...mapGetters([
+      'kvEntryBlockedRoleId',
+    ]),
     records () {
       if (!this.list) return undefined
       return this.normalizeRecords(this.list)
@@ -151,7 +154,7 @@ export default {
       const roleToSet = safeGet(
         record, 'operation.details.roleToSet.id'
       )
-      const isBlocked = Number(roleToSet) === config.ACCOUNT_ROLES.blocked
+      const isBlocked = Number(roleToSet) === this.kvEntryBlockedRoleId
       const isReset = Boolean(safeGet(
         record, 'operation.details.creatorDetails.resetReason'
       ))

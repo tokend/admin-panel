@@ -9,13 +9,21 @@ for further information about branching and tagging conventions.
 
 ## [Unreleased]
 #### Added
-- `canBeBaseInAtomicSwap` and `canBeQuoteInAtomicSwap` policy for assets
-- Migrated "Asset pair" form to v3 endpoint
+- `canBeBaseInAtomicSwap` and `canBeQuoteInAtomicSwap` policy for assets manager
 - New kyc recovery request list page
 - New kyc recovery request review page
 
 #### Fixed
 - Resolved issue when you can't update init assets(BTC, DOGE, USD)
+
+### "Under the hood" changes
+#### Changed
+- Migrated "Asset pair" form to v3 endpoint
+- Moved key values to vuex
+  - Remove fields `ACCOUNT_ROLES`, `SIGNER_ROLES`, `ASSET_TYPES`, `POLL_TYPES`
+    and `CHANGE_ROLE_TASKS` from configuration file
+  - Replaced usages of `ACCOUNT_ROLES`, `SIGNER_ROLES`, `ASSET_TYPES`,
+    `POLL_TYPES` and `CHANGE_ROLE_TASKS` width new fields from vuex storage
 
 ## [1.9.0-rc.2] - 2019-07-09
 #### Removed

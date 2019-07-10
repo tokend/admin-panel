@@ -35,40 +35,6 @@ export default Object.assign(
      */
     BUILD_VERSION: packageJson.version,
 
-    ACCOUNT_ROLES: {
-      // Will be updated on init
-      notVerified: '',
-      general: '',
-      corporate: '',
-      blocked: '',
-      usAccredited: '',
-      usVerified: '',
-    },
-
-    SIGNER_ROLES: {
-      // Will be updated on init
-      default: '',
-    },
-
-    ASSET_TYPES: {
-      // Will be updated on init
-      default: '',
-      kycRequired: '',
-      security: '',
-    },
-
-    POLL_TYPES: {
-      // Will be updated on init
-      restricted: '',
-      unrestricted: '',
-    },
-
-    CHANGE_ROLE_TASKS: {
-      submitAutoVerification: -1,
-      completeAutoVerification: -1,
-      manualReviewRequired: -1,
-      default: 1,
-    },
     /**
      * URL of the Sentry DSN. It’s a representation of the configuration
      * required by the Sentry SDKs.

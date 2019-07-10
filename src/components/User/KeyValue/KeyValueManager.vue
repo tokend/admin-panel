@@ -88,9 +88,10 @@ import { SelectField, InputField } from '@comcom/fields'
 
 import { base } from '@tokend/js-sdk'
 import { KEY_VALUE_ENTRY_TYPE } from '@/constants'
-import { api, loadingDataViaLoop } from '@/api'
+import { api } from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { Bus } from '@/utils/bus'
+import { mapGetters } from 'vuex'
 
 const KEY_VALUE_TYPE_SHORT_NAME = {
   uint32: 'u32',
@@ -118,6 +119,12 @@ export default {
     isPending: false,
     KEY_VALUE_ENTRY_TYPE,
   }),
+
+  computed: {
+    ...mapGetters([
+      'kvEntries',
+    ]),
+  },
 
   watch: {
     'updateForm.key' (key) {
@@ -149,9 +156,7 @@ export default {
     },
 
     async getList () {
-      let response = await api.getWithSignature('/v3/key_values')
-      let data = await loadingDataViaLoop(response)
-      this.list = data
+      this.list = this.kvEntries
 
       if (!this.list.length) {
         return

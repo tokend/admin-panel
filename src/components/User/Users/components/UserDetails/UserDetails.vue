@@ -21,7 +21,7 @@
               <h3>Role to set</h3>
               <p class="user-details__role-info">
                 {{
-                  ROLE_TYPE_VERBOSE[requestToReview.accountRoleToSet
+                  roleTypeVerbose[requestToReview.accountRoleToSet
                     || verifiedRequest.accountRoleToSet]
                 }}
               </p>
@@ -54,20 +54,20 @@
             <template v-if="isKycLoaded">
               <general-kyc-viewer
                 v-if="
-                  requestToReview.accountRoleToSet === ACCOUNT_ROLES.general
+                  requestToReview.accountRoleToSet === kvAccountRoles.general
                 "
                 :kyc="kyc"
                 :user="user" />
               <verified-kyc-viewer
                 v-if="
-                  requestToReview.accountRoleToSet === ACCOUNT_ROLES.usVerified
+                  requestToReview.accountRoleToSet === kvAccountRoles.usVerified
                 "
                 :kyc="kyc"
                 :user="user" />
               <accredited-kyc-viewer
                 v-if="
                   requestToReview.accountRoleToSet ===
-                    ACCOUNT_ROLES.usAccredited
+                    kvAccountRoles.usAccredited
                 "
                 :kyc="kyc"
                 :user="user" />
@@ -82,7 +82,7 @@
             </template>
             <kyc-syndicate-section
               v-if="
-                requestToReview.accountRoleToSet === ACCOUNT_ROLES.corporate
+                requestToReview.accountRoleToSet === kvAccountRoles.corporate
               "
               :user="user"
               :blob-id="requestToReview.blobId"
@@ -94,23 +94,23 @@
         <template v-if="verifiedRequest.state">
           <!-- eslint-disable max-len -->
           <section
-            v-if="verifiedRequest.accountRoleToSet !== ACCOUNT_ROLES.notVerified && !isUserBlocked"
+            v-if="verifiedRequest.accountRoleToSet !== kvAccountRoles.unverified && !isUserBlocked"
             class="user-details__section"
           >
             <template v-if="isKycLoaded">
               <h2>Previous approved KYC Request</h2>
               <general-kyc-viewer
-                v-if="verifiedRequest.accountRoleToSet === ACCOUNT_ROLES.general"
+                v-if="verifiedRequest.accountRoleToSet === kvAccountRoles.general"
                 :kyc="kyc"
                 :user="user"
               />
               <verified-kyc-viewer
-                v-if="verifiedRequest.accountRoleToSet === ACCOUNT_ROLES.usVerified"
+                v-if="verifiedRequest.accountRoleToSet === kvAccountRoles.usVerified"
                 :kyc="kyc"
                 :user="user"
               />
               <accredited-kyc-viewer
-                v-if="verifiedRequest.accountRoleToSet === ACCOUNT_ROLES.usAccredited"
+                v-if="verifiedRequest.accountRoleToSet === kvAccountRoles.usAccredited"
                 :kyc="kyc"
                 :user="user"
               />
@@ -124,7 +124,7 @@
               <p>Loading...</p>
             </template>
             <kyc-syndicate-section
-              v-if="verifiedRequest.accountRoleToSet === ACCOUNT_ROLES.corporate"
+              v-if="verifiedRequest.accountRoleToSet === kvAccountRoles.corporate"
               :user="user"
               :blob-id="verifiedRequest.blobId"
             />
@@ -213,15 +213,7 @@ import { ChangeRoleRequest } from '@/apiHelper/responseHandlers/requests/ChangeR
 import { fromKycTemplate } from '../../../../../utils/kyc-tempater'
 import deepCamelCase from 'camelcase-keys-deep'
 
-import config from '@/config'
-
-const ROLE_TYPE_VERBOSE = {
-  [ config.ACCOUNT_ROLES.general ]: 'General',
-  [ config.ACCOUNT_ROLES.usVerified ]: 'US Verified',
-  [ config.ACCOUNT_ROLES.usAccredited ]: 'US Accredited',
-  [ config.ACCOUNT_ROLES.corporate ]: 'Corporate',
-  [ config.ACCOUNT_ROLES.notVerified ]: 'Not Verified',
-}
+import { mapGetters } from 'vuex'
 
 const OPERATION_TYPE = {
   createKycRequest: '22',
@@ -249,7 +241,6 @@ export default {
 
   data () {
     return {
-      ACCOUNT_ROLES: config.ACCOUNT_ROLES,
       OPERATION_TYPE,
       isLoaded: false,
       isFailed: false,
@@ -260,13 +251,26 @@ export default {
       requests: [],
       verifiedRequest: {},
       kyc: {},
-      ROLE_TYPE_VERBOSE,
     }
   },
 
   computed: {
+    ...mapGetters([
+      'kvAccountRoles',
+    ]),
+
+    roleTypeVerbose () {
+      return {
+        [ this.kvAccountRoles.general ]: 'General',
+        [ this.kvAccountRoles.usVerified ]: 'US Verified',
+        [ this.kvAccountRoles.usAccredited ]: 'US Accredited',
+        [ this.kvAccountRoles.corporate ]: 'Corporate',
+        [ this.kvAccountRoles.notVerified ]: 'Not Verified',
+      }
+    },
+
     isUserBlocked () {
-      return this.user.role === config.ACCOUNT_ROLES.blocked
+      return this.user.role === this.kvAccountRoles.blocked
     },
 
     latestApprovedRequest () {
@@ -283,21 +287,21 @@ export default {
 
     latestBlockedRequest () {
       return this.requests.find(item => {
-        return item.accountRoleToSet === config.ACCOUNT_ROLES.blocked
+        return item.accountRoleToSet === this.kvAccountRoles.blocked
       }) || new ChangeRoleRequest({})
     },
 
     latestNonBlockedRequest () {
       return this.requests.find(item => {
         return item.isApproved &&
-          item.accountRoleToSet !== config.ACCOUNT_ROLES.blocked
+          item.accountRoleToSet !== this.kvAccountRoles.blocked
       }) || new ChangeRoleRequest({})
     },
 
     userRole () {
       return String(
         this.latestNonBlockedRequest.accountRoleToSet ||
-        config.ACCOUNT_ROLES.notVerified
+        this.kvAccountRoles.unverified
       )
     },
   },

@@ -64,7 +64,7 @@ import './scss/app.scss'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { ErrorTracker } from '@/utils/ErrorTracker'
-import { snakeToCamelCase } from '@/utils/un-camel-case'
+import { mapActions } from 'vuex'
 
 function isIE () {
   const parser = new UAParser()
@@ -113,6 +113,10 @@ export default {
   },
 
   methods: {
+    ...mapActions({
+      loadKvEntries: 'LOAD_KV_ENTRIES',
+    }),
+
     async initApp () {
       this.subscribeToStoreMutations()
       await this.loadConfigs()
@@ -142,9 +146,7 @@ export default {
     async loadConfigs () {
       try {
         await this.loadHorizonConfigs()
-        await this.loadAccountRolesConfigs()
-        await this.loadAssetTypesConfigs()
-        await this.loadChangeRoleTasks()
+        await this.loadKvEntries()
       } catch (error) {
         this.isConfigLoadingFailed = true
         ErrorHandler.processWithoutFeedback(error)
@@ -158,68 +160,6 @@ export default {
       config.NETWORK_PASSPHRASE = horizonConfig.networkPassphrase
       config.MASTER_ACCOUNT = horizonConfig.masterAccountId ||
         horizonConfig.adminAccountId
-    },
-
-    async loadChangeRoleTasks () {
-      const { body: tasks } =
-        await this.$http.get(`${config.HORIZON_SERVER}/key_value`)
-      config.CHANGE_ROLE_TASKS.completeAutoVerification = tasks
-        .find(item => item.key === 'change_role_task:complete_auto_verification')
-        .uint32_value
-      config.CHANGE_ROLE_TASKS.submitAutoVerification = tasks
-        .find(item => item.key === 'change_role_task:submit_auto_verification')
-        .uint32_value
-      config.CHANGE_ROLE_TASKS.manualReviewRequired = tasks
-        .find(item => item.key === 'change_role_task:manual_review_required')
-        .uint32_value
-    },
-
-    async loadAccountRolesConfigs () {
-      const { body: roles } =
-        await this.$http.get(`${config.HORIZON_SERVER}/key_value`)
-      config.ACCOUNT_ROLES.notVerified = roles
-        .find(item => item.key === 'account_role:unverified')
-        .uint32_value
-      config.ACCOUNT_ROLES.general = roles
-        .find(item => item.key === 'account_role:general')
-        .uint32_value
-      config.ACCOUNT_ROLES.usAccredited = roles
-        .find(item => item.key === 'account_role:us_accredited')
-        .uint32_value
-      config.ACCOUNT_ROLES.usVerified = roles
-        .find(item => item.key === 'account_role:us_verified')
-        .uint32_value
-      config.ACCOUNT_ROLES.corporate = roles
-        .find(item => item.key === 'account_role:corporate')
-        .uint32_value
-      config.ACCOUNT_ROLES.blocked = roles
-        .find(item => item.key === 'account_role:blocked')
-        .uint32_value
-      config.SIGNER_ROLES.default = roles
-        .find(item => item.key === 'signer_role:default')
-        .uint32_value
-    },
-
-    async loadAssetTypesConfigs () {
-      const { body: keyValues } =
-        await this.$http.get(`${config.HORIZON_SERVER}/key_value`)
-      config.ASSET_TYPES = keyValues
-        .filter(item => /asset_type/ig.test(item.key))
-        .reduce((result, item) => {
-          const assetTypeName = snakeToCamelCase(item.key.split(':')[1])
-          result[assetTypeName] = String(item.uint32_value)
-          return result
-        }, config.ASSET_TYPES)
-
-      // TODO: refactor, should not be here, key_values should be fetched
-      // stubbornly from key_values
-      config.POLL_TYPES = keyValues
-        .filter(item => /poll_type/ig.test(item.key))
-        .reduce((result, item) => {
-          const assetTypeName = snakeToCamelCase(item.key.split(':')[1])
-          result[assetTypeName] = String(item.uint32_value)
-          return result
-        }, config.POLL_TYPES)
     },
 
     subscribeToStoreMutations () {

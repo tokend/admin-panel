@@ -85,13 +85,13 @@
             v-model="filters.accountRole"
             v-if="filters.scope === SCOPE_TYPES.accountRole"
           >
-            <option :value="ACCOUNT_ROLES.general">
+            <option :value="kvAccountRoles.general">
               General
             </option>
-            <option :value="ACCOUNT_ROLES.notVerified">
+            <option :value="kvAccountRoles.unverified">
               Not verified
             </option>
-            <option :value="ACCOUNT_ROLES.corporate">
+            <option :value="kvAccountRoles.corporate">
               Corporate
             </option>
           </select-field>
@@ -188,7 +188,6 @@ import FeeForm from './FeeForm'
 import { base } from '@tokend/js-sdk'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
-import config from '@/config'
 
 import throttle from 'lodash/throttle'
 import { api, loadingDataViaLoop } from '@/api'
@@ -203,6 +202,7 @@ import {
 
 import { FeesRecord } from '@/js/records/fees.record'
 import _cloneDeep from 'lodash/cloneDeep'
+import { mapGetters } from 'vuex'
 
 const SCOPE_TYPES = Object.freeze({ // non-xdr values, internal use only
   account: 'USER',
@@ -229,7 +229,6 @@ export default {
     return {
       SCOPE_TYPES,
       FEE_TYPES,
-      ACCOUNT_ROLES: config.ACCOUNT_ROLES,
       PAYMENT_FEE_TYPES,
 
       assets: [{ id: DEFAULT_BASE_ASSET }],
@@ -244,7 +243,7 @@ export default {
         assetCode: DEFAULT_BASE_ASSET,
 
         // secondary
-        accountRole: config.ACCOUNT_ROLES.general,
+        accountRole: -1,
         accountAlias: '', // address or email
         accountAddress: '', // address will be inserted here
 
@@ -255,6 +254,10 @@ export default {
   },
 
   computed: {
+    ...mapGetters([
+      'kvAccountRoles',
+    ]),
+
     assetsByType () {
       let result
       switch (+this.filters.feeType) {
@@ -370,6 +373,7 @@ export default {
     this.isLoaded = false
     await this.getAssetsAndPairs()
     await this.loadFees()
+    this.filters.accountRole = this.kvAccountRoles.general
     this.isLoaded = true
   },
 

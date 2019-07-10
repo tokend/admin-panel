@@ -136,10 +136,10 @@
           @blur="touchField('asset.type')"
           :error-message="getFieldErrorMessage('asset.type')"
         >
-          <option :value="ASSET_TYPES.default">
+          <option :value="assetTypeDefault">
             Default
           </option>
-          <option :value="ASSET_TYPES.kycRequired">
+          <option :value="assetTypeKycRequired">
             KYC required
           </option>
         </select-field>
@@ -509,7 +509,6 @@ export default {
       DEFAULT_INPUT_MIN,
       DEFAULT_MAX_AMOUNT,
       ASSET_POLICIES_VERBOSE,
-      ASSET_TYPES: config.ASSET_TYPES,
       ASSET_CODE_MAX_LENGTH,
       ASSET_NAME_MAX_LENGTH,
       STELLAR_ASSET_TYPES,
@@ -583,7 +582,11 @@ export default {
   },
 
   computed: {
-    ...mapGetters({ userAddress: getters.GET_USER_ADDRESS }),
+    ...mapGetters({
+      userAddress: getters.GET_USER_ADDRESS,
+      assetTypeDefault: 'kvAssetTypeDefault',
+      assetTypeKycRequired: 'kvAssetTypeKycRequired',
+    }),
 
     isExistingAsset () {
       return !!this.assetCode
