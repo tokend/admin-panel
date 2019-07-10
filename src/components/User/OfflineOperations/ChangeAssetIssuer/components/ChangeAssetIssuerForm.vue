@@ -151,7 +151,13 @@ export default {
     async sendTx () {
       const transaction = new base.Transaction(this.transaction)
       transaction.sign(this.$store.getters.keypair)
-      await api.postOperations(transaction)
+
+      const envelopeTx = this.getEnvelopeTx(transaction)
+      await api.postTxEnvelope(envelopeTx)
+    },
+
+    getEnvelopeTx (tx) {
+      return tx.toEnvelope().toXDR().toString('base64')
     },
   },
 }

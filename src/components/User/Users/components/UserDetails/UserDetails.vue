@@ -370,6 +370,8 @@ export default {
     },
 
     async getKyc (blobId) {
+      if (!blobId) return
+
       this.isKycLoaded = false
       this.isKycLoadFailed = false
 

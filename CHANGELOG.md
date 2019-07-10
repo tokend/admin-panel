@@ -9,24 +9,45 @@ for further information about branching and tagging conventions.
 
 ## [Unreleased]
 #### Added
-- `canBeBaseInAtomicSwap` and `canBeQuoteInAtomicSwap` policy for assets
-- Added key values to vuex
-
-#### Changed
-- Replaced using `ACCOUNT_ROLES`, `SIGNER_ROLES`, `ASSET_TYPES`, `POLL_TYPES` and `CHANGE_ROLE_TASKS` 
-  to fields from vuex storage
-
-#### Removed
-- Remove fields `ACCOUNT_ROLES`, `SIGNER_ROLES`, `ASSET_TYPES`, `POLL_TYPES` and `CHANGE_ROLE_TASKS` from config
+- `canBeBaseInAtomicSwap` and `canBeQuoteInAtomicSwap` policy for assets manager
+- New kyc recovery request list page
+- New kyc recovery request review page
 
 #### Fixed
 - Resolved issue when you can't update init assets(BTC, DOGE, USD)
-- Bug with fulfilling not system asset withdrawal requests
-- Bug with getting private doc
-- Add kyc recovery requests list
-- Add kyc recovery request revue
-- Resolved issue with values like `%27%27` send to horizon
-- Resolved issue with status message shown under modal background
+
+### "Under the hood" changes
+#### Changed
+- Migrated "Asset pair" form to v3 endpoint
+- Moved key values to vuex
+  - Remove fields `ACCOUNT_ROLES`, `SIGNER_ROLES`, `ASSET_TYPES`, `POLL_TYPES`
+    and `CHANGE_ROLE_TASKS` from configuration file
+  - Replaced usages of `ACCOUNT_ROLES`, `SIGNER_ROLES`, `ASSET_TYPES`,
+    `POLL_TYPES` and `CHANGE_ROLE_TASKS` width new fields from vuex storage
+
+## [1.9.0-rc.2] - 2019-07-09
+#### Removed
+- Display of "available for issuance" and "issued" fields at top of asset
+  "Manage asset" page
+
+#### Fixed
+- Display of asset code for existing assets on "Manage asset" page
+- Display of asset type for existing assets on "Manage asset" page
+
+### "Under the hood" changes
+#### Removed
+- Deleted unused `MasterAssets` components
+
+## [1.9.0-rc.1] - 2019-07-08
+#### Fixed
+- Resolved the issue with invalid query param `''` sent to Horizon
+- Resolved the issue with the status message shown under a modal background
+- Resolved the issue when after clicking "sign in with seed" the Login field
+  validation error occurred
+- Resolved the issue when you can't upload and apply a "change asset issuer"
+  offline operation
+- Resolved the issue with an error shown after unblocking of a user and visiting
+  their page again
 
 ## [1.9.0-rc.0] - 2019-06-24
 #### Added
@@ -411,7 +432,9 @@ for further information about branching and tagging conventions.
 
 ## [1.3.0] - 2019-03-01
 
-[Unreleased]: https://github.com/tokend/admin-panel/compare/1.9.0-rc.0...HEAD
+[Unreleased]: https://github.com/tokend/admin-panel/compare/1.9.0-rc.2...HEAD
+[1.9.0-rc.2]: https://github.com/tokend/admin-panel/compare/1.9.0-rc.1...1.9.0-rc.2
+[1.9.0-rc.1]: https://github.com/tokend/admin-panel/compare/1.9.0-rc.0...1.9.0-rc.1
 [1.9.0-rc.0]: https://github.com/tokend/admin-panel/compare/1.8.0...1.9.0-rc.0
 [1.8.0]: https://github.com/tokend/admin-panel/compare/1.8.0-rc.2...1.8.0
 [1.8.0-rc.2]: https://github.com/tokend/admin-panel/compare/1.8.0-rc.1...1.8.0-rc.2
