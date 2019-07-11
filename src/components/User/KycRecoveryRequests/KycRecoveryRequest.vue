@@ -74,7 +74,6 @@
             <p>This user has not yet been verified.</p>
           </template>
           <request-actions
-            v-if="kycRecoveryRequestBlobId"
             class="kyc-recovery-request__actions"
             :request-to-review="kycRecoveryRequest"
             :latest-approved-request="verifiedRequest"
