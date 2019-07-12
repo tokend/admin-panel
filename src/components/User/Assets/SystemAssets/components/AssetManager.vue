@@ -151,7 +151,7 @@
           v-model="isStellarIntegrationEnabled"
           label="Integration with stellar"
           :cb-value="true"
-          :disabled="true || formMixin.isDisabled"
+          :disabled="isExistingAsset || formMixin.isDisabled"
         />
       </div>
 
@@ -160,7 +160,7 @@
           <div class="app__form-field">
             <tick-field
               v-model="asset.creatorDetails.stellar.deposit"
-              :disabled="formMixin.isDisabled"
+              :disabled="isExistingAsset || formMixin.isDisabled"
               :cb-value="true"
               label="Deposit"
             />
@@ -171,7 +171,7 @@
           <div class="app__form-field">
             <tick-field
               v-model="asset.creatorDetails.stellar.withdraw"
-              :disabled="formMixin.isDisabled"
+              :disabled="isExistingAsset || formMixin.isDisabled"
               :cb-value="true"
               label="Withdraw"
             />
@@ -188,7 +188,7 @@
             :error-message="getFieldErrorMessage(
               'asset.creatorDetails.stellar.assetType',
             )"
-            :disabled="formMixin.isDisabled"
+            :disabled="isExistingAsset || formMixin.isDisabled"
           >
             <option
               v-for="assetType in STELLAR_ASSET_TYPES"
@@ -211,7 +211,8 @@
               maxLength: getAssetCodeMaxLength(),
               minLength: CREDIT_ALPHANUM12_MIN_LENGTH
             })"
-            :disabled="formMixin.isDisabled ||
+            :disabled="isExistingAsset ||
+              formMixin.isDisabled ||
               asset.creatorDetails.stellar.assetType === STELLAR_TYPES.native"
           />
         </div>
