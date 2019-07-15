@@ -189,7 +189,8 @@ export default {
   computed: {
     canSetFixedFee () {
       return Number(this.fee.feeType) !== FEE_TYPES.offerFee &&
-        Number(this.fee.feeType) !== FEE_TYPES.capitalDeploymentFee
+        Number(this.fee.feeType) !== FEE_TYPES.capitalDeploymentFee &&
+        Number(this.fee.feeType) !== FEE_TYPES.investFee
     },
   },
 

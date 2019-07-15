@@ -1,19 +1,23 @@
 import _get from 'lodash/get'
+import { FEE_TYPES } from '@/constants'
 
 export class FeesRecord {
   constructor (record = {}, details) {
     this._record = record
+    this._details = details
+
     this.asset =
-    _get(record, 'asset.id') ||
-    _get(record, 'appliedTo.asset') ||
-    _get(details, 'assetCode')
+      _get(record, 'asset.id') ||
+      _get(record, 'appliedTo.asset') ||
+      _get(details, 'assetCode')
 
     this.feeType =
       _get(record, 'appliedTo.feeType') ||
       _get(details, 'feeType')
-    this.subtype =
-      _get(record, 'appliedTo.subtype') ||
-      _get(details, 'paymentFeeSubtype')
+
+    this.subtype = +this.feeType === +FEE_TYPES.paymentFee
+      ? _get(record, 'appliedTo.subtype') || _get(details, 'paymentFeeSubtype')
+      : 0
 
     this.lowerBound = _get(record, 'appliedTo.lowerBound') || 0
     this.upperBound = _get(record, 'appliedTo.upperBound') || 0
