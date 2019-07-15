@@ -154,7 +154,8 @@
             <span
               class="app-list__cell"
               v-if="+filters.feeType !== FEE_TYPES.offerFee &&
-                +filters.feeType !== FEE_TYPES.capitalDeploymentFee"
+                +filters.feeType !== FEE_TYPES.capitalDeploymentFee &&
+                +filters.feeType !== FEE_TYPES.investFee"
             >
               Fixed fee
             </span>
