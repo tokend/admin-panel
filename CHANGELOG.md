@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
+## [1.10.0-rc.1] - 2019-07-16
+- Now using @tokend/js-sdk@1.9.0-rc.1
+
 ## [1.10.0-rc.0] - 2019-07-16
 
 ## [1.10.0-x.0] - 2019-07-12
@@ -443,7 +446,8 @@ for further information about branching and tagging conventions.
 
 ## [1.3.0] - 2019-03-01
 
-[Unreleased]: https://github.com/tokend/admin-panel/compare/1.10.0-rc.0...HEAD
+[Unreleased]: https://github.com/tokend/admin-panel/compare/1.10.0-rc.1...HEAD
+[1.10.0-rc.1]: https://github.com/tokend/admin-panel/compare/1.10.0-rc.0...1.10.0-rc.1
 [1.10.0-rc.0]: https://github.com/tokend/admin-panel/compare/1.10.0-x.0...1.10.0-rc.0
 [1.10.0-x.0]: https://github.com/tokend/admin-panel/compare/1.9.1...1.10.0-x.0
 [1.9.1]: https://github.com/tokend/admin-panel/compare/1.9.0...1.9.1
