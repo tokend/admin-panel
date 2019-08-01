@@ -10,6 +10,7 @@ for further information about branching and tagging conventions.
 ## [Unreleased]
 #### Added
 - Autoclose indicator to status-messages
+- Erc20 token when create new asset
 
 ## [1.10.0-rc.1] - 2019-07-16
 - Now using @tokend/js-sdk@1.9.0-rc.1

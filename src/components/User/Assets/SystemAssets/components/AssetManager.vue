@@ -219,6 +219,55 @@
         <!-- eslint-enable max-len -->
       </template>
 
+      <div class="app__form-row">
+        <tick-field
+          class="app__form-field"
+          v-model="isErc20IntegrationEnabled"
+          label="Integration with erc20"
+          :cb-value="true"
+          :disabled="isExistingAsset || formMixin.isDisabled"
+        />
+      </div>
+
+      <template v-if="isErc20IntegrationEnabled">
+        <div class="app__form-row">
+          <div class="app__form-field">
+            <tick-field
+              v-model="asset.creatorDetails.erc20.deposit"
+              :disabled="isExistingAsset || formMixin.isDisabled"
+              :cb-value="true"
+              label="Deposit"
+            />
+          </div>
+        </div>
+
+        <div class="app__form-row">
+          <div class="app__form-field">
+            <tick-field
+              v-model="asset.creatorDetails.erc20.withdraw"
+              :disabled="isExistingAsset || formMixin.isDisabled"
+              :cb-value="true"
+              label="Withdraw"
+            />
+          </div>
+        </div>
+
+        <div class="app__form-row">
+          <!-- eslint-disable max-len -->
+          <input-field
+            white-autofill
+            v-model="asset.creatorDetails.erc20.address"
+            class="app__form-field"
+            name="create-stellar-asset-code"
+            label="Address"
+            @blur="touchField('asset.creatorDetails.erc20.address')"
+            :error-message="getFieldErrorMessage('asset.creatorDetails.erc20.address')"
+            :disabled="isExistingAsset || formMixin.isDisabled"
+          />
+        </div>
+        <!-- eslint-enable max-len -->
+      </template>
+
       <div class="asset-manager__file-input-wrp">
         <span>Terms</span>
         <div class="asset-manager__file-input-inner">
@@ -399,6 +448,7 @@ import {
   alphaNum,
   minLength,
   requiredIf,
+  hex,
 } from '@/validators'
 
 import { base } from '@tokend/js-sdk'
@@ -466,6 +516,7 @@ export default {
       isShownAdvanced: false,
       isFormSubmitting: false,
       isStellarIntegrationEnabled: false,
+      isErc20IntegrationEnabled: false,
       asset: {
         id: '',
         preissuedAssetSigner: config.MASTER_ACCOUNT,
@@ -488,6 +539,11 @@ export default {
             deposit: false,
             assetType: '',
             assetCode: '',
+          },
+          erc20: {
+            withdraw: false,
+            deposit: false,
+            address: '',
           },
         },
       },
@@ -558,6 +614,14 @@ export default {
               required: requiredIf(function () {
                 return this.isStellarIntegrationEnabled
               }),
+            },
+          },
+          erc20: {
+            address: {
+              required: requiredIf(function () {
+                return this.isErc20IntegrationEnabled
+              }),
+              hex,
             },
           },
         },
@@ -634,6 +698,9 @@ export default {
         if (!_isEmpty(data.creatorDetails.stellar)) {
           this.isStellarIntegrationEnabled = true
         }
+        if (!_isEmpty(data.creatorDetails.erc20)) {
+          this.isErc20IntegrationEnabled = true
+        }
         if (data.type !== undefined) {
           data.type = String(data.type)
         }
@@ -679,6 +746,7 @@ export default {
               logo,
               terms,
               stellar: this.getStellarData(),
+              erc20: this.getErc20Data(),
             },
           })
         } else {
@@ -707,10 +775,10 @@ export default {
                 name: this.asset.creatorDetails.terms.name,
               },
               stellar: this.getStellarData(),
+              erc20: this.getErc20Data(),
             },
           })
         }
-
         await api.postOperations(operation)
         Bus.$emit('recheckConfig')
         Bus.success('Submitted successfully.')
@@ -764,6 +832,15 @@ export default {
           deposit: this.asset.creatorDetails.stellar.deposit,
           assetType: this.asset.creatorDetails.stellar.assetType,
           assetCode: this.asset.creatorDetails.stellar.assetCode,
+        }
+        : {}
+    },
+    getErc20Data () {
+      return this.isErc20IntegrationEnabled
+        ? {
+          withdraw: this.asset.creatorDetails.erc20.withdraw,
+          deposit: this.asset.creatorDetails.erc20.deposit,
+          address: this.asset.creatorDetails.erc20.address,
         }
         : {}
     },
