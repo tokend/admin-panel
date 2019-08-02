@@ -16,4 +16,8 @@ export const noMoreThanAvailableForIssuance = available => value => {
   return +available >= +value
 }
 
+export const hex = value => {
+  return /^(0x|0X)?[a-fA-F0-9]+$/.test(value)
+}
+
 export * from 'vuelidate/lib/validators'

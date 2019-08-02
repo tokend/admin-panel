@@ -32,6 +32,7 @@ const VALIDATION_ERRORS = {
   accountId: _template('This field should be a valid account ID'),
   not: _template('This field cannot take {{value}} as a value'),
   decimal: _template('This field should be a valid decimal value'),
+  hex: _template('This field should be a valid hex value'),
 }
 
 export default {
