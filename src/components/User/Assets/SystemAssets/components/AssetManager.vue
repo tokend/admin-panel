@@ -258,7 +258,7 @@
             white-autofill
             v-model="asset.creatorDetails.erc20.address"
             class="app__form-field"
-            name="create-stellar-asset-code"
+            name="create-erc20-asset-code"
             label="Address"
             @blur="touchField('asset.creatorDetails.erc20.address')"
             :error-message="getFieldErrorMessage('asset.creatorDetails.erc20.address')"
