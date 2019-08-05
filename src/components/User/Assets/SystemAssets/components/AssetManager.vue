@@ -621,7 +621,6 @@ export default {
               required: requiredIf(function () {
                 return this.isErc20IntegrationEnabled
               }),
-              hex,
             },
           },
         },
@@ -642,6 +641,10 @@ export default {
           stellarAssetCode.alphaNum = alphaNum
           break
       }
+    }
+
+    if (this.asset.creatorDetails.erc20.address) {
+      validations.asset.creatorDetails.erc20.address.hex = hex
     }
     return validations
   },
@@ -671,6 +674,8 @@ export default {
 
   watch: {
     'asset.creatorDetails.stellar.assetType' (val) {
+      if (this.isExistingAsset) return
+
       if (val === STELLAR_TYPES.native) {
         this.asset.creatorDetails.stellar.assetCode = NATIVE_XLM_TYPE
       } else {
