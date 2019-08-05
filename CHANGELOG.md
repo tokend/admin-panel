@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
-## [Unreleased]
+## [1.10.0-rc.3] - 2019-08-05
 #### Fixed
 - Resolved the issue when admin can't create asset
 
@@ -455,7 +455,8 @@ for further information about branching and tagging conventions.
 
 ## [1.3.0] - 2019-03-01
 
-[Unreleased]: https://github.com/tokend/admin-panel/compare/1.10.0-rc.2...HEAD
+[Unreleased]: https://github.com/tokend/admin-panel/compare/1.10.0-rc.3...HEAD
+[1.10.0-rc.3]: https://github.com/tokend/admin-panel/compare/1.10.0-rc.2...1.10.0-rc.3
 [1.10.0-rc.2]: https://github.com/tokend/admin-panel/compare/1.10.0-rc.1...1.10.0-rc.2
 [1.10.0-rc.1]: https://github.com/tokend/admin-panel/compare/1.10.0-rc.0...1.10.0-rc.1
 [1.10.0-rc.0]: https://github.com/tokend/admin-panel/compare/1.10.0-x.0...1.10.0-rc.0
