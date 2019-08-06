@@ -698,10 +698,14 @@ export default {
         if (!_isEmpty(data.creatorDetails.stellar)) {
           this.isStellarIntegrationEnabled = true
           this.isShownAdvanced = true
+        } else {
+          data.creatorDetails.stellar = {}
         }
         if (!_isEmpty(data.creatorDetails.erc20)) {
           this.isErc20IntegrationEnabled = true
           this.isShownAdvanced = true
+        } else {
+          data.creatorDetails.erc20 = {}
         }
         if (data.type !== undefined) {
           data.type = String(data.type)
