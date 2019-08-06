@@ -836,8 +836,8 @@ export default {
         ? {
           withdraw: this.asset.creatorDetails.stellar.withdraw,
           deposit: this.asset.creatorDetails.stellar.deposit,
-          assetType: this.asset.creatorDetails.stellar.assetType,
-          assetCode: this.asset.creatorDetails.stellar.assetCode,
+          asset_type: this.asset.creatorDetails.stellar.assetType,
+          asset_code: this.asset.creatorDetails.stellar.assetCode,
         }
         : {}
     },
