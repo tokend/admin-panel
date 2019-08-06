@@ -145,129 +145,6 @@
         </select-field>
       </div>
 
-      <div class="app__form-row">
-        <tick-field
-          class="app__form-field"
-          v-model="isStellarIntegrationEnabled"
-          label="Integration with stellar"
-          :cb-value="true"
-          :disabled="isExistingAsset || formMixin.isDisabled"
-        />
-      </div>
-
-      <template v-if="isStellarIntegrationEnabled">
-        <div class="app__form-row">
-          <div class="app__form-field">
-            <tick-field
-              v-model="asset.creatorDetails.stellar.deposit"
-              :disabled="isExistingAsset || formMixin.isDisabled"
-              :cb-value="true"
-              label="Deposit"
-            />
-          </div>
-        </div>
-
-        <div class="app__form-row">
-          <div class="app__form-field">
-            <tick-field
-              v-model="asset.creatorDetails.stellar.withdraw"
-              :disabled="isExistingAsset || formMixin.isDisabled"
-              :cb-value="true"
-              label="Withdraw"
-            />
-          </div>
-        </div>
-
-        <div class="app__form-row">
-          <select-field
-            v-model="asset.creatorDetails.stellar.assetType"
-            name="create-stellar-asset-type"
-            class="app__form-field"
-            label="Asset type"
-            @blur="touchField('asset.creatorDetails.stellar.assetType')"
-            :error-message="getFieldErrorMessage(
-              'asset.creatorDetails.stellar.assetType',
-            )"
-            :disabled="isExistingAsset || formMixin.isDisabled"
-          >
-            <option
-              v-for="assetType in STELLAR_ASSET_TYPES"
-              :key="assetType.value"
-              :value="assetType.value"
-            >
-              {{ assetType.label }}
-            </option>
-          </select-field>
-
-          <!-- eslint-disable max-len -->
-          <input-field
-            white-autofill
-            v-model="asset.creatorDetails.stellar.assetCode"
-            class="app__form-field"
-            name="create-stellar-asset-code"
-            label="Asset code"
-            @blur="touchField('asset.creatorDetails.stellar.assetCode')"
-            :error-message="getFieldErrorMessage('asset.creatorDetails.stellar.assetCode', {
-              maxLength: getAssetCodeMaxLength(),
-              minLength: CREDIT_ALPHANUM12_MIN_LENGTH
-            })"
-            :disabled="isExistingAsset ||
-              formMixin.isDisabled ||
-              asset.creatorDetails.stellar.assetType === STELLAR_TYPES.native"
-          />
-        </div>
-        <!-- eslint-enable max-len -->
-      </template>
-
-      <div class="app__form-row">
-        <tick-field
-          class="app__form-field"
-          v-model="isErc20IntegrationEnabled"
-          label="Integration with erc20"
-          :cb-value="true"
-          :disabled="isExistingAsset || formMixin.isDisabled"
-        />
-      </div>
-
-      <template v-if="isErc20IntegrationEnabled">
-        <div class="app__form-row">
-          <div class="app__form-field">
-            <tick-field
-              v-model="asset.creatorDetails.erc20.deposit"
-              :disabled="isExistingAsset || formMixin.isDisabled"
-              :cb-value="true"
-              label="Deposit"
-            />
-          </div>
-        </div>
-
-        <div class="app__form-row">
-          <div class="app__form-field">
-            <tick-field
-              v-model="asset.creatorDetails.erc20.withdraw"
-              :disabled="isExistingAsset || formMixin.isDisabled"
-              :cb-value="true"
-              label="Withdraw"
-            />
-          </div>
-        </div>
-
-        <div class="app__form-row">
-          <!-- eslint-disable max-len -->
-          <input-field
-            white-autofill
-            v-model="asset.creatorDetails.erc20.address"
-            class="app__form-field"
-            name="create-erc20-asset-code"
-            label="Address"
-            @blur="touchField('asset.creatorDetails.erc20.address')"
-            :error-message="getFieldErrorMessage('asset.creatorDetails.erc20.address')"
-            :disabled="isExistingAsset || formMixin.isDisabled"
-          />
-        </div>
-        <!-- eslint-enable max-len -->
-      </template>
-
       <div class="asset-manager__file-input-wrp">
         <span>Terms</span>
         <div class="asset-manager__file-input-inner">
@@ -415,6 +292,128 @@
             :disabled="formMixin.isDisabled"
           />
         </div>
+
+        <div class="app__form-row">
+          <tick-field
+            class="app__form-field"
+            v-model="isStellarIntegrationEnabled"
+            label="Integration with stellar"
+            :cb-value="true"
+            :disabled="formMixin.isDisabled"
+          />
+        </div>
+
+        <template v-if="isStellarIntegrationEnabled">
+          <div class="app__form-row">
+            <div class="app__form-field">
+              <tick-field
+                v-model="asset.creatorDetails.stellar.deposit"
+                :disabled="formMixin.isDisabled"
+                :cb-value="true"
+                label="Deposit"
+              />
+            </div>
+          </div>
+
+          <div class="app__form-row">
+            <div class="app__form-field">
+              <tick-field
+                v-model="asset.creatorDetails.stellar.withdraw"
+                :disabled="formMixin.isDisabled"
+                :cb-value="true"
+                label="Withdraw"
+              />
+            </div>
+          </div>
+
+          <div class="app__form-row">
+            <select-field
+              v-model="asset.creatorDetails.stellar.assetType"
+              name="create-stellar-asset-type"
+              class="app__form-field"
+              label="Asset type"
+              @blur="touchField('asset.creatorDetails.stellar.assetType')"
+              :error-message="getFieldErrorMessage(
+                'asset.creatorDetails.stellar.assetType',
+              )"
+              :disabled="formMixin.isDisabled"
+            >
+              <option
+                v-for="assetType in STELLAR_ASSET_TYPES"
+                :key="assetType.value"
+                :value="assetType.value"
+              >
+                {{ assetType.label }}
+              </option>
+            </select-field>
+
+            <!-- eslint-disable max-len -->
+            <input-field
+              white-autofill
+              v-model="asset.creatorDetails.stellar.assetCode"
+              class="app__form-field"
+              name="create-stellar-asset-code"
+              label="Asset code"
+              @blur="touchField('asset.creatorDetails.stellar.assetCode')"
+              :error-message="getFieldErrorMessage('asset.creatorDetails.stellar.assetCode', {
+                maxLength: getAssetCodeMaxLength(),
+                minLength: CREDIT_ALPHANUM12_MIN_LENGTH
+              })"
+              :disabled="formMixin.isDisabled ||
+                asset.creatorDetails.stellar.assetType === STELLAR_TYPES.native"
+            />
+          </div>
+        <!-- eslint-enable max-len -->
+        </template>
+
+        <div class="app__form-row">
+          <tick-field
+            class="app__form-field"
+            v-model="isErc20IntegrationEnabled"
+            label="Integration with erc20"
+            :cb-value="true"
+            :disabled="formMixin.isDisabled"
+          />
+        </div>
+
+        <template v-if="isErc20IntegrationEnabled">
+          <div class="app__form-row">
+            <div class="app__form-field">
+              <tick-field
+                v-model="asset.creatorDetails.erc20.deposit"
+                :disabled="formMixin.isDisabled"
+                :cb-value="true"
+                label="Deposit"
+              />
+            </div>
+          </div>
+
+          <div class="app__form-row">
+            <div class="app__form-field">
+              <tick-field
+                v-model="asset.creatorDetails.erc20.withdraw"
+                :disabled="formMixin.isDisabled"
+                :cb-value="true"
+                label="Withdraw"
+              />
+            </div>
+          </div>
+
+          <div class="app__form-row">
+            <!-- eslint-disable max-len -->
+            <input-field
+              white-autofill
+              v-model="asset.creatorDetails.erc20.address"
+              class="app__form-field"
+              name="create-erc20-asset-code"
+              label="Address"
+              @blur="touchField('asset.creatorDetails.erc20.address')"
+              :error-message="getFieldErrorMessage('asset.creatorDetails.erc20.address')"
+              :disabled="formMixin.isDisabled"
+            />
+          </div>
+        <!-- eslint-enable max-len -->
+        </template>
       </template>
 
       <div class="app__form-actions">
@@ -674,12 +673,8 @@ export default {
 
   watch: {
     'asset.creatorDetails.stellar.assetType' (val) {
-      if (this.isExistingAsset) return
-
       if (val === STELLAR_TYPES.native) {
         this.asset.creatorDetails.stellar.assetCode = NATIVE_XLM_TYPE
-      } else {
-        this.asset.creatorDetails.stellar.assetCode = ''
       }
     },
   },
@@ -702,9 +697,15 @@ export default {
         data.creatorDetails = data.creatorDetails || data.details
         if (!_isEmpty(data.creatorDetails.stellar)) {
           this.isStellarIntegrationEnabled = true
+          this.isShownAdvanced = true
+        } else {
+          data.creatorDetails.stellar = {}
         }
         if (!_isEmpty(data.creatorDetails.erc20)) {
           this.isErc20IntegrationEnabled = true
+          this.isShownAdvanced = true
+        } else {
+          data.creatorDetails.erc20 = {}
         }
         if (data.type !== undefined) {
           data.type = String(data.type)
