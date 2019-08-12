@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
+## [1.10.0] - 2019-08-12
+
 ## [1.10.0-rc.5] - 2019-08-06
 #### Fixed
 - A bug with stellar
@@ -463,7 +465,8 @@ for further information about branching and tagging conventions.
 
 ## [1.3.0] - 2019-03-01
 
-[Unreleased]: https://github.com/tokend/admin-panel/compare/1.10.0-rc.5...HEAD
+[Unreleased]: https://github.com/tokend/admin-panel/compare/1.10.0...HEAD
+[1.10.0]: https://github.com/tokend/admin-panel/compare/1.10.0-rc.5...1.10.0
 [1.10.0-rc.5]: https://github.com/tokend/admin-panel/compare/1.10.0-rc.4...1.10.0-rc.5
 [1.10.0-rc.4]: https://github.com/tokend/admin-panel/compare/1.10.0-rc.3...1.10.0-rc.4
 [1.10.0-rc.3]: https://github.com/tokend/admin-panel/compare/1.10.0-rc.2...1.10.0-rc.3
