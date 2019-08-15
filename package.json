@@ -1,6 +1,6 @@
 {
-  "name": "admin-panel",
-  "version": "1.10.0",
+  "name": "admin-panel-conto",
+  "version": "1.0.0",
   "description": "A TokenD admin client",
   "author": "Distributed Lab <contact@distributedlab.com>",
   "private": true,
