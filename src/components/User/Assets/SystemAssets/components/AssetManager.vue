@@ -299,7 +299,7 @@
             v-model="isStellarIntegrationEnabled"
             label="Integration with stellar"
             :cb-value="true"
-            :disabled="formMixin.isDisabled"
+            :disabled="formMixin.isDisabled || isErc20IntegrationEnabled"
           />
         </div>
 
@@ -372,7 +372,7 @@
             v-model="isErc20IntegrationEnabled"
             label="Integration with erc20"
             :cb-value="true"
-            :disabled="formMixin.isDisabled"
+            :disabled="formMixin.isDisabled || isStellarIntegrationEnabled"
           />
         </div>
 
