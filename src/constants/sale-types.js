@@ -1,5 +1,5 @@
-export const SALE_TYPES = Object.freeze({
-  basic: 1,
-  crowdfunding: 2,
-  fixedPrice: 3,
-})
+import { SALE_TYPES } from '@tokend/js-sdk'
+let localizedSaleTypes = {}
+localizedSaleTypes[SALE_TYPES.fixedPrice] = 'Fixed price'
+localizedSaleTypes[SALE_TYPES.immediate] = 'Immediate'
+export const LOCALIZED_SALE_TYPES = localizedSaleTypes

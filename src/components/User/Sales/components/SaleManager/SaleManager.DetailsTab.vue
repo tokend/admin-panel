@@ -127,6 +127,12 @@
             <span>{{ sale.details.name || '&mdash;' }}</span>
           </li>
           <li>
+            <span>Type</span>
+            <span>
+              {{ LOCALIZED_SALE_TYPES[sale.saleType.value + ''] || '&mdash;' }}
+            </span>
+          </li>
+          <li>
             <span>State</span>
             <span>
               <template v-if="sale.saleState.value === SALE_STATES.open">
@@ -276,7 +282,7 @@ import {
   AssetPoliciesFormatter,
 } from '@comcom/formatters'
 
-import { SALE_STATES, SALE_DEFINITION_TYPES } from '@/constants'
+import { SALE_STATES, SALE_DEFINITION_TYPES, LOCALIZED_SALE_TYPES } from '@/constants'
 import { api } from '@/api'
 import get from 'lodash/get'
 
@@ -302,6 +308,7 @@ export default {
 
   data () {
     return {
+      LOCALIZED_SALE_TYPES,
       SALE_STATES,
       asset: {},
       isAssetLoaded: false,

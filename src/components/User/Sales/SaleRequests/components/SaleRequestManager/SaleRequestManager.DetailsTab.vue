@@ -159,6 +159,12 @@
             </span>
           </li>
           <li>
+            <span>Type</span>
+            <span>
+              {{ LOCALIZED_SALE_TYPES[safeGet(saleDetails, 'saleType.value')] }}
+            </span>
+          </li>
+          <li>
             <span>Whitelisted</span>
             <span>{{ isSaleWhitelisted ? 'Yes' : 'No' }}</span>
           </li>
@@ -245,7 +251,7 @@ import {
   RequestStateFormatter,
 } from '@comcom/formatters'
 
-import { SALE_DEFINITION_TYPES } from '@/constants'
+import { SALE_DEFINITION_TYPES, LOCALIZED_SALE_TYPES } from '@/constants'
 
 import get from 'lodash/get'
 
@@ -268,6 +274,11 @@ export default {
 
   props: {
     request: { type: Object, required: true },
+  },
+  data () {
+    return {
+      LOCALIZED_SALE_TYPES,
+    }
   },
 
   computed: {

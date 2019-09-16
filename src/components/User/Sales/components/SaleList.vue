@@ -50,14 +50,17 @@
           label="Type"
           v-model="filters.type">
           <option :value="''" />
-          <option :value="SALE_TYPES.basic">
+          <option :value="SALE_TYPES.basicSale">
             Basic
           </option>
-          <option :value="SALE_TYPES.crowdfunding">
+          <option :value="SALE_TYPES.crowdFunding">
             Crowdfunding
           </option>
           <option :value="SALE_TYPES.fixedPrice">
             Fixed price
+          </option>
+          <option :value="SALE_TYPES.immediate">
+            Immediate
           </option>
         </select-field>
         <!-- eslint-enable max-len -->
@@ -159,7 +162,8 @@ import { CollectionLoader } from '@/components/common'
 import { api } from '@/api'
 import apiHelper from '@/apiHelper'
 
-import { SALE_STATES, SALE_TYPES } from '@/constants'
+import { SALE_STATES } from '@/constants'
+import { SALE_TYPES } from '@tokend/js-sdk'
 
 import _ from 'lodash'
 
