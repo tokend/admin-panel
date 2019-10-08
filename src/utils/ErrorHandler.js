@@ -47,7 +47,7 @@ export class ErrorHandler {
         message = 'Something bad happened. Please try again later or contact the system owner.'
         break
       case errors.BadRequestError:
-        message = 'The request you sent is invalid in some way.'
+        message = 'You don’t have permission to complete this action'
         break
       case errors.NotAllowedError:
         message = "Your account don't have permissions to perform this request."
