@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
+## [Unreleased]
+#### Added
+- Handling of transactions error
+
 ## [1.10.1-rc.1] - 2019-10-01
 #### Changed
 - Version of `tokend-wallet-js-sdk`
