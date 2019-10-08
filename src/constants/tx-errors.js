@@ -3,7 +3,7 @@ export const TX_ERRORS = Object.freeze({
   tx_too_early: 'Too early',
   tx_too_late: 'Too late',
   tx_missing_operation: 'Missing Operation',
-  tx_bad_auth: 'Bad auth',
+  tx_bad_auth: 'You don’t have permission to complete this action',
   tx_no_account: 'No source account',
   tx_bad_auth_extra: 'Bad auth extra',
   tx_internal_error: 'Internal error',
