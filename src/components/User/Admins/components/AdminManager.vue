@@ -296,15 +296,14 @@ export default {
 
       try {
         await action()
+        Bus.success('Successfully submitted')
+        this.$router.push({ name: 'admins' })
       } catch (error) {
         ErrorHandler.process(error)
       }
 
       this.isFormSubmitting = false
       this.hideConfirmation()
-
-      Bus.success('Successfully submitted')
-      this.$router.push({ name: 'admins' })
     },
 
     async addAdmin () {
