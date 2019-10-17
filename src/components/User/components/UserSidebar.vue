@@ -1,7 +1,7 @@
 <template>
   <aside class="user-sidebar">
     <span class="user-sidebar__admin-logo">
-      TokenD
+      INCLUSIVITY
     </span>
     <span class="user-sidebar__admin-badge">
       ADMIN PANEL

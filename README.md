@@ -1,6 +1,6 @@
 # Introduction
 
-The TokenD admin-panel is written on [Vue v2](https://vuejs.org/v2/guide/)
+The INCLUSIVITY admin-panel is written on [Vue v2](https://vuejs.org/v2/guide/)
 
 # How to
 ## Run the project

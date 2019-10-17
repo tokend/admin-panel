@@ -1,7 +1,7 @@
 {
   "name": "admin-panel",
-  "version": "1.10.1-rc.2",
-  "description": "A TokenD admin client",
+  "version": "1.10.1-rcinc.0",
+  "description": "A INCLUSIVITY admin client",
   "author": "Distributed Lab <contact@distributedlab.com>",
   "private": true,
   "husky": {
