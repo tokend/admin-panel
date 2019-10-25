@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
+## [1.10.1] - 2019-10-25
+
 ## [1.10.1-rc.2] - 2019-10-11
 #### Added
 - Handling of transactions error
@@ -479,7 +481,8 @@ for further information about branching and tagging conventions.
 
 ## [1.3.0] - 2019-03-01
 
-[Unreleased]: https://github.com/tokend/admin-panel/compare/1.10.1-rc.2...HEAD
+[Unreleased]: https://github.com/tokend/admin-panel/compare/1.10.1...HEAD
+[1.10.1]: https://github.com/tokend/admin-panel/compare/1.10.1-rc.2...1.10.1
 [1.10.1-rc.2]: https://github.com/tokend/admin-panel/compare/1.10.1-rc.1...1.10.1-rc.2
 [1.10.1-rc.1]: https://github.com/tokend/admin-panel/compare/1.10.1-rc.0...1.10.1-rc.1
 [1.10.1-rc.0]: https://github.com/tokend/admin-panel/compare/1.10.0...1.10.1-rc.0
