@@ -1,5 +1,8 @@
 <template>
-  <div id="app">
+  <div
+    id="app"
+    :key="lang"
+  >
     <status-message />
 
     <template v-if="isAppInitialized">
@@ -65,6 +68,7 @@ import './scss/app.scss'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { ErrorTracker } from '@/utils/ErrorTracker'
 import { mapActions } from 'vuex'
+import { i18n } from '@/i18n'
 
 function isIE () {
   const parser = new UAParser()
@@ -89,6 +93,7 @@ export default {
       isGoodBrowser: true,
       isAppInitialized: false,
       isConfigLoadingFailed: false,
+      lang: i18n.language,
     }
   },
 
@@ -109,6 +114,9 @@ export default {
   async created () {
     this.isGoodBrowser = !isIE()
     if (!this.isGoodBrowser) return
+
+    i18n.onLanguageChanged(lng => (this.lang = lng))
+
     await this.initApp()
   },
 

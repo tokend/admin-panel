@@ -14,73 +14,84 @@ import App from './components/App/App.vue'
 import Auth from './auth'
 import params from './config'
 import Vuelidate from 'vuelidate'
+import moment from 'moment'
+
+import { i18n } from '@/i18n'
 
 /* Error tracker util */
 import { ErrorTracker } from '@/utils/ErrorTracker'
+import log from 'loglevel'
 
 /* Vue filters */
-
 import {
   filterDateWithTime,
   localizeIssuanceRequestState,
-  adminSignerType,
   cropAddress,
   roleIdToString,
   assetTypeToString,
   pollTypeToString,
   lowerCase,
   formatVersion,
+  globalize,
 } from './components/App/filters/filters'
 
-/* Logger module */
+async function init () {
+  i18n.onLanguageChanged(lang => {
+    moment.locale(lang)
+  })
 
-import log from 'loglevel'
-Vue.use(VueResource)
+  await i18n.init()
 
-if (process.env.NODE_ENV === 'production') {
-  Vue.config.devtools = false
-  Vue.config.debug = false
-  Vue.config.silent = true
-  Vue.config.productionTip = false
-}
+  /* Logger module */
+  Vue.use(VueResource)
 
-Object.isEmpty = function (obj) {
-  for (const prop in obj) {
-    if (obj.hasOwnProperty(prop)) {
-      return false
-    }
+  if (process.env.NODE_ENV === 'production') {
+    Vue.config.devtools = false
+    Vue.config.debug = false
+    Vue.config.silent = true
+    Vue.config.productionTip = false
   }
 
-  return JSON.stringify(obj) === JSON.stringify({})
+  Object.isEmpty = function (obj) {
+    for (const prop in obj) {
+      if (obj.hasOwnProperty(prop)) {
+        return false
+      }
+    }
+
+    return JSON.stringify(obj) === JSON.stringify({})
+  }
+
+  /* Init Sentry */
+  ErrorTracker.init(params)
+
+  /* Create and Mount our Vue instance */
+  new Vue({
+    components: { App },
+    // Attach the Vue instance to the window,
+    // so it's available globally.
+    created: function () {
+      window.vue = this
+    },
+    router,
+    store,
+    template: '<App/>',
+  }).$mount('#app')
+
+  Vue.use(Auth)
+  Vue.use(params)
+  Vue.use(Vuelidate)
+
+  Vue.filter('dateTime', filterDateWithTime)
+  Vue.filter('localizeIssuanceRequestState', localizeIssuanceRequestState)
+  Vue.filter('cropAddress', cropAddress)
+  Vue.filter('roleIdToString', roleIdToString)
+  Vue.filter('assetTypeToString', assetTypeToString)
+  Vue.filter('pollTypeToString', pollTypeToString)
+  Vue.filter('lowerCase', lowerCase)
+  Vue.filter('formatVersion', formatVersion)
+  Vue.filter('globalize', globalize)
+  log.setDefaultLevel(params.LOG_LEVEL)
 }
 
-/* Init Sentry */
-ErrorTracker.init(params)
-
-/* Create and Mount our Vue instance */
-new Vue({
-  components: { App },
-  // Attach the Vue instance to the window,
-  // so it's available globally.
-  created: function () {
-    window.vue = this
-  },
-  router,
-  store,
-  template: '<App/>',
-}).$mount('#app')
-
-Vue.use(Auth)
-Vue.use(params)
-Vue.use(Vuelidate)
-
-Vue.filter('dateTime', filterDateWithTime)
-Vue.filter('localizeIssuanceRequestState', localizeIssuanceRequestState)
-Vue.filter('adminSignerType', adminSignerType)
-Vue.filter('cropAddress', cropAddress)
-Vue.filter('roleIdToString', roleIdToString)
-Vue.filter('assetTypeToString', assetTypeToString)
-Vue.filter('pollTypeToString', pollTypeToString)
-Vue.filter('lowerCase', lowerCase)
-Vue.filter('formatVersion', formatVersion)
-log.setDefaultLevel(params.LOG_LEVEL)
+init()

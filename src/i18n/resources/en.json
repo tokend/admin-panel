@@ -1,0 +1,76 @@
+{
+  "config": {
+    "number": {
+      "formats": {
+        "amounts": {
+          "default": {
+            "decimalSeparator": ".",
+            "groupSeparator": ",",
+            "groupSize": 3,
+            "decimalPlaces": 6
+          }
+        },
+        "default": {
+          "decimalSeparator": ".",
+          "groupSeparator": ",",
+          "groupSize": 3,
+          "decimalPlaces": 6
+        },
+        "integer": {
+          "groupSeparator": ",",
+          "groupSize": 3,
+          "decimalPlaces": 0
+        },
+        "percent": {
+          "decimalSeparator": ".",
+          "groupSeparator": ",",
+          "groupSize": 3,
+          "decimalPlaces": 6,
+          "suffix": "%"
+        }
+      }
+    },
+    "date": {
+      "presets": {
+        "time": "H:mm",
+        "date": "MMMM D, YYYY",
+        "datetime": "MMMM D, YYYY [at] H:mm",
+        "dmy": "DD.MM.YYYY",
+        "dmyt": "DD.MM.YYYY [at] H:mm"
+      },
+      "calendar": {
+        "sameDay": "[Today at] H:mm",
+        "lastDay": "[Yesterday at] H:mm",
+        "nextDay": "[Tomorrow at] H:mm",
+        "lastWeek": "[Last] dddd [at] H:mm",
+        "nextWeek": "[Next] dddd [at] H:mm",
+        "sameElse": "MMMM D, YYYY [at] H:mm"
+      },
+      "calendarInline": {
+        "sameDay": "[today at] H:mm",
+        "lastDay": "[yesterday at] H:mm",
+        "nextDay": "[tomorrow at] H:mm",
+        "lastWeek": "[last] dddd [at] H:mm",
+        "nextWeek": "[next] dddd [at] H:mm",
+        "sameElse": "[at] MMMM D, YYYY [at] H:mm"
+      }
+    }
+  },
+  "translations": {
+    "formats": {
+      "date": "{{value, date}}",
+      "dmy": "{{value, dmy}}",
+      "dmyt": "{{value, dmyt}}",
+      "money": "{{value, money}}",
+      "number": "{{value, number}}",
+      "integer": "{{value, integer}}",
+      "calendar": "{{value, calendar}}",
+      "calendar-inline": "{{value, calendar-inline}}",
+      "order-number": "{{value, orderNumber}}",
+      "percent": "{{value, percent}}"
+    },
+    "sign-up": {
+      "header": "Sign Up"
+    }
+  }
+}

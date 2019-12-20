@@ -3,7 +3,7 @@
     <!-- Signup block -->
     <div class="signup__block app__block" v-if="state === 'signup'">
       <h2 class="signup__heading">
-        Sign Up
+        {{ 'sign-up.header' | globalize }}
       </h2>
 
       <form

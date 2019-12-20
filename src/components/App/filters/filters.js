@@ -1,3 +1,4 @@
+import { i18n } from '@/i18n'
 import moment from 'moment'
 import store from '../../../store'
 
@@ -62,4 +63,8 @@ export function formatVersion (string) {
   } else {
     return string
   }
+}
+
+export function globalize (translationId, interpolationOps) {
+  return i18n.t(translationId, interpolationOps)
 }
