@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" :key="lang">
     <status-message />
 
     <template v-if="isAppInitialized">
@@ -32,13 +32,13 @@
       <div class="app__loading-wrp">
         <template v-if="isConfigLoadingFailed">
           <p class="app__loading-error-txt">
-            Initializing failed
+            {{ "app.init-fail" | globalize }}
           </p>
         </template>
 
         <template v-else>
           <p class="app__loading-txt">
-            Initializing the app...
+            {{ "app.init-app" | globalize }}
           </p>
         </template>
       </div>
@@ -65,6 +65,7 @@ import './scss/app.scss'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { ErrorTracker } from '@/utils/ErrorTracker'
 import { mapActions } from 'vuex'
+import { i18n } from '@/i18n'
 
 function isIE () {
   const parser = new UAParser()
@@ -89,6 +90,7 @@ export default {
       isGoodBrowser: true,
       isAppInitialized: false,
       isConfigLoadingFailed: false,
+      lang: i18n.language,
     }
   },
 
@@ -109,6 +111,9 @@ export default {
   async created () {
     this.isGoodBrowser = !isIE()
     if (!this.isGoodBrowser) return
+
+    i18n.onLanguageChanged(lng => (this.lang = lng))
+
     await this.initApp()
   },
 
@@ -130,8 +135,8 @@ export default {
         )
         api.useWallet(wallet)
         ErrorTracker.setLoggedInUser({
-          'accountId': this.$store.getters.GET_USER.keys.accountId,
-          'name': this.$store.getters.GET_USER.name,
+          accountId: this.$store.getters.GET_USER.keys.accountId,
+          name: this.$store.getters.GET_USER.name,
         })
         this.$store.dispatch('LOG_IN')
       }
@@ -158,8 +163,8 @@ export default {
       const { data: horizonConfig } = await api.getRaw('/')
       api.useNetworkDetails(horizonConfig)
       config.NETWORK_PASSPHRASE = horizonConfig.networkPassphrase
-      config.MASTER_ACCOUNT = horizonConfig.masterAccountId ||
-        horizonConfig.adminAccountId
+      config.MASTER_ACCOUNT =
+        horizonConfig.masterAccountId || horizonConfig.adminAccountId
     },
 
     subscribeToStoreMutations () {
@@ -183,7 +188,8 @@ export default {
             break
           }
           default: {
-            const shouldIdleBeStarted = this.$store.state.auth.isLoggedIn &&
+            const shouldIdleBeStarted =
+              this.$store.state.auth.isLoggedIn &&
               this.$store.getters.logoutTimer === null
             if (shouldIdleBeStarted) {
               this.$store.dispatch('START_IDLE')
@@ -225,13 +231,13 @@ export default {
   font-size: 7.2rem;
   color: $color-text-secondary;
   font-weight: bold;
-  text-shadow: .1rem .1rem 0 $color-shadow-secondary-text;
+  text-shadow: 0.1rem 0.1rem 0 $color-shadow-secondary-text;
 }
 
 .app__loading-error-txt {
   @extend .app__loading-txt;
   color: $color-text-init-loading-failed;
-  text-shadow: .1rem .1rem 0 $color-shadow-init-loading-failed;
+  text-shadow: 0.1rem 0.1rem 0 $color-shadow-init-loading-failed;
 }
 
 // ***** Legacy *****

@@ -5,7 +5,7 @@
       @submit.prevent="isFormValid() && showConfirmation()"
       novalidate
     >
-      <h2>Create asset pair</h2>
+      <h2>{{ "asset-pair-creator.create-pair" | globalize }}</h2>
 
       <div class="asset-pair-creator__form-row app__form-row">
         <input-field
@@ -13,10 +13,9 @@
           label="Base"
           v-model="form.base"
           @blur="touchField('form.base')"
-          :error-message="getFieldErrorMessage(
-            'form.base',
-            { value: form.quote }
-          )"
+          :error-message="
+            getFieldErrorMessage('form.base', { value: form.quote })
+          "
           :disabled="formMixin.isDisabled"
         />
 
@@ -25,10 +24,9 @@
           label="Quote"
           v-model="form.quote"
           @blur="touchField('form.quote')"
-          :error-message="getFieldErrorMessage(
-            'form.quote',
-            { value: form.base }
-          )"
+          :error-message="
+            getFieldErrorMessage('form.quote', { value: form.base })
+          "
           :disabled="formMixin.isDisabled"
         />
       </div>
@@ -42,13 +40,12 @@
           :step="DEFAULT_INPUT_STEP"
           v-model="form.physicalPrice"
           @blur="touchField('form.physicalPrice')"
-          :error-message="getFieldErrorMessage(
-            'form.physicalPrice',
-            {
+          :error-message="
+            getFieldErrorMessage('form.physicalPrice', {
               minValue: DEFAULT_INPUT_MIN,
               maxValue: DEFAULT_MAX_AMOUNT
-            }
-          )"
+            })
+          "
           :disabled="formMixin.isDisabled"
         />
       </div>
@@ -62,20 +59,22 @@
           :step="DEFAULT_INPUT_STEP"
           v-model="form.physicalPriceCorrection"
           @blur="touchField('form.physicalPriceCorrection')"
-          :error-message="getFieldErrorMessage(
-            'form.physicalPriceCorrection',
-            { minValue: 0, maxValue: DEFAULT_MAX_AMOUNT }
-          )"
+          :error-message="
+            getFieldErrorMessage('form.physicalPriceCorrection', {
+              minValue: 0,
+              maxValue: DEFAULT_MAX_AMOUNT
+            })
+          "
           :disabled="formMixin.isDisabled"
         >
           <template slot="help">
             <p class="asset-pair-creator__tip-message">
               <span>
-                The correction of physical price in percents.
-                If physical price and restriction by physical price are set,
-                minimum price for this pair offer will be
+                {{ "asset-pair-creator.creator-tip-msg" | globalize }}
               </span>
-              <strong>physicalPrice * physicalPriceCorrection</strong>
+              <strong>{{
+                "asset-pair-creator.creator-tip-msg-prise" | globalize
+              }}</strong>
             </p>
           </template>
         </input-field>
@@ -89,20 +88,22 @@
           :step="DEFAULT_INPUT_STEP"
           v-model="form.maxPriceStep"
           @blur="touchField('form.maxPriceStep')"
-          :error-message="getFieldErrorMessage(
-            'form.maxPriceStep',
-            { minValue: 0, maxValue: 100 }
-          )"
+          :error-message="
+            getFieldErrorMessage('form.maxPriceStep', {
+              minValue: 0,
+              maxValue: 100
+            })
+          "
           :disabled="formMixin.isDisabled"
         >
           <template slot="help">
             <p class="asset-pair-creator__tip-message">
               <span>
-                Maximum offer price step in percents.
-                If current price restriction is set,
-                the users are allowed to set an offer with price in interval
+                {{ "asset-pair-creator.creator-tip-msg-offer" | globalize }}
               </span>
-              <strong>(1 ± maxPriceStep) * currentPrice</strong>
+              <strong>{{
+                "asset-pair-creator.creator-tip-msg-offer-prise" | globalize
+              }}</strong>
             </p>
           </template>
         </input-field>
@@ -119,7 +120,7 @@
           >
             <template slot="help">
               <span class="asset-pair-creator__tip-message">
-                Allowed to trade this pair on secondary market
+                {{ "asset-pair-creator.asset-pair-tip-msg-trade" | globalize }}
               </span>
             </template>
           </tick-field>
@@ -135,8 +136,9 @@
           >
             <template slot="help">
               <span class="asset-pair-creator__tip-message">
-                If set, then prices for new offers must be greater
-                than physical price with correction
+                {{
+                  "asset-pair-creator.asset-pair-tip-msg-new-offer" | globalize
+                }}
               </span>
             </template>
           </tick-field>
@@ -153,9 +155,11 @@
             <template slot="help">
               <p class="asset-pair-creator__tip-message">
                 <span>
-                  If set, then price for new offers must be in interval of
+                  <!-- eslint-disable-next-line max-len -->
+                  {{ "asset-pair-creator.asset-pair-tip-msg-prise-interval" | globalize }}
                 </span>
-                <strong>(1 ± maxPriceStep) * currentPrice</strong>
+                <!-- eslint-disable-next-line max-len -->
+                <strong>{{ "asset-pair-creator.asset-pair-tip-msg-prise" | globalize }}</strong>
               </p>
             </template>
           </tick-field>
@@ -175,7 +179,7 @@
           class="asset-pair-creator__submit-btn app__btn"
           :disabled="formMixin.isDisabled"
         >
-          Create
+          {{ "asset-pair-creator.asset-pair-submit-btn" | globalize }}
         </button>
       </div>
     </form>
@@ -221,11 +225,19 @@ export default {
       form: {
         base: {
           required,
-          not: not(sameAs(function () { return this.form.quote })),
+          not: not(
+            sameAs(function () {
+              return this.form.quote
+            })
+          ),
         },
         quote: {
           required,
-          not: not(sameAs(function () { return this.form.base })),
+          not: not(
+            sameAs(function () {
+              return this.form.base
+            })
+          ),
         },
         physicalPrice: {
           required,

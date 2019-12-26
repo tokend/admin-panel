@@ -1,18 +1,14 @@
 <template>
   <div class="login">
-    <div
-      class="login__block app__block"
-      v-if="state === 'login'"
-    >
+    <div class="login__block app__block" v-if="state === 'login'">
       <h2 class="login__heading">
-        Sign In
+        {{ "login.header" | globalize }}
       </h2>
 
       <form
         @submit.prevent="login"
         :id="`${_uid}-login-form`"
-        novalidate
-      >
+        novalidate>
         <div class="app__form-row">
           <input-field
             class="app__form-field"
@@ -40,29 +36,23 @@
         </div>
 
         <div class="app__form-actions">
-          <button
-            class="app__btn"
-            :disabled="formMixin.isDisabled"
-          >
-            Sign in
+          <button class="app__btn" :disabled="formMixin.isDisabled">
+            {{ "login.label" | globalize }}
           </button>
         </div>
       </form>
 
       <template v-if="seedLoginEnabled">
         <p class="login__alt-action">
-          <span> Also you can </span>
+          <span> {{ "login.also-you-can" | globalize }} </span>
           <router-link :to="{ name: 'seed-login' }">
-            sign in with seed
+            {{ "login.seed-log-en-link" | globalize }}
           </router-link>
         </p>
       </template>
     </div>
 
-    <div
-      class="login__block app__block"
-      v-else-if="state === 'tfa'"
-    >
+    <div class="login__block app__block" v-else-if="state === 'tfa'">
       <g-auth @tfa-done="redirect" />
     </div>
 
@@ -124,7 +114,7 @@ export default {
 
   async created () {
     this.tfaDone = false
-    this.unsubscribe = this.$store.subscribe(async (mutation) => {
+    this.unsubscribe = this.$store.subscribe(async mutation => {
       if (this.$store.getters.tfaInitiator !== 'login') {
         return
       }
@@ -181,9 +171,7 @@ export default {
 
         if (response.enabledTFA) {
           this.loginParams = response.loginParams
-          this.loginParams.username = this.form.username
-            .toLowerCase()
-            .trim()
+          this.loginParams.username = this.form.username.toLowerCase().trim()
 
           return this.showTfaForm(response.token)
         }

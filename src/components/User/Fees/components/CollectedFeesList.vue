@@ -1,20 +1,20 @@
 <template>
   <div class="collected-fees-list">
-    <h2>Balances</h2>
+    <h2>{{ "collected-fees-list.header" | globalize }}</h2>
     <div class="app-list">
       <template v-if="masterBalances && masterBalances.length">
         <div class="app-list__header">
           <span class="app-list__cell app-list__cell--important">
-            Asset
+            {{ "collected-fees-list.app-list-asset" | globalize }}
           </span>
           <span class="app-list__cell app-list__cell--right">
-            Available
+            {{ "collected-fees-list.app-list-available" | globalize }}
           </span>
           <span class="app-list__cell app-list__cell--right">
-            Locked
+            {{ "collected-fees-list.app-list-locked" | globalize }}
           </span>
           <span class="app-list__cell app-list__cell--right">
-            Withdrawable
+            {{ "collected-fees-list.app-list-withdrawable" | globalize }}
           </span>
         </div>
 
@@ -47,10 +47,14 @@
 
           <span class="app-list__cell app-list__cell--right">
             <template v-if="isAssetWithdrawable(balance.assetCode)">
-              Yes
+              {{
+                "collected-fees-list.app-list-asset-withdrawable-t" | globalize
+              }}
             </template>
             <template v-else>
-              No
+              {{
+                "collected-fees-list.app-list-asset-withdrawable-f" | globalize
+              }}
             </template>
           </span>
         </button>
@@ -60,19 +64,19 @@
         <div class="app-list__li-like">
           <template v-if="isLoading">
             <p>
-              Loading...
+              {{ "collected-fees-list.app-list-load" | globalize }}
             </p>
           </template>
 
           <template v-else-if="isFailed">
             <p class="danger">
-              An error occurred. Please try again later
+              {{ "collected-fees-list.app-list-fail-load" | globalize }}
             </p>
           </template>
 
           <template v-else>
             <p>
-              Nothing here yet
+              {{ "collected-fees-list.app-list-error" | globalize }}
             </p>
           </template>
         </div>
@@ -124,10 +128,14 @@ export default {
       this.isLoading = true
       this.isFailed = false
       try {
-        const { data: { balances: masterBalances } } = await api
-          .getWithSignature(`/v3/accounts/${Vue.params.MASTER_ACCOUNT}`, {
+        const {
+          data: { balances: masterBalances },
+        } = await api.getWithSignature(
+          `/v3/accounts/${Vue.params.MASTER_ACCOUNT}`,
+          {
             include: ['balances.state'],
-          })
+          }
+        )
 
         this.masterBalances = masterBalances.map(b => new Balance(b))
       } catch (err) {
@@ -153,5 +161,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

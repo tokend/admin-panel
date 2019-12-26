@@ -4,7 +4,7 @@
       v-if="!isCollectionFetched"
       class="app__btn-secondary"
       @click="loadNextPage">
-      More
+      {{ "collection-loader.more" | globalize }}
     </button>
   </div>
 </template>

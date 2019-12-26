@@ -2,7 +2,7 @@
   <div class="users">
     <user-header>
       <router-link :to="{ name: 'keyValue.index' }" slot="nav">
-        Key Value
+        {{ "key-value.link-key-val" | globalize }}
       </router-link>
     </user-header>
     <div class="app__user-container">

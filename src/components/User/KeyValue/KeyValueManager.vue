@@ -11,8 +11,7 @@
             <option
               v-for="item in list"
               :value="item.id"
-              :key="item.id"
-            >
+              :key="item.id">
               {{ item.id }}
             </option>
           </select-field>
@@ -31,7 +30,7 @@
             :disabled="isPending"
             @click="setKeyValue(updateForm.key, updateForm.value)"
           >
-            Update
+            {{ "key-value-manager.app-btn-update" | globalize }}
           </button>
         </div>
       </div>
@@ -71,13 +70,11 @@
                       app__btn--small
                       key-value-manager__btn"
           :disabled="isPending"
-          @click="setKeyValue(
-            createForm.key,
-            createForm.value,
-            createForm.entryType
-          )"
+          @click="
+            setKeyValue(createForm.key, createForm.value, createForm.entryType)
+          "
         >
-          Add
+          {{ "key-value-manager.app-btn-add" | globalize }}
         </button>
       </div>
     </div>
@@ -121,9 +118,7 @@ export default {
   }),
 
   computed: {
-    ...mapGetters([
-      'kvEntries',
-    ]),
+    ...mapGetters(['kvEntries']),
   },
 
   watch: {
@@ -142,8 +137,11 @@ export default {
     async setKeyValue (key, value, entryType) {
       this.isPending = true
       try {
-        const operation = base.ManageKeyValueBuilder
-          .putKeyValue({ key, value, entryType })
+        const operation = base.ManageKeyValueBuilder.putKeyValue({
+          key,
+          value,
+          entryType,
+        })
 
         await api.postOperations(operation)
         await this.getList()

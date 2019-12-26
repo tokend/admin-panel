@@ -1,7 +1,7 @@
 <template>
   <div class="collected-fees-withdrawals">
     <h2>
-      Withdrawals
+      {{ "collected-fees-withdrawals.header" | globalize }}
     </h2>
 
     <div class="collected-fees-withdrawals__filters-wrp">
@@ -12,19 +12,34 @@
           v-model="filters.state"
         >
           <option :value="REQUEST_STATES.pending">
-            Pending
+            {{
+              "collected-fees-withdrawals.withdrawals-filters-pendind"
+                | globalize
+            }}
           </option>
           <option :value="REQUEST_STATES.cancelled">
-            Canceled
+            {{
+              "collected-fees-withdrawals.withdrawals-filters-canceled"
+                | globalize
+            }}
           </option>
           <option :value="REQUEST_STATES.approved">
-            Approved
+            {{
+              "collected-fees-withdrawals.withdrawals-filters-approved"
+                | globalize
+            }}
           </option>
           <option :value="REQUEST_STATES.rejected">
-            Rejected
+            {{
+              "collected-fees-withdrawals.withdrawals-filters-rejected"
+                | globalize
+            }}
           </option>
           <option :value="REQUEST_STATES.permanentlyRejected">
-            Permanently rejected
+            {{
+              "collected-fees-withdrawals.withdrawals-filters-perm-rejected"
+                | globalize
+            }}
           </option>
         </select-field>
 
@@ -42,16 +57,16 @@
         <ul class="app-list">
           <div class="app-list__header">
             <span class="app-list__cell">
-              Created at
+              {{ "collected-fees-withdrawals.app-list-created-ad" | globalize }}
             </span>
             <span class="app-list__cell app-list__cell--right">
-              Status
+              {{ "collected-fees-withdrawals.app-list-statu" | globalize }}
             </span>
             <span class="app-list__cell app-list__cell--right">
-              Amount
+              {{ "collected-fees-withdrawals.app-list-amount" | globalize }}
             </span>
             <span class="app-list__cell app-list__cell--right">
-              Tasks
+              {{ "collected-fees-withdrawals.app-list-tasks" | globalize }}
             </span>
           </div>
 
@@ -92,19 +107,21 @@
           <li class="app-list__li-like">
             <template v-if="isListLoading">
               <p>
-                Loading...
+                {{ "collected-fees-withdrawals.app-list-loadind" | globalize }}
               </p>
             </template>
 
             <template v-else-if="isListFailed">
               <p class="danger">
-                An error occurred. Please try again later
+                {{
+                  "collected-fees-withdrawals.app-list-no-loadind" | globalize
+                }}
               </p>
             </template>
 
             <template v-else>
               <p>
-                Nothing here yet
+                {{ "collected-fees-withdrawals.app-list-error" | globalize }}
               </p>
             </template>
           </li>
@@ -126,7 +143,7 @@
       @close-request="itemToShow = null"
       max-width="64rem"
     >
-      <h2>Withdrawal request details</h2>
+      <h2>{{ "collected-fees-withdrawals.withdrawal-req-det" | globalize }}</h2>
       <details-reader :details="itemToShow" />
     </modal>
   </div>
@@ -179,8 +196,12 @@ export default {
   },
 
   watch: {
-    'filters.state' () { this.reloadWithdrawalsThrottled() },
-    'filters.pendingTasks' () { this.reloadWithdrawalsThrottled() },
+    'filters.state' () {
+      this.reloadWithdrawalsThrottled()
+    },
+    'filters.pendingTasks' () {
+      this.reloadWithdrawalsThrottled()
+    },
   },
 
   methods: {
@@ -194,7 +215,7 @@ export default {
           filter: clearObject({
             requestor: Vue.params.MASTER_ACCOUNT,
             state: this.filters.state,
-            'pending_tasks': /^\d+$/.test(this.filters.pendingTasks)
+            pending_tasks: /^\d+$/.test(this.filters.pendingTasks)
               ? this.filters.pendingTasks
               : null,
           }),

@@ -8,11 +8,11 @@
           </span>
 
           <span class="app-list__cell app-list__cell--right">
-            Price
+            {{ "asset-pair-list.app-list-prise" | globalize }}
           </span>
 
           <span class="app-list__cell app-list__cell--right">
-            Policy
+            {{ "asset-pair-list.app-list-policy" | globalize }}
           </span>
         </div>
 
@@ -37,7 +37,9 @@
           </span>
 
           <!-- eslint-disable-next-line max-len -->
-          <span class="app-list__cell app-list__cell--policy app-list__cell--right">
+          <span
+            class="app-list__cell app-list__cell--policy app-list__cell--right"
+          >
             {{ item.policies.value }}
             <span class="asset-pair__policy-tip">
               <i class="mdi mdi-help-circle asset-pairs__tip-icon" />
@@ -53,7 +55,7 @@
                   v-if="!item.policies || !item.policies.length"
                   class="asset-pairs__policies-list-item"
                 >
-                  No policies for this pair
+                  {{ "asset-pair-list.app-list-no-policy" | globalize }}
                 </span>
               </span>
             </span>
@@ -65,7 +67,7 @@
     <template v-else-if="isLoaded && !list.length">
       <div class="app-list">
         <div class="app-list__li-like">
-          <p>Nothing here yet</p>
+          <p>{{ "asset-pair-list.app-list-like" | globalize }}</p>
         </div>
       </div>
     </template>
@@ -74,7 +76,7 @@
       <div class="app-list">
         <div class="app-list__li-like">
           <p class="danger">
-            An error occurred. Please try again later
+            {{ "asset-pair-list.app-list-error" | globalize }}
           </p>
         </div>
       </div>
@@ -83,7 +85,7 @@
     <template v-else>
       <div class="app-list">
         <div class="app-list__li-like">
-          <p>Loading...</p>
+          <p>{{ "asset-pair-list.app-list-load" | globalize }}</p>
         </div>
       </div>
     </template>
@@ -149,7 +151,7 @@ export default {
 }
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .asset-pairs {
   max-width: 72rem;
 }
@@ -187,7 +189,7 @@ export default {
 
 .asset-pairs__tip-icon {
   cursor: help;
-  padding: .5rem;
+  padding: 0.5rem;
   width: 2.6rem;
 }
 </style>

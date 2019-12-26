@@ -10,8 +10,7 @@
           <option
             v-for="asset in assets"
             :value="asset"
-            :key="asset"
-          >
+            :key="asset">
             {{ asset }}
           </option>
         </select-field>
@@ -23,26 +22,25 @@
         <ul class="app-list">
           <div class="app-list__header issuance-rl__li-header">
             <span class="app-list__cell issuance-rl__id-max-width">
-              ID
+              {{ "issuance-history.header-id" | globalize }}
             </span>
             <span class="app-list__cell app-list__cell--right">
-              Value
+              {{ "issuance-history.header-id" | globalize }}
             </span>
             <span class="app-list__cell app-list__cell--right">
-              Requestor
+              {{ "issuance-history.header-val" | globalize }}
             </span>
             <span class="app-list__cell app-list__cell--right">
-              Receiver
+              {{ "issuance-history.header-req" | globalize }}
             </span>
             <span class="app-list__cell app-list__cell--right">
-              Date
+              {{ "issuance-history.header-date" | globalize }}
             </span>
           </div>
           <li
             v-for="item in list"
             :key="item.id"
-            class="issuance-rl__li"
-          >
+            class="issuance-rl__li">
             <span
               class="app-list__cell issuance-rl__id-max-width"
               :title="item.id"
@@ -53,9 +51,14 @@
             <!-- eslint-disable max-len -->
             <span
               class="app-list__cell app-list__cell--right app-list__cell--important"
-              :title="`${localize(item.requestDetails.amount)} ${item.requestDetails.asset.id}`"
+              :title="
+                `${localize(item.requestDetails.amount)} ${
+                  item.requestDetails.asset.id
+                }`
+              "
             >
-              {{ localize(item.requestDetails.amount) }} {{ item.requestDetails.asset.id }}
+              {{ localize(item.requestDetails.amount) }}
+              {{ item.requestDetails.asset.id }}
             </span>
             <!-- eslint-enable max-len -->
 
@@ -86,7 +89,12 @@
       <template v-else>
         <div class="app-list">
           <div class="app-list__li-like app-list__li--no-shadow">
-            <p>{{ isLoaded ? 'Nothing here yet' : 'Loading...' }}</p>
+            <p v-if="isLoaded">
+              {{ "issuance-history.app-loaded" | globalize }}
+            </p>
+            <p v-else>
+              {{ "Issuanceissuance-historyHistory.app-loading" | globalize }}
+            </p>
           </div>
         </div>
       </template>

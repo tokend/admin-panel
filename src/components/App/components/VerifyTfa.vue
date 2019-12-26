@@ -2,11 +2,11 @@
   <div class="verify-tfa" v-if="isRequired">
     <div class="verify-tfa__block app__block">
       <h2 class="verify-tfa__heading">
-        2FA Required
+        {{ "verify-tfa.heading" | globalize }}
       </h2>
 
       <p class="verify-tfa__text text">
-        Enter your verification code to proceed.
+        {{ "verify-tfa.verify-code" | globalize }}
       </p>
 
       <form
@@ -34,7 +34,7 @@
             @click="close()"
             :disabled="formMixin.isDisabled"
           >
-            Cancel
+            {{ "verify-tfa.btn-cancel" | globalize }}
           </button>
 
           <button
@@ -43,7 +43,7 @@
             :disabled="formMixin.isDisabled"
             type="submit"
           >
-            Submit
+            {{ "verify-tfa.btn-submit" | globalize }}
           </button>
         </div>
       </form>

@@ -1,6 +1,6 @@
 <template>
   <div class="asset-requests-index">
-    <h2>Manage assets</h2>
+    <h2>{{ "asset-requests-index.manage-assets" | globalize }}</h2>
 
     <div class="asset-requests-index__list-wrp">
       <asset-request-list />
