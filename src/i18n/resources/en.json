@@ -991,6 +991,10 @@
       "no-pairs": "No pairs yet",
       "error": "An error occurred",
       "loading": "Loading..."
+    },
+    "trades-index": {
+      "header": "Trades",
+      "select-pair": "Select pair"
     }
   }
 }
