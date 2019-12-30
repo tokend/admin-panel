@@ -662,7 +662,7 @@
       "amount": "Amount",
       "asset": "Asset",
       "status": "Status",
-      "btn-rejecr": "Reject",
+      "btn-reject": "Reject",
       "btn-accept": "Accept",
       "btn-more": "More",
       "loading": "Loading...",
@@ -1038,6 +1038,13 @@
       "avatar": "Avatar",
       "photo-with-verification-code": "Photo with verification code",
       "code": "Code: {{ user.address.slice(1, 6) }}"
+    },
+    "user-details-request": {
+      "btn-approve": "Approve",
+      "btn-reject": "Reject",
+      "btn-perm-reject": "Reject permanently",
+      "btn-form-reject": "Reject",
+      "btn-cancel": "Cancel"
     }
   }
 }
