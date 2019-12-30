@@ -1012,6 +1012,12 @@
       "ensure-proof-document": "Please ensure the user attached a valid proof document",
       "proof-document": "Proof document",
       "open-file": "Open file"
+    },
+    "user-details-block": {
+      "btn-unblock-user": "Unblock user",
+      "btn-block-user": "Block user",
+      "btn-block": "Block",
+      "btn-cancel": "Cancel"
     }
   }
 }

@@ -6,7 +6,7 @@
         :disabled="isPending"
         @click="unblockUser"
       >
-        Unblock user
+        {{ "user-details-block.btn-unblock-user" | globalize }}
       </button>
     </div>
     <div class="user-block__unblock-user" v-else>
@@ -15,7 +15,7 @@
         :disabled="isPending"
         @click="showBlockModal"
       >
-        Block user
+        {{ "user-details-block.btn-block-user" | globalize }}
       </button>
     </div>
 
@@ -49,13 +49,13 @@
           class="app__btn app__btn--danger"
           form="user-block-form"
         >
-          Block
+          {{ "user-details-block.btn-block" | globalize }}
         </button>
         <button
           class="app__btn-secondary"
           @click="hideBlockModal"
         >
-          Cancel
+          {{ "user-details-block.btn-cancel" | globalize }}
         </button>
       </div>
     </modal>
