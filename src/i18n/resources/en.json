@@ -1050,6 +1050,14 @@
       "btn-reset-unverified": "Reset to unverified",
       "btn-reset": "Reset",
       "btn-cancel": "Cancel"
+    },
+    "user-details-tasks-manager": {
+      "manage-tasks": "Manage tasks (advanced)",
+      "current-request-tasks": "Current request tasks",
+      "pending-tasks": "Pending tasks: {{ request.pendingTasks }}",
+      "all-tasks": "All tasks: {{ request.allTasks }}",
+      "tasks-add": "Tasks to add",
+      "tasks-remove": "Tasks to remove"
     }
   }
 }
