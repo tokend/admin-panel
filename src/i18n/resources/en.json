@@ -1018,6 +1018,26 @@
       "btn-block-user": "Block user",
       "btn-block": "Block",
       "btn-cancel": "Cancel"
+    },
+    "user-details-kyc": {
+      "header": "KYC information",
+      "uploaded-document": "<p>Can be uploaded one of the documents:</p> <p> - Valid Passport;</p> <p> - Valid Identity card;</p> <p> - Valid Residence permit;</p> <p> - Driving license - full, not provisional, with a color photograph; </p>",
+      "first-name": "First name",
+      "last-name": "Last name",
+      "date-birth": "Date of birth",
+      "address-line1": "Address Line 1",
+      "address-line2": "Address Line 2",
+      "postal-code": "Postal code",
+      "city": "City",
+      "country": "Country",
+      "state": "State",
+      "id-document-type": "ID Document type",
+      "id-document-front-side": "ID Document front side:",
+      "id-document": "ID Document",
+      "open-file": "Open file",
+      "avatar": "Avatar",
+      "photo-with-verification-code": "Photo with verification code",
+      "code": "Code: {{ user.address.slice(1, 6) }}"
     }
   }
 }
