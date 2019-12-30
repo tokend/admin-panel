@@ -7,16 +7,16 @@
         label="State"
       >
         <option :value="REQUEST_STATES.pending">
-          Pending
+          {{ "poll-request-list.pending" | globalize }}
         </option>
         <option :value="REQUEST_STATES.cancelled">
-          Canceled
+          {{ "poll-request-list.canceled" | globalize }}
         </option>
         <option :value="REQUEST_STATES.approved">
-          Approved
+          {{ "poll-request-list.approved" | globalize }}
         </option>
         <option :value="REQUEST_STATES.permanentlyRejected">
-          Permanently rejected
+          {{ "poll-request-list.permanently-rejected" | globalize }}
         </option>
       </select-field>
 
@@ -37,15 +37,15 @@
             </span>
 
             <span class="app-list__cell">
-              Created at
+              {{ "poll-request-list.created-at" | globalize }}
             </span>
 
             <span class="app-list__cell">
-              Requestor
+              {{ "poll-request-list.requestor" | globalize }}
             </span>
 
             <span class="app-list__cell">
-              Question
+              {{ "poll-request-list.question" | globalize }}
             </span>
           </div>
 
@@ -87,8 +87,11 @@
 
       <template v-else>
         <ul class="app-list">
-          <li class="app-list__li-like">
-            {{ isLoadingList ? 'Loading...' : 'Nothing here yet' }}
+          <li class="app-list__li-like" v-if="isLoadingList">
+            {{ "poll-request-list.loading" | globalize }}
+          </li>
+          <li class="app-list__li-like" v-else>
+            {{ "poll-request-list.nothing-here-yet" | globalize }}
           </li>
         </ul>
       </template>

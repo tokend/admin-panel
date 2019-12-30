@@ -6,11 +6,11 @@
       v-if="requestSelected"
     >
       <h2 class="preissuance-request-list__reject-heading">
-        Reject
+        {{ "pre-issuance-request-list.reject" | globalize }}
       </h2>
 
       <p class="preissuance-request-list__reject-hint">
-        Input reject reason and submit rejection
+        {{ "pre-issuance-request-list.input-reason-and-submit" | globalize }}
       </p>
 
       <div class="preissuance-request-list__form-row app__form-row">
@@ -27,14 +27,14 @@
           @click="reject(currentRequest)"
           :disabled="buttonDisabled"
         >
-          Submit rejection
+          {{ "pre-issuance-request-list.btn-submit-rejection" | globalize }}
         </button>
         <button
           class="app__btn-secondary"
           @click="requestSelected = false"
           :disabled="buttonDisabled"
         >
-          Cancel
+          {{ "pre-issuance-request-list.btn-cancel" | globalize }}
         </button>
       </div>
     </div>
@@ -51,17 +51,17 @@
             <tr>
               <th>
                 <span class="secondary">
-                  Amount
+                  {{ "pre-issuance-request-list.amount" | globalize }}
                 </span>
               </th>
               <th>
                 <span class="secondary">
-                  Asset
+                  {{ "pre-issuance-request-list.asset" | globalize }}
                 </span>
               </th>
               <th>
                 <span class="secondary">
-                  Status
+                  {{ "pre-issuance-request-list.status" | globalize }}
                 </span>
               </th>
               <th />
@@ -84,7 +84,7 @@
                     @click="setReject(request)"
                     :disabled="request.state !== 'pending'"
                   >
-                    Reject
+                    {{ "pre-issuance-request-list.btn-reject" | globalize }}
                   </button>
 
                   <button
@@ -92,7 +92,7 @@
                     @click="fulfill(request)"
                     :disabled="buttonDisabled || request.state !== 'pending'"
                   >
-                    Accept
+                    {{ "pre-issuance-request-list.btn-accept" | globalize }}
                   </button>
                 </span>
               </td>
@@ -106,7 +106,7 @@
             v-if="!pageableLoadCompleted && filteredRequests.length !== 0"
             @click="nextPageLoader"
           >
-            More
+            {{ "pre-issuance-request-list.btn-more" | globalize }}
           </button>
         </div>
       </div>
@@ -115,13 +115,13 @@
         <div class="app-list__li-like">
           <template v-if="isLoading">
             <p>
-              Loading...
+              {{ "pre-issuance-request-list.loading" | globalize }}
             </p>
           </template>
 
           <template v-else>
             <p>
-              Nothing here yet
+              {{ "pre-issuance-request-list.fail-load" | globalize }}
             </p>
           </template>
         </div>

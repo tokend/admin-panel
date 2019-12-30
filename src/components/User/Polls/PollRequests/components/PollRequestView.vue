@@ -3,23 +3,23 @@
     <div class="app__block">
       <div class="poll-request-view__request-attributes">
         <label class="data-caption">
-          Request details
+          {{ "poll-request-view.request-details" | globalize }}
         </label>
 
         <ul class="key-value-list">
           <li>
-            <span>Request ID</span>
+            <span>{{ "poll-request-view.request-id" | globalize }}</span>
             <span>{{ request.id }}</span>
           </li>
           <li>
-            <span>Requestor</span>
+            <span>{{ "poll-request-view.requestor" | globalize }}</span>
             <email-getter
               :account-id="request.requestor.id"
               is-titled
             />
           </li>
           <li>
-            <span>Request state</span>
+            <span>{{ "poll-request-view.request-state" | globalize }}</span>
             <request-state-formatter
               :state="request.state"
               is-colored
@@ -27,7 +27,7 @@
           </li>
 
           <li>
-            <span>Requested at</span>
+            <span>{{ "poll-request-view.requested-at" | globalize }}</span>
             <date-formatter
               :date="request.createdAt"
               format="DD MMM YYYY HH:mm:ss"
@@ -37,7 +37,7 @@
 
         <template v-if="request.rejectReason">
           <label class="data-caption danger">
-            Reject reason
+            {{ "poll-request-view.label-reject-reason" | globalize }}
           </label>
           <p class="text">
             {{ request.rejectReason }}
@@ -45,7 +45,7 @@
         </template>
 
         <label class="data-caption">
-          Poll question and answers
+          {{ "poll-request-view.poll-question-and-answers" | globalize }}
         </label>
 
         <p class="poll-request-view__question">
@@ -57,7 +57,7 @@
             v-for="item in request.requestDetails.creatorDetails.choices"
             :key="item.number"
           >
-            <span>Answer #{{ item.number }}</span>
+            <span>{{ "poll-request-view.answer" | globalize }}</span>
             <span>
               {{ item.description }}
             </span>
@@ -65,17 +65,17 @@
         </ul>
 
         <label class="data-caption">
-          Poll details
+          {{ "poll-request-view.poll-details" | globalize }}
         </label>
 
         <ul class="key-value-list">
           <li>
-            <span>Number of choices</span>
+            <span>{{ "poll-request-view.number-of-choices" | globalize }}</span>
             <span>{{ request.requestDetails.numberOfChoices }}</span>
           </li>
 
           <li>
-            <span>Start time</span>
+            <span>{{ "poll-request-view.start-time" | globalize }}</span>
             <date-formatter
               :date="request.requestDetails.startTime"
               format="DD MMM YYYY HH:mm:ss"
@@ -83,7 +83,7 @@
           </li>
 
           <li>
-            <span>End time</span>
+            <span>{{ "poll-request-view.end-time" | globalize }}</span>
             <date-formatter
               :date="request.requestDetails.endTime"
               format="DD MMM YYYY HH:mm:ss"
@@ -91,14 +91,14 @@
           </li>
 
           <li>
-            <span>Permission type</span>
+            <span>{{ "poll-request-view.permission-type" | globalize }}</span>
             <span>
               {{ request.requestDetails.permissionType | pollTypeToString }}
             </span>
           </li>
 
           <li>
-            <span>Result provider</span>
+            <span>{{ "poll-request-view.result-provider" | globalize }}</span>
             <email-getter
               :account-id="request.requestDetails.resultProvider.id"
               is-titled
@@ -106,13 +106,15 @@
           </li>
 
           <li>
-            <span>Vote confirmation required</span>
+            <span>
+              {{ "poll-request-view.vote-confirmation-required" | globalize }}
+            </span>
             <span>
               <template v-if="request.requestDetails.voteConfirmationRequired">
-                Yes
+                {{ "poll-request-view.yes" | globalize }}
               </template>
               <template v-else>
-                No
+                {{ "poll-request-view.no" | globalize }}
               </template>
             </span>
           </li>
@@ -129,14 +131,14 @@
             @click="approve"
             :disabled="isSubmitting"
           >
-            Approve
+            {{ "poll-request-view.btn-approve" | globalize }}
           </button>
           <button
             class="app__btn app__btn--danger"
             :disabled="isSubmitting"
             @click="showRejectForm"
           >
-            Reject
+            {{ "poll-request-view.btn-reject" | globalize }}
           </button>
         </div>
       </template>
@@ -144,10 +146,10 @@
       <template v-else>
         <p>
           <template v-if="isRequestFailed">
-            An error occurred
+            {{ "poll-request-view.error" | globalize }}
           </template>
           <template v-else>
-            Loading...
+            {{ "poll-request-view.loading" | globalize }}
           </template>
         </p>
       </template>
@@ -159,7 +161,7 @@
       max-width="40rem"
     >
       <p class="text">
-        Reject reason
+        {{ "poll-request-view.reject-reason" | globalize }}
       </p>
 
       <form
@@ -196,14 +198,14 @@
           form="sale-reject-form"
           :disabled="formMixin.isDisabled"
         >
-          Reject
+          {{ "poll-request-view.btn-reject" | globalize }}
         </button>
         <button
           class="app__btn-secondary"
           @click="hideRejectForm"
           :disabled="formMixin.isDisabled"
         >
-          Cancel
+          {{ "poll-request-view.btn-cancel" | globalize }}
         </button>
       </div>
     </modal>

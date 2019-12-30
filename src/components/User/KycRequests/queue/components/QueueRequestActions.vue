@@ -13,21 +13,21 @@
           class="app__btn queue-request-actions__btn"
           @click="approve"
         >
-          Approve
+          {{ "queue-request-actions.btn-approve" | globalize }}
         </button>
 
         <button
           class="app__btn app__btn-outline queue-request-actions__btn"
           @click="skip"
         >
-          Skip
+          {{ "queue-request-actions.btn-skip" | globalize }}
         </button>
 
         <button
           class="app__btn app__btn--danger queue-request-actions__btn"
           @click="showRejectModal"
         >
-          Reject
+          {{ "queue-request-actions.btn-reject" | globalize }}
         </button>
       </div>
 
@@ -36,7 +36,7 @@
           class="app__btn app__btn queue-request-actions__btn"
           @click="$emit(EVENTS.finished)"
         >
-          Finish
+          {{ "queue-request-actions.btn-finish" | globalize }}
         </button>
       </div>
     </div>
@@ -73,13 +73,13 @@
           class="app__btn app__btn--danger"
           form="queue-request-actions-reject-form"
         >
-          Reject
+          {{ "queue-request-actions.form-btn-reject" | globalize }}
         </button>
         <button
           class="app__btn-secondary"
           @click="hideRejectModal"
         >
-          Cancel
+          {{ "queue-request-actions.form-btn-cancel" | globalize }}
         </button>
       </div>
     </modal>

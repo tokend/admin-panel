@@ -5,7 +5,9 @@
         <section class="queue-request-viewer__section">
           <div class="queue-request-viewer__account-role">
             <span>
-              <strong>Role to set:</strong>
+              <strong>
+                {{ "queue-request-viewer.role-to-set" | globalize }}
+              </strong>
               <span>
                 {{ request.accountRoleToSet | roleIdToString }}
               </span>
@@ -14,7 +16,8 @@
 
           <template v-if="request.externalDetails.length">
             <div class="queue-request-viewer__ext-details-wrp">
-              <h3>External details (provided by external services)</h3>
+              <!-- eslint-disable-next-line max-len -->
+              <h3>{{ "queue-request-viewer.external-details" | globalize }}</h3>
               <external-details-viewer
                 :external-details="request.externalDetails"
               />
@@ -64,23 +67,23 @@
 
           <template v-else-if="isKycLoadFailed">
             <p class="danger">
-              An error occurred. Please try again later.
+              {{ "queue-request-viewer.error" | globalize }}
             </p>
           </template>
 
           <template v-else>
-            <p>Loading...</p>
+            <p>{{ "queue-request-viewer.loading" | globalize }}</p>
           </template>
         </section>
       </template>
 
       <template v-else-if="!isFailed">
-        <p>Loading...</p>
+        <p>{{ "queue-request-viewer.loading" | globalize }}</p>
       </template>
 
       <template v-else>
         <p class="danger">
-          An error occurred. Please try again later.
+          {{ "queue-request-viewer.error" | globalize }}
         </p>
       </template>
     </div>

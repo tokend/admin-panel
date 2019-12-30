@@ -2,7 +2,7 @@
   <div v-if="operation.id">
     <div class="operation-details">
       <div class="app__block">
-        <h2>Operation details</h2>
+        <h2>{{ "operation-details.header" | globalize }}</h2>
         <details-reader :details="operation" />
       </div>
     </div>

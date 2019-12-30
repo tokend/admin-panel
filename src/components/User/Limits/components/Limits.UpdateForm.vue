@@ -6,7 +6,7 @@
   >
     <div class="update-limits-form__row">
       <span class="update-limits-form__limit-type">
-        Daily
+        {{ "limits-update-form.daily" | globalize }}
       </span>
 
       <input-field
@@ -35,7 +35,7 @@
 
     <div class="update-limits-form__row">
       <span class="update-limits-form__limit-type">
-        Weekly
+        {{ "limits-update-form.weekly" | globalize }}
       </span>
 
       <input-field
@@ -64,7 +64,7 @@
 
     <div class="update-limits-form__row">
       <span class="update-limits-form__limit-type">
-        Monthly
+        {{ "limits-update-form.monthly" | globalize }}
       </span>
 
       <input-field
@@ -93,7 +93,7 @@
 
     <div class="update-limits-form__row">
       <span class="update-limits-form__limit-type">
-        Annual
+        {{ "limits-update-form.annual" | globalize }}
       </span>
 
       <input-field
@@ -137,7 +137,7 @@
           :disabled="formMixin.isDisabled"
           @click="isDeleteMode = false"
         >
-          Update
+          {{ "limits-update-form.btn-update" | globalize }}
         </button>
 
         <button
@@ -147,7 +147,7 @@
           :disabled="formMixin.isDisabled || limits.id === 0"
           @click="isDeleteMode = true"
         >
-          Remove
+          {{ "limits-update-form.btn-remove" | globalize }}
         </button>
       </template>
     </div>

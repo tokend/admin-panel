@@ -4,15 +4,15 @@
       <ul class="limit-uploaded-docs__list app-list">
         <li class="app-list__header">
           <span class="limit-uploaded-docs__list-cell app-list__cell">
-            Description
+            {{ "limits-uploaded-docs-list.description" | globalize }}
           </span>
           <!-- eslint-disable-next-line max-len -->
           <span class="limit-uploaded-docs__list-cell app-list__cell app-list__cell--center">
-            File extension
+            {{ "limits-uploaded-docs-list.file-extension" | globalize }}
           </span>
           <!-- eslint-disable-next-line max-len -->
           <span class="limit-uploaded-docs__list-cell app-list__cell app-list__cell--center">
-            Uploading date
+            {{ "limits-uploaded-docs-list.uploading-date" | globalize }}
           </span>
           <!-- eslint-disable-next-line max-len -->
           <span class="limit-uploaded-docs__list-cell app-list__cell app-list__cell--center">
@@ -37,7 +37,7 @@
               :file-key="item.file.key"
               :file-type="DOCUMENTS_POLICIES.private"
             >
-              Open
+              {{ "limits-uploaded-docs-list.open" | globalize }}
             </doc-link-getter>
           </span>
         </li>
@@ -48,10 +48,10 @@
       <ul class="app-list">
         <li class="app-list__li-like">
           <template v-if="isLoading">
-            Nothing here yet
+            {{ "limits-uploaded-docs-list.nothing-here-yet" | globalize }}
           </template>
           <template v-else>
-            Loading...
+            {{ "limits-uploaded-docs-list.loading" | globalize }}
           </template>
         </li>
       </ul>

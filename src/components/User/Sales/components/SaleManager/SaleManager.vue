@@ -1,6 +1,6 @@
 <template>
   <div class="sale-manager">
-    <h2>Sale overview</h2>
+    <h2>{{ "sale-manager.header" | globalize }}</h2>
 
     <div class="app__block">
       <template v-if="isLoaded">
@@ -32,13 +32,13 @@
 
       <template v-else-if="isFailed">
         <p class="text danger">
-          An error occurred. Please try again later.
+          {{ "sale-manager.error" | globalize }}
         </p>
       </template>
 
       <template v-else>
         <p class="text">
-          Loading...
+          {{ "sale-manager.loading" | globalize }}
         </p>
       </template>
     </div>

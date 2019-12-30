@@ -2,7 +2,7 @@
   <div class="preissuance">
     <div class="preissuance__block app__block">
       <h2>
-        Upload preissuance
+        {{ "preissuance.header" | globalize }}
       </h2>
 
       <div class="preissuance__form-wrp">

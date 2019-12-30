@@ -42,6 +42,8 @@ async function init () {
 
   await i18n.init()
 
+  Vue.filter('globalize', globalize)
+
   /* Logger module */
   Vue.use(VueResource)
 
@@ -77,7 +79,6 @@ async function init () {
     store,
     template: '<App/>',
   }).$mount('#app')
-
   Vue.use(Auth)
   Vue.use(params)
   Vue.use(Vuelidate)
@@ -90,7 +91,6 @@ async function init () {
   Vue.filter('pollTypeToString', pollTypeToString)
   Vue.filter('lowerCase', lowerCase)
   Vue.filter('formatVersion', formatVersion)
-  Vue.filter('globalize', globalize)
   log.setDefaultLevel(params.LOG_LEVEL)
 }
 

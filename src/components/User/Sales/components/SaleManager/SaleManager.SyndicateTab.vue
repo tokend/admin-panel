@@ -3,44 +3,49 @@
     <template v-if="isLoaded">
       <div class="sale-manager-corporate-tab__details-wrp">
         <label class="data-caption">
-          Corporate user details
+          {{ "sale-manager-syndicate-tab.label" | globalize }}
         </label>
         <ul class="key-value-list">
           <li>
-            <span>Name</span>
+            <span>{{ "sale-manager-syndicate-tab.name" | globalize }}</span>
             <span>{{ corporate.name }}</span>
           </li>
           <li>
-            <span>Headquarters</span>
+            <span>
+              {{ "sale-manager-syndicate-tab.headquarters" | globalize }}
+            </span>
             <span>{{ corporate.headquarters }}</span>
           </li>
           <li v-if="kycAvatarKey">
-            <span>Avatar</span>
+            <span>{{ "sale-manager-syndicate-tab.avatar" | globalize }}</span>
             <span>
               <user-doc-link-getter :file-key="kycAvatarKey">
-                Open file
+                {{ "sale-manager-syndicate-tab.open-file" | globalize }}
               </user-doc-link-getter>
             </span>
           </li>
           <li>
-            <span>Homepage</span>
+            <!-- eslint-disable-next-line max-len -->
+            <span>{{ "sale-manager-syndicate-tab.home-page" | globalize }}</span>
             <span>{{ corporate.homepage }}</span>
           </li>
           <li>
-            <span>Industry</span>
+            <span>{{ "sale-manager-syndicate-tab.industry" | globalize }}</span>
             <span>{{ corporate.industry }}</span>
           </li>
           <li>
-            <span>Team size</span>
+            <!-- eslint-disable-next-line max-len -->
+            <span>{{ "sale-manager-syndicate-tab.team-size" | globalize }}</span>
             <span>{{ corporate.team_size }}</span>
           </li>
           <li>
-            <span>Company</span>
+            <span>{{ "sale-manager-syndicate-tab.company" | globalize }}</span>
             <span>{{ corporate.company }}</span>
           </li>
           <li v-if="kycAvatarKey">
             <div class="sale-manager-corporate-tab__doc-view-wrp">
-              <h3>Avatar</h3>
+              <!-- eslint-disable-next-line max-len -->
+              <h3>{{ "sale-manager-syndicate-tab.header-avatar" | globalize }}</h3>
               <user-doc-getter
                 class="sale-manager-corporate-tab__doc-view"
                 :file-key="kycAvatarKey"
@@ -54,13 +59,13 @@
 
     <template v-else-if="isFailed">
       <p class="text danger">
-        An error occurred. Please try again later.
+        {{ "sale-manager-syndicate-tab.error" | globalize }}
       </p>
     </template>
 
     <template v-else>
       <p class="text">
-        Loading...
+        {{ "sale-manager-syndicate-tab.loading" | globalize }}
       </p>
     </template>
   </div>

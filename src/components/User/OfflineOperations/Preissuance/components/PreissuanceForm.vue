@@ -2,9 +2,7 @@
   <div class="preissuance-form">
     <div class="preissuance-form__header">
       <p class="preissuance-form__hint">
-        Select file(s) with preissued asset and click
-        <strong>Upload</strong>.<br>
-        <em>Note:</em> you cannot upload the same preissuance twice
+        {{ "preissuance-form.select-file-and-upload" | globalize }}
       </p>
       <a
         class="preissuance-form__link"
@@ -13,7 +11,7 @@
         rel="noopener"
       >
         <p class="preissuance-form__link-content">
-          Learn more about pre-issuance
+          {{ "preissuance-form.learn-more-about-pre-issuance" | globalize }}
           <i class="mdi mdi-open-in-new preissuance-form__link-icon" />
         </p>
       </a>
@@ -24,7 +22,7 @@
         <label
           class="preissuance-form__upload-btn app__btn app__btn--info"
           for="file-select">
-          Select File(s)
+          {{ "preissuance-form.select-files" | globalize }}
         </label>
         <input
           class="preissuance-form__upload-input"
@@ -38,7 +36,7 @@
 
       <template v-else>
         <p>
-          Loading...
+          {{ "preissuance-form.loading" | globalize }}
           <!-- TODO: better loading feedback -->
         </p>
       </template>
@@ -46,19 +44,19 @@
     <ul class="app-list preissuance-form__list" v-if="fileInfo.length">
       <div class="app-list__header">
         <span class="app-list__cell preissuance-form__id--max-width">
-          ID
+          {{ "preissuance-form.id" | globalize }}
         </span>
         <span class="app-list__cell">
-          File name
+          {{ "preissuance-form.file-name" | globalize }}
         </span>
         <span class="app-list__cell">
-          Value
+          {{ "preissuance-form.value" | globalize }}
         </span>
         <span class="app-list__cell">
-          Preissuance Asset Signer
+          {{ "preissuance-form.preissuance-asset-signer" | globalize }}
         </span>
         <span class="app-list__cell">
-          Signatures
+          {{ "preissuance-form.signatures" | globalize }}
         </span>
       </div>
       <li
@@ -97,7 +95,7 @@
     </ul>
     <template v-if="notLoadedFiles.length">
       <div class="preissuance-form__not-downloaded">
-        <h4>NOT loaded files:</h4>
+        <h4>{{ "preissuance-form.not-loaded-files" | globalize }}</h4>
         <div
           v-for="(item, index) in notLoadedFiles"
           :key="item.fileName"
@@ -113,10 +111,10 @@
         @click="upload"
         :disabled="uploadBtnDisable"
       >
-        Upload
+        {{ "preissuance-form.btn-upload" | globalize }}
       </button>
       <button class="app__btn-secondary" @click="fileInfo = []">
-        Clear
+        {{ "preissuance-form.btn-clear" | globalize }}
       </button>
     </div>
   </div>

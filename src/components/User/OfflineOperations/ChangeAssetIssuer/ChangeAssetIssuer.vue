@@ -2,7 +2,7 @@
   <div class="issuance">
     <section class="issuance__form-section">
       <div class="app__block">
-        <h2>Change asset issuer</h2>
+        <h2>{{ "change-asset-issuer.header" | globalize }}</h2>
         <div class="issuance__form-wrp">
           <change-asset-issuer-form />
         </div>
