@@ -956,6 +956,25 @@
       "amount": "Amount",
       "prise": "Prise",
       "date": "Date"
+    },
+    "order-book-table": {
+      "header-bids": "Bids",
+      "header-asks": "Asks",
+      "summary": "Summary ({{ quoteAsset }})",
+      "volume": "Volume ({{ quoteAsset }})",
+      "amount": "Amount ({{ baseAsset }})",
+      "prise": "Price ({{ quoteAsset }})",
+      "no-data": "No data yet",
+      "offer-details": "Offer details",
+      "id": "ID",
+      "type": "Type",
+      "bid": "Bid",
+      "ask": "Ask",
+      "offered-at": "Offered at",
+      "offerer": "Offerer",
+      "offered-amount": "Offered amount",
+      "prise-per-item-details-asset-code": "Price per {{ itemDetails.baseAssetCode }}",
+      "total-prise": "Total prise"
     }
   }
 }

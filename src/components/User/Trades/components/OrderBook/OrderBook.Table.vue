@@ -1,23 +1,28 @@
 <template>
   <div class="order-book-table" :class="{ 'order-book-table--rtl': isRtl }">
     <div class="app__block">
-      <h2>{{ isBids ? 'Bids' : 'Asks' }}</h2>
+      <h2 v-if="isBids">
+        {{ "order-book-table.header-bids" | globalize }}
+      </h2>
+      <h2 v-else>
+        {{ "order-book-table.header-asks" | globalize }}
+      </h2>
       <template v-if="summedList && summedList.length">
         <div class="order-book-table__table-wrp">
           <table class="order-book-table__table">
             <thead>
               <tr>
                 <template v-if="isRtl">
-                  <th>Summary ({{ quoteAsset }})</th>
-                  <th>Volume ({{ quoteAsset }})</th>
-                  <th>Amount ({{ baseAsset }})</th>
-                  <th>Price ({{ quoteAsset }})</th>
+                  <th>{{ "order-book-table.summary" | globalize }}</th>
+                  <th>{{ "order-book-table.volume" | globalize }}</th>
+                  <th>{{ "order-book-table.amount" | globalize }}</th>
+                  <th>{{ "order-book-table.price" | globalize }}</th>
                 </template>
                 <template v-else>
-                  <th>Price ({{ quoteAsset }})</th>
-                  <th>Amount ({{ baseAsset }})</th>
-                  <th>Volume ({{ quoteAsset }})</th>
-                  <th>Summary ({{ quoteAsset }})</th>
+                  <th>{{ "order-book-table.prise" | globalize }}</th>
+                  <th>{{ "order-book-table.amount" | globalize }}</th>
+                  <th>{{ "order-book-table.volume" | globalize }}</th>
+                  <th>{{ "order-book-table.summary" | globalize }}</th>
                 </template>
               </tr>
             </thead>
@@ -50,7 +55,7 @@
 
       <template v-else>
         <p class="text order-book-table__empty">
-          No data yet
+          {{ "order-book-table.no-data" | globalize }}
         </p>
       </template>
     </div>
@@ -60,51 +65,52 @@
       v-if="isDetailsShown"
       @close-request="hideItemDetails()"
       max-width="45rem">
-      <h2>Offer details</h2>
+      <h2>{{ "order-book-table.offer-details" | globalize }}</h2>
 
       <ul class="key-value-list">
         <li>
-          <span>ID</span>
+          <span>{{ "order-book-table.id" | globalize }}</span>
           <span>{{ itemDetails.id }}</span>
         </li>
         <li>
-          <span>Type</span>
+          <span>{{ "order-book-table.tupe" | globalize }}</span>
           <span>
             <template v-if="itemDetails.isBuy">
-              Bid
+              {{ "order-book-table.bid" | globalize }}
             </template>
             <template v-else>
-              Ask
+              {{ "order-book-table.ask" | globalize }}
             </template>
           </span>
         </li>
         <li>
-          <span>Offered at</span>
+          <span>{{ "order-book-table.offered-at" | globalize }}</span>
           <date-formatter
             :date="itemDetails.createdAt"
             format="DD MMM YYYY [at] HH:mm:ss"
           />
         </li>
         <li>
-          <span>Offerer</span>
+          <span>{{ "order-book-table.offerer" | globalize }}</span>
           <email-getter :account-id="itemDetails.ownerId" is-titled />
         </li>
         <li>
-          <span>Offered amount</span>
+          <span>{{ "order-book-table.offered-amount" | globalize }}</span>
           <asset-amount-formatter
             :amount="itemDetails.baseAmount"
             :asset="itemDetails.baseAssetCode"
           />
         </li>
         <li>
-          <span>Price per {{ itemDetails.baseAssetCode }}</span>
+          <!-- eslint-disable-next-line max-len -->
+          <span>{{ "order-book-table.prise-per-item-details-asset-code" | globalize }}</span>
           <asset-amount-formatter
             :amount="itemDetails.price"
             :asset="itemDetails.quoteAssetCode"
           />
         </li>
         <li>
-          <span>Total price</span>
+          <span>{{ "order-book-table.total-prise" | globalize }}</span>
           <asset-amount-formatter
             :amount="itemDetails.quoteAmount"
             :asset="itemDetails.quoteAssetCode"
