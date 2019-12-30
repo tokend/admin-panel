@@ -1,7 +1,7 @@
 <template>
   <div class="sale-list">
     <h2>
-      Sale list
+      {{ "sale-list.header" | globalize }}
     </h2>
 
     <div class="sale-list__filters-wrp">
@@ -23,13 +23,13 @@
           label="State"
           v-model="filters.state">
           <option :value="SALE_STATES.open">
-            Open
+            {{ "sale-list.select-field-open" | globalize }}
           </option>
           <option :value="SALE_STATES.closed">
-            Closed
+            {{ "sale-list.select-field-closed" | globalize }}
           </option>
           <option :value="SALE_STATES.cancelled">
-            Cancelled
+            {{ "sale-list.select-field-cancelled" | globalize }}
           </option>
         </select-field>
         <input-date-field
@@ -51,16 +51,16 @@
           v-model="filters.type">
           <option :value="''" />
           <option :value="SALE_TYPES.basicSale">
-            Basic
+            {{ "sale-list.basic" | globalize }}
           </option>
           <option :value="SALE_TYPES.crowdFunding">
-            Crowdfunding
+            {{ "sale-list.crowdfunding" | globalize }}
           </option>
           <option :value="SALE_TYPES.fixedPrice">
-            Fixed price
+            {{ "sale-list.fixed-prise" | globalize }}
           </option>
           <option :value="SALE_TYPES.immediate">
-            Immediate
+            {{ "sale-list.immediate" | globalize }}
           </option>
         </select-field>
         <!-- eslint-enable max-len -->
@@ -75,13 +75,13 @@
               <!-- empty -->
             </span>
             <span class="app-list__cell">
-              Name
+              {{ "sale-list.name" | globalize }}
             </span>
             <span class="app-list__cell">
-              State
+              {{ "sale-list.state" | globalize }}
             </span>
             <span class="app-list__cell">
-              Owner
+              {{ "sale-list.owner" | globalize }}
             </span>
           </div>
 
@@ -105,15 +105,15 @@
             </span>
             <span class="app-list__cell">
               <template v-if="item.saleState.value === SALE_STATES.open">
-                Open
+                {{ "sale-list.open" | globalize }}
               </template>
               <template v-else-if="item.saleState.value === SALE_STATES.closed">
-                Closed
+                {{ "sale-list.closed" | globalize }}
               </template>
               <template
                 v-else-if="item.saleState.value === SALE_STATES.cancelled"
               >
-                Cancelled
+                {{ "sale-list.cancelled" | globalize }}
               </template>
             </span>
             <span class="app-list__cell">
@@ -130,10 +130,10 @@
         <ul class="app-list">
           <li class="app-list__li-like">
             <template v-if="isLoaded">
-              Nothing here yet
+              {{ "sale-list.nothing-here-yer" | globalize }}
             </template>
             <template v-else>
-              Loading...
+              {{ "sale-list.loading" | globalize }}
             </template>
           </li>
         </ul>
