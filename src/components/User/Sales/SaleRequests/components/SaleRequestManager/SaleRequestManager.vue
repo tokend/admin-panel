@@ -1,6 +1,6 @@
 <template>
   <div class="sale-rm">
-    <h2>Manage sale request</h2>
+    <h2>{{ "sale-request-manager.header" | globalize }}</h2>
 
     <div class="app__block">
       <template v-if="request.isReady">
@@ -27,14 +27,14 @@
             @click="approve"
             :disabled="isSubmitting"
           >
-            Approve
+            {{ "sale-request-manager.btn-approve" | globalize }}
           </button>
           <button
             class="app__btn app__btn--danger"
             :disabled="isSubmitting"
             @click="showRejectForm"
           >
-            Reject
+            {{ "sale-request-manager.btn-reject" | globalize }}
           </button>
         </div>
       </template>
@@ -42,10 +42,10 @@
       <template v-else>
         <p>
           <template v-if="request.isFailed">
-            An error occurred
+            {{ "sale-request-manager.error" | globalize }}
           </template>
           <template v-else>
-            Loading...
+            {{ "sale-request-manager.loading" | globalize }}
           </template>
         </p>
       </template>
@@ -57,7 +57,7 @@
       max-width="40rem"
     >
       <p class="text">
-        Reject reason
+        {{ "sale-request-manager.reject-reason" | globalize }}
       </p>
 
       <form
@@ -93,14 +93,14 @@
           form="sale-reject-form"
           :disabled="formMixin.isDisabled"
         >
-          Reject
+          {{ "sale-request-manager.btn-reject" | globalize }}
         </button>
         <button
           class="app__btn-secondary"
           @click="hideRejectForm"
           :disabled="formMixin.isDisabled"
         >
-          Cancel
+          {{ "sale-request-manager.brn-cancel" | globalize }}
         </button>
       </div>
     </modal>
