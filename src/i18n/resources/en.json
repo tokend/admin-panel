@@ -1006,6 +1006,12 @@
       "account-role": "Account role",
       "account-state": "Account state",
       "block-reason": "Block reason"
+    },
+    "user-details-accredited-kyc-viewer": {
+      "user-accredited-kyc": "Current user is applying for Accredited KYC",
+      "ensure-proof-document": "Please ensure the user attached a valid proof document",
+      "proof-document": "Proof document",
+      "open-file": "Open file"
     }
   }
 }
