@@ -1058,6 +1058,18 @@
       "all-tasks": "All tasks: {{ request.allTasks }}",
       "tasks-add": "Tasks to add",
       "tasks-remove": "Tasks to remove"
+    },
+    "user-details": {
+      "header": "User details",
+      "current-request-state": "Current request state",
+      "role-set": "Role to set",
+      "reason": "Reason: {{ requestToReview.rejectReason }}",
+      "external-details": "External details (provided by external services)",
+      "error": "An error occurred. Please try again later.",
+      "loading": "Loading...",
+      "previous-approved-kys-request": "Previous approved KYC Request",
+      "latest-request": "Latest request",
+      "create": "Create a '{{ requestToReview.accountRoleToSet | roleIdToString }}' account: {{ requestToReview.state }}"
     }
   }
 }
