@@ -1045,6 +1045,11 @@
       "btn-perm-reject": "Reject permanently",
       "btn-form-reject": "Reject",
       "btn-cancel": "Cancel"
+    },
+    "user-details-reset": {
+      "btn-reset-unverified": "Reset to unverified",
+      "btn-reset": "Reset",
+      "btn-cancel": "Cancel"
     }
   }
 }
