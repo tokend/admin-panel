@@ -11,7 +11,7 @@
       @click="showResetModal"
       :disabled="isPending"
     >
-      Reset to unverified
+      {{ "user-details-reset.btn-reset-unverified" | globalize }}
     </button>
 
     <modal
@@ -45,13 +45,13 @@
           class="app__btn app__btn--danger"
           form="user-reset-form"
         >
-          Reset
+          {{ "user-details-reset.btn-reset" | globalize }}
         </button>
         <button
           class="app__btn-secondary"
           @click="hideResetModal"
         >
-          Cancel
+          {{ "user-details-reset.btn-cancel" | globalize }}
         </button>
       </div>
     </modal>
