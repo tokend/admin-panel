@@ -1,20 +1,20 @@
 <template>
   <div class="user-details-task-manager">
     <h3 class="user-details-task-manager__title">
-      Manage tasks (advanced)
+      {{ "user-details-tasks-manager.manage-tasks" | globalize }}
     </h3>
 
     <h4 class="user-details-task-manager__section-heading">
-      Current request tasks
+      {{ "user-details-tasks-manager.current-request-tasks" | globalize }}
     </h4>
 
     <div class="user-details-task-manager__section-content">
-      <p>Pending tasks: {{ request.pendingTasks }}</p>
-      <p>All tasks: {{ request.allTasks }}</p>
+      <p>{{ "user-details-tasks-manager.pending-tasks" | globalize }}</p>
+      <p>{{ "user-details-tasks-manager.all-tasks" | globalize }}</p>
     </div>
 
     <h4 class="user-details-task-manager__section-heading">
-      Tasks to add
+      {{ "user-details-tasks-manager.tasks-add" | globalize }}
     </h4>
 
     <div class="user-details-task-manager__section-content">
@@ -58,7 +58,7 @@
     </div>
 
     <h4 class="user-details-task-manager__section-heading">
-      Tasks to remove
+      {{ "user-details-tasks-manager.tasks-remove" | globalize }}
     </h4>
 
     <div class="user-details-task-manager__section-content">
