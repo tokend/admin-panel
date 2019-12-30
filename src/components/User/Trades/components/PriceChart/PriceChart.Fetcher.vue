@@ -15,22 +15,21 @@
 
     <template v-else-if="isLoaded">
       <div class="app__block price-chart__empty">
-        <p>No chart data yet</p>
+        <p>{{ "price-chart-fetcher.no-chart-data-yet" | globalize }}</p>
       </div>
     </template>
 
     <template v-else-if="isFailed">
       <div class="app__block price-chart__empty">
         <p>
-          An error occurred while fetching chart data.
-          Please try again later
+          {{ "price-chart-fetcher.error-fetch" | globalize }}
         </p>
       </div>
     </template>
 
     <template v-else>
       <div class="app__block price-chart__empty">
-        <p>Fetching chart data...</p>
+        <p>{{ "price-chart-fetcher.fetching-chart-data" | globalize }}</p>
       </div>
     </template>
   </div>
