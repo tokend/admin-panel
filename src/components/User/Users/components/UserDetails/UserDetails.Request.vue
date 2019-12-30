@@ -15,7 +15,7 @@
           @click="approve"
           :disabled="isPending"
         >
-          Approve
+          {{ "user-details-request.btn-approve" | globalize }}
         </button>
 
         <button
@@ -23,7 +23,7 @@
           @click="showRejectModal"
           :disabled="isPending"
         >
-          Reject
+          {{ "user-details-request.btn-reject" | globalize }}
         </button>
       </div>
     </template>
@@ -34,7 +34,7 @@
         @click="reject(true)"
         :disabled="isPending"
       >
-        Reject permanently
+        {{ "user-details-request.btn-perm-reject" | globalize }}
       </button>
     </template>
 
@@ -69,13 +69,13 @@
           class="app__btn app__btn--danger"
           form="user-request-reject-form"
         >
-          Reject
+          {{ "user-details-request.btn-form-reject" | globalize }}
         </button>
         <button
           class="app__btn-secondary"
           @click="hideRejectModal"
         >
-          Cancel
+          {{ "user-details-request.btn-cancel" | globalize }}
         </button>
       </div>
     </modal>
