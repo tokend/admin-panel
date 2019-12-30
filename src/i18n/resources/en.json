@@ -998,6 +998,14 @@
     },
     "trades": {
       "link-trades": "Trades"
+    },
+    "user-details-account": {
+      "header": "Account information",
+      "mail": "Email",
+      "account-id": "Account Id",
+      "account-role": "Account role",
+      "account-state": "Account state",
+      "block-reason": "Block reason"
     }
   }
 }
