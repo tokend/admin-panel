@@ -1,7 +1,7 @@
 <template>
   <div class="sale-rl">
     <h2>
-      Sale request list
+      {{ "sale-request-list.header" | globalize }}
     </h2>
 
     <div class="sale-rl__filters-wrp">
@@ -12,19 +12,19 @@
           v-model="filters.state"
         >
           <option :value="REQUEST_STATES.pending">
-            Pending
+            {{ "sale-request-list.pending" | globalize }}
           </option>
           <option :value="REQUEST_STATES.cancelled">
-            Cancelled
+            {{ "sale-request-list.cancelled" | globalize }}
           </option>
           <option :value="REQUEST_STATES.approved">
-            Approved
+            {{ "sale-request-list.approved" | globalize }}
           </option>
           <option :value="REQUEST_STATES.rejected">
-            Rejected
+            {{ "sale-request-list.rejected" | globalize }}
           </option>
           <option :value="REQUEST_STATES.permanentlyRejected">
-            Permanently rejected
+            {{ "sale-request-list.perm-rejected" | globalize }}
           </option>
         </select-field>
 
@@ -46,13 +46,13 @@
               <!-- empty -->
             </span>
             <span class="app-list__cell">
-              Name
+              {{ "sale-request-list.name" | globalize }}
             </span>
             <span class="app-list__cell">
-              Hard cap
+              {{ "sale-request-list.hard-cap" | globalize }}
             </span>
             <span class="app-list__cell">
-              Requestor
+              {{ "sale-request-list.requestor" | globalize }}
             </span>
           </div>
 
@@ -94,10 +94,10 @@
         <ul class="app-list">
           <li class="app-list__li-like">
             <template v-if="isLoaded">
-              Nothing here yet
+              {{ "sale-request-list.nothing-here-yet" | globalize }}
             </template>
             <template v-else>
-              Loading...
+              {{ "sale-request-list.loading" | globalize }}
             </template>
           </li>
         </ul>
