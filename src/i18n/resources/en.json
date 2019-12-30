@@ -874,6 +874,14 @@
       "cancelled": "Cancelled",
       "nothing-here-yet": "Nothing here yet",
       "loading": "Loading..."
+    },
+    "sale-request-manager-description-tab": {
+      "label": "Sale video",
+      "no-video": "(No video provided)",
+      "sale-description": "Sale description",
+      "not-provided-yet": "(Not provided yet)",
+      "error": "An error occurred. Please try again later.",
+      "loading": "Loading..."
     }
   }
 }
