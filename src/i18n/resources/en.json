@@ -926,6 +926,19 @@
       "loading": "Loading...",
       "reject-reason": "Reject reason",
       "btn-cancel": "Cancel"
-    }
+    },
+    "sale-request-list": {
+      "header": "Sale request list",
+      "pending": "Pending",
+      "cancelled": "Cancelled",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "perm-rejected": "Permanently rejected",
+      "name": "Name",
+      "hard-cap": "Hard cap",
+      "requestor": "Requestor",
+      "nothing-here-yet": "Nothing here yet",
+      "loading": "Loading..."
+    },
   }
 }
