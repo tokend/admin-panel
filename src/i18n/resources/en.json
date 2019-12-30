@@ -917,6 +917,15 @@
       "sale-logo": "Sale logo",
       "yes": "Yes",
       "no": "No"
+    },
+    "sale-request-manager": {
+      "header": "Manage sale request",
+      "btn-approve": "Approve",
+      "btn-reject": "Reject",
+      "error": "An error occurred",
+      "loading": "Loading...",
+      "reject-reason": "Reject reason",
+      "btn-cancel": "Cancel"
     }
   }
 }
