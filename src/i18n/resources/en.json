@@ -975,6 +975,11 @@
       "offered-amount": "Offered amount",
       "prise-per-item-details-asset-code": "Price per {{ itemDetails.baseAssetCode }}",
       "total-prise": "Total prise"
+    },
+    "price-chart-fetcher": {
+      "no-chart-data-yet": "No chart data yet",
+      "error-fetch": "An error occurred while fetching asset. Please try again later.",
+      "fetching-chart-data": "Fetching chart data..."
     }
   }
 }
