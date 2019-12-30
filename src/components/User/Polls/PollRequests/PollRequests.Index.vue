@@ -1,6 +1,6 @@
 <template>
   <div class="poll-requests-index">
-    <h2>Browse poll requests</h2>
+    <h2>{{ "poll-requests-index.header" | globalize }}</h2>
 
     <div class="poll-requests-index__list-wrp">
       <poll-request-list />

@@ -4,7 +4,7 @@
     :title="isTitled && (email || accountId || balanceId)"
   >
     <template v-if="isMasterAccount">
-      {{ "email-getter.Master" | globalize }}
+      {{ "email-getter.master-acc" | globalize }}
     </template>
 
     <template v-else-if="isLoading">

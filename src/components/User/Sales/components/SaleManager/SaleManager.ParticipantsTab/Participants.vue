@@ -17,7 +17,7 @@
 
         <template v-else>
           <option disabled>
-            No options
+            {{ "participants.no-options" | globalize }}
           </option>
         </template>
       </select-field>
@@ -27,7 +27,7 @@
       <table class="participants__table">
         <thead>
           <tr>
-            <th>Investor</th>
+            <th>{{ "participants.investor" | globalize }}</th>
             <th>{{ filters.quoteAsset }} invested</th>
           </tr>
         </thead>
@@ -42,19 +42,19 @@
 
     <template v-else-if="isLoaded && !participants.length">
       <p class="text">
-        No investments yet.
+        {{ "participants.no-investments-yet" | globalize }}
       </p>
     </template>
 
     <template v-else-if="isFailed">
       <p class="text danger">
-        An error occurred. Please try again later.
+        {{ "participants.error" | globalize }}
       </p>
     </template>
 
     <template v-else>
       <p>
-        Loading...
+        {{ "participants.loading" | globalize }}
       </p>
     </template>
   </div>

@@ -30,13 +30,13 @@
         <div class="app-list">
           <div class="app-list__header">
             <span class="app-list__cell">
-              Email
+              {{ "kyc-recovery-request-list.mail" | globalize }}
             </span>
             <span class="app-list__cell app-list__cell--right">
-              State
+              {{ "kyc-recovery-request-list.state" | globalize }}
             </span>
             <span class="app-list__cell app-list__cell--right">
-              Last updated
+              {{ "kyc-recovery-request-list.last-upd" | globalize }}
             </span>
           </div>
           <button
@@ -65,14 +65,14 @@
           <template v-if="isLoading">
             <p class="app-list__li">
               <span class="app-list__cell app-list__cell--center">
-                Loading...
+                {{ "kyc-recovery-request-list.loading" | globalize }}
               </span>
             </p>
           </template>
           <template v-else>
             <p class="app-list__li">
               <span class="app-list__cell app-list__cell--center">
-                Nothing here yet
+                {{ "kyc-recovery-request-list.fail-loading" | globalize }}
               </span>
             </p>
           </template>

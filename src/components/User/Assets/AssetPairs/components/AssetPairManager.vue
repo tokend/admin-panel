@@ -54,7 +54,7 @@
         @submit.prevent="isFormValid('attributesForm') && showConfirmation()"
         class="asset-pair-manager__form app__block"
       >
-        <h2>{{ "asset-pair-manager.manager-asset-pait" }}</h2>
+        <h2>{{ "asset-pair-manager.manager-asset-pair" | globalize }}</h2>
 
         <div class="asset-pair-manager__form-row app__form-row">
           <input-field

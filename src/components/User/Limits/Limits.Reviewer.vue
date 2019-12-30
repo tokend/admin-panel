@@ -7,12 +7,12 @@
       <span class="limits-reviewer__back-btn-inner">
         <i class="mdi mdi-chevron-left" />
       </span>
-      Back
+      {{ "limits-reviewer.btn-back" | globalize }}
     </button>
     <template v-if="isLoaded && desiredLimitDetails">
       <div class="limits-reviewer__card">
         <h3 class="limits-reviewer__heading">
-          Request information
+          {{ "limits-reviewer.request-information" | globalize }}
         </h3>
         <div class="limits-reviewer__content-section">
           <detail
@@ -50,7 +50,7 @@
         <div class="limits-reviewer__limits-wrapper">
           <div class="limits-review__limits-item">
             <h3 class="limits-reviewer__heading">
-              Current limits
+              {{ "limits-reviewer.current-limits" | globalize }}
             </h3>
             <div class="limits-reviewer__content-section">
               <user-limits
@@ -61,7 +61,7 @@
           </div>
           <div class="limits-review__limits-item">
             <h3 class="limits-reviewer__heading">
-              Desired limits
+              {{ "limits-reviewer.desired-limits" | globalize }}
             </h3>
             <div class="limits-reviewer__content-section">
               <user-limits
@@ -75,7 +75,7 @@
       <template v-if="desiredLimitDetails.requestType === 'docsUploading'">
         <div class="limits-reviewer__uploaded-docs-list-wrapper">
           <h3 class="limits-reviewer__heading">
-            Uploaded documents
+            {{ "limits-reviewer.uploaded-documents" | globalize }}
           </h3>
           <uploaded-docs-list
             v-if="uploadedDocuments"
@@ -95,7 +95,7 @@
           @click="approveRequest"
           :disabled="isPending"
         >
-          Approve
+          {{ "limits-reviewer.btn-approve" | globalize }}
         </button>
         <button
           class="app__btn"
@@ -104,25 +104,25 @@
             desiredLimitDetails.requestType === 'docsUploading' ||
             request.state === REQUEST_STATES.pending"
         >
-          Request docs
+          {{ "limits-reviewer.btn-request-docs" | globalize }}
         </button>
         <button
           class="app__btn-secondary"
           @click="showRejectModal"
           :disabled="isPending"
         >
-          Reject
+          {{ "limits-reviewer.btn-reject" | globalize }}
         </button>
       </div>
     </template>
     <template v-else>
       <template v-if="!isLoaded">
         <p>
-          Loading...
+          {{ "limits-reviewer.loaging" | globalize }}
         </p>
       </template>
       <template v-else>
-        <h3>Something went wrong....</h3>
+        <h3>{{ "limits-reviewer.fail-load" | globalize }}</h3>
       </template>
     </template>
     <template v-if="isRequiringDocs">
@@ -157,14 +157,14 @@
             :disabled="isPending"
             @click="addMoreDoc"
           >
-            Add more
+            {{ "limits-reviewer.btn-add-more" | globalize }}
           </button>
           <button
             class="app__btn"
             :disabled="isPending"
             @click="requireDocsRequest"
           >
-            Submit
+            {{ "limits-reviewer.btn-submit" | globalize }}
           </button>
         </div>
       </div>
@@ -200,13 +200,13 @@
           class="app__btn"
           form="limits-reviewer__reject-form"
         >
-          Reject
+          {{ "limits-reviewer.btn-reject" | globalize }}
         </button>
         <button
           class="app__btn-secondary"
           @click="hideRejectModal"
         >
-          Cancel
+          {{ "limits-reviewer.btn-cancel" | globalize }}
         </button>
       </div>
     </modal>

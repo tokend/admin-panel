@@ -97,7 +97,7 @@
             class="app__btn"
             :disabled="formMixin.isDisabled || !isIssuanceAllowed"
           >
-            {{ "issuance-form.app-isue" | globalize }}
+            {{ "issuance-form.app-issue" | globalize }}
           </button>
         </div>
       </form>

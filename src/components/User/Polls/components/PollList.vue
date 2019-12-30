@@ -1,7 +1,7 @@
 <template>
   <div class="poll-list">
     <h2>
-      Poll list
+      {{ "poll-list.header" | globalize }}
     </h2>
 
     <div class="poll-list__filters-wrp">
@@ -12,16 +12,16 @@
           v-model="filters.state"
         >
           <option :value="POLL_STATES.open">
-            Open
+            {{ "poll-list.select-field-open" | globalize }}
           </option>
           <option :value="POLL_STATES.passed">
-            Passed
+            {{ "poll-list.select-field-passed" | globalize }}
           </option>
           <option :value="POLL_STATES.failed">
-            Failed
+            {{ "poll-list.select-field-failed" | globalize }}
           </option>
           <option :value="POLL_STATES.canceled">
-            Cancelled
+            {{ "poll-list.select-field-cancelled" | globalize }}
           </option>
         </select-field>
 
@@ -56,15 +56,15 @@
             </span>
 
             <span class="app-list__cell">
-              State
+              {{ "poll-list.state" | globalize }}
             </span>
 
             <span class="app-list__cell">
-              Owner
+              {{ "poll-list.owner" | globalize }}
             </span>
 
             <span class="app-list__cell">
-              Question
+              {{ "poll-list.question" | globalize }}
             </span>
           </div>
 
@@ -80,20 +80,20 @@
 
             <span class="app-list__cell">
               <template v-if="item.pollState.value === POLL_STATES.open">
-                Open
+                {{ "poll-list.template-open" | globalize }}
               </template>
 
               <template v-else-if="item.pollState.value === POLL_STATES.passed">
-                Passed
+                {{ "poll-list.template-passed" | globalize }}
               </template>
 
               <template v-else-if="item.pollState.value === POLL_STATES.passed">
-                Failed
+                {{ "poll-list.template-failed" | globalize }}
               </template>
 
               <!-- eslint-disable-next-line max-len -->
               <template v-else-if="item.pollState.value === POLL_STATES.canceled">
-                Canceled
+                {{ "poll-list.template-canceled" | globalize }}
               </template>
             </span>
 
@@ -118,11 +118,11 @@
         <ul class="app-list">
           <li class="app-list__li-like">
             <template v-if="isLoaded">
-              Nothing here yet
+              {{ "poll-list.nothing-here-yet" | globalize }}
             </template>
 
             <template v-else>
-              Loading...
+              {{ "poll-list.loading" | globalize }}
             </template>
           </li>
         </ul>

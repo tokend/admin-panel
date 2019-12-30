@@ -1,7 +1,7 @@
 <template>
   <div class="sale-manager-description-tab">
     <label class="data-caption">
-      Sale video
+      {{ "sale-manager-description-tab.label-sale-video" | globalize }}
     </label>
     <template v-if="sale.details.youtubeVideoId">
       <iframe
@@ -13,12 +13,12 @@
 
     <template v-else>
       <p class="text">
-        (No video provided)
+        {{ "sale-manager-description-tab.no-video-provided" | globalize }}
       </p>
     </template>
 
     <label class="data-caption">
-      Sale description
+      {{ "sale-manager-description-tab.sale-description" | globalize }}
     </label>
     <template v-if="description">
       <div class="sale-manager-description-tab__description-wrp">
@@ -28,19 +28,19 @@
 
     <template v-else-if="isLoaded">
       <p class="text">
-        (Not provided yet)
+        {{ "sale-manager-description-tab.not-provided-yet" | globalize }}
       </p>
     </template>
 
     <template v-else-if="isFailed">
       <p class="text danger">
-        An error occurred. Please try again later.
+        {{ "sale-manager-description-tab.error" | globalize }}
       </p>
     </template>
 
     <template v-else>
       <p class="text">
-        Loading...
+        {{ "sale-manager-description-tab.loading" | globalize }}
       </p>
     </template>
   </div>

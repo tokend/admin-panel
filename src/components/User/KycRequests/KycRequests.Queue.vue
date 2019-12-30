@@ -5,10 +5,10 @@
       class="kyc-requests-queue__warning-msg"
     >
       <span class="kyc-requests-queue__header-title">
-        Your actions will be lost after page reload
+        {{ "kyc-requests-queue.lost-actions-after-reload" | globalize }}
       </span>
       <span class="kyc-requests-queue__header-subtitle">
-        Please, do not reload the page until you finish your review
+        {{ "kyc-requests-queue.please-not-reload-page" | globalize }}
       </span>
     </div>
 
@@ -23,7 +23,7 @@
         label="Role to set"
       >
         <option :value="ALL_ROLES_FILTER">
-          All
+          {{ "kyc-requests-queue.all-roles" | globalize }}
         </option>
         <option
           v-for="role in verifiedAccountRoles"
@@ -47,7 +47,8 @@
             </button>
             <p class="kyc-requests-queue__nav-title">
               {{ currentRequestIndex + 1 }} /
-              {{ pendingRequests.length }} requests
+              <!-- eslint-disable-next-line max-len -->
+              {{ pendingRequests.length }} {{ "kyc-requests-queue.requests" | globalize }}
             </p>
             <button
               class="kyc-requests-queue__nav-btn"
@@ -65,7 +66,7 @@
             class="kyc-requests-queue__current-decision"
           >
             <p class="kyc-requests-queue__current-decision-title">
-              Current decision
+              {{ "kyc-requests-queue.current-decision" | globalize }}
             </p>
             <review-decision-viewer :decision="currentDecision" />
           </div>
@@ -92,13 +93,13 @@
       <div class="app__block">
         <template v-if="isLoading">
           <p>
-            <span>Loading...</span>
+            <span>{{ "kyc-requests-queue.loading" | globalize }}</span>
           </p>
         </template>
 
         <template v-else>
           <p>
-            <span>No requests to review yet</span>
+            <span>{{ "kyc-requests-queue.no-request" | globalize }}</span>
           </p>
         </template>
       </div>

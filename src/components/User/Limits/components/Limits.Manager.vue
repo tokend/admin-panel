@@ -1,7 +1,7 @@
 <template>
   <div class="limits-manager__wrapper">
     <div class="limits-manager">
-      <h2>Limits management</h2>
+      <h2>{{ "limits-manager.header" | globalize }}</h2>
       <div
         class="limits-manager__filters"
         :class="{
@@ -29,13 +29,13 @@
           v-model="filters.scope"
         >
           <option :value="SCOPE_TYPES.global">
-            Global
+            {{ "limits-manager.global" | globalize }}
           </option>
           <option :value="SCOPE_TYPES.accountRole">
-            Account type
+            {{ "limits-manager.account-type" | globalize }}
           </option>
           <option :value="SCOPE_TYPES.account">
-            Account
+            {{ "limits-manager.account" | globalize }}
           </option>
         </select-field>
         <select-field
@@ -45,13 +45,13 @@
           v-if="filters.scope === SCOPE_TYPES.accountRole"
         >
           <option :value="kvAccountRoles.general">
-            General
+            {{ "limits-manager.general" | globalize }}
           </option>
           <option :value="kvAccountRoles.unverified">
-            Not verified
+            {{ "limits-manager.not-verifed" | globalize }}
           </option>
           <option :value="kvAccountRoles.corporate">
-            Corporate
+            {{ "limits-manager.corporate" | globalize }}
           </option>
         </select-field>
         <input-field
@@ -75,7 +75,7 @@
           <template v-if="limits.payment">
             <div class="limits-manager__limits-list">
               <h3 class="limits-manager__content-title">
-                Payment limits
+                {{ "limits-manager.payment-limits" | globalize }}
               </h3>
               <limits-update-form
                 :limits="limits.payment"
@@ -90,7 +90,7 @@
           <template v-if="limits.withdrawal">
             <div class="limits-manager__limits-list">
               <h3 class="limits-manager__content-title">
-                Withdrawal limits
+                {{ "limits-manager.withdrawal-limits" | globalize }}
               </h3>
               <limits-update-form
                 :limits="limits.withdrawal"
@@ -105,7 +105,7 @@
           <template v-if="limits.deposit">
             <div class="limits-manager__limits-list">
               <h3 class="limits-manager__content-title">
-                Deposit limits
+                {{ "limits-manager.deposit-limits" | globalize }}
               </h3>
               <limits-update-form
                 :limits="limits.deposit"
@@ -119,23 +119,23 @@
       </template>
       <template v-else-if="isAddressLoading">
         <div class="limits-manager__message-wrp">
-          <p>Loading ...</p>
+          <p>{{ "limits-manager.loading" | globalize }}</p>
         </div>
       </template>
       <template v-else-if="!filters.account">
         <div class="limits-manager__message-wrp">
-          <p>Please specify account</p>
+          <p>{{ "limits-manager.please-specify-account" | globalize }}</p>
         </div>
       </template>
       <template v-else>
         <div class="limits-manager__message-wrp">
-          <p>Such account not found</p>
+          <p>{{ "limits-manager.such-account-not-found" | globalize }}</p>
         </div>
       </template>
     </div>
 
     <p v-else>
-      Loading the limits…
+      {{ "limits-manager.load-limits" | globalize }}
     </p>
   </div>
 </template>

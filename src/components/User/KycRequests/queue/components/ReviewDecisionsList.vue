@@ -4,22 +4,22 @@
       <div class="app-list">
         <div class="app-list__header">
           <span class="app-list__cell">
-            Email
+            {{ "review-decisions-list.email" | glabalize }}
           </span>
           <span class="app-list__cell">
-            Role to set
+            {{ "review-decisions-list.role-to-set" | glabalize }}
           </span>
           <span class="app-list__cell">
-            State
+            {{ "review-decisions-list.state" | glabalize }}
           </span>
           <span class="app-list__cell">
-            Reason
+            {{ "review-decisions-list.reason" | glabalize }}
           </span>
           <span class="app-list__cell">
-            Tasks to add
+            {{ "review-decisions-list.tasks-to-add" | glabalize }}
           </span>
           <span class="app-list__cell">
-            Tasks to remove
+            {{ "review-decisions-list.tasks-to-remove" | glabalize }}
           </span>
         </div>
 
@@ -41,14 +41,14 @@
           : 'No ready for review decisions yet'"
         @click="submitReview"
       >
-        Submit
+        {{ "review-decisions-list.btn-submit" | glabalize }}
       </button>
 
       <button
         class="app__btn review-decisions-list__btn"
         @click="resetReview"
       >
-        Start new review
+        {{ "review-decisions-list.btn-start-new-review" | glabalize }}
       </button>
     </div>
   </div>

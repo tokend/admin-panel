@@ -9,10 +9,10 @@
         >
           <option value="''" />
           <option :value="kvAccountRoles.general">
-            General
+            {{ "kyc-request-list.general" | globalize }}
           </option>
           <option :value="kvAccountRoles.corporate">
-            Сorporate
+            {{ "kyc-request-list.corporate" | globalize }}
           </option>
         </select-field>
         <select-field
@@ -35,16 +35,16 @@
           label="Pending tasks"
         >
           <option :value="kvChangeRoleTasks.submitAutoVerification">
-            Submit auto verification
+            {{ "kyc-request-list.submit-auto-verification" | globalize }}
           </option>
           <option :value="kvChangeRoleTasks.completeAutoVerification">
-            Complete auto verification
+            {{ "kyc-request-list.complete-auto-verification" | globalize }}
           </option>
           <option :value="kvChangeRoleTasks.manualReviewRequired">
-            Manual review requried
+            {{ "kyc-request-list.manual-review-requried" | globalize }}
           </option>
           <option value="''">
-            Any
+            {{ "kyc-request-list.any" | globalize }}
           </option>
         </select-field>
 
@@ -62,16 +62,16 @@
         <div class="app-list">
           <div class="app-list__header">
             <span class="app-list__cell">
-              Email
+              {{ "kyc-request-list.email" | globalize }}
             </span>
             <span class="app-list__cell app-list__cell--right">
-              State
+              {{ "kyc-request-list.state" | globalize }}
             </span>
             <span class="app-list__cell app-list__cell--right">
-              Last updated
+              {{ "kyc-request-list.last-updated" | globalize }}
             </span>
             <span class="app-list__cell app-list__cell--right">
-              Role to set
+              {{ "kyc-request-list.role-to-set" | globalize }}
             </span>
           </div>
           <button
@@ -103,14 +103,14 @@
           <template v-if="isLoading">
             <p class="app-list__li">
               <span class="app-list__cell app-list__cell--center">
-                Loading...
+                {{ "kyc-request-list.loading" | globalize }}
               </span>
             </p>
           </template>
           <template v-else>
             <p class="app-list__li">
               <span class="app-list__cell app-list__cell--center">
-                Nothing here yet
+                {{ "kyc-request-list.fail-load" | globalize }}
               </span>
             </p>
           </template>

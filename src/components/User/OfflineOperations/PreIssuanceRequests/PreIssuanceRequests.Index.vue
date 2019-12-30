@@ -1,7 +1,7 @@
 <template>
   <div class="preissuance-requests-index">
     <div class="app__block">
-      <h2>Preissuance Requests</h2>
+      <h2>{{ "pre-issuanc-requests-index.header" | globalize }}</h2>
 
       <select-field
         class="preissuance-requests-index__asset-select"

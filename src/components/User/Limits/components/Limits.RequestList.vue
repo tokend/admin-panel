@@ -4,16 +4,16 @@
       <ul class="app-list">
         <div class="app-list__header">
           <span class="app-list__cell">
-            Date
+            {{ "limits-request-list.date" | globalize }}
           </span>
           <span class="app-list__cell">
-            Request type
+            {{ "limits-request-list.request-type" | globalize }}
           </span>
           <span class="app-list__cell">
-            Account Id
+            {{ "limits-request-list.account-id" | globalize }}
           </span>
           <span class="app-list__cell">
-            Account email
+            {{ "limits-request-list.account-email" | globalize }}
           </span>
         </div>
 
@@ -59,10 +59,10 @@
       <ul class="app-list">
         <li class="app-list__li-like">
           <template v-if="isLoading">
-            Nothing here yet
+            {{ "limits-request-list.nothing-here-yet" | globalize }}
           </template>
           <template v-else>
-            Loading...
+            {{ "limits-request-list.loading" | globalize }}
           </template>
         </li>
       </ul>
