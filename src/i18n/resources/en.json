@@ -1081,6 +1081,15 @@
       "state": "State",
       "loading": "Loading...",
       "nothing-here-yet": "Nothing here yet"
+    },
+    "user-op-list": {
+      "header": "Operations",
+      "type": "Type",
+      "date": "Date",
+      "source": "Source",
+      "counterparty": "Counterparty",
+      "loading": "Loading...",
+      "nothing-here-yet": "Nothing here yet"
     }
   }
 }
