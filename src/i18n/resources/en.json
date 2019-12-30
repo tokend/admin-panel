@@ -943,6 +943,19 @@
     "sales": {
       "link-sales": "Sales",
       "link-sale-requests": "Sale requests"
+    },
+    "order-book-history": {
+      "header": "Trade history",
+      "thead-prise": "Price ({{ quoteAsset }})",
+      "thead-amount": "Amount ({{ baseAsset }})",
+      "thead-total-cost": "Total cost ({{ quoteAsset }})",
+      "thead-date": "Date",
+      "no-data": "No data yet",
+      "deal-details": "Deal details",
+      "deal-id": "Deal ID",
+      "amount": "Amount",
+      "prise": "Prise",
+      "date": "Date"
     }
   }
 }

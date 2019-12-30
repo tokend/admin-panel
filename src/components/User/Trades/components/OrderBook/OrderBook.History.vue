@@ -1,16 +1,16 @@
 <template>
   <div class="order-book-history">
     <div class="app__block">
-      <h2>Trade history</h2>
+      <h2>{{ "order-book-history.header" | globalize }}</h2>
       <template v-if="list && list.length">
         <div class="order-book-history__table-wrp">
           <table class="order-book-history__table">
             <thead>
               <tr>
-                <th>Price ({{ quoteAsset }})</th>
-                <th>Amount ({{ baseAsset }})</th>
-                <th>Total cost ({{ quoteAsset }})</th>
-                <th>Date</th>
+                <th>{{ "order-book-history.thead-prise" | globalize }}</th>
+                <th>{{ "order-book-history.thead-amount" | globalize }}</th>
+                <th>{{ "order-book-history.thead-total-cost" | globalize }}</th>
+                <th>{{ "order-book-history.thead-date" | globalize }}</th>
               </tr>
             </thead>
 
@@ -48,7 +48,7 @@
 
       <template v-else>
         <p class="text order-book-history__empty">
-          No data yet
+          {{ "order-book-history.no-data" | globalize }}
         </p>
       </template>
     </div>
@@ -58,29 +58,29 @@
       v-if="isDetailsShown"
       @close-request="hideItemDetails()"
       max-width="40rem">
-      <h2>Deal details</h2>
+      <h2>{{ "order-book-history.deal-details" | globalize }}</h2>
 
       <ul class="key-value-list">
         <li>
-          <span>Deal ID</span>
+          <span>{{ "order-book-history.deal-id" | globalize }}</span>
           <span>{{ itemDetails.id }}</span>
         </li>
         <li>
-          <span>Amount</span>
+          <span>{{ "order-book-history.amount" | globalize }}</span>
           <asset-amount-formatter
             :amount="itemDetails.baseAmount"
             :asset="itemDetails.baseAsset.id"
           />
         </li>
         <li>
-          <span>Price</span>
+          <span>{{ "order-book-history.prise" | globalize }}</span>
           <asset-amount-formatter
             :amount="itemDetails.price"
             :asset="quoteAsset"
           />
         </li>
         <li>
-          <span>Date</span>
+          <span>{{ "order-book-history.date" | globalize }}</span>
           <date-formatter
             :date="itemDetails.createdAt"
             format="DD MMM YYYY [at] HH:mm:ss"
