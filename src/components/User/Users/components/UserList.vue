@@ -9,13 +9,13 @@
         >
           <option :value="''" />
           <option :value="kvAccountRoles.unverified">
-            Unverified
+            {{ "user-list.unverified" | globalize }}
           </option>
           <option :value="kvAccountRoles.general">
-            General
+            {{ "user-list.general" | globalize }}
           </option>
           <option :value="kvAccountRoles.corporate">
-            Сorporate
+            {{ "user-list.corporate" | globalize }}
           </option>
         </select-field>
 
@@ -33,16 +33,16 @@
         <template v-if="list && list.length">
           <div class="app-list__header">
             <span class="app-list__cell user-list__email-cell">
-              Email
+              {{ "user-list.mail" | globalize }}
             </span>
             <span class="app-list__cell app-list__cell--right">
-              Account ID
+              {{ "user-list.account-id" | globalize }}
             </span>
             <span class="app-list__cell app-list__cell--right">
-              Role
+              {{ "user-list.role" | globalize }}
             </span>
             <span class="app-list__cell app-list__cell--right">
-              State
+              {{ "user-list.state" | globalize }}
             </span>
           </div>
 
@@ -86,13 +86,13 @@
           <div class="app-list__li-like">
             <template v-if="isLoading">
               <p>
-                Loading...
+                {{ "user-list.loaging" | globalize }}
               </p>
             </template>
 
             <template v-else>
               <p>
-                Nothing here yet
+                {{ "user-list.nothing-here-yet" | globalize }}
               </p>
             </template>
           </div>

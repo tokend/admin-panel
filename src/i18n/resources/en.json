@@ -1070,6 +1070,17 @@
       "previous-approved-kys-request": "Previous approved KYC Request",
       "latest-request": "Latest request",
       "create": "Create a '{{ requestToReview.accountRoleToSet | roleIdToString }}' account: {{ requestToReview.state }}"
+    },
+    "user-list": {
+      "unverified": "Unverified",
+      "general": "General",
+      "corporate": "Сorporate",
+      "mail": "Email",
+      "account-id": "Account Id",
+      "role": "Role",
+      "state": "State",
+      "loading": "Loading...",
+      "nothing-here-yet": "Nothing here yet"
     }
   }
 }
