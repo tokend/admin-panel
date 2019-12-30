@@ -986,6 +986,11 @@
       "btn-day": "Day",
       "btn-month": "Month",
       "btn-year": "Year"
+    },
+    "trade-filters": {
+      "no-pairs": "No pairs yet",
+      "error": "An error occurred",
+      "loading": "Loading..."
     }
   }
 }
