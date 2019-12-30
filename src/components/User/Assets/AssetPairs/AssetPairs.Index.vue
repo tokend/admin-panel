@@ -1,13 +1,15 @@
 <template>
   <div class="assets-pairs-index">
     <div class="assets-pairs-index__heading-row">
-      <h2>Asset pairs</h2>
+      <h2>{{ "asset-pairs-index.asset-pairs-btn" | globalize }}</h2>
 
       <div class="assets-pairs-index__actions">
         <router-link
           class="assets-pairs-index__create-btn app__btn app__btn--iconed"
-          :to="{ name: 'assets.assetPairs.new' }">
-          <i class="mdi mdi-plus" /> Create pair
+          :to="{ name: 'assets.assetPairs.new' }"
+        >
+          <i class="mdi mdi-plus" />
+          {{ "asset-pairs-index.create-pare-btn" | globalize }}
         </router-link>
       </div>
     </div>
@@ -33,11 +35,11 @@ export default {
   margin-bottom: 2.5rem;
   max-width: 72rem;
 
-&:not(:first-of-type) {
+  &:not(:first-of-type) {
     margin-top: 5.5rem;
   }
 
-& > h2 {
+  & > h2 {
     margin-bottom: 0;
   }
 }
@@ -51,11 +53,11 @@ export default {
   font-weight: 600;
   text-decoration: none;
 
-&.app__btn {
+  &.app__btn {
     padding: 0.9rem;
   }
 
-& > i {
+  & > i {
     display: flex;
     line-height: 1;
     margin-left: -1rem;

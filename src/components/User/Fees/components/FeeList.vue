@@ -6,39 +6,41 @@
           <select-field
             class="fee-list__filter"
             label="Scope"
-            v-model="filters.scope">
+            v-model="filters.scope"
+          >
             <option :value="SCOPE_TYPES.global">
-              Global
+              {{ "fee-list.fee-list-scope-global" | globalize }}
             </option>
             <option :value="SCOPE_TYPES.accountRole">
-              Account type
+              {{ "fee-list.fee-list-scope-acc-type" | globalize }}
             </option>
             <option :value="SCOPE_TYPES.account">
-              Account
+              {{ "fee-list.fee-list-scope-acc" | globalize }}
             </option>
           </select-field>
 
           <select-field
             class="fee-list__filter"
             label="Type"
-            v-model="filters.feeType">
+            v-model="filters.feeType"
+          >
             <option :value="FEE_TYPES.paymentFee">
-              Payment
+              {{ "fee-list.fee-list-payment" | globalize }}
             </option>
             <option :value="FEE_TYPES.offerFee">
-              Order Match
+              {{ "fee-list.fee-list-order-match" | globalize }}
             </option>
             <option :value="FEE_TYPES.withdrawalFee">
-              Withdrawal
+              {{ "fee-list.fee-list-withdrawal" | globalize }}
             </option>
             <option :value="FEE_TYPES.issuanceFee">
-              Issuance
+              {{ "fee-list.fee-list-issuance" | globalize }}
             </option>
             <option :value="FEE_TYPES.investFee">
-              Invest
+              {{ "fee-list.fee-list-invest" | globalize }}
             </option>
             <option :value="FEE_TYPES.capitalDeploymentFee">
-              Capital Deployment
+              {{ "fee-list.fee-list-cap-deployment" | globalize }}
             </option>
           </select-field>
 
@@ -60,7 +62,8 @@
           <select-field
             class="fee-list__filter"
             label="Asset"
-            v-model="filters.assetCode">
+            v-model="filters.assetCode"
+          >
             <template v-if="assetsByType.length">
               <option
                 v-for="item in assetsByType"
@@ -74,7 +77,7 @@
 
             <template v-else>
               <option disabled>
-                No appropriate assets
+                {{ "fee-list.fee-filter-no-assets" | globalize }}
               </option>
             </template>
           </select-field>
@@ -86,13 +89,13 @@
             v-if="filters.scope === SCOPE_TYPES.accountRole"
           >
             <option :value="kvAccountRoles.general">
-              General
+              {{ "fee-list.fee-acc-type-general" | globalize }}
             </option>
             <option :value="kvAccountRoles.unverified">
-              Not verified
+              {{ "fee-list.fee-acc-type-not-ver" | globalize }}
             </option>
             <option :value="kvAccountRoles.corporate">
-              Corporate
+              {{ "fee-list.fee-acc-type-corporate" | globalize }}
             </option>
           </select-field>
 
@@ -112,18 +115,19 @@
       <template v-if="!Object.keys(fees).length">
         <div class="app-list">
           <p class="app-list__li-like">
-            Loading...
+            {{ "fee-list.app-list-loadind" | globalize }}
           </p>
         </div>
       </template>
 
       <template
-        v-else-if="filters.scope === SCOPE_TYPES.account &&
-          !filters.accountAddress"
+        v-else-if="
+          filters.scope === SCOPE_TYPES.account && !filters.accountAddress
+        "
       >
         <div class="app-list">
           <p class="app-list__li-like">
-            Please specify account
+            {{ "fee-list.scecify-acc" | globalize }}
           </p>
         </div>
       </template>
@@ -131,7 +135,7 @@
       <template v-else-if="!fees.length">
         <div class="app-list">
           <p class="app-list__li-like">
-            No fees available for current filter settings
+            {{ "fee-list.no-fees-avaible" | globalize }}
           </p>
         </div>
       </template>
@@ -140,24 +144,26 @@
         <ul class="app-list">
           <div class="app-list__header">
             <span class="app-list__cell">
-              Lower bound
+              {{ "fee-list.app-list-cell-lower-bound" | globalize }}
             </span>
 
             <span class="app-list__cell">
-              Upper bound
+              {{ "fee-list.app-list-cell-upper-bound" | globalize }}
             </span>
 
             <span class="app-list__cell">
-              Percent fee
+              {{ "fee-list.app-list-cell-percent-fee" | globalize }}
             </span>
 
             <span
               class="app-list__cell"
-              v-if="+filters.feeType !== FEE_TYPES.offerFee &&
-                +filters.feeType !== FEE_TYPES.capitalDeploymentFee &&
-                +filters.feeType !== FEE_TYPES.investFee"
+              v-if="
+                +filters.feeType !== FEE_TYPES.offerFee &&
+                  +filters.feeType !== FEE_TYPES.capitalDeploymentFee &&
+                  +filters.feeType !== FEE_TYPES.investFee
+              "
             >
-              Fixed fee
+              {{ "fee-list.app-list-cell-fixed-fee" | globalize }}
             </span>
             <span class="app-list__cell">
               <!-- empty -->
@@ -167,8 +173,7 @@
           <li
             class="app-list__li"
             v-for="(item, id) in fees"
-            :key="id"
-          >
+            :key="id">
             <fee-form
               :fee="item"
               :account-id="composeRequestFilters.account"
@@ -205,7 +210,8 @@ import { FeesRecord } from '@/js/records/fees.record'
 import _cloneDeep from 'lodash/cloneDeep'
 import { mapGetters } from 'vuex'
 
-const SCOPE_TYPES = Object.freeze({ // non-xdr values, internal use only
+const SCOPE_TYPES = Object.freeze({
+  // non-xdr values, internal use only
   account: 'USER',
   accountRole: 'ACCOUNT_TYPE',
   global: 'GLOBAL',
@@ -255,29 +261,29 @@ export default {
   },
 
   computed: {
-    ...mapGetters([
-      'kvAccountRoles',
-    ]),
+    ...mapGetters(['kvAccountRoles']),
 
     assetsByType () {
       let result
       switch (+this.filters.feeType) {
         case FEE_TYPES.paymentFee:
-          result = this.assets
-            .filter(item => item.policies.value & ASSET_POLICIES.transferable)
+          result = this.assets.filter(
+            item => item.policies.value & ASSET_POLICIES.transferable
+          )
           break
         case FEE_TYPES.offerFee:
-          result = this.assets
-            .filter(item => this.assetPairs
-              .filter(el => el.quoteAsset.id === item.id).length
-            )
+          result = this.assets.filter(
+            item =>
+              this.assetPairs.filter(el => el.quoteAsset.id === item.id).length
+          )
           break
         case FEE_TYPES.issuanceFee:
           result = this.assets.filter(item => +item.maxIssuanceAmount)
           break
         case FEE_TYPES.withdrawalFee:
-          result = this.assets
-            .filter(item => +item.policies.value & ASSET_POLICIES.withdrawable)
+          result = this.assets.filter(
+            item => +item.policies.value & ASSET_POLICIES.withdrawable
+          )
           break
         default:
           result = this.assets
@@ -307,10 +313,10 @@ export default {
   },
 
   watch: {
-    'assetsByType': function () {
-      const isSelectedAssetInRange = this.assetsByType
-        .filter(item => item.id === this.filters.assetCode)
-        .length
+    assetsByType: function () {
+      const isSelectedAssetInRange = this.assetsByType.filter(
+        item => item.id === this.filters.assetCode
+      ).length
 
       if (!isSelectedAssetInRange) {
         try {
@@ -407,8 +413,7 @@ export default {
         newFees.push(DEFAULT_FEE)
 
         if (this.filters.scope === SCOPE_TYPES.global) {
-          newFees = newFees
-            .filter((fee) => !(fee.accountRole || fee.account))
+          newFees = newFees.filter(fee => !(fee.accountRole || fee.account))
         }
         this.fees = newFees.map(item => new FeesRecord(item, this.filters))
       } catch (error) {

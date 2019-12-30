@@ -29,6 +29,12 @@ export default {
   props: {
     info: { type: Object, required: true },
   },
+
+  computed: {
+    showInfo () {
+      return this.info.name
+    },
+  },
 }
 </script>
 

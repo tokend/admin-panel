@@ -1,8 +1,12 @@
 <template>
   <div class="admin-manager">
     <div class="admin-manager__block app__block">
-      <h2>
-        {{ addNew ? 'Add new administrator' : 'Manage administrator' }}
+      <h2 v-if="addNew">
+        {{ "admin-manager.add-new-admin" | globalize }}
+      </h2>
+
+      <h2 v-else>
+        {{ "admin-manager.mng-admin" | globalize }}
       </h2>
 
       <form
@@ -113,11 +117,21 @@
 
           <template v-else>
             <button
+              v-if="addNew"
               class="app__btn"
               @click="isDeleteMode = false"
               :disabled="isMaster || formMixin.isDisabled"
             >
-              {{ addNew ? 'Add' : 'Update' }}
+              {{ "admin-manager.btn-add" | globalize }}
+            </button>
+
+            <button
+              v-else
+              class="app__btn"
+              @click="isDeleteMode = false"
+              :disabled="isMaster || formMixin.isDisabled"
+            >
+              {{ "admin-manager.btn-upd" | globalize }}
             </button>
 
             <button
@@ -126,7 +140,7 @@
               :disabled="isMaster || formMixin.isDisabled"
               @click="isDeleteMode = true"
             >
-              Delete
+              {{ "admin-manager.del-btn" | globalize }}
             </button>
           </template>
         </div>

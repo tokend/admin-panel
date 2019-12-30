@@ -2,21 +2,18 @@
   <div class="asset-list">
     <div class="asset-list__table-header" v-if="parsedAssets">
       <span class="asset-list__li-name secondary">
-        Name
+        {{ "asset-list.header-name" | globalize }}
       </span>
 
       <span class="asset-list__li-code secondary">
-        Code
+        {{ "asset-list.header-code" | globalize }}
       </span>
       <span class="asset-list__li-policy secondary">
-        Policy
+        {{ "asset-list.header-policy" | globalize }}
       </span>
     </div>
 
-    <ul
-      class="asset-list__ul"
-      v-if="assets && assets.length"
-    >
+    <ul class="asset-list__ul" v-if="assets && assets.length">
       <li
         class="asset-list__li"
         v-for="(asset, i) in parsedAssets"
@@ -46,13 +43,13 @@
       <div class="app-list__li-like">
         <template v-if="isLoading">
           <p>
-            Loading...
+            {{ "asset-list.app-loading" | globalize }}
           </p>
         </template>
 
         <template v-else>
           <p>
-            Nothing here yet
+            {{ "asset-list.app-fail-loading" | globalize }}
           </p>
         </template>
       </div>
@@ -119,7 +116,7 @@ export default {
         this.$store.commit('CLOSE_LOADER')
       } catch (err) {
         this.$store.commit('CLOSE_LOADER')
-        ErrorHandler.process('Something went wrong. Can\'t to load assets list')
+        ErrorHandler.process("Something went wrong. Can't to load assets list")
       }
 
       this.isLoading = false
@@ -154,12 +151,13 @@ function decamelize (str, prefixForRemove = '') {
 
 function convertPolicyToString (policy) {
   const xdrEnumValues = base.xdr.AssetPolicy.values()
-  return trim(xdrEnumValues
-    .filter(pol => (pol.value & policy) !== 0)
-    .map(pol => decamelize(pol.name, 'asset'))
-    .join(', '))
+  return trim(
+    xdrEnumValues
+      .filter(pol => (pol.value & policy) !== 0)
+      .map(pol => decamelize(pol.name, 'asset'))
+      .join(', ')
+  )
 }
-
 </script>
 
 <style lang="scss" scoped>
@@ -214,7 +212,7 @@ function convertPolicyToString (policy) {
   text-align: center;
 }
 
-.asset-list__li-policy{
+.asset-list__li-policy {
   width: 33%;
   text-align: right;
 }

@@ -1,6 +1,6 @@
 <template>
   <div class="withdrawals-index">
-    <h2>Withdrawal list</h2>
+    <h2>{{ "withdrawal-list.header" | globalize }}</h2>
 
     <div class="withdrawals-index__list-wrp">
       <withdrawal-list />

@@ -1,36 +1,36 @@
 <template>
   <div class="issuance-details">
     <div class="issuance-details app__block">
-      <h2>Issuance details</h2>
+      <h2>{{ "issuance-details.header" | globalize }}</h2>
       <template v-if="isLoaded">
         <ul class="key-value-list">
           <li class="issuance-details__list-item">
-            <span>ID</span>
+            <span>{{ "issuance-details.issuance-id" | globalize }}</span>
             <span>{{ issuance.id }}</span>
           </li>
           <li class="issuance-details__list-item">
-            <span>Date</span>
+            <span>{{ "issuance-details.issuance-date" | globalize }}</span>
             <span>{{ issuance.createdAt | dateTime }}</span>
           </li>
           <li class="issuance-details__list-item">
-            <span>Initiator</span>
+            <span>{{ "issuance-details.issuance-init" | globalize }}</span>
             <span>{{ issuance.requestor.id }}</span>
           </li>
           <li class="issuance-details__list-item">
-            <span>Initiator (Email)</span>
+            <span>{{ "issuance-details.issuence-init-mail" | globalize }}</span>
             <span>
               <email-getter :account-id="issuance.requestor.id" is-titled />
             </span>
           </li>
           <li class="issuance-details__list-item">
-            <span>Value</span>
+            <span>{{ "issuance-details.issuence-val" | globalize }}</span>
             <span>
               {{ localize(issuance.requestDetails.amount) }}
               {{ issuance.requestDetails.asset.id }}
             </span>
           </li>
           <li class="issuance-details__list-item">
-            <span>State</span>
+            <span>{{ "issuance-details.issuence-state" | globalize }}</span>
             <span>
               {{ issuance.state | localizeIssuanceRequestState }}
             </span>
@@ -42,17 +42,21 @@
             <button
               class="app__btn issuance-details__action-btn"
               @click="fulfill(issuance)"
-              :disabled="isSubmitting || issuance.stateI !== REQUEST_STATES.pending"
+              :disabled="
+                isSubmitting || issuance.stateI !== REQUEST_STATES.pending
+              "
             >
-              Fulfill
+              {{ "issuance-details.issuence-fulfill" | globalize }}
             </button>
 
             <button
               class="app__btn app__btn--danger issuance-details__action-btn"
               @click="selectForRejection(issuance)"
-              :disabled="isSubmitting || issuance.stateI !== REQUEST_STATES.pending"
+              :disabled="
+                isSubmitting || issuance.stateI !== REQUEST_STATES.pending
+              "
             >
-              Reject
+              {{ "issuance-details.issuence-reject" | globalize }}
             </button>
             <!-- eslint-enable max-len -->
           </div>
@@ -60,7 +64,7 @@
       </template>
       <template v-else>
         <span class="issuance-details__list-item">
-          Loading...
+          {{ "issuance-details.issuence-loading" | globalize }}
         </span>
       </template>
       <modal
@@ -80,10 +84,11 @@
               v-model="rejectForm.reason"
               :disabled="formMixin.isDisabled"
               @blur="touchField('rejectForm.reason')"
-              :error-message="getFieldErrorMessage(
-                'rejectForm.reason',
-                { maxLength: REJECT_REASON_MAX_LENGTH }
-              )"
+              :error-message="
+                getFieldErrorMessage('rejectForm.reason', {
+                  maxLength: REJECT_REASON_MAX_LENGTH
+                })
+              "
             />
           </div>
         </form>
@@ -94,14 +99,14 @@
             form="issuance-rl-reject-form"
             :disabled="formMixin.isDisabled"
           >
-            Reject
+            {{ "issuance-details.issuence-reject-btn" | globalize }}
           </button>
           <button
             class="app__btn-secondary"
             @click="clearRejectionSelection"
             :disabled="formMixin.isDisabled"
           >
-            Cancel
+            {{ "issuance-details.issuence-cancel-btn" | globalize }}
           </button>
         </div>
       </modal>

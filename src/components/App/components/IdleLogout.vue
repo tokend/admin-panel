@@ -2,21 +2,18 @@
   <div class="idle-logout" v-if="showIdleForm">
     <div class="idle-logout__block app__block">
       <div class="idle-logout__content-wrp">
-        <h2> Session Timeout Warning </h2>
+        <h2>{{ "idle-logout.header" | globalize }}</h2>
 
         <p class="text">
-          The session is about to expire due to long inactivity.<br>
-          Click <strong>Continue</strong> to extend the session.<br>
-          <br>
-          Session expires in {{ timeLeft || '...' }}<br>
+          {{ "idle-logout.text-long-inct" | globalize }}
         </p>
 
         <div class="idle-logout__actions">
           <button class="app__btn" @click="extendSession">
-            Continue
+            {{ "idle-logout.app-btn-cont" | globalize }}
           </button>
           <button class="app__btn-secondary" @click="endSession">
-            Log out
+            {{ "idle-logout.app-btn-lgout" | globalize }}
           </button>
         </div>
       </div>
@@ -43,7 +40,9 @@ export default {
       return this.$store.getters.showIdleForm
     },
   },
-
+  showTimeLeft () {
+    return this.timeLeft || '...'
+  },
   created () {
     this.$store.subscribe((mutation, state) => {
       switch (mutation.type) {
@@ -62,7 +61,9 @@ export default {
   methods: {
     initTimer () {
       const warnInterval = this.$store.getters.forceLogoutDelay
-      this.warnEndTimestamp = moment().add(warnInterval, 'seconds').unix()
+      this.warnEndTimestamp = moment()
+        .add(warnInterval, 'seconds')
+        .unix()
       this.countdownInterval = setInterval(() => {
         const msLeft = moment
           .duration(this.warnEndTimestamp - moment().unix(), 'seconds')

@@ -7,7 +7,7 @@
           @click="approve"
           :disabled="isPending"
         >
-          Approve
+          {{ "kyc-recovery-request-action.app-btn-approve" | globalize }}
         </button>
 
         <button
@@ -15,7 +15,7 @@
           @click="showRejectModal"
           :disabled="isPending"
         >
-          Reject
+          {{ "kyc-recovery-request-action.app-btn-reject" | globalize }}
         </button>
       </div>
     </template>
@@ -26,7 +26,7 @@
         @click="reject(true)"
         :disabled="isPending"
       >
-        Reject permanently
+        {{ "kyc-recovery-request-action.app-btn-reject-perm" | globalize }}
       </button>
     </template>
 
@@ -48,10 +48,11 @@
             :autofocus="true"
             v-model="rejectForm.reason"
             @blur="touchField('rejectForm.reason')"
-            :error-message="getFieldErrorMessage(
-              'rejectForm.reason',
-              { maxLength: REJECT_REASON_MAX_LENGTH }
-            )"
+            :error-message="
+              getFieldErrorMessage('rejectForm.reason', {
+                maxLength: REJECT_REASON_MAX_LENGTH
+              })
+            "
           />
         </div>
       </form>
@@ -61,13 +62,10 @@
           class="app__btn app__btn--danger"
           form="request-action-reject-form"
         >
-          Reject
+          {{ "kyc-recovery-request-action.app-form-btn-reject" | globalize }}
         </button>
-        <button
-          class="app__btn-secondary"
-          @click="hideRejectModal"
-        >
-          Cancel
+        <button class="app__btn-secondary" @click="hideRejectModal">
+          {{ "kyc-recovery-request-action.app-form-btn-cancel" | globalize }}
         </button>
       </div>
     </modal>
@@ -142,7 +140,9 @@ export default {
 
   methods: {
     async approve () {
-      if (!await confirmAction('Are you sure? This action cannot be undone')) {
+      if (
+        !(await confirmAction('Are you sure? This action cannot be undone'))
+      ) {
         return
       }
       this.isPending = true
@@ -163,7 +163,9 @@ export default {
     },
 
     async reject (isPermanent = false) {
-      if (!await confirmAction('Are you sure? This action cannot be undone')) {
+      if (
+        !(await confirmAction('Are you sure? This action cannot be undone'))
+      ) {
         return
       }
       this.isPending = true
@@ -205,7 +207,7 @@ export default {
 </script>
 
 <style scoped>
-  .request-action__btn {
-    width: 15rem;
-  }
+.request-action__btn {
+  width: 15rem;
+}
 </style>

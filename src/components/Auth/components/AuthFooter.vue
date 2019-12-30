@@ -1,7 +1,7 @@
 <template>
   <footer class="auth-footer">
     <span class="small">
-      TokenD © {{ currentYear }}
+      {{ "auth-footer.copyrighted" | globalize }}
     </span>
   </footer>
 </template>

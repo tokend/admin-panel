@@ -51,11 +51,11 @@
             </span>
 
             <span class="app-list__cell">
-              State
+              {{ "asset-request-list.app-list-state" | globalize }}
             </span>
 
             <span class="app-list__cell">
-              Requestor
+              {{ "asset-request-list.app-list-requestor" | globalize }}
             </span>
           </div>
 
@@ -63,7 +63,7 @@
             class="app-list__li"
             v-for="(asset, i) in list"
             :key="i"
-            :to="{ name: 'assets.requests.show', params: { id: asset.id }}"
+            :to="{ name: 'assets.requests.show', params: { id: asset.id } }"
           >
             <span
               class="app-list__cell app-list__cell--important"
@@ -75,9 +75,13 @@
             <!-- eslint-disable max-len -->
             <span
               class="app-list__cell"
-              :title="CREATE_ASSET_REQUEST_STATES[snakeToCamelCase(asset.state)].text"
+              :title="
+                CREATE_ASSET_REQUEST_STATES[snakeToCamelCase(asset.state)].text
+              "
             >
-              {{ CREATE_ASSET_REQUEST_STATES[snakeToCamelCase(asset.state)].text }}
+              {{
+                CREATE_ASSET_REQUEST_STATES[snakeToCamelCase(asset.state)].text
+              }}
             </span>
             <!-- eslint-enable max-len -->
 
@@ -90,8 +94,11 @@
 
       <template v-else>
         <ul class="app-list">
-          <li class="app-list__li-like">
-            {{ isPending ? 'Loading...' : 'Nothing here yet' }}
+          <li class="app-list__li-like" v-if="isPending">
+            {{ "asset-request-list.app-list-load" | globalize }}
+          </li>
+          <li class="app-list__li-like" v-else>
+            {{ "asset-request-list.app-list-fail-load" | globalize }}
           </li>
         </ul>
       </template>
@@ -161,9 +168,13 @@ export default {
   },
 
   watch: {
-    'filters.requestType' () { this.reloadCollectionLoader() },
+    'filters.requestType' () {
+      this.reloadCollectionLoader()
+    },
 
-    'filters.state' () { this.reloadCollectionLoader() },
+    'filters.state' () {
+      this.reloadCollectionLoader()
+    },
 
     'filters.requestor': _.throttle(function () {
       this.reloadCollectionLoader()

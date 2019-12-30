@@ -1,49 +1,39 @@
 <template>
   <div class="admin-list">
-    <div
-      class="admin-list__table-header"
-      v-if="list.length"
-    >
+    <div class="admin-list__table-header" v-if="list.length">
       <span class="admin-list__li-name secondary">
         <!-- empty -->
       </span>
 
       <span class="admin-list__li-role secondary">
-        Role
+        {{ "admin-list.role-sec" | globalize }}
       </span>
 
       <span class="admin-list__li-account-id secondary">
-        Account ID
+        {{ "admin-list.acc-id-sec" | globalize }}
       </span>
 
       <span class="admin-list__li-weight secondary">
-        Weight
+        {{ "admin-list.weight-sec" | globalize }}
       </span>
 
       <span class="admin-list__li-identity secondary">
-        Identity
+        {{ "admin-list.identity-sec" | globalize }}
       </span>
     </div>
 
-    <ul
-      class="admin-list__ul"
-      v-if="list && list.length"
-    >
+    <ul class="admin-list__ul" v-if="list && list.length">
       <li
         class="admin-list__li"
         v-for="item in list"
-        :key="item.id"
-      >
+        :key="item.id">
         <router-link
           class="admin-list__li-a"
           :to="{ name: 'admins.show', params: { id: item.id } }"
         >
-          <span
-            class="admin-list__li-name"
-            :title="item.details.name"
-          >
+          <span class="admin-list__li-name" :title="item.details.name">
             <template v-if="item.id === masterPubKey">
-              Master
+              {{ "admin-list.master-acc" | globalize }}
             </template>
             <template v-else>
               {{ item.details.name }}
@@ -51,7 +41,7 @@
 
             <template v-if="item.id === userAddress">
               <span class="secondary">
-                (you)
+                {{ "admin-list.user-adds" | globalize }}
               </span>
             </template>
           </span>
@@ -63,24 +53,15 @@
             {{ item.role.id | deriveRoleName(signerRoles) }}
           </span>
 
-          <span
-            class="admin-list__li-account-id"
-            :title="item.id"
-          >
+          <span class="admin-list__li-account-id" :title="item.id">
             {{ item.id | cropAddress }}
           </span>
 
-          <span
-            class="admin-list__li-weight"
-            :title="item.weight"
-          >
+          <span class="admin-list__li-weight" :title="item.weight">
             {{ item.weight }}
           </span>
 
-          <span
-            class="admin-list__li-identity"
-            :title="item.identity"
-          >
+          <span class="admin-list__li-identity" :title="item.identity">
             {{ item.identity }}
           </span>
         </router-link>
@@ -90,13 +71,13 @@
       <div class="app-list__li-like">
         <template v-if="isLoading">
           <p>
-            Loading...
+            {{ "admin-list.load" | globalize }}
           </p>
         </template>
 
         <template v-else>
           <p>
-            Nothing here yet
+            {{ "admin-list.fail-load" | globalize }}
           </p>
         </template>
       </div>

@@ -1,28 +1,38 @@
 <template>
   <div class="g-auth">
     <h2 class="g-auth__heading">
-      Two-factor authentication
+      {{ "g-auth.header-auth" | globalize }}
     </h2>
 
     <p class="text">
-      You have to set up 2FA to proceed.
+      {{ "g-auth.header-auth-text-set-up" | globalize }}
     </p>
     <p class="text">
-      Please install Google Authenticator to your device:
+      {{ "g-auth.header-auth-install-g-auth" | globalize }}
     </p>
     <br class="text small">
     <p class="g-auth__app-links">
-      <a target="_blank" href="https://itunes.apple.com/app/google-authenticator/id388497605?mt=8">
-        <i class="mdi mdi-apple g-auth__icon" /><span>iOS</span>
+      <a
+        target="_blank"
+        href="https://itunes.apple.com/app/google-authenticator/id388497605?mt=8"
+      >
+        <i class="mdi mdi-apple g-auth__icon" /><span>{{
+          "g-auth.apple-g-auth-ico-text" | globalize
+        }}</span>
       </a>
-      <a target="_blank" href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">
-        <i class="mdi mdi-android g-auth__icon" /><span>Android</span>
+      <a
+        target="_blank"
+        href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2"
+      >
+        <i class="mdi mdi-android g-auth__icon" /><span>{{
+          "android-g-auth-ico-text" | globalize
+        }}</span>
       </a>
     </p>
 
     <br class="text">
     <p class="text">
-      Scan the QR-code or enter the code manually using Google Authenticator
+      {{ "g-auth.scan-QR" | globalize }}
     </p>
     <br class="text small">
     <div class="g-auth__qr-wrap">
@@ -30,7 +40,8 @@
         class="g-auth__qr"
         :size="240"
         foreground="#3f4244"
-        :value="gAuthLink" />
+        :value="gAuthLink"
+      />
       <p class="g-auth__secret">
         {{ secret }}
       </p>
@@ -73,7 +84,7 @@ export default {
 
   async created () {
     let isDone = false
-    this.$store.subscribe((mutation) => {
+    this.$store.subscribe(mutation => {
       if (this.$store.getters.tfaInitiator !== 'g_auth') {
         return
       }
@@ -179,7 +190,7 @@ export default {
   }
 
   & > a > i {
-    margin-right: .5rem;
+    margin-right: 0.5rem;
   }
 
   & > a > span,

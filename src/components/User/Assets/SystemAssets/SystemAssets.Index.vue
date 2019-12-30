@@ -1,7 +1,7 @@
 <template>
   <div class="system-assets-index">
     <div class="system-assets-index__heading-row">
-      <h2>Assets owned by master</h2>
+      <h2>{{ "system-assets-index.header-row" | globalize }}</h2>
 
       <div class="system-assets-index__actions">
         <router-link
@@ -9,7 +9,7 @@
           :to="{ name: 'assets.systemAssets.new' }"
         >
           <i class="mdi mdi-plus" />
-          Create asset
+          {{ "system-assets-index.create-asset" | globalize }}
         </router-link>
       </div>
     </div>
