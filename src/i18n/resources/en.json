@@ -995,6 +995,9 @@
     "trades-index": {
       "header": "Trades",
       "select-pair": "Select pair"
+    },
+    "trades": {
+      "link-trades": "Trades"
     }
   }
 }
