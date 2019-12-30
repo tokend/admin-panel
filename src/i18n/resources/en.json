@@ -1090,6 +1090,9 @@
       "counterparty": "Counterparty",
       "loading": "Loading...",
       "nothing-here-yet": "Nothing here yet"
+    },
+    "users": {
+     "link-user-index": "User index"
     }
   }
 }
