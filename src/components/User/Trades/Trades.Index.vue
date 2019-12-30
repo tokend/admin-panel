@@ -1,6 +1,6 @@
 <template>
   <div class="trades-index">
-    <h2>Trades</h2>
+    <h2>{{ "trades-index.header" | globalize }}</h2>
 
     <div class="trades-index__filters-wrp">
       <trade-filters v-model="filters" />
@@ -18,7 +18,7 @@
 
     <template v-else>
       <p class="text">
-        Select pair
+        {{ "trades-index.select-pair" | globalize }}
       </p>
     </template>
   </div>
