@@ -940,5 +940,9 @@
       "nothing-here-yet": "Nothing here yet",
       "loading": "Loading..."
     },
+    "sales": {
+      "link-sales": "Sales",
+      "link-sale-requests": "Sale requests"
+    }
   }
 }
