@@ -6,7 +6,7 @@
       :class="{ selected: value === tabs.hour }"
       :disabled="isPending"
     >
-      Hour
+      {{ "price-chart-scale-picker.btn-hour" | globalize }}
     </button>
 
     <button
@@ -15,7 +15,7 @@
       :class="{ selected: value === tabs.day }"
       :disabled="isPending"
     >
-      Day
+      {{ "price-chart-scale-picker.btn-day" | globalize }}
     </button>
 
     <button
@@ -24,7 +24,7 @@
       :class="{ selected: value === tabs.month }"
       :disabled="isPending"
     >
-      Month
+      {{ "price-chart-scale-picker.btn-month" | globalize }}
     </button>
 
     <button
@@ -33,7 +33,7 @@
       :class="{ selected: value === tabs.year }"
       :disabled="isPending"
     >
-      Year
+      {{ "price-chart-scale-picker.btn-year" | globalize }}
     </button>
   </div>
 </template>

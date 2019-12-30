@@ -980,6 +980,12 @@
       "no-chart-data-yet": "No chart data yet",
       "error-fetch": "An error occurred while fetching asset. Please try again later.",
       "fetching-chart-data": "Fetching chart data..."
+    },
+    "price-chart-scale-picker": {
+      "btn-hour": "Hour",
+      "btn-day": "Day",
+      "btn-month": "Month",
+      "btn-year": "Year"
     }
   }
 }
