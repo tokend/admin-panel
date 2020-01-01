@@ -72,167 +72,173 @@
     "idle-logout": {
       "header": "Session Timeout Warning",
       "text-long-inct": "The session is about to expire due to long inactivity.<br> Click <strong>Continue</strong> to extend the session.<br /> <br> Session expires in {{ showTimeLeft }}<br>",
-      "app-btn-cont": "Continue",
-      "app-btn-lgout": "Log out"
+      "btn-cont": "Continue",
+      "btn-log-out": "Log out"
     },
     "ie-restriction-message": {
-      "no-sup-msg": "The browser you're using doesn't support all the needed features. Please consider installing one of the following browsers.",
-      "browser-ico-downld": "Download:"
+      "no-support-msg": "The browser you're using doesn't support all the needed features. Please consider installing one of the following browsers.",
+      "browser-ico-download": "Download:"
     },
     "verify-tfa": {
-      "heading": "2FA Required",
+      "header": "2FA Required",
       "verify-code": "Enter your verification code to proceed.",
       "btn-cancel": "Cancel",
       "btn-submit": "Submit"
     },
     "app": {
-      "init-fail": "Initializing failed",
-      "init-app": "Initializing the app..."
+      "initialization-fail": "Initializing failed",
+      "initialization-app": "Initializing the app..."
     },
     "auth-footer": {
       "copyrighted": "TokenD © {{ currentYear }}"
     },
     "auth-header": {
       "admin-logo": "TokenD",
-      "admin-badge": "ADMIN PANEL",
-      "header-sign-up": "Sign Up",
-      "header-sign-in": "Sign In"
+      "admin-panel": "ADMIN PANEL",
+      "sign-up": "Sign Up",
+      "sign-in": "Sign In"
     },
     "login": {
       "header": "Sign In",
-      "label": "Sign in",
-      "seed-log-en-link": "sign in with seed",
-      "also-you-can":"Also you can"
+      "btn-sign-in": "Sign in",
+      "seed-log-link": "sign in with seed",
+      "also-you-can": "Also you can"
     },
     "seed-login": {
       "header": "Sign In With Seed",
-      "label": "Sign in",
-      "classic-sgn-in": "Back to classic Sign in"
+      "btn-sign-in": "Sign in",
+      "classic-sign-in": "Back to classic Sign in"
     },
     "sign-up": {
       "header": "Sign Up",
-      "header-button": "Sign Up",
-      "app-block-text": " Ask an existing administrator to register the following account ID.<br>",
-      "app-block-text-small": "<em>Important:</em> Do not reload the page! You’ll be redirected automatically once your account is created"
+      "btn-sign-up": "Sign Up",
+      "follow-account-id": " Ask an existing administrator to register the following account ID.<br>",
+      "warning-do-not-reload": "<em>Important:</em> Do not reload the page! You’ll be redirected automatically once your account is created"
     },
     "account-state-getter": {
-      "load-acc-state": "Loading..."
+      "loading": "Loading..."
     },
     "email-getter": {
-      "master-acc": "Master",
+      "master": "Master",
       "loading": "Loading..."
     },
     "user-doc-getter": {
-      "getter-link-text": "Open file",
-      "failed-load-img": "No preview available",
-      "failed-load-file": "(Error)",
+      "link-open-file": "Open file",
+      "fail-load-img": "No preview available",
+      "fail-load-file": "(Error)",
       "fail-load-default": "Loading..."
     },
     "user-doc-link-getter": {
-      "failed-load-doc": "(Error)",
-      "fail-load-def": "Loading..."
+      "error": "(Error)",
+      "loading": "Loading..."
     },
     "collection-loader": {
       "more": "More"
     },
+    "form-confirmation": {
+      "processing": "Processing..."
+    },
     "g-auth": {
-      "header-auth": "Two-factor authentication",
-      "header-auth-text-set-up": "You have to set up 2FA to proceed.",
-      "header-auth-text-install-g-auth": "Please install Google Authenticator to your device:",
-      "apple-g-auth-ico-text": "iOS",
-      "android-g-auth-ico-text": "Android",
-      "scan-QR": "Scan the QR-code or enter the code manually using Google Authenticator"
+      "header": "Two-factor authentication",
+      "need-set-up-2fa": "You have to set up 2FA to proceed.",
+      "install-g-auth": "Please install Google Authenticator to your device:",
+      "ios": "iOS",
+      "android": "Android",
+      "scan-qr": "Scan the QR-code or enter the code manually using Google Authenticator",
+      "btn-enable": "Enable"
     },
     "settings": {
-      "header-link": "Settings",
-      "app-block": "Settings",
-      "app-block-row": "Two-factor Authentication",
+      "settings-link": "Settings",
+      "settings": "Settings",
+      "2fa": "Two-factor Authentication",
       "link-change": "Change",
-      "info-data": "Enabled"
+      "enabled": "Enabled"
     },
     "admin-list": {
-      "role-sec": "Role",
-      "acc-id-sec": "Account ID",
-      "weight-sec": "Weight",
-      "identity-sec": "Identity",
-      "master-acc": "Master",
-      "user-adds": "(you)",
+      "role": "Role",
+      "acc-id": "Account ID",
+      "weight": "Weight",
+      "identity": "Identity",
+      "master": "Master",
+      "user": "(you)",
       "load": "Loading...",
       "fail-load": "Nothing here yet"
     },
     "admin-manager": {
       "add-new-admin": "Add new administrator",
-      "mng-admin": "Manage administrator",
-      "del-btn": "Delete",
+      "manage-admin": "Manage administrator",
+      "btn-delete": "Delete",
       "btn-add": "Add",
       "btn-upd": "Update"
     },
     "admins-index": {
       "header": "Admin list",
-      "act-creat-new-adm": "New admin"
+      "new-admin": "New admin"
     },
     "admins": {
-      "adm-index": "Admin index"
+      "admin-index": "Admin index"
     },
     "asset-pair-creator": {
       "create-pair": "Create asset pair",
-      "creator-tip-msg": "The correction of physical price in percents. If physical price and restriction by physical price are set, minimum price for this pair offer will be",
-      "creator-tip-msg-prise": "physicalPrice * physicalPriceCorrection",
-      "creator-tip-msg-offer": "Maximum offer price step in percents. If current price restriction is set, the users are allowed to set an offer with price in interval",
-      "creator-tip-msg-offer-price": "(1 ± maxPriceStep) * currentPrice",
-      "asset-pair-tip-msg-trade": "Allowed to trade this pair on secondary market",
-      "asset-pair-tip-msg-new-offer": "If set, then prices for new offers must be greater than physical price with correction",
-      "asset-pair-tip-msg-prise-interval": "If set, then price for new offers must be in interval of",
-      "asset-pair-tip-msg-prise": "(1 ± maxPriceStep) * currentPrice",
-      "asset-pair-submit-btn": "Create"
+      "message": "The correction of physical price in percents. If physical price and restriction by physical price are set, minimum price for this pair offer will be",
+      "message-prise": "physicalPrice * physicalPriceCorrection",
+      "message-offer": "Maximum offer price step in percents. If current price restriction is set, the users are allowed to set an offer with price in interval",
+      "message-offer-price": "(1 ± maxPriceStep) * currentPrice",
+      "asset-pair-message-trade": "Allowed to trade this pair on secondary market",
+      "asset-pair-message-new-offer": "If set, then prices for new offers must be greater than physical price with correction",
+      "asset-pair-message-prise-interval": "If set, then price for new offers must be in interval of",
+      "asset-pair-message-prise": "(1 ± maxPriceStep) * currentPrice",
+      "asset-pair-create-btn": "Create"
     },
     "asset-pair-list": {
-      "app-list-prise": "Price",
-      "app-list-policy": "Policy",
-      "app-list-no-policy": " No policies for this pair",
-      "app-list-like": "Nothing here yet",
-      "app-list-error": " An error occurred. Please try again later",
-      "app-list-load": "Loading..."
+      "prise": "Price",
+      "policy": "Policy",
+      "no-policy": " No policies for this pair",
+      "nothing-here-yet": "Nothing here yet",
+      "error": " An error occurred. Please try again later",
+      "loading": "Loading..."
     },
     "asset-pair-manager": {
-      "manager-form-app-prise": "Update {{ base }}/{{ quote }} pair price",
-      "manager-form-submit-btn": "Update",
-      "manager-asset-pair": "Update {{ base }}/{{ quote }} pair attributes",
-      "manager-asset-tip-msg": " The correction of physical price in percents. If physical price and restriction by physical price are set, minimum price for this pair offer will be",
-      "manager-asset-tip-msg-prise": "physicalPrice * physicalPriceCorrection",
-      "manager-asset-tip-msg-max-offer": "Maximum offer price step in percents. If current price restriction is set, the users are allowed to set an offer with price in interval",
-      "manager-asset-tip-msg-max-offer-prise": "(1 ± maxPriceStep) * currentPrice",
-      "manager-asset-tip-msg-allow-trade": "Allowed to trade this pair on secondary market",
-      "manager-asset-tip-msg-new-offer": " If set, then prices for new offers must be greater than physical price with correction",
-      "manager-asset-tip-msg-prise-new-offer": " If set, then price for new offers must be in interval of",
-      "manager-asset-tip-msg-current-prise-new-offer": "(1 ± maxPriceStep) * currentPrice",
-      "manager-asset-upd-policy": "Update policy",
-      "manager-asset-rmv-pair": "Remove pair",
-      "manager-asset-load": "Loading..."
+      "update-pair-prise": "Update {{ base }}/{{ quote }} pair price",
+      "btn-update": "Update",
+      "update-pair-attributes": "Update {{ base }}/{{ quote }} pair attributes",
+      "correct-physical-prise": " The correction of physical price in percents. If physical price and restriction by physical price are set, minimum price for this pair offer will be",
+      "correct-physical-prise-formula": "physicalPrice * physicalPriceCorrection",
+      "max-offer-price": "Maximum offer price step in percents. If current price restriction is set, the users are allowed to set an offer with price in interval",
+      "max-offer-price-formula": "(1 ± maxPriceStep) * currentPrice",
+      "allow-trade": "Allowed to trade this pair on secondary market",
+      "message-condition": " If set, then prices for new offers must be greater than physical price with correction",
+      "message-condition-interval": " If set, then price for new offers must be in interval of",
+      "message-condition-formula": "(1 ± maxPriceStep) * currentPrice",
+      "update-policy": "Update policy",
+      "remove-pair": "Remove pair",
+      "loading": "Loading..."
     },
     "asset-pairs-index": {
       "asset-pairs-btn": "Asset pairs",
       "create-pare-btn": "Create pair"
     },
     "asset-request-list": {
-      "app-list-state": "State",
-      "app-list-requestor": "Requestor",
-      "app-list-load": "Loading...",
-      "app-list-fail-load": "Nothing here yet"
+      "state": "State",
+      "requestor": "Requestor",
+      "loading": "Loading...",
+      "fail-load": "Nothing here yet"
     },
     "asset-request-reject-form": {
-      "trrf-reject": "Reject {{ assetRequest.code }}",
-      "trrf-create-request": "create request",
-      "trrf-update-request": "create request"
+      "reject": "Reject {{ assetRequest.code }}",
+      "create-request": "create request",
+      "update-request": "create request",
+      "btn-reject": "Reject",
+      "btn-cancel": "Cancel"
     },
     "asset-requests-index": {
       "manage-assets": "Manage assets"
     },
     "asset-requests-show": {
-      "app-block-init": "Loading...",
-      "app-block-init-fail": "An error occurred. Please try again later",
+      "loading": "Loading...",
+      "fail-load": "An error occurred. Please try again later",
       "asset-creation-request": "Asset creation request",
-      "asset-upd-request": "Asset update request",
+      "asset-update-request": "Asset update request",
       "asset-request": "Asset request",
       "asset-logo": "Asset logo",
       "asset-name": "Asset name",
@@ -248,75 +254,76 @@
       "stellar-asset-type": "Stellar asset type",
       "stellar-withdraw": "Stellar withdraw",
       "stellar-deposit": "Stellar deposit",
-      "show-val-true": "Yes",
-      "show-val-false": "No",
+      "yes": "Yes",
+      "no": "No",
       "creation-data": "Creation date",
-      "upd-data": "Update date",
+      "update-data": "Update date",
       "request-state": "State",
-      "app-btn-fulfill": "Fulfill",
-      "app-btn-reject": "Reject"
+      "btn-fulfill": "Fulfill",
+      "btn-reject": "Reject"
     },
     "issuance-form": {
-      "avaible-assets": "Avaliecle",
-      "no-avaible-assets": "No available assets left",
-      "app-issue": "Issue",
+      "avaible": "Available",
+      "no-avaible": "No available assets left",
+      "issue": "Issue",
       "loading": "Loading..."
     },
     "issuance-history": {
-      "header-id": "ID",
-      "header-val": "Value",
-      "header-req": "Requestor",
-      "header-date": "Date",
-      "app-loaded": "Nothing here yet",
-      "app-loading": "Loading..."
+      "id": "ID",
+      "value": "Value",
+      "requestor": "Requestor",
+      "receiver": "Receiver",
+      "date": "Date",
+      "fail-load": "Nothing here yet",
+      "loading": "Loading..."
     },
     "issuance-request-list": {
-      "state-pending": "Pending",
-      "state-approved": "Approved",
-      "state-rejected": "Permanently rejected",
-      "list-cell-val": "Value",
-      "list-cell-date": "Date",
-      "list-cell-req": "Requestor",
-      "app-loaded": "Nothing here yet",
-      "app-loading": "Loading..."
+      "pending": "Pending",
+      "approved": "Approved",
+      "perm-rejected": "Permanently rejected",
+      "value": "Value",
+      "date": "Date",
+      "requestor": "Requestor",
+      "fail-load": "Nothing here yet",
+      "loading": "Loading..."
     },
     "issuance": {
-      "h-form": "Issuance"
+      "header": "Issuance"
     },
     "issuance-details": {
       "header": "IssuanceDetails",
-      "issuance-id": "ID",
-      "issuance-date": "Date",
-      "issuence-init": "Initiator",
-      "issuence-init-mail": "Initiator (Email)",
-      "issuence-val": "Value",
-      "issuance-state": "State",
-      "issuance-fulfill": "Fulfill",
-      "issuance-reject": "Reject",
-      "issuance-loading": "Loading...",
-      "issuance-reject-btn": "Reject",
-      "issuance-cancel-btn": "Cancel"
+      "id": "ID",
+      "date": "Date",
+      "initiator": "Initiator",
+      "initiator-mail": "Initiator (Email)",
+      "value": "Value",
+      "state": "State",
+      "fulfill": "Fulfill",
+      "reject": "Reject",
+      "loading": "Loading...",
+      "btn-reject": "Reject",
+      "btn-cancel": "Cancel"
     },
     "asset-list": {
-      "header-name": "Name",
-      "header-code": "Code",
-      "header-policy": "Policy",
-      "app-loading": "Loading...",
-      "app-fail-loading": "Nothing here yet"
+      "name": "Name",
+      "code": "Code",
+      "policy": "Policy",
+      "loading": "Loading...",
+      "fail-load": "Nothing here yet"
     },
     "asset-manager": {
-      "manage": "Manage {{ assetCode }}",
-      "asset-logo": "Upload asset logo",
-      "asset-def": "Default",
-      "accet-KYC-req": "KYC required",
-      "asset-input-wrp": "Terms",
-      "asset-select-file": "Select File",
-      "asset-advanced": "Advansed",
-      "asset-upd-t": "Update asset",
-      "asset-upd-f": "Create asset"
+      "header": "Manage {{ assetCode }}",
+      "upload-asset-logo": "Upload asset logo",
+      "default": "Default",
+      "KYC-required": "KYC required",
+      "terms": "Terms",
+      "select-file": "Select File",
+      "advanced": "Advansed",
+      "btn-update-asset": "Update asset",
+      "btn-create-asset": "Create asset"
     },
     "system-assets-index": {
-      "header-row": "Assets owned by master",
+      "header": "Assets owned by master",
       "create-asset": "Create asset"
     },
     "system-assets-new": {
@@ -324,8 +331,8 @@
     },
     "withdrawal-details": {
       "header": "Withdrawal details",
-      "req-id": "Request ID",
-      "req-state": "Request state",
+      "request-id": "Request ID",
+      "request-state": "Request state",
       "requestor": "Requestor",
       "requestor-id": "Requestor ID",
       "comment": "Comment",
@@ -342,21 +349,21 @@
     },
     "withdrawal-list": {
       "header": "Withdrawal list",
-      "filter-pending": "Pending",
-      "filter-approved": "Approved",
-      "filter-perm-rejected": "Permanently rejected",
+      "pending": "Pending",
+      "approved": "Approved",
+      "perm-rejected": "Permanently rejected",
       "no-assets": "No withdrawable assets",
-      "withdrawal-list-amount": "Amount",
-      "withdrawal-list-status": "Status",
-      "withdrawal-list-requestor": "Requestor",
-      "app-list-loaded": "Nothing here yet",
-      "app-list-no-loaded": "Loading..."
+      "amount": "Amount",
+      "status": "Status",
+      "requestor": "Requestor",
+      "fail-load": "Nothing here yet",
+      "loading": "Loading..."
     },
     "withdrawals-index": {
       "header": "Withdrawal list"
     },
     "assets": {
-      "nav-sys-assets": "System assets",
+      "nav-system-assets": "System assets",
       "nav-asset-requests": "Asset requests",
       "nav-issuance": "Issuance",
       "nav-asset-pairs": "Asset pairs",
@@ -366,20 +373,20 @@
       "btn-sign-out": "Sign Out"
     },
     "user-sidebar": {
-      "admin-badge": "ADMIN PANEL",
-      "sidebar-nav-users": "Users",
-      "sidebar-nav-admins": "Admins",
-      "sidebar-nav-assets": "Assets",
-      "sidebar-nav-sales": "Sales",
-      "sidebar-nav-polls": "Polls",
-      "sidebar-nav-offline-op": "Offline operations",
-      "sidebar-nav-kyc-req": "KYC Requests",
-      "sidebar-nav-kyc-recovery-req": "KYC Recovery Requests",
-      "sidebar-nav-limits": "Limits",
-      "sidebar-nav-trades": "Trades",
-      "sidebar-nav-fees": "Fees",
-      "sidebar-nav-key-val": "Key Value",
-      "sidebar-nav-settings": "Settings"
+      "admin-panel": "ADMIN PANEL",
+      "link-users": "Users",
+      "link-admins": "Admins",
+      "link-assets": "Assets",
+      "link-sales": "Sales",
+      "link-polls": "Polls",
+      "link-offline-op": "Offline operations",
+      "link-kyc-requests": "KYC Requests",
+      "link-kyc-recovery-req": "KYC Recovery Requests",
+      "link-limits": "Limits",
+      "link-trades": "Trades",
+      "link-fees": "Fees",
+      "link-key-value": "Key Value",
+      "link-settings": "Settings"
     },
     "collected-fees-list": {
       "header": "Balances",

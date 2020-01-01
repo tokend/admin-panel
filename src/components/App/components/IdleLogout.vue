@@ -10,10 +10,10 @@
 
         <div class="idle-logout__actions">
           <button class="app__btn" @click="extendSession">
-            {{ "idle-logout.app-btn-cont" | globalize }}
+            {{ "idle-logout.btn-cont" | globalize }}
           </button>
           <button class="app__btn-secondary" @click="endSession">
-            {{ "idle-logout.app-btn-lgout" | globalize }}
+            {{ "idle-logout.btn-log-out" | globalize }}
           </button>
         </div>
       </div>

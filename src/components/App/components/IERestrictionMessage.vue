@@ -1,10 +1,10 @@
 <template>
   <div class="no-support-message">
     <div class="msg">
-      {{ "ie-restriction-message.no-sup-msg" | globalize }}
+      {{ "ie-restriction-message.no-support-msg" | globalize }}
       <div class="browser-icons">
         <span class="download">
-          {{ "ie-restriction-message.browser-ico-downld" | globalize }}
+          {{ "ie-restriction-message.browser-ico-download" | globalize }}
         </span>
         <a
           href="https://www.google.com/chrome/browser/desktop/index.html"

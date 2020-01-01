@@ -70,10 +70,10 @@
           <template slot="help">
             <p class="asset-pair-creator__tip-message">
               <span>
-                {{ "asset-pair-creator.creator-tip-msg" | globalize }}
+                {{ "asset-pair-creator.message" | globalize }}
               </span>
               <strong>{{
-                "asset-pair-creator.creator-tip-msg-prise" | globalize
+                "asset-pair-creator.message-prise" | globalize
               }}</strong>
             </p>
           </template>
@@ -99,10 +99,10 @@
           <template slot="help">
             <p class="asset-pair-creator__tip-message">
               <span>
-                {{ "asset-pair-creator.creator-tip-msg-offer" | globalize }}
+                {{ "asset-pair-creator.message-offer" | globalize }}
               </span>
               <strong>{{
-                "asset-pair-creator.creator-tip-msg-offer-prise" | globalize
+                "asset-pair-creator.message-offer-prise" | globalize
               }}</strong>
             </p>
           </template>
@@ -120,7 +120,7 @@
           >
             <template slot="help">
               <span class="asset-pair-creator__tip-message">
-                {{ "asset-pair-creator.asset-pair-tip-msg-trade" | globalize }}
+                {{ "asset-pair-creator.asset-pair-message-trade" | globalize }}
               </span>
             </template>
           </tick-field>
@@ -137,7 +137,7 @@
             <template slot="help">
               <span class="asset-pair-creator__tip-message">
                 {{
-                  "asset-pair-creator.asset-pair-tip-msg-new-offer" | globalize
+                  "asset-pair-creator.asset-pair-message-new-offer" | globalize
                 }}
               </span>
             </template>
@@ -156,10 +156,10 @@
               <p class="asset-pair-creator__tip-message">
                 <span>
                   <!-- eslint-disable-next-line max-len -->
-                  {{ "asset-pair-creator.asset-pair-tip-msg-prise-interval" | globalize }}
+                  {{ "asset-pair-creator.asset-pair-message-prise-interval" | globalize }}
                 </span>
                 <!-- eslint-disable-next-line max-len -->
-                <strong>{{ "asset-pair-creator.asset-pair-tip-msg-prise" | globalize }}</strong>
+                <strong>{{ "asset-pair-creator.asset-pair-message-prise" | globalize }}</strong>
               </p>
             </template>
           </tick-field>
@@ -179,7 +179,7 @@
           class="asset-pair-creator__submit-btn app__btn"
           :disabled="formMixin.isDisabled"
         >
-          {{ "asset-pair-creator.asset-pair-submit-btn" | globalize }}
+          {{ "asset-pair-creator.asset-pair-create-btn" | globalize }}
         </button>
       </div>
     </form>

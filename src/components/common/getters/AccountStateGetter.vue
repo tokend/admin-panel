@@ -4,7 +4,7 @@
       {{ accountState }}
     </template>
     <template v-else>
-      {{ "account-state-getter.load-acc-state" | globalize }}
+      {{ "account-state-getter.loading" | globalize }}
     </template>
   </span>
 </template>

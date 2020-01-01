@@ -8,13 +8,13 @@
           v-model="filters.state"
         >
           <option :value="REQUEST_STATES.pending">
-            {{ "withdrawal-list.filter-pending" | globalize }}
+            {{ "withdrawal-list.pending" | globalize }}
           </option>
           <option :value="REQUEST_STATES.approved">
-            {{ "withdrawal-list.filter-approved" | globalize }}
+            {{ "withdrawal-list.approved" | globalize }}
           </option>
           <option :value="REQUEST_STATES.permanentlyRejected">
-            {{ "withdrawal-list.filter-perm-rejected" | globalize }}
+            {{ "withdrawal-list.perm-rejected" | globalize }}
           </option>
         </select-field>
 
@@ -59,13 +59,13 @@
         <ul class="app-list">
           <div class="app-list__header">
             <span class="app-list__cell">
-              {{ "withdrawal-list.withdrawal-list-amount" | globalize }}
+              {{ "withdrawal-list.amount" | globalize }}
             </span>
             <span class="app-list__cell">
-              {{ "withdrawal-list.withdrawal-list-status" | globalize }}
+              {{ "withdrawal-list.status" | globalize }}
             </span>
             <span class="app-list__cell">
-              {{ "withdrawal-list.withdrawal-list-requestor" | globalize }}
+              {{ "withdrawal-list.requestor" | globalize }}
             </span>
           </div>
 
@@ -98,10 +98,10 @@
         <ul class="app-list">
           <li class="app-list__li-like">
             <template v-if="isLoaded">
-              {{ "withdrawal-list.app-list-loaded" | globalize }}
+              {{ "withdrawal-list.fail-load" | globalize }}
             </template>
             <template v-else>
-              {{ "withdrawal-list.app-list-no-loaded" | globalize }}
+              {{ "withdrawal-list.loading" | globalize }}
             </template>
           </li>
         </ul>

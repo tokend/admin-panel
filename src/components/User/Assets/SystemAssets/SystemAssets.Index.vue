@@ -1,7 +1,7 @@
 <template>
   <div class="system-assets-index">
     <div class="system-assets-index__heading-row">
-      <h2>{{ "system-assets-index.header-row" | globalize }}</h2>
+      <h2>{{ "system-assets-index.header" | globalize }}</h2>
 
       <div class="system-assets-index__actions">
         <router-link

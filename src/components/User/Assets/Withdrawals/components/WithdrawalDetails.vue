@@ -4,11 +4,11 @@
 
     <ul class="key-value-list">
       <li>
-        <span>{{ "withdrawal-details.req-id" | globalize }}</span>
+        <span>{{ "withdrawal-details.request-id" | globalize }}</span>
         <span>{{ request.id }}</span>
       </li>
       <li>
-        <span>{{ "withdrawal-details.req-state" | globalize }}</span>
+        <span>{{ "withdrawal-details.request-state" | globalize }}</span>
         <verbose-formatter :string="request.state" />
       </li>
       <li>

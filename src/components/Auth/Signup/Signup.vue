@@ -63,7 +63,7 @@
 
         <div class="app__form-actions">
           <button class="app__btn" :disabled="formMixin.isDisabled">
-            {{ "sign-up.header-button" | globalize }}
+            {{ "sign-up.btn-sign-up" | globalize }}
           </button>
         </div>
       </form>
@@ -77,13 +77,13 @@
       </h2>
 
       <p class="text">
-        {{ "sign-up.app-block-text" | globalize }}
+        {{ "sign-up.follow-account-id" | globalize }}
       </p>
 
       <br class="text small">
 
       <p class="text small">
-        {{ "sign-up.app-block-text-small" | globalize }}
+        {{ "sign-up.warning-do-not-reload" | globalize }}
       </p>
 
       <br class="text">

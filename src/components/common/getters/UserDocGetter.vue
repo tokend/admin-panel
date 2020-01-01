@@ -6,7 +6,7 @@
           :href="href"
           target="_blank"
           rel="noopener">
-          {{ "user-doc-getter.getter-link-text" | globalize }}
+          {{ "user-doc-getter.link-open-file" | globalize }}
           <i class="mdi mdi-open-in-new user-doc-getter__ico" />
         </a>
       </div>
@@ -26,17 +26,17 @@
         >
 
         <p v-else>
-          {{ "user-doc-getter.failed-load-img" | globalize }}
+          {{ "user-doc-getter.fail-load-img" | globalize }}
         </p>
       </div>
       <span v-else-if="isNoFile">
         —
       </span>
       <span v-else-if="isFailed" class="danger">
-        {{ "user-doc-getter.failed-load-file" | globalize }}
+        {{ "user-doc-getter.fail-load-file" | globalize }}
       </span>
       <span v-else>
-        {{ "user-doc-getter.failed-load" | globalize }}
+        {{ "user-doc-getter.fail-load-default" | globalize }}
       </span>
     </div>
   </div>

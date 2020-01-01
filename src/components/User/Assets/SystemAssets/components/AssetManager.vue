@@ -1,6 +1,6 @@
 <template>
   <div class="asset-manager">
-    <h2>{{ "asset-manager.manage" | globalize }}</h2>
+    <h2>{{ "asset-manager.header" | globalize }}</h2>
 
     <form
       @submit.prevent="isFormValid() && showConfirmation()"
@@ -8,7 +8,7 @@
     >
       <div class="asset-manager__image-field-wrp">
         <label class="asset-manager__image-lbl">
-          {{ "asset-manager.asset-logo" | globalize }}
+          {{ "asset-manager.upload-asset-logo" | globalize }}
         </label>
         <image-field
           :file-key="safeGet(asset, `creatorDetails.logo.key`)"
@@ -137,10 +137,10 @@
           :error-message="getFieldErrorMessage('asset.type')"
         >
           <option :value="assetTypeDefault">
-            {{ "asset-manager.asset-def" | globalize }}
+            {{ "asset-manager.default" | globalize }}
           </option>
           <option :value="assetTypeKycRequired">
-            {{ "asset-manager.asset-KYC-req" | globalize }}
+            {{ "asset-manager.KYC-required" | globalize }}
           </option>
         </select-field>
       </div>
@@ -152,7 +152,7 @@
             class="app__upload-btn app__btn app__btn--info"
             for="file-select"
           >
-            {{ "asset-manager.asset-select-file" | globalize }}
+            {{ "asset-manager.select-file" | globalize }}
           </label>
           <input
             class="app__upload-input"
@@ -254,7 +254,7 @@
 
       <div class="asset-manager-advanced__block">
         <div class="asset-manager-advanced__heading">
-          <h3>{{ "asset-advansed.asset-advanced" | globalize }}</h3>
+          <h3>{{ "asset-advansed.advanced" | globalize }}</h3>
           <button
             class="app__btn-secondary app__btn-secondary--iconed"
             @click.prevent="isShownAdvanced = !isShownAdvanced"
@@ -429,14 +429,14 @@
           class="app__btn"
           :disabled="formMixin.isDisabled"
         >
-          {{ "asset-manager.asset-upd-t" | globalize }}
+          {{ "asset-manager.btn-update-asset" | globalize }}
         </button>
         <button
           v-else
           class="app__btn"
           :disabled="formMixin.isDisabled"
         >
-          {{ "asset-manager.asset-upd-f" | globalize }}
+          {{ "asset-manager.btn-create-asset" | globalize }}
         </button>
       </div>
     </form>

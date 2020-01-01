@@ -51,11 +51,11 @@
             </span>
 
             <span class="app-list__cell">
-              {{ "asset-request-list.app-list-state" | globalize }}
+              {{ "asset-request-list.state" | globalize }}
             </span>
 
             <span class="app-list__cell">
-              {{ "asset-request-list.app-list-requestor" | globalize }}
+              {{ "asset-request-list.requestor" | globalize }}
             </span>
           </div>
 
@@ -95,10 +95,10 @@
       <template v-else>
         <ul class="app-list">
           <li class="app-list__li-like" v-if="isPending">
-            {{ "asset-request-list.app-list-load" | globalize }}
+            {{ "asset-request-list.loadind" | globalize }}
           </li>
           <li class="app-list__li-like" v-else>
-            {{ "asset-request-list.app-list-fail-load" | globalize }}
+            {{ "asset-request-list.fail-load" | globalize }}
           </li>
         </ul>
       </template>

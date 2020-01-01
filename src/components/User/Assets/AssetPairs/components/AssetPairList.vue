@@ -8,11 +8,11 @@
           </span>
 
           <span class="app-list__cell app-list__cell--right">
-            {{ "asset-pair-list.app-list-prise" | globalize }}
+            {{ "asset-pair-list.prise" | globalize }}
           </span>
 
           <span class="app-list__cell app-list__cell--right">
-            {{ "asset-pair-list.app-list-policy" | globalize }}
+            {{ "asset-pair-list.policy" | globalize }}
           </span>
         </div>
 
@@ -55,7 +55,7 @@
                   v-if="!item.policies || !item.policies.length"
                   class="asset-pairs__policies-list-item"
                 >
-                  {{ "asset-pair-list.app-list-no-policy" | globalize }}
+                  {{ "asset-pair-list.no-policy" | globalize }}
                 </span>
               </span>
             </span>
@@ -67,7 +67,7 @@
     <template v-else-if="isLoaded && !list.length">
       <div class="app-list">
         <div class="app-list__li-like">
-          <p>{{ "asset-pair-list.app-list-like" | globalize }}</p>
+          <p>{{ "asset-pair-list.nothing-here-yet" | globalize }}</p>
         </div>
       </div>
     </template>
@@ -76,7 +76,7 @@
       <div class="app-list">
         <div class="app-list__li-like">
           <p class="danger">
-            {{ "asset-pair-list.app-list-error" | globalize }}
+            {{ "asset-pair-list.error" | globalize }}
           </p>
         </div>
       </div>
@@ -85,7 +85,7 @@
     <template v-else>
       <div class="app-list">
         <div class="app-list__li-like">
-          <p>{{ "asset-pair-list.app-list-load" | globalize }}</p>
+          <p>{{ "asset-pair-list.loading" | globalize }}</p>
         </div>
       </div>
     </template>

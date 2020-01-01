@@ -2,7 +2,7 @@
   <div class="issuance">
     <section class="issuance__form-section">
       <div class="app__block">
-        <h2>{{ "issuance.h-form" | globalize }}</h2>
+        <h2>{{ "issuance.header" | globalize }}</h2>
         <div class="issuance__form-wrp">
           <issuance-form />
         </div>

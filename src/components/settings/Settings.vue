@@ -2,16 +2,16 @@
   <div class="settings">
     <user-header>
       <router-link :to="{ name: 'settings' }" slot="nav">
-        {{ "settings.header-link" | globalize }}
+        {{ "settings.settings-link" | globalize }}
       </router-link>
     </user-header>
 
     <div class="app__user-container">
       <div class="app__block">
-        <h2>{{ "settings.app-block" | globalize }}</h2>
+        <h2>{{ "settings.settings" | globalize }}</h2>
 
         <div class="settings__row">
-          <span>{{ "settings.app-block-row" | globalize }} </span>
+          <span>{{ "settings.2fa" | globalize }} </span>
           <span>
             <template
               v-if="!(isTfaPending || hasGAuth)"
@@ -22,7 +22,7 @@
               </router-link>
             </template>
             <template class="info-block__data" v-else>
-              <strong>{{ "settings.info-data" | globalize }}</strong>
+              <strong>{{ "settings.enabled" | globalize }}</strong>
             </template>
           </span>
         </div>

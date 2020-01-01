@@ -37,7 +37,7 @@
 
         <div class="app__form-actions">
           <button class="app__btn" :disabled="formMixin.isDisabled">
-            {{ "login.label" | globalize }}
+            {{ "login.btn-sign-in" | globalize }}
           </button>
         </div>
       </form>
@@ -46,7 +46,7 @@
         <p class="login__alt-action">
           <span> {{ "login.also-you-can" | globalize }} </span>
           <router-link :to="{ name: 'seed-login' }">
-            {{ "login.seed-log-en-link" | globalize }}
+            {{ "login.seed-log-link" | globalize }}
           </router-link>
         </p>
       </template>
