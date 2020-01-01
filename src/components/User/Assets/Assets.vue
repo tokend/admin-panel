@@ -2,7 +2,7 @@
   <div class="assets">
     <user-header>
       <router-link :to="{ name: 'assets.systemAssets' }" slot="nav">
-        {{ "assets.nav-sys-assets" | globalize }}
+        {{ "assets.nav-system-assets" | globalize }}
       </router-link>
       <router-link :to="{ name: 'assets.assetRequests' }" slot="nav">
         {{ "assets.nav-asset-requests" | globalize }}

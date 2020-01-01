@@ -2,13 +2,13 @@
   <div class="asset-requests-show app__block">
     <template v-if="isInitializing">
       <p class="text">
-        {{ "asset-requests-show.app-block-init" | globalize }}
+        {{ "asset-requests-show.loading" | globalize }}
       </p>
     </template>
 
     <template v-else-if="isInitFailed">
       <p class="text danger">
-        {{ "asset-requests-show.app-block-init-fail" | globalize }}
+        {{ "asset-requests-show.fail-load" | globalize }}
       </p>
     </template>
 
@@ -24,7 +24,7 @@
         <template
           v-else-if="assetRequest.type === ASSET_REQUEST_TYPES.updateAsset"
         >
-          {{ "asset-requests-show.asset-upd-request" | globalize }}
+          {{ "asset-requests-show.asset-update-request" | globalize }}
         </template>
 
         <template v-else>
@@ -224,10 +224,10 @@
             class="asset-requests-show__value"
             v-if="assetRequest.stellarDeposit"
           >
-            {{ "asset-requests-show.show-val-true" | globalize }}
+            {{ "asset-requests-show.yes" | globalize }}
           </span>
           <span class="asset-requests-show__value" v-else>
-            {{ "asset-requests-show.show-val-false" | globalize }}
+            {{ "asset-requests-show.no" | globalize }}
           </span>
         </div>
       </template>
@@ -245,7 +245,7 @@
 
       <div class="asset-requests-show__row">
         <span class="asset-requests-show__key">
-          {{ "asset-requests-show.upd-data" | globalize }}
+          {{ "asset-requests-show.update-data" | globalize }}
         </span>
         <date-formatter
           :date="assetRequest.updateDate"
@@ -288,7 +288,7 @@
           :disabled="isPending"
           @click="fulfill"
         >
-          {{ "asset-requests-show.app-btn-fulfill" | globalize }}
+          {{ "asset-requests-show.btn-fulfill" | globalize }}
         </button>
 
         <button
@@ -296,7 +296,7 @@
           :disabled="isPending"
           @click="isRejecting = true"
         >
-          {{ "asset-requests-show.app-btn-reject" | globalize }}
+          {{ "asset-requests-show.btn-reject" | globalize }}
         </button>
       </div>
     </div>

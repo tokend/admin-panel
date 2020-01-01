@@ -3,10 +3,10 @@
     <slot />
   </doc-link-getter>
   <span v-else-if="isFailed" class="danger">
-    {{ "user-doc-link-getter.failed-load-doc" | globalize }}
+    {{ "user-doc-link-getter.error" | globalize }}
   </span>
   <span v-else>
-    {{ "user-doc-link-getter.failed-load-def" | globalize }}
+    {{ "user-doc-link-getter.loading" | globalize }}
   </span>
 </template>
 

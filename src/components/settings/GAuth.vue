@@ -1,14 +1,14 @@
 <template>
   <div class="g-auth">
     <h2 class="g-auth__heading">
-      {{ "g-auth.header-auth" | globalize }}
+      {{ "g-auth.header" | globalize }}
     </h2>
 
     <p class="text">
-      {{ "g-auth.header-auth-text-set-up" | globalize }}
+      {{ "g-auth.need-set-up-2fa" | globalize }}
     </p>
     <p class="text">
-      {{ "g-auth.header-auth-install-g-auth" | globalize }}
+      {{ "g-auth.install-g-auth" | globalize }}
     </p>
     <br class="text small">
     <p class="g-auth__app-links">
@@ -17,7 +17,7 @@
         href="https://itunes.apple.com/app/google-authenticator/id388497605?mt=8"
       >
         <i class="mdi mdi-apple g-auth__icon" /><span>{{
-          "g-auth.apple-g-auth-ico-text" | globalize
+          "g-auth.ios" | globalize
         }}</span>
       </a>
       <a
@@ -25,14 +25,14 @@
         href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2"
       >
         <i class="mdi mdi-android g-auth__icon" /><span>{{
-          "android-g-auth-ico-text" | globalize
+          "g-auth.android" | globalize
         }}</span>
       </a>
     </p>
 
     <br class="text">
     <p class="text">
-      {{ "g-auth.scan-QR" | globalize }}
+      {{ "g-auth.scan-qr" | globalize }}
     </p>
     <br class="text small">
     <div class="g-auth__qr-wrap">
@@ -51,7 +51,7 @@
       class="app__btn"
       :disabled="buttonDisabled"
       @click="enableGAuth">
-      Enable
+      {{ "g-auth.btn-enable" | globalize }}
     </button>
   </div>
 </template>

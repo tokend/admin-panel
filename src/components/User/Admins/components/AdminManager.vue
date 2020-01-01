@@ -6,7 +6,7 @@
       </h2>
 
       <h2 v-else>
-        {{ "admin-manager.mng-admin" | globalize }}
+        {{ "admin-manager.manage-admin" | globalize }}
       </h2>
 
       <form
@@ -140,7 +140,7 @@
               :disabled="isMaster || formMixin.isDisabled"
               @click="isDeleteMode = true"
             >
-              {{ "admin-manager.del-btn" | globalize }}
+              {{ "admin-manager.btn-delete" | globalize }}
             </button>
           </template>
         </div>

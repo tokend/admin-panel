@@ -1,13 +1,13 @@
 <template>
   <div class="trrf">
     <h2 v-if="assetRequest.type === 'create_asset'">
-      {{ "asset-request-reject-form.trrf-reject" | globalize }}
-      {{ "asset-request-reject-form.trrf-create-request" | globalize }}
+      {{ "asset-request-reject-form.reject" | globalize }}
+      {{ "asset-request-reject-form.create-request" | globalize }}
     </h2>
 
     <h2 v-else>
-      {{ "asset-request-reject-form.trrf-reject" | globalize }}
-      {{ "asset-request-reject-form.trrf-update-request" | globalize }}
+      {{ "asset-request-reject-form.reject" | globalize }}
+      {{ "asset-request-reject-form.update-request" | globalize }}
     </h2>
 
     <form
@@ -44,14 +44,14 @@
         form="trrf-form"
         :disabled="formMixin.isDisabled"
       >
-        Reject
+        {{ "asset-request-reject-form.btn-reject" | globalize }}
       </button>
       <button
         class="app__btn-secondary"
         @click="$emit('close')"
         :disabled="formMixin.isDisabled"
       >
-        Cancel
+        {{ "asset-request-reject-form.btn-cancel" | globalize }}
       </button>
     </div>
   </div>

@@ -9,7 +9,7 @@
           {{ "auth-header.admin-logo" | globalize }}
         </span>
         <span class="auth-header__admin-badge">
-          {{ "auth-header.admin-badge" | globalize }}
+          {{ "auth-header.admin-panel" | globalize }}
         </span>
       </div>
 
@@ -17,13 +17,13 @@
         <nav class="auth-header__nav">
           <li class="auth-header__nav-li">
             <router-link :to="{ name: 'signup' }">
-              {{ "auth-header.admin-badge" | globalize }}
+              {{ "auth-header.sign-up" | globalize }}
             </router-link>
           </li>
 
           <li class="auth-header__nav-li">
             <router-link :to="{ name: 'login' }">
-              {{ "auth-header.header-sign-in" | globalize }}
+              {{ "auth-header.sign-in" | globalize }}
             </router-link>
           </li>
         </nav>

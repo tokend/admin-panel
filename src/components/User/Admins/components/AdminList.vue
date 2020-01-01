@@ -6,19 +6,19 @@
       </span>
 
       <span class="admin-list__li-role secondary">
-        {{ "admin-list.role-sec" | globalize }}
+        {{ "admin-list.role" | globalize }}
       </span>
 
       <span class="admin-list__li-account-id secondary">
-        {{ "admin-list.acc-id-sec" | globalize }}
+        {{ "admin-list.acc-id" | globalize }}
       </span>
 
       <span class="admin-list__li-weight secondary">
-        {{ "admin-list.weight-sec" | globalize }}
+        {{ "admin-list.weight" | globalize }}
       </span>
 
       <span class="admin-list__li-identity secondary">
-        {{ "admin-list.identity-sec" | globalize }}
+        {{ "admin-list.identity" | globalize }}
       </span>
     </div>
 
@@ -33,7 +33,7 @@
         >
           <span class="admin-list__li-name" :title="item.details.name">
             <template v-if="item.id === masterPubKey">
-              {{ "admin-list.master-acc" | globalize }}
+              {{ "admin-list.master" | globalize }}
             </template>
             <template v-else>
               {{ item.details.name }}
@@ -41,7 +41,7 @@
 
             <template v-if="item.id === userAddress">
               <span class="secondary">
-                {{ "admin-list.user-adds" | globalize }}
+                {{ "admin-list.user" | globalize }}
               </span>
             </template>
           </span>

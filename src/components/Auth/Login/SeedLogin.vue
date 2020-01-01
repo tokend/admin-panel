@@ -21,14 +21,14 @@
 
         <div class="app__form-actions">
           <button class="app__btn" :disabled="formMixin.isDisabled">
-            {{ "seed-login.label" | globalize }}
+            {{ "seed-login.btn-sign-in" | globalize }}
           </button>
         </div>
       </form>
 
       <p class="login__alt-action">
         <router-link :to="{ name: 'auth' }">
-          {{ "seed-login.classic-sgn-in" | globalize }}
+          {{ "seed-login.classic-sign-in" | globalize }}
         </router-link>
       </p>
     </div>

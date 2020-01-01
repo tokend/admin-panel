@@ -26,7 +26,7 @@
           </template>
 
           <template v-else>
-            {{ 'Processing…' }}
+            {{ "form-confirmation.processing" | globalize }}
           </template>
         </button>
       </div>

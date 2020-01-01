@@ -71,7 +71,7 @@
 
         <div class="issuance-form__asset-info app__form-row" v-if="form.asset">
           <p v-if="isIssuanceAllowed" class="text">
-            <span>{{ "issuance-form.avaible-assets" | globalize }}</span>
+            <span>{{ "issuance-form.avaible" | globalize }}</span>
             <asset-amount-formatter
               :amount="availableForIssuance"
               :asset="form.asset"
@@ -79,7 +79,7 @@
           </p>
 
           <p v-else class="text">
-            {{ "issuance-form.no-avaible-assets" | globalize }}
+            {{ "issuance-form.no-avaible" | globalize }}
           </p>
         </div>
 
@@ -97,7 +97,7 @@
             class="app__btn"
             :disabled="formMixin.isDisabled || !isIssuanceAllowed"
           >
-            {{ "issuance-form.app-issue" | globalize }}
+            {{ "issuance-form.issue" | globalize }}
           </button>
         </div>
       </form>

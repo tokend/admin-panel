@@ -2,7 +2,7 @@
   <div class="verify-tfa" v-if="isRequired">
     <div class="verify-tfa__block app__block">
       <h2 class="verify-tfa__heading">
-        {{ "verify-tfa.heading" | globalize }}
+        {{ "verify-tfa.header" | globalize }}
       </h2>
 
       <p class="verify-tfa__text text">

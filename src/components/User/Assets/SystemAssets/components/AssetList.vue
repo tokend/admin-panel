@@ -2,14 +2,14 @@
   <div class="asset-list">
     <div class="asset-list__table-header" v-if="parsedAssets">
       <span class="asset-list__li-name secondary">
-        {{ "asset-list.header-name" | globalize }}
+        {{ "asset-list.name" | globalize }}
       </span>
 
       <span class="asset-list__li-code secondary">
-        {{ "asset-list.header-code" | globalize }}
+        {{ "asset-list.code" | globalize }}
       </span>
       <span class="asset-list__li-policy secondary">
-        {{ "asset-list.header-policy" | globalize }}
+        {{ "asset-list.policy" | globalize }}
       </span>
     </div>
 
@@ -43,13 +43,13 @@
       <div class="app-list__li-like">
         <template v-if="isLoading">
           <p>
-            {{ "asset-list.app-loading" | globalize }}
+            {{ "asset-list.loading" | globalize }}
           </p>
         </template>
 
         <template v-else>
           <p>
-            {{ "asset-list.app-fail-loading" | globalize }}
+            {{ "asset-list.fail-load" | globalize }}
           </p>
         </template>
       </div>

@@ -8,13 +8,13 @@
           v-model="filters.state"
         >
           <option :value="REQUEST_STATES.pending">
-            {{ "issuance-request-list.state-pending" | globalize }}
+            {{ "issuance-request-list.pending" | globalize }}
           </option>
           <option :value="REQUEST_STATES.approved">
-            {{ "issuance-request-list.state-approved" | globalize }}
+            {{ "issuance-request-list.approved" | globalize }}
           </option>
           <option :value="REQUEST_STATES.permanentlyRejected">
-            {{ "issuance-request-list.state-rejected" | globalize }}
+            {{ "issuance-request-list.perm-rejected" | globalize }}
           </option>
         </select-field>
         <select-field
@@ -38,15 +38,15 @@
         <ul class="app-list">
           <div class="app-list__header issuance-rl__li-header">
             <span class="app-list__cell">
-              {{ "issuance-request-list.list-cell-val" | globalize }}
+              {{ "issuance-request-list.value" | globalize }}
             </span>
 
             <span class="app-list__cell">
-              {{ "issuance-request-list.list-cell-val" | globalize }}
+              {{ "issuance-request-list.date" | globalize }}
             </span>
 
             <span class="app-list__cell">
-              {{ "issuance-request-list.list-cell-req" | globalize }}
+              {{ "issuance-request-list.requestor" | globalize }}
             </span>
           </div>
           <li
@@ -89,10 +89,10 @@
         <div class="app-list">
           <div class="app-list__li-like app-list__li--no-shadow">
             <p v-if="isLoaded">
-              {{ "issuance-request-list.app-loaded" | globalize }}
+              {{ "issuance-request-list.fail-load" | globalize }}
             </p>
             <p v-else>
-              {{ "issuance-request-list.app-loading" | globalize }}
+              {{ "issuance-request-list.loading" | globalize }}
             </p>
           </div>
         </div>

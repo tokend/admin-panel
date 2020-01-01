@@ -9,7 +9,7 @@
           :to="{ name: 'admins.new' }"
         >
           <i class="mdi mdi-plus" />
-          {{ "admins-index.act-creat-new-adm" | globalize }}
+          {{ "admins-index.new-admin" | globalize }}
         </router-link>
       </div>
     </div>

@@ -5,7 +5,7 @@
         @submit.prevent="isFormValid('priceForm') && showConfirmation()"
         class="asset-pair-manager__form app__block"
       >
-        <h2>{{ "asset-pair-manager.manager-form-app-prise" | globalize }}</h2>
+        <h2>{{ "asset-pair-manager.update-pair-prise" | globalize }}</h2>
 
         <div class="asset-pair-manager__form-row app__form-row">
           <input-field
@@ -43,7 +43,7 @@
             :disabled="formMixin.isDisabled"
             @click="isAttributesFormSelected = false"
           >
-            {{ "asset-pair-manager.manager-form-submit-btn" | globalize }}
+            {{ "asset-pair-manager.btn-update" | globalize }}
           </button>
         </div>
       </form>
@@ -54,7 +54,7 @@
         @submit.prevent="isFormValid('attributesForm') && showConfirmation()"
         class="asset-pair-manager__form app__block"
       >
-        <h2>{{ "asset-pair-manager.manager-asset-pair" | globalize }}</h2>
+        <h2>{{ "asset-pair-manager.update-pair-attributes" | globalize }}</h2>
 
         <div class="asset-pair-manager__form-row app__form-row">
           <input-field
@@ -76,10 +76,11 @@
             <template slot="help">
               <p class="asset-pair-manager__tip-message">
                 <span>
-                  {{ "asset-pair-manager.manager-asset-tip-msg" | globalize }}
+                  {{ "asset-pair-manager.correct-physical-prise" | globalize }}
                 </span>
                 <strong>{{
-                  "asset-pair-manager.manager-asset-tip-msg-prise" | globalize
+                  // eslint-disable-next-line max-len
+                  "asset-pair-manager.correct-physical-prise-formula" | globalize
                 }}</strong>
               </p>
             </template>
@@ -108,12 +109,12 @@
               <p class="asset-pair-manager__tip-message">
                 <span>
                   {{
-                    "asset-pair-manager.manager-asset-tip-msg-max-offer"
+                    "asset-pair-manager.max-offer-price"
                       | globalize
                   }}</span
                   >
                 <strong>{{
-                  "asset-pair-manager.manager-asset-tip-msg-max-offer-prise"
+                  "asset-pair-manager.max-offer-price-formula"
                     | globalize
                 }}</strong>
               </p>
@@ -133,7 +134,7 @@
             <template slot="help">
               <span class="asset-pair-manager__tip-message">
                 {{
-                  "asset-pair-manager.manager-asset-tip-msg-allow-trade"
+                  "asset-pair-manager.allow-trade-pair"
                     | globalize
                 }}
               </span>
@@ -152,7 +153,7 @@
               <span class="asset-pair-manager__tip-message">
                 {{
                   // eslint-disable-next-line max-len
-                  "asset-pair-manager.manager-asset-tip-msg-new-offer" | globalize
+                  "asset-pair-manager.message-condition" | globalize
                 }}
               </span>
             </template>
@@ -170,14 +171,13 @@
               <p class="asset-pair-manager__tip-message">
                 <span>
                   {{
-                    "asset-pair-manager.manager-asset-tip-msg-prise-new-offer"
+                    "asset-pair-manager.message-condition-interval"
                       | globalize
                   }}
                 </span>
                 <strong>
                   {{
-                    // eslint-disable-next-line max-len
-                    "asset-pair-manager.manager-asset-tip-msg-current-prise-new-offer"
+                    "asset-pair-manager.message-condition-formula"
                       | globalize
                   }}</strong
                 >
@@ -202,7 +202,7 @@
               :disabled="formMixin.isDisabled"
               @click="isAttributesFormSelected = true"
             >
-              {{ "asset-pair-manager.manager-asset-upd-policy" | globalize }}
+              {{ "asset-pair-manager.update-policy" | globalize }}
             </button>
 
             <button
@@ -211,7 +211,7 @@
               @click.prevent="removeAssetPair"
               :disabled="formMixin.isDisabled"
             >
-              {{ "asset-pair-manager.manager-asset-rmv-pair" | globalize }}
+              {{ "asset-pair-manager.remove-pair" | globalize }}
             </button>
           </template>
         </div>
@@ -220,7 +220,7 @@
 
     <template v-else>
       <p>
-        {{ "asset-pair-manager.manager-asset-load" | globalize }}
+        {{ "asset-pair-manager.loading" | globalize }}
       </p>
     </template>
   </div>

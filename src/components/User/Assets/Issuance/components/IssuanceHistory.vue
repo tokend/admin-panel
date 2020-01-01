@@ -22,19 +22,19 @@
         <ul class="app-list">
           <div class="app-list__header issuance-rl__li-header">
             <span class="app-list__cell issuance-rl__id-max-width">
-              {{ "issuance-history.header-id" | globalize }}
+              {{ "issuance-history.id" | globalize }}
             </span>
             <span class="app-list__cell app-list__cell--right">
-              {{ "issuance-history.header-id" | globalize }}
+              {{ "issuance-history.value" | globalize }}
             </span>
             <span class="app-list__cell app-list__cell--right">
-              {{ "issuance-history.header-val" | globalize }}
+              {{ "issuance-history.requestor" | globalize }}
             </span>
             <span class="app-list__cell app-list__cell--right">
-              {{ "issuance-history.header-req" | globalize }}
+              {{ "issuance-history.receiver" | globalize }}
             </span>
             <span class="app-list__cell app-list__cell--right">
-              {{ "issuance-history.header-date" | globalize }}
+              {{ "issuance-history.date" | globalize }}
             </span>
           </div>
           <li
@@ -90,10 +90,10 @@
         <div class="app-list">
           <div class="app-list__li-like app-list__li--no-shadow">
             <p v-if="isLoaded">
-              {{ "issuance-history.app-loaded" | globalize }}
+              {{ "issuance-history.fail-load" | globalize }}
             </p>
             <p v-else>
-              {{ "Issuanceissuance-historyHistory.app-loading" | globalize }}
+              {{ "Issuanceissuance-historyHistory.loading" | globalize }}
             </p>
           </div>
         </div>

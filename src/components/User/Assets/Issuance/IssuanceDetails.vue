@@ -5,32 +5,32 @@
       <template v-if="isLoaded">
         <ul class="key-value-list">
           <li class="issuance-details__list-item">
-            <span>{{ "issuance-details.issuance-id" | globalize }}</span>
+            <span>{{ "issuance-details.id" | globalize }}</span>
             <span>{{ issuance.id }}</span>
           </li>
           <li class="issuance-details__list-item">
-            <span>{{ "issuance-details.issuance-date" | globalize }}</span>
+            <span>{{ "issuance-details.date" | globalize }}</span>
             <span>{{ issuance.createdAt | dateTime }}</span>
           </li>
           <li class="issuance-details__list-item">
-            <span>{{ "issuance-details.issuance-init" | globalize }}</span>
+            <span>{{ "issuance-details.initiator" | globalize }}</span>
             <span>{{ issuance.requestor.id }}</span>
           </li>
           <li class="issuance-details__list-item">
-            <span>{{ "issuance-details.issuence-init-mail" | globalize }}</span>
+            <span>{{ "issuance-details.initiator-mail" | globalize }}</span>
             <span>
               <email-getter :account-id="issuance.requestor.id" is-titled />
             </span>
           </li>
           <li class="issuance-details__list-item">
-            <span>{{ "issuance-details.issuence-val" | globalize }}</span>
+            <span>{{ "issuance-details.value" | globalize }}</span>
             <span>
               {{ localize(issuance.requestDetails.amount) }}
               {{ issuance.requestDetails.asset.id }}
             </span>
           </li>
           <li class="issuance-details__list-item">
-            <span>{{ "issuance-details.issuence-state" | globalize }}</span>
+            <span>{{ "issuance-details.state" | globalize }}</span>
             <span>
               {{ issuance.state | localizeIssuanceRequestState }}
             </span>
@@ -46,7 +46,7 @@
                 isSubmitting || issuance.stateI !== REQUEST_STATES.pending
               "
             >
-              {{ "issuance-details.issuence-fulfill" | globalize }}
+              {{ "issuance-details.fulfill" | globalize }}
             </button>
 
             <button
@@ -56,7 +56,7 @@
                 isSubmitting || issuance.stateI !== REQUEST_STATES.pending
               "
             >
-              {{ "issuance-details.issuence-reject" | globalize }}
+              {{ "issuance-details.reject" | globalize }}
             </button>
             <!-- eslint-enable max-len -->
           </div>
@@ -64,7 +64,7 @@
       </template>
       <template v-else>
         <span class="issuance-details__list-item">
-          {{ "issuance-details.issuence-loading" | globalize }}
+          {{ "issuance-details.loading" | globalize }}
         </span>
       </template>
       <modal
@@ -99,14 +99,14 @@
             form="issuance-rl-reject-form"
             :disabled="formMixin.isDisabled"
           >
-            {{ "issuance-details.issuence-reject-btn" | globalize }}
+            {{ "issuance-details.btn-reject" | globalize }}
           </button>
           <button
             class="app__btn-secondary"
             @click="clearRejectionSelection"
             :disabled="formMixin.isDisabled"
           >
-            {{ "issuance-details.issuence-cancel-btn" | globalize }}
+            {{ "issuance-details.btn-cancel" | globalize }}
           </button>
         </div>
       </modal>

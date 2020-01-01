@@ -32,13 +32,13 @@
       <div class="app__loading-wrp">
         <template v-if="isConfigLoadingFailed">
           <p class="app__loading-error-txt">
-            {{ "app.init-fail" | globalize }}
+            {{ "app.initialization-fail" | globalize }}
           </p>
         </template>
 
         <template v-else>
           <p class="app__loading-txt">
-            {{ "app.init-app" | globalize }}
+            {{ "app.initialization-app" | globalize }}
           </p>
         </template>
       </div>
