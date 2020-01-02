@@ -8,7 +8,7 @@
       <div class="app-list-filters">
         <select-field
           class="app-list-filters__field"
-          label="State"
+          :label="'collected-fees-withdrawals.lbl-state' | globalize"
           v-model="filters.state"
         >
           <option :value="REQUEST_STATES.pending">
@@ -45,7 +45,7 @@
 
         <input-field
           class="app-list-filters__field"
-          label="Pending tasks"
+          :label="'collected-fees-withdrawals.lbl-pending-tasks' | globalize"
           placeholder="Bitmask, exact match"
           v-model="filters.pendingTasks"
         />

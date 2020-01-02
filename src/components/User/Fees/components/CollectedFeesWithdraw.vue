@@ -9,7 +9,7 @@
             <select-field
               class="app__form-field"
               v-model="form.balanceId"
-              label="Asset"
+              :label="'collected-fees-withdraw.lbl-asset' | globalize"
               :disabled="formMixin.isDisabled"
               :error-message="checkErrorSelectField"
             >
@@ -27,7 +27,7 @@
             <select-field
               class="app__form-field"
               value="_empty"
-              label="Asset"
+              :label="'collected-fees-withdraw.lbl-asset' | globalize"
               :disabled="formMixin.isDisabled"
             >
               <option
@@ -60,7 +60,7 @@
             class="app__form-field"
             type="number"
             v-model.trim="form.amount"
-            label="Amount"
+            :label="'collected-fees-withdraw.lbl-amount' | globalize"
             name="withdrawal-amount"
             :min="DEFAULT_INPUT_MIN"
             :step="DEFAULT_INPUT_STEP"

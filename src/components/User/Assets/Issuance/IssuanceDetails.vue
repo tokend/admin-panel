@@ -80,7 +80,7 @@
         >
           <div class="app__form-row">
             <text-field
-              label="Enter reject reason"
+              :label="'issuance-details.lbl-enter-reject-reason' | globalize"
               v-model="rejectForm.reason"
               :disabled="formMixin.isDisabled"
               @blur="touchField('rejectForm.reason')"

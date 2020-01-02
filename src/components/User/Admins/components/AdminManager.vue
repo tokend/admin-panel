@@ -18,7 +18,7 @@
           <div class="app__form-row">
             <input-field
               class="app__form-field"
-              label="Account ID"
+              :label="'admin-manager.lbl-account-id' | globalize"
               v-model="form.accountId"
               :disabled="!addNew || formMixin.isDisabled"
               @blur="touchField('form.accountId')"
@@ -29,7 +29,7 @@
           <div class="app__form-row">
             <input-field
               class="app__form-field"
-              label="Name"
+              :label="'admin-manager.lbl-name' | globalize"
               v-model="form.name"
               :disabled="isMaster || formMixin.isDisabled"
               @blur="touchField('form.name')"
@@ -40,7 +40,7 @@
           <div class="app__form-row">
             <input-field
               class="app__form-field"
-              label="Identity"
+              :label="'admin-manager.lbl-identity' | globalize"
               type="number"
               min="0"
               max="255"
@@ -55,7 +55,7 @@
 
             <input-field
               class="app__form-field"
-              label="Weight"
+              :label="'admin-manager.lbl-weight' | globalize"
               type="number"
               min="1"
               max="1000"
@@ -76,7 +76,7 @@
             <div class="app__form-field">
               <select-field
                 class="app__form-field"
-                label="Signer role"
+                :label="'admin-manager.lbl-signer-role' | globalize"
                 v-model="form.signerRoleId"
                 :disabled="isMaster || formMixin.isDisabled"
                 @blur="touchField('form.signerRoleId')"

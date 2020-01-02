@@ -10,7 +10,7 @@
       <div class="asset-pair-creator__form-row app__form-row">
         <input-field
           class="app__form-field"
-          label="Base"
+          :label="'asset-pair-creator.lbl-base' | globalize"
           v-model="form.base"
           @blur="touchField('form.base')"
           :error-message="
@@ -21,7 +21,7 @@
 
         <input-field
           class="app__form-field"
-          label="Quote"
+          :label="'asset-pair-creator.lbl-quote' | globalize"
           v-model="form.quote"
           @blur="touchField('form.quote')"
           :error-message="
@@ -34,7 +34,7 @@
       <div class="asset-pair-creator__form-row app__form-row">
         <input-field
           class="app__form-field"
-          label="Price"
+          :label="'asset-pair-creator.lbl-prise' | globalize"
           type="number"
           min="0"
           :step="DEFAULT_INPUT_STEP"
@@ -53,7 +53,7 @@
       <div class="asset-pair-creator__form-row app__form-row">
         <input-field
           class="app__form-field"
-          label="Physical price correction"
+          :label="'asset-pair-creator.lbl-price-correction' | globalize"
           type="number"
           min="0"
           :step="DEFAULT_INPUT_STEP"
@@ -81,7 +81,7 @@
 
         <input-field
           class="app__form-field"
-          label="Max price step (0-100%)"
+          :label="'asset-pair-creator.lbl-max-prise-step' | globalize"
           type="number"
           min="0"
           max="100"
@@ -115,7 +115,7 @@
             v-model="form.policies"
             :disabled="formMixin.isDisabled"
             :required="false"
-            label="Is tradable"
+            :label="'asset-pair-creator.lbl-is-tradable' | globalize"
             :cb-value="ASSET_PAIR_POLICIES.tradeableSecondaryMarket"
           >
             <template slot="help">
@@ -131,7 +131,7 @@
             v-model="form.policies"
             :disabled="formMixin.isDisabled"
             :required="false"
-            label="Physical price restriction"
+            :label="'asset-pair-creator.lbl-physical-restriction' | globalize"
             :cb-value="ASSET_PAIR_POLICIES.physicalPriceRestriction"
           >
             <template slot="help">
@@ -149,7 +149,7 @@
             v-model="form.policies"
             :disabled="formMixin.isDisabled"
             :required="false"
-            label="Current price restriction"
+            :label="'asset-pair-creator.lbl-current-restriction' | globalize"
             :cb-value="ASSET_PAIR_POLICIES.currentPriceRestriction"
           >
             <template slot="help">

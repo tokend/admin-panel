@@ -4,7 +4,7 @@
       <select-field
         class="arc-list__filter"
         v-model="filters.requestType"
-        label="Request type"
+        :label="'asset-request-list.lbl-request-type' | globalize"
       >
         <option
           v-for="requestType in Object.keys(ASSET_REQUEST_TYPES)"
@@ -17,7 +17,7 @@
       <select-field
         class="arc-list__filter"
         v-model="filters.state"
-        label="State"
+        :label="'asset-request-list.lbl-state' | globalize"
       >
         <option
           v-for="stateObj in Object.values(CREATE_ASSET_REQUEST_STATES)"
@@ -31,14 +31,14 @@
       <input-field
         class="arc-list__filter"
         v-model="filters.requestor"
-        label="Requestor"
+        :label="'asset-request-list.lbl-requestor' | globalize"
         autocomplete-type="email"
       />
 
       <input-field
         class="arc-list__filter"
         v-model="filters.asset"
-        label="Asset code"
+        :label="'asset-request-list.lbl-asset-code' | globalize"
       />
     </div>
 

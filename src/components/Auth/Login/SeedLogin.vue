@@ -12,7 +12,7 @@
             type="password"
             v-model.trim="form.seed"
             name="seed"
-            label="Seed"
+            :label="'seed-login.lbl-seed' | globalize"
             @blur="touchField('form.seed')"
             :error-message="getFieldErrorMessage('form.seed')"
             :disabled="formMixin.isDisabled"

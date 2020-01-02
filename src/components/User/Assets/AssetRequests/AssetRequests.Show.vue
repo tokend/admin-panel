@@ -271,7 +271,7 @@
       <template v-if="assetRequest.state === CREATE_ASSET_REQUEST_STATES.rejected.codeVerbose">
         <div class="asset-requests-show__reject-reason-wrp">
           <text-field
-            label="Reject reason"
+            :label="'asset-requests-show.lbl-reject-reason' | globalize"
             :value="assetRequest.rejectReason"
             :readonly="true"
           />
