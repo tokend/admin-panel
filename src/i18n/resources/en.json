@@ -238,7 +238,8 @@
       "lbl-max-price-step": "Max price step",
       "lbl-is-tradable": "Is tradable",
       "lbl-physical-restriction": "Physical price restriction",
-      "lbl-current-restriction": "Current price restriction"
+      "lbl-current-restriction": "Current price restriction",
+      "msg-sure": "Sure?"
     },
     "asset-pairs-index": {
       "asset-pairs-btn": "Asset pairs",
@@ -303,7 +304,8 @@
       "lbl-receiver": "Receiver (email or address)",
       "lbl-reference": "Reference",
       "lbl-amount": "Amount",
-      "lbl-asset": "Asset"
+      "lbl-asset": "Asset",
+      "msg-please-recheck-all-fields": "Please, recheck all the fields"
     },
     "issuance-history": {
       "id": "ID",
@@ -472,7 +474,8 @@
       "btn-withdraw": "Withdraw",
       "error-asset-not-withdrawable": "Asset is not withdrawable. Please, select another asset",
       "lbl-asset": "Asset",
-      "lbl-amount": "Amount"
+      "lbl-amount": "Amount",
+      "msg-recheck-form": "Please, recheck the form"
     },
     "collected-fees-withdrawals": {
       "header": "Withdrawals",
@@ -688,7 +691,8 @@
       "monthly": "Monthly",
       "annual": "Annual",
       "btn-update": "Update",
-      "btn-remove": "Remove"
+      "btn-remove": "Remove",
+      "msg-sure": "Sure?"
     },
     "limits-uploaded-docs-list": {
       "description": "Description",

@@ -1,3 +1,4 @@
+
 <template>
   <div class="collected-fees-withdraw">
     <div class="app__block">
@@ -140,7 +141,7 @@
           <form-confirmation
             v-if="formMixin.isConfirmationShown"
             :is-pending="isFormSubmitting"
-            message="Please, recheck the form"
+            :message="'collected-fees-withdraw.msg-recheck-form' | globalize"
             @ok="submit"
             @cancel="hideConfirmation"
           />
