@@ -318,7 +318,7 @@
       "KYC-required": "KYC required",
       "terms": "Terms",
       "select-file": "Select File",
-      "advanced": "Advansed",
+      "advanced": "Advanced",
       "btn-update-asset": "Update asset",
       "btn-create-asset": "Create asset"
     },
@@ -363,11 +363,11 @@
       "header": "Withdrawal list"
     },
     "assets": {
-      "nav-system-assets": "System assets",
-      "nav-asset-requests": "Asset requests",
-      "nav-issuance": "Issuance",
-      "nav-asset-pairs": "Asset pairs",
-      "nav-withdrawals": "Withdrawals"
+      "link-system-assets": "System assets",
+      "link-asset-requests": "Asset requests",
+      "link-issuance": "Issuance",
+      "link-asset-pairs": "Asset pairs",
+      "link-withdrawals": "Withdrawals"
     },
     "user-account-widget": {
       "btn-sign-out": "Sign Out"
@@ -390,70 +390,70 @@
     },
     "collected-fees-list": {
       "header": "Balances",
-      "app-list-asset": "Asset",
-      "app-list-available": "Available",
-      "app-list-locked": "Locked",
-      "app-list-withdrawable": "Withdrawable",
-      "app-list-asset-withdrawable-t": "Yes",
-      "app-list-asset-withdrawable-f": "No",
-      "app-list-load": "Loading...",
-      "app-list-fail-load": "An error occurred. Please try again later",
-      "app-list-error": "Nothing here yet"
+      "asset": "Asset",
+      "available": "Available",
+      "locked": "Locked",
+      "withdrawable": "Withdrawable",
+      "yes": "Yes",
+      "no": "No",
+      "loading": "Loading...",
+      "error": "An error occurred. Please try again later",
+      "fail-load": "Nothing here yet"
     },
     "collected-fees-withdraw": {
-      "app-block-header": "Withdrawal",
-      "master-balance-loading": "Loading...",
-      "master-balance-fail": "Asset Load failed",
-      "master-balance-no-assets": "No assets to withdraw yet",
-      "op-attrs-row": "Reviewer:",
-      "op-attrs-row-fix-fee": "Fixed fee:",
-      "op-attrs-row-percent-fee": "Percent fee:",
-      "op-attrs-row-ext-fee-present": "External fee present",
-      "app-submin-btn": "Withdraw",
-      "error-select-field-msg": "Asset is not withdrawable. Please, select another asset"
+      "header": "Withdrawal",
+      "loading": "Loading...",
+      "fail-load": "Asset Load failed",
+      "no-assets-withdraw": "No assets to withdraw yet",
+      "reviewer": "Reviewer:",
+      "fixed-fee": "Fixed fee:",
+      "percent-fee": "Percent fee:",
+      "external-fee-present": "External fee present",
+      "btn-withdraw": "Withdraw",
+      "error-asset-not-withdrawable": "Asset is not withdrawable. Please, select another asset"
     },
     "collected-fees-withdrawals": {
       "header": "Withdrawals",
-      "withdrawals-filters-pendind": "Pending",
-      "withdrawals-filters-canceled": "Canceled",
-      "withdrawals-filters-approved": "Approved",
-      "withdrawals-filters-rejected": "Rejected",
-      "withdrawals-filters-perm-rejected": "Permanently rejected",
-      "app-list-created-ad": "Created at",
-      "app-list-status": "Status",
-      "app-list-amount": "Amount",
-      "app-list-tasks": "Tasks",
-      "app-list-loadind": "Loading...",
-      "app-list-no-loadind": "An error occurred. Please try again later",
-      "app-list-error": "Nothing here yet",
-      "withdrawal-req-det": "Withdrawal request details"
+      "pendind": "Pending",
+      "canceled": "Canceled",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "perm-rejected": "Permanently rejected",
+      "created-ad": "Created at",
+      "status": "Status",
+      "amount": "Amount",
+      "tasks": "Tasks",
+      "loading": "Loading...",
+      "error": "An error occurred. Please try again later",
+      "fail-load": "Nothing here yet",
+      "withdrawal-request-details": "Withdrawal request details"
     },
     "fee-form": {
-      "app-list-btn-update": "Update",
-      "app-list-btn-delete": "Delete",
-      "app-list-btn-create": "Create"
+      "btn-update": "Update",
+      "btn-delete": "Delete",
+      "btn-create": "Create"
     },
     "fee-list": {
-      "fee-list-scope-global": "Global",
-      "fee-list-scope-acc-type": "Account type",
-      "fee-list-scope-acc": "Account",
-      "fee-list-payment": "Payment",
-      "fee-list-order-match": "Order Match",
-      "fee-list-withdrawal": "Withdrawal",
-      "fee-list-issuance": "Issuance",
-      "fee-list-invest": "Invest",
-      "fee-list-cap-deployment": "Capital Deployment",
-      "fee-filter-no-assets": "No appropriate assets",
-      "fee-acc-type-general": "General",
-      "fee-acc-type-not-ver": "Not verified",
-      "fee-acc-type-corporate": "Corporate",
-      "app-list-loadind": "Loading...",
-      "scecify-acc": "Please specify account",
+      "global": "Global",
+      "account-type": "Account type",
+      "account": "Account",
+      "payment": "Payment",
+      "order-match": "Order Match",
+      "withdrawal": "Withdrawal",
+      "issuance": "Issuance",
+      "invest": "Invest",
+      "capital-deployment": "Capital Deployment",
+      "no-appropriate-assets": "No appropriate assets",
+      "general": "General",
+      "not-verified": "Not verified",
+      "corporate": "Corporate",
+      "loading": "Loading...",
+      "please-scecify-account": "Please specify account",
       "no-fees-avaible": "No fees available for current filter settings",
-      "app-list-cell-lower-bound": "Lower bound",
-      "app-list-cell-upper-bound": "Upper bound",
-      "app-list-cell-percent-fee": "Percent fee",
-      "app-list-cell-fixed-fee": "Fixed fee"
+      "lower-bound": "Lower bound",
+      "upper-bound": "Upper bound",
+      "percent-fee": "Percent fee",
+      "fixed-fee": "Fixed fee"
     },
     "fees-index": {
       "header": "Fee management"
@@ -464,8 +464,8 @@
     },
     "fees-balances-index": {
       "header": "Collected fees management",
-      "app-list-error": "An error occurred. Please try again later",
-      "app-list-load": "Loading..."
+      "error": "An error occurred. Please try again later",
+      "loading": "Loading..."
     },
     "key-value-index": {
       "header": "Manage key-value storage"
@@ -474,15 +474,15 @@
       "link-key-val": "Key Value"
     },
     "key-value-manager": {
-      "app-btn-update": "Update",
-      "app-btn-add": "Add"
+      "btn-update": "Update",
+      "btn-add": "Add"
     },
     "kyc-recovery-request-action": {
-      "app-btn-approve": "Approve",
-      "app-btn-reject": "Reject",
-      "app-btn-reject-perm": "Reject permanently",
-      "app-form-btn-reject": "Reject",
-      "app-form-btn-cancel": "Cancel"
+      "btn-approve": "Approve",
+      "btn-reject": "Reject",
+      "btn-reject-perm": "Reject permanently",
+      "form-btn-reject": "Reject",
+      "form-btn-cancel": "Cancel"
     },
     "kyc-recovery-request-list": {
       "mail": "Email",

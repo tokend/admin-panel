@@ -82,7 +82,7 @@
           class="app__btn app__btn--small fee-form__btn"
           :disabled="formMixin.isDisabled"
         >
-          {{ "fee-form.app-list-btn-update" | globalize }}
+          {{ "fee-form.btn-update" | globalize }}
         </button>
 
         <button
@@ -91,7 +91,7 @@
           :disabled="formMixin.isDisabled"
           @click="updateFee({ isDeleteMode: true })"
         >
-          {{ "fee-form.app-list-btn-delete" | globalize }}
+          {{ "fee-form.btn-delete" | globalize }}
         </button>
       </template>
 

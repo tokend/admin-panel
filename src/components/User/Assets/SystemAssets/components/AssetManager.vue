@@ -146,7 +146,7 @@
       </div>
 
       <div class="asset-manager__file-input-wrp">
-        <span>{{ "asset-manager.asset-input-wrp" | globalize }}</span>
+        <span>{{ "asset-manager.terms" | globalize }}</span>
         <div class="asset-manager__file-input-inner">
           <label
             class="app__upload-btn app__btn app__btn--info"
@@ -254,7 +254,7 @@
 
       <div class="asset-manager-advanced__block">
         <div class="asset-manager-advanced__heading">
-          <h3>{{ "asset-advansed.advanced" | globalize }}</h3>
+          <h3>{{ "asset-manager.advanced" | globalize }}</h3>
           <button
             class="app__btn-secondary app__btn-secondary--iconed"
             @click.prevent="isShownAdvanced = !isShownAdvanced"

@@ -130,7 +130,7 @@
         <ul class="app-list">
           <li class="app-list__li-like">
             <template v-if="isLoaded">
-              {{ "sale-list.nothing-here-yer" | globalize }}
+              {{ "sale-list.nothing-here-yet" | globalize }}
             </template>
             <template v-else>
               {{ "sale-list.loading" | globalize }}

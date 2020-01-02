@@ -30,7 +30,7 @@
             :disabled="isPending"
             @click="setKeyValue(updateForm.key, updateForm.value)"
           >
-            {{ "key-value-manager.app-btn-update" | globalize }}
+            {{ "key-value-manager.btn-update" | globalize }}
           </button>
         </div>
       </div>
@@ -74,7 +74,7 @@
             setKeyValue(createForm.key, createForm.value, createForm.entryType)
           "
         >
-          {{ "key-value-manager.app-btn-add" | globalize }}
+          {{ "key-value-manager.btn-add" | globalize }}
         </button>
       </div>
     </div>

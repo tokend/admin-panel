@@ -13,31 +13,31 @@
         >
           <option :value="REQUEST_STATES.pending">
             {{
-              "collected-fees-withdrawals.withdrawals-filters-pendind"
+              "collected-fees-withdrawals.pendind"
                 | globalize
             }}
           </option>
           <option :value="REQUEST_STATES.cancelled">
             {{
-              "collected-fees-withdrawals.withdrawals-filters-canceled"
+              "collected-fees-withdrawals.canceled"
                 | globalize
             }}
           </option>
           <option :value="REQUEST_STATES.approved">
             {{
-              "collected-fees-withdrawals.withdrawals-filters-approved"
+              "collected-fees-withdrawals.approved"
                 | globalize
             }}
           </option>
           <option :value="REQUEST_STATES.rejected">
             {{
-              "collected-fees-withdrawals.withdrawals-filters-rejected"
+              "collected-fees-withdrawals.rejected"
                 | globalize
             }}
           </option>
           <option :value="REQUEST_STATES.permanentlyRejected">
             {{
-              "collected-fees-withdrawals.withdrawals-filters-perm-rejected"
+              "collected-fees-withdrawals.perm-rejected"
                 | globalize
             }}
           </option>
@@ -57,16 +57,16 @@
         <ul class="app-list">
           <div class="app-list__header">
             <span class="app-list__cell">
-              {{ "collected-fees-withdrawals.app-list-created-ad" | globalize }}
+              {{ "collected-fees-withdrawals.created-ad" | globalize }}
             </span>
             <span class="app-list__cell app-list__cell--right">
-              {{ "collected-fees-withdrawals.app-list-statu" | globalize }}
+              {{ "collected-fees-withdrawals.status" | globalize }}
             </span>
             <span class="app-list__cell app-list__cell--right">
-              {{ "collected-fees-withdrawals.app-list-amount" | globalize }}
+              {{ "collected-fees-withdrawals.amount" | globalize }}
             </span>
             <span class="app-list__cell app-list__cell--right">
-              {{ "collected-fees-withdrawals.app-list-tasks" | globalize }}
+              {{ "collected-fees-withdrawals.tasks" | globalize }}
             </span>
           </div>
 
@@ -107,21 +107,21 @@
           <li class="app-list__li-like">
             <template v-if="isListLoading">
               <p>
-                {{ "collected-fees-withdrawals.app-list-loadind" | globalize }}
+                {{ "collected-fees-withdrawals.loading" | globalize }}
               </p>
             </template>
 
             <template v-else-if="isListFailed">
               <p class="danger">
                 {{
-                  "collected-fees-withdrawals.app-list-no-loadind" | globalize
+                  "collected-fees-withdrawals.error" | globalize
                 }}
               </p>
             </template>
 
             <template v-else>
               <p>
-                {{ "collected-fees-withdrawals.app-list-error" | globalize }}
+                {{ "collected-fees-withdrawals.fail-load" | globalize }}
               </p>
             </template>
           </li>
@@ -143,7 +143,8 @@
       @close-request="itemToShow = null"
       max-width="64rem"
     >
-      <h2>{{ "collected-fees-withdrawals.withdrawal-req-det" | globalize }}</h2>
+      <!-- eslint-disable-next-line max-len -->
+      <h2>{{ "collected-fees-withdrawals.withdrawal-request-details" | globalize }}</h2>
       <details-reader :details="itemToShow" />
     </modal>
   </div>
