@@ -186,7 +186,7 @@
         <div class="app__form-row">
           <tick-field
             v-model="rejectForm.isPermanentReject"
-            label="Reject permanently"
+            :label="'poll-request-view.lbl-perm-reject'"
             disabled
           />
         </div>

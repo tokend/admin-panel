@@ -28,7 +28,7 @@
       >
         <div class="app__form-row">
           <text-field
-            label="Reset reason"
+            :label="'ser-details-reset.lbl-reject-reason' | globalize"
             :autofocus="true"
             v-model="resetForm.reason"
             @blur="touchField('resetForm.reason')"

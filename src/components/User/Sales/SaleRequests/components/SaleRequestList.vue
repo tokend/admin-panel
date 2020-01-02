@@ -8,7 +8,7 @@
       <div class="app-list-filters">
         <select-field
           class="app-list-filters__field"
-          label="State"
+          :label="'sale-request-list.lbl-state' | globalize"
           v-model="filters.state"
         >
           <option :value="REQUEST_STATES.pending">
@@ -30,7 +30,7 @@
 
         <input-field
           class="app-list-filters__field sale-rl__requestor-filter"
-          label="Requestor"
+          :label="'sale-request-list.lbl-requestor' | globalize"
           placeholder="Address or email"
           v-model="filters.requestor"
           autocomplete-type="email"

@@ -33,7 +33,7 @@
       >
         <div class="app__form-row">
           <text-field
-            label="Block reason"
+            :label="'user-details-block.lbl-block-reason' | globalize"
             v-model="blockForm.reason"
             @blur="touchField('blockForm.reason')"
             :error-message="getFieldErrorMessage(

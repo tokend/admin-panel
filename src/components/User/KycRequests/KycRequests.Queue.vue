@@ -20,7 +20,7 @@
         class="kyc-requests-queue__roles-select"
         :value="filters.role"
         @input="setRoleFilter"
-        label="Role to set"
+        :label="'kyc-requests-queue.lbl-role-to-set' | globalize"
       >
         <option :value="ALL_ROLES_FILTER">
           {{ "kyc-requests-queue.all-roles" | globalize }}

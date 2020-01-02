@@ -12,7 +12,7 @@
         <select-field
           v-model="filters.asset"
           class="limits-manager__filter"
-          label="Asset"
+          :label="'limits-manager.lbl-asset' | globalize"
         >
           <option
             v-for="item in assets"
@@ -25,7 +25,7 @@
         </select-field>
         <select-field
           class="limits-manager__filter"
-          label="Scope"
+          :label="'limits-manager.lbl-scope' | globalize"
           v-model="filters.scope"
         >
           <option :value="SCOPE_TYPES.global">
@@ -41,7 +41,7 @@
         <select-field
           v-model="filters.accountRole"
           class="limits-manager__filter"
-          label="Account type"
+          :label="'limits-manager.lbl-accout-type' | globalize"
           v-if="filters.scope === SCOPE_TYPES.accountRole"
         >
           <option :value="kvAccountRoles.general">
@@ -57,7 +57,7 @@
         <input-field
           class="limits-manager__filter"
           v-model.trim="filters.account"
-          label="Email or Account ID"
+          :label="'limits-manager.lbl-email-or-account-id' | globalize"
           autocomplete-type="email"
           v-if="filters.scope === SCOPE_TYPES.account"
         />

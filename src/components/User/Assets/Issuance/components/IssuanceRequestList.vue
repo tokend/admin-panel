@@ -4,7 +4,7 @@
       <div class="issuance-rl__filters">
         <select-field
           class="issuance-rl__filter app-list-filters__field"
-          :label="'issuance-form.lbl-state' | globalize"
+          :label="'issuance-request-list.lbl-state' | globalize"
           v-model="filters.state"
         >
           <option :value="REQUEST_STATES.pending">

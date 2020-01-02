@@ -82,7 +82,7 @@
         <div class="app__form-row">
           <tick-field
             v-model="rejectForm.isPermanentReject"
-            label="Reject permanently"
+            :label="'sale-request-manager.lbl-perm-rejected' | globalize"
           />
         </div>
       </form>

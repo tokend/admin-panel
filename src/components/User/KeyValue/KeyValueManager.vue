@@ -6,7 +6,7 @@
           <select-field
             class="key-value-manager__input"
             v-model="updateForm.key"
-            label="Key"
+            :label="'key-value-manager.lbl-key-select-field' | globalize"
           >
             <option
               v-for="item in list"
@@ -19,7 +19,7 @@
           <input-field
             v-model="updateForm.value"
             class="key-value-manager__input"
-            label="Value"
+            :label="'key-value-manager.lbl-value-select-field' | globalize"
             placeholder="Enter new value"
           />
 
@@ -41,20 +41,20 @@
         <input-field
           v-model="createForm.key"
           class="key-value-manager__input"
-          label="Key"
+          :label="'key-value-manager.lbl-key-input-field' | globalize"
           placeholder="Enter new key"
         />
         <input-field
           v-model="createForm.value"
           class="key-value-manager__input"
-          label="Value"
+          :label="'key-value-manager.lbl-value-input-field' | globalize"
           placeholder="Enter new value"
         />
 
         <select-field
           v-model.number="createForm.entryType"
           class="key-value-manager__input"
-          label="Entry type"
+          :label="'key-value-manager.lbl-entry-type' | globalize"
         >
           <option
             v-for="(value, lbl) in KEY_VALUE_ENTRY_TYPE"

@@ -55,7 +55,7 @@
       >
         <div class="app__form-row">
           <text-field
-            label="Reject reason"
+            :label="'queue-request-documents.lbl-reject-reason' | globalize"
             :autofocus="true"
             v-model="rejectForm.reason"
             :disabled="formMixin.isDisabled"

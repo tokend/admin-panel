@@ -545,21 +545,29 @@
     },
     "key-value-manager": {
       "btn-update": "Update",
-      "btn-add": "Add"
+      "btn-add": "Add",
+      "lbl-key-select-field": "Key",
+      "lbl-value-select-field": "Value",
+      "lbl-key-input-field": "Key",
+      "lbl-value-input-field": "Value",
+      "lbl-entry-type": "Entry type"
     },
     "kyc-recovery-request-action": {
       "btn-approve": "Approve",
       "btn-reject": "Reject",
       "btn-reject-perm": "Reject permanently",
       "form-btn-reject": "Reject",
-      "form-btn-cancel": "Cancel"
+      "form-btn-cancel": "Cancel",
+      "lbl-reject-reason": "Reject reason"
     },
     "kyc-recovery-request-list": {
       "mail": "Email",
       "state": "State",
       "last-upd": "Last updated",
       "loading": "Loading...",
-      "fail-loading": "Nothing here yet"
+      "fail-loading": "Nothing here yet",
+      "lbl-state": "State",
+      "lbl-requestor": "Requestor"
     },
     "kyc-recovery-request": {
       "header": "Kyc recovery reques",
@@ -578,7 +586,8 @@
       "btn-reject": "Reject",
       "btn-finish": "Finish",
       "form-btn-reject": "Reject",
-      "form-btn-cancel": "Cancel"
+      "form-btn-cancel": "Cancel",
+      "lbl-reject-reason": "Reject reason"
     },
     "queue-request-documents": {
       "header": "User documents",
@@ -622,7 +631,11 @@
       "last-updated": "Last updated",
       "role-to-set": "Role to set",
       "loading": "Loading...",
-      "fail-load": "Nothing here yet"
+      "fail-load": "Nothing here yet",
+      "lbl-role-to-set": "Role to set",
+      "lbl-state": "State",
+      "lbl-pending-tasks": "Pending tasks",
+      "lbl-requestor": "Requestor"
     },
     "kyc-requests-queue": {
       "lost-actions-after-reload": "Your actions will be lost after page reload",
@@ -631,11 +644,15 @@
       "requests": "requests",
       "current-decision": "Current decision",
       "loading": "Loading...",
-      "no-request": "No requests to review yet"
+      "no-request": "No requests to review yet",
+      "lbl-role-to-set": "Role to set"
     },
     "kyc-requests": {
       "index": "Index",
       "queue": "Queue"
+    },
+    "data-list": {
+      "lbl-document-type": "Document type"
     },
     "limits-manager": {
       "header": "Limits management",
@@ -651,7 +668,11 @@
       "loading": "Loading...",
       "please-specify-account": "Please specify account",
       "such-account-not-found": "Such account not found",
-      "load-limits": "Loading the limits…"
+      "load-limits": "Loading the limits…",
+      "lbl-asset": "Asset",
+      "lbl-scope": "Scope",
+      "lbl-account-type": "Account type",
+      "lbl-email-or-account-id": "Email or Account ID"
     },
     "limits-request-list": {
       "date": "Date",
@@ -694,7 +715,17 @@
       "fail-load": "Something went wrong....",
       "btn-add-more": "Add more",
       "btn-submit": "Submit",
-      "btn-cancel": "Cancel"
+      "btn-cancel": "Cancel",
+      "lbl-request-date-time": "Request date & time",
+      "lbl-account-type": "Account type",
+      "lbl-request-type": "Request type",
+      "lbl-account-email": "Account email",
+      "lbl-account-id": "Account Id",
+      "lbl-note": "Note",
+      "lbl-limits-for-asset": "Limits for asset",
+      "lbl-operation-type-limits": "Operation type limits",
+      "lbl-document-description": "Document description",
+      "lbl-reject-reason": "Reject reason"
     },
     "limits": {
       "link-limits-management": "Limits management",
@@ -743,10 +774,12 @@
       "btn-accept": "Accept",
       "btn-more": "More",
       "loading": "Loading...",
-      "fail-load": "Nothing here yet"
+      "fail-load": "Nothing here yet",
+      "lbl-reject-reason": "Reject reason"
     },
     "pre-issuanc-requests-index": {
-      "header": "Preissuance Requests"
+      "header": "Preissuance Requests",
+      "lbl-asset": "Asset"
     },
     "offline-operations": {
       "link-pre-issuance": "Pre-issuance",
@@ -770,7 +803,11 @@
       "template-failed": "Failed",
       "template-canceled": "Canceled",
       "nothing-here-yet": "Nothing here yet",
-      "loading": "Loading..."
+      "loading": "Loading...",
+      "lbl-state": "State",
+      "lbl-min-start-time": "Min start time",
+      "lbl-min-end-time": "Min end time",
+      "lbl-owner": "Owner"
     },
     "poll-viewer": {
       "header": "Poll overview",
@@ -809,7 +846,9 @@
       "requestor": "Requestor",
       "question": "Question",
       "loading": "Loading...",
-      "nothing-here-yet": "Nothing here yet"
+      "nothing-here-yet": "Nothing here yet",
+      "lbl-state": "State",
+      "lbl-requestor": "Requestor"
     },
     "poll-request-view": {
       "request-details": "Request details",
@@ -834,7 +873,8 @@
       "error": "An error occurred",
       "loading": "Loading...",
       "reject-reason": "Reject reason",
-      "btn-cancel": "Cancel"
+      "btn-cancel": "Cancel",
+      "lbl-perm-reject": "Reject permanently"
     },
     "poll-requests-index": {
       "header": "Browse poll requests"
@@ -851,7 +891,8 @@
       "investor": "Investor",
       "no-investments-yet": "No investments yet.",
       "error": "An error occurred. Please try again later.",
-      "loading": "Loading..."
+      "loading": "Loading...",
+      "lbl-quote-asset": "Quote asset"
     },
     "sale-manager-description-tab": {
       "label-sale-video": "Sale video",
@@ -950,7 +991,13 @@
       "closed": "Closed",
       "cancelled": "Cancelled",
       "nothing-here-yet": "Nothing here yet",
-      "loading": "Loading..."
+      "loading": "Loading...",
+      "lbl-asset-code": "Asset code",
+      "lbl-owner": "Owner",
+      "lbl-state": "State",
+      "lbl-start-date": "Start date",
+      "lbl-end-date": "End date",
+      "lbl-type": "Type"
     },
     "sale-request-manager-description-tab": {
       "label": "Sale video",
@@ -1002,7 +1049,8 @@
       "error": "An error occurred",
       "loading": "Loading...",
       "reject-reason": "Reject reason",
-      "btn-cancel": "Cancel"
+      "btn-cancel": "Cancel",
+      "lbl-perm-rejected": "Reject permanently"
     },
     "sale-request-list": {
       "header": "Sale request list",
@@ -1015,7 +1063,9 @@
       "hard-cap": "Hard cap",
       "requestor": "Requestor",
       "nothing-here-yet": "Nothing here yet",
-      "loading": "Loading..."
+      "loading": "Loading...",
+      "lbl-state": "State",
+      "lbl-requestor": "Requestor"
     },
     "sales": {
       "link-sales": "Sales",
@@ -1094,7 +1144,8 @@
       "btn-unblock-user": "Unblock user",
       "btn-block-user": "Block user",
       "btn-block": "Block",
-      "btn-cancel": "Cancel"
+      "btn-cancel": "Cancel",
+      "lbl-block-reason": "Block reason"
     },
     "user-details-kyc": {
       "header": "KYC information",
@@ -1121,12 +1172,14 @@
       "btn-reject": "Reject",
       "btn-perm-reject": "Reject permanently",
       "btn-form-reject": "Reject",
-      "btn-cancel": "Cancel"
+      "btn-cancel": "Cancel",
+      "lbl-reject-reason": "Reject reason"
     },
     "user-details-reset": {
       "btn-reset-unverified": "Reset to unverified",
       "btn-reset": "Reset",
-      "btn-cancel": "Cancel"
+      "btn-cancel": "Cancel",
+      "lbl-reject-reason": "Reject reason"
     },
     "user-details-tasks-manager": {
       "manage-tasks": "Manage tasks (advanced)",
@@ -1157,7 +1210,9 @@
       "role": "Role",
       "state": "State",
       "loading": "Loading...",
-      "nothing-here-yet": "Nothing here yet"
+      "nothing-here-yet": "Nothing here yet",
+      "lbl-role": "Role",
+      "lbl-requestor": "Requestor"
     },
     "user-op-list": {
       "header": "Operations",

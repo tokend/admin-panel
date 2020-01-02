@@ -44,7 +44,7 @@
       >
         <div class="app__form-row">
           <text-field
-            label="Reject reason"
+            :label="'kyc-recovery-request-action.lbl-reject-reason' | globalize"
             :autofocus="true"
             v-model="rejectForm.reason"
             @blur="touchField('rejectForm.reason')"
