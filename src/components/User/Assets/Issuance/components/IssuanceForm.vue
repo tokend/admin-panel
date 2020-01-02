@@ -87,7 +87,7 @@
           <form-confirmation
             v-if="formMixin.isConfirmationShown"
             :is-pending="isFormSubmitting"
-            message="Please, recheck all the fields"
+            :message="'issuance-form.msg-please-recheck-all-fields' | globalize"
             @ok="submit"
             @cancel="hideConfirmation"
           />

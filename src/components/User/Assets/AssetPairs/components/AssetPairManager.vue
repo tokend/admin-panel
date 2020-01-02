@@ -30,7 +30,7 @@
           <form-confirmation
             v-if="!isAttributesFormSelected && formMixin.isConfirmationShown"
             :is-pending="isFormSubmitting"
-            message="Sure?"
+            :message="'asset-pair-manager.msg-sure' | globalize"
             ok-button-text="Yes"
             cancel-button-text="No"
             @ok="updatePrice"
@@ -190,7 +190,7 @@
           <form-confirmation
             v-if="isAttributesFormSelected && formMixin.isConfirmationShown"
             :is-pending="isFormSubmitting"
-            message="Sure?"
+            :message="'asset-pair-manager.msg-sure' | globalize"
             ok-button-text="Yes"
             cancel-button-text="No"
             @ok="updateAttributes"
