@@ -5,7 +5,7 @@
         <select-field
           class="app-list-filters__field"
           v-model="filters.state"
-          label="State"
+          :label="'kyc-recovery-request-list.lbl-state' | globalize"
         >
           <option
             v-for="(state, s) in Object.keys(KYC_REQUEST_STATES)"
@@ -19,7 +19,7 @@
         <input-field
           class="app-list-filters__field"
           v-model.trim="filters.requestor"
-          label="Requestor"
+          :label="'kyc-recovery-request-list.lbl-requestor' | globalize"
           autocomplete-type="email"
         />
       </div>

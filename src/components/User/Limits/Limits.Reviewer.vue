@@ -16,34 +16,34 @@
         </h3>
         <div class="limits-reviewer__content-section">
           <detail
-            label="Request date & time"
+            :label="'limits-reviewer.lbl-request-date-time' | globalize"
             :value="formatDateWithTime(request.createdAt)"
           />
           <detail
-            label="Account role"
+            :label="'limits-reviewer.lbl-account-type' | globalize"
             :value="account.role.id | roleIdToString"
           />
           <detail
-            label="Request type"
+            :label="'limits-reviewer.lbl-request-type' | globalize"
             :value="requestType"
           />
-          <detail label="Account email">
+          <detail :label="'limits-reviewer.lbl-account-email' | globalize">
             <email-getter :account-id="account.id" />
           </detail>
           <detail
-            label="Account ID"
+            :label="'limits-reviewer.lbl-account-id' | globalize"
             :value="request.requestor.id"
           />
           <detail
-            label="Note"
+            :label="'limits-reviewer.lbl-note' | globalize"
             :value="get(desiredLimitDetails, 'note')"
           />
           <detail
-            label="Limits for asset"
+            :label="'limits-reviewer.lbl-limits-for-asset' | globalize"
             :value="get(desiredLimitDetails, 'asset')"
           />
           <detail
-            label="Operation type limits"
+            :label="'limits-reviewer.lbl-operation-type-limits' | globalize"
             :value="get(desiredLimitDetails, 'operationType')"
           />
         </div>
@@ -139,7 +139,7 @@
               />
             </div>
             <text-field
-              label="Document description"
+              :label="'limits-reviewer.lbl-document-description' | globalize"
               class="limits-reviewer__doc-textfield"
               :autofocus="true"
               v-model="item.description"
@@ -183,7 +183,7 @@
       >
         <div class="app__form-row">
           <text-field
-            label="Reject reason"
+            :label="'limits-reviewer.lbl-reject-reason' | globalize"
             class="limits-reviewer__reject-form-textfield"
             :autofocus="true"
             v-model="rejectForm.reason"

@@ -4,7 +4,7 @@
       <select-field
         class="poll-request-list__filter"
         v-model="filters.state"
-        label="State"
+        :label="'poll-request-list.lbl-state' | globalize"
       >
         <option :value="REQUEST_STATES.pending">
           {{ "poll-request-list.pending" | globalize }}
@@ -23,7 +23,7 @@
       <input-field
         class="poll-request-list__filter"
         v-model="filters.requestor"
-        label="Requestor"
+        :label="'poll-request-list.lbl-requestor' | globalize"
         autocomplete-type="email"
       />
     </div>

@@ -17,7 +17,7 @@
         <input-field
           class="app__form-field"
           v-model="rejectReason"
-          label="Reject reason"
+          :label="'pre-issuance-request-list.lbl-reject-reason' | globalize"
         />
       </div>
 

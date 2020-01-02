@@ -8,19 +8,19 @@
       <div class="app-list-filters sale-list__filters">
         <input-field
           class="app-list-filters__field sale-list__field"
-          label="Asset code"
+          :label="'sale-list.lbl-asset-code' | globalize"
           v-model="filters.baseAsset"
         />
         <input-field
           class="app-list-filters__field sale-list__field"
-          label="Owner"
+          :label="'sale-list.lbl-owner' | globalize"
           placeholder="Address (full match)"
           v-model="owner"
           autocomplete-type="email"
         />
         <select-field
           class="app-list-filters__field sale-list__field"
-          label="State"
+          :label="'sale-list.lbl-state' | globalize"
           v-model="filters.state">
           <option :value="SALE_STATES.open">
             {{ "sale-list.select-field-open" | globalize }}
@@ -33,21 +33,21 @@
           </option>
         </select-field>
         <input-date-field
-          label="Start date"
+          :label="'sale-list.lbl-start-date' | globalize"
           class="sale-list__field sale-list__field-margin-top"
           :enable-time="false"
           v-model="filters.startDate"
         />
         <!-- eslint-disable max-len -->
         <input-date-field
-          label="End date"
+          :abel="'sale-list.lbl-end-date' | globalize"
           class="sale-list__field sale-list__field-margin-left sale-list__field-margin-top"
           :enable-time="false"
           v-model="filters.endDate"
         />
         <select-field
           class="sale-list__field sale-list__field-margin-left sale-list__field-margin-top"
-          label="Type"
+          :label="'sale-list.lbl-type' | globalize"
           v-model="filters.type">
           <option :value="''" />
           <option :value="SALE_TYPES.basicSale">

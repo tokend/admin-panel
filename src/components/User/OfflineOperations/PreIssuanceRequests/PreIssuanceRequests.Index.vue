@@ -6,7 +6,7 @@
       <select-field
         class="preissuance-requests-index__asset-select"
         v-model="asset"
-        label="Asset">
+        :label="'pre-issuanc-requests-index.lbl-asset' | globalize">
         <option
           v-for="a in assets"
           :value="a.id"

@@ -52,7 +52,7 @@
       >
         <div class="app__form-row">
           <text-field
-            label="Reject reason"
+            :label="'user-details-request.lbl-reject-reason'"
             :autofocus="true"
             v-model="rejectForm.reason"
             @blur="touchField('rejectForm.reason')"

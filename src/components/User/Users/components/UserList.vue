@@ -4,7 +4,7 @@
       <div class="app-list-filters">
         <select-field
           class="app-list-filters__field"
-          label="Role"
+          :label="'user-list.lbl-role' | globalize"
           v-model="filters.role"
         >
           <option :value="''" />
@@ -22,7 +22,7 @@
         <input-field
           class="app-list-filters__field"
           v-model.trim="filters.requestor"
-          label="Requestor"
+          :label="'user-list.lbl-requestor' | globalize"
           autocomplete-type="email"
         />
       </div>

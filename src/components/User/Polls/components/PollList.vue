@@ -8,7 +8,7 @@
       <div class="app-list-filters">
         <select-field
           class="app-list-filters__field poll-list__field"
-          label="State"
+          :label="'poll-list.lbl-state' | globalize"
           v-model="filters.state"
         >
           <option :value="POLL_STATES.open">
@@ -26,20 +26,20 @@
         </select-field>
 
         <input-date-field
-          label="Min start time"
+          :label="'poll-list.lbl-min-start-time' | globalize"
           class="poll-list__field"
           v-model="filters.minStartTime"
         />
 
         <input-date-field
-          label="Max end time"
+          :label="'poll-list.lbl-min-end-time' | globalize"
           class="poll-list__field"
           v-model="filters.maxEndTime"
         />
 
         <input-field
           class="app-list-filters__field poll-list__field"
-          label="Owner"
+          :label="'poll-list.owner' | globalize"
           placeholder="Address or email"
           v-model="filters.owner"
           autocomplete-type="email"
