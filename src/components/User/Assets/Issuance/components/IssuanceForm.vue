@@ -8,7 +8,7 @@
             type="text"
             placeholder="email@example.com or GAAQ..."
             v-model="form.receiver"
-            label="Receiver (email or address)"
+            :label="'issuance-form.lbl-receiver' | globalize"
             @blur="touchField('form.receiver')"
             :error-message="getFieldErrorMessage('form.receiver')"
             :disabled="formMixin.isDisabled"
@@ -20,7 +20,7 @@
           <input-field
             class="app__form-field"
             v-model="form.reference"
-            label="Reference"
+            :label="'issuance-form.lbl-reference' | globalize"
             @blur="touchField('form.reference')"
             :error-message="
               getFieldErrorMessage('form.reference', {
@@ -39,7 +39,7 @@
             :min="DEFAULT_INPUT_MIN"
             :max="availableForIssuance"
             v-model="form.amount"
-            label="Amount"
+            :label="'issuance-form.lbl-amount' | globalize"
             @blur="touchField('form.amount')"
             :error-message="
               getFieldErrorMessage('form.amount', {
@@ -54,7 +54,7 @@
             <select-field
               class="issuance-form__asset-select"
               v-model="form.asset"
-              label="Asset"
+              :label="'issuance-form.lbl-asset' | globalize"
               @blur="touchField('form.asset')"
               :error-message="getFieldErrorMessage('form.asset')"
               :disabled="formMixin.isDisabled"

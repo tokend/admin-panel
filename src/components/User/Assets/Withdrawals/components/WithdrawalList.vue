@@ -4,7 +4,7 @@
       <div class="app-list-filters">
         <select-field
           class="app-list-filters__field"
-          label="State"
+          :label="'withdrawal-list.lbl-state' | globalize"
           v-model="filters.state"
         >
           <option :value="REQUEST_STATES.pending">
@@ -21,7 +21,7 @@
         <select-field
           v-if="assets.length"
           class="app-list-filters__field"
-          label="Asset"
+          :label="'withdrawal-list.lbl-asset' | globalize"
           v-model="filters.asset"
         >
           <option
@@ -35,7 +35,7 @@
         <select-field
           v-else
           class="app-list-filters__field"
-          label="Asset"
+          :label="'withdrawal-list.lbl-asset' | globalize"
           value="no-assets"
           disabled
         >
@@ -46,7 +46,7 @@
 
         <input-field
           class="app-list-filters__field"
-          label="Requestor"
+          :label="'withdrawal-list.lbl-requestor' | globalize"
           placeholder="Requestor"
           autocomplete-type="email"
           v-model="filters.requestor"

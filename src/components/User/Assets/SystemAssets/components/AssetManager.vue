@@ -19,7 +19,7 @@
       <div class="app__form-row">
         <input-field
           class="app__form-field"
-          label="Asset name"
+          :label="'asset-manager.lbl-asset-name' | globalize"
           v-model="asset.creatorDetails.name"
           name="asset-name"
           @blur="touchField('asset.creatorDetails.name')"
@@ -32,7 +32,7 @@
 
         <input-field
           class="app__form-field"
-          label="Asset code"
+          :label="'asset-manager.lbl-asset-code' | globalize"
           v-model="asset.id"
           :disabled="isExistingAsset || formMixin.isDisabled"
           name="asset-code"
@@ -47,7 +47,7 @@
       <div class="app__form-row">
         <input-field
           class="app__form-field"
-          label="Issuer public key"
+          :label="'asset-manager.lbl-issuer-public-key' | globalize"
           v-model="asset.preissuedAssetSigner"
           :disabled="isExistingAsset || formMixin.isDisabled"
           name="issuer-key"
@@ -61,7 +61,7 @@
           min="0"
           :max="DEFAULT_MAX_AMOUNT"
           :step="DEFAULT_INPUT_STEP"
-          label="Maximum assets"
+          :label="'asset-manager.lbl-maximum-assets' | globalize"
           v-model="asset.maxIssuanceAmount"
           :disabled="isExistingAsset || formMixin.isDisabled"
           name="max-assets"
@@ -84,7 +84,7 @@
           :max="asset.maxIssuanceAmount"
           :step="DEFAULT_INPUT_STEP"
           class="app__form-field"
-          label="Initial preissued amount"
+          :label="'asset-manager.lbl-initial-preissued-amount' | globalize"
           v-model="asset.initialPreissuedAmount"
           :disabled="isExistingAsset || formMixin.isDisabled"
           name="initial-preissued"
@@ -99,7 +99,7 @@
           v-else
           v-model="asset.availableForIssuance"
           class="app__form-field"
-          label="Available for issuance"
+          :label="'asset-manager.lbl-available-for-issuance' | globalize"
           :disabled="true"
           name="available-issuance"
         />
@@ -114,7 +114,7 @@
           min="0"
           step="1"
           max="6"
-          label="Trailing digits count"
+          :label="'asset-manager.lbl-trailing-digits-count' | globalize"
           v-model="asset.trailingDigitsCount"
           :disabled="true || isExistingAsset || formMixin.isDisabled"
           name="trailing-digits-count"
@@ -129,7 +129,7 @@
       <div class="app__form-row">
         <select-field
           class="app__form-field app__form-field--halved"
-          label="Asset type"
+          :label="'asset-manager.lbl-asset-type' | globalize"
           v-model="asset.type"
           :disabled="isExistingAsset || formMixin.isDisabled"
           name="asset-type"
@@ -277,7 +277,7 @@
             title="Use Coinpayments service for deposition"
             class="app__form-field"
             v-model="asset.creatorDetails.isCoinpayments"
-            label="Use Coinpayments"
+            :label="'asset-manager.lbl-use-coinpayments' | globalize"
             :disabled="formMixin.isDisabled"
           />
         </div>
@@ -285,7 +285,7 @@
           <input-field
             class="app__form-field app__form-field--halved"
             type="number"
-            label="External system type"
+            :label="'asset-manager.lbl-external-system-type' | globalize"
             name="External system type"
             v-model="asset.creatorDetails.externalSystemType"
             :required="false"
@@ -297,7 +297,7 @@
           <tick-field
             class="app__form-field"
             v-model="isStellarIntegrationEnabled"
-            label="Integration with stellar"
+            :label="'asset-manager.lbl-integration-with-stellar' | globalize"
             :cb-value="true"
             :disabled="formMixin.isDisabled || isErc20IntegrationEnabled"
           />
@@ -310,7 +310,7 @@
                 v-model="asset.creatorDetails.stellar.deposit"
                 :disabled="formMixin.isDisabled"
                 :cb-value="true"
-                label="Deposit"
+                :label="'asset-manager.lbl-deposit' | globalize"
               />
             </div>
           </div>
@@ -321,7 +321,7 @@
                 v-model="asset.creatorDetails.stellar.withdraw"
                 :disabled="formMixin.isDisabled"
                 :cb-value="true"
-                label="Withdraw"
+                :label="'asset-manager.lbl-withdraw' | globalize"
               />
             </div>
           </div>
@@ -331,7 +331,7 @@
               v-model="asset.creatorDetails.stellar.assetType"
               name="create-stellar-asset-type"
               class="app__form-field"
-              label="Asset type"
+              :label="'asset-manager.lbl-asset-type' | globalize"
               @blur="touchField('asset.creatorDetails.stellar.assetType')"
               :error-message="getFieldErrorMessage(
                 'asset.creatorDetails.stellar.assetType',
@@ -353,7 +353,7 @@
               v-model="asset.creatorDetails.stellar.assetCode"
               class="app__form-field"
               name="create-stellar-asset-code"
-              label="Asset code"
+              :label="'asset-manager.lbl-asset-code' | globalize"
               @blur="touchField('asset.creatorDetails.stellar.assetCode')"
               :error-message="getFieldErrorMessage('asset.creatorDetails.stellar.assetCode', {
                 maxLength: getAssetCodeMaxLength(),
@@ -370,7 +370,7 @@
           <tick-field
             class="app__form-field"
             v-model="isErc20IntegrationEnabled"
-            label="Integration with erc20"
+            :label="'asset-manager.lbl-integration-erc20' | globalize"
             :cb-value="true"
             :disabled="formMixin.isDisabled || isStellarIntegrationEnabled"
           />
@@ -383,7 +383,7 @@
                 v-model="asset.creatorDetails.erc20.deposit"
                 :disabled="formMixin.isDisabled"
                 :cb-value="true"
-                label="Deposit"
+                :label="'asset-manager.lbl-deposit' | globalize"
               />
             </div>
           </div>
@@ -394,7 +394,7 @@
                 v-model="asset.creatorDetails.erc20.withdraw"
                 :disabled="formMixin.isDisabled"
                 :cb-value="true"
-                label="Withdraw"
+                :label="'asset-manager.lbl-withdraw' | globalize"
               />
             </div>
           </div>
@@ -406,7 +406,7 @@
               v-model="asset.creatorDetails.erc20.address"
               class="app__form-field"
               name="create-erc20-asset-code"
-              label="Address"
+              :label="'asset-manager.lbl-adress' | globalize"
               @blur="touchField('asset.creatorDetails.erc20.address')"
               :error-message="getFieldErrorMessage('asset.creatorDetails.erc20.address')"
               :disabled="formMixin.isDisabled"

@@ -16,7 +16,7 @@
       novalidate>
       <div class="app__form-row">
         <text-field
-          label="Describe reject reason"
+          :label="'asset-request-reject-form.lbl-reject-reason' | globalize"
           v-model="form.rejectReason"
           :disabled="formMixin.isDisabled"
           @blur="touchField('form.rejectReason')"
@@ -31,7 +31,7 @@
 
       <div class="app__form-row">
         <tick-field
-          label="Reject permanently"
+          :label="'asset-request-reject-form.lbl-perm-reject' | globalize"
           v-model="isPermanentReject"
           :disabled="formMixin.isDisabled"
         />

@@ -6,7 +6,7 @@
       </h2>
 
       <p class="verify-tfa__text text">
-        {{ "verify-tfa.verify-code" | globalize }}
+        {{ "verify-tfa.verification-code" | globalize }}
       </p>
 
       <form
@@ -19,7 +19,7 @@
           <input-field
             class="app__form-field"
             v-model.trim="form.verificationCode"
-            label="Verification Code"
+            :label="'verify-tfa.lbl-verification-code' | globalize"
             autofocus
             @blur="touchField('form.verificationCode')"
             :error-message="getFieldErrorMessage('form.verificationCode')"

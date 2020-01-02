@@ -59,7 +59,7 @@
         <div class="asset-pair-manager__form-row app__form-row">
           <input-field
             class="app__form-field"
-            label="Physical price correction"
+            :label="'asset-pair-manager.lbl-physical-correction' | globalize"
             type="number"
             min="0"
             :step="DEFAULT_INPUT_STEP"
@@ -90,7 +90,7 @@
         <div class="asset-pair-manager__form-row app__form-row">
           <input-field
             class="app__form-field"
-            label="Max price step"
+            :label="'asset-pair-manager.lbl-max-price-step' | globalize"
             type="number"
             min="0"
             max="100"
@@ -128,7 +128,7 @@
             v-model="attributesForm.policies"
             :disabled="formMixin.isDisabled"
             :required="false"
-            label="Is tradable"
+            :label="'asset-pair-manager.lbl-is-tradable' | globalize"
             :cb-value="ASSET_PAIR_POLICIES.tradeableSecondaryMarket"
           >
             <template slot="help">
@@ -146,7 +146,7 @@
             v-model="attributesForm.policies"
             :disabled="formMixin.isDisabled"
             :required="false"
-            label="Physical price restriction"
+            :label="'asset-pair-manager.lbl-physical-restriction' | globalize"
             :cb-value="ASSET_PAIR_POLICIES.physicalPriceRestriction"
           >
             <template slot="help">
@@ -164,7 +164,7 @@
             v-model="attributesForm.policies"
             :disabled="formMixin.isDisabled"
             :required="false"
-            label="Current price restriction"
+            :label="'asset-pair-manager.lbl-current-restriction' | globalize"
             :cb-value="ASSET_PAIR_POLICIES.currentPriceRestriction"
           >
             <template slot="help">

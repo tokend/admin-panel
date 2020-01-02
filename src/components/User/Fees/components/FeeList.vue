@@ -5,7 +5,7 @@
         <div class="fee-list__filters">
           <select-field
             class="fee-list__filter"
-            label="Scope"
+            :label="'fee-list.lbl-scope' | globalize"
             v-model="filters.scope"
           >
             <option :value="SCOPE_TYPES.global">
@@ -21,7 +21,7 @@
 
           <select-field
             class="fee-list__filter"
-            label="Type"
+            :label="'fee-list.lbl-type' | globalize"
             v-model="filters.feeType"
           >
             <option :value="FEE_TYPES.paymentFee">
@@ -48,7 +48,7 @@
             class="fee-list__filter"
             v-model.number="filters.paymentFeeSubtype"
             v-if="+filters.feeType === FEE_TYPES.paymentFee"
-            label="Direction"
+            :label="'fee-list.lbl-direction' | globalize"
           >
             <option
               v-for="(value, name) in PAYMENT_FEE_TYPES"
@@ -61,7 +61,7 @@
 
           <select-field
             class="fee-list__filter"
-            label="Asset"
+            :label="'fee-list.lbl-asset' | globalize"
             v-model="filters.assetCode"
           >
             <template v-if="assetsByType.length">
@@ -84,7 +84,7 @@
 
           <select-field
             class="fee-list__filter"
-            label="Account type"
+            :label="'fee-list.lbl-account-type' | globalize"
             v-model="filters.accountRole"
             v-if="filters.scope === SCOPE_TYPES.accountRole"
           >
@@ -101,7 +101,7 @@
 
           <input-field
             class="fee-list__filter"
-            label="Account"
+            :label="'fee-list.lbl-account' | globalize"
             v-model="filters.accountAlias"
             placeholder="Email or account ID"
             v-if="filters.scope === SCOPE_TYPES.account"

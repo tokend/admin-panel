@@ -81,8 +81,9 @@
     },
     "verify-tfa": {
       "header": "2FA Required",
-      "verify-code": "Enter your verification code to proceed.",
+      "verification-code": "Enter your verification code to proceed.",
       "btn-cancel": "Cancel",
+      "lbl-verification-code": "Verification Code",
       "btn-submit": "Submit"
     },
     "app": {
@@ -102,16 +103,23 @@
       "header": "Sign In",
       "btn-sign-in": "Sign in",
       "seed-log-link": "sign in with seed",
-      "also-you-can": "Also you can"
+      "also-you-can": "Also you can",
+      "lbl-username": "Username",
+      "lbl-password": "Password"
     },
     "seed-login": {
       "header": "Sign In With Seed",
       "btn-sign-in": "Sign in",
+      "lbl-seed": "Seed",
       "classic-sign-in": "Back to classic Sign in"
     },
     "sign-up": {
       "header": "Sign Up",
       "btn-sign-up": "Sign Up",
+      "lbl-username": "Username",
+      "lbl-password": "Password",
+      "lbl-password-confirmation": "Password confirmation",
+      "lbl-save-seed": "Save this seed",
       "follow-account-id": " Ask an existing administrator to register the following account ID.<br>",
       "warning-do-not-reload": "<em>Important:</em> Do not reload the page! You’ll be redirected automatically once your account is created"
     },
@@ -166,6 +174,11 @@
     },
     "admin-manager": {
       "add-new-admin": "Add new administrator",
+      "lbl-account-id": "Account Id",
+      "lbl-name": "Name",
+      "lbl-identity": "Identity",
+      "lbl-weight": "Weight",
+      "lbl-signer-role": "Signer role",
       "manage-admin": "Manage administrator",
       "btn-delete": "Delete",
       "btn-add": "Add",
@@ -188,7 +201,15 @@
       "asset-pair-message-new-offer": "If set, then prices for new offers must be greater than physical price with correction",
       "asset-pair-message-prise-interval": "If set, then price for new offers must be in interval of",
       "asset-pair-message-prise": "(1 ± maxPriceStep) * currentPrice",
-      "asset-pair-create-btn": "Create"
+      "asset-pair-create-btn": "Create",
+      "lbl-base": "Base",
+      "lbl-quote": "Quote",
+      "lbl-prise": "Prise",
+      "lbl-price-correction": "Physical price correction",
+      "lbl-max-prise-step": "Max price step (0-100%)",
+      "lbl-is-tradable": "Is tradable",
+      "lbl-physical-restriction": "Physical price restriction",
+      "lbl-current-restriction": "Current price restriction"
     },
     "asset-pair-list": {
       "prise": "Price",
@@ -212,7 +233,12 @@
       "message-condition-formula": "(1 ± maxPriceStep) * currentPrice",
       "update-policy": "Update policy",
       "remove-pair": "Remove pair",
-      "loading": "Loading..."
+      "loading": "Loading...",
+      "lbl-physical-correction": "Physical price correction",
+      "lbl-max-price-step": "Max price step",
+      "lbl-is-tradable": "Is tradable",
+      "lbl-physical-restriction": "Physical price restriction",
+      "lbl-current-restriction": "Current price restriction"
     },
     "asset-pairs-index": {
       "asset-pairs-btn": "Asset pairs",
@@ -222,14 +248,20 @@
       "state": "State",
       "requestor": "Requestor",
       "loading": "Loading...",
-      "fail-load": "Nothing here yet"
+      "fail-load": "Nothing here yet",
+      "lbl-request-type": "Request type",
+      "lbl-state": "State",
+      "lbl-requestor": "Requestor",
+      "lbl-asset-code": "Asset code"
     },
     "asset-request-reject-form": {
       "reject": "Reject {{ assetRequest.code }}",
       "create-request": "create request",
       "update-request": "create request",
       "btn-reject": "Reject",
-      "btn-cancel": "Cancel"
+      "btn-cancel": "Cancel",
+      "lbl-reject-reason": "Describe reject reason",
+      "lbl-perm-reject": "Reject permanently"
     },
     "asset-requests-index": {
       "manage-assets": "Manage assets"
@@ -260,13 +292,18 @@
       "update-data": "Update date",
       "request-state": "State",
       "btn-fulfill": "Fulfill",
-      "btn-reject": "Reject"
+      "btn-reject": "Reject",
+      "lbl-reject-reason": "Reject reason"
     },
     "issuance-form": {
       "avaible": "Available",
       "no-avaible": "No available assets left",
       "issue": "Issue",
-      "loading": "Loading..."
+      "loading": "Loading...",
+      "lbl-receiver": "Receiver (email or address)",
+      "lbl-reference": "Reference",
+      "lbl-amount": "Amount",
+      "lbl-asset": "Asset"
     },
     "issuance-history": {
       "id": "ID",
@@ -275,7 +312,8 @@
       "receiver": "Receiver",
       "date": "Date",
       "fail-load": "Nothing here yet",
-      "loading": "Loading..."
+      "loading": "Loading...",
+      "lbl-asset": "Asset"
     },
     "issuance-request-list": {
       "pending": "Pending",
@@ -285,7 +323,9 @@
       "date": "Date",
       "requestor": "Requestor",
       "fail-load": "Nothing here yet",
-      "loading": "Loading..."
+      "loading": "Loading...",
+      "lbl-state": "State",
+      "lbl-asset": "Asset"
     },
     "issuance": {
       "header": "Issuance"
@@ -302,7 +342,8 @@
       "reject": "Reject",
       "loading": "Loading...",
       "btn-reject": "Reject",
-      "btn-cancel": "Cancel"
+      "btn-cancel": "Cancel",
+      "lbl-enter-reject-reason": "Enter reject reason"
     },
     "asset-list": {
       "name": "Name",
@@ -320,7 +361,22 @@
       "select-file": "Select File",
       "advanced": "Advanced",
       "btn-update-asset": "Update asset",
-      "btn-create-asset": "Create asset"
+      "btn-create-asset": "Create asset",
+      "lbl-asset-name": "Asset name",
+      "lbl-asset-code": "Asset code",
+      "lbl-issuer-public-key": "Issuer public key",
+      "lbl-maximum-assets": "Maximum assets",
+      "lbl-initial-preissued-amount": "Initial preissued amount",
+      "lbl-available-for-issuance": "Available for issuance",
+      "lbl-trailing-digits-count": "Trailing digits count",
+      "lbl-asset-type": "Asset type",
+      "lbl-use-coinpayments": "Use Coinpayments",
+      "lbl-external-system-type": "External system type",
+      "lbl-integration-with-stellar": "Integration with stellar",
+      "lbl-deposit": "Deposit",
+      "lbl-withdraw": "Withdraw",
+      "lbl-integration-erc20": "Integration with erc20",
+      "lbl-address": "Address"
     },
     "system-assets-index": {
       "header": "Assets owned by master",
@@ -345,7 +401,8 @@
       "btn-fulfill": "Fulfill",
       "btn-reject": "Reject",
       "form-reject": "Reject",
-      "form-cancel": "Cancel"
+      "form-cancel": "Cancel",
+      "lbl-enter-reject-reason": "Enter reject reason"
     },
     "withdrawal-list": {
       "header": "Withdrawal list",
@@ -357,7 +414,10 @@
       "status": "Status",
       "requestor": "Requestor",
       "fail-load": "Nothing here yet",
-      "loading": "Loading..."
+      "loading": "Loading...",
+      "lbl-state": "State",
+      "lbl-asset": "Asset",
+      "lbl-requestor": "Requestor"
     },
     "withdrawals-index": {
       "header": "Withdrawal list"
@@ -410,7 +470,9 @@
       "percent-fee": "Percent fee:",
       "external-fee-present": "External fee present",
       "btn-withdraw": "Withdraw",
-      "error-asset-not-withdrawable": "Asset is not withdrawable. Please, select another asset"
+      "error-asset-not-withdrawable": "Asset is not withdrawable. Please, select another asset",
+      "lbl-asset": "Asset",
+      "lbl-amount": "Amount"
     },
     "collected-fees-withdrawals": {
       "header": "Withdrawals",
@@ -426,7 +488,9 @@
       "loading": "Loading...",
       "error": "An error occurred. Please try again later",
       "fail-load": "Nothing here yet",
-      "withdrawal-request-details": "Withdrawal request details"
+      "withdrawal-request-details": "Withdrawal request details",
+      "lbl-state": "State",
+      "lbl-pending-tasks": "Pending tasks"
     },
     "fee-form": {
       "btn-update": "Update",
@@ -453,7 +517,13 @@
       "lower-bound": "Lower bound",
       "upper-bound": "Upper bound",
       "percent-fee": "Percent fee",
-      "fixed-fee": "Fixed fee"
+      "fixed-fee": "Fixed fee",
+      "lbl-scope": "Scope",
+      "lbl-type": "Type",
+      "lbl-direction": "Direction",
+      "lbl-asset": "Asset",
+      "lbl-account-type": "Account type",
+      "lbl-account": "Account"
     },
     "fees-index": {
       "header": "Fee management"
