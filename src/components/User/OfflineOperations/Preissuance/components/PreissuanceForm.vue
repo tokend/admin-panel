@@ -1,9 +1,12 @@
 <template>
   <div class="preissuance-form">
     <div class="preissuance-form__header">
-      <p class="preissuance-form__hint">
-        {{ "preissuance-form.select-file-and-upload" | globalize }}
-      </p>
+      <!-- eslint-disable -->
+      <p 
+        class="preissuance-form__hint"
+        v-html="$options.filters.globalize('preissuance-form.select-file-and-upload')"
+      />
+      <!-- eslint-enable -->
       <a
         class="preissuance-form__link"
         :href="preissuanceGuideURL"

@@ -246,7 +246,7 @@ export default {
     checkErrorSelectField () {
       return this.isSelectedAssetWithdrawable
         ? ''
-        : 'CollectedFeesWithdraw.error-asset-not-withdrawable'
+        : 'collected-fees-withdraw.error-asset-not-withdrawable'
     },
 
     selectedBalanceAttrs () {

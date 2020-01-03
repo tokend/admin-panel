@@ -3,9 +3,12 @@
     <h3 class="user-details-account__title">
       {{ "user-details-kyc.header" | globalize }}
     </h3>
-    <div class="user-details-account__info">
-      {{ "user-details-kyc.uploaded-document" | globalize }}
-    </div>
+    <!--eslint-disable-->
+    <div 
+      class="user-details-account__info"
+      v-html="$options.filters.globalize('user-details-kyc.uploaded-document')"
+    />
+    <!--eslint-enable-->
     <ul class="user-details-account__key-value-list key-value-list">
       <li>
         <span>{{ "user-details-kyc.first-name" | globalize }}</span>

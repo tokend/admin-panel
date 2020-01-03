@@ -3,11 +3,12 @@
     <div class="idle-logout__block app__block">
       <div class="idle-logout__content-wrp">
         <h2>{{ "idle-logout.header" | globalize }}</h2>
-
-        <p class="text">
-          {{ "idle-logout.text-long-inct" | globalize }}
-        </p>
-
+        <!--eslint-disable-->
+        <p 
+          class="text"
+          v-html="$options.filters.globalize('idle-logout.text-long-inct')"  
+        />
+        <!--eslint-enable-->
         <div class="idle-logout__actions">
           <button class="app__btn" @click="extendSession">
             {{ "idle-logout.btn-cont" | globalize }}
