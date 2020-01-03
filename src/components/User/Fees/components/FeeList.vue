@@ -103,7 +103,7 @@
             class="fee-list__filter"
             :label="'fee-list.lbl-account' | globalize"
             v-model="filters.accountAlias"
-            placeholder="Email or account ID"
+            :placeholder="'fee-list.placeholder-mail-or-account-id' | globalize"
             v-if="filters.scope === SCOPE_TYPES.account"
             autocomplete-type="email"
           />

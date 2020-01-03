@@ -12,7 +12,7 @@
               v-model="form.balanceId"
               :label="'collected-fees-withdraw.lbl-asset' | globalize"
               :disabled="formMixin.isDisabled"
-              :error-message="checkErrorSelectField"
+              :error-message="checkErrorSelectField | globalize"
             >
               <option
                 v-for="balance in masterBalances"
@@ -181,8 +181,6 @@ import { FEE_TYPES, base } from '@tokend/js-sdk'
 
 import { Balance } from '@/store/wrappers/balance'
 
-import globalize from '@/components/App/filters/filters'
-
 const EVENTS = {
   submitted: 'submitted',
 }
@@ -248,7 +246,7 @@ export default {
     checkErrorSelectField () {
       return this.isSelectedAssetWithdrawable
         ? ''
-        : 'CollectedFeesWithdraw.eerror-asset-not-withdrawable' | globalize
+        : 'CollectedFeesWithdraw.error-asset-not-withdrawable'
     },
 
     selectedBalanceAttrs () {

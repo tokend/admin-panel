@@ -42,13 +42,14 @@
             }}
           </option>
         </select-field>
-
+        <!-- eslint-disable -->
         <input-field
           class="app-list-filters__field"
           :label="'collected-fees-withdrawals.lbl-pending-tasks' | globalize"
-          placeholder="Bitmask, exact match"
+          :placeholder="'collected-fees-withdraw.placeholder-bitmask-exact-match' | globalize"
           v-model="filters.pendingTasks"
         />
+        <!-- eslint-enable -->
       </div>
     </div>
 

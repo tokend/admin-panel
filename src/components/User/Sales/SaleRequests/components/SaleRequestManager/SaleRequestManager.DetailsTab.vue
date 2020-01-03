@@ -133,14 +133,14 @@
               <!-- eslint-disable-next-line max-len -->
               <span>{{ "sale-request-manager-details-tab.stellar-withdraw" | globalize }}</span>
               <span>
-                {{ checkAssetWithdraw }}
+                {{ checkAssetWithdraw | globalize }}
               </span>
             </li>
             <li>
               <!-- eslint-disable-next-line max-len -->
               <span>{{ "sale-request-manager-details-tab.stellar-deposit" | globalize }}</span>
               <span>
-                {{ checkAssetDeposit }}
+                {{ checkAssetDeposit | globalize }}
               </span>
             </li>
           </template>
@@ -196,7 +196,7 @@
             <span>
               {{ "sale-request-manager-details-tab.whitelisted" | globalize }}
             </span>
-            <span>{{ checkIsWhitelisted }}</span>
+            <span>{{ checkIsWhitelisted | globalize }}</span>
           </li>
           <li>
             <span>
@@ -297,8 +297,6 @@ import {
 
 import { SALE_DEFINITION_TYPES, LOCALIZED_SALE_TYPES } from '@/constants'
 
-import globalize from '@/components/App/filters/filters'
-
 import get from 'lodash/get'
 
 const STELLAR_TYPES = {
@@ -334,20 +332,20 @@ export default {
 
     checkAssetWithdraw () {
       return this.request.asset.details.stellar.withdraw
-        ? 'sale-request-manager-details-tab.yes' | globalize
-        : 'sale-request-manager-details-tab.no' | globalize
+        ? 'sale-request-manager-details-tab.yes'
+        : 'sale-request-manager-details-tab.no'
     },
 
     checkAssetDeposit () {
       return this.request.asset.details.stellar.deposit
-        ? 'sale-request-manager-details-tab.yes' | globalize
-        : 'sale-request-manager-details-tab.no' | globalize
+        ? 'sale-request-manager-details-tab.yes'
+        : 'sale-request-manager-details-tab.no'
     },
 
     checkIsWhitelisted () {
       return this.isSaleWhitelisted
-        ? 'sale-request-manager-details-tab.yes' | globalize
-        : 'sale-request-manager-details-tab.no' | globalize
+        ? 'sale-request-manager-details-tab.yes'
+        : 'sale-request-manager-details-tab.no'
     },
 
     isSaleWhitelisted () {

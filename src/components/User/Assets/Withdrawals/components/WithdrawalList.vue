@@ -47,7 +47,7 @@
         <input-field
           class="app-list-filters__field"
           :label="'withdrawal-list.lbl-requestor' | globalize"
-          placeholder="Requestor"
+          :placeholder="'withdrawal-list.placeholder-requestor' | globalize"
           autocomplete-type="email"
           v-model="filters.requestor"
         />
