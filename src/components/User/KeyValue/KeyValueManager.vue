@@ -20,7 +20,7 @@
             v-model="updateForm.value"
             class="key-value-manager__input"
             :label="'key-value-manager.lbl-value-select-field' | globalize"
-            placeholder="Enter new value"
+            :placeholder="'key-value-manager.placeholder-new-value' | globalize"
           />
 
           <button
@@ -42,13 +42,13 @@
           v-model="createForm.key"
           class="key-value-manager__input"
           :label="'key-value-manager.lbl-key-input-field' | globalize"
-          placeholder="Enter new key"
+          :placeholder="'key-value-manager.placeholder-new-key' | globalize"
         />
         <input-field
           v-model="createForm.value"
           class="key-value-manager__input"
           :label="'key-value-manager.lbl-value-input-field' | globalize"
-          placeholder="Enter new value"
+          :placeholder="'key-value-manager.placeholder-new-value' | globalize"
         />
 
         <select-field

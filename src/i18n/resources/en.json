@@ -305,7 +305,8 @@
       "lbl-reference": "Reference",
       "lbl-amount": "Amount",
       "lbl-asset": "Asset",
-      "msg-please-recheck-all-fields": "Please, recheck all the fields"
+      "msg-please-recheck-all-fields": "Please, recheck all the fields",
+      "placeholder-email-or-gaaq": "email@example.com or GAAQ..."
     },
     "issuance-history": {
       "id": "ID",
@@ -419,7 +420,8 @@
       "loading": "Loading...",
       "lbl-state": "State",
       "lbl-asset": "Asset",
-      "lbl-requestor": "Requestor"
+      "lbl-requestor": "Requestor",
+      "placeholder-requestor": "Requestor"
     },
     "withdrawals-index": {
       "header": "Withdrawal list"
@@ -475,7 +477,8 @@
       "error-asset-not-withdrawable": "Asset is not withdrawable. Please, select another asset",
       "lbl-asset": "Asset",
       "lbl-amount": "Amount",
-      "msg-recheck-form": "Please, recheck the form"
+      "msg-recheck-form": "Please, recheck the form",
+      "placeholder-bitmask-exact-match": "Bitmask, exact match"
     },
     "collected-fees-withdrawals": {
       "header": "Withdrawals",
@@ -526,7 +529,8 @@
       "lbl-direction": "Direction",
       "lbl-asset": "Asset",
       "lbl-account-type": "Account type",
-      "lbl-account": "Account"
+      "lbl-account": "Account",
+      "placeholder-mail-or-account-id": "Email or account ID"
     },
     "fees-index": {
       "header": "Fee management"
@@ -553,7 +557,9 @@
       "lbl-value-select-field": "Value",
       "lbl-key-input-field": "Key",
       "lbl-value-input-field": "Value",
-      "lbl-entry-type": "Entry type"
+      "lbl-entry-type": "Entry type",
+      "placeholder-new-value": "Enter new value",
+      "placeholder-new-key": "Enter new key"
     },
     "kyc-recovery-request-action": {
       "btn-approve": "Approve",
@@ -692,7 +698,9 @@
       "annual": "Annual",
       "btn-update": "Update",
       "btn-remove": "Remove",
-      "msg-sure": "Sure?"
+      "msg-sure": "Sure?",
+      "placeholder-unlimited": "Unlimited",
+      "placeholder-not-set": "Not set"
     },
     "limits-uploaded-docs-list": {
       "description": "Description",
@@ -811,7 +819,8 @@
       "lbl-state": "State",
       "lbl-min-start-time": "Min start time",
       "lbl-min-end-time": "Min end time",
-      "lbl-owner": "Owner"
+      "lbl-owner": "Owner",
+      "placeholder-addres-or-email": "Address or email"
     },
     "poll-viewer": {
       "header": "Poll overview",
@@ -1001,7 +1010,8 @@
       "lbl-state": "State",
       "lbl-start-date": "Start date",
       "lbl-end-date": "End date",
-      "lbl-type": "Type"
+      "lbl-type": "Type",
+      "placeholder-adress": "Address (full match)"
     },
     "sale-request-manager-description-tab": {
       "label": "Sale video",
@@ -1069,7 +1079,8 @@
       "nothing-here-yet": "Nothing here yet",
       "loading": "Loading...",
       "lbl-state": "State",
-      "lbl-requestor": "Requestor"
+      "lbl-requestor": "Requestor",
+      "placeholder-address-or-email": "Address or email"
     },
     "sales": {
       "link-sales": "Sales",

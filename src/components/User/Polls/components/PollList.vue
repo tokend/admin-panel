@@ -40,7 +40,7 @@
         <input-field
           class="app-list-filters__field poll-list__field"
           :label="'poll-list.owner' | globalize"
-          placeholder="Address or email"
+          :placeholder="'poll-list.placeholder-addres-or-email' | globalize"
           v-model="filters.owner"
           autocomplete-type="email"
         />

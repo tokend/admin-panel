@@ -6,7 +6,7 @@
           <input-field
             class="app__form-field"
             type="text"
-            placeholder="email@example.com or GAAQ..."
+            :placeholder="'issuance-form.placeholder-email-or-gaaq' | globalize"
             v-model="form.receiver"
             :label="'issuance-form.lbl-receiver' | globalize"
             @blur="touchField('form.receiver')"

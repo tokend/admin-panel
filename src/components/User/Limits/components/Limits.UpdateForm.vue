@@ -24,7 +24,7 @@
             maxValue: form.weeklyOut || DEFAULT_MAX_AMOUNT
           }
         )"
-        :placeholder="limits.id ? 'Unlimited' : 'Not set'"
+        :placeholder="checkLimitsId | globalize"
         :disabled="formMixin.isDisabled"
         type="number"
         step="0.000001"
@@ -53,7 +53,7 @@
             maxValue: form.monthlyOut || DEFAULT_MAX_AMOUNT
           }
         )"
-        :placeholder="limits.id ? 'Unlimited' : 'Not set'"
+        :placeholder="checkLimitsId | globalize"
         :disabled="formMixin.isDisabled"
         type="number"
         step="0.000001"
@@ -82,7 +82,7 @@
             maxValue: form.annualOut || DEFAULT_MAX_AMOUNT
           }
         )"
-        :placeholder="limits.id ? 'Unlimited' : 'Not set'"
+        :placeholder="checkLimitsId | globalize"
         :disabled="formMixin.isDisabled"
         type="number"
         step="0.000001"
@@ -111,7 +111,7 @@
             maxValue: DEFAULT_MAX_AMOUNT
           }
         )"
-        :placeholder="limits.id ? 'Unlimited' : 'Not set'"
+        :placeholder="checkLimitsId | globalize"
         :disabled="formMixin.isDisabled"
         type="number"
         step="0.000001"
@@ -234,6 +234,12 @@ export default {
       }
 
       return limits
+    },
+
+    checkLimitsId () {
+      return this.limits.id
+        ? 'limits-update-form.placeholder-unlimited'
+        : 'limits-update-form.placeholder-not-set'
     },
   },
 
