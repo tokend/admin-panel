@@ -1,8 +1,11 @@
 <template>
   <div class="change-asset-issuer-form">
-    <p class="change-asset-issuer-form__hint">
-      {{ "change-asset-issuer-form.select-lile-and-click-upload" | globalize }}
-    </p>
+    <!--eslint-disable -->
+    <p 
+      class="change-asset-issuer-form__hint"
+      v-html="$options.filters.globalize('change-asset-issuer-form.select-lile-and-click-upload')"
+      />
+    <!--eslint-enable -->
 
     <div class="change-asset-issuer-form__upload-wrp">
       <template>
@@ -37,10 +40,12 @@
         {{ "change-asset-issuer-form.transaction-source" | globalize }}
       </p>
     </div>
-
-    <p class="change-asset-issuer-form__expiration-date-note text">
-      {{ "change-asset-issuer-form.note-transaction" | globalize }}
-    </p>
+    <!-- eslint-disable -->
+    <p 
+      class="change-asset-issuer-form__expiration-date-note text"
+      v-html="$options.filters.globalize('change-asset-issuer-form.note-transaction')"  
+    />
+    <!-- eslint-enable -->
     <a
       class="change-asset-issuer-form__link"
       :href="preissuanceGuideURL"

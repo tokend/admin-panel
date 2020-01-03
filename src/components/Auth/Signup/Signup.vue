@@ -75,17 +75,19 @@
       <h2 class="signup__heading">
         {{ "sign-up.header" | globalize }}
       </h2>
-
-      <p class="text">
-        {{ "sign-up.follow-account-id" | globalize }}
-      </p>
+      <!-- eslint-disable -->
+      <p 
+        class="text"
+        v-html="$options.filters.globalize('sign-up.follow-account-id')"
+      />
 
       <br class="text small">
 
-      <p class="text small">
-        {{ "sign-up.warning-do-not-reload" | globalize }}
-      </p>
-
+      <p 
+        class="text small"
+        v-html="$options.filters.globalize('sign-up.warning-do-not-reload')"
+        />
+      <!-- eslint-enable -->
       <br class="text">
 
       <div class="signup__qr-wrap">
