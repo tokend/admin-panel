@@ -39,7 +39,7 @@
         <div class="app__form-row">
           <div class="app__form-field">
             <input-field
-              :label="'sign-up.password-confirmation' | globalize"
+              :label="'sign-up.lbl-password-confirmation' | globalize"
               type="password"
               v-model="form.confirmPassword"
               @blur="touchField('form.confirmPassword')"
@@ -52,7 +52,7 @@
         <div class="app__form-row">
           <div class="app__form-field">
             <input-field
-              :label="'sign-up.save-seed' | globalize"
+              :label="'sign-up.lbl-save-seed' | globalize"
               v-model="form.seed"
               @blur="touchField('form.seed')"
               :error-message="getFieldErrorMessage('form.seed')"
