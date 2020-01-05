@@ -16,7 +16,7 @@
 
         <div class="status-message__payload">
           <h4 class="status-message__title">
-            {{ messageTitle }}
+            {{ messageTitle | globalize }}
           </h4>
 
           <p class="status-message__text">
@@ -74,15 +74,15 @@ export default {
     messageTitle () {
       switch (this.messageType) {
         case MESSAGE_TYPES.success:
-          return 'Success'
+          return 'status-message.success'
         case MESSAGE_TYPES.error:
-          return 'Error'
+          return 'status-message.error'
         case MESSAGE_TYPES.info:
-          return 'Notification'
+          return 'status-message.notification'
         case MESSAGE_TYPES.warning:
-          return 'Warning'
+          return 'status-message.warning'
         default:
-          return ''
+          return 'status-message.default'
       }
     },
 

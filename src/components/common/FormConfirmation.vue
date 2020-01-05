@@ -2,7 +2,7 @@
   <transition name="form-confirmation__transition">
     <div class="form-confirmation">
       <p class="form-confirmation__msg">
-        {{ message }}
+        {{ message | globalize }}
       </p>
 
       <div class="form-confirmation__btns">
@@ -12,7 +12,7 @@
           @click.prevent="emitCancel"
           :disabled="isPending || isDisabled"
         >
-          {{ cancelButtonText }}
+          {{ cancelButtonText | globalize }}
         </button>
 
         <button
@@ -22,7 +22,7 @@
           :disabled="isPending || isDisabled"
         >
           <template v-if="!isPending">
-            {{ okButtonText }}
+            {{ okButtonText | globalize }}
           </template>
 
           <template v-else>
@@ -41,15 +41,15 @@ export default {
   props: {
     message: {
       type: String,
-      default: 'Please, recheck the form before confirmation',
+      default: 'form-confirmation.please-recheck-form',
     },
     okButtonText: {
       type: String,
-      default: 'Confirm',
+      default: 'form-confirmation.confirm',
     },
     cancelButtonText: {
       type: String,
-      default: 'Cancel',
+      default: 'form-confirmation.cancel',
     },
     isPending: {
       type: Boolean,
