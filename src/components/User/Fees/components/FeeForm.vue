@@ -100,7 +100,7 @@
           class="app__btn app__btn--small fee-form__btn"
           :disabled="formMixin.isDisabled"
         >
-          {{ "fee-form.app-list-btn-create" | globalize }}
+          {{ "fee-form.btn-create" | globalize }}
         </button>
       </template>
     </span>

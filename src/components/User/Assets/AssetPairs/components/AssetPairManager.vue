@@ -134,7 +134,7 @@
             <template slot="help">
               <span class="asset-pair-manager__tip-message">
                 {{
-                  "asset-pair-manager.allow-trade-pair"
+                  "asset-pair-manager.allow-trade"
                     | globalize
                 }}
               </span>
