@@ -102,7 +102,7 @@
                 {{ "asset-pair-creator.message-offer" | globalize }}
               </span>
               <strong>{{
-                "asset-pair-creator.message-offer-prise" | globalize
+                "asset-pair-creator.message-offer-price" | globalize
               }}</strong>
             </p>
           </template>

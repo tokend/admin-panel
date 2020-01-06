@@ -79,6 +79,13 @@
       "no-support-msg": "The browser you're using doesn't support all the needed features. Please consider installing one of the following browsers.",
       "browser-ico-download": "Download:"
     },
+    "status-message": {
+      "success": "Success",
+      "error": "Error",
+      "notification": "Notification",
+      "warning": "Warning",
+      "default": " "
+    },
     "verify-tfa": {
       "header": "2FA Required",
       "verification-code": "Enter your verification code to proceed.",
@@ -124,7 +131,9 @@
       "warning-do-not-reload": "<em>Important:</em> Do not reload the page! You’ll be redirected automatically once your account is created"
     },
     "account-state-getter": {
-      "loading": "Loading..."
+      "loading": "Loading...",
+      "blocked": "Blocked",
+      "active": "Active"
     },
     "email-getter": {
       "master": "Master",
@@ -144,7 +153,10 @@
       "more": "More"
     },
     "form-confirmation": {
-      "processing": "Processing..."
+      "processing": "Processing...",
+      "please-recheck-form": "Please, recheck the form before confirmation",
+      "confirm": "Confirm",
+      "cancel": "Cancel"
     },
     "g-auth": {
       "header": "Two-factor authentication",
@@ -214,9 +226,9 @@
     "asset-pair-list": {
       "prise": "Price",
       "policy": "Policy",
-      "no-policy": " No policies for this pair",
+      "no-policy": "No policies for this pair",
       "nothing-here-yet": "Nothing here yet",
-      "error": " An error occurred. Please try again later",
+      "error": "An error occurred. Please try again later",
       "loading": "Loading..."
     },
     "asset-pair-manager": {
