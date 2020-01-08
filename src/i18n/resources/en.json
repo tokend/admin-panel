@@ -633,7 +633,9 @@
       "tasks-to-add": "Tasks to add",
       "tasks-to-remove": "Tasks to remove",
       "btn-submit": "Submit",
-      "btn-start-new-review": "Start new review"
+      "btn-start-new-review": "Start new review",
+      "btn-default": "",
+      "btn-no-ready-review": "No ready for review decisions yet"
     },
     "review-decision-viewer": {
       "error": "Error:",

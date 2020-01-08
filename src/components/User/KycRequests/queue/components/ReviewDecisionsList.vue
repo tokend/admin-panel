@@ -4,22 +4,22 @@
       <div class="app-list">
         <div class="app-list__header">
           <span class="app-list__cell">
-            {{ "review-decisions-list.email" | glabalize }}
+            {{ "review-decisions-list.email" | globalize }}
           </span>
           <span class="app-list__cell">
-            {{ "review-decisions-list.role-to-set" | glabalize }}
+            {{ "review-decisions-list.role-to-set" | globalize }}
           </span>
           <span class="app-list__cell">
-            {{ "review-decisions-list.state" | glabalize }}
+            {{ "review-decisions-list.state" | globalize }}
           </span>
           <span class="app-list__cell">
-            {{ "review-decisions-list.reason" | glabalize }}
+            {{ "review-decisions-list.reason" | globalize }}
           </span>
           <span class="app-list__cell">
-            {{ "review-decisions-list.tasks-to-add" | glabalize }}
+            {{ "review-decisions-list.tasks-to-add" | globalize }}
           </span>
           <span class="app-list__cell">
-            {{ "review-decisions-list.tasks-to-remove" | glabalize }}
+            {{ "review-decisions-list.tasks-to-remove" | globalize }}
           </span>
         </div>
 
@@ -36,19 +36,17 @@
       <button
         class="app__btn review-decisions-list__btn"
         :disabled="!readyForReviewDecisions.length"
-        :title="readyForReviewDecisions.length
-          ? ''
-          : 'No ready for review decisions yet'"
+        :title="checkReadyForReviewDecisions | globalize"
         @click="submitReview"
       >
-        {{ "review-decisions-list.btn-submit" | glabalize }}
+        {{ "review-decisions-list.btn-submit" | globalize }}
       </button>
 
       <button
         class="app__btn review-decisions-list__btn"
         @click="resetReview"
       >
-        {{ "review-decisions-list.btn-start-new-review" | glabalize }}
+        {{ "review-decisions-list.btn-start-new-review" | globalize }}
       </button>
     </div>
   </div>
@@ -88,6 +86,11 @@ export default {
   computed: {
     readyForReviewDecisions () {
       return this.decisions.filter(item => item.isReadyForReview)
+    },
+    checkReadyForReviewDecisions () {
+      return this.readyForReviewDecisions.length
+        ? 'review-decisions-list.btn-default'
+        : 'review-decisions-list.btn-no-ready-review'
     },
   },
 
