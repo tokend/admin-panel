@@ -86,7 +86,7 @@
             class="app__form-field"
             type="text"
             v-model.trim="form.meta"
-            :label="selectInputFieldLabel"
+            :label="selectInputFieldLabel | globalize"
             name="withdrawal-meta"
             @blur="touchField('form.meta')"
             :error-message="getFieldErrorMessage('form.meta')"
@@ -181,6 +181,8 @@ import { FEE_TYPES, base } from '@tokend/js-sdk'
 
 import { Balance } from '@/store/wrappers/balance'
 
+import { globalize } from '@/components/App/filters/filters'
+
 const EVENTS = {
   submitted: 'submitted',
 }
@@ -239,8 +241,8 @@ export default {
 
     selectInputFieldLabel () {
       return this.isMasterSelectedBalanceAsset
-        ? 'Destination address'
-        : 'Comment'
+        ? 'collected-fees-withdraw.destination-address'
+        : 'collected-fees-withdraw.comment'
     },
 
     checkErrorSelectField () {
@@ -274,7 +276,7 @@ export default {
         this.selectedBalanceAttrs.available,
         this.selectedBalanceAttrs.assetCode
       )
-      return `Max amount is ${formatted}`
+      return globalize('collected-fees-withdraw.max-amount')`${formatted}`
     },
 
     isSelectedAssetWithdrawable () {

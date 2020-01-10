@@ -12,13 +12,13 @@ export function filterDateWithTime (date, format = 'DD MMM YYYY [at] hh:mm:ss') 
 
 export function localizeIssuanceRequestState (type) {
   return {
-    approved: 'Approved',
-    pending: 'Pending',
-    rejected: 'Rejected',
-    permanently_rejected: 'Permanently rejected',
-    permanentlyRejected: 'Permanently rejected',
-    canceled: 'Canceled',
-    cancelled: 'Cancelled',
+    approved: globalize('filters.approved'),
+    pending: globalize('filters.pending'),
+    rejected: globalize('filters.rejected'),
+    permanently_rejected: globalize('filters.permanently-rejected'),
+    permanentlyRejected: globalize('filters.permanently-rejected'),
+    canceled: globalize('filters.canceled'),
+    cancelled: globalize('filters.cancelled'),
   }[type]
 }
 
@@ -28,27 +28,27 @@ export function cropAddress (value) {
 
 export function roleIdToString (roleId) {
   return {
-    [+store.getters.kvEntryUnverifiedRoleId]: 'Unverified',
-    [+store.getters.kvEntryGeneralRoleId]: 'General',
-    [+store.getters.kvEntryUsVerifiedRoleId]: 'US Verified',
-    [+store.getters.kvEntryUsAccreditedRoleId]: 'US Accredited',
-    [+store.getters.kvEntryCorporateRoleId]: 'Corporate',
-    [+store.getters.kvEntryBlockedRoleId]: 'Blocked',
+    [+store.getters.kvEntryUnverifiedRoleId]: globalize('filters.unverified'),
+    [+store.getters.kvEntryGeneralRoleId]: globalize('filters.general'),
+    [+store.getters.kvEntryUsVerifiedRoleId]: globalize('filters.us-verified'),
+    [+store.getters.kvEntryUsAccreditedRoleId]: globalize('filters.us-accredited'),
+    [+store.getters.kvEntryCorporateRoleId]: globalize('filters.corporate'),
+    [+store.getters.kvEntryBlockedRoleId]: globalize('filters.blocked'),
   }[+roleId]
 }
 
 export function assetTypeToString (assetType) {
   return {
-    [+store.getters.kvAssetTypeDefault]: 'Does not require KYC',
-    [+store.getters.kvAssetTypeKycRequired]: 'Requires KYC',
-    [+store.getters.kvAssetTypeSecurity]: 'Security',
+    [+store.getters.kvAssetTypeDefault]: globalize('filters.not-require-kyc'),
+    [+store.getters.kvAssetTypeKycRequired]: globalize('filters.requires-kyc'),
+    [+store.getters.kvAssetTypeSecurity]: globalize('filters.security'),
   }[+assetType]
 }
 
 export function pollTypeToString (value) {
   return {
-    [+store.getters.kvPollTypeRestricted]: 'Restricted',
-    [+store.getters.kvPollTypeUnrestricted]: 'Unrestricted',
+    [+store.getters.kvPollTypeRestricted]: globalize('filters.restricted'),
+    [+store.getters.kvPollTypeUnrestricted]: globalize('filters.unrestricted'),
   }[+value]
 }
 

@@ -33,7 +33,7 @@
           {{ "user-details-account.account-state" | globalize }}
         </span>
         <span>
-          {{ accountState }}
+          {{ accountState | globalize }}
         </span>
       </li>
 
@@ -80,7 +80,9 @@ export default {
     },
 
     accountState () {
-      return this.isUserBlocked ? 'Blocked' : 'Active'
+      return this.isUserBlocked
+        ? 'user-details-account.blocked'
+        : 'user-details-account.active'
     },
   },
 }

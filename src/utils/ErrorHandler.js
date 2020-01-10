@@ -3,7 +3,7 @@ import log from 'loglevel'
 import _get from 'lodash/get'
 import { ErrorTracker } from '@/utils/ErrorTracker'
 import { errors } from '@/js/errors'
-import { TX_ERRORS } from '@/constants/tx-errors'
+import { globalize } from '@/components/App/filters/filters'
 
 export class ErrorHandler {
   static process (error, errorTrackerConfig = {}) {
@@ -32,46 +32,46 @@ export class ErrorHandler {
 
     switch (error.constructor) {
       case errors.NetworkError:
-        message = 'Network error. Please re-check your internet connection and try again.'
+        message = 'errors.network'
         break
       case errors.UserDoesntExistError:
-        message = "This user doesn't exist in system."
+        message = 'errors.user-doesnt-exist'
         break
       case errors.BalanceNotFoundError:
-        message = 'The user does not have this asset balance yet.'
+        message = 'errors.balance-not-found'
         break
       case errors.TimeoutError:
-        message = 'Timeout exceeded. Please re-check your internet connection and try again.'
+        message = 'errors.timeout'
         break
       case errors.InternalServerError:
-        message = 'Something bad happened. Please try again later or contact the system owner.'
+        message = 'errors.internal'
         break
       case errors.BadRequestError:
-        message = 'The request you sent is invalid in some way.'
+        message = 'errors.bad-request'
         break
       case errors.NotAllowedError:
-        message = "Your account don't have permissions to perform this request."
+        message = 'errors.not-allowed'
         break
       case errors.ForbiddenRequestError:
-        message = 'Request forbidden.'
+        message = 'errors.forbidden'
         break
       case errors.TFARequiredError:
-        message = '2FA required.'
+        message = 'errors.tfa-required'
         break
       case errors.VerificationRequiredError:
-        message = 'Verification required.'
+        message = 'errors.verification-required'
         break
       case errors.NotFoundError:
-        message = 'Such item not found.'
+        message = 'errors.not-found'
         break
       case errors.ConflictError:
-        message = 'Such item already exists.'
+        message = 'errors.conflict'
         break
       case errors.UnauthorizedError:
-        message = 'Access denied.'
+        message = 'errors.unauthorized'
         break
       case errors.UserExistsError:
-        message = 'User with such email already exists.'
+        message = 'errors.user-exists'
         break
       case errors.TransactionError:
         let errorCode
@@ -84,19 +84,19 @@ export class ErrorHandler {
             (errorResults.find(i => i.errorCode !== 'op_success') || {})
               .errorCode
         }
-        message = TX_ERRORS[errorCode]
+        message = `transaction-errors.${errorCode}`
         break
       case errors.StorageServerError:
-        message = 'Cannot upload a file to the storage. Please upload another file or try again later.'
+        message = 'errors.file-upload'
         break
       default:
         if (error.message) {
           message = error.message
         } else {
-          message = 'Something bad happened. Please try again later or contact the system owner.'
+          message = 'errors.default'
         }
     }
 
-    return message
+    return globalize(message)
   }
 }

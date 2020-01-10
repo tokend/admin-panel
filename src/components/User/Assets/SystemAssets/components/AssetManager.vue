@@ -184,7 +184,8 @@
         <tick-field
           class="app__form-field"
           v-model="asset.policies.value"
-          :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.transferable]"
+          :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.transferable]
+            | globalize"
           :cb-value="ASSET_POLICIES.transferable"
           :disabled="formMixin.isDisabled"
         />
@@ -194,7 +195,8 @@
         <tick-field
           class="app__form-field"
           v-model="asset.policies.value"
-          :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.baseAsset]"
+          :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.baseAsset]
+            | globalize"
           :cb-value="ASSET_POLICIES.baseAsset"
           :disabled="formMixin.isDisabled"
         />
@@ -204,7 +206,8 @@
         <tick-field
           class="app__form-field"
           v-model="asset.policies.value"
-          :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.statsQuoteAsset]"
+          :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.statsQuoteAsset]
+            | globalize"
           :cb-value="ASSET_POLICIES.statsQuoteAsset"
           :disabled="formMixin.isDisabled"
         />
@@ -214,7 +217,8 @@
         <tick-field
           class="app__form-field"
           v-model="asset.policies.value"
-          :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.withdrawable]"
+          :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.withdrawable]
+            | globalize"
           :cb-value="ASSET_POLICIES.withdrawable"
           :disabled="formMixin.isDisabled"
         />
@@ -225,7 +229,8 @@
         <tick-field
           class="app__form-field"
           v-model="asset.policies.value"
-          :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.issuanceManualReviewRequired]"
+          :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.issuanceManualReviewRequired]
+            | globalize"
           :cb-value="ASSET_POLICIES.issuanceManualReviewRequired"
           :disabled="formMixin.isDisabled"
         />
@@ -236,7 +241,8 @@
         <tick-field
           class="app__form-field"
           v-model="asset.policies.value"
-          :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.canBeBaseInAtomicSwap]"
+          :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.canBeBaseInAtomicSwap]
+            | globalize"
           :cb-value="ASSET_POLICIES.canBeBaseInAtomicSwap"
           :disabled="formMixin.isDisabled"
         />
@@ -246,7 +252,8 @@
         <tick-field
           class="app__form-field"
           v-model="asset.policies.value"
-          :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.canBeQuoteInAtomicSwap]"
+          :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.canBeQuoteInAtomicSwap]
+            | globalize"
           :cb-value="ASSET_POLICIES.canBeQuoteInAtomicSwap"
           :disabled="formMixin.isDisabled"
         />
@@ -471,6 +478,8 @@ import { mapGetters } from 'vuex'
 import { getters } from '@/store/types'
 import _isEmpty from 'lodash/isEmpty'
 
+import { globalize } from '@/components/App/filters/filters'
+
 import {
   ASSET_POLICIES,
   DEFAULT_INPUT_STEP,
@@ -486,15 +495,15 @@ const ASSET_NAME_MAX_LENGTH = 255
 
 const STELLAR_ASSET_TYPES = [
   {
-    label: 'Alphanumeric 4',
+    label: globalize('asset-manager.lbl-alphanumeric-4'),
     value: 'credit_alphanum4',
   },
   {
-    label: 'Alphanumeric 12',
+    label: globalize('asset-manager.lbl-alphanumeric-12'),
     value: 'credit_alphanum12',
   },
   {
-    label: 'Native',
+    label: globalize('asset-manager.lbl-native'),
     value: 'native',
   },
 ]

@@ -146,7 +146,7 @@
                 class="asset-requests-show__key asset-requests-show__key--informative"
                 v-if="assetRequest.policies & key"
               >
-                {{ policy }}
+                {{ policy | globalize }}
               </span>
               <!-- eslint-enable max-len -->
             </template>
