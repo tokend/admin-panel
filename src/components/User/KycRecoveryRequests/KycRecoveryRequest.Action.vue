@@ -7,7 +7,7 @@
           @click="approve"
           :disabled="isPending"
         >
-          {{ "kyc-recovery-request-action.app-btn-approve" | globalize }}
+          {{ "kyc-recovery-request-action.btn-approve" | globalize }}
         </button>
 
         <button
@@ -15,7 +15,7 @@
           @click="showRejectModal"
           :disabled="isPending"
         >
-          {{ "kyc-recovery-request-action.app-btn-reject" | globalize }}
+          {{ "kyc-recovery-request-action.btn-reject" | globalize }}
         </button>
       </div>
     </template>
@@ -26,7 +26,7 @@
         @click="reject(true)"
         :disabled="isPending"
       >
-        {{ "kyc-recovery-request-action.app-btn-reject-perm" | globalize }}
+        {{ "kyc-recovery-request-action.btn-reject-perm" | globalize }}
       </button>
     </template>
 
@@ -62,10 +62,10 @@
           class="app__btn app__btn--danger"
           form="request-action-reject-form"
         >
-          {{ "kyc-recovery-request-action.app-form-btn-reject" | globalize }}
+          {{ "kyc-recovery-request-action.form-btn-reject" | globalize }}
         </button>
         <button class="app__btn-secondary" @click="hideRejectModal">
-          {{ "kyc-recovery-request-action.app-form-btn-cancel" | globalize }}
+          {{ "kyc-recovery-request-action.form-btn-cancel" | globalize }}
         </button>
       </div>
     </modal>

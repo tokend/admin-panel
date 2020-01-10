@@ -5,16 +5,16 @@
       <template v-if="masterBalances && masterBalances.length">
         <div class="app-list__header">
           <span class="app-list__cell app-list__cell--important">
-            {{ "collected-fees-list.app-list-asset" | globalize }}
+            {{ "collected-fees-list.asset" | globalize }}
           </span>
           <span class="app-list__cell app-list__cell--right">
-            {{ "collected-fees-list.app-list-available" | globalize }}
+            {{ "collected-fees-list.available" | globalize }}
           </span>
           <span class="app-list__cell app-list__cell--right">
-            {{ "collected-fees-list.app-list-locked" | globalize }}
+            {{ "collected-fees-list.locked" | globalize }}
           </span>
           <span class="app-list__cell app-list__cell--right">
-            {{ "collected-fees-list.app-list-withdrawable" | globalize }}
+            {{ "collected-fees-list.withdrawable" | globalize }}
           </span>
         </div>
 
@@ -48,12 +48,12 @@
           <span class="app-list__cell app-list__cell--right">
             <template v-if="isAssetWithdrawable(balance.assetCode)">
               {{
-                "collected-fees-list.app-list-asset-withdrawable-t" | globalize
+                "collected-fees-list.yes" | globalize
               }}
             </template>
             <template v-else>
               {{
-                "collected-fees-list.app-list-asset-withdrawable-f" | globalize
+                "collected-fees-list.no" | globalize
               }}
             </template>
           </span>
@@ -64,19 +64,19 @@
         <div class="app-list__li-like">
           <template v-if="isLoading">
             <p>
-              {{ "collected-fees-list.app-list-load" | globalize }}
+              {{ "collected-fees-list.loading" | globalize }}
             </p>
           </template>
 
           <template v-else-if="isFailed">
             <p class="danger">
-              {{ "collected-fees-list.app-list-fail-load" | globalize }}
+              {{ "collected-fees-list.error" | globalize }}
             </p>
           </template>
 
           <template v-else>
             <p>
-              {{ "collected-fees-list.app-list-error" | globalize }}
+              {{ "collected-fees-list.fail-load" | globalize }}
             </p>
           </template>
         </div>

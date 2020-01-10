@@ -1,7 +1,7 @@
 <template>
   <div class="collected-fees-withdraw">
     <div class="app__block">
-      <h2>{{ "collected-fees-withdraw.app-block-header" | globalize }}</h2>
+      <h2>{{ "collected-fees-withdraw.header" | globalize }}</h2>
 
       <form @submit.prevent="isFormValid() && showConfirmation()">
         <div class="app__form-row">
@@ -36,19 +36,18 @@
                 selected>
                 <template v-if="isMasterBalancesLoading">
                   {{
-                    "collected-fees-withdraw.master-balance-loading" | globalize
+                    "collected-fees-withdraw.loading" | globalize
                   }}
                 </template>
 
                 <template v-else-if="isMasterBalancesFailed">
                   <!--eslint-disable-next-line max-len -->
-                  {{ "collected-fees-withdraw.master-balance-fail" | globalize }}
+                  {{ "collected-fees-withdraw.fail-load" | globalize }}
                 </template>
 
                 <template v-else>
                   {{
-                    "collected-fees-withdraw.master-balance-no-assets"
-                      | globalize
+                    "collected-fees-withdraw.no-assets-withdraw" | globalize
                   }}
                 </template>
               </option>
@@ -97,7 +96,7 @@
         <div class="collected-fees-withdraw__op-attrs">
           <p class="collected-fees-withdraw__op-attrs-row">
             <span>
-              {{ "collected-fees-withdraw.op-attrs-row" | globalize }}
+              {{ "collected-fees-withdraw.reviewer" | globalize }}
             </span>
             <email-getter :account-id="opAttrs.reviewerAddress" is-titled />
           </p>
@@ -105,7 +104,7 @@
           <template v-if="+opAttrs.fixedFee">
             <p class="collected-fees-withdraw__op-attrs-row">
               <span>
-                {{ "collected-fees-withdraw.op-attrs-row-fix-fee" | globalize }}
+                {{ "collected-fees-withdraw.fixed-fee" | globalize }}
               </span>
               <asset-amount-formatter
                 :amount="opAttrs.fixedFee"
@@ -118,7 +117,7 @@
             <p class="collected-fees-withdraw__op-attrs-row">
               <span>
                 {{
-                  "collected-fees-withdraw.op-attrs-row-percent-fee" | globalize
+                  "collected-fees-withdraw.percent-fee" | globalize
                 }}
               </span>
               <asset-amount-formatter
@@ -131,8 +130,7 @@
           <template v-if="isMasterSelectedBalanceAsset">
             <p class="collected-fees-withdraw__op-attrs-row">
               {{
-                "collected-fees-withdraw.op-attrs-row-ext-fee-present"
-                  | globalize
+                "collected-fees-withdraw.external-fee-present" | globalize
               }}
             </p>
           </template>
@@ -152,7 +150,7 @@
             class="app__btn collected-fees-withdraw__submit-btn"
             :disabled="formMixin.isDisabled || !isSelectedAssetWithdrawable"
           >
-            {{ "collected-fees-withdraw.app-submin-btn" | globalize }}
+            {{ "collected-fees-withdraw.btn-withdraw" | globalize }}
           </button>
         </div>
       </form>
@@ -249,7 +247,7 @@ export default {
     checkErrorSelectField () {
       return this.isSelectedAssetWithdrawable
         ? ''
-        : 'CollectedFeesWithdraw.error-select-field-msg' | globalize
+        : 'CollectedFeesWithdraw.eerror-asset-not-withdrawable' | globalize
     },
 
     selectedBalanceAttrs () {

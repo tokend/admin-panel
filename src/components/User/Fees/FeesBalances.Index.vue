@@ -27,12 +27,12 @@
         <div class="app-list__li-like">
           <template v-if="isLoadFailed">
             <p class="danger">
-              {{ "fees-balances-index.app-list-error" | globalize }}
+              {{ "fees-balances-index.error" | globalize }}
             </p>
           </template>
 
           <template v-else>
-            <p>{{ "fees-balances-index.app-list-load" | globalize }}</p>
+            <p>{{ "fees-balances-index.loading" | globalize }}</p>
           </template>
         </div>
       </div>

@@ -9,13 +9,13 @@
             v-model="filters.scope"
           >
             <option :value="SCOPE_TYPES.global">
-              {{ "fee-list.fee-list-scope-global" | globalize }}
+              {{ "fee-list.global" | globalize }}
             </option>
             <option :value="SCOPE_TYPES.accountRole">
-              {{ "fee-list.fee-list-scope-acc-type" | globalize }}
+              {{ "fee-list.account-type" | globalize }}
             </option>
             <option :value="SCOPE_TYPES.account">
-              {{ "fee-list.fee-list-scope-acc" | globalize }}
+              {{ "fee-list.account" | globalize }}
             </option>
           </select-field>
 
@@ -25,22 +25,22 @@
             v-model="filters.feeType"
           >
             <option :value="FEE_TYPES.paymentFee">
-              {{ "fee-list.fee-list-payment" | globalize }}
+              {{ "fee-list.payment" | globalize }}
             </option>
             <option :value="FEE_TYPES.offerFee">
-              {{ "fee-list.fee-list-order-match" | globalize }}
+              {{ "fee-list.order-match" | globalize }}
             </option>
             <option :value="FEE_TYPES.withdrawalFee">
-              {{ "fee-list.fee-list-withdrawal" | globalize }}
+              {{ "fee-list.withdrawal" | globalize }}
             </option>
             <option :value="FEE_TYPES.issuanceFee">
-              {{ "fee-list.fee-list-issuance" | globalize }}
+              {{ "fee-list.issuance" | globalize }}
             </option>
             <option :value="FEE_TYPES.investFee">
-              {{ "fee-list.fee-list-invest" | globalize }}
+              {{ "fee-list.invest" | globalize }}
             </option>
             <option :value="FEE_TYPES.capitalDeploymentFee">
-              {{ "fee-list.fee-list-cap-deployment" | globalize }}
+              {{ "fee-list.capital-deployment" | globalize }}
             </option>
           </select-field>
 
@@ -77,7 +77,7 @@
 
             <template v-else>
               <option disabled>
-                {{ "fee-list.fee-filter-no-assets" | globalize }}
+                {{ "fee-list.no-appropriate-assets" | globalize }}
               </option>
             </template>
           </select-field>
@@ -89,13 +89,13 @@
             v-if="filters.scope === SCOPE_TYPES.accountRole"
           >
             <option :value="kvAccountRoles.general">
-              {{ "fee-list.fee-acc-type-general" | globalize }}
+              {{ "fee-list.general" | globalize }}
             </option>
             <option :value="kvAccountRoles.unverified">
-              {{ "fee-list.fee-acc-type-not-ver" | globalize }}
+              {{ "fee-list.not-verified" | globalize }}
             </option>
             <option :value="kvAccountRoles.corporate">
-              {{ "fee-list.fee-acc-type-corporate" | globalize }}
+              {{ "fee-list.corporate" | globalize }}
             </option>
           </select-field>
 
@@ -115,7 +115,7 @@
       <template v-if="!Object.keys(fees).length">
         <div class="app-list">
           <p class="app-list__li-like">
-            {{ "fee-list.app-list-loadind" | globalize }}
+            {{ "fee-list.loading" | globalize }}
           </p>
         </div>
       </template>
@@ -127,7 +127,7 @@
       >
         <div class="app-list">
           <p class="app-list__li-like">
-            {{ "fee-list.scecify-acc" | globalize }}
+            {{ "fee-list.please-scecify-account" | globalize }}
           </p>
         </div>
       </template>
@@ -144,15 +144,15 @@
         <ul class="app-list">
           <div class="app-list__header">
             <span class="app-list__cell">
-              {{ "fee-list.app-list-cell-lower-bound" | globalize }}
+              {{ "fee-list.lower-bound" | globalize }}
             </span>
 
             <span class="app-list__cell">
-              {{ "fee-list.app-list-cell-upper-bound" | globalize }}
+              {{ "fee-list.upper-bound" | globalize }}
             </span>
 
             <span class="app-list__cell">
-              {{ "fee-list.app-list-cell-percent-fee" | globalize }}
+              {{ "fee-list.percent-fee" | globalize }}
             </span>
 
             <span
@@ -163,7 +163,7 @@
                   +filters.feeType !== FEE_TYPES.investFee
               "
             >
-              {{ "fee-list.app-list-cell-fixed-fee" | globalize }}
+              {{ "fee-list.fixed-fee" | globalize }}
             </span>
             <span class="app-list__cell">
               <!-- empty -->
