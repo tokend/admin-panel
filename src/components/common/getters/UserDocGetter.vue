@@ -5,9 +5,9 @@
         <a
           :href="href"
           target="_blank"
-          rel="noopener"
-        >
-          Open file <i class="mdi mdi-open-in-new user-doc-getter__ico" />
+          rel="noopener">
+          {{ "user-doc-getter.getter-link-text" | globalize }}
+          <i class="mdi mdi-open-in-new user-doc-getter__ico" />
         </a>
       </div>
 
@@ -16,8 +16,7 @@
           v-if="isImage"
           class="user-doc-getter__img"
           :src="href"
-          alt=""
-        >
+          alt="">
 
         <embed
           v-else-if="isPdf"
@@ -27,17 +26,17 @@
         >
 
         <p v-else>
-          No preview available
+          {{ "user-doc-getter.failed-load-img" | globalize }}
         </p>
       </div>
       <span v-else-if="isNoFile">
         —
       </span>
       <span v-else-if="isFailed" class="danger">
-        (Error)
+        {{ "user-doc-getter.failed-load-file" | globalize }}
       </span>
       <span v-else>
-        Loading...
+        {{ "user-doc-getter.failed-load" | globalize }}
       </span>
     </div>
   </div>
@@ -66,7 +65,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../../../assets/scss/colors';
+@import "../../../assets/scss/colors";
 
 .user-doc-getter {
   position: relative;
@@ -95,11 +94,11 @@ export default {
   right: 0;
   height: 3rem;
   font-size: 1.4rem;
-  transition: .2s;
+  transition: 0.2s;
   transform: translateY(-100%);
   justify-content: center;
   align-items: center;
-  background: rgba(0,0,0,.25);
+  background: rgba(0, 0, 0, 0.25);
 }
 
 .user-doc-getter__ico {
@@ -109,7 +108,8 @@ export default {
   color: $color-active;
 }
 
-embed, img {
+embed,
+img {
   border: none;
   width: 100%;
 }

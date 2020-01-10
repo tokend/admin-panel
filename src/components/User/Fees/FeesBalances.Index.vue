@@ -1,7 +1,7 @@
 <template>
   <div class="fees-balances">
     <template v-if="isLoaded">
-      <h2>Collected fees management</h2>
+      <h2>{{ "fees-balances-index.header" | globalize }}</h2>
 
       <div class="fees-balances__withdraw-form-wrp">
         <collected-fees-withdraw
@@ -13,13 +13,12 @@
       <div class="fees-balances__list-wrp">
         <collected-fees-list
           :ref="REFS.collectedFeesList"
-          @on-item-clicked="passToWithdrawalForm($event)" />
+          @on-item-clicked="passToWithdrawalForm($event)"
+        />
       </div>
 
       <div class="fees-balances__withdrawals-wrp">
-        <collected-fees-withdrawals
-          :ref="REFS.collectedFeesWithdrawals"
-        />
+        <collected-fees-withdrawals :ref="REFS.collectedFeesWithdrawals" />
       </div>
     </template>
 
@@ -28,12 +27,12 @@
         <div class="app-list__li-like">
           <template v-if="isLoadFailed">
             <p class="danger">
-              An error occurred. Please try again later
+              {{ "fees-balances-index.app-list-error" | globalize }}
             </p>
           </template>
 
           <template v-else>
-            <p>Loading...</p>
+            <p>{{ "fees-balances-index.app-list-load" | globalize }}</p>
           </template>
         </div>
       </div>

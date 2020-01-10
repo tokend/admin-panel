@@ -1,25 +1,30 @@
 <template>
   <div class="trrf">
-    <h2>
-      Reject {{ assetRequest.code }}
-      {{ assetRequest.type === 'create_asset' ? 'create' : 'update' }} request
+    <h2 v-if="assetRequest.type === 'create_asset'">
+      {{ "asset-request-reject-form.trrf-reject" | globalize }}
+      {{ "asset-request-reject-form.trrf-create-request" | globalize }}
+    </h2>
+
+    <h2 v-else>
+      {{ "asset-request-reject-form.trrf-reject" | globalize }}
+      {{ "asset-request-reject-form.trrf-update-request" | globalize }}
     </h2>
 
     <form
       @submit.prevent="reject"
       id="trrf-form"
-      novalidate
-    >
+      novalidate>
       <div class="app__form-row">
         <text-field
           label="Describe reject reason"
           v-model="form.rejectReason"
           :disabled="formMixin.isDisabled"
           @blur="touchField('form.rejectReason')"
-          :error-message="getFieldErrorMessage(
-            'form.rejectReason',
-            { maxLength: REJECT_REASON_MAX_LENGTH }
-          )"
+          :error-message="
+            getFieldErrorMessage('form.rejectReason', {
+              maxLength: REJECT_REASON_MAX_LENGTH
+            })
+          "
           rows="5"
         />
       </div>
@@ -95,8 +100,10 @@ export default {
 
       this.disableForm()
       try {
-        await this.assetRequest
-          .reject(this.form.rejectReason, this.isPermanentReject)
+        await this.assetRequest.reject(
+          this.form.rejectReason,
+          this.isPermanentReject
+        )
         Bus.success('Request successfully rejected')
         this.$router.push({ name: 'assets' })
       } catch (err) {

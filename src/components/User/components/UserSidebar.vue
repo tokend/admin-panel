@@ -4,90 +4,92 @@
       TokenD
     </span>
     <span class="user-sidebar__admin-badge">
-      ADMIN PANEL
+      {{ "user-sidebar.admin-badge" | globalize }}
     </span>
 
     <nav class="user-sidebar__nav user-sidebar__nav--full-height">
       <li class="user-sidebar__nav-li">
         <router-link :to="{ name: 'users' }">
           <i class="mdi mdi-account user-sidebar__icon" />
-          <span>Users</span>
+          <span>{{ "user-sidebar.sidebar-nav-users" | globalize }}</span>
         </router-link>
       </li>
 
       <li class="user-sidebar__nav-li">
         <router-link :to="{ name: 'admins' }">
           <i class="mdi mdi-account-star user-sidebar__icon" />
-          <span>Admins</span>
+          <span>{{ "user-sidebar.sidebar-nav-admins" | globalize }}</span>
         </router-link>
       </li>
 
       <li class="user-sidebar__nav-li">
         <router-link :to="{ name: 'assets' }">
           <i class="mdi mdi-coin user-sidebar__icon" />
-          <span>Assets</span>
+          <span>{{ "user-sidebar.sidebar-nav-assets" | globalize }}</span>
         </router-link>
       </li>
 
       <li class="user-sidebar__nav-li">
         <router-link :to="{ name: 'sales' }">
           <i class="mdi mdi-coins user-sidebar__icon" />
-          <span>Sales</span>
+          <span>{{ "user-sidebar.sidebar-nav-sales" | globalize }}</span>
         </router-link>
       </li>
 
       <li class="user-sidebar__nav-li">
         <router-link :to="{ name: 'polls' }">
           <i class="mdi mdi-vote user-sidebar__icon" />
-          <span>Polls</span>
+          <span>{{ "user-sidebar.sidebar-nav-polls" | globalize }}</span>
         </router-link>
       </li>
 
       <li class="user-sidebar__nav-li">
         <router-link :to="{ name: 'offlineOperations' }">
           <i class="mdi mdi-sync-off user-sidebar__icon" />
-          <span>Offline operations</span>
+          <span>{{ "user-sidebar.sidebar-nav-offline-op" | globalize }}</span>
         </router-link>
       </li>
 
       <li class="user-sidebar__nav-li">
         <router-link :to="{ name: 'kycRequests' }">
           <i class="mdi mdi-account-plus user-sidebar__icon" />
-          <span>KYC Requests</span>
+          <span>{{ "user-sidebar.sidebar-nav-kyc-req" | globalize }}</span>
         </router-link>
       </li>
       <li class="user-sidebar__nav-li">
         <router-link :to="{ name: 'kycRecoveryRequests' }">
           <i class="mdi mdi-account-plus user-sidebar__icon" />
-          <span>KYC Recovery Requests</span>
+          <span>{{
+            "user-sidebar.sidebar-nav-kyc-recovery-req" | globalize
+          }}</span>
         </router-link>
       </li>
 
       <li class="user-sidebar__nav-li">
         <router-link :to="{ name: 'limits' }">
           <i class="mdi mdi-chart-bar user-sidebar__icon" />
-          <span>Limits</span>
+          <span>{{ "user-sidebar.sidebar-nav-limits" | globalize }}</span>
         </router-link>
       </li>
 
       <li class="user-sidebar__nav-li">
         <router-link :to="{ name: 'trades' }">
           <i class="mdi mdi-chart-line-variant user-sidebar__icon" />
-          <span>Trades</span>
+          <span>{{ "user-sidebar.sidebar-nav-trades" | globalize }}</span>
         </router-link>
       </li>
 
       <li class="user-sidebar__nav-li">
         <router-link :to="{ name: 'fees' }">
           <i class="mdi mdi-percent user-sidebar__icon" />
-          <span>Fees</span>
+          <span>{{ "user-sidebar.sidebar-nav-fees" | globalize }}</span>
         </router-link>
       </li>
 
       <li class="user-sidebar__nav-li">
         <router-link :to="{ name: 'keyValue' }">
           <i class="mdi mdi-table user-sidebar__icon" />
-          <span>Key Value</span>
+          <span>{{ "user-sidebar.sidebar-nav-key-val" | globalize }}</span>
         </router-link>
       </li>
     </nav>
@@ -96,7 +98,7 @@
       <li class="user-sidebar__nav-li">
         <router-link :to="{ name: 'settings' }">
           <i class="mdi mdi-settings user-sidebar__icon" />
-          <span>Settings</span>
+          <span>{{ "user-sidebar.sidebar-nav-settings" | globalize }}</span>
         </router-link>
       </li>
     </nav>

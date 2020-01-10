@@ -5,7 +5,7 @@
         @submit.prevent="isFormValid('priceForm') && showConfirmation()"
         class="asset-pair-manager__form app__block"
       >
-        <h2>Update {{ base }}/{{ quote }} pair price</h2>
+        <h2>{{ "asset-pair-manager.manager-form-app-prise" | globalize }}</h2>
 
         <div class="asset-pair-manager__form-row app__form-row">
           <input-field
@@ -16,13 +16,12 @@
             :step="DEFAULT_INPUT_STEP"
             v-model="priceForm.price"
             @blur="touchField('priceForm.price')"
-            :error-message="getFieldErrorMessage(
-              'priceForm.price',
-              {
+            :error-message="
+              getFieldErrorMessage('priceForm.price', {
                 minValue: DEFAULT_INPUT_MIN,
                 maxValue: DEFAULT_MAX_AMOUNT
-              }
-            )"
+              })
+            "
             :disabled="formMixin.isDisabled"
           />
         </div>
@@ -44,7 +43,7 @@
             :disabled="formMixin.isDisabled"
             @click="isAttributesFormSelected = false"
           >
-            Update
+            {{ "asset-pair-manager.manager-form-submit-btn" | globalize }}
           </button>
         </div>
       </form>
@@ -55,7 +54,7 @@
         @submit.prevent="isFormValid('attributesForm') && showConfirmation()"
         class="asset-pair-manager__form app__block"
       >
-        <h2>Update {{ base }}/{{ quote }} pair attributes</h2>
+        <h2>{{ "asset-pair-manager.manager-asset-pait" }}</h2>
 
         <div class="asset-pair-manager__form-row app__form-row">
           <input-field
@@ -66,20 +65,22 @@
             :step="DEFAULT_INPUT_STEP"
             v-model="attributesForm.physicalPriceCorrection"
             @blur="touchField('attributesForm.physicalPriceCorrection')"
-            :error-message="getFieldErrorMessage(
-              'attributesForm.physicalPriceCorrection',
-              { minValue: 0, maxValue: DEFAULT_MAX_AMOUNT }
-            )"
+            :error-message="
+              getFieldErrorMessage('attributesForm.physicalPriceCorrection', {
+                minValue: 0,
+                maxValue: DEFAULT_MAX_AMOUNT
+              })
+            "
             :disabled="formMixin.isDisabled"
           >
             <template slot="help">
               <p class="asset-pair-manager__tip-message">
                 <span>
-                  The correction of physical price in percents.
-                  If physical price and restriction by physical price are set,
-                  minimum price for this pair offer will be
+                  {{ "asset-pair-manager.manager-asset-tip-msg" | globalize }}
                 </span>
-                <strong>physicalPrice * physicalPriceCorrection</strong>
+                <strong>{{
+                  "asset-pair-manager.manager-asset-tip-msg-prise" | globalize
+                }}</strong>
               </p>
             </template>
           </input-field>
@@ -95,20 +96,26 @@
             :step="DEFAULT_INPUT_STEP"
             v-model="attributesForm.maxPriceStep"
             @blur="touchField('attributesForm.maxPriceStep')"
-            :error-message="getFieldErrorMessage(
-              'attributesForm.maxPriceStep',
-              { minValue: 0, maxValue: 100 }
-            )"
+            :error-message="
+              getFieldErrorMessage('attributesForm.maxPriceStep', {
+                minValue: 0,
+                maxValue: 100
+              })
+            "
             :disabled="formMixin.isDisabled"
           >
             <template slot="help">
               <p class="asset-pair-manager__tip-message">
                 <span>
-                  Maximum offer price step in percents.
-                  If current price restriction is set,
-                  the users are allowed to set an offer with price in interval
-                </span>
-                <strong>(1 ± maxPriceStep) * currentPrice</strong>
+                  {{
+                    "asset-pair-manager.manager-asset-tip-msg-max-offer"
+                      | globalize
+                  }}</span
+                  >
+                <strong>{{
+                  "asset-pair-manager.manager-asset-tip-msg-max-offer-prise"
+                    | globalize
+                }}</strong>
               </p>
             </template>
           </input-field>
@@ -125,7 +132,10 @@
           >
             <template slot="help">
               <span class="asset-pair-manager__tip-message">
-                Allowed to trade this pair on secondary market
+                {{
+                  "asset-pair-manager.manager-asset-tip-msg-allow-trade"
+                    | globalize
+                }}
               </span>
             </template>
           </tick-field>
@@ -140,8 +150,10 @@
           >
             <template slot="help">
               <span class="asset-pair-manager__tip-message">
-                If set, then prices for new offers must be greater
-                than physical price with correction
+                {{
+                  // eslint-disable-next-line max-len
+                  "asset-pair-manager.manager-asset-tip-msg-new-offer" | globalize
+                }}
               </span>
             </template>
           </tick-field>
@@ -157,9 +169,18 @@
             <template slot="help">
               <p class="asset-pair-manager__tip-message">
                 <span>
-                  If set, then price for new offers must be in interval of
+                  {{
+                    "asset-pair-manager.manager-asset-tip-msg-prise-new-offer"
+                      | globalize
+                  }}
                 </span>
-                <strong>(1 ± maxPriceStep) * currentPrice</strong>
+                <strong>
+                  {{
+                    // eslint-disable-next-line max-len
+                    "asset-pair-manager.manager-asset-tip-msg-current-prise-new-offer"
+                      | globalize
+                  }}</strong
+                >
               </p>
             </template>
           </tick-field>
@@ -181,7 +202,7 @@
               :disabled="formMixin.isDisabled"
               @click="isAttributesFormSelected = true"
             >
-              Update policy
+              {{ "asset-pair-manager.manager-asset-upd-policy" | globalize }}
             </button>
 
             <button
@@ -190,7 +211,7 @@
               @click.prevent="removeAssetPair"
               :disabled="formMixin.isDisabled"
             >
-              Remove pair
+              {{ "asset-pair-manager.manager-asset-rmv-pair" | globalize }}
             </button>
           </template>
         </div>
@@ -199,7 +220,7 @@
 
     <template v-else>
       <p>
-        Loading...
+        {{ "asset-pair-manager.manager-asset-load" | globalize }}
       </p>
     </template>
   </div>
@@ -282,11 +303,12 @@ export default {
   async created () {
     await this.getPair()
     this.priceForm.price = this.pair.physicalPrice
-    this.attributesForm.physicalPriceCorrection =
-      this.pair.physicalPriceCorrection
+    // eslint-disable-next-line max-len
+    this.attributesForm.physicalPriceCorrection = this.pair.physicalPriceCorrection
     this.attributesForm.maxPriceStep = this.pair.maxPriceStep
-    this.attributesForm.policies = this.pair.policies
-      .map(policy => policy.value)
+    this.attributesForm.policies = this.pair.policies.map(
+      policy => policy.value
+    )
   },
 
   methods: {
@@ -304,18 +326,22 @@ export default {
 
     async updatePrice () {
       this.pair.physicalPrice = this.priceForm.price
-      this.pair.policies = this.attributesForm.policies
-        .reduce((sum, policy) => sum | policy, 0)
+      this.pair.policies = this.attributesForm.policies.reduce(
+        (sum, policy) => sum | policy,
+        0
+      )
       this.submit({ updatePrice: true })
     },
 
     async updateAttributes () {
-      this.pair.physicalPriceCorrection =
-        this.attributesForm.physicalPriceCorrection
+      // eslint-disable-next-line max-len
+      this.pair.physicalPriceCorrection = this.attributesForm.physicalPriceCorrection
       this.pair.maxPriceStep = this.attributesForm.maxPriceStep
 
-      this.pair.policies = this.attributesForm.policies
-        .reduce((sum, policy) => sum | policy, 0)
+      this.pair.policies = this.attributesForm.policies.reduce(
+        (sum, policy) => sum | policy,
+        0
+      )
       this.submit({ updatePolicy: true })
     },
 

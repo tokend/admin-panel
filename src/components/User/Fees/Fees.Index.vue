@@ -1,7 +1,7 @@
 <template>
   <div class="fees-index">
     <h2>
-      Fee management
+      {{ "fees-index.header" | globalize }}
     </h2>
 
     <div class="fees-index__list-wrp">

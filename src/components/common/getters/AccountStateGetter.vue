@@ -4,7 +4,7 @@
       {{ accountState }}
     </template>
     <template v-else>
-      Loading...
+      {{ "account-state-getter.load-acc-state" | globalize }}
     </template>
   </span>
 </template>
@@ -23,9 +23,7 @@ export default {
   }),
 
   computed: {
-    ...mapGetters([
-      'kvAccountRoles',
-    ]),
+    ...mapGetters(['kvAccountRoles']),
 
     accountState () {
       if (!this.account) return null

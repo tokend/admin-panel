@@ -3,23 +3,21 @@
     <!-- Signup block -->
     <div class="signup__block app__block" v-if="state === 'signup'">
       <h2 class="signup__heading">
-        {{ 'sign-up.header' | globalize }}
+        {{ "sign-up.header" | globalize }}
       </h2>
 
-      <form
-        @submit.prevent="submit"
-        novalidate
-      >
+      <form @submit.prevent="submit" novalidate>
         <div class="app__form-row">
           <div class="app__form-field">
             <input-field
               label="Username"
               v-model="form.username"
               @blur="touchField('form.username')"
-              :error-message="getFieldErrorMessage(
-                'form.username',
-                { minLength: USERNAME_MIN_LENGTH }
-              )"
+              :error-message="
+                getFieldErrorMessage('form.username', {
+                  minLength: USERNAME_MIN_LENGTH
+                })
+              "
               :disabled="formMixin.isDisabled"
             />
           </div>
@@ -64,11 +62,8 @@
         </div>
 
         <div class="app__form-actions">
-          <button
-            class="app__btn"
-            :disabled="formMixin.isDisabled"
-          >
-            Sign Up
+          <button class="app__btn" :disabled="formMixin.isDisabled">
+            {{ "sign-up.header-button" | globalize }}
           </button>
         </div>
       </form>
@@ -78,18 +73,17 @@
     <!-- Confirm Section -->
     <div class="signup__block app__block" v-else-if="state === 'submit'">
       <h2 class="signup__heading">
-        Sign Up
+        {{ "sign-up.header" | globalize }}
       </h2>
 
       <p class="text">
-        Ask an existing administrator to register the following account ID.<br>
+        {{ "sign-up.app-block-text" | globalize }}
       </p>
 
       <br class="text small">
 
       <p class="text small">
-        <em>Important:</em> Do not reload the page!
-        You’ll be redirected automatically once your account is created
+        {{ "sign-up.app-block-text-small" | globalize }}
       </p>
 
       <br class="text">
@@ -98,8 +92,7 @@
         <qrcode
           :size="240"
           foreground="#3f4244"
-          :value="form.publicKey"
-        />
+          :value="form.publicKey" />
         <p class="signup__account-id small">
           {{ form.publicKey }}
         </p>
@@ -173,7 +166,9 @@ export default {
         confirmPassword: {
           required,
           password,
-          sameAsPassword: sameAs(function () { return this.form.password }),
+          sameAsPassword: sameAs(function () {
+            return this.form.password
+          }),
         },
         seed: { required, seed },
       },
@@ -189,8 +184,9 @@ export default {
       try {
         const endpoint = `/v3/accounts/${config.MASTER_ACCOUNT}/signers`
         const { data } = await api.get(endpoint)
-        const isSignerExists = data
-          .find(item => item.id === this.form.publicKey)
+        const isSignerExists = data.find(
+          item => item.id === this.form.publicKey
+        )
 
         if (!isSignerExists) {
           setTimeout(this.isSigner, 5000)
@@ -213,7 +209,9 @@ export default {
         const res = await Vue.auth.login(this.form)
 
         if (!res.ok || res.enabledTFA) {
-          ErrorHandler.process('Can not automatically log into the system. Try to log yourself')
+          ErrorHandler.process(
+            'Can not automatically log into the system. Try to log yourself'
+          )
           this.state = 'signup'
           return
         }
@@ -223,7 +221,9 @@ export default {
         ErrorHandler.processWithoutFeedback(err)
 
         if (!walletCreated) {
-          ErrorHandler.process('You are not registered, try again to register with the secret key later')
+          ErrorHandler.process(
+            'You are not registered, try again to register with the secret key later'
+          )
           this.state = 'signup'
         }
       }
@@ -275,10 +275,12 @@ export default {
 
     async checkCredentials () {
       await this.getUniqueCredentials(
-        this.form.username, 'Username already exist. Please select another'
+        this.form.username,
+        'Username already exist. Please select another'
       )
       await this.getUniqueCredentials(
-        this.form.publicKey, 'Account already exists'
+        this.form.publicKey,
+        'Account already exists'
       )
     },
   },

@@ -18,7 +18,7 @@
       <ul class="user-account-widget__action-list">
         <li class="user-account-widget__action-list-item">
           <button class="user-account-widget__action-btn" @click="signOut()">
-            Sign Out
+            {{ "user-account-widget.btn-sign-out" | globalize }}
           </button>
         </li>
       </ul>
@@ -63,7 +63,7 @@ export default {
     },
 
     detectOpenedModals () {
-      const listener = (e) => {
+      const listener = e => {
         if (e.target.closest('.user-account-widget')) return
         this.isPaneActive = false
         document.removeEventListener('click', listener)

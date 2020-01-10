@@ -2,13 +2,13 @@
   <div class="asset-requests-show app__block">
     <template v-if="isInitializing">
       <p class="text">
-        Loading...
+        {{ "asset-requests-show.app-block-init" | globalize }}
       </p>
     </template>
 
     <template v-else-if="isInitFailed">
       <p class="text danger">
-        An error occurred. Please try again later
+        {{ "asset-requests-show.app-block-init-fail" | globalize }}
       </p>
     </template>
 
@@ -18,22 +18,22 @@
     >
       <h2>
         <template v-if="assetRequest.type === ASSET_REQUEST_TYPES.createAsset">
-          Asset creation request
+          {{ "asset-requests-show.asset-creation-request" | globalize }}
         </template>
 
         <template
           v-else-if="assetRequest.type === ASSET_REQUEST_TYPES.updateAsset"
         >
-          Asset update request
+          {{ "asset-requests-show.asset-upd-request" | globalize }}
         </template>
 
         <template v-else>
-          Asset request
+          {{ "asset-requests-show.asset-request" | globalize }}
         </template>
       </h2>
       <div class="asset-requests-show__row">
         <span class="asset-requests-show__key">
-          Asset logo
+          {{ "asset-requests-show.asset-logo" | globalize }}
         </span>
         <template
           v-if="safeGet(
@@ -52,7 +52,7 @@
       </div>
       <div class="asset-requests-show__row">
         <span class="asset-requests-show__key">
-          Asset name
+          {{ "asset-requests-show.asset-name" | globalize }}
         </span>
         <span
           class="asset-requests-show__value"
@@ -64,7 +64,7 @@
 
       <div class="asset-requests-show__row">
         <span class="asset-requests-show__key">
-          Asset code
+          {{ "asset-requests-show.asset-code" | globalize }}
         </span>
         <span class="asset-requests-show__value">
           {{ assetRequest.code || '—' }}
@@ -76,7 +76,7 @@
         v-if="assetRequest.type !== ASSET_REQUEST_TYPES.updateAsset"
       >
         <span class="asset-requests-show__key">
-          Max issuance amount
+          {{ "asset-requests-show.max-issuance" | globalize }}
         </span>
         <span class="asset-requests-show__value">
           {{
@@ -92,7 +92,7 @@
         v-if="assetRequest.type !== ASSET_REQUEST_TYPES.updateAsset"
       >
         <span class="asset-requests-show__key">
-          Issued amount
+          {{ "asset-requests-show.issued-amount" | globalize }}
         </span>
         <span class="asset-requests-show__value">
           {{ assetRequest.issuedAmount }}
@@ -104,7 +104,7 @@
         v-if="assetRequest.type !== ASSET_REQUEST_TYPES.updateAsset"
       >
         <span class="asset-requests-show__key">
-          Preissuance signer
+          {{ "asset-requests-show.pre-signer" | globalize }}
         </span>
         <email-getter
           v-if="assetRequest.signer"
@@ -126,7 +126,7 @@
         v-if="assetRequest.type !== ASSET_REQUEST_TYPES.updateAsset"
       >
         <span class="asset-requests-show__key">
-          Type
+          {{ "asset-requests-show.request-type" | globalize }}
         </span>
         <span class="asset-requests-show__value">
           {{ assetRequest.assetType | assetTypeToString }}
@@ -136,7 +136,7 @@
       <template v-if="assetRequest.policies">
         <div class="asset-requests-show__row asset-requests-show__row--policy">
           <span class="asset-requests-show__key">
-            Policies
+            {{ "asset-requests-show.policies" | globalize }}
           </span>
           <div class="asset-requests-show__policies-wrapper">
             <template v-for="(policy, key) in ASSET_POLICIES_VERBOSE">
@@ -156,7 +156,7 @@
 
       <div class="asset-requests-show__row">
         <span class="asset-requests-show__key">
-          Terms
+          {{ "asset-requests-show.terms" | globalize }}
         </span>
         <span class="asset-requests-show__value">
           <template
@@ -171,7 +171,7 @@
             <user-doc-link-getter
               :file-key="assetRequest.operationDetails.creatorDetails.terms.key"
             >
-              Open file
+              {{ "asset-requests-show.opn-file" | globalize }}
             </user-doc-link-getter>
           </template>
           <template v-else>
@@ -185,7 +185,7 @@
           class="asset-requests-show__row"
         >
           <span class="asset-requests-show__key">
-            Stellar asset code
+            {{ "asset-requests-show.stellar-asset-code" | globalize }}
           </span>
           <span class="asset-requests-show__value">
             {{ assetRequest.stellarAssetCode }}
@@ -196,7 +196,7 @@
           class="asset-requests-show__row"
         >
           <span class="asset-requests-show__key">
-            Stellar asset type
+            {{ "asset-requests-show.stellar-asset-type" | globalize }}
           </span>
           <span class="asset-requests-show__value">
             {{ stellarAssetType }}
@@ -207,7 +207,7 @@
           class="asset-requests-show__row"
         >
           <span class="asset-requests-show__key">
-            Stellar withdraw
+            {{ "asset-requests-show.stellar-withdraw" | globalize }}
           </span>
           <span class="asset-requests-show__value">
             {{ assetRequest.stellarWithdraw ? 'Yes' : 'No' }}
@@ -218,17 +218,23 @@
           class="asset-requests-show__row"
         >
           <span class="asset-requests-show__key">
-            Stellar deposit
+            {{ "asset-requests-show.stellar-deposit" | globalize }}
           </span>
-          <span class="asset-requests-show__value">
-            {{ assetRequest.stellarDeposit ? 'Yes' : 'No' }}
+          <span
+            class="asset-requests-show__value"
+            v-if="assetRequest.stellarDeposit"
+          >
+            {{ "asset-requests-show.show-val-true" | globalize }}
+          </span>
+          <span class="asset-requests-show__value" v-else>
+            {{ "asset-requests-show.show-val-false" | globalize }}
           </span>
         </div>
       </template>
 
       <div class="asset-requests-show__row">
         <span class="asset-requests-show__key">
-          Creation date
+          {{ "asset-requests-show.creation-data" | globalize }}
         </span>
         <date-formatter
           :date="assetRequest.creationDate"
@@ -239,7 +245,7 @@
 
       <div class="asset-requests-show__row">
         <span class="asset-requests-show__key">
-          Update date
+          {{ "asset-requests-show.upd-data" | globalize }}
         </span>
         <date-formatter
           :date="assetRequest.updateDate"
@@ -252,7 +258,7 @@
       <template v-if="assetRequest.state !== CREATE_ASSET_REQUEST_STATES.pending.codeVerbose">
         <div class="asset-requests-show__row">
           <span class="asset-requests-show__key">
-            State
+            {{ "asset-requests-show.request-state" | globalize }}
           </span>
 
           <span class="asset-requests-show__value">
@@ -282,7 +288,7 @@
           :disabled="isPending"
           @click="fulfill"
         >
-          Fulfill
+          {{ "asset-requests-show.app-btn-fulfill" | globalize }}
         </button>
 
         <button
@@ -290,7 +296,7 @@
           :disabled="isPending"
           @click="isRejecting = true"
         >
-          Reject
+          {{ "asset-requests-show.app-btn-reject" | globalize }}
         </button>
       </div>
     </div>

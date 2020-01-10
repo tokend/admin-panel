@@ -1,10 +1,7 @@
 <template>
   <div class="issuance-form">
     <template v-if="assets && assets.length">
-      <form
-        @submit.prevent="isFormValid() && showConfirmation()"
-        novalidate
-      >
+      <form @submit.prevent="isFormValid() && showConfirmation()" novalidate>
         <div class="app__form-row">
           <input-field
             class="app__form-field"
@@ -25,10 +22,11 @@
             v-model="form.reference"
             label="Reference"
             @blur="touchField('form.reference')"
-            :error-message="getFieldErrorMessage(
-              'form.reference',
-              { maxLength: REFERENCE_MAX_LENGTH }
-            )"
+            :error-message="
+              getFieldErrorMessage('form.reference', {
+                maxLength: REFERENCE_MAX_LENGTH
+              })
+            "
             :disabled="formMixin.isDisabled"
           />
         </div>
@@ -43,13 +41,12 @@
             v-model="form.amount"
             label="Amount"
             @blur="touchField('form.amount')"
-            :error-message="getFieldErrorMessage(
-              'form.amount',
-              {
+            :error-message="
+              getFieldErrorMessage('form.amount', {
                 minValue: DEFAULT_INPUT_MIN,
                 available: availableForIssuance
-              }
-            )"
+              })
+            "
             :disabled="formMixin.isDisabled"
           />
 
@@ -65,8 +62,7 @@
               <option
                 v-for="item in assets"
                 :value="item.id"
-                :key="item.id"
-              >
+                :key="item.id">
                 {{ item.id }}
               </option>
             </select-field>
@@ -75,7 +71,7 @@
 
         <div class="issuance-form__asset-info app__form-row" v-if="form.asset">
           <p v-if="isIssuanceAllowed" class="text">
-            <span>Available:</span>
+            <span>{{ "issuance-form.avaible-assets" | globalize }}</span>
             <asset-amount-formatter
               :amount="availableForIssuance"
               :asset="form.asset"
@@ -83,7 +79,7 @@
           </p>
 
           <p v-else class="text">
-            No available assets left
+            {{ "issuance-form.no-avaible-assets" | globalize }}
           </p>
         </div>
 
@@ -101,14 +97,14 @@
             class="app__btn"
             :disabled="formMixin.isDisabled || !isIssuanceAllowed"
           >
-            Issue
+            {{ "issuance-form.app-isue" | globalize }}
           </button>
         </div>
       </form>
     </template>
 
     <template v-else>
-      <p>Loading...</p>
+      <p>{{ "issuance-form.loading" | globalize }}</p>
       <!-- TODO: better loading -->
     </template>
   </div>
@@ -246,9 +242,8 @@ export default {
           include: ['balances', 'balances.asset'],
         })
         account = data
-        return account.balances.find(
-          item => item.asset.id === this.form.asset
-        ).id
+        return account.balances.find(item => item.asset.id === this.form.asset)
+          .id
       } else {
         return balance.id
       }
@@ -258,8 +253,8 @@ export default {
       if (receiver === '') {
         throw new Error(`The receiver has no ${this.form.asset} balance.`)
       }
-      const operation = base.CreateIssuanceRequestBuilder
-        .createIssuanceRequest({
+      const operation = base.CreateIssuanceRequestBuilder.createIssuanceRequest(
+        {
           asset: this.form.asset,
           amount: this.form.amount,
           receiver: receiver,
@@ -267,7 +262,8 @@ export default {
           source: config.MASTER_ACCOUNT,
           creatorDetails: {},
           allTasks: 0,
-        })
+        }
+      )
       await api.postOperations(operation)
 
       Bus.success('Issued successfully')
