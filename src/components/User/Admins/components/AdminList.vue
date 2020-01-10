@@ -94,14 +94,17 @@ import { getters } from '@/store/types'
 import { api, loadingDataViaLoop } from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
+import { globalize } from '@/components/App/filters/filters'
+
 export default {
   filters: {
     deriveRoleName (roleId, signerRoles = []) {
       if (+roleId === 1) {
-        return 'Master'
+        return globalize('admin-list.master')
       }
       const role = signerRoles.find(item => item.id === roleId) || {}
-      return (role.details || {}).name || `Unnamed (${roleId})`
+      return (role.details || {}).name ||
+      globalize('admin-list.unnamed')`(${roleId})`
     },
   },
 

@@ -163,6 +163,8 @@ import { api, loadingDataViaLoop } from '@/api'
 import { Bus } from '@/utils/bus'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
+import { globalize } from '@/components/App/filters/filters'
+
 const MASTER_ROLE_ID = 1
 
 export default {
@@ -264,15 +266,17 @@ export default {
           if (+item.id === +MASTER_ROLE_ID) {
             return {
               id: item.id,
-              name: 'Master',
-              description: 'The root admin of the system',
+              name: globalize('admin-manager.master'),
+              description: globalize('admin-manager.root-admin-system'),
             }
           }
 
           return {
             id: item.id,
-            name: (item.details || {}).name || `Unnamed (${item.id})`,
-            description: (item.details || {}).description || '(No description)',
+            name: (item.details || {}).name ||
+            globalize('admin-manager.unnamed')`(${item.id})`,
+            description: (item.details || {}).description ||
+            globalize('admin-manager.no-description'),
           }
         })
 
@@ -291,7 +295,7 @@ export default {
         identity: signer.identity,
         signerRoleId: String(signer.role.id),
         name: signer.id === this.masterPubKey
-          ? 'Master'
+          ? globalize('admin-manager.master')
           : signer.details.name,
       }
 
@@ -310,7 +314,7 @@ export default {
 
       try {
         await action()
-        Bus.success('Successfully submitted')
+        Bus.success(globalize('admin-manager.successfully-submitted'))
         this.$router.push({ name: 'admins' })
       } catch (error) {
         ErrorHandler.process(error)
@@ -329,7 +333,7 @@ export default {
     },
 
     async deleteAdmin () {
-      const confirmationTxt = 'Are you sure you want to delete this admin?'
+      const confirmationTxt = globalize('admin-manager.confirmation-delete-admin')
       if (await confirmAction({ title: confirmationTxt })) {
         await this.submitTx(base.ManageSignerBuilder.deleteSigner)
       }

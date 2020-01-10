@@ -5,11 +5,11 @@ export const ASSET_POLICIES = Object.freeze(
   xdrEnumToConstant('AssetPolicy')
 )
 export const ASSET_POLICIES_VERBOSE = {
-  [ base.xdr.AssetPolicy.transferable().value ]: 'Transferable',
-  [ base.xdr.AssetPolicy.baseAsset().value ]: 'Base asset',
-  [ base.xdr.AssetPolicy.statsQuoteAsset().value ]: 'Stats quote asset',
-  [ base.xdr.AssetPolicy.withdrawable().value ]: 'Withdrawable',
-  [ base.xdr.AssetPolicy.issuanceManualReviewRequired().value ]: 'Issuance manual review required',
-  [ base.xdr.AssetPolicy.canBeBaseInAtomicSwap().value ]: 'Can be base in atomic swap',
-  [ base.xdr.AssetPolicy.canBeQuoteInAtomicSwap().value ]: 'Can be quote in atomic swap',
+  [ base.xdr.AssetPolicy.transferable().value ]: 'asset-policies.transferable',
+  [ base.xdr.AssetPolicy.baseAsset().value ]: 'asset-policies.base-asset',
+  [ base.xdr.AssetPolicy.statsQuoteAsset().value ]: 'asset-policies.stats-quote-asset',
+  [ base.xdr.AssetPolicy.withdrawable().value ]: 'asset-policies.withdrawable',
+  [ base.xdr.AssetPolicy.issuanceManualReviewRequired().value ]: 'asset-policies.issuance-manual-review-required',
+  [ base.xdr.AssetPolicy.canBeBaseInAtomicSwap().value ]: 'asset-policies.base-atomic-swap',
+  [ base.xdr.AssetPolicy.canBeQuoteInAtomicSwap().value ]: 'asset-policies.quote-atomic-swap',
 }

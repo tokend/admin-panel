@@ -86,7 +86,7 @@
           <div class="app-list__li-like">
             <template v-if="isLoading">
               <p>
-                {{ "user-list.loaging" | globalize }}
+                {{ "user-list.loading" | globalize }}
               </p>
             </template>
 
