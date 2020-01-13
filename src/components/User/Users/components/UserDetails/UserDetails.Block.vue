@@ -161,7 +161,7 @@ export default {
           })
         await api.postOperations(operation)
 
-        Bus.success('The user account was blocked')
+        Bus.success('user-details-block.user-account-blocked')
         this.$emit(EVENTS.updated)
       } catch (error) {
         ErrorHandler.process(error)
@@ -190,7 +190,7 @@ export default {
           })
         await api.postOperations(operation)
 
-        Bus.success('The user account was unblocked')
+        Bus.success('user-details-block.user-account-unblocked')
         this.$emit(EVENTS.updated)
       } catch (error) {
         ErrorHandler.process(error)

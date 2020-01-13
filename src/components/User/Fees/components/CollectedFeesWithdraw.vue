@@ -341,7 +341,7 @@ export default {
         this.clearFieldsWithOverriding({
           balanceId: this.form.balanceId,
         })
-        Bus.success('Request created successfully')
+        Bus.success('collected-fees-withdraw.request-created-successfully')
         this.$emit(EVENTS.submitted)
 
         await this.loadAssets()

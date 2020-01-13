@@ -3,75 +3,78 @@ import log from 'loglevel'
 import _get from 'lodash/get'
 import { ErrorTracker } from '@/utils/ErrorTracker'
 import { errors } from '@/js/errors'
-import { globalize } from '@/components/App/filters/filters'
+import { i18n } from '@/i18n'
 
 export class ErrorHandler {
-  static process (error, errorTrackerConfig = {}) {
-    const message = ErrorHandler.extractErrorMessage(error)
-    Bus.error(message)
+  static process (error, translationId = '', errorTrackerConfig = {}) {
+    const msgTrId = translationId || ErrorHandler._getTranslationId(error)
+    Bus.error(msgTrId)
 
-    errorTrackerConfig.message = message
+    errorTrackerConfig.translationId = msgTrId
     ErrorHandler.processWithoutFeedback(error, errorTrackerConfig)
   }
 
   static processWithoutFeedback (error, errorTrackerConfig = {}) {
-    log.error(error)
     ErrorHandler.trackMessage(error, errorTrackerConfig)
+    log.error(error)
   }
 
   static trackMessage (error, opts = {}) {
-    const { message = '', skipTrack = false } = opts
+    const { translationId = '', skipTrack = false } = opts
+
     if (!skipTrack) {
-      const msg = message || ErrorHandler.extractErrorMessage(error)
-      ErrorTracker.trackMessage(msg)
+      const msgTrId = translationId || ErrorHandler._getTranslationId(error)
+
+      const englify = i18n.getFixedT('en')
+      ErrorTracker.trackMessage(englify(msgTrId))
     }
   }
 
-  static extractErrorMessage (error) {
-    let message
+  static _getTranslationId (error) {
+    let translationId
 
     switch (error.constructor) {
       case errors.NetworkError:
-        message = 'errors.network'
+        translationId = 'errors.network'
         break
       case errors.UserDoesntExistError:
-        message = 'errors.user-doesnt-exist'
+        translationId = 'errors.user-doesnt-exist'
         break
       case errors.BalanceNotFoundError:
-        message = 'errors.balance-not-found'
+        translationId = 'errors.balance-not-found'
         break
       case errors.TimeoutError:
-        message = 'errors.timeout'
+        translationId = 'errors.timeout'
         break
       case errors.InternalServerError:
-        message = 'errors.internal'
+        translationId = 'errors.internal'
         break
       case errors.BadRequestError:
-        message = 'errors.bad-request'
+        translationId = 'errors.bad-request'
         break
       case errors.NotAllowedError:
-        message = 'errors.not-allowed'
+        translationId = 'errors.not-allowed'
         break
       case errors.ForbiddenRequestError:
-        message = 'errors.forbidden'
+        translationId = 'errors.forbidden'
         break
       case errors.TFARequiredError:
-        message = 'errors.tfa-required'
+        translationId = 'errors.tfa-required'
         break
       case errors.VerificationRequiredError:
-        message = 'errors.verification-required'
+        translationId = 'errors.verification-required'
         break
       case errors.NotFoundError:
-        message = 'errors.not-found'
+        translationId = 'errors.not-found'
         break
       case errors.ConflictError:
-        message = 'errors.conflict'
+        translationId = 'errors.conflict'
         break
       case errors.UnauthorizedError:
-        message = 'errors.unauthorized'
+        translationId = 'errors.unauthorized'
         break
       case errors.UserExistsError:
-        message = 'errors.user-exists'
+        translationId = 'errors.user-exists'
         break
       case errors.TransactionError:
         let errorCode
@@ -84,19 +87,20 @@ export class ErrorHandler {
             (errorResults.find(i => i.errorCode !== 'op_success') || {})
               .errorCode
         }
-        message = `transaction-errors.${errorCode}`
+        translationId = `transaction-errors.${errorCode}`
+        if (!i18n.exists(translationId)) {
+          // If there is no localized error code, display the message
+          // that came from the backend
+          translationId = error.errorResults[0].message
+        }
         break
       case errors.StorageServerError:
-        message = 'errors.file-upload'
+        translationId = 'errors.file-upload'
         break
       default:
-        if (error.message) {
-          message = error.message
-        } else {
-          message = 'errors.default'
-        }
+        translationId = 'errors.default'
     }
 
-    return globalize(message)
+    return translationId
   }
 }

@@ -803,7 +803,7 @@ export default {
         }
         await api.postOperations(operation)
         Bus.$emit('recheckConfig')
-        Bus.success('Submitted successfully.')
+        Bus.success('asset-manager.submitted-successfully')
         this.$router.push({ name: 'assets.systemAssets.index' })
       } catch (error) {
         ErrorHandler.process(error)

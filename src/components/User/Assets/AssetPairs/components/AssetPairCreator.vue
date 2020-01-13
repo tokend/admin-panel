@@ -267,7 +267,7 @@ export default {
           policies: this.form.policies.reduce((sum, policy) => sum | policy, 0),
         })
 
-        Bus.success('Pair has been created.')
+        Bus.success('asset-pair-creator.pair-created')
         this.$router.push({ name: 'assets.assetPairs.index' })
       } catch (error) {
         ErrorHandler.process(error)

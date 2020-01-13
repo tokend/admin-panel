@@ -148,7 +148,7 @@ export default {
         await api.postOperations(operation)
         await this.getList()
 
-        Bus.success('Submitted successfully')
+        Bus.success('key-value-manager.submitted-successfully')
       } catch (error) {
         ErrorHandler.process(error)
       }

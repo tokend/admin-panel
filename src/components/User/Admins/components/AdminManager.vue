@@ -314,7 +314,7 @@ export default {
 
       try {
         await action()
-        Bus.success(globalize('admin-manager.successfully-submitted'))
+        Bus.success('admin-manager.successfully-submitted')
         this.$router.push({ name: 'admins' })
       } catch (error) {
         ErrorHandler.process(error)

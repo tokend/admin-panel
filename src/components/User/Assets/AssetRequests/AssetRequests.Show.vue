@@ -394,7 +394,7 @@ export default {
           break
 
         default:
-          label = 'asset-requests-show.erro'
+          label = '[UNKNOWN_STELLAR_ASSET_TYPE]'
           break
       }
 
@@ -427,7 +427,7 @@ export default {
       if (await confirmAction()) {
         try {
           await this.assetRequest.fulfill()
-          Bus.success('Asset successfully created')
+          Bus.success('asset-requests-show.asset-created')
           this.$router.push({ name: 'assets' })
         } catch (error) {
           ErrorHandler.process(error)

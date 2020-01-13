@@ -104,10 +104,10 @@ export default {
           this.form.rejectReason,
           this.isPermanentReject
         )
-        Bus.success('Request successfully rejected')
+        Bus.success('asset-request-reject-form.request-rejected')
         this.$router.push({ name: 'assets' })
       } catch (err) {
-        ErrorHandler.process('Failed to reject asset creation')
+        ErrorHandler.process('asset-request-reject-form.fail-reject')
       }
       this.enableForm()
     },

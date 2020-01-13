@@ -296,7 +296,7 @@ export default {
         })
         await api.postOperations(operation)
 
-        Bus.success('Limits update saved')
+        Bus.success('limits-update-form.limits-update-saved')
         this.$emit(EVENTS.limitsUpdated)
       } catch (e) {
         ErrorHandler.process(e)
@@ -310,7 +310,7 @@ export default {
         })
 
         await api.postOperations(operation)
-        Bus.success('Limits removed')
+        Bus.success('limits-update-form.limits-removed')
         this.$emit(EVENTS.limitsUpdated)
       } catch (e) {
         ErrorHandler.process(e)

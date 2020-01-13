@@ -237,7 +237,7 @@ export default {
         const operation = base.Operation.setFees(opts)
 
         await api.postOperations(operation)
-        Bus.success('Submitted successfully')
+        Bus.success('fee-form.submitted-successfully')
         this.$emit(EVENTS.feeUpdated)
       } catch (error) {
         ErrorHandler.process(error)

@@ -211,9 +211,7 @@ export default {
         const res = await Vue.auth.login(this.form)
 
         if (!res.ok || res.enabledTFA) {
-          ErrorHandler.process(
-            'Can not automatically log into the system. Try to log yourself'
-          )
+          ErrorHandler.process('sign-up.error-automatically-log')
           this.state = 'signup'
           return
         }
@@ -223,9 +221,7 @@ export default {
         ErrorHandler.processWithoutFeedback(err)
 
         if (!walletCreated) {
-          ErrorHandler.process(
-            'You are not registered, try again to register with the secret key later'
-          )
+          ErrorHandler.process('sign-up.error-not-registered')
           this.state = 'signup'
         }
       }

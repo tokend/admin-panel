@@ -435,7 +435,9 @@
       "verification-code": "Enter your verification code to proceed.",
       "btn-cancel": "Cancel",
       "lbl-verification-code": "Verification Code",
-      "btn-submit": "Submit"
+      "btn-submit": "Submit",
+      "verification-failed": "Verification failed",
+      "verification-code-mismatched": "Verification code mismatched"
     },
     "app": {
       "initialization-fail": "Initializing failed",
@@ -472,7 +474,9 @@
       "lbl-password-confirmation": "Password confirmation",
       "lbl-save-seed": "Save this seed",
       "follow-account-id": " Ask an existing administrator to register the following account ID.<br>",
-      "warning-do-not-reload": "<em>Important:</em> Do not reload the page! You’ll be redirected automatically once your account is created"
+      "warning-do-not-reload": "<em>Important:</em> Do not reload the page! You’ll be redirected automatically once your account is created",
+      "error-automatically-log": "Can not automatically log into the system. Try to log yourself",
+      "error-not-registered": "You are not registered, try again to register with the secret key later"
     },
     "account-state-getter": {
       "loading": "Loading...",
@@ -509,7 +513,11 @@
       "ios": "iOS",
       "android": "Android",
       "scan-qr": "Scan the QR-code or enter the code manually using Google Authenticator",
-      "btn-enable": "Enable"
+      "btn-enable": "Enable",
+      "two-factor-auth-enabled": "Two-factor Authentication enabled",
+      "error": "Something went wrong. Try again later",
+      "tfa-already-created": "TFA already created. Just re-login",
+      "unable-add-tfa": "Unable to add TFA. Try to re-login"
     },
     "settings": {
       "settings-link": "Settings",
@@ -572,7 +580,8 @@
       "lbl-max-prise-step": "Max price step (0-100%)",
       "lbl-is-tradable": "Is tradable",
       "lbl-physical-restriction": "Physical price restriction",
-      "lbl-current-restriction": "Current price restriction"
+      "lbl-current-restriction": "Current price restriction",
+      "pair-created": "Pair has been created."
     },
     "asset-pair-list": {
       "prise": "Price",
@@ -602,7 +611,9 @@
       "lbl-is-tradable": "Is tradable",
       "lbl-physical-restriction": "Physical price restriction",
       "lbl-current-restriction": "Current price restriction",
-      "msg-sure": "Sure?"
+      "msg-sure": "Sure?",
+      "pair-updated": "Pair has been updated.",
+      "asset-pair-removed": "Asset pair was successfully removed"
     },
     "asset-pairs-index": {
       "asset-pairs-btn": "Asset pairs",
@@ -627,7 +638,9 @@
       "btn-reject": "Reject",
       "btn-cancel": "Cancel",
       "lbl-reject-reason": "Describe reject reason",
-      "lbl-perm-reject": "Reject permanently"
+      "lbl-perm-reject": "Reject permanently",
+      "request-rejected": "Request successfully rejected",
+      "fail-reject": "Failed to reject asset creation"
     },
     "asset-requests-index": {
       "manage-assets": "Manage assets"
@@ -663,7 +676,7 @@
       "alphanumeric-4": "Alphanumeric 4",
       "alphanumeric-12": "Alphanumeric 12",
       "native": "Native",
-      "error": "[UNKNOWN_STELLAR_ASSET_TYPE]"
+      "asset-created": "Asset successfully created"
     },
     "issuance-form": {
       "avaible": "Available",
@@ -675,7 +688,8 @@
       "lbl-amount": "Amount",
       "lbl-asset": "Asset",
       "msg-please-recheck-all-fields": "Please, recheck all the fields",
-      "placeholder-email-or-gaaq": "email@example.com or GAAQ..."
+      "placeholder-email-or-gaaq": "email@example.com or GAAQ...",
+      "issued-successfully": "Issued successfully"
     },
     "issuance-history": {
       "id": "ID",
@@ -717,14 +731,17 @@
       "loading": "Loading...",
       "btn-reject": "Reject",
       "btn-cancel": "Cancel",
-      "lbl-enter-reject-reason": "Enter reject reason"
+      "lbl-enter-reject-reason": "Enter reject reason",
+      "request-fulfilled-successfully": "Request fulfilled successfully.",
+      "request-rejected-successfully": "Request rejected successfully"
     },
     "asset-list": {
       "name": "Name",
       "code": "Code",
       "policy": "Policy",
       "loading": "Loading...",
-      "fail-load": "Nothing here yet"
+      "fail-load": "Nothing here yet",
+      "error": "Something went wrong. Can't to load assets list"
     },
     "asset-manager": {
       "header": "Manage {{ assetCode }}",
@@ -753,7 +770,8 @@
       "lbl-address": "Address",
       "lbl-alphanumeric-4": "Alphanumeric 4",
       "lbl-alphanumeric-12": "Alphanumeric 12",
-      "lbl-native": "Native"
+      "lbl-native": "Native",
+      "submitted-successfully": "Submitted successfully."
     },
     "system-assets-index": {
       "header": "Assets owned by master",
@@ -779,7 +797,9 @@
       "btn-reject": "Reject",
       "form-reject": "Reject",
       "form-cancel": "Cancel",
-      "lbl-enter-reject-reason": "Enter reject reason"
+      "lbl-enter-reject-reason": "Enter reject reason",
+      "request-fulfilled-successfully": "Request fulfilled successfully.",
+      "request-rejected-successfully": "Request rejected successfully"
     },
     "withdrawal-list": {
       "header": "Withdrawal list",
@@ -855,7 +875,8 @@
       "placeholder-bitmask-exact-match": "Bitmask, exact match",
       "destination-address": "Destination address",
       "comment": "Comment",
-      "max-amount": "Max amount is "
+      "max-amount": "Max amount is ",
+      "request-created-successfully": "Request created successfully"
     },
     "collected-fees-withdrawals": {
       "header": "Withdrawals",
@@ -878,7 +899,8 @@
     "fee-form": {
       "btn-update": "Update",
       "btn-delete": "Delete",
-      "btn-create": "Create"
+      "btn-create": "Create",
+      "submitted-successfully": "Submitted successfully."
     },
     "fee-list": {
       "global": "Global",
@@ -936,7 +958,8 @@
       "lbl-value-input-field": "Value",
       "lbl-entry-type": "Entry type",
       "placeholder-new-value": "Enter new value",
-      "placeholder-new-key": "Enter new key"
+      "placeholder-new-key": "Enter new key",
+      "submitted-successfully": "Submitted successfully."
     },
     "kyc-recovery-request-action": {
       "btn-approve": "Approve",
@@ -944,7 +967,10 @@
       "btn-reject-perm": "Reject permanently",
       "form-btn-reject": "Reject",
       "form-btn-cancel": "Cancel",
-      "lbl-reject-reason": "Reject reason"
+      "lbl-reject-reason": "Reject reason",
+      "request-approved-successfully": "Request approved successfully",
+      "request-rejected-successfully": "Request rejected successfully",
+      "confirm-message": "Are you sure? This action cannot be undone"
     },
     "kyc-recovery-request-list": {
       "mail": "Email",
@@ -1079,7 +1105,9 @@
       "btn-remove": "Remove",
       "msg-sure": "Sure?",
       "placeholder-unlimited": "Unlimited",
-      "placeholder-not-set": "Not set"
+      "placeholder-not-set": "Not set",
+      "limits-update-saved": "Limits update saved",
+      "limits-removed": "Limits removed"
     },
     "limits-uploaded-docs-list": {
       "description": "Description",
@@ -1116,7 +1144,11 @@
       "lbl-limits-for-asset": "Limits for asset",
       "lbl-operation-type-limits": "Operation type limits",
       "lbl-document-description": "Document description",
-      "lbl-reject-reason": "Reject reason"
+      "lbl-reject-reason": "Reject reason",
+      "request-approved": "Request approved. Limits are changed",
+      "request-rejected": "Request rejected. Limits are not changed",
+      "upload-additional-documents": "Upload additional documents requested.",
+      "please-update-user-limits": "Please update user limits before approving request"
     },
     "limits": {
       "link-limits-management": "Limits management",
@@ -1131,7 +1163,9 @@
       "note-transaction": "<i>Note: </i>Transaction is valid for one week since the file was created",
       "more-about-pre-issuance": "Learn more about pre-issuance",
       "btn-upload": "Upload",
-      "btn-clear": "Crear"
+      "btn-clear": "Crear",
+      "submitted-successfully": "Submitted successfully",
+      "your-file-is-corrupted": "Your file is corrupted. Please, select another file"
     },
     "change-asset-issuer": {
       "header": "Change asset issuer"
@@ -1148,7 +1182,10 @@
       "signatures": "Signatures",
       "not-loaded-files": "NOT loaded files:",
       "btn-upload": "Upload",
-      "btn-clear": "Crear"
+      "btn-clear": "Crear",
+      "submitted-successfully": "Submitted successfully",
+      "your-file-is-corrupted": "Your file is corrupted. Please, select another file",
+      "code-does-not-exist": "Asset with code does not exist in the system"
     },
     "preissuance": {
       "header": "Upload preissuance"
@@ -1169,7 +1206,9 @@
       "lbl-reject-reason": "Reject reason",
       "pending": "Pending",
       "accepted": "Accepted",
-      "rejected": "Rejected"
+      "rejected": "Rejected",
+      "rejected-transaction-submitted": "Pending transaction for rejected request submitted",
+      "fulfill-transaction-submitted": "Pending transaction for fulfill request submitted"
     },
     "pre-issuance-requests-index": {
       "header": "Preissuance Requests",
@@ -1270,7 +1309,9 @@
       "loading": "Loading...",
       "reject-reason": "Reject reason",
       "btn-cancel": "Cancel",
-      "lbl-perm-reject": "Reject permanently"
+      "lbl-perm-reject": "Reject permanently",
+      "sale-request-approved": "Sale request approved.",
+      "sale-request-rejected": "Sale request rejected successfully."
     },
     "poll-requests-index": {
       "header": "Browse poll requests"
@@ -1447,7 +1488,9 @@
       "loading": "Loading...",
       "reject-reason": "Reject reason",
       "btn-cancel": "Cancel",
-      "lbl-perm-rejected": "Reject permanently"
+      "lbl-perm-rejected": "Reject permanently",
+      "sale-request-approved": "Sale request approved.",
+      "sale-request-rejected": "Sale request rejected successfully."
     },
     "sale-request-list": {
       "header": "Sale request list",
@@ -1545,7 +1588,9 @@
       "btn-block-user": "Block user",
       "btn-block": "Block",
       "btn-cancel": "Cancel",
-      "lbl-block-reason": "Block reason"
+      "lbl-block-reason": "Block reason",
+      "user-account-blocked": "The user account was blocked",
+      "user-account-unblocked": "The user account was unblocked"
     },
     "user-details-kyc": {
       "header": "KYC information",
@@ -1573,13 +1618,16 @@
       "btn-perm-reject": "Reject permanently",
       "btn-form-reject": "Reject",
       "btn-cancel": "Cancel",
-      "lbl-reject-reason": "Reject reason"
+      "lbl-reject-reason": "Reject reason",
+      "request-approved-successfully": "Request approved successfully",
+      "request-rejected-successfully": "Request rejected successfully"
     },
     "user-details-reset": {
       "btn-reset-unverified": "Reset to unverified",
       "btn-reset": "Reset",
       "btn-cancel": "Cancel",
-      "lbl-reject-reason": "Reject reason"
+      "lbl-reject-reason": "Reject reason",
+      "account-reset-to-unverified": "The user account was reset to unverified"
     },
     "user-details-tasks-manager": {
       "manage-tasks": "Manage tasks (advanced)",
@@ -1675,6 +1723,11 @@
     },
     "tick-field": {
       "label": "Label"
+    },
+    "confirmation-message": {
+      "confirm-msg": "Are you sure?",
+      "submit": "Submit",
+      "cancel": "Cancel"  
     }
   }
 }

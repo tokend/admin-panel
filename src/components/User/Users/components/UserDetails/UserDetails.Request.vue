@@ -166,7 +166,7 @@ export default {
           reviewDetails,
         })
 
-        Bus.success('Request approved successfully')
+        Bus.success('user-details-request.request-approved-successfully')
         this.$emit(EVENTS.reviewed)
       } catch (error) {
         ErrorHandler.process(error)
@@ -189,7 +189,7 @@ export default {
             reviewDetails: { tasksToRemove: 0 },
           }
         )
-        Bus.success(`Request rejected successfully`)
+        Bus.success('user-details-request.request-rejected-successfully')
         this.$emit(EVENTS.reviewed)
       } catch (error) {
         this.isPending = false

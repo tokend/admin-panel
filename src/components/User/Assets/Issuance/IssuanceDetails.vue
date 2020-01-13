@@ -198,7 +198,7 @@ export default {
           })
 
           await this.getIssuance(this.id)
-          Bus.success('Request fulfilled successfully.')
+          Bus.success('issuance-details.request-fulfilled-successfully')
         } catch (error) {
           ErrorHandler.processWithoutFeedback(error)
         }
@@ -232,7 +232,7 @@ export default {
 
         await this.getIssuance(this.id)
         this.clearRejectionSelection()
-        Bus.success('Request rejected successfully.')
+        Bus.success('issuance-details.request-rejected-successfully')
       } catch (error) {
         ErrorHandler.process(error)
       }

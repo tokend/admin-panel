@@ -141,7 +141,7 @@ export default {
   methods: {
     async approve () {
       if (
-        !(await confirmAction('Are you sure? This action cannot be undone'))
+        !(await confirmAction('kyc-recovery-request-action.confirm-message'))
       ) {
         return
       }
@@ -154,7 +154,7 @@ export default {
           reviewDetails,
         })
 
-        Bus.success('Request approved successfully')
+        Bus.success('kyc-recovery-request-action.request-approved-successfully')
         this.$emit(EVENTS.reviewed)
       } catch (error) {
         ErrorHandler.process(error)
@@ -164,7 +164,7 @@ export default {
 
     async reject (isPermanent = false) {
       if (
-        !(await confirmAction('Are you sure? This action cannot be undone'))
+        !(await confirmAction('kyc-recovery-request-action.confirm-message'))
       ) {
         return
       }
@@ -178,7 +178,7 @@ export default {
             reviewDetails: { tasksToRemove: 0 },
           }
         )
-        Bus.success(`Request rejected successfully`)
+        Bus.success('kyc-recovery-request-action.request-rejected-successfully')
         this.$emit(EVENTS.reviewed)
       } catch (error) {
         this.isPending = false

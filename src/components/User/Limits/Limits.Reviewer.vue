@@ -406,7 +406,7 @@ export default {
           newLimits.push(this.newLimit)
         }
         if (!newLimits.length) {
-          ErrorHandler.process('Please update user limits before approving request')
+          ErrorHandler.process('limits-reviewer.please-update-user-limits')
           this.isPending = false
           return
         }
@@ -428,7 +428,7 @@ export default {
         })
 
         this.$router.push({ name: 'limits.requests' })
-        Bus.success('Request approved. Limits are changed')
+        Bus.success('limits-reviewer.request-approved')
       } catch (error) {
         ErrorHandler.process(error)
       }
@@ -451,7 +451,7 @@ export default {
         }, this.request)
 
         this.$router.push({ name: 'limits.requests' })
-        Bus.success('Request rejected. Limits are not changed')
+        Bus.success('limits-reviewer.request-rejected')
       } catch (error) {
         this.isPending = false
         ErrorHandler.process(error)
@@ -473,7 +473,7 @@ export default {
           reason: requireDocsDetails,
           isPermanent: false,
         })
-        Bus.success('Upload additional documents requested.')
+        Bus.success('limits-reviewer.upload-additional-documents')
         this.isRequiringDocs = false
       } catch (error) {
         this.isPending = false

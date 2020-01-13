@@ -142,6 +142,7 @@ export default {
       fileInfo: [],
       temporaryFileName: null,
       notLoadedFiles: [],
+      app: 'asd',
     }
   },
 
@@ -185,12 +186,11 @@ export default {
         try {
           this.parsePreIssuances(JSON.parse(extracted).issuances)
         } catch (e) {
-          ErrorHandler.process('Your file is corrupted. Please, select another file')
+          ErrorHandler.process('preissuance-form.your-file-is-corrupted')
           return
         }
       }
     },
-
     readFile (file) {
       // eslint-disable-next-line promise/avoid-new
       return new Promise(function (resolve) {
@@ -250,7 +250,7 @@ export default {
         })
         await api.postOperations(...operations)
         this.fileInfo = []
-        Bus.success('Successfully submitted')
+        Bus.success('preissuance-form.submitted-successfully')
       } catch (error) {
         ErrorHandler.process(error)
       }

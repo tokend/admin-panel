@@ -266,7 +266,7 @@ export default {
       )
       await api.postOperations(operation)
 
-      Bus.success('Issued successfully')
+      Bus.success('issuance-form.issued successfully')
       this.getAssets()
     },
 

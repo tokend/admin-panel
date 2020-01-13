@@ -126,9 +126,9 @@ export default {
         this.$store.commit('CLOSE_LOADER')
 
         if (err.status === 409) {
-          ErrorHandler.process('TFA already created. Just re-login')
+          ErrorHandler.process('g-auth.tfa-already-created"')
         } else {
-          ErrorHandler.process('Unable to add TFA. Try to re-login')
+          ErrorHandler.process('g-auth.unable-add-tfa')
         }
       }
     },
@@ -140,7 +140,7 @@ export default {
         await tfa.enableGAuth(this.id)
 
         this.$store.commit('CLOSE_LOADER')
-        Bus.success('Two-factor Authentication enabled')
+        Bus.success('g-auth.two-factor-auth-enabled')
 
         this.$emit('tfa-done')
       } catch (err) {
@@ -149,7 +149,7 @@ export default {
         if (err.response.status === 403 && err.response.data.extras) {
           return this.showTfaForm(err.response.data.extras.token)
         } else {
-          ErrorHandler.process('Something went wrong. Try again later')
+          ErrorHandler.process('g-auth.error')
         }
       }
     },

@@ -20,7 +20,7 @@
           </h4>
 
           <p class="status-message__text">
-            {{ message }}
+            {{ message | globalize }}
           </p>
         </div>
 

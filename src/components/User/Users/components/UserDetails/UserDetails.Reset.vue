@@ -152,7 +152,7 @@ export default {
             allTasks: 0,
           })
         await api.postOperations(operation)
-        Bus.success('The user account was reset to unverified')
+        Bus.success('user-details-reset.account-reset-to-unverified')
         this.$emit(EVENTS.reset)
       } catch (error) {
         ErrorHandler.process(error)

@@ -83,7 +83,6 @@ export default {
       return this.$store.getters.tfaIsRequired
     },
   },
-
   methods: {
     async verifyTFACode () {
       if (!this.isFormValid()) return
@@ -105,9 +104,9 @@ export default {
         this.clearFields()
 
         if (err.status !== 400) {
-          ErrorHandler.process('Verification failed')
+          ErrorHandler.process('verify-tfa.verification-failed')
         } else {
-          ErrorHandler.process('Verification code mismatched')
+          ErrorHandler.process('verify-tfa.verification-code-mismatched')
           this.$store.commit('TFA_FORM_FALSE')
         }
       }

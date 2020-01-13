@@ -278,7 +278,7 @@ export default {
         await request.reject(this.rejectReason, true)
 
         this.clear()
-        Bus.success('Pending transaction for rejected request submitted')
+        Bus.success('pre-issuance-request-list.rejected-transaction-submitted')
 
         await this.getRequests()
       } catch (error) {
@@ -294,7 +294,7 @@ export default {
         await request.fulfill()
 
         this.$store.commit('CLOSE_LOADER')
-        Bus.success('Pending transaction for fulfill request submitted')
+        Bus.success('pre-issuance-request-list.fulfill-transaction-submitted')
         this.$emit('need-to-update')
 
         await this.getRequests()

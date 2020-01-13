@@ -211,7 +211,7 @@ export default {
       this.isSubmitting = true
       try {
         await apiHelper.requests.approveWithdraw(request)
-        Bus.success('Request fulfilled successfully.')
+        Bus.success('withdrawal-details.request-fulfilled-successfully')
         this.$emit('close-request')
       } catch (error) {
         ErrorHandler.process(error)
@@ -232,7 +232,7 @@ export default {
           request
         )
 
-        Bus.success('Request rejected succesfully.')
+        Bus.success('withdrawal-details.request-rejected-successfully')
         this.$emit('close-request')
       } catch (error) {
         ErrorHandler.process(error)

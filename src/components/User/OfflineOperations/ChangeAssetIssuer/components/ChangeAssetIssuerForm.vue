@@ -112,7 +112,7 @@ export default {
         this.transaction = fileData.transaction
         this.source = fileData.source
       } catch (e) {
-        ErrorHandler.process('Your file is corrupted. Please, select another file')
+        ErrorHandler.process('change-asset-issuer-form.your-file-is-corrupted')
       }
     },
 
@@ -145,7 +145,7 @@ export default {
       try {
         await this.sendTx()
         this.clear()
-        Bus.success('Submitted successfully')
+        Bus.success('change-asset-issuer-form.submitted-successfully')
       } catch (error) {
         ErrorHandler.process(error)
       }

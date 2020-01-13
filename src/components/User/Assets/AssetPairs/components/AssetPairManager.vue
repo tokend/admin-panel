@@ -349,7 +349,7 @@ export default {
       this.isFormSubmitting = true
       try {
         await apiHelper.assets.updatePair({ ...this.pair, ...action })
-        Bus.success('Pair has been updated.')
+        Bus.success('asset-pair-manager.pair-updated')
         this.$router.push({ name: 'assets.assetPairs.index' })
       } catch (error) {
         ErrorHandler.process(error)
@@ -373,7 +373,7 @@ export default {
           })
 
           await api.postOperations(operation)
-          Bus.success('Asset pair was successfully removed')
+          Bus.success('asset-pair-manager.asset-pair-removed')
           this.$router.push({ name: 'assets.assetPairs.index' })
         } catch (e) {
           ErrorHandler.process(e)
