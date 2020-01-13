@@ -17,7 +17,7 @@
         class="tick-field__label"
         :for="id"
         :title="title">
-        {{ label }}
+        {{ label | globalize }}
       </label>
 
       <span
@@ -43,7 +43,7 @@
 <script>
 export default {
   props: {
-    label: { type: String, default: 'Label' },
+    label: { type: String, default: 'tick-field".label' },
     value: { type: [String, Number, Array, Boolean], default: false },
 
     // proxies

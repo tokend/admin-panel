@@ -1,18 +1,18 @@
 <template>
   <div class="preissuance-requests-index">
     <div class="app__block">
-      <h2>{{ "pre-issuanc-requests-index.header" | globalize }}</h2>
+      <h2>{{ "pre-issuance-requests-index.header" | globalize }}</h2>
 
       <select-field
         class="preissuance-requests-index__asset-select"
         v-model="asset"
-        :label="'pre-issuanc-requests-index.lbl-asset' | globalize">
+        :label="'pre-issuance-requests-index.lbl-asset' | globalize">
         <option
           v-for="a in assets"
           :value="a.id"
           :key="a.id"
         >
-          {{ a.id }}
+          {{ a.id | globalize }}
         </option>
       </select-field>
 
@@ -73,7 +73,7 @@ export default {
         let response = await api.getWithSignature('/v3/assets')
         let assets = await loadingDataViaLoop(response)
         this.assets = [{
-          id: 'All',
+          id: 'pre-issuance-requests-index.all',
         }].concat(assets)
         this.asset = this.assets[0].id
         this.assetsLoaded = true

@@ -9,7 +9,7 @@
       class="text-field__label"
       :class="{'text-field__label--hidden': isNoLabel}"
     >
-      {{ label }}
+      {{ label | globalize }}
     </span>
 
     <textarea
@@ -46,12 +46,12 @@ export default {
   },
 
   props: {
-    label: { type: String, default: 'Label' },
+    label: { type: String, default: 'text-field.label' },
     value: { type: [String, Number], default: undefined },
     errorMessage: { type: String, default: undefined },
 
     // proxies
-    autocomplete: { type: String, default: 'off' },
+    autocomplete: { type: String, default: 'text-field.off' },
     autofocus: { type: Boolean, default: false },
     disabled: { type: Boolean, default: false },
     name: { type: String, default: undefined },

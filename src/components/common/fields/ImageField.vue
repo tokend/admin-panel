@@ -10,7 +10,7 @@
     <div class="image-input__input-inner">
       <div class="image-input__text">
         <p class="title">
-          {{ title }}
+          {{ title | globalize }}
         </p>
 
         <div class="notes">
@@ -18,7 +18,7 @@
             class="image-input__note"
             v-for="(note, key) in notes"
             :key="key">
-            {{ note }}
+            {{ note | globalize }}
           </p>
         </div>
       </div>
@@ -45,14 +45,14 @@ export default {
     },
     title: {
       type: String,
-      default: 'Choose an image from your PC',
+      default: 'image-field.choose-img',
     },
     notes: {
       type: Array,
       default: () => [
-        'JPEG, PNG or BMP',
-        'no more than 5mb',
-        'not less than 1024x576, 1:1',
+        'image-field.img-type',
+        'image-field.img-weight-limit',
+        'image-field.min-img-resolution',
       ],
     },
   },

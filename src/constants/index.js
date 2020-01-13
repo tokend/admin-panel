@@ -15,7 +15,7 @@ export { ID_DOCUMENT_TYPES } from './document-types'
 export { OP_TYPES } from './operation-type'
 export { DOCUMENTS_POLICIES } from './documents-policies'
 export { SALES_SORT_CRITERIA } from './sorts-criteria'
-export { LIMITS_REQUEST_STATES, LIMITS_REQUEST_STATES_STR } from './limits-request-states'
+export { LIMITS_REQUEST_STATES_STR } from './limits-request-states'
 export { STATS_OPERATION_TYPES } from './stats-op-types'
 export {
   DEFAULT_BASE_ASSET,

@@ -241,8 +241,9 @@ export default {
     },
 
     parseStatus (accepted) {
-      if (accepted === null) return 'Pending'
-      return accepted ? 'Accepted' : 'Rejected'
+      if (accepted === null) return 'pre-issuance-request-list.pending'
+      return accepted ? 'pre-issuance-request-list.accepted'
+        : 'pre-issuance-request-list.rejected'
     },
 
     async getRequests () {

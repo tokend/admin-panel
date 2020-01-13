@@ -6,7 +6,7 @@ export const ASSET_PAIR_POLICIES = Object.freeze(
 )
 
 export const ASSET_PAIR_POLICIES_VERBOSE = {
-  [base.xdr.AssetPairPolicy.tradeableSecondaryMarket().value]: 'Tradable on secondary market',
+  [base.xdr.AssetPairPolicy.tradeableSecondaryMarket().value]: 'asset-pair-policies.tradable-secondary-market',
   [base.xdr.AssetPairPolicy.physicalPriceRestriction().value]: '',
   [base.xdr.AssetPairPolicy.currentPriceRestriction().value]: '',
 }

@@ -49,7 +49,7 @@
                   v-for="(policy, i) in item.policies.flags"
                   :key="i"
                 >
-                  {{ ASSET_PAIR_POLICIES_VERBOSE[policy.value] }}
+                  {{ ASSET_PAIR_POLICIES_VERBOSE[policy.value] | globalize }}
                 </span>
                 <span
                   v-if="!item.policies || !item.policies.length"

@@ -27,7 +27,7 @@
     </div>
 
     <span class="select-field__label">
-      {{ label }}
+      {{ label | globalize }}
     </span>
 
     <transition name="select-field__err-transition">
@@ -41,7 +41,7 @@
 <script>
 export default {
   props: {
-    label: { type: String, default: 'Label' },
+    label: { type: String, default: 'select-field.label' },
     // eslint-disable-next-line vue/require-prop-types
     value: { default: false },
     errorMessage: { type: String, default: undefined },

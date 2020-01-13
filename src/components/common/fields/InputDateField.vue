@@ -11,7 +11,7 @@
       placeholder=" " />
 
     <span class="input-field__label">
-      {{ label }}
+      {{ label | globalize }}
     </span>
 
     <transition name="input-field__err-transition">
@@ -32,7 +32,7 @@ export default {
   props: {
     error: { type: [String, Boolean], default: '' },
     placeholder: { type: String, default: '' },
-    label: { type: String, default: 'Label' },
+    label: { type: String, default: 'input-date-field.label' },
     type: { type: String, default: 'text' },
     value: { type: String, default: '' },
     enableTime: {

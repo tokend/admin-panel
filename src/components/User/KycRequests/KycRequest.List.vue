@@ -25,7 +25,7 @@
             :key="`kyc-request-${s}`"
             :value="state"
           >
-            {{ KYC_REQUEST_STATES[state].label }}
+            {{ KYC_REQUEST_STATES[state].label | globalize }}
           </option>
         </select-field>
 

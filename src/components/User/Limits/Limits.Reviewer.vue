@@ -229,6 +229,8 @@ import UploadedDocsList from './components/Limits.UploadedDocsList'
 import { api } from '@/api'
 import apiHelper from '@/apiHelper'
 
+import { globalize } from '@/components/App/filters/filters'
+
 import {
   REQUEST_STATES,
   DOCUMENT_TYPES_STR,
@@ -357,7 +359,7 @@ export default {
     },
 
     requestType () {
-      return LIMITS_REQUEST_STATES_STR[get(this.desiredLimitDetails, 'requestType')]
+      return globalize(LIMITS_REQUEST_STATES_STR[get(this.desiredLimitDetails, 'requestType')])
     },
   },
 

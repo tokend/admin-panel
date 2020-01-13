@@ -45,11 +45,11 @@ export default {
     },
     okButtonText: {
       type: String,
-      default: 'form-confirmation.confirm',
+      default: 'form-confirmation.btn-confirm',
     },
     cancelButtonText: {
       type: String,
-      default: 'form-confirmation.cancel',
+      default: 'form-confirmation.btn-cancel',
     },
     isPending: {
       type: Boolean,

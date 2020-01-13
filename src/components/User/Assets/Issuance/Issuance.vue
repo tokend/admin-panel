@@ -12,11 +12,11 @@
     <section class="issuance__list-section">
       <div class="app__block">
         <tabs>
-          <tab name="History">
+          <tab :name="'issuance.history' | globalize">
             <issuance-history />
           </tab>
 
-          <tab name="Requests">
+          <tab :name="'issuance.requests' | globalize">
             <issuance-request-list />
           </tab>
         </tabs>

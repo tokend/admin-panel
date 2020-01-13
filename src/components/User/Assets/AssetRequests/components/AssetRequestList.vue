@@ -24,7 +24,7 @@
           :value="stateObj.codeVerbose"
           :key="stateObj.codeVerbose"
         >
-          {{ stateObj.text }}
+          {{ stateObj.text | globalize }}
         </option>
       </select-field>
 
@@ -132,15 +132,16 @@ import { clearObject } from '@/utils/clearObject'
 import { snakeToCamelCase } from '@/utils/un-camel-case'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { globalize } from '@/components/App/filters/filters'
 
 const ASSET_REQUEST_TYPES = Object.freeze({
   create: {
     value: 'create_asset_requests',
-    text: 'Create',
+    text: globalize('asset-request-list.create'),
   },
   update: {
     value: 'update_asset_requests',
-    text: 'Update',
+    text: globalize('asset-request-list.update'),
   },
 })
 

@@ -400,7 +400,7 @@
       "fill-this-field": "Please, fill out this field",
       "email-or-account-id": "This field should be a valid email or account ID",
       "more-then-min-value": "This field should be more or equal {{minValue}}",
-      "less-then-max-value": "This field should be less or equal {{maxValue}}')",
+      "less-then-max-value": "This field should be less or equal {{maxValue}}",
       "no-more-then-avaible-issuance": "Not enough assets for issuance. Available: {{available}}",
       "more-then-min-length": "This field should have at least {{minLength}} symbols",
       "less-then-max-length": "This field cannot have more than {{maxLength}} symbols",
@@ -499,8 +499,8 @@
     "form-confirmation": {
       "processing": "Processing...",
       "please-recheck-form": "Please, recheck the form before confirmation",
-      "confirm": "Confirm",
-      "cancel": "Cancel"
+      "btn-confirm": "Confirm",
+      "btn-cancel": "Cancel"
     },
     "g-auth": {
       "header": "Two-factor authentication",
@@ -616,7 +616,9 @@
       "lbl-request-type": "Request type",
       "lbl-state": "State",
       "lbl-requestor": "Requestor",
-      "lbl-asset-code": "Asset code"
+      "lbl-asset-code": "Asset code",
+      "create": "Create",
+      "update": "Update"
     },
     "asset-request-reject-form": {
       "reject": "Reject {{ assetRequest.code }}",
@@ -657,7 +659,11 @@
       "request-state": "State",
       "btn-fulfill": "Fulfill",
       "btn-reject": "Reject",
-      "lbl-reject-reason": "Reject reason"
+      "lbl-reject-reason": "Reject reason",
+      "alphanumeric-4": "Alphanumeric 4",
+      "alphanumeric-12": "Alphanumeric 12",
+      "native": "Native",
+      "error": "[UNKNOWN_STELLAR_ASSET_TYPE]"
     },
     "issuance-form": {
       "avaible": "Available",
@@ -694,7 +700,9 @@
       "lbl-asset": "Asset"
     },
     "issuance": {
-      "header": "Issuance"
+      "header": "Issuance",
+      "history": "History",
+      "requests": "Requests"
     },
     "issuance-details": {
       "header": "IssuanceDetails",
@@ -1158,11 +1166,15 @@
       "btn-more": "More",
       "loading": "Loading...",
       "fail-load": "Nothing here yet",
-      "lbl-reject-reason": "Reject reason"
+      "lbl-reject-reason": "Reject reason",
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "rejected": "Rejected"
     },
-    "pre-issuanc-requests-index": {
+    "pre-issuance-requests-index": {
       "header": "Preissuance Requests",
-      "lbl-asset": "Asset"
+      "lbl-asset": "Asset",
+      "all": "All"
     },
     "offline-operations": {
       "link-pre-issuance": "Pre-issuance",
@@ -1622,6 +1634,47 @@
       "issuance-manual-review-required": "Issuance manual review required",
       "base-atomic-swap": "Can be base in atomic swap",
       "quote-atomic-swap": "Can be quote in atomic swap"
+    },
+    "create-asset-request-states": {
+      "pending": "Pending",
+      "canceled": "Canceled",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "perm-rejected": "Permanently rejected"
+    },
+    "asset-pair-policies": {
+      "tradable-secondary-market": "Tradable on secondary market"
+    },
+    "request-states": {
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "waiting-review": "Waiting for review",
+      "request-sent-idmind": "Request sent to IDMind",
+      "request-processed-idmind": "Request processed by IDMind"
+    },
+    "limits-request-states": {
+      "limits-update": "Limits update",
+      "initial": "Initial",
+      "docs-uploading": "Documents uploading"
+    },
+    "image-field": {
+      "choose-img": "Choose an image from your PC",
+      "img-type": "JPEG, PNG or BMP",
+      "img-weight-limit": "no more than 5mb",
+      "min-img-resolution": "not less than 1024x576, 1:1"
+    },
+    "input-date-field": {
+      "label": "Label"
+    },
+    "select-field": {
+      "label": "Label"
+    },
+    "text-field": {
+      "label": "Label",
+      "off": "off"
+    },
+    "tick-field": {
+      "label": "Label"
     }
   }
 }

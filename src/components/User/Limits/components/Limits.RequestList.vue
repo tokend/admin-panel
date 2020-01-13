@@ -37,7 +37,7 @@
             {{
               LIMITS_REQUEST_STATES_STR[
                 item.requestDetails.creatorDetails.requestType
-              ]
+              ] | globalize
             }}
           </span>
 

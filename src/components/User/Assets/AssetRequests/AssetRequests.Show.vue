@@ -199,7 +199,7 @@
             {{ "asset-requests-show.stellar-asset-type" | globalize }}
           </span>
           <span class="asset-requests-show__value">
-            {{ stellarAssetType }}
+            {{ stellarAssetType | globalize }}
           </span>
         </div>
 
@@ -382,19 +382,19 @@ export default {
 
       switch (this.assetRequest.stellarAssetType) {
         case STELLAR_TYPES.creditAlphanum4:
-          label = 'Alphanumeric 4'
+          label = 'asset-requests-show.alphanumeric-4'
           break
 
         case STELLAR_TYPES.creditAlphanum12:
-          label = 'Alphanumeric 12'
+          label = 'asset-requests-show.alphanumeric-12'
           break
 
         case STELLAR_TYPES.native:
-          label = 'Native'
+          label = 'asset-requests-show.native'
           break
 
         default:
-          label = '[UNKNOWN_STELLAR_ASSET_TYPE]'
+          label = 'asset-requests-show.erro'
           break
       }
 
