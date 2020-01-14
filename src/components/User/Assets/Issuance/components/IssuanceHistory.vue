@@ -4,7 +4,7 @@
       <div class="issuance-rl__filters">
         <select-field
           class="issuance-rl__filter app-list-filters__field"
-          :label="'issuance-history.lbl-asset' | globalize"
+          label="issuance-history.lbl-asset"
           v-model="filters.asset"
         >
           <option
@@ -93,7 +93,7 @@
               {{ "issuance-history.fail-load" | globalize }}
             </p>
             <p v-else>
-              {{ "Issuanceissuance-historyHistory.loading" | globalize }}
+              {{ "issuance-history.loading" | globalize }}
             </p>
           </div>
         </div>

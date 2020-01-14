@@ -532,7 +532,7 @@
       "weight": "Weight",
       "identity": "Identity",
       "master": "Master",
-      "user": "(you)",
+      "your-account": "(you)",
       "load": "Loading...",
       "fail-load": "Nothing here yet",
       "unnamed": "Unnamed "
@@ -613,7 +613,8 @@
       "lbl-current-restriction": "Current price restriction",
       "msg-sure": "Sure?",
       "pair-updated": "Pair has been updated.",
-      "asset-pair-removed": "Asset pair was successfully removed"
+      "asset-pair-removed": "Asset pair was successfully removed",
+      "lbl-prise": "Price ({{pair.quote}})"
     },
     "asset-pairs-index": {
       "asset-pairs-btn": "Asset pairs",
@@ -880,7 +881,7 @@
     },
     "collected-fees-withdrawals": {
       "header": "Withdrawals",
-      "pendind": "Pending",
+      "pending": "Pending",
       "canceled": "Canceled",
       "approved": "Approved",
       "rejected": "Rejected",
@@ -1059,7 +1060,11 @@
       "current-decision": "Current decision",
       "loading": "Loading...",
       "no-request": "No requests to review yet",
-      "lbl-role-to-set": "Role to set"
+      "lbl-role-to-set": "Role to set",
+      "quit-warning": "Quit the review? All your decisions will be lost",
+      "yes": "Yes",
+      "no": "No",
+      "filter-requests-warning": "Filter requests? All your decisions will be lost"
     },
     "kyc-requests": {
       "index": "Index",
@@ -1185,7 +1190,9 @@
       "btn-clear": "Crear",
       "submitted-successfully": "Submitted successfully",
       "your-file-is-corrupted": "Your file is corrupted. Please, select another file",
-      "code-does-not-exist": "Asset with code does not exist in the system"
+      "code-does-not-exist": "Asset with code does not exist in the system",
+      "asset-not-found": "Asset with code {{assetCode}} does not exist in the system",
+      "msg-asset-not-found": "Asset with code {{assetCode}} does not exist in the system"
     },
     "preissuance": {
       "header": "Upload preissuance"
@@ -1208,7 +1215,8 @@
       "accepted": "Accepted",
       "rejected": "Rejected",
       "rejected-transaction-submitted": "Pending transaction for rejected request submitted",
-      "fulfill-transaction-submitted": "Pending transaction for fulfill request submitted"
+      "fulfill-transaction-submitted": "Pending transaction for fulfill request submitted",
+      "enter-reject": "Enter reject reason before continue"
     },
     "pre-issuance-requests-index": {
       "header": "Preissuance Requests",
@@ -1669,7 +1677,13 @@
       "source": "Source",
       "counterparty": "Counterparty",
       "loading": "Loading...",
-      "nothing-here-yet": "Nothing here yet"
+      "nothing-here-yet": "Nothing here yet",
+      "create-change-role-request": "Create change role request",
+      "block": "Block",
+      "reset-unverified": "Reset to unverified",
+      "unblock": "Unblock",
+      "change-role-request": "Change role request",
+      "master": "Master"
     },
     "users": {
      "link-user-index": "User index"

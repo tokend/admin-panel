@@ -6,13 +6,13 @@
       <select-field
         class="preissuance-requests-index__asset-select"
         v-model="asset"
-        :label="'pre-issuance-requests-index.lbl-asset' | globalize">
+        label="pre-issuance-requests-index.lbl-asset">
         <option
           v-for="a in assets"
           :value="a.id"
           :key="a.id"
         >
-          {{ a.id | globalize }}
+          {{ a.id }}
         </option>
       </select-field>
 
@@ -32,6 +32,8 @@ import SelectField from '@comcom/fields/SelectField'
 import { api, loadingDataViaLoop } from '@/api'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
+
+import { globalize } from '@/components/App/filters/filters'
 
 export default {
   components: {
@@ -73,7 +75,7 @@ export default {
         let response = await api.getWithSignature('/v3/assets')
         let assets = await loadingDataViaLoop(response)
         this.assets = [{
-          id: 'pre-issuance-requests-index.all',
+          id: globalize('pre-issuance-requests-index.all'),
         }].concat(assets)
         this.asset = this.assets[0].id
         this.assetsLoaded = true

@@ -10,7 +10,7 @@
         <div class="asset-pair-manager__form-row app__form-row">
           <input-field
             class="app__form-field"
-            :label="`Price (${pair.quote})`"
+            :label="'lbl-prise' | globalize"
             type="number"
             :min="DEFAULT_INPUT_MIN"
             :step="DEFAULT_INPUT_STEP"

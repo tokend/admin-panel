@@ -12,7 +12,7 @@
         <select-field
           v-model="filters.asset"
           class="limits-manager__filter"
-          :label="'limits-manager.lbl-asset' | globalize"
+          label="limits-manager.lbl-asset"
         >
           <option
             v-for="item in assets"
@@ -25,7 +25,7 @@
         </select-field>
         <select-field
           class="limits-manager__filter"
-          :label="'limits-manager.lbl-scope' | globalize"
+          label="limits-manager.lbl-scope"
           v-model="filters.scope"
         >
           <option :value="SCOPE_TYPES.global">

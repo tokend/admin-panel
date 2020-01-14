@@ -103,7 +103,7 @@
           v-for="(item, index) in notLoadedFiles"
           :key="item.fileName"
         >
-          {{ index + 1 }}. {{ item.fileName }} - {{ item.msg }}
+          {{ index + 1 }}. {{ item.fileName }} - {{ item.key | globalize }}
         </div>
       </div>
     </template>
@@ -142,7 +142,6 @@ export default {
       fileInfo: [],
       temporaryFileName: null,
       notLoadedFiles: [],
-      app: 'asd',
     }
   },
 
@@ -224,10 +223,10 @@ export default {
         const assetCode = items[i].asset
         const asset = this.getAsset(assetCode)
         if (!asset) {
-          ErrorHandler.process(`Asset with code ${assetCode} does not exist in the system`)
+          ErrorHandler.process(assetCode, 'preissuance-form.asset-not-found')
           this.notLoadedFiles.push({
             fileName: this.temporaryFileName,
-            msg: `Asset with code ${assetCode} does not exist in the system`,
+            key: 'preissuance-form.msg-asset-not-found',
           })
         } else {
           this.fileInfo.push({

@@ -5,7 +5,7 @@
         <div class="fee-list__filters">
           <select-field
             class="fee-list__filter"
-            :label="'fee-list.lbl-scope' | globalize"
+            label="fee-list.lbl-scope"
             v-model="filters.scope"
           >
             <option :value="SCOPE_TYPES.global">
@@ -21,7 +21,7 @@
 
           <select-field
             class="fee-list__filter"
-            :label="'fee-list.lbl-type' | globalize"
+            label="fee-list.lbl-type"
             v-model="filters.feeType"
           >
             <option :value="FEE_TYPES.paymentFee">
@@ -48,7 +48,7 @@
             class="fee-list__filter"
             v-model.number="filters.paymentFeeSubtype"
             v-if="+filters.feeType === FEE_TYPES.paymentFee"
-            :label="'fee-list.lbl-direction' | globalize"
+            label="fee-list.lbl-direction"
           >
             <option
               v-for="(value, name) in PAYMENT_FEE_TYPES"
@@ -61,7 +61,7 @@
 
           <select-field
             class="fee-list__filter"
-            :label="'fee-list.lbl-asset' | globalize"
+            label="fee-list.lbl-asset"
             v-model="filters.assetCode"
           >
             <template v-if="assetsByType.length">
@@ -382,6 +382,7 @@ export default {
     await this.loadFees()
     this.filters.accountRole = this.kvAccountRoles.general
     this.isLoaded = true
+    this.filters.assetCode = this.assetsByType[0].id
   },
 
   methods: {

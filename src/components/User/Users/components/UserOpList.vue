@@ -97,6 +97,8 @@ import { ErrorHandler } from '@/utils/ErrorHandler'
 
 import { mapGetters } from 'vuex'
 
+import { globalize } from '@/components/App/filters/filters'
+
 export default {
   components: {
     OperationCounterparty,
@@ -146,7 +148,7 @@ export default {
 
     getOperationType (record) {
       switch (record.operationType) {
-        case 'Create change role request':
+        case globalize('user-op-list.create-change-role-request'):
           return this.getChangeRoleOperationType(record)
         default:
           return record.operationType
@@ -171,13 +173,13 @@ export default {
 
       let operationType
       if (isBlocked) {
-        operationType = 'Block'
+        operationType = globalize('user-op-list.block')
       } else if (isReset) {
-        operationType = 'Reset to unverified'
+        operationType = globalize('user-op-list.reset-unverified')
       } else if (isUnblocked) {
-        operationType = 'Unblock'
+        operationType = globalize('user-op-list.unblock')
       } else {
-        operationType = 'Change role request'
+        operationType = globalize('user-op-list.change-role-request')
       }
 
       return operationType
@@ -201,7 +203,7 @@ export default {
           operationType: operationType.charAt(0).toUpperCase() +
             operationType.slice(1),
           appliedAt: moment(item.operation.appliedAt).format('DD MMM YYYY [at] hh:mm:ss'),
-          sourceAccount: item.operation.source.id === this.masterPubKey ? 'Master' : item.operation.source.id,
+          sourceAccount: item.operation.source.id === this.masterPubKey ? globalize('user-op-list.master') : item.operation.source.id,
           receiverAccount: safeGet(item, 'operation.details.receiverAccount.id'),
           accountTo: safeGet(item, 'operation.details.accountTo.id'),
         })

@@ -8,12 +8,12 @@
       <div class="app-list-filters">
         <select-field
           class="app-list-filters__field"
-          :label="'collected-fees-withdrawals.lbl-state' | globalize"
+          label="collected-fees-withdrawals.lbl-state"
           v-model="filters.state"
         >
           <option :value="REQUEST_STATES.pending">
             {{
-              "collected-fees-withdrawals.pendind"
+              "collected-fees-withdrawals.pending"
                 | globalize
             }}
           </option>

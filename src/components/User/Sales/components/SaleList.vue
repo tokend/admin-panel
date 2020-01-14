@@ -33,21 +33,21 @@
           </option>
         </select-field>
         <input-date-field
-          :label="'sale-list.lbl-start-date' | globalize"
+          label="sale-list.lbl-start-date"
           class="sale-list__field sale-list__field-margin-top"
           :enable-time="false"
           v-model="filters.startDate"
         />
         <!-- eslint-disable max-len -->
         <input-date-field
-          :abel="'sale-list.lbl-end-date' | globalize"
+          label="sale-list.lbl-end-date"
           class="sale-list__field sale-list__field-margin-left sale-list__field-margin-top"
           :enable-time="false"
           v-model="filters.endDate"
         />
         <select-field
           class="sale-list__field sale-list__field-margin-left sale-list__field-margin-top"
-          :label="'sale-list.lbl-type' | globalize"
+          label="sale-list.lbl-type"
           v-model="filters.type">
           <option :value="''" />
           <option :value="SALE_TYPES.basicSale">

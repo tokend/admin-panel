@@ -76,7 +76,7 @@
             <div class="app__form-field">
               <select-field
                 class="app__form-field"
-                :label="'admin-manager.lbl-signer-role' | globalize"
+                label="admin-manager.lbl-signer-role"
                 v-model="form.signerRoleId"
                 :disabled="isMaster || formMixin.isDisabled"
                 @blur="touchField('form.signerRoleId')"
@@ -281,7 +281,7 @@ export default {
         })
 
       this.form.signerRoleId = this.form.signerRoleId ||
-        this.signerRoles.find(item => item.name !== 'Master').id
+        this.signerRoles.find(item => item.name !== globalize('admin-manager.master')).id
     },
 
     async loadSigner () {

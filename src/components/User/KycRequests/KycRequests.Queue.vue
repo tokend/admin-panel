@@ -128,6 +128,7 @@ import { confirmAction } from '@/js/modals/confirmation_message'
 
 import _omit from 'lodash/omit'
 import { mapGetters } from 'vuex'
+import { globalize } from '@/components/App/filters/filters'
 
 const ALL_ROLES_FILTER = '0'
 
@@ -194,9 +195,9 @@ export default {
   async beforeRouteLeave (to, from, next) {
     const isConfirmed = !this.isReviewActive ||
       await confirmAction({
-        title: 'Quit the review? All your decisions will be lost',
-        confirmText: 'Yes',
-        cancelText: 'No',
+        title: globalize('kyc-requests-queue.quit-warning'),
+        confirmText: globalize('kyc-requests-queue.yes'),
+        cancelText: globalize('kyc-requests-queue.no'),
       })
 
     if (isConfirmed) {
@@ -247,7 +248,7 @@ export default {
 
       const isConfirmed = !this.isReviewActive ||
         await confirmAction({
-          title: 'Filter requests? All your decisions will be lost',
+          title: globalize('kyc-requests-queue.filter-requests-warning'),
         })
 
       if (isConfirmed) {

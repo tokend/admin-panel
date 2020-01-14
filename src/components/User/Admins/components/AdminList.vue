@@ -41,7 +41,7 @@
 
             <template v-if="item.id === userAddress">
               <span class="secondary">
-                {{ "admin-list.user" | globalize }}
+                {{ "admin-list.your-account" | globalize }}
               </span>
             </template>
           </span>

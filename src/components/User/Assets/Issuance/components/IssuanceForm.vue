@@ -54,7 +54,7 @@
             <select-field
               class="issuance-form__asset-select"
               v-model="form.asset"
-              :label="'issuance-form.lbl-asset' | globalize"
+              label="issuance-form.lbl-asset"
               @blur="touchField('form.asset')"
               :error-message="getFieldErrorMessage('form.asset')"
               :disabled="formMixin.isDisabled"
@@ -266,7 +266,7 @@ export default {
       )
       await api.postOperations(operation)
 
-      Bus.success('issuance-form.issued successfully')
+      Bus.success('issuance-form.issued-successfully')
       this.getAssets()
     },
 
