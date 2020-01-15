@@ -34,7 +34,8 @@
               <option
                 :value="'_empty'"
                 disabled
-                selected>
+                selected
+              >
                 <template v-if="isMasterBalancesLoading">
                   {{
                     "collected-fees-withdraw.loading" | globalize

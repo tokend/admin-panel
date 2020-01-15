@@ -4,7 +4,7 @@
     <p 
       class="change-asset-issuer-form__hint"
       v-html="$options.filters.globalize('change-asset-issuer-form.select-lile-and-click-upload')"
-      />
+    />
     <!--eslint-enable -->
 
     <div class="change-asset-issuer-form__upload-wrp">

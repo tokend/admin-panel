@@ -27,7 +27,8 @@
           <option
             :value="item.id"
             v-for="item in assets"
-            :key="item.id">
+            :key="item.id"
+          >
             {{ item.id }}
           </option>
         </select-field>

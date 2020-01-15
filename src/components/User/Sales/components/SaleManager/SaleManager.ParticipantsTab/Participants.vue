@@ -4,7 +4,8 @@
       <select-field
         class="participants__filter"
         v-model="filters.quoteAsset"
-        :label="'participants.lbl-quote-asset' | globalize">
+        :label="'participants.lbl-quote-asset' | globalize"
+      >
         <template v-if="get(sale, 'quoteAssets', []).length">
           <option
             :value="item.asset.id"

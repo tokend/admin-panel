@@ -26,7 +26,8 @@
       <li
         class="admin-list__li"
         v-for="item in list"
-        :key="item.id">
+        :key="item.id"
+      >
         <router-link
           class="admin-list__li-a"
           :to="{ name: 'admins.show', params: { id: item.id } }"

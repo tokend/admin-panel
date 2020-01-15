@@ -5,7 +5,8 @@
         <a
           :href="href"
           target="_blank"
-          rel="noopener">
+          rel="noopener"
+        >
           {{ "user-doc-getter.link-open-file" | globalize }}
           <i class="mdi mdi-open-in-new user-doc-getter__ico" />
         </a>
@@ -16,7 +17,8 @@
           v-if="isImage"
           class="user-doc-getter__img"
           :src="href"
-          alt="">
+          alt=""
+        >
 
         <embed
           v-else-if="isPdf"

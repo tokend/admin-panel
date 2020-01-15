@@ -10,7 +10,8 @@
           <option
             v-for="asset in assets"
             :value="asset"
-            :key="asset">
+            :key="asset"
+          >
             {{ asset }}
           </option>
         </select-field>
@@ -40,7 +41,8 @@
           <li
             v-for="item in list"
             :key="item.id"
-            class="issuance-rl__li">
+            class="issuance-rl__li"
+          >
             <span
               class="app-list__cell issuance-rl__id-max-width"
               :title="item.id"

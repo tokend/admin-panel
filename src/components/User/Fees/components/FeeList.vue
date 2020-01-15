@@ -173,7 +173,8 @@
           <li
             class="app-list__li"
             v-for="(item, id) in fees"
-            :key="id">
+            :key="id"
+          >
             <fee-form
               :fee="item"
               :account-id="composeRequestFilters.account"
