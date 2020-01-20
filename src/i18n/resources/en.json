@@ -427,8 +427,7 @@
       "success": "Success",
       "error": "Error",
       "notification": "Notification",
-      "warning": "Warning",
-      "default": " "
+      "warning": "Warning"
     },
     "verify-tfa": {
       "header": "2FA Required",

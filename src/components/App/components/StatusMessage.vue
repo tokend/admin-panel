@@ -82,7 +82,7 @@ export default {
         case MESSAGE_TYPES.warning:
           return 'status-message.warning'
         default:
-          return 'status-message.default'
+          return ''
       }
     },
 
