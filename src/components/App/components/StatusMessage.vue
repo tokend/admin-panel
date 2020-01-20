@@ -16,7 +16,7 @@
 
         <div class="status-message__payload">
           <h4 class="status-message__title">
-            {{ messageTitle | globalize }}
+            {{ messageTitleTranslationId | globalize }}
           </h4>
 
           <p class="status-message__text">
@@ -71,7 +71,7 @@ export default {
   }),
 
   computed: {
-    messageTitle () {
+    messageTitleTranslationId () {
       switch (this.messageType) {
         case MESSAGE_TYPES.success:
           return 'status-message.success'
