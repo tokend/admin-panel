@@ -9,7 +9,8 @@
         <price-chart
           :price-history="priceHistory"
           :scale="scale"
-          :asset-pair="filters.pair" />
+          :asset-pair="filters.pair"
+        />
       </div>
     </template>
 

@@ -476,7 +476,9 @@
       "follow-account-id": " Ask an existing administrator to register the following account ID.<br>",
       "warning-do-not-reload": "<em>Important:</em> Do not reload the page! You’ll be redirected automatically once your account is created",
       "error-automatically-log": "Can not automatically log into the system. Try to log yourself",
-      "error-not-registered": "You are not registered, try again to register with the secret key later"
+      "error-not-registered": "You are not registered, try again to register with the secret key later",
+      "username-already-exist": "Username already exist. Please select another",
+      "account-already-exists": "Account already exists"
     },
     "account-state-getter": {
       "loading": "Loading...",
@@ -614,7 +616,9 @@
       "msg-sure": "Sure?",
       "pair-updated": "Pair has been updated.",
       "asset-pair-removed": "Asset pair was successfully removed",
-      "lbl-prise": "Price ({{pair.quote}})"
+      "lbl-prise": "Price ({{pair.quote}})",
+      "yes": "Yes",
+      "no": "No"
     },
     "asset-pairs-index": {
       "asset-pairs-btn": "Asset pairs",
@@ -1026,8 +1030,13 @@
       "tasks-to-remove": "Tasks to remove",
       "btn-submit": "Submit",
       "btn-start-new-review": "Start new review",
-      "btn-default": "",
-      "btn-no-ready-review": "No ready for review decisions yet"
+      "btn-no-ready-review": "No ready for review decisions yet",
+      "confirm-reset": "Are you sure? All your decisions will be lost",
+      "yes": "Yes",
+      "no": "No",
+      "confirm-submit": "Are you sure? This action cannot be undone",
+      "yes-confirm": "Yes, confirm",
+      "no-cancel": "No, cancel"
     },
     "review-decision-viewer": {
       "error": "Error:",

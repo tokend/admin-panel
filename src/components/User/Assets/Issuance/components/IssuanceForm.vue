@@ -54,7 +54,7 @@
             <select-field
               class="issuance-form__asset-select"
               v-model="form.asset"
-              label="issuance-form.lbl-asset"
+              :label="'issuance-form.lbl-asset' | globalize"
               @blur="touchField('form.asset')"
               :error-message="getFieldErrorMessage('form.asset')"
               :disabled="formMixin.isDisabled"

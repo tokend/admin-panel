@@ -268,7 +268,7 @@ export default {
 
     async reject (request) {
       if (!this.rejectReason) {
-        ErrorHandler.process('pre-issuance-request-list.enter-reject')
+        ErrorHandler.process(request, 'pre-issuance-request-list.enter-reject')
         return
       }
 

@@ -57,20 +57,23 @@
                   requestToReview.accountRoleToSet === kvAccountRoles.general
                 "
                 :kyc="kyc"
-                :user="user" />
+                :user="user"
+              />
               <verified-kyc-viewer
                 v-if="
                   requestToReview.accountRoleToSet === kvAccountRoles.usVerified
                 "
                 :kyc="kyc"
-                :user="user" />
+                :user="user"
+              />
               <accredited-kyc-viewer
                 v-if="
                   requestToReview.accountRoleToSet ===
                     kvAccountRoles.usAccredited
                 "
                 :kyc="kyc"
-                :user="user" />
+                :user="user"
+              />
             </template>
             <template v-else-if="isKycLoadFailed">
               <p class="danger">

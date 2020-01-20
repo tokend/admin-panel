@@ -432,18 +432,14 @@
         />
 
         <button
-          v-else-if="isExistingAsset"
-          class="app__btn"
-          :disabled="formMixin.isDisabled"
-        >
-          {{ "asset-manager.btn-update-asset" | globalize }}
-        </button>
-        <button
           v-else
           class="app__btn"
           :disabled="formMixin.isDisabled"
         >
-          {{ "asset-manager.btn-create-asset" | globalize }}
+          <span v-if="isExistingAsset">
+            {{ "asset-manager.btn-update-asset" | globalize }}
+          </span>
+          <span v-else>{{ "asset-manager.btn-create-asset" | globalize }}</span>
         </button>
       </div>
     </form>

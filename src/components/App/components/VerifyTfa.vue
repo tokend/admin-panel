@@ -104,9 +104,9 @@ export default {
         this.clearFields()
 
         if (err.status !== 400) {
-          ErrorHandler.process('verify-tfa.verification-failed')
+          ErrorHandler.process(err, 'verify-tfa.verification-failed')
         } else {
-          ErrorHandler.process('verify-tfa.verification-code-mismatched')
+          ErrorHandler.process(err, 'verify-tfa.verification-code-mismatched')
           this.$store.commit('TFA_FORM_FALSE')
         }
       }

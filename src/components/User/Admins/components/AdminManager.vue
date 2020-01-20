@@ -76,7 +76,7 @@
             <div class="app__form-field">
               <select-field
                 class="app__form-field"
-                label="admin-manager.lbl-signer-role"
+                :label="'admin-manager.lbl-signer-role' | globalize"
                 v-model="form.signerRoleId"
                 :disabled="isMaster || formMixin.isDisabled"
                 @blur="touchField('form.signerRoleId')"
@@ -117,21 +117,14 @@
 
           <template v-else>
             <button
-              v-if="addNew"
               class="app__btn"
               @click="isDeleteMode = false"
               :disabled="isMaster || formMixin.isDisabled"
             >
-              {{ "admin-manager.btn-add" | globalize }}
-            </button>
-
-            <button
-              v-else
-              class="app__btn"
-              @click="isDeleteMode = false"
-              :disabled="isMaster || formMixin.isDisabled"
-            >
-              {{ "admin-manager.btn-upd" | globalize }}
+              <span v-if="addNew">
+                {{ "admin-manager.btn-add" | globalize }}
+              </span>
+              <span v-else>{{ "admin-manager.btn-upd" | globalize }}</span>
             </button>
 
             <button

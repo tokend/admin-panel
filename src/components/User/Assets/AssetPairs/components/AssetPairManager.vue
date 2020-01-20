@@ -10,7 +10,7 @@
         <div class="asset-pair-manager__form-row app__form-row">
           <input-field
             class="app__form-field"
-            :label="'lbl-prise' | globalize"
+            :label="'asset-pair-manager.lbl-prise' | globalize"
             type="number"
             :min="DEFAULT_INPUT_MIN"
             :step="DEFAULT_INPUT_STEP"
@@ -31,8 +31,8 @@
             v-if="!isAttributesFormSelected && formMixin.isConfirmationShown"
             :is-pending="isFormSubmitting"
             :message="'asset-pair-manager.msg-sure' | globalize"
-            ok-button-text="Yes"
-            cancel-button-text="No"
+            :ok-button-text="'asset-pair-manager.yes' | globalize"
+            :cancel-button-text="'asset-pair-manager.no' | globalize"
             @ok="updatePrice"
             @cancel="hideConfirmation"
           />

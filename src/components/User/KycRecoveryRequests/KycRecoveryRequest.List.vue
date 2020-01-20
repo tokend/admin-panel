@@ -5,7 +5,7 @@
         <select-field
           class="app-list-filters__field"
           v-model="filters.state"
-          label="kyc-recovery-request-list.lbl-state"
+          :label="'kyc-recovery-request-list.lbl-state' | globalize"
         >
           <option
             v-for="(state, s) in Object.keys(KYC_REQUEST_STATES)"

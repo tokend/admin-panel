@@ -4,7 +4,7 @@
       <div class="issuance-rl__filters">
         <select-field
           class="issuance-rl__filter app-list-filters__field"
-          label="issuance-history.lbl-asset"
+          :label="'issuance-history.lbl-asset' | globalize"
           v-model="filters.asset"
         >
           <option

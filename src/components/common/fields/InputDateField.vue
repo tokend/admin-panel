@@ -8,7 +8,8 @@
       :config="config"
       :value="value"
       @input.native="onInput"
-      placeholder=" " />
+      placeholder=" "
+    />
 
     <span class="input-field__label">
       {{ label | globalize }}

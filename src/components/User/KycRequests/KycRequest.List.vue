@@ -4,7 +4,7 @@
       <div class="app-list-filters">
         <select-field
           class="app-list-filters__field"
-          label="kyc-request-list.lbl-role-to-set"
+          :label="'kyc-request-list.lbl-role-to-set' | globalize"
           v-model="filters.roleToSet"
         >
           <option value="''" />
@@ -18,7 +18,7 @@
         <select-field
           class="app-list-filters__field"
           v-model="filters.state"
-          label="kyc-request-list.lbl-state"
+          :label="'kyc-request-list.lbl-state' | globalize"
         >
           <option
             v-for="(state, s) in Object.keys(KYC_REQUEST_STATES)"
@@ -32,7 +32,7 @@
         <select-field
           class="app-list-filters__field"
           v-model="filters.pendingTasks"
-          label="kyc-request-list.lbl-pending-tasks"
+          :label="'kyc-request-list.lbl-pending-tasks' | globalize"
         >
           <option :value="kvChangeRoleTasks.submitAutoVerification">
             {{ "kyc-request-list.submit-auto-verification" | globalize }}

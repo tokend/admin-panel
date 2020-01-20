@@ -94,7 +94,8 @@
         <qrcode
           :size="240"
           foreground="#3f4244"
-          :value="form.publicKey" />
+          :value="form.publicKey"
+        />
         <p class="signup__account-id small">
           {{ form.publicKey }}
         </p>
@@ -133,6 +134,7 @@ import config from '@/config'
 import GAuth from '../../settings/GAuth.vue'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { globalize } from '@/components/App/filters/filters'
 
 const USERNAME_MIN_LENGTH = 3
 
@@ -211,7 +213,7 @@ export default {
         const res = await Vue.auth.login(this.form)
 
         if (!res.ok || res.enabledTFA) {
-          ErrorHandler.process('sign-up.error-automatically-log')
+          ErrorHandler.process(res, 'sign-up.error-automatically-log')
           this.state = 'signup'
           return
         }
@@ -221,7 +223,7 @@ export default {
         ErrorHandler.processWithoutFeedback(err)
 
         if (!walletCreated) {
-          ErrorHandler.process('sign-up.error-not-registered')
+          ErrorHandler.process(err, 'sign-up.error-not-registered')
           this.state = 'signup'
         }
       }
@@ -274,11 +276,11 @@ export default {
     async checkCredentials () {
       await this.getUniqueCredentials(
         this.form.username,
-        'Username already exist. Please select another'
+        globalize('sign-up.username-already-exist')
       )
       await this.getUniqueCredentials(
         this.form.publicKey,
-        'Account already exists'
+        globalize('sign-up.account-already-exists')
       )
     },
   },

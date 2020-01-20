@@ -185,7 +185,7 @@ export default {
         try {
           this.parsePreIssuances(JSON.parse(extracted).issuances)
         } catch (e) {
-          ErrorHandler.process('preissuance-form.your-file-is-corrupted')
+          ErrorHandler.process(e, 'preissuance-form.your-file-is-corrupted')
           return
         }
       }

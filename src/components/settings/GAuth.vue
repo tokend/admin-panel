@@ -126,9 +126,9 @@ export default {
         this.$store.commit('CLOSE_LOADER')
 
         if (err.status === 409) {
-          ErrorHandler.process('g-auth.tfa-already-created"')
+          ErrorHandler.process(err, 'g-auth.tfa-already-created"')
         } else {
-          ErrorHandler.process('g-auth.unable-add-tfa')
+          ErrorHandler.process(err, 'g-auth.unable-add-tfa')
         }
       }
     },
@@ -149,7 +149,7 @@ export default {
         if (err.response.status === 403 && err.response.data.extras) {
           return this.showTfaForm(err.response.data.extras.token)
         } else {
-          ErrorHandler.process('g-auth.error')
+          ErrorHandler.process(err, 'g-auth.error')
         }
       }
     },

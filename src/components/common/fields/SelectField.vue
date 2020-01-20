@@ -27,7 +27,7 @@
     </div>
 
     <span class="select-field__label">
-      {{ label | globalize }}
+      {{ label }}
     </span>
 
     <transition name="select-field__err-transition">

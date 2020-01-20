@@ -116,7 +116,7 @@ export default {
         this.$store.commit('CLOSE_LOADER')
       } catch (err) {
         this.$store.commit('CLOSE_LOADER')
-        ErrorHandler.process('asset-list.error')
+        ErrorHandler.process(err, 'asset-list.error')
       }
 
       this.isLoading = false

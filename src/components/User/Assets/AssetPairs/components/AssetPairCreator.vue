@@ -115,7 +115,7 @@
             v-model="form.policies"
             :disabled="formMixin.isDisabled"
             :required="false"
-            label="asset-pair-creator.lbl-is-tradable"
+            :label="'asset-pair-creator.lbl-is-tradable' | globalize"
             :cb-value="ASSET_PAIR_POLICIES.tradeableSecondaryMarket"
           >
             <template slot="help">
@@ -131,7 +131,7 @@
             v-model="form.policies"
             :disabled="formMixin.isDisabled"
             :required="false"
-            label="asset-pair-creator.lbl-physical-restriction"
+            :label="'asset-pair-creator.lbl-physical-restriction' | globalize"
             :cb-value="ASSET_PAIR_POLICIES.physicalPriceRestriction"
           >
             <template slot="help">
@@ -149,7 +149,7 @@
             v-model="form.policies"
             :disabled="formMixin.isDisabled"
             :required="false"
-            label="asset-pair-creator.lbl-current-restriction"
+            :label="'asset-pair-creator.lbl-current-restriction' | globalize"
             :cb-value="ASSET_PAIR_POLICIES.currentPriceRestriction"
           >
             <template slot="help">

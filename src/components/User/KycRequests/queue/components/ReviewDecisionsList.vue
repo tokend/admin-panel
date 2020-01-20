@@ -64,6 +64,8 @@ import { base } from '@tokend/js-sdk'
 
 import { DECISION_ACTIONS } from '../constants/decision-actions'
 
+import { globalize } from '@/components/App/filters/filters'
+
 const EVENTS = {
   edit: 'edit',
   reset: 'reset',
@@ -89,7 +91,7 @@ export default {
     },
     checkReadyForReviewDecisions () {
       return this.readyForReviewDecisions.length
-        ? 'review-decisions-list.btn-default'
+        ? ''
         : 'review-decisions-list.btn-no-ready-review'
     },
   },
@@ -102,9 +104,9 @@ export default {
     async resetReview () {
       const isConfirmed = !this.readyForReviewDecisions.length ||
         await confirmAction({
-          title: 'Are you sure? All your decisions will be lost',
-          confirmText: 'Yes',
-          cancelText: 'No',
+          title: globalize('review-decisions-list.confirm-reset'),
+          confirmText: globalize('review-decisions-list.yes'),
+          cancelText: globalize('review-decisions-list.no'),
         })
       if (!isConfirmed) { return }
 
@@ -113,9 +115,9 @@ export default {
 
     async submitReview () {
       const isConfirmed = await confirmAction({
-        title: 'Are you sure? This action cannot be undone',
-        confirmText: 'Yes, confirm',
-        cancelText: 'No, cancel',
+        title: globalize('review-decisions-list.confirm-submit'),
+        confirmText: globalize('review-decisions-list.yes-confirm'),
+        cancelText: globalize('review-decisions-list.no-cancel'),
       })
       if (!isConfirmed) { return }
 

@@ -8,7 +8,7 @@
       <div class="app-list-filters">
         <select-field
           class="app-list-filters__field"
-          label="collected-fees-withdrawals.lbl-state"
+          :label="'collected-fees-withdrawals.lbl-state' | globalize"
           v-model="filters.state"
         >
           <option :value="REQUEST_STATES.pending">

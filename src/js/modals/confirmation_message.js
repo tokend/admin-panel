@@ -2,7 +2,7 @@ import Vue from 'vue'
 import store from '../../store'
 import FormBlockingModalMixin from './flow-blocking-modal.mixin'
 import Modal from '../../components/common/modals/Modal'
-
+import { globalize } from '@/components/App/filters/filters'
 const template = `
   <modal maxWidth="40rem">
     <p class="modal__title">{{ title | globalize }}</p>
@@ -26,9 +26,9 @@ const template = `
  * @return {Promise<boolean>}
  */
 export function confirmAction (opts = {}) {
-  const title = opts.title || 'confirmation-message.confirm-msg'
-  const confirmText = opts.confirmText || 'confirmation-message.submit'
-  const cancelText = opts.cancelText || 'confirmation-message.cancel'
+  const title = opts.title || globalize('confirmation-message.confirm-msg')
+  const confirmText = opts.confirmText || globalize('confirmation-message.submit')
+  const cancelText = opts.cancelText || globalize('confirmation-message.cancel')
 
   const container = document.createElement('div')
   document.querySelector('#app').appendChild(container)

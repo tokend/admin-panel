@@ -107,7 +107,7 @@ export default {
         Bus.success('asset-request-reject-form.request-rejected')
         this.$router.push({ name: 'assets' })
       } catch (err) {
-        ErrorHandler.process('asset-request-reject-form.fail-reject')
+        ErrorHandler.process(err, 'asset-request-reject-form.fail-reject')
       }
       this.enableForm()
     },

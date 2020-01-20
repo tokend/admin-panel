@@ -112,7 +112,7 @@ export default {
         this.transaction = fileData.transaction
         this.source = fileData.source
       } catch (e) {
-        ErrorHandler.process('change-asset-issuer-form.your-file-is-corrupted')
+        ErrorHandler.process(e, 'change-asset-issuer-form.your-file-is-corrupted')
       }
     },
 
