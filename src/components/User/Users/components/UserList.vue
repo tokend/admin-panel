@@ -4,7 +4,7 @@
       <div class="app-list-filters">
         <select-field
           class="app-list-filters__field"
-          label="user-list.lbl-role"
+          :label="'user-list.lbl-role' | globalize"
           v-model="filters.role"
         >
           <option :value="''" />

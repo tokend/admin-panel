@@ -47,7 +47,7 @@
         />
         <select-field
           class="sale-list__field sale-list__field-margin-left sale-list__field-margin-top"
-          label="sale-list.lbl-type"
+          :label="'sale-list.lbl-type' | globalize"
           v-model="filters.type">
           <option :value="''" />
           <option :value="SALE_TYPES.basicSale">

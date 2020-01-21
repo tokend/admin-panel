@@ -39,9 +39,12 @@
 </template>
 
 <script>
+
+import { globalize } from '@/components/App/filters/filters'
+
 export default {
   props: {
-    label: { type: String, default: 'select-field.label' },
+    label: { type: String, default: globalize('select-field.label') },
     // eslint-disable-next-line vue/require-prop-types
     value: { default: false },
     errorMessage: { type: String, default: undefined },
