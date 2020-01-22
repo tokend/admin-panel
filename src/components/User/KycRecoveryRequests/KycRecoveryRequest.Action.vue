@@ -48,11 +48,10 @@
             :autofocus="true"
             v-model="rejectForm.reason"
             @blur="touchField('rejectForm.reason')"
-            :error-message="
-              getFieldErrorMessage('rejectForm.reason', {
-                maxLength: REJECT_REASON_MAX_LENGTH
-              })
-            "
+            :error-message="getFieldErrorMessage(
+              'rejectForm.reason',
+              { maxLength: REJECT_REASON_MAX_LENGTH }
+            )"
           />
         </div>
       </form>
@@ -64,7 +63,10 @@
         >
           {{ "kyc-recovery-request-action.form-btn-reject" | globalize }}
         </button>
-        <button class="app__btn-secondary" @click="hideRejectModal">
+        <button
+          class="app__btn-secondary"
+          @click="hideRejectModal"
+        >
           {{ "kyc-recovery-request-action.form-btn-cancel" | globalize }}
         </button>
       </div>

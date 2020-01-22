@@ -57,7 +57,7 @@
             {{ "sale-list.crowdfunding" | globalize }}
           </option>
           <option :value="SALE_TYPES.fixedPrice">
-            {{ "sale-list.fixed-prise" | globalize }}
+            {{ "sale-list.fixed-price" | globalize }}
           </option>
           <option :value="SALE_TYPES.immediate">
             {{ "sale-list.immediate" | globalize }}

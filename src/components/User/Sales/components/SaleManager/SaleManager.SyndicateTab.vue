@@ -25,27 +25,34 @@
             </span>
           </li>
           <li>
-            <!-- eslint-disable-next-line max-len -->
-            <span>{{ "sale-manager-syndicate-tab.home-page" | globalize }}</span>
+            <span>
+              {{ "sale-manager-syndicate-tab.home-page" | globalize }}
+            </span>
             <span>{{ corporate.homepage }}</span>
           </li>
           <li>
-            <span>{{ "sale-manager-syndicate-tab.industry" | globalize }}</span>
+            <span>
+              {{ "sale-manager-syndicate-tab.industry" | globalize }}
+            </span>
             <span>{{ corporate.industry }}</span>
           </li>
           <li>
-            <!-- eslint-disable-next-line max-len -->
-            <span>{{ "sale-manager-syndicate-tab.team-size" | globalize }}</span>
+            <span>
+              {{ "sale-manager-syndicate-tab.team-size" | globalize }}
+            </span>
             <span>{{ corporate.team_size }}</span>
           </li>
           <li>
-            <span>{{ "sale-manager-syndicate-tab.company" | globalize }}</span>
+            <span>
+              {{ "sale-manager-syndicate-tab.company" | globalize }}
+            </span>
             <span>{{ corporate.company }}</span>
           </li>
           <li v-if="kycAvatarKey">
             <div class="sale-manager-corporate-tab__doc-view-wrp">
-              <!-- eslint-disable-next-line max-len -->
-              <h3>{{ "sale-manager-syndicate-tab.header-avatar" | globalize }}</h3>
+              <h3>
+                {{ "sale-manager-syndicate-tab.header-avatar" | globalize }}
+              </h3>
               <user-doc-getter
                 class="sale-manager-corporate-tab__doc-view"
                 :file-key="kycAvatarKey"

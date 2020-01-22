@@ -75,13 +75,9 @@
             <!-- eslint-disable max-len -->
             <span
               class="app-list__cell"
-              :title="
-                CREATE_ASSET_REQUEST_STATES[snakeToCamelCase(asset.state)].text
-              "
+              :title="CREATE_ASSET_REQUEST_STATES[snakeToCamelCase(asset.state)].text"
             >
-              {{
-                CREATE_ASSET_REQUEST_STATES[snakeToCamelCase(asset.state)].text
-              }}
+              {{ CREATE_ASSET_REQUEST_STATES[snakeToCamelCase(asset.state)].text }}
             </span>
             <!-- eslint-enable max-len -->
 
@@ -94,10 +90,16 @@
 
       <template v-else>
         <ul class="app-list">
-          <li class="app-list__li-like" v-if="isPending">
+          <li
+            class="app-list__li-like"
+            v-if="isPending"
+          >
             {{ "asset-request-list.loadind" | globalize }}
           </li>
-          <li class="app-list__li-like" v-else>
+          <li
+            class="app-list__li-like"
+            v-else
+          >
             {{ "asset-request-list.fail-load" | globalize }}
           </li>
         </ul>
@@ -169,13 +171,9 @@ export default {
   },
 
   watch: {
-    'filters.requestType' () {
-      this.reloadCollectionLoader()
-    },
+    'filters.requestType' () { this.reloadCollectionLoader() },
 
-    'filters.state' () {
-      this.reloadCollectionLoader()
-    },
+    'filters.state' () { this.reloadCollectionLoader() },
 
     'filters.requestor': _.throttle(function () {
       this.reloadCollectionLoader()

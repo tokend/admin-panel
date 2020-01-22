@@ -19,7 +19,7 @@
                   <th>{{ "order-book-table.price" | globalize }}</th>
                 </template>
                 <template v-else>
-                  <th>{{ "order-book-table.prise" | globalize }}</th>
+                  <th>{{ "order-book-table.price" | globalize }}</th>
                   <th>{{ "order-book-table.amount" | globalize }}</th>
                   <th>{{ "order-book-table.volume" | globalize }}</th>
                   <th>{{ "order-book-table.summary" | globalize }}</th>
@@ -102,15 +102,17 @@
           />
         </li>
         <li>
-          <!-- eslint-disable-next-line max-len -->
-          <span>{{ "order-book-table.prise-per-item-details-asset-code" | globalize }}</span>
+          <span>
+            <!-- eslint-disable-next-line max-len -->
+            {{ "order-book-table.price-per-item-details-asset-code" | globalize }}
+          </span>
           <asset-amount-formatter
             :amount="itemDetails.price"
             :asset="itemDetails.quoteAssetCode"
           />
         </li>
         <li>
-          <span>{{ "order-book-table.total-prise" | globalize }}</span>
+          <span>{{ "order-book-table.total-price" | globalize }}</span>
           <asset-amount-formatter
             :amount="itemDetails.quoteAmount"
             :asset="itemDetails.quoteAssetCode"

@@ -25,7 +25,10 @@
       {{ decision.state | localizeDecisionState }}
     </span>
 
-    <span class="app-list__cell" :title="decision.reason">
+    <span
+      class="app-list__cell"
+      :title="decision.reason"
+    >
       {{ decision.reason || '&mdash;' }}
     </span>
 

@@ -143,7 +143,10 @@ import WithdrawalDetails from './WithdrawalDetails'
 
 import { base } from '@tokend/js-sdk'
 
-import { REQUEST_STATES, ASSET_POLICIES } from '@/constants'
+import {
+  REQUEST_STATES,
+  ASSET_POLICIES,
+} from '@/constants'
 
 import { verbozify } from '@/utils/verbozify'
 import _ from 'lodash'
@@ -181,13 +184,9 @@ export default {
   },
 
   watch: {
-    'filters.state' () {
-      this.reloadCollectionLoader()
-    },
+    'filters.state' () { this.reloadCollectionLoader() },
 
-    'filters.asset' () {
-      this.reloadCollectionLoader()
-    },
+    'filters.asset' () { this.reloadCollectionLoader() },
 
     'filters.requestor': _.throttle(function () {
       this.reloadCollectionLoader()
@@ -222,9 +221,10 @@ export default {
       this.isNoMoreEntries = false
       let response = {}
       try {
-        const requestor = await this.getRequestorAccountId(
-          this.filters.requestor
-        )
+        const requestor =
+          await this.getRequestorAccountId(
+            this.filters.requestor
+          )
         response = await api.getWithSignature('/v3/create_withdraw_requests', {
           filter: {
             state: this.filters.state,

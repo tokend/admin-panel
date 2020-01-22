@@ -47,14 +47,10 @@
 
           <span class="app-list__cell app-list__cell--right">
             <template v-if="isAssetWithdrawable(balance.assetCode)">
-              {{
-                "collected-fees-list.yes" | globalize
-              }}
+              {{ "collected-fees-list.yes" | globalize }}
             </template>
             <template v-else>
-              {{
-                "collected-fees-list.no" | globalize
-              }}
+              {{ "collected-fees-list.no" | globalize }}
             </template>
           </span>
         </button>
@@ -128,14 +124,10 @@ export default {
       this.isLoading = true
       this.isFailed = false
       try {
-        const {
-          data: { balances: masterBalances },
-        } = await api.getWithSignature(
-          `/v3/accounts/${Vue.params.MASTER_ACCOUNT}`,
-          {
+        const { data: { balances: masterBalances } } = await api
+          .getWithSignature(`/v3/accounts/${Vue.params.MASTER_ACCOUNT}`, {
             include: ['balances.state'],
-          }
-        )
+          })
 
         this.masterBalances = masterBalances.map(b => new Balance(b))
       } catch (err) {

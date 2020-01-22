@@ -1,10 +1,16 @@
 <template>
   <div class="sales">
     <user-header>
-      <router-link :to="{ name: 'sales.index' }" slot="nav">
+      <router-link
+        :to="{ name: 'sales.index' }"
+        slot="nav"
+      >
         {{ "sales.link-sales" | globalize }}
       </router-link>
-      <router-link :to="{ name: 'sales.requests' }" slot="nav">
+      <router-link
+        :to="{ name: 'sales.requests' }"
+        slot="nav"
+      >
         {{ "sales.link-sale-requests" | globalize }}
       </router-link>
     </user-header>

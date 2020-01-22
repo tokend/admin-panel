@@ -1,6 +1,9 @@
 <template>
   <div class="admin-list">
-    <div class="admin-list__table-header" v-if="list.length">
+    <div
+      class="admin-list__table-header"
+      v-if="list.length"
+    >
       <span class="admin-list__li-name secondary">
         <!-- empty -->
       </span>
@@ -22,7 +25,10 @@
       </span>
     </div>
 
-    <ul class="admin-list__ul" v-if="list && list.length">
+    <ul
+      class="admin-list__ul"
+      v-if="list && list.length"
+    >
       <li
         class="admin-list__li"
         v-for="item in list"
@@ -32,7 +38,10 @@
           class="admin-list__li-a"
           :to="{ name: 'admins.show', params: { id: item.id } }"
         >
-          <span class="admin-list__li-name" :title="item.details.name">
+          <span
+            class="admin-list__li-name"
+            :title="item.details.name"
+          >
             <template v-if="item.id === masterPubKey">
               {{ "admin-list.master" | globalize }}
             </template>
@@ -54,15 +63,24 @@
             {{ item.role.id | deriveRoleName(signerRoles) }}
           </span>
 
-          <span class="admin-list__li-account-id" :title="item.id">
+          <span
+            class="admin-list__li-account-id"
+            :title="item.id"
+          >
             {{ item.id | cropAddress }}
           </span>
 
-          <span class="admin-list__li-weight" :title="item.weight">
+          <span
+            class="admin-list__li-weight"
+            :title="item.weight"
+          >
             {{ item.weight }}
           </span>
 
-          <span class="admin-list__li-identity" :title="item.identity">
+          <span
+            class="admin-list__li-identity"
+            :title="item.identity"
+          >
             {{ item.identity }}
           </span>
         </router-link>

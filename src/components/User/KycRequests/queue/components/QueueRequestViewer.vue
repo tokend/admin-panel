@@ -16,7 +16,6 @@
 
           <template v-if="request.externalDetails.length">
             <div class="queue-request-viewer__ext-details-wrp">
-              <!-- eslint-disable-next-line max-len -->
               <h3>{{ "queue-request-viewer.external-details" | globalize }}</h3>
               <external-details-viewer
                 :external-details="request.externalDetails"

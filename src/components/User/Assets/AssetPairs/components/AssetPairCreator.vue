@@ -13,9 +13,9 @@
           :label="'asset-pair-creator.lbl-base' | globalize"
           v-model="form.base"
           @blur="touchField('form.base')"
-          :error-message="
-            getFieldErrorMessage('form.base', { value: form.quote })
-          "
+          :error-message="getFieldErrorMessage('form.base', {
+            value: form.quote
+          })"
           :disabled="formMixin.isDisabled"
         />
 
@@ -24,9 +24,9 @@
           :label="'asset-pair-creator.lbl-quote' | globalize"
           v-model="form.quote"
           @blur="touchField('form.quote')"
-          :error-message="
-            getFieldErrorMessage('form.quote', { value: form.base })
-          "
+          :error-message="getFieldErrorMessage('form.quote', {
+            value: form.base
+          })"
           :disabled="formMixin.isDisabled"
         />
       </div>
@@ -34,18 +34,16 @@
       <div class="asset-pair-creator__form-row app__form-row">
         <input-field
           class="app__form-field"
-          :label="'asset-pair-creator.lbl-prise' | globalize"
+          :label="'asset-pair-creator.lbl-price' | globalize"
           type="number"
           min="0"
           :step="DEFAULT_INPUT_STEP"
           v-model="form.physicalPrice"
           @blur="touchField('form.physicalPrice')"
-          :error-message="
-            getFieldErrorMessage('form.physicalPrice', {
-              minValue: DEFAULT_INPUT_MIN,
-              maxValue: DEFAULT_MAX_AMOUNT
-            })
-          "
+          :error-message="getFieldErrorMessage('form.physicalPrice', {
+            minValue: DEFAULT_INPUT_MIN,
+            maxValue: DEFAULT_MAX_AMOUNT
+          })"
           :disabled="formMixin.isDisabled"
         />
       </div>
@@ -59,12 +57,10 @@
           :step="DEFAULT_INPUT_STEP"
           v-model="form.physicalPriceCorrection"
           @blur="touchField('form.physicalPriceCorrection')"
-          :error-message="
-            getFieldErrorMessage('form.physicalPriceCorrection', {
-              minValue: 0,
-              maxValue: DEFAULT_MAX_AMOUNT
-            })
-          "
+          :error-message="getFieldErrorMessage('form.physicalPriceCorrection', {
+            minValue: 0,
+            maxValue: DEFAULT_MAX_AMOUNT
+          })"
           :disabled="formMixin.isDisabled"
         >
           <template slot="help">
@@ -72,28 +68,26 @@
               <span>
                 {{ "asset-pair-creator.message" | globalize }}
               </span>
-              <strong>{{
-                "asset-pair-creator.message-prise" | globalize
-              }}</strong>
+              <strong>
+                {{ "asset-pair-creator.message-price" | globalize }}
+              </strong>
             </p>
           </template>
         </input-field>
 
         <input-field
           class="app__form-field"
-          :label="'asset-pair-creator.lbl-max-prise-step' | globalize"
+          :label="'asset-pair-creator.lbl-max-price-step' | globalize"
           type="number"
           min="0"
           max="100"
           :step="DEFAULT_INPUT_STEP"
           v-model="form.maxPriceStep"
           @blur="touchField('form.maxPriceStep')"
-          :error-message="
-            getFieldErrorMessage('form.maxPriceStep', {
-              minValue: 0,
-              maxValue: 100
-            })
-          "
+          :error-message="getFieldErrorMessage('form.maxPriceStep', {
+            minValue: 0,
+            maxValue: 100
+          })"
           :disabled="formMixin.isDisabled"
         >
           <template slot="help">
@@ -101,9 +95,9 @@
               <span>
                 {{ "asset-pair-creator.message-offer" | globalize }}
               </span>
-              <strong>{{
-                "asset-pair-creator.message-offer-price" | globalize
-              }}</strong>
+              <strong>
+                {{ "asset-pair-creator.message-offer-price" | globalize }}
+              </strong>
             </p>
           </template>
         </input-field>
@@ -136,9 +130,8 @@
           >
             <template slot="help">
               <span class="asset-pair-creator__tip-message">
-                {{
-                  "asset-pair-creator.asset-pair-message-new-offer" | globalize
-                }}
+                <!-- eslint-disable-next-line max-len -->
+                {{ "asset-pair-creator.asset-pair-message-new-offer" | globalize }}
               </span>
             </template>
           </tick-field>
@@ -156,10 +149,10 @@
               <p class="asset-pair-creator__tip-message">
                 <span>
                   <!-- eslint-disable-next-line max-len -->
-                  {{ "asset-pair-creator.asset-pair-message-prise-interval" | globalize }}
+                  {{ "asset-pair-creator.asset-pair-message-price-interval" | globalize }}
                 </span>
                 <!-- eslint-disable-next-line max-len -->
-                <strong>{{ "asset-pair-creator.asset-pair-message-prise" | globalize }}</strong>
+                <strong>{{ "asset-pair-creator.asset-pair-message-price" | globalize }}</strong>
               </p>
             </template>
           </tick-field>

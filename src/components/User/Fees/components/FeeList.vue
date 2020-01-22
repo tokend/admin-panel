@@ -121,9 +121,8 @@
       </template>
 
       <template
-        v-else-if="
-          filters.scope === SCOPE_TYPES.account && !filters.accountAddress
-        "
+        v-else-if="filters.scope === SCOPE_TYPES.account &&
+          !filters.accountAddress"
       >
         <div class="app-list">
           <p class="app-list__li-like">
@@ -157,11 +156,9 @@
 
             <span
               class="app-list__cell"
-              v-if="
-                +filters.feeType !== FEE_TYPES.offerFee &&
-                  +filters.feeType !== FEE_TYPES.capitalDeploymentFee &&
-                  +filters.feeType !== FEE_TYPES.investFee
-              "
+              v-if="+filters.feeType !== FEE_TYPES.offerFee &&
+                +filters.feeType !== FEE_TYPES.capitalDeploymentFee &&
+                +filters.feeType !== FEE_TYPES.investFee"
             >
               {{ "fee-list.fixed-fee" | globalize }}
             </span>
@@ -211,8 +208,7 @@ import { FeesRecord } from '@/js/records/fees.record'
 import _cloneDeep from 'lodash/cloneDeep'
 import { mapGetters } from 'vuex'
 
-const SCOPE_TYPES = Object.freeze({
-  // non-xdr values, internal use only
+const SCOPE_TYPES = Object.freeze({ // non-xdr values, internal use only
   account: 'USER',
   accountRole: 'ACCOUNT_TYPE',
   global: 'GLOBAL',
@@ -262,21 +258,22 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['kvAccountRoles']),
+    ...mapGetters([
+      'kvAccountRoles',
+    ]),
 
     assetsByType () {
       let result
       switch (+this.filters.feeType) {
         case FEE_TYPES.paymentFee:
-          result = this.assets.filter(
-            item => item.policies.value & ASSET_POLICIES.transferable
-          )
+          result = this.assets
+            .filter(item => item.policies.value & ASSET_POLICIES.transferable)
           break
         case FEE_TYPES.offerFee:
-          result = this.assets.filter(
-            item =>
-              this.assetPairs.filter(el => el.quoteAsset.id === item.id).length
-          )
+          result = this.assets
+            .filter(item => this.assetPairs
+              .filter(el => el.quoteAsset.id === item.id).length
+            )
           break
         case FEE_TYPES.issuanceFee:
           result = this.assets.filter(item => +item.maxIssuanceAmount)
@@ -315,10 +312,9 @@ export default {
 
   watch: {
     assetsByType: function () {
-      const isSelectedAssetInRange = this.assetsByType.filter(
-        item => item.id === this.filters.assetCode
-      ).length
-
+      const isSelectedAssetInRange = this.assetsByType
+        .filter(item => item.id === this.filters.assetCode)
+        .length
       if (!isSelectedAssetInRange) {
         try {
           this.filters.assetCode = this.assetsByType[0].id
@@ -415,7 +411,8 @@ export default {
         newFees.push(DEFAULT_FEE)
 
         if (this.filters.scope === SCOPE_TYPES.global) {
-          newFees = newFees.filter(fee => !(fee.accountRole || fee.account))
+          newFees = newFees
+            .filter(fee => !(fee.accountRole || fee.account))
         }
         this.fees = newFees.map(item => new FeesRecord(item, this.filters))
       } catch (error) {

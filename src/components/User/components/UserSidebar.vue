@@ -59,9 +59,7 @@
       <li class="user-sidebar__nav-li">
         <router-link :to="{ name: 'kycRecoveryRequests' }">
           <i class="mdi mdi-account-plus user-sidebar__icon" />
-          <span>{{
-            "user-sidebar.link-kyc-recovery-req" | globalize
-          }}</span>
+          <span>{{ "user-sidebar.link-kyc-recovery-req" | globalize }}</span>
         </router-link>
       </li>
 

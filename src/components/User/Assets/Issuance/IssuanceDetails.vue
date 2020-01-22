@@ -42,9 +42,7 @@
             <button
               class="app__btn issuance-details__action-btn"
               @click="fulfill(issuance)"
-              :disabled="
-                isSubmitting || issuance.stateI !== REQUEST_STATES.pending
-              "
+              :disabled="isSubmitting || issuance.stateI !== REQUEST_STATES.pending"
             >
               {{ "issuance-details.fulfill" | globalize }}
             </button>
@@ -52,9 +50,7 @@
             <button
               class="app__btn app__btn--danger issuance-details__action-btn"
               @click="selectForRejection(issuance)"
-              :disabled="
-                isSubmitting || issuance.stateI !== REQUEST_STATES.pending
-              "
+              :disabled="isSubmitting || issuance.stateI !== REQUEST_STATES.pending"
             >
               {{ "issuance-details.reject" | globalize }}
             </button>
@@ -84,11 +80,10 @@
               v-model="rejectForm.reason"
               :disabled="formMixin.isDisabled"
               @blur="touchField('rejectForm.reason')"
-              :error-message="
-                getFieldErrorMessage('rejectForm.reason', {
-                  maxLength: REJECT_REASON_MAX_LENGTH
-                })
-              "
+              :error-message="getFieldErrorMessage(
+                'rejectForm.reason',
+                { maxLength: REJECT_REASON_MAX_LENGTH }
+              )"
             />
           </div>
         </form>

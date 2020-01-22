@@ -13,7 +13,10 @@
       </span>
     </div>
 
-    <ul class="asset-list__ul" v-if="assets && assets.length">
+    <ul
+      class="asset-list__ul"
+      v-if="assets && assets.length"
+    >
       <li
         class="asset-list__li"
         v-for="(asset, i) in parsedAssets"
@@ -151,11 +154,10 @@ function decamelize (str, prefixForRemove = '') {
 
 function convertPolicyToString (policy) {
   const xdrEnumValues = base.xdr.AssetPolicy.values()
-  return trim(
-    xdrEnumValues
-      .filter(pol => (pol.value & policy) !== 0)
-      .map(pol => decamelize(pol.name, 'asset'))
-      .join(', ')
+  return trim(xdrEnumValues
+    .filter(pol => (pol.value & policy) !== 0)
+    .map(pol => decamelize(pol.name, 'asset'))
+    .join(', ')
   )
 }
 </script>

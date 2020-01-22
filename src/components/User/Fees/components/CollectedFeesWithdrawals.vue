@@ -12,34 +12,20 @@
           v-model="filters.state"
         >
           <option :value="REQUEST_STATES.pending">
-            {{
-              "collected-fees-withdrawals.pending"
-                | globalize
-            }}
+            {{ "collected-fees-withdrawals.pending" | globalize }}
           </option>
           <option :value="REQUEST_STATES.cancelled">
-            {{
-              "collected-fees-withdrawals.canceled"
-                | globalize
-            }}
+            {{ "collected-fees-withdrawals.canceled" | globalize }}
           </option>
           <option :value="REQUEST_STATES.approved">
-            {{
-              "collected-fees-withdrawals.approved"
-                | globalize
+            {{ "collected-fees-withdrawals.approved" | globalize
             }}
           </option>
           <option :value="REQUEST_STATES.rejected">
-            {{
-              "collected-fees-withdrawals.rejected"
-                | globalize
-            }}
+            {{ "collected-fees-withdrawals.rejected" | globalize }}
           </option>
           <option :value="REQUEST_STATES.permanentlyRejected">
-            {{
-              "collected-fees-withdrawals.perm-rejected"
-                | globalize
-            }}
+            {{ "collected-fees-withdrawals.perm-rejected" | globalize }}
           </option>
         </select-field>
         <!-- eslint-disable -->
@@ -114,9 +100,7 @@
 
             <template v-else-if="isListFailed">
               <p class="danger">
-                {{
-                  "collected-fees-withdrawals.error" | globalize
-                }}
+                {{ "collected-fees-withdrawals.error" | globalize }}
               </p>
             </template>
 
@@ -144,8 +128,10 @@
       @close-request="itemToShow = null"
       max-width="64rem"
     >
-      <!-- eslint-disable-next-line max-len -->
-      <h2>{{ "collected-fees-withdrawals.withdrawal-request-details" | globalize }}</h2>
+      <h2>
+        <!-- eslint-disable-next-line max-len -->
+        {{ "collected-fees-withdrawals.withdrawal-request-details" | globalize }}
+      </h2>
       <details-reader :details="itemToShow" />
     </modal>
   </div>
@@ -198,12 +184,8 @@ export default {
   },
 
   watch: {
-    'filters.state' () {
-      this.reloadWithdrawalsThrottled()
-    },
-    'filters.pendingTasks' () {
-      this.reloadWithdrawalsThrottled()
-    },
+    'filters.state' () { this.reloadWithdrawalsThrottled() },
+    'filters.pendingTasks' () { this.reloadWithdrawalsThrottled() },
   },
 
   methods: {
@@ -217,7 +199,7 @@ export default {
           filter: clearObject({
             requestor: Vue.params.MASTER_ACCOUNT,
             state: this.filters.state,
-            pending_tasks: /^\d+$/.test(this.filters.pendingTasks)
+            'pending_tasks': /^\d+$/.test(this.filters.pendingTasks)
               ? this.filters.pendingTasks
               : null,
           }),

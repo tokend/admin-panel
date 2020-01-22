@@ -16,17 +16,15 @@
         target="_blank"
         href="https://itunes.apple.com/app/google-authenticator/id388497605?mt=8"
       >
-        <i class="mdi mdi-apple g-auth__icon" /><span>{{
-          "g-auth.ios" | globalize
-        }}</span>
+        <i class="mdi mdi-apple g-auth__icon" />
+        <span>{{ "g-auth.ios" | globalize }}</span>
       </a>
       <a
         target="_blank"
         href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2"
       >
-        <i class="mdi mdi-android g-auth__icon" /><span>{{
-          "g-auth.android" | globalize
-        }}</span>
+        <i class="mdi mdi-android g-auth__icon" />
+        <span>{{ "g-auth.android" | globalize }}</span>
       </a>
     </p>
 

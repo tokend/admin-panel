@@ -1,5 +1,8 @@
 <template>
-  <form class="fee-form app-list__li" @submit.prevent="updateFee">
+  <form
+    class="fee-form app-list__li"
+    @submit.prevent="updateFee"
+  >
     <span class="fee-form__cell app-list__cell">
       <input-field
         type="number"
@@ -8,12 +11,10 @@
         :disabled="formMixin.isDisabled || fee.exists"
         v-model="form.lowerBound"
         @blur="touchField('form.lowerBound')"
-        :error-message="
-          getFieldErrorMessage('form.lowerBound', {
-            minValue: 0,
-            maxValue: form.upperBound
-          })
-        "
+        :error-message="getFieldErrorMessage(
+          'form.lowerBound',
+          { minValue: 0, maxValue: form.upperBound }
+        )"
       />
     </span>
 
@@ -26,12 +27,10 @@
         :disabled="formMixin.isDisabled || fee.exists"
         v-model="form.upperBound"
         @blur="touchField('form.upperBound')"
-        :error-message="
-          getFieldErrorMessage('form.upperBound', {
-            minValue: form.lowerBound,
-            maxValue: DEFAULT_MAX_AMOUNT
-          })
-        "
+        :error-message="getFieldErrorMessage(
+          'form.upperBound',
+          { minValue: form.lowerBound, maxValue: DEFAULT_MAX_AMOUNT }
+        )"
       />
       <button
         v-if="!fee.exists"
@@ -53,13 +52,17 @@
         :disabled="formMixin.isDisabled"
         v-model="form.percent"
         @blur="touchField('form.percent')"
-        :error-message="
-          getFieldErrorMessage('form.percent', { minValue: 0, maxValue: 100 })
-        "
+        :error-message="getFieldErrorMessage(
+          'form.percent',
+          { minValue: 0, maxValue: 100 }
+        )"
       />
     </span>
 
-    <span class="fee-form__cell app-list__cell" v-if="canSetFixedFee">
+    <span
+      class="fee-form__cell app-list__cell"
+      v-if="canSetFixedFee"
+    >
       <input-field
         type="number"
         min="0"
@@ -67,12 +70,10 @@
         :disabled="formMixin.isDisabled"
         v-model="form.fixed"
         @blur="touchField('form.fixed')"
-        :error-message="
-          getFieldErrorMessage('form.fixed', {
-            minValue: 0,
-            maxValue: DEFAULT_MAX_AMOUNT
-          })
-        "
+        :error-message="getFieldErrorMessage(
+          'form.fixed',
+          { minValue: 0, maxValue: DEFAULT_MAX_AMOUNT }
+        )"
       />
     </span>
 
@@ -187,11 +188,9 @@ export default {
 
   computed: {
     canSetFixedFee () {
-      return (
-        Number(this.fee.feeType) !== FEE_TYPES.offerFee &&
+      return Number(this.fee.feeType) !== FEE_TYPES.offerFee &&
         Number(this.fee.feeType) !== FEE_TYPES.capitalDeploymentFee &&
         Number(this.fee.feeType) !== FEE_TYPES.investFee
-      )
     },
   },
 

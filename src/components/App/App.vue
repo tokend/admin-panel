@@ -1,5 +1,8 @@
 <template>
-  <div id="app" :key="lang">
+  <div
+    id="app"
+    :key="lang"
+  >
     <status-message />
 
     <template v-if="isAppInitialized">

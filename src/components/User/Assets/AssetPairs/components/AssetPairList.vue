@@ -8,7 +8,7 @@
           </span>
 
           <span class="app-list__cell app-list__cell--right">
-            {{ "asset-pair-list.prise" | globalize }}
+            {{ "asset-pair-list.price" | globalize }}
           </span>
 
           <span class="app-list__cell app-list__cell--right">
@@ -37,9 +37,7 @@
           </span>
 
           <!-- eslint-disable-next-line max-len -->
-          <span
-            class="app-list__cell app-list__cell--policy app-list__cell--right"
-          >
+          <span class="app-list__cell app-list__cell--policy app-list__cell--right">
             {{ item.policies.value }}
             <span class="asset-pair__policy-tip">
               <i class="mdi mdi-help-circle asset-pairs__tip-icon" />

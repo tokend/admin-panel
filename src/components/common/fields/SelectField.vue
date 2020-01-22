@@ -16,7 +16,8 @@
         class="select-field__default-option"
         :selected="!value"
         v-if="emptyText"
-        disabled>
+        disabled
+      >
         {{ emptyText }}
       </option>
       <slot />
@@ -26,7 +27,16 @@
       <!-- css art -->
     </div>
 
-    <span class="select-field__label">
+    <span
+      class="select-field__label"
+      v-if="label=='select-field.label'"
+    >
+      {{ label | globalize }}
+    </span>
+    <span
+      class="select-field__label"
+      v-else
+    >
       {{ label }}
     </span>
 
@@ -40,11 +50,9 @@
 
 <script>
 
-import { globalize } from '@/components/App/filters/filters'
-
 export default {
   props: {
-    label: { type: String, default: globalize('select-field.label') },
+    label: { type: String, default: 'select-field.label' },
     // eslint-disable-next-line vue/require-prop-types
     value: { default: false },
     errorMessage: { type: String, default: undefined },
@@ -57,7 +65,6 @@ export default {
     title: { type: [String, Number], default: undefined },
     required: { type: Boolean, default: true },
   },
-
   methods: {
     onChange (event) {
       this.$emit('input', event.target.value)

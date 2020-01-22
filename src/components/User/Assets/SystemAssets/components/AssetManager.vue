@@ -184,8 +184,9 @@
         <tick-field
           class="app__form-field"
           v-model="asset.policies.value"
-          :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.transferable]
-            | globalize"
+          :label="
+            ASSET_POLICIES_VERBOSE[ASSET_POLICIES.transferable]| globalize
+          "
           :cb-value="ASSET_POLICIES.transferable"
           :disabled="formMixin.isDisabled"
         />
@@ -195,8 +196,9 @@
         <tick-field
           class="app__form-field"
           v-model="asset.policies.value"
-          :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.baseAsset]
-            | globalize"
+          :label="
+            ASSET_POLICIES_VERBOSE[ASSET_POLICIES.baseAsset] | globalize
+          "
           :cb-value="ASSET_POLICIES.baseAsset"
           :disabled="formMixin.isDisabled"
         />
@@ -206,8 +208,9 @@
         <tick-field
           class="app__form-field"
           v-model="asset.policies.value"
-          :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.statsQuoteAsset]
-            | globalize"
+          :label="
+            ASSET_POLICIES_VERBOSE[ASSET_POLICIES.statsQuoteAsset] | globalize
+          "
           :cb-value="ASSET_POLICIES.statsQuoteAsset"
           :disabled="formMixin.isDisabled"
         />
@@ -217,8 +220,9 @@
         <tick-field
           class="app__form-field"
           v-model="asset.policies.value"
-          :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.withdrawable]
-            | globalize"
+          :label="
+            ASSET_POLICIES_VERBOSE[ASSET_POLICIES.withdrawable] | globalize
+          "
           :cb-value="ASSET_POLICIES.withdrawable"
           :disabled="formMixin.isDisabled"
         />
@@ -229,8 +233,7 @@
         <tick-field
           class="app__form-field"
           v-model="asset.policies.value"
-          :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.issuanceManualReviewRequired]
-            | globalize"
+          :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.issuanceManualReviewRequired] | globalize"
           :cb-value="ASSET_POLICIES.issuanceManualReviewRequired"
           :disabled="formMixin.isDisabled"
         />
@@ -241,8 +244,10 @@
         <tick-field
           class="app__form-field"
           v-model="asset.policies.value"
-          :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.canBeBaseInAtomicSwap]
-            | globalize"
+          :label="
+            // eslint-disable-next-line max-len
+            ASSET_POLICIES_VERBOSE[ASSET_POLICIES.canBeBaseInAtomicSwap] | globalize
+          "
           :cb-value="ASSET_POLICIES.canBeBaseInAtomicSwap"
           :disabled="formMixin.isDisabled"
         />
@@ -252,8 +257,9 @@
         <tick-field
           class="app__form-field"
           v-model="asset.policies.value"
-          :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.canBeQuoteInAtomicSwap]
-            | globalize"
+          :label="
+            // eslint-disable-next-line max-len
+            ASSET_POLICIES_VERBOSE[ASSET_POLICIES.canBeQuoteInAtomicSwap] | globalize"
           :cb-value="ASSET_POLICIES.canBeQuoteInAtomicSwap"
           :disabled="formMixin.isDisabled"
         />
@@ -439,7 +445,9 @@
           <span v-if="isExistingAsset">
             {{ "asset-manager.btn-update-asset" | globalize }}
           </span>
-          <span v-else>{{ "asset-manager.btn-create-asset" | globalize }}</span>
+          <span v-else>
+            {{ "asset-manager.btn-create-asset" | globalize }}
+          </span>
         </button>
       </div>
     </form>

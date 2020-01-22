@@ -311,7 +311,7 @@ export default {
       if (await confirmAction()) {
         try {
           await apiHelper.requests.approve(this.request)
-          Bus.success('poll-request-view.sale-request-approved.')
+          Bus.success('poll-request-view.sale-request-approved')
           this.$router.push({ name: 'polls.requests' })
         } catch (error) {
           ErrorHandler.process(error)

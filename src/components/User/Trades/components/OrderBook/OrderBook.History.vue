@@ -7,7 +7,7 @@
           <table class="order-book-history__table">
             <thead>
               <tr>
-                <th>{{ "order-book-history.thead-prise" | globalize }}</th>
+                <th>{{ "order-book-history.thead-price" | globalize }}</th>
                 <th>{{ "order-book-history.thead-amount" | globalize }}</th>
                 <th>{{ "order-book-history.thead-total-cost" | globalize }}</th>
                 <th>{{ "order-book-history.thead-date" | globalize }}</th>
@@ -73,7 +73,7 @@
           />
         </li>
         <li>
-          <span>{{ "order-book-history.prise" | globalize }}</span>
+          <span>{{ "order-book-history.price" | globalize }}</span>
           <asset-amount-formatter
             :amount="itemDetails.price"
             :asset="quoteAsset"

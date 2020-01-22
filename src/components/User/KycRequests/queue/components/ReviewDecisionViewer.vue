@@ -4,12 +4,12 @@
       v-if="decision.state === DECISION_STATES.error"
       class="review-decision-viewer__error"
     >
-      <strong>{{ "review-decision-viewer.error" }}</strong>
+      <strong>{{ "review-decision-viewer.error" | globalize }}</strong>
       {{ decision.errorMessage }}
     </p>
 
     <p class="review-decision-viewer__item">
-      <strong>{{ "review-decision-viewer.action" }}</strong>
+      <strong>{{ "review-decision-viewer.action" | globalize }}</strong>
       <span :title="decision.action">
         {{ decision.action }}
       </span>
@@ -19,7 +19,7 @@
       v-if="decision.reason"
       class="review-decision-viewer__item"
     >
-      <strong>{{ "review-decision-viewer.reason" }}</strong>
+      <strong>{{ "review-decision-viewer.reason" | globalize }}</strong>
       <span :title="decision.reason">
         {{ decision.reason }}
       </span>

@@ -18,7 +18,9 @@
       </div>
 
       <div class="fees-balances__withdrawals-wrp">
-        <collected-fees-withdrawals :ref="REFS.collectedFeesWithdrawals" />
+        <collected-fees-withdrawals
+          :ref="REFS.collectedFeesWithdrawals"
+        />
       </div>
     </template>
 

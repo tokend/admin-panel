@@ -5,7 +5,10 @@
         {{ "seed-login.header" | globalize }}
       </h2>
 
-      <form @submit.prevent="seedLogin" novalidate>
+      <form
+        @submit.prevent="seedLogin"
+        novalidate
+      >
         <div class="app__form-row">
           <input-field
             class="app__form-field"
@@ -20,7 +23,10 @@
         </div>
 
         <div class="app__form-actions">
-          <button class="app__btn" :disabled="formMixin.isDisabled">
+          <button
+            class="app__btn"
+            :disabled="formMixin.isDisabled"
+          >
             {{ "seed-login.btn-sign-in" | globalize }}
           </button>
         </div>

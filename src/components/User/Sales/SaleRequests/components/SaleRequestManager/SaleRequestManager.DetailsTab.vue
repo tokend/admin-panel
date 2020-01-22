@@ -75,18 +75,24 @@
             <span>{{ request.asset.id }}</span>
           </li>
           <li>
-            <!-- eslint-disable-next-line max-len -->
-            <span>{{ "sale-request-manager-details-tab.initial-preissued-amount" | globalize }}</span>
+            <span>
+              <!-- eslint-disable-next-line max-len -->
+              {{ "sale-request-manager-details-tab.initial-preissued-amount" | globalize }}
+            </span>
             <asset-amount-formatter :amount="request.asset.maxIssuanceAmount" />
           </li>
           <li>
-            <!-- eslint-disable-next-line max-len -->
-            <span>{{ "sale-request-manager-details-tab.max-issuance-amount" | globalize }}</span>
+            <span>
+              <!-- eslint-disable-next-line max-len -->
+              {{ "sale-request-manager-details-tab.max-issuance-amount" | globalize }}
+            </span>
             <asset-amount-formatter :amount="request.asset.maxIssuanceAmount" />
           </li>
           <li>
-            <!-- eslint-disable-next-line max-len -->
-            <span>{{ "sale-request-manager-details-tab.preissuance-signer" | globalize }}</span>
+            <span>
+              <!-- eslint-disable-next-line max-len -->
+              {{ "sale-request-manager-details-tab.preissuance-signer" | globalize }}
+            </span>
             <email-getter
               :account-id="request.asset.preIssuanceAssetSigner"
               is-titled

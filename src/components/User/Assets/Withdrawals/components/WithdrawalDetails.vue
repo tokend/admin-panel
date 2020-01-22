@@ -65,10 +65,8 @@
       <li>
         <span>{{ "withdrawal-details.total-fee" | globalize }}</span>
         <asset-amount-formatter
-          :amount="
-            Number(request.requestDetails.fee.fixed) +
-              Number(request.requestDetails.fee.calculatedPercent)
-          "
+          :amount="Number(request.requestDetails.fee.fixed) +
+            Number(request.requestDetails.fee.calculatedPercent)"
           :asset="request.requestDetails.asset.id"
         />
       </li>
@@ -107,11 +105,10 @@
             v-model="rejectForm.reason"
             :disabled="formMixin.isDisabled"
             @blur="touchField('rejectForm.reason')"
-            :error-message="
-              getFieldErrorMessage('rejectForm.reason', {
-                maxLength: REJECT_REASON_MAX_LENGTH
-              })
-            "
+            :error-message="getFieldErrorMessage(
+              'rejectForm.reason',
+              { maxLength: REJECT_REASON_MAX_LENGTH }
+            )"
           />
         </div>
       </form>
@@ -196,10 +193,8 @@ export default {
   computed: {
     ...mapGetters({ userAddress: getters.GET_USER_ADDRESS }),
     reviewAllowed () {
-      return (
-        this.request.stateI === REQUEST_STATES.pending &&
+      return this.request.stateI === REQUEST_STATES.pending &&
         this.userAddress === this.request.reviewer.id
-      )
     },
   },
 

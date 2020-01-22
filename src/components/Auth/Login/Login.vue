@@ -1,6 +1,9 @@
 <template>
   <div class="login">
-    <div class="login__block app__block" v-if="state === 'login'">
+    <div
+      class="login__block app__block"
+      v-if="state === 'login'"
+    >
       <h2 class="login__heading">
         {{ "login.header" | globalize }}
       </h2>
@@ -8,7 +11,8 @@
       <form
         @submit.prevent="login"
         :id="`${_uid}-login-form`"
-        novalidate>
+        novalidate
+      >
         <div class="app__form-row">
           <input-field
             class="app__form-field"
@@ -36,7 +40,10 @@
         </div>
 
         <div class="app__form-actions">
-          <button class="app__btn" :disabled="formMixin.isDisabled">
+          <button
+            class="app__btn"
+            :disabled="formMixin.isDisabled"
+          >
             {{ "login.btn-sign-in" | globalize }}
           </button>
         </div>
@@ -52,7 +59,10 @@
       </template>
     </div>
 
-    <div class="login__block app__block" v-else-if="state === 'tfa'">
+    <div
+      class="login__block app__block"
+      v-else-if="state === 'tfa'"
+    >
       <g-auth @tfa-done="redirect" />
     </div>
 

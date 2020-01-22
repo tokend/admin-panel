@@ -23,8 +23,10 @@
               />
             </li>
             <li>
-              <!-- eslint-disable-next-line max-len -->
-              <span>{{ "sale-manager-details-tab.preissued-asset-signer" | globalize }}</span>
+              <span>
+                <!-- eslint-disable-next-line max-len -->
+                {{ "sale-manager-details-tab.preissued-asset-signer" | globalize }}
+              </span>
               <email-getter
                 :account-id="asset.preIssuanceAssetSigner"
                 is-titled
@@ -73,18 +75,22 @@
               v-if="get(asset, 'details.stellar.assetCode')"
             >
               <li>
-                <!-- eslint-disable-next-line max-len -->
-                <span>{{ "sale-manager-details-tab.no-document" | globalize }}</span>
+                <span>
+                  {{ "sale-manager-details-tab.no-document" | globalize }}
+                </span>
                 <span>{{ asset.details.stellar.assetCode }}</span>
               </li>
               <li>
-                <!-- eslint-disable-next-line max-len -->
-                <span>{{ "sale-manager-details-tab.stellar-asset-type" | globalize }}</span>
+                <span>
+                  <!-- eslint-disable-next-line max-len -->
+                  {{ "sale-manager-details-tab.stellar-asset-type" | globalize }}
+                </span>
                 <span>{{ stellarAssetType }}</span>
               </li>
               <li>
-                <!-- eslint-disable-next-line max-len -->
-                <span>{{ "sale-manager-details-tab.stellar-withdraw" | globalize }}</span>
+                <span>
+                  {{ "sale-manager-details-tab.stellar-withdraw" | globalize }}
+                </span>
                 <span v-if="asset.details.stellar.withdraw">
                   {{ "sale-manager-details-tab.yes" | globalize }}
                 </span>
@@ -93,8 +99,9 @@
                 </span>
               </li>
               <li>
-                <!-- eslint-disable-next-line max-len -->
-                <span>{{ "sale-manager-details-tab.stellar-deposit" | globalize }}</span>
+                <span>
+                  {{ "sale-manager-details-tab.stellar-deposit" | globalize }}
+                </span>
                 <span v-if="asset.details.stellar.deposit">
                   {{ "sale-manager-details-tab.yes" | globalize }}
                 </span>
@@ -215,7 +222,7 @@
           </label>
           <li>
             <span>
-              {{ "sale-manager-details-tab.prise-per-sale" | globalize }}
+              {{ "sale-manager-details-tab.price-per-sale" | globalize }}
             </span>
             <asset-amount-formatter :amount="item.price" />
           </li>
@@ -227,14 +234,14 @@
           </li>
           <li>
             <!-- eslint-disable-next-line max-len -->
-            <span :title="`Current cap + current caps of the other acceptable assets in the ${item.asset.id} equivalent`">
+            <span :title="'sale-manager-details-tab.title-assets-equivalent' | globalize">
               {{ "sale-manager-details-tab.total-current-cap" | globalize }}
             </span>
             <asset-amount-formatter :amount="item.totalCurrentCap" />
           </li>
           <li>
             <!-- eslint-disable-next-line max-len -->
-            <span :title="`Hard cap of the sale in the ${item.asset.id} equivalent`">
+            <span :title="'sale-manager-details-tab.title-hard-cup-equivalent' | globalize">
               {{ "sale-manager-details-tab.hard-cap" | globalize }}
             </span>
             <asset-amount-formatter :amount="item.hardCap" />

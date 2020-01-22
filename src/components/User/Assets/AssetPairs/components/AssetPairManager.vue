@@ -5,12 +5,12 @@
         @submit.prevent="isFormValid('priceForm') && showConfirmation()"
         class="asset-pair-manager__form app__block"
       >
-        <h2>{{ "asset-pair-manager.update-pair-prise" | globalize }}</h2>
+        <h2>{{ "asset-pair-manager.update-pair-price" | globalize }}</h2>
 
         <div class="asset-pair-manager__form-row app__form-row">
           <input-field
             class="app__form-field"
-            :label="'asset-pair-manager.lbl-prise' | globalize"
+            :label="'asset-pair-manager.lbl-price' | globalize"
             type="number"
             :min="DEFAULT_INPUT_MIN"
             :step="DEFAULT_INPUT_STEP"
@@ -65,23 +65,21 @@
             :step="DEFAULT_INPUT_STEP"
             v-model="attributesForm.physicalPriceCorrection"
             @blur="touchField('attributesForm.physicalPriceCorrection')"
-            :error-message="
-              getFieldErrorMessage('attributesForm.physicalPriceCorrection', {
-                minValue: 0,
-                maxValue: DEFAULT_MAX_AMOUNT
-              })
-            "
+            :error-message="getFieldErrorMessage(
+              'attributesForm.physicalPriceCorrection',
+              { minValue: 0, maxValue: DEFAULT_MAX_AMOUNT }
+            )"
             :disabled="formMixin.isDisabled"
           >
             <template slot="help">
               <p class="asset-pair-manager__tip-message">
                 <span>
-                  {{ "asset-pair-manager.correct-physical-prise" | globalize }}
+                  {{ "asset-pair-manager.correct-physical-price" | globalize }}
                 </span>
-                <strong>{{
-                  // eslint-disable-next-line max-len
-                  "asset-pair-manager.correct-physical-prise-formula" | globalize
-                }}</strong>
+                <strong>
+                  <!-- eslint-disable-next-line max-len -->
+                  {{ "asset-pair-manager.correct-physical-price-formula" | globalize }}
+                </strong>
               </p>
             </template>
           </input-field>
@@ -97,26 +95,20 @@
             :step="DEFAULT_INPUT_STEP"
             v-model="attributesForm.maxPriceStep"
             @blur="touchField('attributesForm.maxPriceStep')"
-            :error-message="
-              getFieldErrorMessage('attributesForm.maxPriceStep', {
-                minValue: 0,
-                maxValue: 100
-              })
-            "
+            :error-message="getFieldErrorMessage(
+              'attributesForm.maxPriceStep',
+              { minValue: 0, maxValue: 100 }
+            )"
             :disabled="formMixin.isDisabled"
           >
             <template slot="help">
               <p class="asset-pair-manager__tip-message">
                 <span>
-                  {{
-                    "asset-pair-manager.max-offer-price"
-                      | globalize
-                  }}</span
-                  >
-                <strong>{{
-                  "asset-pair-manager.max-offer-price-formula"
-                    | globalize
-                }}</strong>
+                  {{ "asset-pair-manager.max-offer-price" | globalize }}
+                </span>
+                <strong>
+                  {{ "asset-pair-manager.max-offer-price-formula" | globalize }}
+                </strong>
               </p>
             </template>
           </input-field>
@@ -133,10 +125,7 @@
           >
             <template slot="help">
               <span class="asset-pair-manager__tip-message">
-                {{
-                  "asset-pair-manager.allow-trade"
-                    | globalize
-                }}
+                {{ "asset-pair-manager.allow-trade" | globalize }}
               </span>
             </template>
           </tick-field>
@@ -151,10 +140,7 @@
           >
             <template slot="help">
               <span class="asset-pair-manager__tip-message">
-                {{
-                  // eslint-disable-next-line max-len
-                  "asset-pair-manager.message-condition" | globalize
-                }}
+                {{ "asset-pair-manager.message-condition" | globalize }}
               </span>
             </template>
           </tick-field>
@@ -170,17 +156,13 @@
             <template slot="help">
               <p class="asset-pair-manager__tip-message">
                 <span>
-                  {{
-                    "asset-pair-manager.message-condition-interval"
-                      | globalize
-                  }}
+                  <!-- eslint-disable-next-line max-len -->
+                  {{ "asset-pair-manager.message-condition-interval" | globalize }}
                 </span>
                 <strong>
-                  {{
-                    "asset-pair-manager.message-condition-formula"
-                      | globalize
-                  }}</strong
-                >
+                  <!-- eslint-disable-next-line max-len -->
+                  {{ "asset-pair-manager.message-condition-formula" | globalize }}
+                </strong>
               </p>
             </template>
           </tick-field>
@@ -303,12 +285,11 @@ export default {
   async created () {
     await this.getPair()
     this.priceForm.price = this.pair.physicalPrice
-    // eslint-disable-next-line max-len
-    this.attributesForm.physicalPriceCorrection = this.pair.physicalPriceCorrection
+    this.attributesForm.physicalPriceCorrection =
+      this.pair.physicalPriceCorrection
     this.attributesForm.maxPriceStep = this.pair.maxPriceStep
-    this.attributesForm.policies = this.pair.policies.map(
-      policy => policy.value
-    )
+    this.attributesForm.policies = this.pair
+      .policies.map(policy => policy.value)
   },
 
   methods: {
@@ -326,16 +307,14 @@ export default {
 
     async updatePrice () {
       this.pair.physicalPrice = this.priceForm.price
-      this.pair.policies = this.attributesForm.policies.reduce(
-        (sum, policy) => sum | policy,
-        0
-      )
+      this.pair.policies = this.attributesForm.policies
+        .reduce((sum, policy) => sum | policy, 0)
       this.submit({ updatePrice: true })
     },
 
     async updateAttributes () {
-      // eslint-disable-next-line max-len
-      this.pair.physicalPriceCorrection = this.attributesForm.physicalPriceCorrection
+      this.pair.physicalPriceCorrection =
+        this.attributesForm.physicalPriceCorrection
       this.pair.maxPriceStep = this.attributesForm.maxPriceStep
 
       this.pair.policies = this.attributesForm.policies.reduce(

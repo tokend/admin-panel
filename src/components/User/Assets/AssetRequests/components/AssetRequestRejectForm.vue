@@ -13,18 +13,17 @@
     <form
       @submit.prevent="reject"
       id="trrf-form"
-      novalidate>
+      novalidate
+    >
       <div class="app__form-row">
         <text-field
           :label="'asset-request-reject-form.lbl-reject-reason' | globalize"
           v-model="form.rejectReason"
           :disabled="formMixin.isDisabled"
           @blur="touchField('form.rejectReason')"
-          :error-message="
-            getFieldErrorMessage('form.rejectReason', {
-              maxLength: REJECT_REASON_MAX_LENGTH
-            })
-          "
+          :error-message="getFieldErrorMessage('form.rejectReason', {
+            maxLength: REJECT_REASON_MAX_LENGTH
+          })"
           rows="5"
         />
       </div>
@@ -100,10 +99,8 @@ export default {
 
       this.disableForm()
       try {
-        await this.assetRequest.reject(
-          this.form.rejectReason,
-          this.isPermanentReject
-        )
+        await this.assetRequest
+          .reject(this.form.rejectReason, this.isPermanentReject)
         Bus.success('asset-request-reject-form.request-rejected')
         this.$router.push({ name: 'assets' })
       } catch (err) {

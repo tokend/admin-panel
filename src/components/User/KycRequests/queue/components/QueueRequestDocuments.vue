@@ -44,8 +44,9 @@
         v-if="documents.kycIdDocument && documents.kycIdDocument.back"
         class="queue-request-documents__list-item"
       >
-        <!-- eslint-disable-next-line max-len -->
-        <span>{{ "queue-request-documents.id-document-back-side" | globalize }}</span>
+        <span>
+          {{ "queue-request-documents.id-document-back-side" | globalize }}
+        </span>
         <user-doc-getter
           class="queue-request-documents__doc-getter"
           :file-key="documents.kycIdDocument.back.key"

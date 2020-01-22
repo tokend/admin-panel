@@ -27,15 +27,15 @@
             {{ "sale-request-list.perm-rejected" | globalize }}
           </option>
         </select-field>
-        <!-- eslint-disable -->
         <input-field
           class="app-list-filters__field sale-rl__requestor-filter"
           :label="'sale-request-list.lbl-requestor' | globalize"
-          :placeholder="'sale-request-list.placeholder-address-or-email' | globalize"
+          :placeholder="
+            'sale-request-list.placeholder-address-or-email' | globalize
+          "
           v-model="filters.requestor"
           autocomplete-type="email"
         />
-        <!-- eslint-enable -->
       </div>
     </div>
 

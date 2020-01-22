@@ -16,14 +16,16 @@
       <label
         class="tick-field__label"
         :for="id"
-        :title="title">
-        {{ label | globalize }}
+        :title="title"
+      >
+        {{ label }}
       </label>
 
       <span
         class="tick-field__tick"
         :for="id"
-        :title="title">
+        :title="title"
+      >
         <!-- css art -->
       </span>
     </div>
@@ -41,9 +43,10 @@
 </template>
 
 <script>
+import { globalize } from '@/components/App/filters/filters'
 export default {
   props: {
-    label: { type: String, default: 'tick-field".label' },
+    label: { type: String, default: globalize('tick-field".label') },
     value: { type: [String, Number, Array, Boolean], default: false },
 
     // proxies

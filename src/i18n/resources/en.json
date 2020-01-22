@@ -566,26 +566,26 @@
     "asset-pair-creator": {
       "create-pair": "Create asset pair",
       "message": "The correction of physical price in percents. If physical price and restriction by physical price are set, minimum price for this pair offer will be",
-      "message-prise": "physicalPrice * physicalPriceCorrection",
+      "message-price": "physicalPrice * physicalPriceCorrection",
       "message-offer": "Maximum offer price step in percents. If current price restriction is set, the users are allowed to set an offer with price in interval",
       "message-offer-price": "(1 ± maxPriceStep) * currentPrice",
       "asset-pair-message-trade": "Allowed to trade this pair on secondary market",
       "asset-pair-message-new-offer": "If set, then prices for new offers must be greater than physical price with correction",
-      "asset-pair-message-prise-interval": "If set, then price for new offers must be in interval of",
-      "asset-pair-message-prise": "(1 ± maxPriceStep) * currentPrice",
+      "asset-pair-message-price-interval": "If set, then price for new offers must be in interval of",
+      "asset-pair-message-price": "(1 ± maxPriceStep) * currentPrice",
       "asset-pair-create-btn": "Create",
       "lbl-base": "Base",
       "lbl-quote": "Quote",
-      "lbl-prise": "Prise",
+      "lbl-price": "Price",
       "lbl-price-correction": "Physical price correction",
-      "lbl-max-prise-step": "Max price step (0-100%)",
+      "lbl-max-price-step": "Max price step (0-100%)",
       "lbl-is-tradable": "Is tradable",
       "lbl-physical-restriction": "Physical price restriction",
       "lbl-current-restriction": "Current price restriction",
       "pair-created": "Pair has been created."
     },
     "asset-pair-list": {
-      "prise": "Price",
+      "price": "Price",
       "policy": "Policy",
       "no-policy": "No policies for this pair",
       "nothing-here-yet": "Nothing here yet",
@@ -593,11 +593,11 @@
       "loading": "Loading..."
     },
     "asset-pair-manager": {
-      "update-pair-prise": "Update {{ base }}/{{ quote }} pair price",
+      "update-pair-price": "Update {{ base }}/{{ quote }} pair price",
       "btn-update": "Update",
       "update-pair-attributes": "Update {{ base }}/{{ quote }} pair attributes",
-      "correct-physical-prise": " The correction of physical price in percents. If physical price and restriction by physical price are set, minimum price for this pair offer will be",
-      "correct-physical-prise-formula": "physicalPrice * physicalPriceCorrection",
+      "correct-physical-price": " The correction of physical price in percents. If physical price and restriction by physical price are set, minimum price for this pair offer will be",
+      "correct-physical-price-formula": "physicalPrice * physicalPriceCorrection",
       "max-offer-price": "Maximum offer price step in percents. If current price restriction is set, the users are allowed to set an offer with price in interval",
       "max-offer-price-formula": "(1 ± maxPriceStep) * currentPrice",
       "allow-trade": "Allowed to trade this pair on secondary market",
@@ -615,7 +615,7 @@
       "msg-sure": "Sure?",
       "pair-updated": "Pair has been updated.",
       "asset-pair-removed": "Asset pair was successfully removed",
-      "lbl-prise": "Price ({{pair.quote}})",
+      "lbl-price": "Price ({{pair.quote}})",
       "yes": "Yes",
       "no": "No"
     },
@@ -1388,7 +1388,6 @@
       "end-time": "End time",
       "yes": "Yes",
       "no": "No",
-      "prise": "Price (per {{ sale.baseAsset.id }})",
       "current-cap": "Current cap",
       "total-current-cap": "Total current cap",
       "hard-cap": "Hard cap",
@@ -1398,7 +1397,9 @@
       "short-description": "Short description",
       "sale-logo": "Sale logo",
       "progress": "progress",
-      "prise-per-sale": "Price (per {{ sale.baseAsset.id }})"
+      "price-per-sale": "Price (per {{ sale.baseAsset.id }})",
+      "title-assets-equivalent": "Current cap + current caps of the other acceptable assets in the {{item.asset.id}} equivalent",
+      "title-hard-cup-equivalent": "Hard cap of the sale in the {{item.asset.id}} equivalent"
     },
     "sale-manager-syndicate-tab": {
       "label": "Corporate user details",
@@ -1435,7 +1436,7 @@
       "select-field-cancelled": "Cancelled",
       "basic": "Basic",
       "crowdfunding": "Crowdfunding",
-      "fixed-prise": "Fixed price",
+      "fixed-price": "Fixed price",
       "immediate": "Immediate",
       "name": "Name",
       "state": "State",
@@ -1530,7 +1531,7 @@
     },
     "order-book-history": {
       "header": "Trade history",
-      "thead-prise": "Price ({{ quoteAsset }})",
+      "thead-price": "Price ({{ quoteAsset }})",
       "thead-amount": "Amount ({{ baseAsset }})",
       "thead-total-cost": "Total cost ({{ quoteAsset }})",
       "thead-date": "Date",
@@ -1538,7 +1539,7 @@
       "deal-details": "Deal details",
       "deal-id": "Deal ID",
       "amount": "Amount",
-      "prise": "Prise",
+      "price": "Price",
       "date": "Date"
     },
     "order-book-table": {
@@ -1547,7 +1548,7 @@
       "summary": "Summary ({{ quoteAsset }})",
       "volume": "Volume ({{ quoteAsset }})",
       "amount": "Amount ({{ baseAsset }})",
-      "prise": "Price ({{ quoteAsset }})",
+      "price": "Price ({{ quoteAsset }})",
       "no-data": "No data yet",
       "offer-details": "Offer details",
       "id": "ID",
@@ -1557,12 +1558,12 @@
       "offered-at": "Offered at",
       "offerer": "Offerer",
       "offered-amount": "Offered amount",
-      "prise-per-item-details-asset-code": "Price per {{ itemDetails.baseAssetCode }}",
-      "total-prise": "Total prise"
+      "price-per-item-details-asset-code": "Price per {{ itemDetails.baseAssetCode }}",
+      "total-price": "Total price"
     },
     "price-chart-fetcher": {
       "no-chart-data-yet": "No chart data yet",
-      "error-fetch": "An error occurred while fetching asset. Please try again later.",
+      "error-fetch": "An error occurred while fetching asset.\nPlease try again later.",
       "fetching-chart-data": "Fetching chart data..."
     },
     "price-chart-scale-picker": {

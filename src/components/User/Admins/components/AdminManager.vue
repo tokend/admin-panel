@@ -124,7 +124,9 @@
               <span v-if="addNew">
                 {{ "admin-manager.btn-add" | globalize }}
               </span>
-              <span v-else>{{ "admin-manager.btn-upd" | globalize }}</span>
+              <span v-else>
+                {{ "admin-manager.btn-upd" | globalize }}
+              </span>
             </button>
 
             <button
