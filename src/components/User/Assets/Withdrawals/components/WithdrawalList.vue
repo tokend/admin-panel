@@ -221,10 +221,9 @@ export default {
       this.isNoMoreEntries = false
       let response = {}
       try {
-        const requestor =
-          await this.getRequestorAccountId(
-            this.filters.requestor
-          )
+        const requestor = await this.getRequestorAccountId(
+          this.filters.requestor
+        )
         response = await api.getWithSignature('/v3/create_withdraw_requests', {
           filter: {
             state: this.filters.state,

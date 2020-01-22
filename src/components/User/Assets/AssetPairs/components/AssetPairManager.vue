@@ -285,11 +285,12 @@ export default {
   async created () {
     await this.getPair()
     this.priceForm.price = this.pair.physicalPrice
-    this.attributesForm.physicalPriceCorrection =
-      this.pair.physicalPriceCorrection
+    // eslint-disable-next-line max-len
+    this.attributesForm.physicalPriceCorrection = this.pair.physicalPriceCorrection
     this.attributesForm.maxPriceStep = this.pair.maxPriceStep
-    this.attributesForm.policies = this.pair
-      .policies.map(policy => policy.value)
+    this.attributesForm.policies = this.pair.policies.map(
+      policy => policy.value
+    )
   },
 
   methods: {
@@ -313,8 +314,8 @@ export default {
     },
 
     async updateAttributes () {
-      this.pair.physicalPriceCorrection =
-        this.attributesForm.physicalPriceCorrection
+      // eslint-disable-next-line max-len
+      this.pair.physicalPriceCorrection = this.attributesForm.physicalPriceCorrection
       this.pair.maxPriceStep = this.attributesForm.maxPriceStep
 
       this.pair.policies = this.attributesForm.policies.reduce(

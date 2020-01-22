@@ -1740,10 +1740,6 @@
     "select-field": {
       "label": "Label"
     },
-    "text-field": {
-      "label": "Label",
-      "off": "off"
-    },
     "tick-field": {
       "label": "Label"
     },
