@@ -51,7 +51,7 @@
                 </td>
                 <td>
                   <span>
-                    {{ item.createdAt | formatDateDMYT }}
+                    {{ item.createdAt | formatDate }}
                   </span>
                 </td>
               </tr>
@@ -96,7 +96,7 @@
         <li>
           <span>{{ "order-book-history.date" | globalize }}</span>
           <span>
-            {{ itemDetails.createdAt | formatDateDMYT }}
+            {{ itemDetails.createdAt | formatDate }}
           </span>
         </li>
       </ul>

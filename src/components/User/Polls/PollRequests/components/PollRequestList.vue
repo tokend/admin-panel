@@ -62,7 +62,7 @@
               {{ item.id }}
             </span>
             <span>
-              {{ item.requestDetails.startTime | formatDateDMYT }}
+              {{ item.requestDetails.startTime | formatDate }}
             </span>
             <span
               class="app-list__cell"

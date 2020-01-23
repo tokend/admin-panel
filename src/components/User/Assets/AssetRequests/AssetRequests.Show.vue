@@ -237,7 +237,7 @@
           {{ "asset-requests-show.creation-data" | globalize }}
         </span>
         <span>
-          {{ assetRequest.creationDate | formatDateDMYT }}
+          {{ assetRequest.creationDate | formatDate }}
         </span>
       </div>
 
@@ -246,7 +246,7 @@
           {{ "asset-requests-show.update-data" | globalize }}
         </span>
         <span>
-          {{ assetRequest.updateDate | formatDateDMYT }}
+          {{ assetRequest.updateDate | formatDate }}
         </span>
       </div>
 

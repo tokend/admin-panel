@@ -64,7 +64,7 @@
             @click="itemToShow = item"
           >
             <span>
-              {{ item.createdAt | formatDateDMYT }}
+              {{ item.createdAt | formatDate }}
             </span>
             <span
               class="app-list__cell app-list__cell--right"

@@ -62,14 +62,14 @@
         <li>
           <span>{{ "poll-viewer-attributes.start-time" | globalize }}</span>
           <span>
-            {{ poll.startTime | formatDateDMYT }}
+            {{ poll.startTime | formatDate }}
           </span>
         </li>
 
         <li>
           <span>{{ "poll-viewer-attributes.end-time" | globalize }}</span>
           <span>
-            {{ poll.endTime | formatDateDMYT }}
+            {{ poll.endTime | formatDate }}
           </span>
         </li>
 

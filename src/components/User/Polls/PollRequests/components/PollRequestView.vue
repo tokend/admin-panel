@@ -29,7 +29,7 @@
           <li>
             <span>{{ "poll-request-view.requested-at" | globalize }}</span>
             <span>
-              {{ request.createdAt | formatDateDMYT }}
+              {{ request.createdAt | formatDate }}
             </span>
           </li>
         </ul>
@@ -81,14 +81,14 @@
           <li>
             <span>{{ "poll-request-view.start-time" | globalize }}</span>
             <span>
-              {{ request.requestDetails.startTime | formatDateDMYT }}
+              {{ request.requestDetails.startTime | formatDate }}
             </span>
           </li>
 
           <li>
             <span>{{ "poll-request-view.end-time" | globalize }}</span>
             <span>
-              {{ request.requestDetails.endTime | formatDateDMYT }}
+              {{ request.requestDetails.endTime | formatDate }}
             </span>
           </li>
 

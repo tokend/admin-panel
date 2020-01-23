@@ -196,13 +196,13 @@
           <li>
             <span>{{ "sale-manager-details-tab.start-time" | globalize }}</span>
             <span>
-              {{ sale.startTime | formatDateDMYT }}
+              {{ sale.startTime | formatDate }}
             </span>
           </li>
           <li>
             <span>{{ "sale-manager-details-tab.end-time" | globalize }}</span>
             <span>
-              {{ sale.endTime | formatDateDMYT }}
+              {{ sale.endTime | formatDate }}
             </span>
           </li>
         </ul>

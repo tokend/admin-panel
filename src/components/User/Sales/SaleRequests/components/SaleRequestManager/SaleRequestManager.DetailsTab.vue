@@ -30,7 +30,7 @@
               {{ "sale-request-manager-details-tab.requested-at" | globalize }}
             </span>
             <span>
-              {{ request.sale.createdAt | formatDateDMYT }}
+              {{ request.sale.createdAt | formatDate }}
             </span>
           </li>
         </ul>
@@ -208,7 +208,7 @@
               {{ "sale-request-manager-details-tab.start-time" | globalize }}
             </span>
             <span>
-              {{ saleDetails.startTime | formatDateDMYT }}
+              {{ saleDetails.startTime | formatDate }}
             </span>
           </li>
           <li>
@@ -216,7 +216,7 @@
               {{ "sale-request-manager-details-tab.end-time" | globalize }}
             </span>
             <span>
-              {{ saleDetails.endTime | formatDateDMYT }}
+              {{ saleDetails.endTime | formatDate }}
             </span>
           </li>
           <li>

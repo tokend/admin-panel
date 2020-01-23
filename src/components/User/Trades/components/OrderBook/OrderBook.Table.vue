@@ -126,7 +126,7 @@
         <li>
           <span>{{ "order-book-table.offered-at" | globalize }}</span>
           <span>
-            {{ itemDetails.createdAt | formatDateDMYT }}
+            {{ itemDetails.createdAt | formatDate }}
           </span>
         </li>
         <li>

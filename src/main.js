@@ -34,8 +34,6 @@ import {
   formatVersion,
   globalize,
   formatDate,
-  formatDateDMY,
-  formatDateDMYT,
 } from './components/App/filters/filters'
 
 async function init () {
@@ -95,8 +93,6 @@ async function init () {
   Vue.filter('lowerCase', lowerCase)
   Vue.filter('formatVersion', formatVersion)
   Vue.filter('formatDate', formatDate)
-  Vue.filter('formatDateDMY', formatDateDMY)
-  Vue.filter('formatDateDMYT', formatDateDMYT)
   log.setDefaultLevel(params.LOG_LEVEL)
 }
 
