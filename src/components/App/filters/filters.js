@@ -68,3 +68,15 @@ export function formatVersion (string) {
 export function globalize (translationId, interpolationOps) {
   return i18n.t(translationId, interpolationOps)
 }
+
+export function formatDate (value) {
+  return globalize('formats.date', { value })
+}
+
+export function formatDateDMY (value) {
+  return globalize('formats.dmy', { value })
+}
+
+export function formatDateDMYT (value) {
+  return globalize('formats.dmyt', { value })
+}

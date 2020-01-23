@@ -29,10 +29,9 @@
             <span>
               {{ "sale-request-manager-details-tab.requested-at" | globalize }}
             </span>
-            <date-formatter
-              :date="request.sale.createdAt"
-              format="DD MMM YYYY HH:mm:ss"
-            />
+            <span>
+              {{ request.sale.createdAt | formatDateDMYT }}
+            </span>
           </li>
         </ul>
 
@@ -208,19 +207,17 @@
             <span>
               {{ "sale-request-manager-details-tab.start-time" | globalize }}
             </span>
-            <date-formatter
-              :date="saleDetails.startTime"
-              format="DD MMM YYYY HH:mm:ss"
-            />
+            <span>
+              {{ saleDetails.startTime | formatDateDMYT }}
+            </span>
           </li>
           <li>
             <span>
               {{ "sale-request-manager-details-tab.end-time" | globalize }}
             </span>
-            <date-formatter
-              :date="saleDetails.endTime"
-              format="DD MMM YYYY HH:mm:ss"
-            />
+            <span>
+              {{ saleDetails.endTime | formatDateDMYT }}
+            </span>
           </li>
           <li>
             <span>
@@ -243,7 +240,10 @@
           <li>
             <span>
               <!-- eslint-disable-next-line max-len -->
-              {{ "sale-request-manager-details-tab.max-amount-sold" | globalize }}
+              {{ "sale-request-manager-details-tab.max-amount-sold" | globalize({
+                saleDetailsBaseAssetId :saleDetails.baseAsset.id
+              })
+              }}
             </span>
             <asset-amount-formatter
               :amount="saleDetails.baseAssetForHardCap"
@@ -296,7 +296,6 @@
 import { EmailGetter, ImgGetter, DocLinkGetter } from '@comcom/getters'
 import {
   AssetAmountFormatter,
-  DateFormatter,
   AssetPoliciesFormatter,
   RequestStateFormatter,
 } from '@comcom/formatters'
@@ -317,7 +316,6 @@ export default {
     ImgGetter,
     DocLinkGetter,
     AssetAmountFormatter,
-    DateFormatter,
     AssetPoliciesFormatter,
     RequestStateFormatter,
   },

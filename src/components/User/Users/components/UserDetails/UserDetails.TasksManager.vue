@@ -9,8 +9,18 @@
     </h4>
 
     <div class="user-details-task-manager__section-content">
-      <p>{{ "user-details-tasks-manager.pending-tasks" | globalize }}</p>
-      <p>{{ "user-details-tasks-manager.all-tasks" | globalize }}</p>
+      <p>
+        {{ "user-details-tasks-manager.pending-tasks" | globalize({
+          requestPendingTasks: request.pendingTasks
+        })
+        }}
+      </p>
+      <p>
+        {{ "user-details-tasks-manager.all-tasks" | globalize({
+          requestAllTasks: request.allTasks
+        })
+        }}
+      </p>
     </div>
 
     <h4 class="user-details-task-manager__section-heading">
@@ -22,7 +32,9 @@
       <tick-field
         class="app__form-field"
         v-model="tasks.toAdd"
-        :label="`Submit auto verification request (${kvChangeRoleTasks.submitAutoVerification})`"
+        :label="'user-details-tasks-manager.lbl-submit-auto-verification' | globalize({
+          submitAutoVerification: kvChangeRoleTasks.submitAutoVerification
+        })"
         :cb-value="kvChangeRoleTasks.submitAutoVerification"
         :disabled="isPending"
       />
@@ -32,7 +44,9 @@
       <tick-field
         class="app__form-field"
         v-model="tasks.toAdd"
-        :label="`Complete auto verification request (${kvChangeRoleTasks.completeAutoVerification})`"
+        :label="'user-details-tasks-manager.lbl-complete-auto-verification' | globalize({
+          completeAutoVerification: kvChangeRoleTasks.completeAutoVerification
+        })"
         :cb-value="kvChangeRoleTasks.completeAutoVerification"
         :disabled="isPending"
       />
@@ -42,7 +56,9 @@
       <tick-field
         class="app__form-field"
         v-model="tasks.toAdd"
-        :label="`Manual review required (${kvChangeRoleTasks.manualReviewRequired})`"
+        :label="'user-details-tasks-manager.lbl-manual-review-required' | globalize({
+          manualReviewRequired :kvChangeRoleTasks.manualReviewRequired
+        })"
         :cb-value="kvChangeRoleTasks.manualReviewRequired"
         :disabled="isPending"
       />
@@ -51,7 +67,9 @@
       <tick-field
         class="app__form-field"
         v-model="tasks.toAdd"
-        :label="`Default (${kvChangeRoleTasks.default})`"
+        :label="'user-details-tasks-manager.lbl-default' | globalize({
+          default :kvChangeRoleTasks.default
+        })"
         :cb-value="kvChangeRoleTasks.default"
         :disabled="isPending"
       />
@@ -66,7 +84,9 @@
       <tick-field
         class="app__form-field"
         v-model="tasks.toRemove"
-        :label="`Submit auto verification request (${kvChangeRoleTasks.submitAutoVerification})`"
+        :label="'user-details-tasks-manager.lbl-submit-auto-verification-request' | globalize({
+          submitAutoVerification: kvChangeRoleTasks.submitAutoVerification
+        })"
         :cb-value="kvChangeRoleTasks.submitAutoVerification"
         :disabled="isPending"
       />
@@ -76,7 +96,9 @@
       <tick-field
         class="app__form-field"
         v-model="tasks.toRemove"
-        :label="`Complete auto verification request (${kvChangeRoleTasks.completeAutoVerification})`"
+        :label="'user-details-tasks-manager.lbl-complete-auto-verification-request' | globalize({
+          completeAutoVerification: kvChangeRoleTasks.completeAutoVerification
+        })"
         :cb-value="kvChangeRoleTasks.completeAutoVerification"
         :disabled="isPending"
       />
@@ -86,7 +108,9 @@
       <tick-field
         class="app__form-field"
         v-model="tasks.toRemove"
-        :label="`Manual review required (${kvChangeRoleTasks.manualReviewRequired})`"
+        :label="'user-details-tasks-manager.lbl-manual-review-required' | globalize({
+          manualReviewRequired :kvChangeRoleTasks.manualReviewRequired
+        })"
         :cb-value="kvChangeRoleTasks.manualReviewRequired"
         :disabled="isPending"
       />
@@ -95,7 +119,9 @@
       <tick-field
         class="app__form-field"
         v-model="tasks.toRemove"
-        :label="`Default (${kvChangeRoleTasks.default})`"
+        :label="'user-details-tasks-manager.lbl-default' | globalize({
+          default :kvChangeRoleTasks.default
+        })"
         :cb-value="kvChangeRoleTasks.default"
         :disabled="isPending"
       />

@@ -5,12 +5,19 @@
         @submit.prevent="isFormValid('priceForm') && showConfirmation()"
         class="asset-pair-manager__form app__block"
       >
-        <h2>{{ "asset-pair-manager.update-pair-price" | globalize }}</h2>
+        <h2>
+          {{ "asset-pair-manager.update-pair-price" | globalize({
+            base: base, quote: quote
+          })
+          }}
+        </h2>
 
         <div class="asset-pair-manager__form-row app__form-row">
           <input-field
             class="app__form-field"
-            :label="'asset-pair-manager.lbl-price' | globalize"
+            :label="'asset-pair-manager.lbl-price' | globalize({
+              amount: pair.quote
+            })"
             type="number"
             :min="DEFAULT_INPUT_MIN"
             :step="DEFAULT_INPUT_STEP"
@@ -54,7 +61,12 @@
         @submit.prevent="isFormValid('attributesForm') && showConfirmation()"
         class="asset-pair-manager__form app__block"
       >
-        <h2>{{ "asset-pair-manager.update-pair-attributes" | globalize }}</h2>
+        <h2>
+          {{ "asset-pair-manager.update-pair-attributes" | globalize({
+            base: base, quote: quote
+          })
+          }}
+        </h2>
 
         <div class="asset-pair-manager__form-row app__form-row">
           <input-field
@@ -285,8 +297,8 @@ export default {
   async created () {
     await this.getPair()
     this.priceForm.price = this.pair.physicalPrice
-    // eslint-disable-next-line max-len
-    this.attributesForm.physicalPriceCorrection = this.pair.physicalPriceCorrection
+    this.attributesForm.physicalPriceCorrection =
+      this.pair.physicalPriceCorrection
     this.attributesForm.maxPriceStep = this.pair.maxPriceStep
     this.attributesForm.policies = this.pair.policies.map(
       policy => policy.value
@@ -314,8 +326,8 @@ export default {
     },
 
     async updateAttributes () {
-      // eslint-disable-next-line max-len
-      this.pair.physicalPriceCorrection = this.attributesForm.physicalPriceCorrection
+      this.pair.physicalPriceCorrection =
+        this.attributesForm.physicalPriceCorrection
       this.pair.maxPriceStep = this.attributesForm.maxPriceStep
 
       this.pair.policies = this.attributesForm.policies.reduce(

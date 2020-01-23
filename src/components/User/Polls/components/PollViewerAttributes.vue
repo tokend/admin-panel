@@ -15,7 +15,10 @@
           :key="item.number"
         >
           <span>
-            {{ "poll-viewer-attributes.answer" | globalize }}{{ item.number }}
+            {{ "poll-viewer-attributes.answer" | globalize({
+              number: item.number
+            })
+            }}
           </span>
           <span>
             {{ item.description }}
@@ -58,18 +61,16 @@
 
         <li>
           <span>{{ "poll-viewer-attributes.start-time" | globalize }}</span>
-          <date-formatter
-            :date="poll.startTime"
-            format="DD MMM YYYY HH:mm:ss"
-          />
+          <span>
+            {{ poll.startTime | formatDateDMYT }}
+          </span>
         </li>
 
         <li>
           <span>{{ "poll-viewer-attributes.end-time" | globalize }}</span>
-          <date-formatter
-            :date="poll.endTime"
-            format="DD MMM YYYY HH:mm:ss"
-          />
+          <span>
+            {{ poll.endTime | formatDateDMYT }}
+          </span>
         </li>
 
         <li>
@@ -112,13 +113,11 @@
 
 <script>
 import { EmailGetter } from '@comcom/getters'
-import { DateFormatter } from '@comcom/formatters'
 
 import { POLL_STATES } from '@/constants/poll-states'
 
 export default {
   components: {
-    DateFormatter,
     EmailGetter,
   },
 

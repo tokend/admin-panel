@@ -63,12 +63,9 @@
             :key="item.id"
             @click="itemToShow = item"
           >
-            <date-formatter
-              class="app-list__cell"
-              :date="item.createdAt"
-              format="DD MMM YYYY HH:mm:ss"
-            />
-
+            <span>
+              {{ item.createdAt | formatDateDMYT }}
+            </span>
             <span
               class="app-list__cell app-list__cell--right"
               :title="verbozify(item.state)"
@@ -145,7 +142,7 @@ import { REQUEST_STATES } from '@/constants'
 import { SelectField, InputField } from '@comcom/fields'
 import Modal from '@comcom/modals/Modal'
 import { CollectionLoader } from '@comcom'
-import { AssetAmountFormatter, DateFormatter } from '@comcom/formatters'
+import { AssetAmountFormatter } from '@comcom/formatters'
 import DetailsReader from '@comcom/details/DetailsReader'
 
 import { verbozify } from '@/utils/verbozify'
@@ -161,7 +158,6 @@ export default {
     SelectField,
     CollectionLoader,
     AssetAmountFormatter,
-    DateFormatter,
     Modal,
     DetailsReader,
   },

@@ -195,17 +195,15 @@
           </li>
           <li>
             <span>{{ "sale-manager-details-tab.start-time" | globalize }}</span>
-            <date-formatter
-              :date="sale.startTime"
-              format="DD MMM YYYY HH:mm:ss"
-            />
+            <span>
+              {{ sale.startTime | formatDateDMYT }}
+            </span>
           </li>
           <li>
             <span>{{ "sale-manager-details-tab.end-time" | globalize }}</span>
-            <date-formatter
-              :date="sale.endTime"
-              format="DD MMM YYYY HH:mm:ss"
-            />
+            <span>
+              {{ sale.endTime | formatDateDMYT }}
+            </span>
           </li>
         </ul>
 
@@ -222,7 +220,10 @@
           </label>
           <li>
             <span>
-              {{ "sale-manager-details-tab.price-per-sale" | globalize }}
+              {{ "sale-manager-details-tab.price-per-sale" | globalize({
+                assetId: sale.baseAsset.id
+              })
+              }}
             </span>
             <asset-amount-formatter :amount="item.price" />
           </li>
@@ -233,17 +234,27 @@
             <asset-amount-formatter :amount="item.currentCap" />
           </li>
           <li>
-            <!-- eslint-disable-next-line max-len -->
-            <span :title="'sale-manager-details-tab.title-assets-equivalent' | globalize">
+            <!-- eslint-disable -->
+            <span
+              :title="'sale-manager-details-tab.title-assets-equivalent' | globalize({
+                itemAssetId: item.asset.id
+              })"
+            >
               {{ "sale-manager-details-tab.total-current-cap" | globalize }}
             </span>
+            <!-- eslint-enable -->
             <asset-amount-formatter :amount="item.totalCurrentCap" />
           </li>
           <li>
-            <!-- eslint-disable-next-line max-len -->
-            <span :title="'sale-manager-details-tab.title-hard-cup-equivalent' | globalize">
+            <!-- eslint-disable -->
+            <span
+              :title="'sale-manager-details-tab.title-hard-cup-equivalent' | globalize({
+                itemAssetId: item.asset.id
+              })"
+            >
               {{ "sale-manager-details-tab.hard-cap" | globalize }}
             </span>
+            <!-- eslint-enable -->
             <asset-amount-formatter :amount="item.hardCap" />
           </li>
         </ul>
@@ -280,7 +291,10 @@
           </li>
           <li>
             <span>
-              {{ "sale-manager-details-tab.max-amoubt-to-sold" | globalize }}
+              {{ "sale-manager-details-tab.max-amoubt-to-sold" | globalize({
+                assetId: sale.baseAsset.id
+              })
+              }}
             </span>
             <asset-amount-formatter
               :amount="sale.baseHardCap"
@@ -320,7 +334,6 @@
 import { EmailGetter, ImgGetter, DocLinkGetter } from '@comcom/getters'
 import {
   AssetAmountFormatter,
-  DateFormatter,
   AssetPoliciesFormatter,
 } from '@comcom/formatters'
 
@@ -337,7 +350,6 @@ const STELLAR_TYPES = {
 export default {
   components: {
     AssetAmountFormatter,
-    DateFormatter,
     AssetPoliciesFormatter,
     EmailGetter,
     ImgGetter,

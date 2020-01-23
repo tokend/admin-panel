@@ -61,13 +61,9 @@
             >
               {{ item.id }}
             </span>
-
-            <date-formatter
-              class="app-list__cell"
-              :date="item.requestDetails.startTime"
-              format="DD MMM YYYY HH:mm:ss"
-            />
-
+            <span>
+              {{ item.requestDetails.startTime | formatDateDMYT }}
+            </span>
             <span
               class="app-list__cell"
               :title="item.requestor.id"
@@ -112,7 +108,6 @@
 import InputField from '@comcom/fields/InputField'
 import SelectField from '@comcom/fields/SelectField'
 import { EmailGetter } from '@comcom/getters'
-import { DateFormatter } from '@comcom/formatters'
 
 import { CollectionLoader } from '@/components/common'
 
@@ -133,7 +128,6 @@ export default {
     SelectField,
     EmailGetter,
     CollectionLoader,
-    DateFormatter,
   },
 
   data () {

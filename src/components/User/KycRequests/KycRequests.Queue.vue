@@ -48,7 +48,10 @@
             <p class="kyc-requests-queue__nav-title">
               {{ currentRequestIndex + 1 }} /
               <!-- eslint-disable-next-line max-len -->
-              {{ pendingRequests.length }} {{ "kyc-requests-queue.requests" | globalize }}
+              {{ "kyc-requests-queue.requests" | globalize({
+                amount: pendingRequests.length
+              })
+              }}
             </p>
             <button
               class="kyc-requests-queue__nav-btn"

@@ -13,16 +13,56 @@
             <thead>
               <tr>
                 <template v-if="isRtl">
-                  <th>{{ "order-book-table.summary" | globalize }}</th>
-                  <th>{{ "order-book-table.volume" | globalize }}</th>
-                  <th>{{ "order-book-table.amount" | globalize }}</th>
-                  <th>{{ "order-book-table.price" | globalize }}</th>
+                  <th>
+                    {{ "order-book-table.summary" | globalize({
+                      quoteAsset: quoteAsset
+                    })
+                    }}
+                  </th>
+                  <th>
+                    {{ "order-book-table.volume" | globalize({
+                      quoteAsset: quoteAsset
+                    })
+                    }}
+                  </th>
+                  <th>
+                    {{ "order-book-table.amount" | globalize({
+                      baseAsset: baseAsset
+                    })
+                    }}
+                  </th>
+                  <th>
+                    {{ "order-book-table.price" | globalize({
+                      quoteAsset: quoteAsset
+                    })
+                    }}
+                  </th>
                 </template>
                 <template v-else>
-                  <th>{{ "order-book-table.price" | globalize }}</th>
-                  <th>{{ "order-book-table.amount" | globalize }}</th>
-                  <th>{{ "order-book-table.volume" | globalize }}</th>
-                  <th>{{ "order-book-table.summary" | globalize }}</th>
+                  <th>
+                    {{ "order-book-table.price" | globalize({
+                      quoteAsset: quoteAsset
+                    })
+                    }}
+                  </th>
+                  <th>
+                    {{ "order-book-table.amount" | globalize({
+                      baseAsset: baseAsset
+                    })
+                    }}
+                  </th>
+                  <th>
+                    {{ "order-book-table.volume" | globalize({
+                      quoteAsset: quoteAsset
+                    })
+                    }}
+                  </th>
+                  <th>
+                    {{ "order-book-table.summary" | globalize({
+                      quoteAsset: quoteAsset
+                    })
+                    }}
+                  </th>
                 </template>
               </tr>
             </thead>
@@ -85,10 +125,9 @@
         </li>
         <li>
           <span>{{ "order-book-table.offered-at" | globalize }}</span>
-          <date-formatter
-            :date="itemDetails.createdAt"
-            format="DD MMM YYYY [at] HH:mm:ss"
-          />
+          <span>
+            {{ itemDetails.createdAt | formatDateDMYT }}
+          </span>
         </li>
         <li>
           <span>{{ "order-book-table.offerer" | globalize }}</span>
@@ -126,7 +165,7 @@
 <script>
 import { AssetPair } from '../../models/AssetPair'
 
-import { AssetAmountFormatter, DateFormatter } from '@comcom/formatters'
+import { AssetAmountFormatter } from '@comcom/formatters'
 import { EmailGetter } from '@comcom/getters'
 import Modal from '@comcom/modals/Modal'
 
@@ -135,7 +174,6 @@ const EMPTY_DETAILS = Object.freeze({})
 export default {
   components: {
     AssetAmountFormatter,
-    DateFormatter,
     EmailGetter,
     Modal,
   },

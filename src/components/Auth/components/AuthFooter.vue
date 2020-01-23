@@ -1,7 +1,7 @@
 <template>
   <footer class="auth-footer">
     <span class="small">
-      {{ "auth-footer.copyrighted" | globalize }}
+      {{ "auth-footer.copyrighted" | globalize({currentYear: currentYear}) }}
     </span>
   </footer>
 </template>

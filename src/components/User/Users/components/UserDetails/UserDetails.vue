@@ -28,7 +28,10 @@
             </li>
           </ul>
           <p v-if="requestToReview.isRejected">
-            {{ "user-details.reason" | globalize }}
+            {{ "user-details.reason" | globalize({
+              rejectReason: requestToReview.rejectReason
+            })
+            }}
           </p>
 
           <template v-if="requestToReview.externalDetails">
@@ -141,8 +144,11 @@
             <h3>{{ "user-details.latest-request" | globalize }}</h3>
             <!-- eslint-disable max-len -->
             <p class="text">
-              Create a "{{ requestToReview.accountRoleToSet | roleIdToString }}" account:
-              {{ requestToReview.state }}
+              {{ "user-details.create" | globalize({
+                accountRoleToSet: requestToReview.accountRoleToSet | roleIdToString,
+                state: requestToReview.state
+              })
+              }}
             </p>
             <!-- eslint-enable max-len -->
           </div>

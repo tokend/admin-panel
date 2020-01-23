@@ -415,7 +415,7 @@
     },
     "idle-logout": {
       "header": "Session Timeout Warning",
-      "text-long-inct": "The session is about to expire due to long inactivity.<br> Click <strong>Continue</strong> to extend the session.<br /> <br> Session expires in {{ showTimeLeft }}<br>",
+      "text-long-inct": "The session is about to expire due to long inactivity.<br> Click <strong>Continue</strong> to extend the session.<br /> <br> Session expires in {{ timeLeft }}<br>",
       "btn-cont": "Continue",
       "btn-log-out": "Log out"
     },
@@ -615,7 +615,7 @@
       "msg-sure": "Sure?",
       "pair-updated": "Pair has been updated.",
       "asset-pair-removed": "Asset pair was successfully removed",
-      "lbl-price": "Price ({{pair.quote}})",
+      "lbl-price": "Price ({{amount}})",
       "yes": "Yes",
       "no": "No"
     },
@@ -636,7 +636,7 @@
       "update": "Update"
     },
     "asset-request-reject-form": {
-      "reject": "Reject {{ assetRequest.code }}",
+      "reject": "Reject {{ assetRequestCode }}",
       "create-request": "create request",
       "update-request": "create request",
       "btn-reject": "Reject",
@@ -1064,7 +1064,7 @@
       "lost-actions-after-reload": "Your actions will be lost after page reload",
       "please-not-reload-page": "Please, do not reload the page until you finish your review",
       "all-roles": "All",
-      "requests": "requests",
+      "requests": "{{ amount }} requests",
       "current-decision": "Current decision",
       "loading": "Loading...",
       "no-request": "No requests to review yet",
@@ -1171,7 +1171,7 @@
       "select-lile-and-click-upload": "Select file(s) with change issuer transaction and click <strong>Upload</strong>.<br>",
       "label-select-file": "Select File(s)",
       "signer-change-asset": "Signer will change on asset: {{ asset }}",
-      "new-signer": " New signer will be: {{ accountId }}",
+      "new-signer": "New signer will be: {{ accId }}",
       "transaction-source": "Transaction source: {{ source }}",
       "note-transaction": "<i>Note: </i>Transaction is valid for one week since the file was created",
       "more-about-pre-issuance": "Learn more about pre-issuance",
@@ -1267,7 +1267,7 @@
     },
     "poll-viewer-attributes": {
       "label-poll-question": "Poll question and answers",
-      "answer": "Answer #{{ item.number }}",
+      "answer": "Answer #{{ number }}",
       "label-poll-details": "Poll details",
       "status": "Status",
       "open": "Open",
@@ -1309,7 +1309,7 @@
       "requested-at": "Requested at",
       "label-reject-reason": "Reject reason",
       "poll-question-and-answers": "Poll question and answers",
-      "answer": "Answer #{{ item.number }}",
+      "answer": "Answer #{{ number }}",
       "poll-details": "Poll details",
       "number-of-choices": "Number of choices",
       "start-time": "Start time",
@@ -1393,13 +1393,13 @@
       "hard-cap": "Hard cap",
       "total-progress": "Total progress",
       "soft-cap": "Soft cap",
-      "max-amoubt-to-sold": "Max {{ sale.baseAsset.id }} amount to be sold",
+      "max-amoubt-to-sold": "Max {{ assetId }} amount to be sold",
       "short-description": "Short description",
       "sale-logo": "Sale logo",
       "progress": "progress",
-      "price-per-sale": "Price (per {{ sale.baseAsset.id }})",
-      "title-assets-equivalent": "Current cap + current caps of the other acceptable assets in the {{item.asset.id}} equivalent",
-      "title-hard-cup-equivalent": "Hard cap of the sale in the {{item.asset.id}} equivalent"
+      "price-per-sale": "Price (per {{ assetId }})",
+      "title-assets-equivalent": "Current cap + current caps of the other acceptable assets in the {{itemAssetId}} equivalent",
+      "title-hard-cup-equivalent": "Hard cap of the sale in the {{itemAssetId}} equivalent"
     },
     "sale-manager-syndicate-tab": {
       "label": "Corporate user details",
@@ -1491,7 +1491,7 @@
       "end-time": "End time",
       "soft-cap": "Soft cap",
       "hard-cap": "Hard cap",
-      "max-amount-sold": "Max {{ saleDetails.baseAsset.id }} amount to be sold",
+      "max-amount-sold": "Max {{ saleDetailsBaseAssetId }} amount to be sold",
       "short-description": "Short description",
       "sale-logo": "Sale logo",
       "yes": "Yes",
@@ -1627,7 +1627,7 @@
       "open-file": "Open file",
       "avatar": "Avatar",
       "photo-with-verification-code": "Photo with verification code",
-      "code": "Code: {{ user.address.slice(1, 6) }}"
+      "code": "Code: {{ userAddress }}"
     },
     "user-details-request": {
       "btn-approve": "Approve",
@@ -1649,22 +1649,28 @@
     "user-details-tasks-manager": {
       "manage-tasks": "Manage tasks (advanced)",
       "current-request-tasks": "Current request tasks",
-      "pending-tasks": "Pending tasks: {{ request.pendingTasks }}",
-      "all-tasks": "All tasks: {{ request.allTasks }}",
+      "pending-tasks": "Pending tasks: {{ requestPendingTasks }}",
+      "all-tasks": "All tasks: {{ requestAllTasks }}",
       "tasks-add": "Tasks to add",
-      "tasks-remove": "Tasks to remove"
+      "tasks-remove": "Tasks to remove",
+      "lbl-submit-auto-verification": "Submit auto verification request ({{submitAutoVerification}})",
+      "lbl-complete-auto-verification": "Complete auto verification request ({{completeAutoVerification}})",
+      "lbl-manual-review-required": "Manual review required ({{manualReviewRequired}})",
+      "lbl-submit-auto-verification-request": "Submit auto verification request ({{submitAutoVerification}})",
+      "lbl-submit-complete-verification-request": "Complete auto verification request ({{completeAutoVerification}})",
+      "lbl-default": "Default ({{default}})"
     },
     "user-details": {
       "header": "User details",
       "current-request-state": "Current request state",
       "role-set": "Role to set",
-      "reason": "Reason: {{ requestToReview.rejectReason }}",
+      "reason": "Reason: {{ rejectReason }}",
       "external-details": "External details (provided by external services)",
       "error": "An error occurred. Please try again later.",
       "loading": "Loading...",
       "previous-approved-kys-request": "Previous approved KYC Request",
       "latest-request": "Latest request",
-      "create": "Create a '{{ requestToReview.accountRoleToSet | roleIdToString }}' account: {{ requestToReview.state }}"
+      "create": "Create a '{{ accountRoleToSet }}' account: {{ state }}"
     },
     "user-list": {
       "unverified": "Unverified",
@@ -1746,7 +1752,7 @@
     "confirmation-message": {
       "confirm-msg": "Are you sure?",
       "submit": "Submit",
-      "cancel": "Cancel"  
+      "cancel": "Cancel"
     }
   }
 }

@@ -223,10 +223,14 @@ export default {
         const assetCode = items[i].asset
         const asset = this.getAsset(assetCode)
         if (!asset) {
-          ErrorHandler.process(assetCode, globalize('preissuance-form.asset-not-found', assetCode))
+          ErrorHandler.process(assetCode, globalize('preissuance-form.asset-not-found',
+            { assetCode: assetCode }
+          ))
           this.notLoadedFiles.push({
             fileName: this.temporaryFileName,
-            key: 'preissuance-form.msg-asset-not-found',
+            key: globalize('preissuance-form.msg-asset-not-found',
+              { assetCode: assetCode }
+            ),
           })
         } else {
           this.fileInfo.push({

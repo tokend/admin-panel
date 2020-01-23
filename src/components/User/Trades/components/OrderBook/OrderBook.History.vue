@@ -7,9 +7,24 @@
           <table class="order-book-history__table">
             <thead>
               <tr>
-                <th>{{ "order-book-history.thead-price" | globalize }}</th>
-                <th>{{ "order-book-history.thead-amount" | globalize }}</th>
-                <th>{{ "order-book-history.thead-total-cost" | globalize }}</th>
+                <th>
+                  {{ "order-book-history.thead-price" | globalize({
+                    quoteAsset: quoteAsset
+                  })
+                  }}
+                </th>
+                <th>
+                  {{ "order-book-history.thead-amount" | globalize({
+                    baseAsset: baseAsset
+                  })
+                  }}
+                </th>
+                <th>
+                  {{ "order-book-history.thead-total-cost" | globalize({
+                    quoteAsset: quoteAsset
+                  })
+                  }}
+                </th>
                 <th>{{ "order-book-history.thead-date" | globalize }}</th>
               </tr>
             </thead>
@@ -35,10 +50,9 @@
                   />
                 </td>
                 <td>
-                  <date-formatter
-                    :date="item.createdAt"
-                    format="DD MMM YYYY [at] HH:mm:ss"
-                  />
+                  <span>
+                    {{ item.createdAt | formatDateDMYT }}
+                  </span>
                 </td>
               </tr>
             </tbody>
@@ -81,10 +95,9 @@
         </li>
         <li>
           <span>{{ "order-book-history.date" | globalize }}</span>
-          <date-formatter
-            :date="itemDetails.createdAt"
-            format="DD MMM YYYY [at] HH:mm:ss"
-          />
+          <span>
+            {{ itemDetails.createdAt | formatDateDMYT }}
+          </span>
         </li>
       </ul>
     </modal>
@@ -94,7 +107,7 @@
 <script>
 import { AssetPair } from '../../models/AssetPair'
 
-import { DateFormatter, AssetAmountFormatter } from '@comcom/formatters'
+import { AssetAmountFormatter } from '@comcom/formatters'
 import Modal from '@comcom/modals/Modal'
 
 const EMPTY_DETAILS = Object.freeze({})
@@ -102,7 +115,6 @@ const EMPTY_DETAILS = Object.freeze({})
 export default {
   components: {
     AssetAmountFormatter,
-    DateFormatter,
     Modal,
   },
 

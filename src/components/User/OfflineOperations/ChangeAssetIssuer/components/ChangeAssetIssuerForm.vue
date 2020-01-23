@@ -31,13 +31,22 @@
       v-if="asset && accountId"
     >
       <p class="text">
-        {{ "change-asset-issuer-form.signer-change-asset" | globalize }}
+        {{ "change-asset-issuer-form.signer-change-asset" | globalize({
+          asset: asset
+        })
+        }}
       </p>
       <p class="text">
-        {{ "change-asset-issuer-form.new-signer" | globalize }}
+        {{ "change-asset-issuer-form.new-signer" | globalize({
+          accId: accountId
+        })
+        }}
       </p>
       <p class="text">
-        {{ "change-asset-issuer-form.transaction-source" | globalize }}
+        {{ "change-asset-issuer-form.transaction-source" | globalize({
+          source: source
+        })
+        }}
       </p>
     </div>
     <!-- eslint-disable -->

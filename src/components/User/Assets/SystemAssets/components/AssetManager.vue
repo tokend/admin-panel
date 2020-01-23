@@ -1,6 +1,11 @@
 <template>
   <div class="asset-manager">
-    <h2>{{ "asset-manager.header" | globalize }}</h2>
+    <h2>
+      {{ "asset-manager.header" | globalize({
+        assetCode: assetCode
+      })
+      }}
+    </h2>
 
     <form
       @submit.prevent="isFormValid() && showConfirmation()"

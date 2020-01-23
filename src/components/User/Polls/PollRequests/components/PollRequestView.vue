@@ -28,10 +28,9 @@
 
           <li>
             <span>{{ "poll-request-view.requested-at" | globalize }}</span>
-            <date-formatter
-              :date="request.createdAt"
-              format="DD MMM YYYY HH:mm:ss"
-            />
+            <span>
+              {{ request.createdAt | formatDateDMYT }}
+            </span>
           </li>
         </ul>
 
@@ -57,7 +56,12 @@
             v-for="item in request.requestDetails.creatorDetails.choices"
             :key="item.number"
           >
-            <span>{{ "poll-request-view.answer" | globalize }}</span>
+            <span>
+              {{ "poll-request-view.answer" | globalize({
+                number: item.number
+              })
+              }}
+            </span>
             <span>
               {{ item.description }}
             </span>
@@ -76,18 +80,16 @@
 
           <li>
             <span>{{ "poll-request-view.start-time" | globalize }}</span>
-            <date-formatter
-              :date="request.requestDetails.startTime"
-              format="DD MMM YYYY HH:mm:ss"
-            />
+            <span>
+              {{ request.requestDetails.startTime | formatDateDMYT }}
+            </span>
           </li>
 
           <li>
             <span>{{ "poll-request-view.end-time" | globalize }}</span>
-            <date-formatter
-              :date="request.requestDetails.endTime"
-              format="DD MMM YYYY HH:mm:ss"
-            />
+            <span>
+              {{ request.requestDetails.endTime | formatDateDMYT }}
+            </span>
           </li>
 
           <li>
@@ -218,7 +220,6 @@ import { required, maxLength } from '@/validators'
 
 import { EmailGetter } from '@comcom/getters'
 import {
-  DateFormatter,
   RequestStateFormatter,
 } from '@comcom/formatters'
 
@@ -236,7 +237,6 @@ const REJECT_REASON_MAX_LENGTH = 255
 
 export default {
   components: {
-    DateFormatter,
     RequestStateFormatter,
     EmailGetter,
     Modal,

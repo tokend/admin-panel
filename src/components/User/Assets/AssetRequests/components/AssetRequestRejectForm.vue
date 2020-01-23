@@ -1,7 +1,10 @@
 <template>
   <div class="trrf">
     <h2 v-if="assetRequest.type === 'create_asset'">
-      {{ "asset-request-reject-form.reject" | globalize }}
+      {{ "asset-request-reject-form.reject" | globalize({
+        assetRequestCode: assetRequest.code
+      })
+      }}
       {{ "asset-request-reject-form.create-request" | globalize }}
     </h2>
 

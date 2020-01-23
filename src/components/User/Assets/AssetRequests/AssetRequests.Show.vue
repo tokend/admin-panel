@@ -236,22 +236,18 @@
         <span class="asset-requests-show__key">
           {{ "asset-requests-show.creation-data" | globalize }}
         </span>
-        <date-formatter
-          :date="assetRequest.creationDate"
-          format="DD MMM YYYY HH:mm:ss"
-          class="asset-requests-show__value"
-        />
+        <span>
+          {{ assetRequest.creationDate | formatDateDMYT }}
+        </span>
       </div>
 
       <div class="asset-requests-show__row">
         <span class="asset-requests-show__key">
           {{ "asset-requests-show.update-data" | globalize }}
         </span>
-        <date-formatter
-          :date="assetRequest.updateDate"
-          format="DD MMM YYYY HH:mm:ss"
-          class="asset-requests-show__value"
-        />
+        <span>
+          {{ assetRequest.updateDate | formatDateDMYT }}
+        </span>
       </div>
 
       <!-- eslint-disable-next-line max-len -->
@@ -315,7 +311,6 @@ import TextField from '@comcom/fields/TextField'
 import AssetRequestRejectForm from './components/AssetRequestRejectForm'
 
 import { ImgGetter, EmailGetter, UserDocLinkGetter } from '@comcom/getters'
-import { DateFormatter } from '@comcom/formatters'
 
 import { confirmAction } from '@/js/modals/confirmation_message'
 
@@ -348,7 +343,6 @@ export default {
     TextField,
     ImgGetter,
     EmailGetter,
-    DateFormatter,
     UserDocLinkGetter,
   },
 
