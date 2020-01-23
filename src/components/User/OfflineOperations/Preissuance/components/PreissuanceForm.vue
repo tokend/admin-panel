@@ -126,7 +126,7 @@
 <script>
 import { base } from '@tokend/js-sdk'
 import config from '@/config'
-
+import { globalize } from '@/components/App/filters/filters'
 import localize from '@/utils/localize'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { api, loadingDataViaLoop } from '@/api'
@@ -223,7 +223,7 @@ export default {
         const assetCode = items[i].asset
         const asset = this.getAsset(assetCode)
         if (!asset) {
-          ErrorHandler.process(assetCode, 'preissuance-form.asset-not-found')
+          ErrorHandler.process(assetCode, globalize('preissuance-form.asset-not-found', assetCode))
           this.notLoadedFiles.push({
             fileName: this.temporaryFileName,
             key: 'preissuance-form.msg-asset-not-found',
