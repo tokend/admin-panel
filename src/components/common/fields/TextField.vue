@@ -4,19 +4,11 @@
     :class="{
       'text-field--error': errorMessage,
       'text-field--disabled': disabled
-    }">
+    }"
+  >
     <span
       class="text-field__label"
       :class="{'text-field__label--hidden': isNoLabel}"
-      v-if="label=='text-field.label'"
-    >
-      {{ label | globalize }}
-    </span>
-
-    <span
-      class="text-field__label"
-      :class="{'text-field__label--hidden': isNoLabel}"
-      v-else
     >
       {{ label }}
     </span>
@@ -50,16 +42,14 @@
 
 <script>
 
-import { globalize } from '@/components/App/filters/filters'
-
 export default {
   props: {
-    label: { type: String, default: 'text-field.label' },
+    label: { type: String, default: '' },
     value: { type: [String, Number], default: undefined },
     errorMessage: { type: String, default: undefined },
 
     // proxies
-    autocomplete: { type: String, default: globalize('text-field.off') },
+    autocomplete: { type: String, default: '' },
     autofocus: { type: Boolean, default: false },
     disabled: { type: Boolean, default: false },
     name: { type: String, default: undefined },

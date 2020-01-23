@@ -26,13 +26,13 @@
         </select-field>
 
         <input-date-field
-          label="poll-list.lbl-min-start-time"
+          :label="'poll-list.lbl-min-start-time' | globalize"
           class="poll-list__field"
           v-model="filters.minStartTime"
         />
 
         <input-date-field
-          label="poll-list.lbl-min-end-time"
+          :label="'poll-list.lbl-min-end-time' | globalize"
           class="poll-list__field"
           v-model="filters.maxEndTime"
         />

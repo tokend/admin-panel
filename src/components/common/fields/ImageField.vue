@@ -10,15 +10,18 @@
     <div class="image-input__input-inner">
       <div class="image-input__text">
         <p class="title">
-          {{ title | globalize }}
+          {{ title }}
         </p>
 
         <div class="notes">
-          <p
-            class="image-input__note"
-            v-for="(note, key) in notes"
-            :key="key">
-            {{ note | globalize }}
+          <p class="image-input__note">
+            {{ imgType }}
+          </p>
+          <p class="image-input__note">
+            {{ imgWeight }}
+          </p>
+          <p class="image-input__note">
+            {{ imgResolution }}
           </p>
         </div>
       </div>
@@ -45,15 +48,19 @@ export default {
     },
     title: {
       type: String,
-      default: 'image-field.choose-img',
+      default: '',
     },
-    notes: {
-      type: Array,
-      default: () => [
-        'image-field.img-type',
-        'image-field.img-weight-limit',
-        'image-field.min-img-resolution',
-      ],
+    imgType: {
+      type: String,
+      default: '',
+    },
+    imgWeight: {
+      type: String,
+      default: '',
+    },
+    imgResolution: {
+      type: String,
+      default: '',
     },
   },
 

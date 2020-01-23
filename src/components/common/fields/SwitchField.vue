@@ -20,7 +20,7 @@ export default {
   name: 'switch-field',
 
   props: {
-    label: { type: String, default: 'Label' },
+    label: { type: String, default: '' },
     // eslint-disable-next-line vue/require-prop-types
     value: { default: false },
 

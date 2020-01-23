@@ -771,7 +771,11 @@
       "lbl-alphanumeric-4": "Alphanumeric 4",
       "lbl-alphanumeric-12": "Alphanumeric 12",
       "lbl-native": "Native",
-      "submitted-successfully": "Submitted successfully."
+      "submitted-successfully": "Submitted successfully.",
+      "choose-img": "Choose an image from your PC",
+      "img-type": "JPEG, PNG or BMP",
+      "img-weight-limit": "no more than 5mb",
+      "min-img-resolution": "not less than 1024x576, 1:1"
     },
     "system-assets-index": {
       "header": "Assets owned by master",
@@ -1571,7 +1575,8 @@
     "trade-filters": {
       "no-pairs": "No pairs yet",
       "error": "An error occurred",
-      "loading": "Loading..."
+      "loading": "Loading...",
+      "label": "Label"
     },
     "trades-index": {
       "header": "Trades",
@@ -1729,21 +1734,6 @@
       "limits-update": "Limits update",
       "initial": "Initial",
       "docs-uploading": "Documents uploading"
-    },
-    "image-field": {
-      "choose-img": "Choose an image from your PC",
-      "img-type": "JPEG, PNG or BMP",
-      "img-weight-limit": "no more than 5mb",
-      "min-img-resolution": "not less than 1024x576, 1:1"
-    },
-    "input-date-field": {
-      "label": "Label"
-    },
-    "select-field": {
-      "label": "Label"
-    },
-    "tick-field": {
-      "label": "Label"
     },
     "confirmation-message": {
       "confirm-msg": "Are you sure?",

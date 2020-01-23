@@ -26,16 +26,8 @@
     <div class="select-field__arrow">
       <!-- css art -->
     </div>
-
     <span
       class="select-field__label"
-      v-if="label=='select-field.label'"
-    >
-      {{ label | globalize }}
-    </span>
-    <span
-      class="select-field__label"
-      v-else
     >
       {{ label }}
     </span>
@@ -52,7 +44,7 @@
 
 export default {
   props: {
-    label: { type: String, default: 'select-field.label' },
+    label: { type: String, default: '' },
     // eslint-disable-next-line vue/require-prop-types
     value: { default: false },
     errorMessage: { type: String, default: undefined },

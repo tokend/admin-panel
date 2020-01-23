@@ -27,7 +27,7 @@
             class="app-list__cell"
             :title="item.updatedAt"
           >
-            {{ formatDate(item.updatedAt) }}
+            {{ item.updatedAt | formatDate }}
           </span>
 
           <span

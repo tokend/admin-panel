@@ -43,10 +43,9 @@
 </template>
 
 <script>
-import { globalize } from '@/components/App/filters/filters'
 export default {
   props: {
-    label: { type: String, default: globalize('tick-field".label') },
+    label: { type: String, default: '' },
     value: { type: [String, Number, Array, Boolean], default: false },
 
     // proxies

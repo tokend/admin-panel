@@ -21,23 +21,23 @@ export const KYC_REQUEST_STATES = Object.freeze(
   Object.entries({
     approved: {
       state: REQUEST_STATES.approved,
-      label: 'request-states.approved',
+      translationId: 'request-states.approved',
     },
     rejected: {
       state: REQUEST_STATES.rejected,
-      label: 'request-states.rejected',
+      translationId: 'request-states.rejected',
     },
     pending: {
       state: REQUEST_STATES.pending,
-      label: 'request-states.waiting-review',
+      translationId: 'request-states.waiting-review',
     },
     waitingForAutoReview: {
       state: REQUEST_STATES.pending,
-      label: 'request-states.request-sent-idmind',
+      translationId: 'request-states.request-sent-idmind',
     },
     processedAutoReview: {
       state: REQUEST_STATES.pending,
-      label: 'request-states.request-processed-idmind',
+      translationId: 'request-states.request-processed-idmind',
     },
   })
     .filter(([key]) => {

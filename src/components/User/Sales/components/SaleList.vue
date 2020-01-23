@@ -33,14 +33,14 @@
           </option>
         </select-field>
         <input-date-field
-          label="sale-list.lbl-start-date"
+          :label="'sale-list.lbl-start-date' | globalize"
           class="sale-list__field sale-list__field-margin-top"
           :enable-time="false"
           v-model="filters.startDate"
         />
         <!-- eslint-disable max-len -->
         <input-date-field
-          label="sale-list.lbl-end-date"
+          :label="'sale-list.lbl-end-date' | globalize"
           class="sale-list__field sale-list__field-margin-left sale-list__field-margin-top"
           :enable-time="false"
           v-model="filters.endDate"

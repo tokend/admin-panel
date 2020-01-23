@@ -30,7 +30,7 @@
             {{ getFileExtension(item.file.name) }}
           </span>
           <span class="app-list__cell app-list__cell--center">
-            {{ formatDate(uploadDate) }}
+            {{ uploadDate | formatDate }}
           </span>
           <span class="app-list__cell app-list__cell--center">
             <doc-link-getter

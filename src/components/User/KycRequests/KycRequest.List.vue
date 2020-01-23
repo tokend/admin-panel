@@ -25,7 +25,7 @@
             :key="`kyc-request-${s}`"
             :value="state"
           >
-            {{ KYC_REQUEST_STATES[state].label | globalize }}
+            {{ KYC_REQUEST_STATES[state].translationId | globalize }}
           </option>
         </select-field>
 
@@ -89,7 +89,7 @@
               {{ item.state }}
             </span>
             <span class="app-list__cell app-list__cell--right">
-              {{ formatDate(item.updatedAt) }}
+              {{ item.updatedAt | formatDate }}
             </span>
             <span class="app-list__cell app-list__cell--right">
               {{ item | deriveRoleToSet(kvAccountRoles) }}
@@ -137,7 +137,6 @@ import SelectField from '@comcom/fields/SelectField'
 
 import { EmailGetter } from '@comcom/getters'
 
-import { formatDate } from '@/utils/formatters'
 import { clearObject } from '@/utils/clearObject'
 
 import { KYC_REQUEST_STATES } from '@/constants'
@@ -257,7 +256,6 @@ export default {
     reloadCollectionLoader () {
       this.$refs.collectionLoaderBtn.loadFirstPage()
     },
-    formatDate,
   },
 }
 </script>

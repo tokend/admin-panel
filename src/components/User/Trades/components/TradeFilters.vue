@@ -4,6 +4,7 @@
       <select-field
         class="app-list-filters__field trade-filters__asset-selector"
         v-model="filters.pair"
+        :label="'trade-filters.label' | globalize"
       >
         <template v-if="isLoaded && pairs.length">
           <option

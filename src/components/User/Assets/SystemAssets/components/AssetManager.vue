@@ -18,6 +18,10 @@
         <image-field
           :file-key="safeGet(asset, `creatorDetails.logo.key`)"
           @change="onFileChange($event, DOCUMENT_TYPES.assetLogo)"
+          :title="'asset-manager.choose-img' | globalize"
+          :img-type="'asset-manager.img-type' | globalize"
+          :img-weight="'asset-manager.img-weight-limit' | globalize"
+          :img-resolution="'asset-manager.min-img-resolution' | globalize"
         />
       </div>
 

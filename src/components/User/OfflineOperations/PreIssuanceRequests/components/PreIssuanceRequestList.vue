@@ -134,7 +134,6 @@
 <script>
 import InputField from '@comcom/fields/InputField'
 
-import moment from 'moment'
 import localize from '@/utils/localize'
 import { verbozify } from '@/utils/verbozify'
 
@@ -224,13 +223,6 @@ export default {
         this.loadNewPage = false
         this.pageableLoadCompleted = true
       }
-    },
-
-    formatDate (date) {
-      return moment(date).calendar(null, {
-        lastWeek: 'DD MMM LT',
-        sameElse: 'DD MMM LT',
-      })
     },
 
     clear () {
