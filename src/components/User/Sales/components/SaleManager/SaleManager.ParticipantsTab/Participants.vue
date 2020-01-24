@@ -29,7 +29,12 @@
         <thead>
           <tr>
             <th>{{ "participants.investor" | globalize }}</th>
-            <th>{{ filters.quoteAsset }} invested</th>
+            <th>
+              {{ "participants.invested" | globalize({
+                quoteAsset: filters.quoteAsset
+              })
+              }}
+            </th>
           </tr>
         </thead>
         <tbody>

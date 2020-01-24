@@ -1,4 +1,4 @@
-<template>
+-<template>
   <div class="request-action">
     <template v-if="requestToReview.isPending">
       <div class="app__form-actions user-details-request__form-actions">
@@ -76,7 +76,7 @@
 
 <script>
 import apiHelper from '@/apiHelper'
-
+import { globalize } from '@/components/App/filters/filters'
 import Modal from '@comcom/modals/Modal'
 
 import FormMixin from '@/mixins/form.mixin'
@@ -143,7 +143,7 @@ export default {
   methods: {
     async approve () {
       if (
-        !(await confirmAction('kyc-recovery-request-action.confirm-message'))
+        !(await confirmAction(globalize('kyc-recovery-request-action.confirm-message')))
       ) {
         return
       }
@@ -166,7 +166,7 @@ export default {
 
     async reject (isPermanent = false) {
       if (
-        !(await confirmAction('kyc-recovery-request-action.confirm-message'))
+        !(await confirmAction(globalize('kyc-recovery-request-action.confirm-message')))
       ) {
         return
       }

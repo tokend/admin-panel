@@ -103,7 +103,7 @@
           v-for="(item, index) in notLoadedFiles"
           :key="item.fileName"
         >
-          {{ index + 1 }}. {{ item.fileName }} - {{ item.key | globalize }}
+          {{ index + 1 }}. {{ item.fileName }} - {{ item.key }}
         </div>
       </div>
     </template>

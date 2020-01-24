@@ -74,7 +74,6 @@
 
 <script>
 import { EmailGetter } from '@comcom/getters'
-import { formatDate } from '@/utils/formatters'
 
 import {
   ACCOUNT_TYPES,
@@ -96,7 +95,6 @@ export default {
       REQUEST_STATES,
       ACCOUNT_TYPES,
       LIMITS_REQUEST_STATES_STR,
-      formatDate,
     }
   },
 }

@@ -92,7 +92,7 @@
               {{ item.updatedAt | formatDate }}
             </span>
             <span class="app-list__cell app-list__cell--right">
-              {{ item | deriveRoleToSet(kvAccountRoles) }}
+              {{ item | deriveRoleToSet(kvAccountRoles) | globalize }}
             </span>
           </button>
         </div>
@@ -131,7 +131,6 @@
 
 <script>
 import _ from 'lodash'
-
 import InputField from '@comcom/fields/InputField'
 import SelectField from '@comcom/fields/SelectField'
 
@@ -161,9 +160,9 @@ export default {
   filters: {
     deriveRoleToSet (item, accountRoles) {
       return {
-        [accountRoles.unverified]: 'Unverified',
-        [accountRoles.general]: 'General',
-        [accountRoles.corporate]: 'Corporate',
+        [accountRoles.unverified]: 'kyc-request-list.unverified-role',
+        [accountRoles.general]: 'kyc-request-list.general-role',
+        [accountRoles.corporate]: 'kyc-request-list.corporate-role',
       }[item.requestDetails.accountRoleToSet]
     },
   },

@@ -1,15 +1,16 @@
 <template>
   <div class="trrf">
-    <h2 v-if="assetRequest.type === 'create_asset'">
-      {{ "asset-request-reject-form.reject" | globalize({
+    <h2>
+      {{ "asset-request-reject-form.header" | globalize({
         assetRequestCode: assetRequest.code
       })
       }}
+    </h2>
+    <h2 v-if="assetRequest.type === 'create_asset'">
       {{ "asset-request-reject-form.create-request" | globalize }}
     </h2>
 
     <h2 v-else>
-      {{ "asset-request-reject-form.reject" | globalize }}
       {{ "asset-request-reject-form.update-request" | globalize }}
     </h2>
 

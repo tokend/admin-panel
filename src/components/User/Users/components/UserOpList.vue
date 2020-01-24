@@ -173,13 +173,13 @@ export default {
 
       let operationType
       if (isBlocked) {
-        operationType = globalize('user-op-list.block')
+        operationType = 'Block'
       } else if (isReset) {
-        operationType = globalize('user-op-list.reset-unverified')
+        operationType = 'Reset to unverified'
       } else if (isUnblocked) {
-        operationType = globalize('user-op-list.unblock')
+        operationType = 'Unblock'
       } else {
-        operationType = globalize('user-op-list.change-role-request')
+        operationType = 'Change role request'
       }
 
       return operationType
@@ -203,7 +203,7 @@ export default {
           operationType: operationType.charAt(0).toUpperCase() +
             operationType.slice(1),
           appliedAt: moment(item.operation.appliedAt).format('DD MMM YYYY [at] hh:mm:ss'),
-          sourceAccount: item.operation.source.id === this.masterPubKey ? globalize('user-op-list.master') : item.operation.source.id,
+          sourceAccount: item.operation.source.id === this.masterPubKey ? 'Master' : item.operation.source.id,
           receiverAccount: safeGet(item, 'operation.details.receiverAccount.id'),
           accountTo: safeGet(item, 'operation.details.accountTo.id'),
         })

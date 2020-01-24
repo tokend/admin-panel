@@ -5,13 +5,13 @@ import Modal from '../../components/common/modals/Modal'
 import { globalize } from '@/components/App/filters/filters'
 const template = `
   <modal maxWidth="40rem">
-    <p class="modal__title">{{ title | globalize }}</p>
+    <p class="modal__title">{{ title }}</p>
     <div class="issuance-rl__reject-form-actions app__form-actions">
       <button class="app__btn app__btn--color-theme" @click="confirm">
-        {{ confirmText | globalize }}
+        {{ confirmText }}
       </button>
       <button class="app__btn-secondary" @click="cancel">
-        {{ cancelText | globalize }}
+        {{ cancelText }}
       </button>
     </div>
   </modal>
@@ -29,7 +29,6 @@ export function confirmAction (opts = {}) {
   const title = opts.title || globalize('confirmation-message.confirm-msg')
   const confirmText = opts.confirmText || globalize('confirmation-message.submit')
   const cancelText = opts.cancelText || globalize('confirmation-message.cancel')
-
   const container = document.createElement('div')
   document.querySelector('#app').appendChild(container)
 

@@ -7,7 +7,8 @@
       >
         <h2>
           {{ "asset-pair-manager.update-pair-price" | globalize({
-            base: base, quote: quote
+            base,
+            quote
           })
           }}
         </h2>
@@ -63,7 +64,8 @@
       >
         <h2>
           {{ "asset-pair-manager.update-pair-attributes" | globalize({
-            base: base, quote: quote
+            base,
+            quote
           })
           }}
         </h2>
@@ -185,8 +187,8 @@
             v-if="isAttributesFormSelected && formMixin.isConfirmationShown"
             :is-pending="isFormSubmitting"
             :message="'asset-pair-manager.msg-sure' | globalize"
-            ok-button-text="Yes"
-            cancel-button-text="No"
+            :ok-button-text="'asset-pair-manager.yes' | globalize"
+            :cancel-button-text="'asset-pair-manager.no' | globalize"
             @ok="updateAttributes"
             @cancel="hideConfirmation"
           />
@@ -229,7 +231,7 @@ import { confirmAction } from '@/js/modals/confirmation_message'
 import apiHelper from '@/apiHelper'
 import { api } from '@/api'
 import { base } from '@tokend/js-sdk'
-
+import { globalize } from '@/components/App/filters/filters'
 import {
   DEFAULT_INPUT_STEP,
   DEFAULT_MAX_AMOUNT,
@@ -353,7 +355,7 @@ export default {
 
     async removeAssetPair () {
       const isConfirmed = await confirmAction({
-        title: 'Are you sure? This action cannot be undone',
+        title: globalize('asset-pair-manager.are-you-sure'),
       })
 
       if (isConfirmed) {

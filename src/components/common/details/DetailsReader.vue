@@ -82,6 +82,7 @@
 <script>
 import { verbozify } from '@/utils/verbozify'
 import _omit from 'lodash/omit'
+import { globalize } from '../../App/filters/filters'
 
 export default {
   name: 'details-reader',
@@ -111,14 +112,14 @@ export default {
   computed: {
     normalizedDetails () {
       const omittedFields = [
-        'relationshipNames',
-        'type',
-        'tx',
-        'source',
-        'effect',
-        'operation.id',
-        'operation.appliedAt',
-        'details.id',
+        globalize('details-reader.relationship-names'),
+        globalize('details-reader.type'),
+        globalize('details-reader.tx'),
+        globalize('details-reader.source'),
+        globalize('details-reader.effect'),
+        globalize('details-reader.operation-id'),
+        globalize('details-reader.operation-applied-at'),
+        globalize('details-reader.details-id'),
       ]
 
       return _omit(this.details, omittedFields)

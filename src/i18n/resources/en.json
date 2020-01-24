@@ -413,7 +413,8 @@
       "header": "Session Timeout Warning",
       "text-long-inct": "The session is about to expire due to long inactivity.<br> Click <strong>Continue</strong> to extend the session.<br /> <br> Session expires in {{ timeLeft }}<br>",
       "btn-cont": "Continue",
-      "btn-log-out": "Log out"
+      "btn-log-out": "Log out",
+      "seconds": "seconds"
     },
     "ie-restriction-message": {
       "no-support-msg": "The browser you're using doesn't support all the needed features. Please consider installing one of the following browsers.",
@@ -497,12 +498,6 @@
     "collection-loader": {
       "more": "More"
     },
-    "form-confirmation": {
-      "processing": "Processing...",
-      "please-recheck-form": "Please, recheck the form before confirmation",
-      "btn-confirm": "Confirm",
-      "btn-cancel": "Cancel"
-    },
     "g-auth": {
       "header": "Two-factor authentication",
       "need-set-up-2fa": "You have to set up 2FA to proceed.",
@@ -532,7 +527,7 @@
       "your-account": "(you)",
       "load": "Loading...",
       "fail-load": "Nothing here yet",
-      "unnamed": "Unnamed "
+      "unnamed": "Unnamed {{id}}"
     },
     "admin-manager": {
       "add-new-admin": "Add new administrator",
@@ -549,8 +544,11 @@
       "successfully-submitted": "Successfully submitted",
       "master": "Master",
       "no-description": "(No description)",
-      "unnamed": "Unnamed ",
-      "root-admin-system": "The root admin of the system"
+      "unnamed": "Unnamed ({{id}})",
+      "root-admin-system": "The root admin of the system",
+      "please-recheck-form": "Please, recheck the form before confirmation",
+      "btn-confirm": "Confirm",
+      "btn-cancel": "Cancel"
     },
     "admins-index": {
       "header": "Admin list",
@@ -578,7 +576,10 @@
       "lbl-is-tradable": "Is tradable",
       "lbl-physical-restriction": "Physical price restriction",
       "lbl-current-restriction": "Current price restriction",
-      "pair-created": "Pair has been created."
+      "pair-created": "Pair has been created.",
+      "please-recheck-form": "Please, recheck the form before confirmation",
+      "btn-confirm": "Confirm",
+      "btn-cancel": "Cancel"
     },
     "asset-pair-list": {
       "price": "Price",
@@ -613,7 +614,8 @@
       "asset-pair-removed": "Asset pair was successfully removed",
       "lbl-price": "Price ({{amount}})",
       "yes": "Yes",
-      "no": "No"
+      "no": "No",
+      "are-you-sure": "Are you sure? This action cannot be undone"
     },
     "asset-pairs-index": {
       "asset-pairs-btn": "Asset pairs",
@@ -632,7 +634,8 @@
       "update": "Update"
     },
     "asset-request-reject-form": {
-      "reject": "Reject {{ assetRequestCode }}",
+      "header": "Reject {{ assetRequestCode }}",
+      "reject": "Reject",
       "create-request": "create request",
       "update-request": "create request",
       "btn-reject": "Reject",
@@ -689,7 +692,10 @@
       "lbl-asset": "Asset",
       "msg-please-recheck-all-fields": "Please, recheck all the fields",
       "placeholder-email-or-gaaq": "email@example.com or GAAQ...",
-      "issued-successfully": "Issued successfully"
+      "issued-successfully": "Issued successfully",
+      "btn-confirm": "Confirm",
+      "btn-cancel": "Cancel",
+      "account-not-exists": "Account doesn't exists in the system"
     },
     "issuance-history": {
       "id": "ID",
@@ -768,14 +774,17 @@
       "lbl-withdraw": "Withdraw",
       "lbl-integration-erc20": "Integration with erc20",
       "lbl-address": "Address",
-      "lbl-alphanumeric-4": "Alphanumeric 4",
-      "lbl-alphanumeric-12": "Alphanumeric 12",
-      "lbl-native": "Native",
+      "alphanumeric-4": "Alphanumeric 4",
+      "alphanumeric-12": "Alphanumeric 12",
+      "native": "Native",
       "submitted-successfully": "Submitted successfully.",
       "choose-img": "Choose an image from your PC",
       "img-type": "JPEG, PNG or BMP",
       "img-weight-limit": "no more than 5mb",
-      "min-img-resolution": "not less than 1024x576, 1:1"
+      "min-img-resolution": "not less than 1024x576, 1:1",
+      "please-recheck-form": "Please, recheck the form before confirmation",
+      "btn-confirm": "Confirm",
+      "btn-cancel": "Cancel"
     },
     "system-assets-index": {
       "header": "Assets owned by master",
@@ -879,8 +888,11 @@
       "placeholder-bitmask-exact-match": "Bitmask, exact match",
       "destination-address": "Destination address",
       "comment": "Comment",
-      "max-amount": "Max amount is ",
-      "request-created-successfully": "Request created successfully"
+      "max-amount": "Max amount is {{amount}}",
+      "please-recheck-form": "Please, recheck the form before confirmation",
+      "btn-confirm": "Confirm",
+      "btn-cancel": "Cancel"
+
     },
     "collected-fees-withdrawals": {
       "header": "Withdrawals",
@@ -1037,6 +1049,21 @@
       "yes-confirm": "Yes, confirm",
       "no-cancel": "No, cancel"
     },
+    "review-decisions-list-item": {
+      "approve": "Ready to approve",
+      "approving": "Approving…",
+      "approved": "Approved",
+      "error": "Error",
+      "reject": "Ready to reject",
+      "rejecting": "Rejecting…",
+      "rejected": "Rejected",
+      "skip": "Skipped",
+      "none": "Not reviewed",
+      "submit-auto-verification": "Submit auto verification request",
+      "complete-auto-verification": "Complete auto verification request",
+      "manual-review-required": "Manual review required",
+      "default": "Default"
+    },
     "review-decision-viewer": {
       "error": "Error:",
       "action": "Action:",
@@ -1058,7 +1085,10 @@
       "lbl-role-to-set": "Role to set",
       "lbl-state": "State",
       "lbl-pending-tasks": "Pending tasks",
-      "lbl-requestor": "Requestor"
+      "lbl-requestor": "Requestor",
+      "unverified-role": "Unverified",
+      "general-role": "General",
+      "corporate-role": "Corporate"
     },
     "kyc-requests-queue": {
       "lost-actions-after-reload": "Your actions will be lost after page reload",
@@ -1072,7 +1102,9 @@
       "quit-warning": "Quit the review? All your decisions will be lost",
       "yes": "Yes",
       "no": "No",
-      "filter-requests-warning": "Filter requests? All your decisions will be lost"
+      "filter-requests-warning": "Filter requests? All your decisions will be lost",
+      "unverified": "unverified",
+      "blocked": "blocked"
     },
     "kyc-requests": {
       "index": "Index",
@@ -1120,7 +1152,9 @@
       "placeholder-unlimited": "Unlimited",
       "placeholder-not-set": "Not set",
       "limits-update-saved": "Limits update saved",
-      "limits-removed": "Limits removed"
+      "limits-removed": "Limits removed",
+      "yes": "Yes",
+      "no": "No"
     },
     "limits-uploaded-docs-list": {
       "description": "Description",
@@ -1219,12 +1253,10 @@
       "loading": "Loading...",
       "fail-load": "Nothing here yet",
       "lbl-reject-reason": "Reject reason",
-      "pending": "Pending",
-      "accepted": "Accepted",
-      "rejected": "Rejected",
       "rejected-transaction-submitted": "Pending transaction for rejected request submitted",
       "fulfill-transaction-submitted": "Pending transaction for fulfill request submitted",
-      "enter-reject": "Enter reject reason before continue"
+      "enter-reject": "Enter reject reason before continue",
+      "all": "All"
     },
     "pre-issuance-requests-index": {
       "header": "Preissuance Requests",
@@ -1237,7 +1269,8 @@
       "link-pre-issuance-requests": "Pre-issuance requests"
     },
     "operation-details": {
-      "header": "Operation details"
+      "header": "Operation details",
+      "master": "Master"
     },
     "poll-list": {
       "header": "Poll list",
@@ -1345,7 +1378,8 @@
       "no-investments-yet": "No investments yet.",
       "error": "An error occurred. Please try again later.",
       "loading": "Loading...",
-      "lbl-quote-asset": "Quote asset"
+      "lbl-quote-asset": "Quote asset",
+      "invested": "{{ quoteAsset }} invested"
     },
     "sale-manager-description-tab": {
       "label-sale-video": "Sale video",
@@ -1396,10 +1430,10 @@
       "max-amoubt-to-sold": "Max {{ assetId }} amount to be sold",
       "short-description": "Short description",
       "sale-logo": "Sale logo",
-      "progress": "progress",
       "price-per-sale": "Price (per {{ assetId }})",
       "title-assets-equivalent": "Current cap + current caps of the other acceptable assets in the {{itemAssetId}} equivalent",
-      "title-hard-cup-equivalent": "Hard cap of the sale in the {{itemAssetId}} equivalent"
+      "title-hard-cup-equivalent": "Hard cap of the sale in the {{itemAssetId}} equivalent",
+      "progress": "{{ assetId }} progress"
     },
     "sale-manager-syndicate-tab": {
       "label": "Corporate user details",
@@ -1558,13 +1592,14 @@
       "offered-at": "Offered at",
       "offerer": "Offerer",
       "offered-amount": "Offered amount",
-      "price-per-item-details-asset-code": "Price per {{ itemDetails.baseAssetCode }}",
+      "price-per-item-details-asset-code": "Price per {{ baseAssetCode }}",
       "total-price": "Total price"
     },
     "price-chart-fetcher": {
       "no-chart-data-yet": "No chart data yet",
       "error-fetch": "An error occurred while fetching asset.\nPlease try again later.",
-      "fetching-chart-data": "Fetching chart data..."
+      "fetching-chart-data": "Fetching chart data...",
+      "day": "day"
     },
     "price-chart-scale-picker": {
       "btn-hour": "Hour",
@@ -1608,7 +1643,8 @@
       "btn-cancel": "Cancel",
       "lbl-block-reason": "Block reason",
       "user-account-blocked": "The user account was blocked",
-      "user-account-unblocked": "The user account was unblocked"
+      "user-account-unblocked": "The user account was unblocked",
+      "are-you-sure": "Are you sure?"
     },
     "user-details-kyc": {
       "header": "KYC information",
@@ -1628,7 +1664,11 @@
       "open-file": "Open file",
       "avatar": "Avatar",
       "photo-with-verification-code": "Photo with verification code",
-      "code": "Code: {{ userAddress }}"
+      "code": "Code: {{ userAddress }}",
+      "passport": "Passport",
+      "identity-card": "Identity card",
+      "driving-license": "Driving license",
+      "residence-permit": "Residence permit"
     },
     "user-details-request": {
       "btn-approve": "Approve",
@@ -1638,14 +1678,16 @@
       "btn-cancel": "Cancel",
       "lbl-reject-reason": "Reject reason",
       "request-approved-successfully": "Request approved successfully",
-      "request-rejected-successfully": "Request rejected successfully"
+      "request-rejected-successfully": "Request rejected successfully",
+      "are-you-sure": "Are you sure? This action cannot be undone"
     },
     "user-details-reset": {
       "btn-reset-unverified": "Reset to unverified",
       "btn-reset": "Reset",
       "btn-cancel": "Cancel",
       "lbl-reject-reason": "Reject reason",
-      "account-reset-to-unverified": "The user account was reset to unverified"
+      "account-reset-to-unverified": "The user account was reset to unverified",
+      "are-you-sure": "Are you sure? This action cannot be undone"
     },
     "user-details-tasks-manager": {
       "manage-tasks": "Manage tasks (advanced)",
@@ -1671,7 +1713,12 @@
       "loading": "Loading...",
       "previous-approved-kys-request": "Previous approved KYC Request",
       "latest-request": "Latest request",
-      "create": "Create a '{{ accountRoleToSet }}' account: {{ state }}"
+      "create": "Create a '{{ accountRoleToSet }}' account: {{ state }}",
+      "general": "General",
+      "us-verified": "US Verified",
+      "us-accredited": "US Accredited",
+      "corporate": "Corporate",
+      "not-verified": "Not Verified"
     },
     "user-list": {
       "unverified": "Unverified",
@@ -1694,12 +1741,7 @@
       "counterparty": "Counterparty",
       "loading": "Loading...",
       "nothing-here-yet": "Nothing here yet",
-      "create-change-role-request": "Create change role request",
-      "block": "Block",
-      "reset-unverified": "Reset to unverified",
-      "unblock": "Unblock",
-      "change-role-request": "Change role request",
-      "master": "Master"
+      "create-change-role-request": "Create change role request"
     },
     "users": {
      "link-user-index": "User index"
@@ -1708,7 +1750,7 @@
       "transferable": "Transferable",
       "base-asset": "Base asset",
       "stats-quote-asset": "Stats quote asset",
-      "withdrawable": "withdrawable",
+      "withdrawable": "Withdrawable",
       "issuance-manual-review-required": "Issuance manual review required",
       "base-atomic-swap": "Can be base in atomic swap",
       "quote-atomic-swap": "Can be quote in atomic swap"
@@ -1739,6 +1781,40 @@
       "confirm-msg": "Are you sure?",
       "submit": "Submit",
       "cancel": "Cancel"
+    },
+    "issuance-mixin": {
+      "asc": "asc"
+    },
+    "details-reader": {
+      "relationship-names": "relationshipNames",
+      "type": "type",
+      "tx": "tx",
+      "source": "source",
+      "effect": "effect",
+      "operation-id": "operation.id",
+      "operation-applied-at": "operation.appliedAt",
+      "details-id": "details.id"
+    },
+    "asset-policies-formatter": {
+      "transferable": "transferable",
+      "base-asset": "base asset",
+      "stats-quote-asset": "stats quote asset",
+      "withdrawable": "withdrawable"
+    },
+    "config-checker": {
+      "please-set-quote": "Please set exactly 1 quote asset"
+    },
+    "decision-actions": {
+      "approve": "approve",
+      "reject": "reject",
+      "skip": "skip",
+      "none": "none"
+    },
+    "asset-pair": {
+      "unknown-source-format": "AssetPair: unknown source format"
+    },
+    "form-confirmation": {
+      "processing": "Processing"
     }
   }
 }

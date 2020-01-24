@@ -91,6 +91,8 @@
             :message="'issuance-form.msg-please-recheck-all-fields' | globalize"
             @ok="submit"
             @cancel="hideConfirmation"
+            :ok-button-text="'issuance-form.btn-confirm' | globalize"
+            :cancel-button-text="'issuance-form.btn-cancel' | globalize"
           />
 
           <button
@@ -121,7 +123,7 @@ import { base } from '@tokend/js-sdk'
 import config from '@/config'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { Bus } from '@/utils/bus'
-
+import { globalize } from '@/components/App/filters/filters'
 import {
   required,
   minValue,
@@ -218,7 +220,7 @@ export default {
 
       if (!address) {
         // eslint-disable-next-line prefer-promise-reject-errors
-        return Promise.reject(`Account doesn't exists in the system`)
+        return Promise.reject(globalize('issuance-form.account-not-exists'))
       }
       const { data } = await api.getWithSignature(`/v3/accounts/${address}`, {
         include: ['balances', 'balances.asset'],

@@ -216,7 +216,10 @@
             <!-- to padding of label.data-caption -->
           </span>
           <label class="data-caption">
-            {{ item.asset.id }} progress
+            {{ "sale-manager-details-tab.progress" | globalize({
+              assetId: item.asset.id
+            })
+            }}
           </label>
           <li>
             <span>

@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import { formatDate } from '@/utils/formatters'
+
 import { DocLinkGetter } from '@comcom/getters'
 import { DOCUMENTS_POLICIES } from '@/constants'
 
@@ -75,7 +75,6 @@ export default {
     return {
       isLoading: false,
       isNoMoreEntries: false,
-      formatDate,
       DOCUMENTS_POLICIES,
     }
   },

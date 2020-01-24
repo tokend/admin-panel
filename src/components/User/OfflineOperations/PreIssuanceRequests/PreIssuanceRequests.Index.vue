@@ -43,7 +43,7 @@ export default {
 
   data () {
     return {
-      asset: [{ id: 'All' }],
+      asset: [{ id: globalize('pre-issuance-requests-index.all') }],
       assets: undefined,
       assetsLoaded: false,
     }
@@ -75,7 +75,7 @@ export default {
         let response = await api.getWithSignature('/v3/assets')
         let assets = await loadingDataViaLoop(response)
         this.assets = [{
-          id: globalize('pre-issuance-requests-index.all'),
+          id: 'All',
         }].concat(assets)
         this.asset = this.assets[0].id
         this.assetsLoaded = true

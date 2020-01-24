@@ -19,9 +19,7 @@
           :file-key="safeGet(asset, `creatorDetails.logo.key`)"
           @change="onFileChange($event, DOCUMENT_TYPES.assetLogo)"
           :title="'asset-manager.choose-img' | globalize"
-          :img-type="'asset-manager.img-type' | globalize"
-          :img-weight="'asset-manager.img-weight-limit' | globalize"
-          :img-resolution="'asset-manager.min-img-resolution' | globalize"
+          :notes="notes"
         />
       </div>
 
@@ -365,7 +363,7 @@
                 :key="assetType.value"
                 :value="assetType.value"
               >
-                {{ assetType.label }}
+                {{ assetType.translationId | globalize }}
               </option>
             </select-field>
 
@@ -444,6 +442,9 @@
           :is-pending="isFormSubmitting"
           @ok="submit"
           @cancel="hideConfirmation"
+          :message="'asset-manager.please-recheck-form' | globalize"
+          :ok-button-text="'asset-manager.btn-confirm' | globalize"
+          :cancel-button-text="'asset-manager.btn-cancel' | globalize"
         />
 
         <button
@@ -479,6 +480,7 @@ import {
 
 import { base } from '@tokend/js-sdk'
 import { api, documentsManager } from '@/api'
+import { globalize } from '@/components/App/filters/filters'
 
 import safeGet from 'lodash/get'
 
@@ -490,8 +492,6 @@ import { fileReader } from '@/utils/file-reader'
 import { mapGetters } from 'vuex'
 import { getters } from '@/store/types'
 import _isEmpty from 'lodash/isEmpty'
-
-import { globalize } from '@/components/App/filters/filters'
 
 import {
   ASSET_POLICIES,
@@ -508,15 +508,15 @@ const ASSET_NAME_MAX_LENGTH = 255
 
 const STELLAR_ASSET_TYPES = [
   {
-    label: globalize('asset-manager.lbl-alphanumeric-4'),
+    translationId: 'asset-manager.alphanumeric-4',
     value: 'credit_alphanum4',
   },
   {
-    label: globalize('asset-manager.lbl-alphanumeric-12'),
+    translationId: 'asset-manager.alphanumeric-12',
     value: 'credit_alphanum12',
   },
   {
-    label: globalize('asset-manager.lbl-native'),
+    translationId: 'asset-manager.native',
     value: 'native',
   },
 ]
@@ -683,7 +683,13 @@ export default {
       assetTypeDefault: 'kvAssetTypeDefault',
       assetTypeKycRequired: 'kvAssetTypeKycRequired',
     }),
-
+    notes () {
+      return [
+        globalize('asset-manager.img-type'),
+        globalize('asset-manager.img-weight-limit'),
+        globalize('asset-manager.min-img-resolution'),
+      ]
+    },
     isExistingAsset () {
       return !!this.assetCode
     },
@@ -716,7 +722,7 @@ export default {
 
   methods: {
     safeGet,
-
+    globalize,
     async getAsset () {
       try {
         const endpoint = `/v3/assets/${this.assetCode}`

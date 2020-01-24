@@ -12,7 +12,7 @@
               v-model="form.balanceId"
               :label="'collected-fees-withdraw.lbl-asset' | globalize"
               :disabled="formMixin.isDisabled"
-              :error-message="checkErrorSelectField | globalize"
+              :error-message="getErrorSelectField"
             >
               <option
                 v-for="balance in masterBalances"
@@ -80,7 +80,7 @@
             class="app__form-field"
             type="text"
             v-model.trim="form.meta"
-            :label="selectInputFieldLabel | globalize"
+            :label="getInputFieldLabel | globalize"
             name="withdrawal-meta"
             @blur="touchField('form.meta')"
             :error-message="getFieldErrorMessage('form.meta')"
@@ -131,14 +131,17 @@
         </div>
 
         <div class="app__form-actions">
+          <!-- eslint-disable max-len -->
           <form-confirmation
             v-if="formMixin.isConfirmationShown"
             :is-pending="isFormSubmitting"
             :message="'collected-fees-withdraw.msg-recheck-form' | globalize"
             @ok="submit"
             @cancel="hideConfirmation"
+            :ok-button-text="'collected-fees-withdraw.btn-confirm' | globalize"
+            :cancel-button-text="'collected-fees-withdraw.btn-cancel' | globalize"
           />
-
+          <!-- eslint-enable max-len -->
           <button
             v-else
             class="app__btn collected-fees-withdraw__submit-btn"
@@ -232,16 +235,16 @@ export default {
       assetByCode: 'assetByCode',
     }),
 
-    selectInputFieldLabel () {
+    getInputFieldLabel () {
       return this.isMasterSelectedBalanceAsset
         ? 'collected-fees-withdraw.destination-address'
         : 'collected-fees-withdraw.comment'
     },
 
-    checkErrorSelectField () {
+    getErrorSelectField () {
       return this.isSelectedAssetWithdrawable
         ? ''
-        : 'collected-fees-withdraw.error-asset-not-withdrawable'
+        : globalize('collected-fees-withdraw.error-asset-not-withdrawable')
     },
 
     selectedBalanceAttrs () {
@@ -267,7 +270,9 @@ export default {
         this.selectedBalanceAttrs.available,
         this.selectedBalanceAttrs.assetCode
       )
-      return globalize('collected-fees-withdraw.max-amount')`${formatted}`
+      return globalize('collected-fees-withdraw.max-amount', {
+        amount: formatted,
+      })
     },
 
     isSelectedAssetWithdrawable () {

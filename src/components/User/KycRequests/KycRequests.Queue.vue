@@ -181,7 +181,10 @@ export default {
     },
 
     verifiedAccountRoles () {
-      return _omit(this.kvAccountRoles, ['unverified', 'blocked'])
+      return _omit(this.kvAccountRoles, [
+        globalize('kyc-requests-queue.unverified'),
+        globalize('kyc-requests-queue.blocked'),
+      ])
     },
   },
 

@@ -39,7 +39,7 @@
 <script>
 import { api } from '@/api'
 import { AssetPair } from '../../models/AssetPair'
-
+import { globalize } from '@/components/App/filters/filters'
 import PriceChart from './PriceChart.Renderer'
 import ScalePicker from './PriceChart.ScalePicker'
 
@@ -58,7 +58,7 @@ export default {
   data () {
     return {
       priceHistory: {},
-      scale: 'day',
+      scale: '',
       isLoaded: [],
       isFailed: [],
     }
@@ -70,6 +70,7 @@ export default {
 
   created () {
     this.getPriceHistory()
+    this.scale = globalize('price-chart-fetcher.day')
   },
 
   methods: {

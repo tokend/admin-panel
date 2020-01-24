@@ -222,6 +222,8 @@ import { ChangeRoleRequest } from '@/apiHelper/responseHandlers/requests/ChangeR
 import { fromKycTemplate } from '../../../../../utils/kyc-tempater'
 import deepCamelCase from 'camelcase-keys-deep'
 
+import { globalize } from '@/components/App/filters/filters'
+
 import { mapGetters } from 'vuex'
 
 const OPERATION_TYPE = {
@@ -270,11 +272,11 @@ export default {
 
     roleTypeVerbose () {
       return {
-        [ this.kvAccountRoles.general ]: 'General',
-        [ this.kvAccountRoles.usVerified ]: 'US Verified',
-        [ this.kvAccountRoles.usAccredited ]: 'US Accredited',
-        [ this.kvAccountRoles.corporate ]: 'Corporate',
-        [ this.kvAccountRoles.notVerified ]: 'Not Verified',
+        [ this.kvAccountRoles.general ]: globalize('user-details.general'),
+        [ this.kvAccountRoles.usVerified ]: globalize('user-details.us-verified'),
+        [ this.kvAccountRoles.usAccredited ]: globalize('user-details.us-accredited'),
+        [ this.kvAccountRoles.corporate ]: globalize('user-details.corporate'),
+        [ this.kvAccountRoles.notVerified ]: globalize('user-details.not-verified'),
       }
     },
 

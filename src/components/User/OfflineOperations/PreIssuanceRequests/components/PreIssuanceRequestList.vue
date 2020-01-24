@@ -232,12 +232,6 @@ export default {
       this.$store.commit('CLOSE_LOADER')
     },
 
-    parseStatus (accepted) {
-      if (accepted === null) return 'pre-issuance-request-list.pending'
-      return accepted ? 'pre-issuance-request-list.accepted'
-        : 'pre-issuance-request-list.rejected'
-    },
-
     async getRequests () {
       this.isLoading = true
       let response

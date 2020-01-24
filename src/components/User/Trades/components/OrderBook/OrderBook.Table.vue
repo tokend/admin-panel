@@ -143,7 +143,10 @@
         <li>
           <span>
             <!-- eslint-disable-next-line max-len -->
-            {{ "order-book-table.price-per-item-details-asset-code" | globalize }}
+            {{ "order-book-table.price-per-item-details-asset-code" | globalize({
+              baseAssetCode: itemDetails.baseAssetCode
+            })
+            }}
           </span>
           <asset-amount-formatter
             :amount="itemDetails.price"

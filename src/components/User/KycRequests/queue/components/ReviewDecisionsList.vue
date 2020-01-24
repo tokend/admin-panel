@@ -36,7 +36,7 @@
       <button
         class="app__btn review-decisions-list__btn"
         :disabled="!readyForReviewDecisions.length"
-        :title="checkReadyForReviewDecisions | globalize"
+        :title="checkReadyForReviewDecisions"
         @click="submitReview"
       >
         {{ "review-decisions-list.btn-submit" | globalize }}
@@ -92,7 +92,7 @@ export default {
     checkReadyForReviewDecisions () {
       return this.readyForReviewDecisions.length
         ? ''
-        : 'review-decisions-list.btn-no-ready-review'
+        : globalize('review-decisions-list.btn-no-ready-review')
     },
   },
 

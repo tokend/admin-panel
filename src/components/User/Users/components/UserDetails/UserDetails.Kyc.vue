@@ -136,12 +136,13 @@
 <script>
 import { UserDocLinkGetter } from '@comcom/getters'
 import { byAlpha2 } from 'iso-country-codes'
+import { globalize } from '@/components/App/filters/filters'
 
 const ID_DOCUMENTS_VERBOSE = {
-  passport: 'Passport',
-  identity_card: 'Identity card',
-  driving_license: 'Driving license',
-  residence_permit: 'Residence permit',
+  passport: globalize('user-details-kyc.passport'),
+  identity_card: globalize('user-details-kyc.identity-card'),
+  driving_license: globalize('user-details-kyc.driving-license'),
+  residence_permit: globalize('user-details-kyc.residence-permit'),
 }
 
 export default {

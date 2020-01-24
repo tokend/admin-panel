@@ -113,6 +113,9 @@
             :is-pending="isFormSubmitting"
             @ok="submit"
             @cancel="hideConfirmation"
+            :message="'admin-manager.please-recheck-form' | globalize"
+            :ok-button-text="'admin-manager.btn-confirm' | globalize"
+            :cancel-button-text="'admin-manager.btn-cancel' | globalize"
           />
 
           <template v-else>
@@ -269,7 +272,7 @@ export default {
           return {
             id: item.id,
             name: (item.details || {}).name ||
-            globalize('admin-manager.unnamed')`(${item.id})`,
+            globalize('admin-manager.unnamed', { id: item.id }),
             description: (item.details || {}).description ||
             globalize('admin-manager.no-description'),
           }

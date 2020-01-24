@@ -46,10 +46,9 @@ export default {
   props: {
     label: { type: String, default: '' },
     value: { type: [String, Number], default: undefined },
-    errorMessage: { type: String, default: undefined },
+    errorMessage: { type: String, default: '' },
 
     // proxies
-    autocomplete: { type: String, default: '' },
     autofocus: { type: Boolean, default: false },
     disabled: { type: Boolean, default: false },
     name: { type: String, default: undefined },

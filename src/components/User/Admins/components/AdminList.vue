@@ -123,7 +123,7 @@ export default {
       }
       const role = signerRoles.find(item => item.id === roleId) || {}
       return (role.details || {}).name ||
-      globalize('admin-list.unnamed')`(${roleId})`
+      globalize('admin-list.unnamed', { id: roleId })
     },
   },
 

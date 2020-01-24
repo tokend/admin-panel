@@ -9,6 +9,7 @@
       :value="value"
       @input.native="onInput"
       placeholder=" "
+      @keypress="onKeypress"
     />
 
     <span class="input-field__label">

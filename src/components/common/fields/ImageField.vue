@@ -14,14 +14,12 @@
         </p>
 
         <div class="notes">
-          <p class="image-input__note">
-            {{ imgType }}
-          </p>
-          <p class="image-input__note">
-            {{ imgWeight }}
-          </p>
-          <p class="image-input__note">
-            {{ imgResolution }}
+          <p
+            class="image-input__note"
+            v-for="(note, key) in notes"
+            :key="key"
+          >
+            {{ note }}
           </p>
         </div>
       </div>
@@ -50,17 +48,13 @@ export default {
       type: String,
       default: '',
     },
-    imgType: {
-      type: String,
-      default: '',
-    },
-    imgWeight: {
-      type: String,
-      default: '',
-    },
-    imgResolution: {
-      type: String,
-      default: '',
+    notes: {
+      type: Array,
+      default: () => [
+        '',
+        '',
+        '',
+      ],
     },
   },
 

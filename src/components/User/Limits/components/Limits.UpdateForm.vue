@@ -125,8 +125,8 @@
         v-if="formMixin.isConfirmationShown"
         :is-pending="isFormSubmitting"
         :message="'limits-update-form.msg-sure' | globalize"
-        ok-button-text="Yes"
-        cancel-button-text="No"
+        :ok-button-text="'limits-update-form.yes' | globalize"
+        :cancel-button-text="'limits-update-form.no' | globalize"
         @ok="submit"
         @cancel="hideConfirmation"
       />

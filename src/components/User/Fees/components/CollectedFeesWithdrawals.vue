@@ -18,8 +18,7 @@
             {{ "collected-fees-withdrawals.canceled" | globalize }}
           </option>
           <option :value="REQUEST_STATES.approved">
-            {{ "collected-fees-withdrawals.approved" | globalize
-            }}
+            {{ "collected-fees-withdrawals.approved" | globalize }}
           </option>
           <option :value="REQUEST_STATES.rejected">
             {{ "collected-fees-withdrawals.rejected" | globalize }}

@@ -52,7 +52,7 @@
       >
         <div class="app__form-row">
           <text-field
-            :label="'user-details-request.lbl-reject-reason'"
+            :label="'user-details-request.lbl-reject-reason' | globalize"
             :autofocus="true"
             v-model="rejectForm.reason"
             @blur="touchField('rejectForm.reason')"
@@ -96,7 +96,7 @@ import { confirmAction } from '@/js/modals/confirmation_message'
 import { Bus } from '@/utils/bus'
 
 import { ChangeRoleRequest } from '@/apiHelper/responseHandlers/requests/ChangeRoleRequest'
-
+import { globalize } from '@/components/App/filters/filters'
 const EVENTS = {
   reviewed: 'reviewed',
 }
@@ -152,7 +152,9 @@ export default {
 
   methods: {
     async approve () {
-      if (!await confirmAction('Are you sure? This action cannot be undone')) {
+      if (!await confirmAction(
+        globalize('user-details-request.are-you-sure'))
+      ) {
         return
       }
       this.isPending = true
@@ -175,7 +177,9 @@ export default {
     },
 
     async reject (isPermanent = false) {
-      if (!await confirmAction('Are you sure? This action cannot be undone')) {
+      if (!await confirmAction(
+        globalize('user-details-request.are-you-sure'))
+      ) {
         return
       }
       this.isPending = true

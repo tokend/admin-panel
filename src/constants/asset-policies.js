@@ -1,6 +1,5 @@
 import { xdrEnumToConstant } from '@/utils/xdrEnumToConstant'
 import { base } from '@tokend/js-sdk'
-
 export const ASSET_POLICIES = Object.freeze(
   xdrEnumToConstant('AssetPolicy')
 )

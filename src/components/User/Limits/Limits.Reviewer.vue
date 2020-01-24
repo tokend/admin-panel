@@ -118,7 +118,7 @@
     <template v-else>
       <template v-if="!isLoaded">
         <p>
-          {{ "limits-reviewer.loaging" | globalize }}
+          {{ "limits-reviewer.loading" | globalize }}
         </p>
       </template>
       <template v-else>

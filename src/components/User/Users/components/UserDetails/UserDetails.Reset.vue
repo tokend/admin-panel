@@ -69,7 +69,7 @@ import { required, maxLength } from '@/validators'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { confirmAction } from '@/js/modals/confirmation_message'
 import { Bus } from '@/utils/bus'
-
+import { globalize } from '@/components/App/filters/filters'
 import { ChangeRoleRequest } from '@/apiHelper/responseHandlers/requests/ChangeRoleRequest'
 
 import { api } from '@/api'
@@ -135,7 +135,7 @@ export default {
 
   methods: {
     async resetToUnverified () {
-      if (!await confirmAction('Are you sure? This action cannot be undone')) {
+      if (!await confirmAction(globalize('user-details-reset.are-you-sure'))) {
         return
       }
       this.$emit(EVENTS.updateIsPending, true)

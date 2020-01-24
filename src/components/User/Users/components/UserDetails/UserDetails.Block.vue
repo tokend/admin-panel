@@ -78,6 +78,7 @@ import { ChangeRoleRequest } from '@/apiHelper/responseHandlers/requests/ChangeR
 
 import { api } from '@/api'
 import { mapGetters } from 'vuex'
+import { globalize } from '@/components/App/filters/filters'
 
 const EVENTS = {
   updated: 'updated',
@@ -143,7 +144,7 @@ export default {
 
   methods: {
     async blockUser () {
-      if (!await confirmAction('Are you sure?')) {
+      if (!await confirmAction(globalize('user-details-block.are-you-sure'))) {
         return
       }
       this.$emit(EVENTS.updateIsPending, true)
@@ -170,7 +171,7 @@ export default {
     },
 
     async unblockUser () {
-      if (!await confirmAction('Are you sure?')) {
+      if (!await confirmAction(globalize('user-details-block.are-you-sure'))) {
         return
       }
       this.$emit(EVENTS.updateIsPending, true)

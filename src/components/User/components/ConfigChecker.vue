@@ -28,13 +28,13 @@ import { Bus } from '@/utils/bus'
 
 import { ASSET_POLICIES } from '@/constants'
 import config from '@/config'
-
+import { globalize } from '@/components/App/filters/filters'
 import { api, loadingDataViaLoop } from '@/api'
 import store from '@/store'
 
 const CHECK_LIST = [
   {
-    message: 'Please set exactly 1 quote asset',
+    message: globalize('config-checker.please-set-quote'),
     async check ({ store, api }) {
       let response = await api.getWithSignature('/v3/assets', {
         filter: {

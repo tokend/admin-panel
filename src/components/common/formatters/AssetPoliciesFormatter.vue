@@ -2,10 +2,14 @@
   <span class="asset-policies-formatter capitalized">
     {{
       [
-        (mask & ASSET_POLICIES.transferable) && 'transferable',
-        (mask & ASSET_POLICIES.baseAsset) && 'base asset',
-        (mask & ASSET_POLICIES.statsQuoteAsset) && 'stats quote asset',
-        (mask & ASSET_POLICIES.withdrawable) && 'withdrawable'
+        (mask & ASSET_POLICIES.transferable) &&
+          ('asset-policies-formatter.transferable' | globalize),
+        (mask & ASSET_POLICIES.baseAsset) &&
+          ('asset-policies-formatter.base-asset' | globalize),
+        (mask & ASSET_POLICIES.statsQuoteAsset) &&
+          ('asset-policies-formatter.stats-quote-asset' | globalize),
+        (mask & ASSET_POLICIES.withdrawable) &&
+          ('asset-policies-formatter.withdrawable' | globalize)
       ].filter(item => item).join(', ') || '&mdash;'
     }}
   </span>

@@ -372,27 +372,27 @@ export default {
       return isPending && isCancellableRequestor
     },
     stellarAssetType () {
-      let label
+      let translationId
 
       switch (this.assetRequest.stellarAssetType) {
         case STELLAR_TYPES.creditAlphanum4:
-          label = 'asset-requests-show.alphanumeric-4'
+          translationId = 'asset-requests-show.alphanumeric-4'
           break
 
         case STELLAR_TYPES.creditAlphanum12:
-          label = 'asset-requests-show.alphanumeric-12'
+          translationId = 'asset-requests-show.alphanumeric-12'
           break
 
         case STELLAR_TYPES.native:
-          label = 'asset-requests-show.native'
+          translationId = 'asset-requests-show.native'
           break
 
         default:
-          label = '[UNKNOWN_STELLAR_ASSET_TYPE]'
+          translationId = '[UNKNOWN_STELLAR_ASSET_TYPE]'
           break
       }
 
-      return label
+      return translationId
     },
   },
 

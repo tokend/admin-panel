@@ -165,6 +165,9 @@
           :is-pending="isFormSubmitting"
           @ok="submit"
           @cancel="hideConfirmation"
+          :message="'asset-pair-creator.please-recheck-form' | globalize"
+          :ok-button-text="'asset-pair-creator.btn-confirm' | globalize"
+          :cancel-button-text="'asset-pair-creator.btn-cancel' | globalize"
         />
 
         <button
