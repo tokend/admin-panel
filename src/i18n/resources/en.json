@@ -476,7 +476,8 @@
       "error-automatically-log": "Can not automatically log into the system. Try to log yourself",
       "error-not-registered": "You are not registered, try again to register with the secret key later",
       "username-already-exist": "Username already exist. Please select another",
-      "account-already-exists": "Account already exists"
+      "account-already-exists": "Account already exists",
+      "server-error": "Server error"
     },
     "account-state-getter": {
       "loading": "Loading...",
@@ -544,7 +545,6 @@
       "btn-upd": "Update",
       "confirmation-delete-admin": "Are you sure you want to delete this admin?",
       "successfully-submitted": "Successfully submitted",
-      "master": "Master",
       "no-description": "(No description)",
       "unnamed": "Unnamed ({{id}})",
       "root-admin-system": "The root admin of the system",
@@ -695,7 +695,8 @@
       "issued-successfully": "Issued successfully",
       "btn-confirm": "Confirm",
       "btn-cancel": "Cancel",
-      "account-not-exists": "Account doesn't exists in the system"
+      "account-not-exists": "Account doesn't exists in the system",
+      "error": "The receiver has no {{asset}} balance."
     },
     "issuance-history": {
       "id": "ID",
@@ -1529,7 +1530,8 @@
       "btn-cancel": "Cancel",
       "lbl-perm-rejected": "Reject permanently",
       "sale-request-approved": "Sale request approved.",
-      "sale-request-rejected": "Sale request rejected successfully."
+      "sale-request-rejected": "Sale request rejected successfully.",
+      "error-get-request": "SaleRequestManager: provide \"id\" or \"sale\""
     },
     "sale-request-list": {
       "header": "Sale request list",
@@ -1770,9 +1772,6 @@
       "submit": "Submit",
       "cancel": "Cancel"
     },
-    "issuance-mixin": {
-      "asc": "asc"
-    },
     "details-reader": {
       "relationship-names": "relationshipNames",
       "type": "type",
@@ -1787,7 +1786,8 @@
       "transferable": "transferable",
       "base-asset": "base asset",
       "stats-quote-asset": "stats quote asset",
-      "withdrawable": "withdrawable"
+      "withdrawable": "withdrawable",
+      "error": "AssetPoliciesFormatter: provide \"policies\" or \"policyMask\""
     },
     "config-checker": {
       "please-set-quote": "Please set exactly 1 quote asset"
@@ -1803,6 +1803,24 @@
     },
     "form-confirmation": {
       "processing": "Processing"
+    },
+    "requests": {
+      "unknown-request-type": "Unknown reviewable request type: {{type}}"
+    },
+    "auth": {
+      "admin-not-exist": "Such admin does not exist"
+    },
+    "i18n": {
+      "error": "I18n._loadResources(): unknown language: {{lang}}"
+    },
+    "bus": {
+      "error-no-event": "EventBus.list has no {{eventName}} event"
+    },
+    "xdr-enum-to-constant": {
+      "error": "xdrEnumToConstant: Cannot get values from provided xdrEnum ({{xdrEnum}})"
+    },
+    "xdr-type-from-value": {
+      "error": "xdrEnumToConstant: Cannot get values from provided xdrEnum ({{xdrEnum}})"
     }
   }
 }

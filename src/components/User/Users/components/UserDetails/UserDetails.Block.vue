@@ -144,7 +144,10 @@ export default {
 
   methods: {
     async blockUser () {
-      if (!await confirmAction(globalize('user-details-block.are-you-sure'))) {
+      if (!await confirmAction({
+        title: globalize('user-details-block.are-you-sure'),
+      })
+      ) {
         return
       }
       this.$emit(EVENTS.updateIsPending, true)
@@ -171,7 +174,10 @@ export default {
     },
 
     async unblockUser () {
-      if (!await confirmAction(globalize('user-details-block.are-you-sure'))) {
+      if (!await confirmAction({
+        title: globalize('user-details-block.are-you-sure'),
+      })
+      ) {
         return
       }
       this.$emit(EVENTS.updateIsPending, true)

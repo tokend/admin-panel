@@ -143,7 +143,10 @@ export default {
   methods: {
     async approve () {
       if (
-        !(await confirmAction(globalize('kyc-recovery-request-action.confirm-message')))
+        !(await confirmAction({
+          title: globalize('kyc-recovery-request-action.confirm-message'),
+        })
+        )
       ) {
         return
       }
@@ -166,7 +169,10 @@ export default {
 
     async reject (isPermanent = false) {
       if (
-        !(await confirmAction(globalize('kyc-recovery-request-action.confirm-message')))
+        !(await confirmAction({
+          title: globalize('kyc-recovery-request-action.confirm-message'),
+        })
+        )
       ) {
         return
       }

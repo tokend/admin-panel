@@ -406,7 +406,9 @@ export default {
           newLimits.push(this.newLimit)
         }
         if (!newLimits.length) {
-          ErrorHandler.process(newLimits.length, 'limits-reviewer.please-update-user-limits')
+          ErrorHandler.process(new Error(
+            globalize('limits-reviewer.please-update-user-limits')
+          ), 'limits-reviewer.please-update-user-limits')
           this.isPending = false
           return
         }

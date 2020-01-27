@@ -17,7 +17,7 @@
 
 <script>
 import { ASSET_POLICIES } from '@/constants'
-
+import { globalize } from '@/components/App/filters/filters'
 export default {
   props: {
     policies: { type: Array, default: null },
@@ -39,7 +39,7 @@ export default {
     } else if (this.policies === null) {
       this.mask = 0
     } else {
-      throw new Error('AssetPoliciesFormatter: provide "policies" or "policyMask"')
+      throw new Error(globalize('asset-policies-formatter.error'))
     }
   },
 

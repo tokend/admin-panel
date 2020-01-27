@@ -118,7 +118,7 @@ import { confirmAction } from '../../../../../../js/modals/confirmation_message'
 import DetailsTab from './SaleRequestManager.DetailsTab'
 import DescriptionTab from './SaleRequestManager.DescriptionTab'
 import SyndicateTab from '../../../components/SaleManager/SaleManager.SyndicateTab'
-
+import { globalize } from '@/components/App/filters/filters'
 import { REQUEST_STATES } from '@/constants'
 
 import cloneDeep from 'lodash/cloneDeep'
@@ -185,7 +185,7 @@ export default {
     if (this.id) {
       this.getRequest(this.id)
     } else {
-      throw new Error('SaleRequestManager: provide "id" or "sale"')
+      throw new Error(globalize('sale-request-manager.error-get-request'))
     }
   },
 

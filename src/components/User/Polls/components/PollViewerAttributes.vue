@@ -61,23 +61,17 @@
 
         <li>
           <span>{{ "poll-viewer-attributes.start-time" | globalize }}</span>
-          <span>
-            {{ poll.startTime | formatDate }}
-          </span>
+          <span>{{ poll.startTime | formatDate }}</span>
         </li>
 
         <li>
           <span>{{ "poll-viewer-attributes.end-time" | globalize }}</span>
-          <span>
-            {{ poll.endTime | formatDate }}
-          </span>
+          <span>{{ poll.endTime | formatDate }}</span>
         </li>
 
         <li>
           <span>
             {{ "poll-viewer-attributes.permission-type" | globalize }}
-          </span>
-          <span>
             {{ poll.permissionType | pollTypeToString }}
           </span>
         </li>

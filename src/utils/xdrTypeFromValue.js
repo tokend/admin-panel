@@ -1,4 +1,5 @@
 import { base } from '@tokend/js-sdk'
+import { globalize } from '@/components/App/filters/filters'
 
 export function xdrTypeFromValue (xdrEnum, value) {
   xdrEnum = typeof xdrEnum === 'string'
@@ -8,6 +9,9 @@ export function xdrTypeFromValue (xdrEnum, value) {
   try {
     return xdrEnum.values().filter(item => item.value === value)[0]
   } catch (error) {
-    throw new Error(`xdrEnumToConstant: Cannot get values from provided xdrEnum (${xdrEnum})`)
+    throw new Error(globalize('xdr-type-from-value.error', {
+      xdrEnum: xdrEnum,
+    })
+    )
   }
 }

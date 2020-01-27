@@ -279,7 +279,7 @@ export default {
         })
 
       this.form.signerRoleId = this.form.signerRoleId ||
-        this.signerRoles.find(item => item.name !== globalize('admin-manager.master')).id
+        this.signerRoles.find(item => item.name !== 'Master').id
     },
 
     async loadSigner () {

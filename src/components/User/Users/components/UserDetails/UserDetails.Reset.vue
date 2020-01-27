@@ -135,7 +135,10 @@ export default {
 
   methods: {
     async resetToUnverified () {
-      if (!await confirmAction(globalize('user-details-reset.are-you-sure'))) {
+      if (!await confirmAction({
+        title: globalize('user-details-reset.are-you-sure'),
+      })
+      ) {
         return
       }
       this.$emit(EVENTS.updateIsPending, true)

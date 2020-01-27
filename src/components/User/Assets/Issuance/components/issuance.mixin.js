@@ -4,7 +4,6 @@ import { CollectionLoader } from '@/components/common'
 import { REQUEST_STATES, ASSET_POLICIES } from '@/constants'
 
 import localize from '@/utils/localize'
-import { globalize } from '@/components/App/filters/filters'
 import config from '@/config'
 import { api, loadingDataViaLoop } from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
@@ -73,7 +72,7 @@ export default {
             'request_details.asset': this.filters.asset,
           },
           page: {
-            order: globalize('issuance-mixin.asc'),
+            order: 'asc',
           },
           include: ['request_details'],
         })

@@ -255,7 +255,10 @@ export default {
 
     async sendManualIssuance (receiver) {
       if (receiver === '') {
-        throw new Error(`The receiver has no ${this.form.asset} balance.`)
+        throw new Error(globalize('issuance-form.error', {
+          asset: this.form.asset,
+        })
+        )
       }
       const operation = base.CreateIssuanceRequestBuilder
         .createIssuanceRequest(

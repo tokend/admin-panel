@@ -213,7 +213,9 @@ export default {
         const res = await Vue.auth.login(this.form)
 
         if (!res.ok || res.enabledTFA) {
-          ErrorHandler.process(res, 'sign-up.error-automatically-log')
+          ErrorHandler.process(new Error(
+            globalize('sign-up.error-automatically-log')
+          ), 'sign-up.error-automatically-log')
           this.state = 'signup'
           return
         }
@@ -244,7 +246,7 @@ export default {
         })
       } catch (err) {
         ErrorHandler.processWithoutFeedback(err)
-        throw new Error('Server error')
+        throw new Error(globalize('sign-up.server-error'))
       }
 
       if (response.status === 409) {

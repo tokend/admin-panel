@@ -141,6 +141,7 @@ import apiHelper from '@/apiHelper'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { CreatePreIssuanceRequest } from '@/apiHelper/responseHandlers/requests/CreatePreIssuanceRequest'
 import { Bus } from '@/utils/bus'
+import { globalize } from '../../../../App/filters/filters'
 
 export default {
   components: { InputField },
@@ -254,7 +255,9 @@ export default {
 
     async reject (request) {
       if (!this.rejectReason) {
-        ErrorHandler.process(request, 'pre-issuance-request-list.enter-reject')
+        ErrorHandler.process(new Error(
+          globalize('pre-issuance-request-list.enter-reject')
+        ), 'pre-issuance-request-list.enter-reject')
         return
       }
 
