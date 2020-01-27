@@ -25,7 +25,7 @@
           />
           <detail
             :label="'limits-reviewer.lbl-request-type' | globalize"
-            :value="requestType"
+            :value="localizedRequestType"
           />
           <detail :label="'limits-reviewer.lbl-account-email' | globalize">
             <email-getter :account-id="account.id" />
@@ -72,7 +72,9 @@
           </div>
         </div>
       </div>
-      <template v-if="desiredLimitDetails.requestType === 'docsUploading'">
+      <template
+        v-if="desiredLimitDetails.localizedRequestType === 'docsUploading'"
+      >
         <div class="limits-reviewer__uploaded-docs-list-wrapper">
           <h3 class="limits-reviewer__heading">
             {{ "limits-reviewer.uploaded-documents" | globalize }}
@@ -101,7 +103,7 @@
           class="app__btn"
           @click="isRequiringDocs = true"
           :disabled="isPending ||
-            desiredLimitDetails.requestType === 'docsUploading' ||
+            desiredLimitDetails.localizedRequestType === 'docsUploading' ||
             request.state === REQUEST_STATES.pending"
         >
           {{ "limits-reviewer.btn-request-docs" | globalize }}
@@ -234,7 +236,6 @@ import { globalize } from '@/components/App/filters/filters'
 import {
   REQUEST_STATES,
   DOCUMENT_TYPES_STR,
-  LIMITS_REQUEST_STATES_STR,
 } from '@/constants'
 import { STATS_OPERATION_TYPES } from '@tokend/js-sdk'
 
@@ -293,7 +294,6 @@ export default {
     desiredLimitDetails: null,
     REQUEST_STATES,
     DOCUMENT_TYPES_STR,
-    LIMITS_REQUEST_STATES_STR,
     REJECT_REASON_MAX_LENGTH,
     uploadDocs: [
       {
@@ -335,7 +335,11 @@ export default {
         statsOpType: this.desiredLimitDetails.operationType,
       }
     },
-
+    LIMITS_REQUEST_STATES_KEY: {
+      update_limits: 'limits-request-states.limits-update',
+      initial: 'limits-request-states.initial',
+      docsUploading: 'limits-request-states.docs-uploading',
+    },
     newLimit () {
       const requestDetails = this.desiredLimitDetails
       const operationType = OPERATION_TYPES[requestDetails.operationType]
@@ -358,8 +362,8 @@ export default {
       return this.desiredLimitDetails.documents
     },
 
-    requestType () {
-      return globalize(LIMITS_REQUEST_STATES_STR[get(this.desiredLimitDetails, 'requestType')])
+    localizedRequestType () {
+      return this.LIMITS_REQUEST_STATES_KEY[get(this.desiredLimitDetails, 'localizedRequestType')]
     },
   },
 

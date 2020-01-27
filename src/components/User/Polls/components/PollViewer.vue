@@ -1,6 +1,6 @@
 <template>
   <div class="poll-viewer">
-    <h2>{{ "poll-viewer.header" }}</h2>
+    <h2>{{ "poll-viewer.header" | globalize }}</h2>
 
     <div class="app__block">
       <template v-if="isLoaded">

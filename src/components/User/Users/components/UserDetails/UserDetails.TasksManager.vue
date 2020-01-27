@@ -96,7 +96,7 @@
       <tick-field
         class="app__form-field"
         v-model="tasks.toRemove"
-        :label="'user-details-tasks-manager.lbl-complete-auto-verification-request' | globalize({
+        :label="'user-details-tasks-manager.lbl-submit-complete-verification-request' | globalize({
           completeAutoVerification: kvChangeRoleTasks.completeAutoVerification
         })"
         :cb-value="kvChangeRoleTasks.completeAutoVerification"

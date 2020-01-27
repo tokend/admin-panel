@@ -192,7 +192,7 @@
           class="app__form-field"
           v-model="asset.policies.value"
           :label="
-            ASSET_POLICIES_VERBOSE[ASSET_POLICIES.transferable]| globalize
+            ASSET_POLICIES_VERBOSE[ASSET_POLICIES.transferable] | globalize
           "
           :cb-value="ASSET_POLICIES.transferable"
           :disabled="formMixin.isDisabled"

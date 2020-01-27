@@ -35,7 +35,7 @@
             :title="item.requestDetails.creatorDetails.requestType"
           >
             {{
-              LIMITS_REQUEST_STATES_STR[
+              LIMITS_REQUEST_STATES_KEY[
                 item.requestDetails.creatorDetails.requestType
               ] | globalize
             }}
@@ -78,7 +78,6 @@ import { EmailGetter } from '@comcom/getters'
 import {
   ACCOUNT_TYPES,
   REQUEST_STATES,
-  LIMITS_REQUEST_STATES_STR,
 } from '@/constants'
 
 export default {
@@ -94,8 +93,14 @@ export default {
       isNoMoreEntries: false,
       REQUEST_STATES,
       ACCOUNT_TYPES,
-      LIMITS_REQUEST_STATES_STR,
     }
+  },
+  computed: {
+    LIMITS_REQUEST_STATES_KEY: {
+      update_limits: 'limits-request-states.limits-update',
+      initial: 'limits-request-states.initial',
+      docsUploading: 'limits-request-states.docs-uploading',
+    },
   },
 }
 </script>

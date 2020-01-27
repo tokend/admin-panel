@@ -75,9 +75,9 @@
             <!-- eslint-disable max-len -->
             <span
               class="app-list__cell"
-              :title="CREATE_ASSET_REQUEST_STATES[snakeToCamelCase(asset.state)].translationId"
+              :title="CREATE_ASSET_REQUEST_STATES[snakeToCamelCase(asset.state)].translationId | globalize"
             >
-              {{ CREATE_ASSET_REQUEST_STATES[snakeToCamelCase(asset.state)].translationId }}
+              {{ CREATE_ASSET_REQUEST_STATES[snakeToCamelCase(asset.state)].translationId | globalize }}
             </span>
             <!-- eslint-enable max-len -->
 

@@ -41,7 +41,7 @@
         <select-field
           v-model="filters.accountRole"
           class="limits-manager__filter"
-          :label="'limits-manager.lbl-accout-type' | globalize"
+          :label="'limits-manager.lbl-account-type' | globalize"
           v-if="filters.scope === SCOPE_TYPES.accountRole"
         >
           <option :value="kvAccountRoles.general">

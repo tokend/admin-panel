@@ -245,7 +245,7 @@
       </div>
 
       <!-- eslint-disable-next-line max-len -->
-      <template v-if="assetRequest.state !== CREATE_ASSET_REQUEST_STATES.pending.codeVerbose">
+      <template v-if="assetRequest.state !== CREATE_ASSET_REQUEST_STATES.pending.codeVerbose | globalize">
         <div class="asset-requests-show__row">
           <span class="asset-requests-show__key">
             {{ "asset-requests-show.request-state" | globalize }}
@@ -258,7 +258,7 @@
       </template>
 
       <!-- eslint-disable-next-line max-len -->
-      <template v-if="assetRequest.state === CREATE_ASSET_REQUEST_STATES.rejected.codeVerbose">
+      <template v-if="assetRequest.state === CREATE_ASSET_REQUEST_STATES.rejected.codeVerbose | globalize">
         <div class="asset-requests-show__reject-reason-wrp">
           <text-field
             :label="'asset-requests-show.lbl-reject-reason' | globalize"
@@ -271,7 +271,7 @@
       <!-- eslint-disable max-len -->
       <div
         class="asset-requests-show__buttons"
-        v-if="assetRequest.state === CREATE_ASSET_REQUEST_STATES.pending.codeVerbose"
+        v-if="assetRequest.state === CREATE_ASSET_REQUEST_STATES.pending.codeVerbose | globalize"
       >
         <button
           class="app__btn"
@@ -315,7 +315,7 @@ import safeGet from 'lodash/get'
 import { AssetRequest } from '@/apiHelper/responseHandlers/requests/AssetRequest'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { Bus } from '@/utils/bus'
-
+import { globalize } from '@/components/App/filters/filters'
 import {
   ASSET_POLICIES_VERBOSE,
   CREATE_ASSET_REQUEST_STATES,
@@ -360,7 +360,7 @@ export default {
   computed: {
     isCancellable () {
       const isPending = this.assetRequest.state ===
-        CREATE_ASSET_REQUEST_STATES.pending.codeVerbose
+        globalize(CREATE_ASSET_REQUEST_STATES.pending.codeVerbose)
       const isCancellableRequestor =
         this.assetRequest.requestor === this.$store.getters.masterId
       return isPending && isCancellableRequestor

@@ -541,6 +541,7 @@
       "lbl-signer-role": "Signer role",
       "manage-admin": "Manage administrator",
       "btn-delete": "Delete",
+      "master": "Master",
       "btn-add": "Add",
       "btn-upd": "Update",
       "confirmation-delete-admin": "Are you sure you want to delete this admin?",
