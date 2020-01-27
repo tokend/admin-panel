@@ -11,11 +11,8 @@
         <tbody>
           <tr v-for="(item, index) in whitelistedUsers" :key="index">
             <td>{{ item.email }}</td>
-            <td v-if="item.accounts">
-              {{ "sale-manager-whitelist-tab.yes" | globalize }}
-            </td>
-            <td v-else>
-              {{ "sale-manager-whitelist-tab.no" | globalize }}
+            <td>
+              {{ item.accounts | yesNoFilter }}
             </td>
           </tr>
         </tbody>

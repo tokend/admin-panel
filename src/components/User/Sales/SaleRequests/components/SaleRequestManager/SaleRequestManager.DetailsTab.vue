@@ -138,14 +138,14 @@
               <!-- eslint-disable-next-line max-len -->
               <span>{{ "sale-request-manager-details-tab.stellar-withdraw" | globalize }}</span>
               <span>
-                {{ checkAssetWithdraw | globalize }}
+                {{ request.asset.details.stellar.withdraw | yesNoFilter }}
               </span>
             </li>
             <li>
               <!-- eslint-disable-next-line max-len -->
               <span>{{ "sale-request-manager-details-tab.stellar-deposit" | globalize }}</span>
               <span>
-                {{ checkAssetDeposit | globalize }}
+                {{ request.asset.details.stellar.deposit | yesNoFilter }}
               </span>
             </li>
           </template>
@@ -201,7 +201,7 @@
             <span>
               {{ "sale-request-manager-details-tab.whitelisted" | globalize }}
             </span>
-            <span>{{ checkIsWhitelisted | globalize }}</span>
+            <span>{{ isSaleWhitelisted | yesNoFilter }}</span>
           </li>
           <li>
             <span>
@@ -332,24 +332,6 @@ export default {
   computed: {
     saleDetails () {
       return this.request.sale.requestDetails
-    },
-
-    checkAssetWithdraw () {
-      return this.request.asset.details.stellar.withdraw
-        ? 'sale-request-manager-details-tab.yes'
-        : 'sale-request-manager-details-tab.no'
-    },
-
-    checkAssetDeposit () {
-      return this.request.asset.details.stellar.deposit
-        ? 'sale-request-manager-details-tab.yes'
-        : 'sale-request-manager-details-tab.no'
-    },
-
-    checkIsWhitelisted () {
-      return this.isSaleWhitelisted
-        ? 'sale-request-manager-details-tab.yes'
-        : 'sale-request-manager-details-tab.no'
     },
 
     isSaleWhitelisted () {

@@ -390,7 +390,9 @@
       "requires-kyc": "Requires KYC",
       "security": "Security",
       "restricted": "Restricted",
-      "unrestricted": "Unrestricted"
+      "unrestricted": "Unrestricted",
+      "yes": "Yes",
+      "no": "No"
     },
     "mixin": {
       "fill-this-field": "Please, fill out this field",
@@ -668,8 +670,6 @@
       "stellar-asset-type": "Stellar asset type",
       "stellar-withdraw": "Stellar withdraw",
       "stellar-deposit": "Stellar deposit",
-      "yes": "Yes",
-      "no": "No",
       "creation-data": "Creation date",
       "update-data": "Update date",
       "request-state": "State",
@@ -865,8 +865,6 @@
       "available": "Available",
       "locked": "Locked",
       "withdrawable": "Withdrawable",
-      "yes": "Yes",
-      "no": "No",
       "loading": "Loading...",
       "error": "An error occurred. Please try again later",
       "fail-load": "Nothing here yet"
@@ -1312,9 +1310,7 @@
       "end-time": "End time",
       "permission-type": "Permission type",
       "result-provider": "Result provider",
-      "vote-confirmation-required": "Vote confirmation required",
-      "yes": "Yes",
-      "no": "No"
+      "vote-confirmation-required": "Vote confirmation required"
     },
     "poll-viewer-voters": {
       "votes": "Votes",
@@ -1350,8 +1346,6 @@
       "permission-type": "Permission type",
       "result-provider": "Result provider",
       "vote-confirmation-required": "Vote confirmation required",
-      "yes": "Yes",
-      "no": "No",
       "btn-approve": "Approve",
       "bnt-reject": "Reject",
       "error": "An error occurred",
@@ -1420,8 +1414,6 @@
       "whitelisted": "Whitelisted",
       "start-time": "Start time",
       "end-time": "End time",
-      "yes": "Yes",
-      "no": "No",
       "current-cap": "Current cap",
       "total-current-cap": "Total current cap",
       "hard-cap": "Hard cap",
@@ -1459,9 +1451,7 @@
       "registered": "Registered",
       "no-whitelisted": "No whitelisted users yet.",
       "error": "An error occurred. Please try again later.",
-      "loading": "Loading...",
-      "yes": "Yes",
-      "no": "No"
+      "loading": "Loading..."
     },
     "sale-list": {
       "header": "Sale list",
@@ -1527,9 +1517,7 @@
       "hard-cap": "Hard cap",
       "max-amount-sold": "Max {{ saleDetailsBaseAssetId }} amount to be sold",
       "short-description": "Short description",
-      "sale-logo": "Sale logo",
-      "yes": "Yes",
-      "no": "No"
+      "sale-logo": "Sale logo"
     },
     "sale-request-manager": {
       "header": "Manage sale request",

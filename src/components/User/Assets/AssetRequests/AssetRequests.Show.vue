@@ -220,14 +220,8 @@
           <span class="asset-requests-show__key">
             {{ "asset-requests-show.stellar-deposit" | globalize }}
           </span>
-          <span
-            class="asset-requests-show__value"
-            v-if="assetRequest.stellarDeposit"
-          >
-            {{ "asset-requests-show.yes" | globalize }}
-          </span>
-          <span class="asset-requests-show__value" v-else>
-            {{ "asset-requests-show.no" | globalize }}
+          <span class="asset-requests-show__value">
+            {{ assetRequest.stellarDeposit | yesNoFilter }}
           </span>
         </div>
       </template>

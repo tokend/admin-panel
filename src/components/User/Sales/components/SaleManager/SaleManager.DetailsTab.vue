@@ -91,22 +91,16 @@
                 <span>
                   {{ "sale-manager-details-tab.stellar-withdraw" | globalize }}
                 </span>
-                <span v-if="asset.details.stellar.withdraw">
-                  {{ "sale-manager-details-tab.yes" | globalize }}
-                </span>
-                <span v-else>
-                  {{ "sale-manager-details-tab.no" | globalize }}
+                <span>
+                  {{ asset.details.stellar.withdraw | yesNoFilter }}
                 </span>
               </li>
               <li>
                 <span>
                   {{ "sale-manager-details-tab.stellar-deposit" | globalize }}
                 </span>
-                <span v-if="asset.details.stellar.deposit">
-                  {{ "sale-manager-details-tab.yes" | globalize }}
-                </span>
-                <span v-else>
-                  {{ "sale-manager-details-tab.no" | globalize }}
+                <span>
+                  {{ asset.details.stellar.deposit | yesNoFilter }}
                 </span>
               </li>
             </template>
@@ -179,11 +173,8 @@
             <span>
               {{ "sale-manager-details-tab.whitelisted" | globalize }}
             </span>
-            <span v-if="isSaleWhitelisted">
-              {{ "sale-manager-details-tab.yes" | globalize }}
-            </span>
-            <span v-else>
-              {{ "sale-manager-details-tab.no" | globalize }}
+            <span>
+              {{ isSaleWhitelisted | yesNoFilter }}
             </span>
           </li>
           <li>

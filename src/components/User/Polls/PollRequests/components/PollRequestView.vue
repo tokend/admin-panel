@@ -112,11 +112,10 @@
               {{ "poll-request-view.vote-confirmation-required" | globalize }}
             </span>
             <span>
-              <template v-if="request.requestDetails.voteConfirmationRequired">
-                {{ "poll-request-view.yes" | globalize }}
-              </template>
-              <template v-else>
-                {{ "poll-request-view.no" | globalize }}
+              <template>
+                {{
+                  request.requestDetails.voteConfirmationRequired | yesNoFilter
+                }}
               </template>
             </span>
           </li>

@@ -72,3 +72,11 @@ export function globalize (translationId, interpolationOps) {
 export function formatDate (value) {
   return globalize('formats.date', { value })
 }
+
+export function yesNoFilter (value) {
+  if (value) {
+    return globalize('filters.yes')
+  } else {
+    return globalize('filters.no')
+  }
+}

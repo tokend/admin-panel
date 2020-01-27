@@ -34,6 +34,7 @@ import {
   formatVersion,
   globalize,
   formatDate,
+  yesNoFilter,
 } from './components/App/filters/filters'
 
 async function init () {
@@ -94,6 +95,7 @@ async function init () {
   Vue.filter('formatVersion', formatVersion)
   Vue.filter('formatDate', formatDate)
   log.setDefaultLevel(params.LOG_LEVEL)
+  Vue.filter('yesNoFilter', yesNoFilter)
 }
 
 init()

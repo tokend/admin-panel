@@ -46,11 +46,8 @@
           />
 
           <span class="app-list__cell app-list__cell--right">
-            <template v-if="isAssetWithdrawable(balance.assetCode)">
-              {{ "collected-fees-list.yes" | globalize }}
-            </template>
-            <template v-else>
-              {{ "collected-fees-list.no" | globalize }}
+            <template>
+              {{ isAssetWithdrawable(balance.assetCode) | yesNoFilter }}
             </template>
           </span>
         </button>
