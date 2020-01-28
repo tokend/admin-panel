@@ -150,7 +150,8 @@
           <li>
             <span>{{ "sale-manager-details-tab.type" | globalize }}</span>
             <span>
-              {{ LOCALIZED_SALE_TYPES[sale.saleType.value + ''] || '&mdash;' }}
+              {{ LOCALIZED_SALE_TYPES[sale.saleType.value + '']
+                | globalize || '&mdash;' }}
             </span>
           </li>
           <li>

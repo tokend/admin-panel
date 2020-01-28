@@ -194,7 +194,8 @@
               {{ "sale-request-manager-details-tab.type" | globalize }}
             </span>
             <span>
-              {{ LOCALIZED_SALE_TYPES[safeGet(saleDetails, 'saleType.value')] }}
+              {{ LOCALIZED_SALE_TYPES[safeGet(saleDetails, 'saleType.value')]
+                | globalize }}
             </span>
           </li>
           <li>

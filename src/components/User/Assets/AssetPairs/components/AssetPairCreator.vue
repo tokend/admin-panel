@@ -110,7 +110,7 @@
             :disabled="formMixin.isDisabled"
             :required="false"
             :label="'asset-pair-creator.lbl-is-tradable' | globalize"
-            :cb-value="ASSET_PAIR_POLICIES.tradeableSecondaryMarket"
+            :cb-value="ASSET_PAIR_POLICIES.tradeableSecondaryMarket | globalize"
           >
             <template slot="help">
               <span class="asset-pair-creator__tip-message">

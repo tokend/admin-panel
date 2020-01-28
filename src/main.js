@@ -35,6 +35,7 @@ import {
   globalize,
   formatDate,
   yesNoFilter,
+  assetRequestStatesToString,
 } from './components/App/filters/filters'
 
 async function init () {
@@ -96,6 +97,7 @@ async function init () {
   Vue.filter('formatDate', formatDate)
   log.setDefaultLevel(params.LOG_LEVEL)
   Vue.filter('yesNoFilter', yesNoFilter)
+  Vue.filter('assetRequestStatesToString', assetRequestStatesToString)
 }
 
 init()

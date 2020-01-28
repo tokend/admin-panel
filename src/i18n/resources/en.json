@@ -374,25 +374,42 @@
       "file-upload": "Cannot upload a file to the storage. Please upload another file or try again later."
     },
     "filters": {
-      "approved": "Approved",
-      "pending": "Pending",
-      "rejected": "Rejected",
-      "permanently-rejected": "Permanently rejected",
-      "canceled": "Canceled",
-      "cancelled": "Cancelled",
-      "unverified": "Unverified",
-      "general": "General",
-      "us-verified": "US Verified",
-      "us-accredited": "US Accredited",
-      "corporate": "Corporate",
-      "blocked": "Blocked",
-      "not-require-kyc": "Does not require KYC",
-      "requires-kyc": "Requires KYC",
-      "security": "Security",
-      "restricted": "Restricted",
-      "unrestricted": "Unrestricted",
+      "localize-issuance-request-state": {
+        "approved": "Approved",
+        "pending": "Pending",
+        "rejected": "Rejected",
+        "permanently-rejected": "Permanently rejected",
+        "canceled": "Canceled",
+        "cancelled": "Cancelled"
+      },
+      "role-id-to-string": {
+        "unverified": "Unverified",
+        "general": "General",
+        "us-verified": "US Verified",
+        "us-accredited": "US Accredited",
+        "corporate": "Corporate",
+        "blocked": "Blocked"
+      },
+      "asset-type-to-string": {
+        "not-require-kyc": "Does not require KYC",
+        "requires-kyc": "Requires KYC",
+        "security": "Security"
+      },
+      "poll-type-to-string": {
+        "restricted": "Restricted",
+        "unrestricted": "Unrestricted"
+      },
+      "yes-no-filter": {
       "yes": "Yes",
       "no": "No"
+      },
+      "asset-request-states-to-string": {
+        "pending": "Pending",
+        "canceled": "Canceled",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "perm-rejected": "Permanently rejected"
+      }
     },
     "mixin": {
       "fill-this-field": "Please, fill out this field",
@@ -1746,13 +1763,6 @@
       "base-atomic-swap": "Can be base in atomic swap",
       "quote-atomic-swap": "Can be quote in atomic swap"
     },
-    "create-asset-request-states": {
-      "pending": "Pending",
-      "canceled": "Canceled",
-      "approved": "Approved",
-      "rejected": "Rejected",
-      "perm-rejected": "Permanently rejected"
-    },
     "asset-pair-policies": {
       "tradable-secondary-market": "Tradable on secondary market"
     },
@@ -1822,6 +1832,10 @@
     },
     "xdr-type-from-value": {
       "error": "xdrEnumToConstant: Cannot get values from provided xdrEnum ({{xdrEnum}})"
+    },
+    "sale-types": {
+      "fixed-price": "Fixed price",
+      "immediate": "Immediate"
     }
   }
 }
