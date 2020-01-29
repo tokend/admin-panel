@@ -137,13 +137,7 @@
 <script>
 import { UserDocLinkGetter } from '@comcom/getters'
 import { byAlpha2 } from 'iso-country-codes'
-
-export const ID_DOCUMENTS_VERBOSE = {
-  passport: 'Passport',
-  identity_card: 'Identity card',
-  driving_license: 'Driving license',
-  residence_permit: 'Residence permit',
-}
+import { ID_DOCUMENTS_VERBOSE } from '@/constants'
 
 export default {
   components: {

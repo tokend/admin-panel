@@ -8,10 +8,10 @@
       >
         <option
           v-for="requestType in Object.keys(ASSET_REQUEST_TYPES)"
-          :value="ASSET_REQUEST_TYPES[requestType].value"
+          :value="ASSET_REQUEST_TYPES[requestType]"
           :key="requestType"
         >
-          {{ ASSET_REQUEST_TYPES[requestType].value | assetRequestTypesFilter }}
+          {{ ASSET_REQUEST_TYPES[requestType] | assetRequestTypesFilter }}
         </option>
       </select-field>
       <select-field
@@ -75,9 +75,9 @@
             <!-- eslint-disable max-len -->
             <span
               class="app-list__cell"
-              :title="CREATE_ASSET_REQUEST_STATES[snakeToCamelCase(asset.state)].codeVerbose | assetRequestStatesFilter"
+              :title="asset.state | assetRequestStatesFilter"
             >
-              {{ CREATE_ASSET_REQUEST_STATES[snakeToCamelCase(asset.state)].codeVerbose | assetRequestStatesFilter }}
+              {{ asset.state | assetRequestStatesFilter }}
             </span>
             <!-- eslint-enable max-len -->
 
@@ -127,22 +127,13 @@ import { api } from '@/api'
 import apiHelper from '@/apiHelper'
 import { base } from '@tokend/js-sdk'
 
-import { CREATE_ASSET_REQUEST_STATES, REQUEST_STATES_STR } from '@/constants'
+import { CREATE_ASSET_REQUEST_STATES, REQUEST_STATES_STR, ASSET_REQUEST_TYPES } from '@/constants'
 
 import _ from 'lodash'
 import { clearObject } from '@/utils/clearObject'
 import { snakeToCamelCase } from '@/utils/un-camel-case'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
-
-export const ASSET_REQUEST_TYPES = Object.freeze({
-  create: {
-    value: 'create_asset_requests',
-  },
-  update: {
-    value: 'update_asset_requests',
-  },
-})
 
 export default {
   components: {
@@ -156,7 +147,7 @@ export default {
       list: [],
       isPending: false,
       filters: {
-        requestType: ASSET_REQUEST_TYPES.create.value,
+        requestType: ASSET_REQUEST_TYPES.createAsset,
         state: REQUEST_STATES_STR.pending,
         requestor: null,
         asset: null,
@@ -191,7 +182,7 @@ export default {
         const requestor = await this.getRequestorAccountId(
           this.filters.requestor
         )
-        const endpoint = `/v3/${this.filters.requestType}`
+        const endpoint = `/v3/${this.filters.requestType}_requests`
         response = await api.getWithSignature(endpoint, {
           page: { order: 'desc' },
           filter: clearObject({

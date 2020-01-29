@@ -2,9 +2,7 @@ import { i18n } from '@/i18n'
 import moment from 'moment'
 import store from '../../../store'
 import { base } from '@tokend/js-sdk'
-import { CREATE_ASSET_REQUEST_STATES, LIMITS_REQUEST_STATES_STR, STELLAR_TYPES } from '@/constants'
-import { ASSET_REQUEST_TYPES } from '@/components/User/Assets/AssetRequests/components/AssetRequestList'
-import { ID_DOCUMENTS_VERBOSE } from '@/components/User/Users/components/UserDetails/UserDetails.Kyc'
+import { CREATE_ASSET_REQUEST_STATES, LIMITS_REQUEST_STATES_STR, STELLAR_TYPES, ASSET_REQUEST_TYPES, ID_DOCUMENTS_VERBOSE, ASSET_POLICIES_VERBOSE } from '@/constants'
 export function filterDateWithTime (date, format = 'DD MMM YYYY [at] hh:mm:ss') {
   try {
     return moment(date).format(format)
@@ -109,6 +107,7 @@ export function assetRequestStatesFilter (value) {
     }
     default: {
       translationId = 'filters.asset-request-states-filter.default'
+      break
     }
   }
   return globalize(translationId)
@@ -117,11 +116,11 @@ export function assetRequestStatesFilter (value) {
 export function assetRequestTypesFilter (val) {
   let translationId = ''
   switch (val) {
-    case ASSET_REQUEST_TYPES.create.value: {
+    case ASSET_REQUEST_TYPES.createAsset: {
       translationId = 'filters.asset-request-types-filter.create'
       break
     }
-    case ASSET_REQUEST_TYPES.update.value: {
+    case ASSET_REQUEST_TYPES.updateAsset: {
       translationId = 'filters.asset-request-types-filter.update'
       break
     }
@@ -136,31 +135,35 @@ export function assetRequestTypesFilter (val) {
 export function assetPoliciesVerboseFilter (value) {
   let translationId = ''
   switch (value) {
-    case base.xdr.AssetPolicy.transferable().value: {
+    case ASSET_POLICIES_VERBOSE[ base.xdr.AssetPolicy.transferable().value ]: {
       translationId = 'filters.asset-policies-verbose-filter.transferable'
       break
     }
-    case base.xdr.AssetPolicy.baseAsset().value: {
+    case ASSET_POLICIES_VERBOSE[ base.xdr.AssetPolicy.baseAsset().value ]: {
       translationId = 'filters.asset-policies-verbose-filter.base-asset'
       break
     }
-    case base.xdr.AssetPolicy.statsQuoteAsset().value: {
+    // eslint-disable-next-line max-len
+    case ASSET_POLICIES_VERBOSE[ base.xdr.AssetPolicy.statsQuoteAsset().value ]: {
       translationId = 'filters.asset-policies-verbose-filter.stats-quote-asset'
       break
     }
-    case base.xdr.AssetPolicy.withdrawable().value: {
+    case ASSET_POLICIES_VERBOSE[ base.xdr.AssetPolicy.withdrawable().value ]: {
       translationId = 'filters.asset-policies-verbose-filter.withdrawable'
       break
     }
-    case base.xdr.AssetPolicy.issuanceManualReviewRequired().value: {
+    // eslint-disable-next-line max-len
+    case ASSET_POLICIES_VERBOSE[ base.xdr.AssetPolicy.issuanceManualReviewRequired().value ]: {
       translationId = 'filters.asset-policies-verbose-filter.issuance-manual-review-required'
       break
     }
-    case base.xdr.AssetPolicy.canBeBaseInAtomicSwap().value: {
+    // eslint-disable-next-line max-len
+    case ASSET_POLICIES_VERBOSE[ base.xdr.AssetPolicy.canBeBaseInAtomicSwap().value ]: {
       translationId = 'filters.asset-policies-verbose-filter.base-atomic-swap'
       break
     }
-    case base.xdr.AssetPolicy.canBeQuoteInAtomicSwap().value: {
+    // eslint-disable-next-line max-len
+    case ASSET_POLICIES_VERBOSE[ base.xdr.AssetPolicy.canBeQuoteInAtomicSwap().value ]: {
       translationId = 'filters.asset-policies-verbose-filter.quote-atomic-swap'
       break
     }

@@ -26,7 +26,6 @@
 
 <script>
 import moment from 'moment'
-import { globalize } from '@/components/App/filters/filters'
 export default {
   name: 'idle-logout',
 
@@ -65,12 +64,12 @@ export default {
     initTimer () {
       const warnInterval = this.$store.getters.forceLogoutDelay
       this.warnEndTimestamp = moment()
-        .add(warnInterval, globalize('idle-logout.seconds'))
+        .add(warnInterval, 'seconds')
         .unix()
       this.countdownInterval = setInterval(() => {
         const msLeft = moment
           .duration(this.warnEndTimestamp - moment().unix(),
-            globalize('idle-logout.seconds')).asMilliseconds()
+            'seconds').asMilliseconds()
 
         if (msLeft <= 0) {
           this.endSession()
