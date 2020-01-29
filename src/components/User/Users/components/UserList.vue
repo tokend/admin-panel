@@ -89,7 +89,7 @@
 
         <template v-else>
           <div class="app-list__li-like">
-            <template v-if="isLoading">
+            <template v-if="isLoading || !isUsersIdentityLoad">
               <p>
                 Loading...
               </p>
@@ -145,6 +145,7 @@ export default {
       },
       list: [],
       isLoading: false,
+      isUsersIdentityLoad: false,
     }
   },
 
@@ -200,7 +201,6 @@ export default {
     async setList (userList) {
       const users = await this.getUsersWithIdentity(userList)
       this.list = users
-      this.isLoaded = true
     },
     async extendList (userList) {
       const users = await this.getUsersWithIdentity(userList)
@@ -246,6 +246,7 @@ export default {
     },
 
     async loadUsersIdentity (users) {
+      this.isUsersIdentityLoad = false
       try {
         const { data } = await api.postWithSignature('/identities/mass-emails', {
           data: users,
@@ -254,6 +255,7 @@ export default {
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }
+      this.isUsersIdentityLoad = true
     },
   },
 }
