@@ -17,6 +17,9 @@
           <option :value="kvAccountRoles.corporate">
             Сorporate
           </option>
+          <option :value="kvAccountRoles.blocked">
+            Blocked
+          </option>
         </select-field>
 
         <input-field
@@ -56,9 +59,9 @@
               class="app-list__cell
                         app-list__cell--important
                         user-list__email-cell"
-              :title="item.email"
+              :title="item.email ? item.email : '-'"
             >
-              {{ item.email }}
+              {{ item.email ? item.email : '-' }}
             </span>
 
             <span
@@ -75,16 +78,18 @@
               {{ item.role | roleIdToString }}
             </span>
 
-            <account-state-getter
+            <span
               class="app-list__cell app-list__cell--right"
-              :account-id="item.address"
-            />
+              :title="item.role | accountState"
+            >
+              {{ item.role | accountState }}
+            </span>
           </button>
         </template>
 
         <template v-else>
           <div class="app-list__li-like">
-            <template v-if="isLoading">
+            <template v-if="isLoading || !isUsersIdentityLoad">
               <p>
                 Loading...
               </p>
@@ -112,28 +117,23 @@
 </template>
 
 <script>
-import { clearObject } from '@/utils/clearObject'
-
 import SelectField from '@comcom/fields/SelectField'
 import InputField from '@comcom/fields/InputField'
-
-import { AccountStateGetter } from '@comcom/getters'
-import { CollectionLoader } from '@/components/common'
-
 import _ from 'lodash'
-
-import { api } from '@/api'
 import apiHelper from '@/apiHelper'
 
+import { api } from '@/api'
+import { CollectionLoader } from '@/components/common'
+import { clearObject } from '@/utils/clearObject'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { base } from '@tokend/js-sdk'
 import { mapGetters } from 'vuex'
+import { UserRecord } from '@/js/records/user.record'
 
 export default {
   components: {
     SelectField,
     InputField,
-    AccountStateGetter,
     CollectionLoader,
   },
 
@@ -145,6 +145,7 @@ export default {
       },
       list: [],
       isLoading: false,
+      isUsersIdentityLoad: false,
     }
   },
 
@@ -171,10 +172,10 @@ export default {
       try {
         const requestor =
           await this.getRequestorAccountId(this.filters.requestor)
-        response = await api.getWithSignature('/identities', {
+        response = await api.getWithSignature('/v3/accounts', {
           filter: clearObject({
             role: this.filters.role,
-            address: requestor,
+            account: requestor,
           }),
         })
       } catch (error) {
@@ -197,12 +198,13 @@ export default {
       }
     },
 
-    setList (data) {
-      this.list = data
-      this.isLoaded = true
+    async setList (userList) {
+      const users = await this.getUsersWithIdentity(userList)
+      this.list = users
     },
-    extendList (data) {
-      this.list = this.list.concat(data)
+    async extendList (userList) {
+      const users = await this.getUsersWithIdentity(userList)
+      this.list = this.list.concat(users)
     },
 
     showUserDetails (id) {
@@ -218,6 +220,42 @@ export default {
 
     reloadCollectionLoader () {
       this.$refs.collectionLoaderBtn.loadFirstPage()
+    },
+
+    async getUsersWithIdentity (userList) {
+      if (!userList.length) return []
+
+      const users = userList.map(user => {
+        return {
+          id: user.id,
+          type: 'account',
+        }
+      })
+
+      const usersIdentity = await this.loadUsersIdentity(users)
+
+      const usersWithIdentity = userList.map(user => {
+        const userIdentity = usersIdentity.find(identity => {
+          return identity.address === user.id
+        })
+
+        return new UserRecord(user, userIdentity)
+      })
+
+      return usersWithIdentity
+    },
+
+    async loadUsersIdentity (users) {
+      this.isUsersIdentityLoad = false
+      try {
+        const { data } = await api.postWithSignature('/identities/mass-emails', {
+          data: users,
+        })
+        return data
+      } catch (error) {
+        ErrorHandler.processWithoutFeedback(error)
+      }
+      this.isUsersIdentityLoad = true
     },
   },
 }

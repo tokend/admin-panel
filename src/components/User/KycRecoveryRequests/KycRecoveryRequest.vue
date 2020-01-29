@@ -7,7 +7,6 @@
         <section class="kyc-recovery-request__section">
           <account-section
             :user="user"
-            :original-role="userRole"
             :block-reason="latestBlockedRequest.blockReason"
           />
         </section>
@@ -106,6 +105,8 @@ import VerifiedKycViewer from '../Users/components/UserDetails/UserDetails.Verif
 import AccreditedKycViewer from '../Users/components/UserDetails/UserDetails.AccreditedKycViewer'
 
 import RequestActions from './KycRecoveryRequest.Action'
+import apiHelper from '@/apiHelper'
+import deepCamelCase from 'camelcase-keys-deep'
 
 import { api } from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
@@ -113,8 +114,6 @@ import { ErrorHandler } from '@/utils/ErrorHandler'
 import { ChangeRoleRequest } from '@/apiHelper/responseHandlers/requests/ChangeRoleRequest'
 import { KycRecoveryRequest } from '@/apiHelper/responseHandlers/requests/KycRecoveryRequest'
 import { fromKycTemplate } from '../../../utils/kyc-tempater'
-import deepCamelCase from 'camelcase-keys-deep'
-
 import { mapGetters } from 'vuex'
 
 const OPERATION_TYPE = {
@@ -229,9 +228,7 @@ export default {
       this.isFailed = false
       try {
         const [user, requests, kycRecoveryRequest] = await Promise.all([
-          api.getWithSignature('/identities', {
-            filter: { address: this.id },
-          }),
+          apiHelper.users.getUserByAccountId(this.id),
           api.getWithSignature('/v3/change_role_requests', {
             page: { order: 'desc' },
             filter: { requestor: this.id },
@@ -243,7 +240,7 @@ export default {
             include: ['request_details'],
           }),
         ])
-        this.user = user.data[0]
+        this.user = user
         this.requests = requests.data
           ? requests.data.map(item => new ChangeRoleRequest(item))
           : []

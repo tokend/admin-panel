@@ -78,6 +78,7 @@ import { ChangeRoleRequest } from '@/apiHelper/responseHandlers/requests/ChangeR
 
 import { api } from '@/api'
 import { mapGetters } from 'vuex'
+import { UserRecord } from '@/js/records/user.record'
 
 const EVENTS = {
   updated: 'updated',
@@ -94,15 +95,15 @@ export default {
   props: {
     latestApprovedRequest: {
       type: ChangeRoleRequest,
-      default: _ => new ChangeRoleRequest({}),
+      default: () => {},
     },
     verifiedRequest: {
       type: ChangeRoleRequest,
-      default: _ => new ChangeRoleRequest({}),
+      default: () => {},
     },
     user: {
-      type: Object,
-      default: _ => ({}),
+      type: UserRecord,
+      default: () => {},
     },
     isPending: {
       type: Boolean,

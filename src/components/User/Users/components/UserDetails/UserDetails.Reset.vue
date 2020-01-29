@@ -74,6 +74,7 @@ import { ChangeRoleRequest } from '@/apiHelper/responseHandlers/requests/ChangeR
 
 import { api } from '@/api'
 import { mapGetters } from 'vuex'
+import { UserRecord } from '@/js/records/user.record'
 
 const EVENTS = {
   reset: 'reset',
@@ -89,12 +90,12 @@ export default {
 
   props: {
     user: {
-      type: Object,
-      default: _ => ({}),
+      type: UserRecord,
+      default: () => {},
     },
     verifiedRequest: {
       type: ChangeRoleRequest,
-      default: _ => new ChangeRoleRequest({}),
+      default: () => {},
     },
     isPending: {
       type: Boolean,

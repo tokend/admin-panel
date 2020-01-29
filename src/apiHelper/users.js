@@ -1,5 +1,6 @@
 import { api } from '@/api'
 import { base } from '@tokend/js-sdk'
+import { UserRecord } from '@/js/records/user.record'
 
 export default {
   async getAccountIdByEmail (email) {
@@ -51,5 +52,19 @@ export default {
         return value
       }
     }
+  },
+
+  async getUserByAccountId (accountId) {
+    let account = {}
+    const { data: identities } = await api.getWithSignature('/identities', {
+      filter: { address: accountId },
+    })
+    if (!identities.length) {
+      const { data } = await api.getWithSignature(`/v3/accounts`, {
+        filter: { account: accountId },
+      })
+      account = data[0]
+    }
+    return new UserRecord(account, identities[0])
   },
 }

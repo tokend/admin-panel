@@ -96,6 +96,7 @@ import { confirmAction } from '@/js/modals/confirmation_message'
 import { Bus } from '@/utils/bus'
 
 import { ChangeRoleRequest } from '@/apiHelper/responseHandlers/requests/ChangeRoleRequest'
+import { UserRecord } from '@/js/records/user.record'
 
 const EVENTS = {
   reviewed: 'reviewed',
@@ -114,15 +115,15 @@ export default {
   props: {
     requestToReview: {
       type: ChangeRoleRequest,
-      default: () => new ChangeRoleRequest({}),
+      default: () => {},
     },
     latestApprovedRequest: {
       type: ChangeRoleRequest,
-      default: () => new ChangeRoleRequest({}),
+      default: () => {},
     },
     user: {
-      type: Object,
-      default: () => ({}),
+      type: UserRecord,
+      default: () => {},
     },
   },
 
