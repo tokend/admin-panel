@@ -130,8 +130,9 @@
           >
             <template slot="help">
               <span class="asset-pair-creator__tip-message">
-                <!-- eslint-disable-next-line max-len -->
-                {{ "asset-pair-creator.asset-pair-message-new-offer" | globalize }}
+                {{
+                  "asset-pair-creator.asset-pair-message-new-offer" | globalize
+                }}
               </span>
             </template>
           </tick-field>
@@ -148,11 +149,14 @@
             <template slot="help">
               <p class="asset-pair-creator__tip-message">
                 <span>
-                  <!-- eslint-disable-next-line max-len -->
-                  {{ "asset-pair-creator.asset-pair-message-price-interval" | globalize }}
+                  {{ "asset-pair-creator.asset-pair-message-price-interval"
+                    | globalize }}
                 </span>
-                <!-- eslint-disable-next-line max-len -->
-                <strong>{{ "asset-pair-creator.asset-pair-message-price" | globalize }}</strong>
+                <strong>
+                  {{
+                    "asset-pair-creator.asset-pair-message-price" | globalize
+                  }}
+                </strong>
               </p>
             </template>
           </tick-field>

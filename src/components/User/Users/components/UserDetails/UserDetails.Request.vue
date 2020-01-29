@@ -152,8 +152,9 @@ export default {
 
   methods: {
     async approve () {
-      if (!await confirmAction(
-        globalize('user-details-request.are-you-sure'))
+      if (!await confirmAction({
+        title: globalize('user-details-request.are-you-sure'),
+      })
       ) {
         return
       }
@@ -177,8 +178,9 @@ export default {
     },
 
     async reject (isPermanent = false) {
-      if (!await confirmAction(
-        globalize('user-details-request.are-you-sure'))
+      if (!await confirmAction({
+        title: globalize('user-details-request.are-you-sure'),
+      })
       ) {
         return
       }

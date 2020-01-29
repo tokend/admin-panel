@@ -17,7 +17,7 @@
         </span>
       </li>
       <li>
-        <span>{{ "user-details-kyc.last-name" | globalize }}e</span>
+        <span>{{ "user-details-kyc.last-name" | globalize }}</span>
         <span :title="kyc.lastName">
           {{ kyc.lastName }}
         </span>
@@ -72,12 +72,13 @@
       <li>
         <span>{{ "user-details-kyc.id-document-type" | globalize }}</span>
         <span :title="ID_DOCUMENTS_VERBOSE[kyc.idDocumentType]">
-          {{ ID_DOCUMENTS_VERBOSE[kyc.idDocumentType] }}
+          {{ ID_DOCUMENTS_VERBOSE[kyc.idDocumentType]
+            | idDocumentsVerboseFilter }}
         </span>
       </li>
       <li>
         <span v-if="kyc.documents.kycIdDocument.back">
-          {{ "user-details-kyc.id-document-front-size" | globalize }}
+          {{ "user-details-kyc.id-document-front-side" | globalize }}
         </span>
         <span v-else>
           {{ "user-details-kyc.id-document" | globalize }}
@@ -91,7 +92,7 @@
         </span>
       </li>
       <li v-if="kyc.documents.kycIdDocument.back">
-        <span>{{ "user-details-kyc.id-document-back-size" | globalize }} </span>
+        <span>{{ "user-details-kyc.id-document-back-side" | globalize }} </span>
         <span>
           <user-doc-link-getter
             :file-key="kyc.documents.kycIdDocument.back"
@@ -136,13 +137,12 @@
 <script>
 import { UserDocLinkGetter } from '@comcom/getters'
 import { byAlpha2 } from 'iso-country-codes'
-import { globalize } from '@/components/App/filters/filters'
 
-const ID_DOCUMENTS_VERBOSE = {
-  passport: globalize('user-details-kyc.passport'),
-  identity_card: globalize('user-details-kyc.identity-card'),
-  driving_license: globalize('user-details-kyc.driving-license'),
-  residence_permit: globalize('user-details-kyc.residence-permit'),
+export const ID_DOCUMENTS_VERBOSE = {
+  passport: 'Passport',
+  identity_card: 'Identity card',
+  driving_license: 'Driving license',
+  residence_permit: 'Residence permit',
 }
 
 export default {

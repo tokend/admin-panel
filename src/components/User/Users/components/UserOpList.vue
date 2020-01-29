@@ -96,8 +96,7 @@ import { clearObject } from '@/utils/clearObject'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 import { mapGetters } from 'vuex'
-
-import { globalize } from '@/components/App/filters/filters'
+import { globalize } from '../../../App/filters/filters'
 
 export default {
   components: {
@@ -148,7 +147,7 @@ export default {
 
     getOperationType (record) {
       switch (record.operationType) {
-        case globalize('user-op-list.create-change-role-request'):
+        case 'Create change role request':
           return this.getChangeRoleOperationType(record)
         default:
           return record.operationType
@@ -173,13 +172,13 @@ export default {
 
       let operationType
       if (isBlocked) {
-        operationType = 'Block'
+        operationType = globalize('user-op-list.block')
       } else if (isReset) {
-        operationType = 'Reset to unverified'
+        operationType = globalize('user-op-list-reset-to-unverified')
       } else if (isUnblocked) {
-        operationType = 'Unblock'
+        operationType = globalize('user-op-list.unblock')
       } else {
-        operationType = 'Change role request'
+        operationType = globalize('user-op-list.change-role-request')
       }
 
       return operationType

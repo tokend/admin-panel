@@ -191,8 +191,7 @@
         <tick-field
           class="app__form-field"
           v-model="asset.policies.value"
-          :label="
-            ASSET_POLICIES_VERBOSE[ASSET_POLICIES.transferable] | globalize
+          :label="ASSET_POLICIES.transferable | assetPoliciesVerboseFilter
           "
           :cb-value="ASSET_POLICIES.transferable"
           :disabled="formMixin.isDisabled"
@@ -203,9 +202,7 @@
         <tick-field
           class="app__form-field"
           v-model="asset.policies.value"
-          :label="
-            ASSET_POLICIES_VERBOSE[ASSET_POLICIES.baseAsset] | globalize
-          "
+          :label="ASSET_POLICIES.baseAsset | assetPoliciesVerboseFilter"
           :cb-value="ASSET_POLICIES.baseAsset"
           :disabled="formMixin.isDisabled"
         />
@@ -215,9 +212,7 @@
         <tick-field
           class="app__form-field"
           v-model="asset.policies.value"
-          :label="
-            ASSET_POLICIES_VERBOSE[ASSET_POLICIES.statsQuoteAsset] | globalize
-          "
+          :label="ASSET_POLICIES.statsQuoteAsset | assetPoliciesVerboseFilter"
           :cb-value="ASSET_POLICIES.statsQuoteAsset"
           :disabled="formMixin.isDisabled"
         />
@@ -227,34 +222,29 @@
         <tick-field
           class="app__form-field"
           v-model="asset.policies.value"
-          :label="
-            ASSET_POLICIES_VERBOSE[ASSET_POLICIES.withdrawable] | globalize
-          "
+          :label="ASSET_POLICIES.withdrawable | assetPoliciesVerboseFilter"
           :cb-value="ASSET_POLICIES.withdrawable"
           :disabled="formMixin.isDisabled"
         />
       </div>
 
-      <!-- eslint-disable max-len -->
       <div class="app__form-row">
         <tick-field
           class="app__form-field"
           v-model="asset.policies.value"
-          :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.issuanceManualReviewRequired] | globalize"
+          :label="ASSET_POLICIES.issuanceManualReviewRequired
+            | assetPoliciesVerboseFilter"
           :cb-value="ASSET_POLICIES.issuanceManualReviewRequired"
           :disabled="formMixin.isDisabled"
         />
       </div>
-      <!-- eslint-enable max-len -->
 
       <div class="app__form-row">
         <tick-field
           class="app__form-field"
           v-model="asset.policies.value"
-          :label="
-            // eslint-disable-next-line max-len
-            ASSET_POLICIES_VERBOSE[ASSET_POLICIES.canBeBaseInAtomicSwap] | globalize
-          "
+          :label="ASSET_POLICIES.canBeBaseInAtomicSwap
+            | assetPoliciesVerboseFilter"
           :cb-value="ASSET_POLICIES.canBeBaseInAtomicSwap"
           :disabled="formMixin.isDisabled"
         />
@@ -264,9 +254,8 @@
         <tick-field
           class="app__form-field"
           v-model="asset.policies.value"
-          :label="
-            // eslint-disable-next-line max-len
-            ASSET_POLICIES_VERBOSE[ASSET_POLICIES.canBeQuoteInAtomicSwap] | globalize"
+          :label="ASSET_POLICIES.canBeQuoteInAtomicSwap
+            | assetPoliciesVerboseFilter"
           :cb-value="ASSET_POLICIES.canBeQuoteInAtomicSwap"
           :disabled="formMixin.isDisabled"
         />
@@ -363,7 +352,7 @@
                 :key="assetType.value"
                 :value="assetType.value"
               >
-                {{ assetType.translationId | globalize }}
+                {{ assetType.value | stellarAssetTypesFilter }}
               </option>
             </select-field>
 
@@ -499,7 +488,6 @@ import {
   DEFAULT_INPUT_MIN,
   DEFAULT_MAX_AMOUNT,
   DOCUMENT_TYPES,
-  ASSET_POLICIES_VERBOSE,
 } from '@/constants'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
@@ -508,15 +496,12 @@ const ASSET_NAME_MAX_LENGTH = 255
 
 const STELLAR_ASSET_TYPES = [
   {
-    translationId: 'asset-manager.alphanumeric-4',
     value: 'credit_alphanum4',
   },
   {
-    translationId: 'asset-manager.alphanumeric-12',
     value: 'credit_alphanum12',
   },
   {
-    translationId: 'asset-manager.native',
     value: 'native',
   },
 ]
@@ -593,7 +578,6 @@ export default {
       DEFAULT_INPUT_STEP,
       DEFAULT_INPUT_MIN,
       DEFAULT_MAX_AMOUNT,
-      ASSET_POLICIES_VERBOSE,
       ASSET_CODE_MAX_LENGTH,
       ASSET_NAME_MAX_LENGTH,
       STELLAR_ASSET_TYPES,

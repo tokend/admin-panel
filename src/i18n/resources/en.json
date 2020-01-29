@@ -400,15 +400,79 @@
         "unrestricted": "Unrestricted"
       },
       "yes-no-filter": {
-      "yes": "Yes",
-      "no": "No"
+        "yes": "Yes",
+        "no": "No"
       },
-      "asset-request-states-to-string": {
+      "asset-request-states-filter": {
         "pending": "Pending",
         "canceled": "Canceled",
         "approved": "Approved",
         "rejected": "Rejected",
-        "perm-rejected": "Permanently rejected"
+        "perm-rejected": "Permanently rejected",
+        "default": "UNKNOWN CREATE ASSET REQUEST STATES"
+      },
+      "asset-request-types-filter": {
+        "create": "Create",
+        "update": "Update",
+        "default": "UNKNOWN ASSET REQUEST TYPES"
+      },
+      "stellar-asset-types-filter": {
+        "alphanumeric-4": "Alphanumeric 4",
+        "alphanumeric-12": "Alphanumeric 12",
+        "native": "Native",
+        "default": "UNKNOWN STELLAR ASSET TYPE"
+      },
+      "asset-policies-verbose-filter": {
+        "transferable": "Transferable",
+        "base-asset": "Base asset",
+        "stats-quote-asset": "Stats quote asset",
+        "withdrawable": "Withdrawable",
+        "issuance-manual-review-required": "Issuance manual review required",
+        "base-atomic-swap": "Can be base in atomic swap",
+        "quote-atomic-swap": "Can be quote in atomic swap",
+        "default": "UNKNOWN ASSET POLICIES VERBOSE"
+      },
+      "role-type-verbose-filter": {
+        "general": "General",
+        "us-verified": "US Verified",
+        "us-accredited": "US Accredited",
+        "corporate": "Corporate",
+        "not-verified": "Not Verified",
+        "default": "UNKNOWN ACCOUNT ROLE"
+      },
+      "limits-request-states-str-filter": {
+        "limits-update": "Limits update",
+        "initial": "Initial",
+        "docs-uploading": "Documents uploading",
+        "default": "UNKNOWN LIMITS REQUEST STATES STR"
+      },
+      "id-documents-verbose-filter": {
+        "passport": "Passport",
+        "identity-card": "Identity card",
+        "driving-license": "Driving license",
+        "residence-permit": "Residence permit",
+        "default": "UNKNOWN ID DOCUMENTS VERBOSE"
+      },
+      "signer-roles-filter": {
+        "master": "Master",
+        "super-administrator": "Super Administrator",
+        "external-systems-administrator": "External Systems Administrator",
+        "issuance": "Issuance",
+        "license-admin": "License Admin",
+        "kyc-aml": "KYC/AML",
+        "kyc-recovery-creator": "KYC Recovery creator",
+        "default": "UNKNOWN SIGNER ROLE",
+        "unnamed": "Unnamed ({{id}})"
+      },
+      "signer-roles-description-filter": {
+        "master-description": "The root admin of the system",
+        "super-administrator-description": "Have full access to system administration functionality",
+        "issuance-description": "Role allows signer only to send create issuance requests",
+        "license-admin-description": "Able to manage system licenses",
+        "kyc-aml-description": "Responsible for reviewing users requests including KYC, asset/sale creation etc",
+        "kyc-recovery-creator-description": "Use ID of role as value in kv by kyc_recovery_signer_role key",
+        "no-description": "(No description)",
+        "default": "UNKNOWN SIGNER ROLE DESCRIPTION"
       }
     },
     "mixin": {
@@ -558,14 +622,12 @@
       "lbl-signer-role": "Signer role",
       "manage-admin": "Manage administrator",
       "btn-delete": "Delete",
-      "master": "Master",
       "btn-add": "Add",
       "btn-upd": "Update",
       "confirmation-delete-admin": "Are you sure you want to delete this admin?",
       "successfully-submitted": "Successfully submitted",
       "no-description": "(No description)",
       "unnamed": "Unnamed ({{id}})",
-      "root-admin-system": "The root admin of the system",
       "please-recheck-form": "Please, recheck the form before confirmation",
       "btn-confirm": "Confirm",
       "btn-cancel": "Cancel"
@@ -649,9 +711,7 @@
       "lbl-request-type": "Request type",
       "lbl-state": "State",
       "lbl-requestor": "Requestor",
-      "lbl-asset-code": "Asset code",
-      "create": "Create",
-      "update": "Update"
+      "lbl-asset-code": "Asset code"
     },
     "asset-request-reject-form": {
       "header": "Reject {{ assetRequestCode }}",
@@ -694,9 +754,6 @@
       "btn-fulfill": "Fulfill",
       "btn-reject": "Reject",
       "lbl-reject-reason": "Reject reason",
-      "alphanumeric-4": "Alphanumeric 4",
-      "alphanumeric-12": "Alphanumeric 12",
-      "native": "Native",
       "asset-created": "Asset successfully created"
     },
     "issuance-form": {
@@ -1667,16 +1724,13 @@
       "country": "Country",
       "state": "State",
       "id-document-type": "ID Document type",
-      "id-document-front-side": "ID Document front side:",
+      "id-document-front-side": "ID Document front side: ",
+      "id-document-back-side": "ID Document back side:",
       "id-document": "ID Document",
       "open-file": "Open file",
       "avatar": "Avatar",
       "photo-with-verification-code": "Photo with verification code",
-      "code": "Code: {{ userAddress }}",
-      "passport": "Passport",
-      "identity-card": "Identity card",
-      "driving-license": "Driving license",
-      "residence-permit": "Residence permit"
+      "code": "Code: {{ userAddress }}"
     },
     "user-details-request": {
       "btn-approve": "Approve",
@@ -1721,12 +1775,7 @@
       "loading": "Loading...",
       "previous-approved-kys-request": "Previous approved KYC Request",
       "latest-request": "Latest request",
-      "create": "Create a '{{ accountRoleToSet }}' account: {{ state }}",
-      "general": "General",
-      "us-verified": "US Verified",
-      "us-accredited": "US Accredited",
-      "corporate": "Corporate",
-      "not-verified": "Not Verified"
+      "create": "Create a '{{ accountRoleToSet }}' account: {{ state }}"
     },
     "user-list": {
       "unverified": "Unverified",
@@ -1749,19 +1798,14 @@
       "counterparty": "Counterparty",
       "loading": "Loading...",
       "nothing-here-yet": "Nothing here yet",
-      "create-change-role-request": "Create change role request"
+      "block": "Block",
+      "reset-to-unverified": "Reset to unverified",
+      "unblock": "Unblock",
+      "change-role-request": "Change role request",
+      "create-account": "Create account"
     },
     "users": {
      "link-user-index": "User index"
-    },
-    "asset-policies": {
-      "transferable": "Transferable",
-      "base-asset": "Base asset",
-      "stats-quote-asset": "Stats quote asset",
-      "withdrawable": "Withdrawable",
-      "issuance-manual-review-required": "Issuance manual review required",
-      "base-atomic-swap": "Can be base in atomic swap",
-      "quote-atomic-swap": "Can be quote in atomic swap"
     },
     "asset-pair-policies": {
       "tradable-secondary-market": "Tradable on secondary market"
@@ -1772,11 +1816,6 @@
       "waiting-review": "Waiting for review",
       "request-sent-idmind": "Request sent to IDMind",
       "request-processed-idmind": "Request processed by IDMind"
-    },
-    "limits-request-states": {
-      "limits-update": "Limits update",
-      "initial": "Initial",
-      "docs-uploading": "Documents uploading"
     },
     "confirmation-message": {
       "confirm-msg": "Are you sure?",

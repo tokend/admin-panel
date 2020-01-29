@@ -146,7 +146,7 @@
                 class="asset-requests-show__key asset-requests-show__key--informative"
                 v-if="assetRequest.policies & key"
               >
-                {{ policy | globalize }}
+                {{ policy | assetPoliciesVerboseFilter }}
               </span>
               <!-- eslint-enable max-len -->
             </template>
@@ -199,7 +199,7 @@
             {{ "asset-requests-show.stellar-asset-type" | globalize }}
           </span>
           <span class="asset-requests-show__value">
-            {{ stellarAssetType | globalize }}
+            {{ assetRequest.stellarAssetType | stellarAssetTypesFilter }}
           </span>
         </div>
 
@@ -210,7 +210,7 @@
             {{ "asset-requests-show.stellar-withdraw" | globalize }}
           </span>
           <span class="asset-requests-show__value">
-            {{ assetRequest.stellarWithdraw ? 'Yes' : 'No' }}
+            {{ assetRequest.stellarWithdraw | yesNoFilter }}
           </span>
         </div>
 
@@ -323,12 +323,6 @@ import {
 
 import { api } from '@/api'
 
-const STELLAR_TYPES = {
-  creditAlphanum4: 'credit_alphanum4',
-  creditAlphanum12: 'credit_alphanum12',
-  native: 'native',
-}
-
 // TODO: extract to AssetRequestForm
 export default {
   components: {
@@ -363,29 +357,6 @@ export default {
       const isCancellableRequestor =
         this.assetRequest.requestor === this.$store.getters.masterId
       return isPending && isCancellableRequestor
-    },
-    stellarAssetType () {
-      let translationId
-
-      switch (this.assetRequest.stellarAssetType) {
-        case STELLAR_TYPES.creditAlphanum4:
-          translationId = 'asset-requests-show.alphanumeric-4'
-          break
-
-        case STELLAR_TYPES.creditAlphanum12:
-          translationId = 'asset-requests-show.alphanumeric-12'
-          break
-
-        case STELLAR_TYPES.native:
-          translationId = 'asset-requests-show.native'
-          break
-
-        default:
-          translationId = '[UNKNOWN_STELLAR_ASSET_TYPE]'
-          break
-      }
-
-      return translationId
     },
   },
 

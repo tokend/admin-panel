@@ -35,7 +35,13 @@ import {
   globalize,
   formatDate,
   yesNoFilter,
-  assetRequestStatesToString,
+  assetRequestStatesFilter,
+  assetRequestTypesFilter,
+  assetPoliciesVerboseFilter,
+  stellarAssetTypesFilter,
+  limitsRequestStatesStrFilter,
+  roleTypeVerboseFilter,
+  idDocumentsVerboseFilter,
 } from './components/App/filters/filters'
 
 async function init () {
@@ -97,7 +103,13 @@ async function init () {
   Vue.filter('formatDate', formatDate)
   log.setDefaultLevel(params.LOG_LEVEL)
   Vue.filter('yesNoFilter', yesNoFilter)
-  Vue.filter('assetRequestStatesToString', assetRequestStatesToString)
+  Vue.filter('assetRequestStatesFilter', assetRequestStatesFilter)
+  Vue.filter('assetRequestTypesFilter', assetRequestTypesFilter)
+  Vue.filter('assetPoliciesVerboseFilter', assetPoliciesVerboseFilter)
+  Vue.filter('stellarAssetTypesFilter', stellarAssetTypesFilter)
+  Vue.filter('limitsRequestStatesStrFilter', limitsRequestStatesStrFilter)
+  Vue.filter('roleTypeVerboseFilter', roleTypeVerboseFilter)
+  Vue.filter('idDocumentsVerboseFilter', idDocumentsVerboseFilter)
 }
 
 init()

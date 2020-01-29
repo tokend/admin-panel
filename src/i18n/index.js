@@ -8,7 +8,6 @@ import i18nextBrowserLanguageDetector from 'i18next-browser-languagedetector'
 // https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
 
 // TODO: make i18n.language and i18n.languages responsive
-import { globalize } from '@/components/App/filters/filters'
 import moment from 'moment-timezone'
 
 import _isObject from 'lodash/isObject'
@@ -57,10 +56,7 @@ class I18n {
         break
 
       default:
-        throw new Error(globalize('i18n.error', {
-          lang: lang,
-        })
-        )
+        throw new Error(`I18n._loadResources(): unknown language: ${lang}`)
     }
 
     return result

@@ -11,7 +11,7 @@
           :value="ASSET_REQUEST_TYPES[requestType].value"
           :key="requestType"
         >
-          {{ ASSET_REQUEST_TYPES[requestType].translationId | globalize }}
+          {{ ASSET_REQUEST_TYPES[requestType].value | assetRequestTypesFilter }}
         </option>
       </select-field>
       <select-field
@@ -24,7 +24,7 @@
           :value="stateObj.codeVerbose"
           :key="stateObj.codeVerbose"
         >
-          {{ stateObj.codeVerbose | assetRequestStatesToString }}
+          {{ stateObj.codeVerbose | assetRequestStatesFilter }}
         </option>
       </select-field>
 
@@ -75,9 +75,9 @@
             <!-- eslint-disable max-len -->
             <span
               class="app-list__cell"
-              :title="CREATE_ASSET_REQUEST_STATES[snakeToCamelCase(asset.state)].codeVerbose | assetRequestStatesToString"
+              :title="CREATE_ASSET_REQUEST_STATES[snakeToCamelCase(asset.state)].codeVerbose | assetRequestStatesFilter"
             >
-              {{ CREATE_ASSET_REQUEST_STATES[snakeToCamelCase(asset.state)].codeVerbose | assetRequestStatesToString }}
+              {{ CREATE_ASSET_REQUEST_STATES[snakeToCamelCase(asset.state)].codeVerbose | assetRequestStatesFilter }}
             </span>
             <!-- eslint-enable max-len -->
 
@@ -135,14 +135,12 @@ import { snakeToCamelCase } from '@/utils/un-camel-case'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
-const ASSET_REQUEST_TYPES = Object.freeze({
+export const ASSET_REQUEST_TYPES = Object.freeze({
   create: {
     value: 'create_asset_requests',
-    translationId: 'asset-request-list.create',
   },
   update: {
     value: 'update_asset_requests',
-    translationId: 'asset-request-list.update',
   },
 })
 

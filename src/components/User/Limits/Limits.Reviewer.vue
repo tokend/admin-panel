@@ -25,7 +25,7 @@
           />
           <detail
             :label="'limits-reviewer.lbl-request-type' | globalize"
-            :value="localizedRequestType"
+            :value="localizedRequestType | limitsRequestStatesStrFilter"
           />
           <detail :label="'limits-reviewer.lbl-account-email' | globalize">
             <email-getter :account-id="account.id" />
@@ -236,6 +236,7 @@ import { globalize } from '@/components/App/filters/filters'
 import {
   REQUEST_STATES,
   DOCUMENT_TYPES_STR,
+  LIMITS_REQUEST_STATES_STR,
 } from '@/constants'
 import { STATS_OPERATION_TYPES } from '@tokend/js-sdk'
 
@@ -294,6 +295,7 @@ export default {
     desiredLimitDetails: null,
     REQUEST_STATES,
     DOCUMENT_TYPES_STR,
+    LIMITS_REQUEST_STATES_STR,
     REJECT_REASON_MAX_LENGTH,
     uploadDocs: [
       {
@@ -335,11 +337,6 @@ export default {
         statsOpType: this.desiredLimitDetails.operationType,
       }
     },
-    LIMITS_REQUEST_STATES_KEY: {
-      update_limits: 'limits-request-states.limits-update',
-      initial: 'limits-request-states.initial',
-      docsUploading: 'limits-request-states.docs-uploading',
-    },
     newLimit () {
       const requestDetails = this.desiredLimitDetails
       const operationType = OPERATION_TYPES[requestDetails.operationType]
@@ -363,7 +360,7 @@ export default {
     },
 
     localizedRequestType () {
-      return this.LIMITS_REQUEST_STATES_KEY[get(this.desiredLimitDetails, 'localizedRequestType')]
+      return LIMITS_REQUEST_STATES_STR[get(this.desiredLimitDetails, 'localizedRequestType')]
     },
   },
 

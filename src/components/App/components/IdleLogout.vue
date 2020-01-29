@@ -8,7 +8,7 @@
           class="text"
           v-html="$options.filters.globalize('idle-logout.text-long-inct', {
             timeLeft: showTimeLeft
-          })"  
+          })"
         />
         <!--eslint-enable-->
         <div class="idle-logout__actions">

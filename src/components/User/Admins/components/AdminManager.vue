@@ -264,17 +264,17 @@ export default {
           if (+item.id === +MASTER_ROLE_ID) {
             return {
               id: item.id,
-              name: globalize('admin-manager.master'),
-              description: globalize('admin-manager.root-admin-system'),
+              name: 'Master',
+              description: 'The root admin of the system',
             }
           }
 
           return {
             id: item.id,
             name: (item.details || {}).name ||
-            globalize('admin-manager.unnamed', { id: item.id }),
+            `Unnamed (${item.id})`,
             description: (item.details || {}).description ||
-            globalize('admin-manager.no-description'),
+            '(No description)',
           }
         })
 
@@ -293,7 +293,7 @@ export default {
         identity: signer.identity,
         signerRoleId: String(signer.role.id),
         name: signer.id === this.masterPubKey
-          ? globalize('admin-manager.master')
+          ? 'Master'
           : signer.details.name,
       }
 
@@ -331,8 +331,9 @@ export default {
     },
 
     async deleteAdmin () {
-      const confirmationTxt = globalize('admin-manager.confirmation-delete-admin')
-      if (await confirmAction({ title: confirmationTxt })) {
+      if (await confirmAction({
+        title: globalize('admin-manager.confirmation-delete-admin'),
+      })) {
         await this.submitTx(base.ManageSignerBuilder.deleteSigner)
       }
     },

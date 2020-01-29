@@ -21,8 +21,8 @@
               <h3>{{ "user-details.role-set" | globalize }}</h3>
               <p class="user-details__role-info">
                 {{
-                  roleTypeVerbose[requestToReview.accountRoleToSet
-                    || verifiedRequest.accountRoleToSet]
+                  (requestToReview.accountRoleToSet
+                    || verifiedRequest.accountRoleToSet) | roleTypeVerboseFilter
                 }}
               </p>
             </li>
@@ -222,8 +222,6 @@ import { ChangeRoleRequest } from '@/apiHelper/responseHandlers/requests/ChangeR
 import { fromKycTemplate } from '../../../../../utils/kyc-tempater'
 import deepCamelCase from 'camelcase-keys-deep'
 
-import { globalize } from '@/components/App/filters/filters'
-
 import { mapGetters } from 'vuex'
 
 const OPERATION_TYPE = {
@@ -269,16 +267,6 @@ export default {
     ...mapGetters([
       'kvAccountRoles',
     ]),
-
-    roleTypeVerbose () {
-      return {
-        [ this.kvAccountRoles.general ]: globalize('user-details.general'),
-        [ this.kvAccountRoles.usVerified ]: globalize('user-details.us-verified'),
-        [ this.kvAccountRoles.usAccredited ]: globalize('user-details.us-accredited'),
-        [ this.kvAccountRoles.corporate ]: globalize('user-details.corporate'),
-        [ this.kvAccountRoles.notVerified ]: globalize('user-details.not-verified'),
-      }
-    },
 
     isUserBlocked () {
       return this.user.role === this.kvAccountRoles.blocked
