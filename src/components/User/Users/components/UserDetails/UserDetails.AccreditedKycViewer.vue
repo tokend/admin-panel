@@ -31,6 +31,7 @@
 <script>
 import KycGeneralSection from './UserDetails.Kyc'
 import { UserDocLinkGetter } from '@comcom/getters'
+import { UserRecord } from '@/js/records/user.record'
 
 export default {
   components: {
@@ -43,7 +44,7 @@ export default {
       required: true,
     },
     user: {
-      type: Object,
+      type: UserRecord,
       required: true,
     },
   },

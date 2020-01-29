@@ -30,6 +30,7 @@ import {
   pollTypeToString,
   lowerCase,
   formatVersion,
+  accountState,
 } from './components/App/filters/filters'
 
 /* Logger module */
@@ -83,4 +84,5 @@ Vue.filter('assetTypeToString', assetTypeToString)
 Vue.filter('pollTypeToString', pollTypeToString)
 Vue.filter('lowerCase', lowerCase)
 Vue.filter('formatVersion', formatVersion)
+Vue.filter('accountState', accountState)
 log.setDefaultLevel(params.LOG_LEVEL)

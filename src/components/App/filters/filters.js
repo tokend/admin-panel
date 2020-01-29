@@ -33,7 +33,7 @@ export function roleIdToString (roleId) {
     [+store.getters.kvEntryUsAccreditedRoleId]: 'US Accredited',
     [+store.getters.kvEntryCorporateRoleId]: 'Corporate',
     [+store.getters.kvEntryBlockedRoleId]: 'Blocked',
-  }[+roleId]
+  }[+roleId] || 'Not found'
 }
 
 export function assetTypeToString (assetType) {
@@ -62,4 +62,10 @@ export function formatVersion (string) {
   } else {
     return string
   }
+}
+
+export function accountState (role) {
+  return role === +store.getters.kvAccountRoles.blocked
+    ? 'Blocked'
+    : 'Active'
 }

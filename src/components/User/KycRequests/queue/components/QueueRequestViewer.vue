@@ -25,7 +25,6 @@
         <section class="queue-request-viewer__section">
           <account-section
             :user="user"
-            :original-role="String(user.role)"
           />
         </section>
 
@@ -98,13 +97,14 @@ import AccreditedKycViewer from '@/components/User/Users/components/UserDetails/
 
 import QueueRequestDocuments from './QueueRequestDocuments'
 import ExternalDetailsViewer from '@/components/User/Users/components/UserDetails/UserDetails.ExternalDetailsViewer'
+import apiHelper from '@/apiHelper'
+import deepCamelCase from 'camelcase-keys-deep'
 
 import { api } from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 import { ChangeRoleRequest } from '@/apiHelper/responseHandlers/requests/ChangeRoleRequest'
 import { fromKycTemplate } from '@/utils/kyc-tempater'
-import deepCamelCase from 'camelcase-keys-deep'
 
 import { mapGetters } from 'vuex'
 
@@ -160,10 +160,9 @@ export default {
       this.isFailed = false
 
       try {
-        const { data: users } = await api.getWithSignature('/identities', {
-          filter: { address: this.request.requestor },
-        })
-        this.user = users[0]
+        this.user = await apiHelper.users.getUserByAccountId(
+          this.request.requestor
+        )
         this.isLoaded = true
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)

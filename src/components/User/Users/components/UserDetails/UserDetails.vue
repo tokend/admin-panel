@@ -44,7 +44,6 @@
         <section class="user-details__section">
           <account-section
             :user="user"
-            :original-role="userRole"
             :block-reason="latestBlockedRequest.blockReason"
           />
         </section>
@@ -145,37 +144,39 @@
           </div>
         </template>
 
-        <div class="user-details__actions-wrp">
-          <template v-if="requestToReview.state">
-            <request-actions
-              class="user-details__actions"
-              :user="user"
-              :request-to-review="requestToReview"
-              :latest-approved-request="verifiedRequest"
-              @reviewed="getUpdatedUser"
-            />
-          </template>
+        <template v-if="!isAdmin">
+          <div class="user-details__actions-wrp">
+            <template v-if="requestToReview.state">
+              <request-actions
+                class="user-details__actions"
+                :user="user"
+                :request-to-review="requestToReview"
+                :latest-approved-request="verifiedRequest"
+                @reviewed="getUpdatedUser"
+              />
+            </template>
 
-          <template v-else>
-            <block-actions
-              class="user-details__actions"
-              :user="user"
-              :latest-approved-request="latestApprovedRequest"
-              :verified-request="verifiedRequest"
-              :is-pending.sync="isPending"
-              @updated="getUpdatedUser"
-            />
+            <template v-else>
+              <block-actions
+                class="user-details__actions"
+                :user="user"
+                :latest-approved-request="latestApprovedRequest"
+                :verified-request="verifiedRequest"
+                :is-pending.sync="isPending"
+                @updated="getUpdatedUser"
+              />
 
-            <reset-actions
-              v-if="!isUserBlocked"
-              class="user-details__actions"
-              :user="user"
-              :verified-request="verifiedRequest"
-              :is-pending.sync="isPending"
-              @reset="getUpdatedUser"
-            />
-          </template>
-        </div>
+              <reset-actions
+                v-if="!isUserBlocked"
+                class="user-details__actions"
+                :user="user"
+                :verified-request="verifiedRequest"
+                :is-pending.sync="isPending"
+                @reset="getUpdatedUser"
+              />
+            </template>
+          </div>
+        </template>
       </template>
 
       <template v-else-if="!isFailed">
@@ -205,13 +206,14 @@ import ResetActions from './UserDetails.Reset'
 import BlockActions from './UserDetails.Block'
 
 import ExternalDetailsViewer from './UserDetails.ExternalDetailsViewer'
+import deepCamelCase from 'camelcase-keys-deep'
+import apiHelper from '@/apiHelper'
 
 import { api } from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 import { ChangeRoleRequest } from '@/apiHelper/responseHandlers/requests/ChangeRoleRequest'
 import { fromKycTemplate } from '../../../../../utils/kyc-tempater'
-import deepCamelCase from 'camelcase-keys-deep'
 
 import { mapGetters } from 'vuex'
 
@@ -257,6 +259,7 @@ export default {
   computed: {
     ...mapGetters([
       'kvAccountRoles',
+      'accountId',
     ]),
 
     roleTypeVerbose () {
@@ -298,11 +301,8 @@ export default {
       }) || new ChangeRoleRequest({})
     },
 
-    userRole () {
-      return String(
-        this.latestNonBlockedRequest.accountRoleToSet ||
-        this.kvAccountRoles.unverified
-      )
+    isAdmin () {
+      return this.user.address === this.accountId
     },
   },
 
@@ -322,16 +322,14 @@ export default {
       this.isFailed = false
       try {
         const [user, requests] = await Promise.all([
-          api.getWithSignature('/identities', {
-            filter: { address: this.id },
-          }),
+          apiHelper.users.getUserByAccountId(this.id),
           api.getWithSignature('/v3/change_role_requests', {
             page: { order: 'desc' },
             filter: { requestor: this.id },
             include: ['request_details'],
           }),
         ])
-        this.user = user.data[0]
+        this.user = user
         this.requests = requests.data
           ? requests.data.map(item => new ChangeRoleRequest(item))
           : []

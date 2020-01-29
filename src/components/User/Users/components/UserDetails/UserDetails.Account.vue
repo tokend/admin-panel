@@ -7,9 +7,16 @@
           Email
         </span>
 
-        <span :title="user.email">
-          {{ user.email }}
-        </span>
+        <template v-if="user.email">
+          <span :title="user.email">
+            {{ user.email }}
+          </span>
+        </template>
+        <template v-else>
+          <span>
+            -
+          </span>
+        </template>
       </li>
       <li>
         <span>
@@ -23,8 +30,8 @@
         <span>
           Account role
         </span>
-        <span :title="originalRole | roleIdToString">
-          {{ originalRole | roleIdToString }}
+        <span :title="user.role | roleIdToString">
+          {{ user.role | roleIdToString }}
         </span>
       </li>
 
@@ -51,18 +58,13 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { UserRecord } from '@/js/records/user.record'
 
 export default {
   props: {
     user: {
-      type: Object,
-      default () {
-        return {}
-      },
-    },
-    originalRole: {
-      type: String,
-      default: '',
+      type: UserRecord,
+      default: () => {},
     },
     blockReason: {
       type: String,

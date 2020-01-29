@@ -10,6 +10,7 @@ const getters = Object.freeze({
   GET_USER: 'GET_USER',
   GET_USER_ADDRESS: 'GET_USER_ADDRESS',
   GET_EMAIL_ADDRESS_BOOK: 'GET_EMAIL_ADDRESS_BOOK',
+  accountId: 'accountId',
 })
 
 export { mutations, actions, getters }

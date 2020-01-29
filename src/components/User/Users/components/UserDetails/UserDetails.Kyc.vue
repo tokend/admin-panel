@@ -134,6 +134,7 @@
 <script>
 import { UserDocLinkGetter } from '@comcom/getters'
 import { byAlpha2 } from 'iso-country-codes'
+import { UserRecord } from '@/js/records/user.record'
 
 const ID_DOCUMENTS_VERBOSE = {
   passport: 'Passport',
@@ -153,7 +154,7 @@ export default {
       required: true,
     },
     user: {
-      type: Object,
+      type: UserRecord,
       required: true,
     },
   },
