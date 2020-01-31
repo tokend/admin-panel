@@ -17,7 +17,7 @@
         <div class="limits-reviewer__content-section">
           <detail
             :label="'limits-reviewer.lbl-request-date-time' | globalize"
-            :value="formatDateWithTime(request.createdAt)"
+            :value="request.createdAt | formatDate"
           />
           <detail
             :label="'limits-reviewer.lbl-account-type' | globalize"
@@ -236,11 +236,8 @@ import { globalize } from '@/components/App/filters/filters'
 import {
   REQUEST_STATES,
   DOCUMENT_TYPES_STR,
-  LIMITS_REQUEST_STATES_STR,
 } from '@/constants'
 import { STATS_OPERATION_TYPES } from '@tokend/js-sdk'
-
-import { formatDateWithTime } from '../../../utils/formatters'
 
 import get from 'lodash/get'
 import isEqual from 'lodash/isEqual'
@@ -295,7 +292,6 @@ export default {
     desiredLimitDetails: null,
     REQUEST_STATES,
     DOCUMENT_TYPES_STR,
-    LIMITS_REQUEST_STATES_STR,
     REJECT_REASON_MAX_LENGTH,
     uploadDocs: [
       {
@@ -360,7 +356,7 @@ export default {
     },
 
     localizedRequestType () {
-      return LIMITS_REQUEST_STATES_STR[get(this.desiredLimitDetails, 'localizedRequestType')]
+      return get(this.desiredLimitDetails, 'requestType')
     },
   },
 
@@ -378,7 +374,6 @@ export default {
 
   methods: {
     get,
-    formatDateWithTime,
 
     async getRequest () {
       this.$store.commit('OPEN_LOADER')

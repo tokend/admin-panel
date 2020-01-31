@@ -61,7 +61,7 @@
             >
               {{ item.id }}
             </span>
-            <span>
+            <span class="app-list__cell">
               {{ item.requestDetails.startTime | formatDate }}
             </span>
             <span

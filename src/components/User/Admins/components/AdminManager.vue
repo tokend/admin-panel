@@ -264,17 +264,19 @@ export default {
           if (+item.id === +MASTER_ROLE_ID) {
             return {
               id: item.id,
-              name: 'Master',
-              description: 'The root admin of the system',
+              name: globalize('admin-manager.master'),
+              description: globalize('admin-manager.root-admin'),
             }
           }
 
           return {
             id: item.id,
             name: (item.details || {}).name ||
-            `Unnamed (${item.id})`,
+            globalize('admin-manager.unnamed', {
+              id: item.id,
+            }),
             description: (item.details || {}).description ||
-            '(No description)',
+            globalize('admin-manager.no-description'),
           }
         })
 

@@ -44,6 +44,7 @@ export default {
   },
 
   methods: {
+    globalize,
     calcMask (policies) {
       return policies.reduce((acc, cur) => acc + cur.value, 0)
     },

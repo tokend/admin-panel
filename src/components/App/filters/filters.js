@@ -1,8 +1,15 @@
 import { i18n } from '@/i18n'
 import moment from 'moment'
 import store from '../../../store'
-import { base } from '@tokend/js-sdk'
-import { CREATE_ASSET_REQUEST_STATES, LIMITS_REQUEST_STATES_STR, STELLAR_TYPES, ASSET_REQUEST_TYPES, ID_DOCUMENTS_VERBOSE, ASSET_POLICIES_VERBOSE } from '@/constants'
+import { base, SALE_TYPES } from '@tokend/js-sdk'
+import {
+  CREATE_ASSET_REQUEST_STATES,
+  LIMITS_REQUEST_STATES_STR,
+  STELLAR_TYPES, ASSET_REQUEST_TYPES,
+  ID_DOCUMENT_TYPES,
+  ASSET_POLICIES_VERBOSE,
+} from '@/constants'
+
 export function filterDateWithTime (date, format = 'DD MMM YYYY [at] hh:mm:ss') {
   try {
     return moment(date).format(format)
@@ -113,9 +120,9 @@ export function assetRequestStatesFilter (value) {
   return globalize(translationId)
 }
 
-export function assetRequestTypesFilter (val) {
+export function assetRequestTypesFilter (value) {
   let translationId = ''
-  switch (val) {
+  switch (value) {
     case ASSET_REQUEST_TYPES.createAsset: {
       translationId = 'filters.asset-request-types-filter.create'
       break
@@ -200,16 +207,17 @@ export function stellarAssetTypesFilter (value) {
 
 export function limitsRequestStatesStrFilter (value) {
   let translationId = ''
+  let key = Object.keys(LIMITS_REQUEST_STATES_STR)
   switch (value) {
-    case LIMITS_REQUEST_STATES_STR.update_limits: {
+    case key[0]: {
       translationId = 'filters.limits-request-states-str-filter.limits-update'
       break
     }
-    case LIMITS_REQUEST_STATES_STR.initial: {
+    case key[1]: {
       translationId = 'filters.limits-request-states-str-filter.initial'
       break
     }
-    case LIMITS_REQUEST_STATES_STR.docsUploading: {
+    case key[2]: {
       translationId = 'filters.limits-request-states-str-filter.docs-uploading'
       break
     }
@@ -255,25 +263,43 @@ export function roleTypeVerboseFilter (value) {
 export function idDocumentsVerboseFilter (value) {
   let translationId = ''
   switch (value) {
-    case ID_DOCUMENTS_VERBOSE.passport: {
+    case ID_DOCUMENT_TYPES.passport: {
       translationId = 'filters.id-documents-verbose-filter.passport'
       break
     }
-    case ID_DOCUMENTS_VERBOSE.identity_card: {
+    case ID_DOCUMENT_TYPES.identity_card: {
       translationId = 'filters.id-documents-verbose-filter.identity-card'
       break
     }
-    case ID_DOCUMENTS_VERBOSE.driving_license: {
+    case ID_DOCUMENT_TYPES.driving_license: {
       translationId = 'filters.id-documents-verbose-filter.driving-license'
       break
     }
-    case ID_DOCUMENTS_VERBOSE.residence_permit: {
+    case ID_DOCUMENT_TYPES.residence_permit: {
       translationId = 'filters.id-documents-verbose-filter.residence-permit'
       break
     }
     default: {
       translationId = 'filters.id-documents-verbose-filter.default'
       break
+    }
+  }
+  return globalize(translationId)
+}
+
+export function localizedSaleTypesFilter (value) {
+  let translationId = ''
+  switch (value) {
+    case SALE_TYPES.fixedPrice: {
+      translationId = 'filters.localized-sale-types-filter.fixed-price'
+      break
+    }
+    case SALE_TYPES.immediate: {
+      translationId = 'filters.localized-sale-types-filter.immediate'
+      break
+    }
+    default: {
+      translationId = 'filters.localized-sale-types-filter.default'
     }
   }
   return globalize(translationId)

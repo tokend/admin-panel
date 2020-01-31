@@ -7,11 +7,11 @@
         :label="'asset-request-list.lbl-request-type' | globalize"
       >
         <option
-          v-for="requestType in Object.keys(ASSET_REQUEST_TYPES)"
-          :value="ASSET_REQUEST_TYPES[requestType]"
+          v-for="requestType in ASSET_REQUEST_TYPES"
+          :value="requestType"
           :key="requestType"
         >
-          {{ ASSET_REQUEST_TYPES[requestType] | assetRequestTypesFilter }}
+          {{ requestType | assetRequestTypesFilter }}
         </option>
       </select-field>
       <select-field
@@ -123,6 +123,8 @@ import SelectField from '@comcom/fields/SelectField'
 
 import { CollectionLoader } from '@/components/common'
 
+import { snakeToCamelCase } from '@/utils/un-camel-case'
+
 import { api } from '@/api'
 import apiHelper from '@/apiHelper'
 import { base } from '@tokend/js-sdk'
@@ -131,7 +133,6 @@ import { CREATE_ASSET_REQUEST_STATES, REQUEST_STATES_STR, ASSET_REQUEST_TYPES } 
 
 import _ from 'lodash'
 import { clearObject } from '@/utils/clearObject'
-import { snakeToCamelCase } from '@/utils/un-camel-case'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
 

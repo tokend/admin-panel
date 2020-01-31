@@ -71,9 +71,8 @@
       </li>
       <li>
         <span>{{ "user-details-kyc.id-document-type" | globalize }}</span>
-        <span :title="ID_DOCUMENTS_VERBOSE[kyc.idDocumentType]">
-          {{ ID_DOCUMENTS_VERBOSE[kyc.idDocumentType]
-            | idDocumentsVerboseFilter }}
+        <span :title="kyc.idDocumentType | idDocumentsVerboseFilter">
+          {{ kyc.idDocumentType| idDocumentsVerboseFilter }}
         </span>
       </li>
       <li>
@@ -137,7 +136,6 @@
 <script>
 import { UserDocLinkGetter } from '@comcom/getters'
 import { byAlpha2 } from 'iso-country-codes'
-import { ID_DOCUMENTS_VERBOSE } from '@/constants'
 
 export default {
   components: {
@@ -153,12 +151,6 @@ export default {
       type: Object,
       required: true,
     },
-  },
-
-  data () {
-    return {
-      ID_DOCUMENTS_VERBOSE,
-    }
   },
 
   computed: {

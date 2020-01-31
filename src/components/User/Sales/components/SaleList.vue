@@ -35,7 +35,6 @@
         <input-date-field
           :label="'sale-list.lbl-start-date' | globalize"
           class="sale-list__field sale-list__field-margin-top"
-          placeholder=""
           :enable-time="false"
           v-model="filters.startDate"
         />

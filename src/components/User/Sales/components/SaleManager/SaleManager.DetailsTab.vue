@@ -85,7 +85,11 @@
                   <!-- eslint-disable-next-line max-len -->
                   {{ "sale-manager-details-tab.stellar-asset-type" | globalize }}
                 </span>
-                <span>{{ stellarAssetType }}</span>
+                <span>
+                  {{
+                    asset.details.stellar.assetType | stellarAssetTypesFilter
+                  }}
+                </span>
               </li>
               <li>
                 <span>
@@ -150,8 +154,7 @@
           <li>
             <span>{{ "sale-manager-details-tab.type" | globalize }}</span>
             <span>
-              {{ LOCALIZED_SALE_TYPES[sale.saleType.value + '']
-                | globalize || '&mdash;' }}
+              {{ localizedSaleTypesFilter(sale.saleType.value) || '&mdash;' }}
             </span>
           </li>
           <li>
@@ -332,15 +335,14 @@ import {
   AssetPoliciesFormatter,
 } from '@comcom/formatters'
 
-import { SALE_STATES, SALE_DEFINITION_TYPES, LOCALIZED_SALE_TYPES } from '@/constants'
+import {
+  SALE_STATES,
+  SALE_DEFINITION_TYPES,
+} from '@/constants'
 import { api } from '@/api'
 import get from 'lodash/get'
 
-const STELLAR_TYPES = {
-  creditAlphanum4: 'credit_alphanum4',
-  creditAlphanum12: 'credit_alphanum12',
-  native: 'native',
-}
+import { localizedSaleTypesFilter } from '@/components/App/filters/filters'
 
 export default {
   components: {
@@ -357,7 +359,6 @@ export default {
 
   data () {
     return {
-      LOCALIZED_SALE_TYPES,
       SALE_STATES,
       asset: {},
       isAssetLoaded: false,
@@ -370,30 +371,6 @@ export default {
       return this.sale.accessDefinitionType.value ===
         SALE_DEFINITION_TYPES.whitelist
     },
-
-    stellarAssetType () {
-      let label
-
-      switch (this.asset.details.stellar.assetType) {
-        case STELLAR_TYPES.creditAlphanum4:
-          label = 'Alphanumeric 4'
-          break
-
-        case STELLAR_TYPES.creditAlphanum12:
-          label = 'Alphanumeric 12'
-          break
-
-        case STELLAR_TYPES.native:
-          label = 'Native'
-          break
-
-        default:
-          label = '[UNKNOWN_STELLAR_ASSET_TYPE]'
-          break
-      }
-
-      return label
-    },
   },
 
   async created () {
@@ -402,7 +379,7 @@ export default {
 
   methods: {
     get,
-
+    localizedSaleTypesFilter,
     async getAsset ({ baseAsset }) {
       try {
         const endpoint = `/v3/assets/${baseAsset.id}`

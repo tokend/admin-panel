@@ -42,6 +42,7 @@ import {
   limitsRequestStatesStrFilter,
   roleTypeVerboseFilter,
   idDocumentsVerboseFilter,
+  localizedSaleTypesFilter,
 } from './components/App/filters/filters'
 
 async function init () {
@@ -110,6 +111,7 @@ async function init () {
   Vue.filter('limitsRequestStatesStrFilter', limitsRequestStatesStrFilter)
   Vue.filter('roleTypeVerboseFilter', roleTypeVerboseFilter)
   Vue.filter('idDocumentsVerboseFilter', idDocumentsVerboseFilter)
+  Vue.filter('localizedSaleTypesFilter', localizedSaleTypesFilter)
 }
 
 init()

@@ -488,6 +488,7 @@ import {
   DEFAULT_INPUT_MIN,
   DEFAULT_MAX_AMOUNT,
   DOCUMENT_TYPES,
+  STELLAR_TYPES,
 } from '@/constants'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
@@ -505,12 +506,6 @@ const STELLAR_ASSET_TYPES = [
     value: 'native',
   },
 ]
-
-const STELLAR_TYPES = {
-  creditAlphanum4: 'credit_alphanum4',
-  creditAlphanum12: 'credit_alphanum12',
-  native: 'native',
-}
 
 const CREDIT_ALPHANUM4_MAX_LENGTH = 4
 const CREDIT_ALPHANUM12_MIN_LENGTH = 5

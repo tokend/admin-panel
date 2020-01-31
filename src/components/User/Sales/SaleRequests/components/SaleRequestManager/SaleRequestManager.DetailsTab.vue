@@ -132,7 +132,10 @@
             <li>
               <!-- eslint-disable-next-line max-len -->
               <span>{{ "sale-request-manager-details-tab.stellar-asset-type" | globalize }}</span>
-              <span>{{ stellarAssetType }}</span>
+              <span>
+                {{ request.asset.details.stellar.assetType
+                  | stellarAssetTypesFilter }}
+              </span>
             </li>
             <li>
               <!-- eslint-disable-next-line max-len -->
@@ -194,8 +197,8 @@
               {{ "sale-request-manager-details-tab.type" | globalize }}
             </span>
             <span>
-              {{ LOCALIZED_SALE_TYPES[safeGet(saleDetails, 'saleType.value')]
-                | globalize }}
+              {{ safeGet(saleDetails, 'saleType.value')
+                | localizedSaleTypesFilter }}
             </span>
           </li>
           <li>
@@ -301,15 +304,9 @@ import {
   RequestStateFormatter,
 } from '@comcom/formatters'
 
-import { SALE_DEFINITION_TYPES, LOCALIZED_SALE_TYPES } from '@/constants'
+import { SALE_DEFINITION_TYPES } from '@/constants'
 
 import get from 'lodash/get'
-
-const STELLAR_TYPES = {
-  creditAlphanum4: 'credit_alphanum4',
-  creditAlphanum12: 'credit_alphanum12',
-  native: 'native',
-}
 
 export default {
   components: {
@@ -324,11 +321,6 @@ export default {
   props: {
     request: { type: Object, required: true },
   },
-  data () {
-    return {
-      LOCALIZED_SALE_TYPES,
-    }
-  },
 
   computed: {
     saleDetails () {
@@ -339,31 +331,8 @@ export default {
       return this.saleDetails.accessDefinitionType.value ===
         SALE_DEFINITION_TYPES.whitelist
     },
-
-    stellarAssetType () {
-      let label
-
-      switch (this.request.asset.details.stellar.assetType) {
-        case STELLAR_TYPES.creditAlphanum4:
-          label = 'Alphanumeric 4'
-          break
-
-        case STELLAR_TYPES.creditAlphanum12:
-          label = 'Alphanumeric 12'
-          break
-
-        case STELLAR_TYPES.native:
-          label = 'Native'
-          break
-
-        default:
-          label = '[UNKNOWN_STELLAR_ASSET_TYPE]'
-          break
-      }
-
-      return label
-    },
   },
+
   methods: {
     safeGet: get,
   },

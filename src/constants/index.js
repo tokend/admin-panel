@@ -30,6 +30,4 @@ export {
 } from './defaults'
 export { KEY_VALUE_ENTRY_TYPE } from './key-value'
 export { ASSET_REQUEST_TYPES } from './asset-request-types'
-export { LOCALIZED_SALE_TYPES } from './sale-types'
 export { SALE_DEFINITION_TYPES } from './sale-definition-types'
-export { ID_DOCUMENTS_VERBOSE } from './id-documents-verbose'

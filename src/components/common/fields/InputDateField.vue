@@ -7,8 +7,8 @@
       class="input-field__input"
       :config="config"
       :value="value"
+      :placeholder="placeholder"
       @input.native="onInput"
-      placeholder=" "
       @keypress="onKeypress"
     />
 
@@ -33,7 +33,7 @@ export default {
 
   props: {
     error: { type: [String, Boolean], default: '' },
-    placeholder: { type: String, default: '' },
+    placeholder: { type: String, default: ' ' },
     label: { type: String, default: '' },
     type: { type: String, default: 'text' },
     value: { type: String, default: '' },
