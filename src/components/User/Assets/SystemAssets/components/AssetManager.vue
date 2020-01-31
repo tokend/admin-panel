@@ -191,8 +191,7 @@
         <tick-field
           class="app__form-field"
           v-model="asset.policies.value"
-          :label="ASSET_POLICIES.transferable | assetPoliciesVerboseFilter
-          "
+          :label="ASSET_POLICIES.transferable | assetPoliciesVerboseFilter"
           :cb-value="ASSET_POLICIES.transferable"
           :disabled="formMixin.isDisabled"
         />
@@ -496,15 +495,9 @@ const ASSET_CODE_MAX_LENGTH = 16
 const ASSET_NAME_MAX_LENGTH = 255
 
 const STELLAR_ASSET_TYPES = [
-  {
-    value: 'credit_alphanum4',
-  },
-  {
-    value: 'credit_alphanum12',
-  },
-  {
-    value: 'native',
-  },
+  { value: 'credit_alphanum4' },
+  { value: 'credit_alphanum12' },
+  { value: 'native' },
 ]
 
 const CREDIT_ALPHANUM4_MAX_LENGTH = 4

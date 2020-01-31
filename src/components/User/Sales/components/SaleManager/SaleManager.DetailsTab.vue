@@ -154,7 +154,7 @@
           <li>
             <span>{{ "sale-manager-details-tab.type" | globalize }}</span>
             <span>
-              {{ localizedSaleTypesFilter(sale.saleType.value) || '&mdash;' }}
+              {{ sale.saleType.value | localizedSaleTypesFilter }}
             </span>
           </li>
           <li>
@@ -342,8 +342,6 @@ import {
 import { api } from '@/api'
 import get from 'lodash/get'
 
-import { localizedSaleTypesFilter } from '@/components/App/filters/filters'
-
 export default {
   components: {
     AssetAmountFormatter,
@@ -379,7 +377,6 @@ export default {
 
   methods: {
     get,
-    localizedSaleTypesFilter,
     async getAsset ({ baseAsset }) {
       try {
         const endpoint = `/v3/assets/${baseAsset.id}`

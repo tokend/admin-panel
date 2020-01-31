@@ -207,17 +207,16 @@ export function stellarAssetTypesFilter (value) {
 
 export function limitsRequestStatesStrFilter (value) {
   let translationId = ''
-  let key = Object.keys(LIMITS_REQUEST_STATES_STR)
   switch (value) {
-    case key[0]: {
+    case LIMITS_REQUEST_STATES_STR.updateLimits: {
       translationId = 'filters.limits-request-states-str-filter.limits-update'
       break
     }
-    case key[1]: {
+    case LIMITS_REQUEST_STATES_STR.initial: {
       translationId = 'filters.limits-request-states-str-filter.initial'
       break
     }
-    case key[2]: {
+    case LIMITS_REQUEST_STATES_STR.docsUploading: {
       translationId = 'filters.limits-request-states-str-filter.docs-uploading'
       break
     }
@@ -267,15 +266,15 @@ export function idDocumentsVerboseFilter (value) {
       translationId = 'filters.id-documents-verbose-filter.passport'
       break
     }
-    case ID_DOCUMENT_TYPES.identity_card: {
+    case ID_DOCUMENT_TYPES.identityCard: {
       translationId = 'filters.id-documents-verbose-filter.identity-card'
       break
     }
-    case ID_DOCUMENT_TYPES.driving_license: {
+    case ID_DOCUMENT_TYPES.drivingLicense: {
       translationId = 'filters.id-documents-verbose-filter.driving-license'
       break
     }
-    case ID_DOCUMENT_TYPES.residence_permit: {
+    case ID_DOCUMENT_TYPES.residencePermit: {
       translationId = 'filters.id-documents-verbose-filter.residence-permit'
       break
     }

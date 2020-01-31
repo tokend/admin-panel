@@ -25,7 +25,9 @@
           />
           <detail
             :label="'limits-reviewer.lbl-request-type' | globalize"
-            :value="localizedRequestType | limitsRequestStatesStrFilter"
+            :value="
+              desiredLimitDetails.requestType | limitsRequestStatesStrFilter
+            "
           />
           <detail :label="'limits-reviewer.lbl-account-email' | globalize">
             <email-getter :account-id="account.id" />
@@ -73,7 +75,7 @@
         </div>
       </div>
       <template
-        v-if="desiredLimitDetails.localizedRequestType === 'docsUploading'"
+        v-if="desiredLimitDetails.requestType === 'docsUploading'"
       >
         <div class="limits-reviewer__uploaded-docs-list-wrapper">
           <h3 class="limits-reviewer__heading">
@@ -103,7 +105,7 @@
           class="app__btn"
           @click="isRequiringDocs = true"
           :disabled="isPending ||
-            desiredLimitDetails.localizedRequestType === 'docsUploading' ||
+            desiredLimitDetails.requestType === 'docsUploading' ||
             request.state === REQUEST_STATES.pending"
         >
           {{ "limits-reviewer.btn-request-docs" | globalize }}
@@ -354,12 +356,7 @@ export default {
       if (!this.desiredLimitDetails.documents) return
       return this.desiredLimitDetails.documents
     },
-
-    localizedRequestType () {
-      return get(this.desiredLimitDetails, 'requestType')
-    },
   },
-
   async created () {
     try {
       await this.getRequest()

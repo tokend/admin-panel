@@ -35,9 +35,8 @@
             :title="item.requestDetails.creatorDetails.requestType"
           >
             {{
-              LIMITS_REQUEST_STATES_STR[
-                item.requestDetails.creatorDetails.requestType
-              ] | limitsRequestStatesStrFilter
+              item.requestDetails.creatorDetails.requestType
+                | limitsRequestStatesStrFilter
             }}
           </span>
 
@@ -78,7 +77,6 @@ import { EmailGetter } from '@comcom/getters'
 import {
   ACCOUNT_TYPES,
   REQUEST_STATES,
-  LIMITS_REQUEST_STATES_STR,
 } from '@/constants'
 
 export default {
@@ -94,7 +92,6 @@ export default {
       isNoMoreEntries: false,
       REQUEST_STATES,
       ACCOUNT_TYPES,
-      LIMITS_REQUEST_STATES_STR,
     }
   },
 }

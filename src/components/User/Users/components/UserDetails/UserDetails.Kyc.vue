@@ -71,8 +71,12 @@
       </li>
       <li>
         <span>{{ "user-details-kyc.id-document-type" | globalize }}</span>
-        <span :title="kyc.idDocumentType | idDocumentsVerboseFilter">
-          {{ kyc.idDocumentType| idDocumentsVerboseFilter }}
+        <span
+          :title="
+            snakeToCamelCase(kyc.idDocumentType) | idDocumentsVerboseFilter
+          "
+        >
+          {{ snakeToCamelCase(kyc.idDocumentType) | idDocumentsVerboseFilter }}
         </span>
       </li>
       <li>
@@ -136,7 +140,7 @@
 <script>
 import { UserDocLinkGetter } from '@comcom/getters'
 import { byAlpha2 } from 'iso-country-codes'
-
+import { snakeToCamelCase } from '@/utils/un-camel-case'
 export default {
   components: {
     UserDocLinkGetter,
@@ -160,6 +164,9 @@ export default {
         .find(country => country === this.kyc.address.country)
       return country ? byAlpha2[country].name : ''
     },
+  },
+  methods: {
+    snakeToCamelCase,
   },
 }
 </script>
