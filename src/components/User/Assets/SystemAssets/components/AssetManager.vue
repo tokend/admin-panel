@@ -347,11 +347,11 @@
               :disabled="formMixin.isDisabled"
             >
               <option
-                v-for="assetType in STELLAR_ASSET_TYPES"
-                :key="assetType.value"
-                :value="assetType.value"
+                v-for="assetType in STELLAR_ASSET"
+                :key="assetType"
+                :value="assetType"
               >
-                {{ assetType.value | stellarAssetTypesFilter }}
+                {{ assetType | stellarAssetTypesFilter }}
               </option>
             </select-field>
 
@@ -488,17 +488,12 @@ import {
   DEFAULT_MAX_AMOUNT,
   DOCUMENT_TYPES,
   STELLAR_TYPES,
+  STELLAR_ASSET,
 } from '@/constants'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
 const ASSET_CODE_MAX_LENGTH = 16
 const ASSET_NAME_MAX_LENGTH = 255
-
-const STELLAR_ASSET_TYPES = [
-  { value: 'credit_alphanum4' },
-  { value: 'credit_alphanum12' },
-  { value: 'native' },
-]
 
 const CREDIT_ALPHANUM4_MAX_LENGTH = 4
 const CREDIT_ALPHANUM12_MIN_LENGTH = 5
@@ -568,7 +563,7 @@ export default {
       DEFAULT_MAX_AMOUNT,
       ASSET_CODE_MAX_LENGTH,
       ASSET_NAME_MAX_LENGTH,
-      STELLAR_ASSET_TYPES,
+      STELLAR_ASSET,
       STELLAR_TYPES,
       CREDIT_ALPHANUM12_MIN_LENGTH,
     }

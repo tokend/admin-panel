@@ -185,11 +185,11 @@ export function stellarAssetTypesFilter (value) {
   let translationId
 
   switch (value) {
-    case STELLAR_TYPES.credit_alphanum4:
+    case STELLAR_TYPES.creditAlphanum4:
       translationId = 'filters.stellar-asset-types-filter.alphanumeric-4'
       break
 
-    case STELLAR_TYPES.credit_alphanum12:
+    case STELLAR_TYPES.creditAlphanum12:
       translationId = 'filters.stellar-asset-types-filter.alphanumeric-12'
       break
 
