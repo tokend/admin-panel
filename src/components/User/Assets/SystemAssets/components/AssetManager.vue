@@ -347,7 +347,7 @@
               :disabled="formMixin.isDisabled"
             >
               <option
-                v-for="assetType in STELLAR_ASSET"
+                v-for="assetType in STELLAR_TYPES"
                 :key="assetType"
                 :value="assetType"
               >
@@ -488,7 +488,6 @@ import {
   DEFAULT_MAX_AMOUNT,
   DOCUMENT_TYPES,
   STELLAR_TYPES,
-  STELLAR_ASSET,
 } from '@/constants'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
@@ -563,7 +562,6 @@ export default {
       DEFAULT_MAX_AMOUNT,
       ASSET_CODE_MAX_LENGTH,
       ASSET_NAME_MAX_LENGTH,
-      STELLAR_ASSET,
       STELLAR_TYPES,
       CREDIT_ALPHANUM12_MIN_LENGTH,
     }

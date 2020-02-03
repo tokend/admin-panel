@@ -74,7 +74,7 @@
         <span
           :title="kyc.idDocumentType | idDocumentsVerboseFilter"
         >
-          {{ kyc.idDocumentType| idDocumentsVerboseFilter }}
+          {{ kyc.idDocumentType | idDocumentsVerboseFilter }}
         </span>
       </li>
       <li>

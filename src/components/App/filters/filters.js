@@ -7,7 +7,6 @@ import {
   LIMITS_REQUEST_STATES_STR,
   STELLAR_TYPES, ASSET_REQUEST_TYPES,
   ID_DOCUMENT_TYPES,
-  ASSET_POLICIES_VERBOSE,
 } from '@/constants'
 
 export function filterDateWithTime (date, format = 'DD MMM YYYY [at] hh:mm:ss') {
@@ -142,35 +141,35 @@ export function assetRequestTypesFilter (value) {
 export function assetPoliciesVerboseFilter (value) {
   let translationId = ''
   switch (value) {
-    case ASSET_POLICIES_VERBOSE[ base.xdr.AssetPolicy.transferable().value ]: {
+    case base.xdr.AssetPolicy.transferable().value: {
       translationId = 'filters.asset-policies-verbose-filter.transferable'
       break
     }
-    case ASSET_POLICIES_VERBOSE[ base.xdr.AssetPolicy.baseAsset().value ]: {
+    case base.xdr.AssetPolicy.baseAsset().value: {
       translationId = 'filters.asset-policies-verbose-filter.base-asset'
       break
     }
     // eslint-disable-next-line max-len
-    case ASSET_POLICIES_VERBOSE[ base.xdr.AssetPolicy.statsQuoteAsset().value ]: {
+    case base.xdr.AssetPolicy.statsQuoteAsset().value: {
       translationId = 'filters.asset-policies-verbose-filter.stats-quote-asset'
       break
     }
-    case ASSET_POLICIES_VERBOSE[ base.xdr.AssetPolicy.withdrawable().value ]: {
+    case base.xdr.AssetPolicy.withdrawable().value: {
       translationId = 'filters.asset-policies-verbose-filter.withdrawable'
       break
     }
     // eslint-disable-next-line max-len
-    case ASSET_POLICIES_VERBOSE[ base.xdr.AssetPolicy.issuanceManualReviewRequired().value ]: {
+    case base.xdr.AssetPolicy.issuanceManualReviewRequired().value: {
       translationId = 'filters.asset-policies-verbose-filter.issuance-manual-review-required'
       break
     }
     // eslint-disable-next-line max-len
-    case ASSET_POLICIES_VERBOSE[ base.xdr.AssetPolicy.canBeBaseInAtomicSwap().value ]: {
+    case base.xdr.AssetPolicy.canBeBaseInAtomicSwap().value: {
       translationId = 'filters.asset-policies-verbose-filter.base-atomic-swap'
       break
     }
     // eslint-disable-next-line max-len
-    case ASSET_POLICIES_VERBOSE[ base.xdr.AssetPolicy.canBeQuoteInAtomicSwap().value ]: {
+    case base.xdr.AssetPolicy.canBeQuoteInAtomicSwap().value: {
       translationId = 'filters.asset-policies-verbose-filter.quote-atomic-swap'
       break
     }
