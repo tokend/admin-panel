@@ -138,70 +138,108 @@ export function assetRequestTypesFilter (value) {
   return globalize(translationId)
 }
 
-export function assetPoliciesVerboseFilter (value) {
+export function assetPoliciesFilter (value) {
   let translationId = ''
   switch (value) {
     case base.xdr.AssetPolicy.transferable().value: {
-      translationId = 'filters.asset-policies-verbose-filter.transferable'
+      translationId = 'filters.asset-policies-filter.transferable'
       break
     }
     case base.xdr.AssetPolicy.baseAsset().value: {
-      translationId = 'filters.asset-policies-verbose-filter.base-asset'
+      translationId = 'filters.asset-policies-filter.base-asset'
       break
     }
-    // eslint-disable-next-line max-len
     case base.xdr.AssetPolicy.statsQuoteAsset().value: {
-      translationId = 'filters.asset-policies-verbose-filter.stats-quote-asset'
+      translationId = 'filters.asset-policies-filter.stats-quote-asset'
       break
     }
     case base.xdr.AssetPolicy.withdrawable().value: {
-      translationId = 'filters.asset-policies-verbose-filter.withdrawable'
+      translationId = 'filters.asset-policies-filter.withdrawable'
       break
     }
-    // eslint-disable-next-line max-len
     case base.xdr.AssetPolicy.issuanceManualReviewRequired().value: {
-      translationId = 'filters.asset-policies-verbose-filter.issuance-manual-review-required'
+      translationId = 'filters.asset-policies-filter.issuance-manual-review-required'
       break
     }
-    // eslint-disable-next-line max-len
     case base.xdr.AssetPolicy.canBeBaseInAtomicSwap().value: {
-      translationId = 'filters.asset-policies-verbose-filter.base-atomic-swap'
+      translationId = 'filters.asset-policies-filter.base-atomic-swap'
       break
     }
-    // eslint-disable-next-line max-len
     case base.xdr.AssetPolicy.canBeQuoteInAtomicSwap().value: {
-      translationId = 'filters.asset-policies-verbose-filter.quote-atomic-swap'
+      translationId = 'filters.asset-policies-filter.quote-atomic-swap'
       break
     }
     default: {
-      translationId = 'filters.asset-policies-verbose-filter.default'
+      translationId = 'filters.asset-policies-filter.default'
+
       break
     }
   }
   return globalize(translationId)
 }
+export function assetPoliciesVerboseFilter (value) {
+  let translationId = ''
+  switch (value) {
+    case base.xdr.AssetPolicy.transferable().name: {
+      translationId = 'filters.asset-policies-filter.transferable'
+      break
+    }
+    case base.xdr.AssetPolicy.baseAsset().name: {
+      translationId = 'filters.asset-policies-verbose-filter.base-asset'
+      break
+    }
+    case base.xdr.AssetPolicy.statsQuoteAsset().name: {
+      translationId = 'filters.asset-policies-verbose-filter.stats-quote-asset'
+      break
+    }
+    case base.xdr.AssetPolicy.withdrawable().name: {
+      translationId = 'filters.asset-policies-verbose-filter.withdrawable'
+      break
+    }
+    case base.xdr.AssetPolicy.issuanceManualReviewRequired().name: {
+      translationId = 'filters.asset-policies-verbose-filter.issuance-manual-review-required'
+      break
+    }
+    case base.xdr.AssetPolicy.canBeBaseInAtomicSwap().name: {
+      translationId = 'filters.asset-policies-verbose-filter.base-atomic-swap'
+      break
+    }
+    case base.xdr.AssetPolicy.canBeQuoteInAtomicSwap().name: {
+      translationId = 'filters.asset-policies-verbose-filter.quote-atomic-swap'
+      break
+    }
+    default: {
+      translationId = 'filters.asset-policies-verbose-filter.default'
+
+      break
+    }
+  }
+  return globalize(translationId)
+}
+
 export function stellarAssetTypesFilter (value) {
   let translationId
 
   switch (value) {
-    case STELLAR_TYPES.creditAlphanum4:
+    case STELLAR_TYPES.creditAlphanum4: {
       translationId = 'filters.stellar-asset-types-filter.alphanumeric-4'
       break
-
-    case STELLAR_TYPES.creditAlphanum12:
+    }
+    case STELLAR_TYPES.creditAlphanum12: {
       translationId = 'filters.stellar-asset-types-filter.alphanumeric-12'
       break
-
-    case STELLAR_TYPES.native:
+    }
+    case STELLAR_TYPES.native: {
       translationId = 'filters.stellar-asset-types-filter.native'
       break
-
-    default:
+    }
+    default: {
       translationId = 'filters.stellar-asset-types-filter.default'
       break
+    }
   }
 
-  return translationId
+  return globalize(translationId)
 }
 
 export function limitsRequestStatesStrFilter (value) {

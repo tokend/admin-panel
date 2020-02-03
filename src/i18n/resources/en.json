@@ -422,6 +422,16 @@
         "native": "Native",
         "default": "UNKNOWN STELLAR ASSET TYPE"
       },
+      "asset-policies-filter": {
+        "transferable": "Transferable",
+        "base-asset": "Base asset",
+        "stats-quote-asset": "Stats quote asset",
+        "withdrawable": "Withdrawable",
+        "issuance-manual-review-required": "Issuance manual review required",
+        "base-atomic-swap": "Can be base in atomic swap",
+        "quote-atomic-swap": "Can be quote in atomic swap",
+        "default": "UNKNOWN ASSET POLICIES"
+      },
       "asset-policies-verbose-filter": {
         "transferable": "Transferable",
         "base-asset": "Base asset",

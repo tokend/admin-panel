@@ -191,7 +191,7 @@
         <tick-field
           class="app__form-field"
           v-model="asset.policies.value"
-          :label="ASSET_POLICIES.transferable | assetPoliciesVerboseFilter"
+          :label="ASSET_POLICIES.transferable | assetPoliciesFilter"
           :cb-value="ASSET_POLICIES.transferable"
           :disabled="formMixin.isDisabled"
         />
@@ -201,7 +201,7 @@
         <tick-field
           class="app__form-field"
           v-model="asset.policies.value"
-          :label="ASSET_POLICIES.baseAsset | assetPoliciesVerboseFilter"
+          :label="ASSET_POLICIES.baseAsset | assetPoliciesFilter"
           :cb-value="ASSET_POLICIES.baseAsset"
           :disabled="formMixin.isDisabled"
         />
@@ -211,7 +211,7 @@
         <tick-field
           class="app__form-field"
           v-model="asset.policies.value"
-          :label="ASSET_POLICIES.statsQuoteAsset | assetPoliciesVerboseFilter"
+          :label="ASSET_POLICIES.statsQuoteAsset | assetPoliciesFilter"
           :cb-value="ASSET_POLICIES.statsQuoteAsset"
           :disabled="formMixin.isDisabled"
         />
@@ -221,7 +221,7 @@
         <tick-field
           class="app__form-field"
           v-model="asset.policies.value"
-          :label="ASSET_POLICIES.withdrawable | assetPoliciesVerboseFilter"
+          :label="ASSET_POLICIES.withdrawable | assetPoliciesFilter"
           :cb-value="ASSET_POLICIES.withdrawable"
           :disabled="formMixin.isDisabled"
         />
@@ -232,7 +232,7 @@
           class="app__form-field"
           v-model="asset.policies.value"
           :label="ASSET_POLICIES.issuanceManualReviewRequired
-            | assetPoliciesVerboseFilter"
+            | assetPoliciesFilter"
           :cb-value="ASSET_POLICIES.issuanceManualReviewRequired"
           :disabled="formMixin.isDisabled"
         />
@@ -243,7 +243,7 @@
           class="app__form-field"
           v-model="asset.policies.value"
           :label="ASSET_POLICIES.canBeBaseInAtomicSwap
-            | assetPoliciesVerboseFilter"
+            | assetPoliciesFilter"
           :cb-value="ASSET_POLICIES.canBeBaseInAtomicSwap"
           :disabled="formMixin.isDisabled"
         />
@@ -254,7 +254,7 @@
           class="app__form-field"
           v-model="asset.policies.value"
           :label="ASSET_POLICIES.canBeQuoteInAtomicSwap
-            | assetPoliciesVerboseFilter"
+            | assetPoliciesFilter"
           :cb-value="ASSET_POLICIES.canBeQuoteInAtomicSwap"
           :disabled="formMixin.isDisabled"
         />
