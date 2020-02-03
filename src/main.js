@@ -38,7 +38,6 @@ import {
   assetRequestStatesFilter,
   assetRequestTypesFilter,
   assetPoliciesFilter,
-  assetPoliciesVerboseFilter,
   stellarAssetTypesFilter,
   limitsRequestStatesStrFilter,
   roleTypeVerboseFilter,
@@ -108,7 +107,6 @@ async function init () {
   Vue.filter('assetRequestStatesFilter', assetRequestStatesFilter)
   Vue.filter('assetRequestTypesFilter', assetRequestTypesFilter)
   Vue.filter('assetPoliciesFilter', assetPoliciesFilter)
-  Vue.filter('assetPoliciesVerboseFilter', assetPoliciesVerboseFilter)
   Vue.filter('stellarAssetTypesFilter', stellarAssetTypesFilter)
   Vue.filter('limitsRequestStatesStrFilter', limitsRequestStatesStrFilter)
   Vue.filter('roleTypeVerboseFilter', roleTypeVerboseFilter)

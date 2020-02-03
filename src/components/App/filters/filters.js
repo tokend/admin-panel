@@ -140,7 +140,7 @@ export function assetRequestTypesFilter (value) {
 
 export function assetPoliciesFilter (value) {
   let translationId = ''
-  switch (value) {
+  switch (+value) {
     case base.xdr.AssetPolicy.transferable().value: {
       translationId = 'filters.asset-policies-filter.transferable'
       break
@@ -171,46 +171,6 @@ export function assetPoliciesFilter (value) {
     }
     default: {
       translationId = 'filters.asset-policies-filter.default'
-
-      break
-    }
-  }
-  return globalize(translationId)
-}
-export function assetPoliciesVerboseFilter (value) {
-  let translationId = ''
-  switch (value) {
-    case base.xdr.AssetPolicy.transferable().name: {
-      translationId = 'filters.asset-policies-filter.transferable'
-      break
-    }
-    case base.xdr.AssetPolicy.baseAsset().name: {
-      translationId = 'filters.asset-policies-verbose-filter.base-asset'
-      break
-    }
-    case base.xdr.AssetPolicy.statsQuoteAsset().name: {
-      translationId = 'filters.asset-policies-verbose-filter.stats-quote-asset'
-      break
-    }
-    case base.xdr.AssetPolicy.withdrawable().name: {
-      translationId = 'filters.asset-policies-verbose-filter.withdrawable'
-      break
-    }
-    case base.xdr.AssetPolicy.issuanceManualReviewRequired().name: {
-      translationId = 'filters.asset-policies-verbose-filter.issuance-manual-review-required'
-      break
-    }
-    case base.xdr.AssetPolicy.canBeBaseInAtomicSwap().name: {
-      translationId = 'filters.asset-policies-verbose-filter.base-atomic-swap'
-      break
-    }
-    case base.xdr.AssetPolicy.canBeQuoteInAtomicSwap().name: {
-      translationId = 'filters.asset-policies-verbose-filter.quote-atomic-swap'
-      break
-    }
-    default: {
-      translationId = 'filters.asset-policies-verbose-filter.default'
-
       break
     }
   }
@@ -325,13 +285,21 @@ export function idDocumentsVerboseFilter (value) {
 
 export function localizedSaleTypesFilter (value) {
   let translationId = ''
-  switch (value) {
+  switch (+value) {
     case SALE_TYPES.fixedPrice: {
       translationId = 'filters.localized-sale-types-filter.fixed-price'
       break
     }
     case SALE_TYPES.immediate: {
       translationId = 'filters.localized-sale-types-filter.immediate'
+      break
+    }
+    case SALE_TYPES.basicSale: {
+      translationId = 'filters.localized-sale-types-filter.basic-sale'
+      break
+    }
+    case SALE_TYPES.crowdFunding: {
+      translationId = 'filters.localized-sale-types-filter.crowd-funding'
       break
     }
     default: {

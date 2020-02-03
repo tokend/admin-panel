@@ -139,14 +139,14 @@
             {{ "asset-requests-show.policies" | globalize }}
           </span>
           <div class="asset-requests-show__policies-wrapper">
-            <template v-for="(policy, key) in ASSET_POLICIES_VERBOSE">
+            <template v-for="(policy, key) in ASSET_POLICIES">
               <!-- eslint-disable max-len -->
               <span
                 :key="key"
                 class="asset-requests-show__key asset-requests-show__key--informative"
-                v-if="assetRequest.policies & key"
+                v-if="assetRequest.policies & policy"
               >
-                {{ policy | assetPoliciesVerboseFilter }}
+                {{ policy | assetPoliciesFilter }}
               </span>
               <!-- eslint-enable max-len -->
             </template>
@@ -316,7 +316,7 @@ import { AssetRequest } from '@/apiHelper/responseHandlers/requests/AssetRequest
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { Bus } from '@/utils/bus'
 import {
-  ASSET_POLICIES_VERBOSE,
+  ASSET_POLICIES,
   CREATE_ASSET_REQUEST_STATES,
   ASSET_REQUEST_TYPES,
 } from '@/constants'
@@ -344,7 +344,7 @@ export default {
       isPending: false,
       isInitializing: false,
       isInitFailed: false,
-      ASSET_POLICIES_VERBOSE,
+      ASSET_POLICIES,
       ASSET_REQUEST_TYPES,
       CREATE_ASSET_REQUEST_STATES,
     }

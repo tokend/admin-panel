@@ -432,16 +432,6 @@
         "quote-atomic-swap": "Can be quote in atomic swap",
         "default": "UNKNOWN ASSET POLICIES"
       },
-      "asset-policies-verbose-filter": {
-        "transferable": "Transferable",
-        "base-asset": "Base asset",
-        "stats-quote-asset": "Stats quote asset",
-        "withdrawable": "Withdrawable",
-        "issuance-manual-review-required": "Issuance manual review required",
-        "base-atomic-swap": "Can be base in atomic swap",
-        "quote-atomic-swap": "Can be quote in atomic swap",
-        "default": "UNKNOWN ASSET POLICIES VERBOSE"
-      },
       "role-type-verbose-filter": {
         "general": "General",
         "us-verified": "US Verified",
@@ -466,6 +456,8 @@
       "localized-sale-types-filter": {
         "fixed-price": "Fixed price",
         "immediate": "Immediate",
+        "basic-sale": "Basic sale",
+        "crowd-funding": "Crowd funding",
         "default": "UNKNOWN LOCALIZED SALE TYPES"
       }
     },
@@ -712,7 +704,7 @@
       "header": "Reject {{ assetRequestCode }}",
       "reject": "Reject",
       "create-request": "create request",
-      "update-request": "create request",
+      "update-request": "update request",
       "btn-reject": "Reject",
       "btn-cancel": "Cancel",
       "lbl-reject-reason": "Describe reject reason",
