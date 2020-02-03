@@ -1,7 +1,7 @@
 <template>
   <div class="system-assets-new">
     <div class="app__block system-assets-new__block">
-      <h2>Create asset</h2>
+      <h2>{{ "system-assets-new.create-asset" | globalize }}</h2>
 
       <div class="system-assets-new__manager-wrp">
         <asset-manager />

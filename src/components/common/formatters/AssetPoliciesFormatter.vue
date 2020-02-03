@@ -2,10 +2,14 @@
   <span class="asset-policies-formatter capitalized">
     {{
       [
-        (mask & ASSET_POLICIES.transferable) && 'transferable',
-        (mask & ASSET_POLICIES.baseAsset) && 'base asset',
-        (mask & ASSET_POLICIES.statsQuoteAsset) && 'stats quote asset',
-        (mask & ASSET_POLICIES.withdrawable) && 'withdrawable'
+        (mask & ASSET_POLICIES.transferable) &&
+          ('asset-policies-formatter.transferable' | globalize),
+        (mask & ASSET_POLICIES.baseAsset) &&
+          ('asset-policies-formatter.base-asset' | globalize),
+        (mask & ASSET_POLICIES.statsQuoteAsset) &&
+          ('asset-policies-formatter.stats-quote-asset' | globalize),
+        (mask & ASSET_POLICIES.withdrawable) &&
+          ('asset-policies-formatter.withdrawable' | globalize)
       ].filter(item => item).join(', ') || '&mdash;'
     }}
   </span>
@@ -13,7 +17,7 @@
 
 <script>
 import { ASSET_POLICIES } from '@/constants'
-
+import { globalize } from '@/components/App/filters/filters'
 export default {
   props: {
     policies: { type: Array, default: null },
@@ -35,11 +39,12 @@ export default {
     } else if (this.policies === null) {
       this.mask = 0
     } else {
-      throw new Error('AssetPoliciesFormatter: provide "policies" or "policyMask"')
+      throw new Error(globalize('asset-policies-formatter.error'))
     }
   },
 
   methods: {
+    globalize,
     calcMask (policies) {
       return policies.reduce((acc, cur) => acc + cur.value, 0)
     },

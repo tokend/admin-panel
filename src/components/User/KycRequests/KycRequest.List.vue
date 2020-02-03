@@ -4,54 +4,54 @@
       <div class="app-list-filters">
         <select-field
           class="app-list-filters__field"
-          label="Role to set"
+          :label="'kyc-request-list.lbl-role-to-set' | globalize"
           v-model="filters.roleToSet"
         >
           <option value="''" />
           <option :value="kvAccountRoles.general">
-            General
+            {{ "kyc-request-list.general" | globalize }}
           </option>
           <option :value="kvAccountRoles.corporate">
-            Сorporate
+            {{ "kyc-request-list.corporate" | globalize }}
           </option>
         </select-field>
         <select-field
           class="app-list-filters__field"
           v-model="filters.state"
-          label="State"
+          :label="'kyc-request-list.lbl-state' | globalize"
         >
           <option
             v-for="(state, s) in Object.keys(KYC_REQUEST_STATES)"
             :key="`kyc-request-${s}`"
             :value="state"
           >
-            {{ KYC_REQUEST_STATES[state].label }}
+            {{ KYC_REQUEST_STATES[state].translationId | globalize }}
           </option>
         </select-field>
 
         <select-field
           class="app-list-filters__field"
           v-model="filters.pendingTasks"
-          label="Pending tasks"
+          :label="'kyc-request-list.lbl-pending-tasks' | globalize"
         >
           <option :value="kvChangeRoleTasks.submitAutoVerification">
-            Submit auto verification
+            {{ "kyc-request-list.submit-auto-verification" | globalize }}
           </option>
           <option :value="kvChangeRoleTasks.completeAutoVerification">
-            Complete auto verification
+            {{ "kyc-request-list.complete-auto-verification" | globalize }}
           </option>
           <option :value="kvChangeRoleTasks.manualReviewRequired">
-            Manual review requried
+            {{ "kyc-request-list.manual-review-requried" | globalize }}
           </option>
           <option value="''">
-            Any
+            {{ "kyc-request-list.any" | globalize }}
           </option>
         </select-field>
 
         <input-field
           class="app-list-filters__field"
           v-model.trim="filters.requestor"
-          label="Requestor"
+          :label="'kyc-request-list.lbl-requestor' | globalize"
           autocomplete-type="email"
         />
       </div>
@@ -62,16 +62,16 @@
         <div class="app-list">
           <div class="app-list__header">
             <span class="app-list__cell">
-              Email
+              {{ "kyc-request-list.email" | globalize }}
             </span>
             <span class="app-list__cell app-list__cell--right">
-              State
+              {{ "kyc-request-list.state" | globalize }}
             </span>
             <span class="app-list__cell app-list__cell--right">
-              Last updated
+              {{ "kyc-request-list.last-updated" | globalize }}
             </span>
             <span class="app-list__cell app-list__cell--right">
-              Role to set
+              {{ "kyc-request-list.role-to-set" | globalize }}
             </span>
           </div>
           <button
@@ -89,10 +89,10 @@
               {{ item.state }}
             </span>
             <span class="app-list__cell app-list__cell--right">
-              {{ formatDate(item.updatedAt) }}
+              {{ item.updatedAt | formatDate }}
             </span>
             <span class="app-list__cell app-list__cell--right">
-              {{ item | deriveRoleToSet(kvAccountRoles) }}
+              {{ item | deriveRoleToSet(kvAccountRoles) | globalize }}
             </span>
           </button>
         </div>
@@ -103,14 +103,14 @@
           <template v-if="isLoading">
             <p class="app-list__li">
               <span class="app-list__cell app-list__cell--center">
-                Loading...
+                {{ "kyc-request-list.loading" | globalize }}
               </span>
             </p>
           </template>
           <template v-else>
             <p class="app-list__li">
               <span class="app-list__cell app-list__cell--center">
-                Nothing here yet
+                {{ "kyc-request-list.fail-load" | globalize }}
               </span>
             </p>
           </template>
@@ -131,13 +131,11 @@
 
 <script>
 import _ from 'lodash'
-
 import InputField from '@comcom/fields/InputField'
 import SelectField from '@comcom/fields/SelectField'
 
 import { EmailGetter } from '@comcom/getters'
 
-import { formatDate } from '@/utils/formatters'
 import { clearObject } from '@/utils/clearObject'
 
 import { KYC_REQUEST_STATES } from '@/constants'
@@ -162,9 +160,9 @@ export default {
   filters: {
     deriveRoleToSet (item, accountRoles) {
       return {
-        [accountRoles.unverified]: 'Unverified',
-        [accountRoles.general]: 'General',
-        [accountRoles.corporate]: 'Corporate',
+        [accountRoles.unverified]: 'kyc-request-list.unverified-role',
+        [accountRoles.general]: 'kyc-request-list.general-role',
+        [accountRoles.corporate]: 'kyc-request-list.corporate-role',
       }[item.requestDetails.accountRoleToSet]
     },
   },
@@ -257,7 +255,6 @@ export default {
     reloadCollectionLoader () {
       this.$refs.collectionLoaderBtn.loadFirstPage()
     },
-    formatDate,
   },
 }
 </script>

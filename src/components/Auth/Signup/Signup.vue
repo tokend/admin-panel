@@ -3,23 +3,21 @@
     <!-- Signup block -->
     <div class="signup__block app__block" v-if="state === 'signup'">
       <h2 class="signup__heading">
-        {{ 'sign-up.header' | globalize }}
+        {{ "sign-up.header" | globalize }}
       </h2>
 
-      <form
-        @submit.prevent="submit"
-        novalidate
-      >
+      <form @submit.prevent="submit" novalidate>
         <div class="app__form-row">
           <div class="app__form-field">
             <input-field
-              label="Username"
+              :label="'sign-up.lbl-username' | globalize"
               v-model="form.username"
               @blur="touchField('form.username')"
-              :error-message="getFieldErrorMessage(
-                'form.username',
-                { minLength: USERNAME_MIN_LENGTH }
-              )"
+              :error-message="
+                getFieldErrorMessage('form.username', {
+                  minLength: USERNAME_MIN_LENGTH
+                })
+              "
               :disabled="formMixin.isDisabled"
             />
           </div>
@@ -28,7 +26,7 @@
         <div class="app__form-row">
           <div class="app__form-field">
             <input-field
-              label="Password"
+              :label="'sign-up.lbl-password' | globalize"
               type="password"
               v-model="form.password"
               @blur="touchField('form.password')"
@@ -41,7 +39,7 @@
         <div class="app__form-row">
           <div class="app__form-field">
             <input-field
-              label="Password confirmation"
+              :label="'sign-up.lbl-password-confirmation' | globalize"
               type="password"
               v-model="form.confirmPassword"
               @blur="touchField('form.confirmPassword')"
@@ -54,7 +52,7 @@
         <div class="app__form-row">
           <div class="app__form-field">
             <input-field
-              label="Save this seed"
+              :label="'sign-up.lbl-save-seed' | globalize"
               v-model="form.seed"
               @blur="touchField('form.seed')"
               :error-message="getFieldErrorMessage('form.seed')"
@@ -64,11 +62,8 @@
         </div>
 
         <div class="app__form-actions">
-          <button
-            class="app__btn"
-            :disabled="formMixin.isDisabled"
-          >
-            Sign Up
+          <button class="app__btn" :disabled="formMixin.isDisabled">
+            {{ "sign-up.btn-sign-up" | globalize }}
           </button>
         </div>
       </form>
@@ -78,20 +73,21 @@
     <!-- Confirm Section -->
     <div class="signup__block app__block" v-else-if="state === 'submit'">
       <h2 class="signup__heading">
-        Sign Up
+        {{ "sign-up.header" | globalize }}
       </h2>
-
-      <p class="text">
-        Ask an existing administrator to register the following account ID.<br>
-      </p>
+      <!-- eslint-disable -->
+      <p 
+        class="text"
+        v-html="$options.filters.globalize('sign-up.follow-account-id')"
+      />
 
       <br class="text small">
 
-      <p class="text small">
-        <em>Important:</em> Do not reload the page!
-        You’ll be redirected automatically once your account is created
-      </p>
-
+      <p 
+        class="text small"
+        v-html="$options.filters.globalize('sign-up.warning-do-not-reload')"
+        />
+      <!-- eslint-enable -->
       <br class="text">
 
       <div class="signup__qr-wrap">
@@ -138,6 +134,7 @@ import config from '@/config'
 import GAuth from '../../settings/GAuth.vue'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { globalize } from '@/components/App/filters/filters'
 
 const USERNAME_MIN_LENGTH = 3
 
@@ -173,7 +170,9 @@ export default {
         confirmPassword: {
           required,
           password,
-          sameAsPassword: sameAs(function () { return this.form.password }),
+          sameAsPassword: sameAs(function () {
+            return this.form.password
+          }),
         },
         seed: { required, seed },
       },
@@ -189,8 +188,9 @@ export default {
       try {
         const endpoint = `/v3/accounts/${config.MASTER_ACCOUNT}/signers`
         const { data } = await api.get(endpoint)
-        const isSignerExists = data
-          .find(item => item.id === this.form.publicKey)
+        const isSignerExists = data.find(
+          item => item.id === this.form.publicKey
+        )
 
         if (!isSignerExists) {
           setTimeout(this.isSigner, 5000)
@@ -213,7 +213,9 @@ export default {
         const res = await Vue.auth.login(this.form)
 
         if (!res.ok || res.enabledTFA) {
-          ErrorHandler.process('Can not automatically log into the system. Try to log yourself')
+          ErrorHandler.process(new Error(
+            globalize('sign-up.error-automatically-log')
+          ), 'sign-up.error-automatically-log')
           this.state = 'signup'
           return
         }
@@ -223,7 +225,7 @@ export default {
         ErrorHandler.processWithoutFeedback(err)
 
         if (!walletCreated) {
-          ErrorHandler.process('You are not registered, try again to register with the secret key later')
+          ErrorHandler.process(err, 'sign-up.error-not-registered')
           this.state = 'signup'
         }
       }
@@ -244,7 +246,7 @@ export default {
         })
       } catch (err) {
         ErrorHandler.processWithoutFeedback(err)
-        throw new Error('Server error')
+        throw new Error(globalize('sign-up.server-error'))
       }
 
       if (response.status === 409) {
@@ -275,10 +277,12 @@ export default {
 
     async checkCredentials () {
       await this.getUniqueCredentials(
-        this.form.username, 'Username already exist. Please select another'
+        this.form.username,
+        globalize('sign-up.username-already-exist')
       )
       await this.getUniqueCredentials(
-        this.form.publicKey, 'Account already exists'
+        this.form.publicKey,
+        globalize('sign-up.account-already-exists')
       )
     },
   },

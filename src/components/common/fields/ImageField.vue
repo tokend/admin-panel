@@ -17,7 +17,8 @@
           <p
             class="image-input__note"
             v-for="(note, key) in notes"
-            :key="key">
+            :key="key"
+          >
             {{ note }}
           </p>
         </div>
@@ -45,14 +46,14 @@ export default {
     },
     title: {
       type: String,
-      default: 'Choose an image from your PC',
+      default: '',
     },
     notes: {
       type: Array,
       default: () => [
-        'JPEG, PNG or BMP',
-        'no more than 5mb',
-        'not less than 1024x576, 1:1',
+        '',
+        '',
+        '',
       ],
     },
   },

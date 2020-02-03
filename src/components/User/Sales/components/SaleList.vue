@@ -1,66 +1,66 @@
 <template>
   <div class="sale-list">
     <h2>
-      Sale list
+      {{ "sale-list.header" | globalize }}
     </h2>
 
     <div class="sale-list__filters-wrp">
       <div class="app-list-filters sale-list__filters">
         <input-field
           class="app-list-filters__field sale-list__field"
-          label="Asset code"
+          :label="'sale-list.lbl-asset-code' | globalize"
           v-model="filters.baseAsset"
         />
         <input-field
           class="app-list-filters__field sale-list__field"
-          label="Owner"
-          placeholder="Address (full match)"
+          :label="'sale-list.lbl-owner' | globalize"
+          :placeholder="'sale-list.placeholder-adress' | globalize"
           v-model="owner"
           autocomplete-type="email"
         />
         <select-field
           class="app-list-filters__field sale-list__field"
-          label="State"
+          :label="'sale-list.lbl-state' | globalize"
           v-model="filters.state">
           <option :value="SALE_STATES.open">
-            Open
+            {{ "sale-list.select-field-open" | globalize }}
           </option>
           <option :value="SALE_STATES.closed">
-            Closed
+            {{ "sale-list.select-field-closed" | globalize }}
           </option>
           <option :value="SALE_STATES.cancelled">
-            Cancelled
+            {{ "sale-list.select-field-cancelled" | globalize }}
           </option>
         </select-field>
         <input-date-field
-          label="Start date"
+          :label="'sale-list.lbl-start-date' | globalize"
           class="sale-list__field sale-list__field-margin-top"
           :enable-time="false"
           v-model="filters.startDate"
         />
         <!-- eslint-disable max-len -->
         <input-date-field
-          label="End date"
+          :label="'sale-list.lbl-end-date' | globalize"
           class="sale-list__field sale-list__field-margin-left sale-list__field-margin-top"
           :enable-time="false"
           v-model="filters.endDate"
         />
         <select-field
           class="sale-list__field sale-list__field-margin-left sale-list__field-margin-top"
-          label="Type"
+          :label="'sale-list.lbl-type' | globalize"
           v-model="filters.type">
           <option :value="''" />
           <option :value="SALE_TYPES.basicSale">
-            Basic
+            {{ "sale-list.basic" | globalize }}
           </option>
           <option :value="SALE_TYPES.crowdFunding">
-            Crowdfunding
+            {{ "sale-list.crowdfunding" | globalize }}
           </option>
           <option :value="SALE_TYPES.fixedPrice">
-            Fixed price
+            {{ "sale-list.fixed-price" | globalize }}
           </option>
           <option :value="SALE_TYPES.immediate">
-            Immediate
+            {{ "sale-list.immediate" | globalize }}
           </option>
         </select-field>
         <!-- eslint-enable max-len -->
@@ -75,13 +75,13 @@
               <!-- empty -->
             </span>
             <span class="app-list__cell">
-              Name
+              {{ "sale-list.name" | globalize }}
             </span>
             <span class="app-list__cell">
-              State
+              {{ "sale-list.state" | globalize }}
             </span>
             <span class="app-list__cell">
-              Owner
+              {{ "sale-list.owner" | globalize }}
             </span>
           </div>
 
@@ -105,15 +105,15 @@
             </span>
             <span class="app-list__cell">
               <template v-if="item.saleState.value === SALE_STATES.open">
-                Open
+                {{ "sale-list.open" | globalize }}
               </template>
               <template v-else-if="item.saleState.value === SALE_STATES.closed">
-                Closed
+                {{ "sale-list.closed" | globalize }}
               </template>
               <template
                 v-else-if="item.saleState.value === SALE_STATES.cancelled"
               >
-                Cancelled
+                {{ "sale-list.cancelled" | globalize }}
               </template>
             </span>
             <span class="app-list__cell">
@@ -130,10 +130,10 @@
         <ul class="app-list">
           <li class="app-list__li-like">
             <template v-if="isLoaded">
-              Nothing here yet
+              {{ "sale-list.nothing-here-yet" | globalize }}
             </template>
             <template v-else>
-              Loading...
+              {{ "sale-list.loading" | globalize }}
             </template>
           </li>
         </ul>

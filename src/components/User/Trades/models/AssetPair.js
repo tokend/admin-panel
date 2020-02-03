@@ -1,4 +1,6 @@
-const UNKNOWN_SOURCE_TYPE_ERROR = 'AssetPair: unknown source format'
+import { globalize } from '@/components/App/filters/filters'
+
+const UNKNOWN_SOURCE_TYPE_ERROR = globalize('asset-pair.unknown-source-format')
 
 export class AssetPair {
   constructor (source) {

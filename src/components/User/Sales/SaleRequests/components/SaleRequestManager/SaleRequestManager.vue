@@ -1,6 +1,6 @@
 <template>
   <div class="sale-rm">
-    <h2>Manage sale request</h2>
+    <h2>{{ "sale-request-manager.header" | globalize }}</h2>
 
     <div class="app__block">
       <template v-if="request.isReady">
@@ -27,14 +27,14 @@
             @click="approve"
             :disabled="isSubmitting"
           >
-            Approve
+            {{ "sale-request-manager.btn-approve" | globalize }}
           </button>
           <button
             class="app__btn app__btn--danger"
             :disabled="isSubmitting"
             @click="showRejectForm"
           >
-            Reject
+            {{ "sale-request-manager.btn-reject" | globalize }}
           </button>
         </div>
       </template>
@@ -42,10 +42,10 @@
       <template v-else>
         <p>
           <template v-if="request.isFailed">
-            An error occurred
+            {{ "sale-request-manager.error" | globalize }}
           </template>
           <template v-else>
-            Loading...
+            {{ "sale-request-manager.loading" | globalize }}
           </template>
         </p>
       </template>
@@ -57,7 +57,7 @@
       max-width="40rem"
     >
       <p class="text">
-        Reject reason
+        {{ "sale-request-manager.reject-reason" | globalize }}
       </p>
 
       <form
@@ -82,7 +82,7 @@
         <div class="app__form-row">
           <tick-field
             v-model="rejectForm.isPermanentReject"
-            label="Reject permanently"
+            :label="'sale-request-manager.lbl-perm-rejected' | globalize"
           />
         </div>
       </form>
@@ -93,14 +93,14 @@
           form="sale-reject-form"
           :disabled="formMixin.isDisabled"
         >
-          Reject
+          {{ "sale-request-manager.btn-reject" | globalize }}
         </button>
         <button
           class="app__btn-secondary"
           @click="hideRejectForm"
           :disabled="formMixin.isDisabled"
         >
-          Cancel
+          {{ "sale-request-manager.brn-cancel" | globalize }}
         </button>
       </div>
     </modal>
@@ -118,7 +118,7 @@ import { confirmAction } from '../../../../../../js/modals/confirmation_message'
 import DetailsTab from './SaleRequestManager.DetailsTab'
 import DescriptionTab from './SaleRequestManager.DescriptionTab'
 import SyndicateTab from '../../../components/SaleManager/SaleManager.SyndicateTab'
-
+import { globalize } from '@/components/App/filters/filters'
 import { REQUEST_STATES } from '@/constants'
 
 import cloneDeep from 'lodash/cloneDeep'
@@ -185,7 +185,7 @@ export default {
     if (this.id) {
       this.getRequest(this.id)
     } else {
-      throw new Error('SaleRequestManager: provide "id" or "sale"')
+      throw new Error(globalize('sale-request-manager.error-get-request'))
     }
   },
 
@@ -227,7 +227,7 @@ export default {
       if (await confirmAction()) {
         try {
           await apiHelper.requests.approve(this.request.sale)
-          Bus.success('Sale request approved.')
+          Bus.success('sale-request-manager.sale-request-approved')
           this.$router.push({ name: 'sales.requests' })
         } catch (error) {
           ErrorHandler.process(error)
@@ -249,7 +249,7 @@ export default {
           },
           this.request.sale
         )
-        Bus.success('Sale request rejected successfully.')
+        Bus.success('sale-request-manager.sale-request-rejected')
         this.$router.push({ name: 'sales.requests' })
       } catch (error) {
         ErrorHandler.process(error)

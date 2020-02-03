@@ -2,7 +2,7 @@
   <div class="poll-viewer-attributes">
     <div class="poll-viewer-attributes__key-value-wrp">
       <label class="data-caption">
-        Poll question and answers
+        {{ "poll-viewer-attributes.label-poll-question" | globalize }}
       </label>
 
       <p class="poll-viewer-attributes__question">
@@ -14,7 +14,12 @@
           v-for="item in poll.creatorDetails.choices"
           :key="item.number"
         >
-          <span>Answer #{{ item.number }}</span>
+          <span>
+            {{ "poll-viewer-attributes.answer" | globalize({
+              number: item.number
+            })
+            }}
+          </span>
           <span>
             {{ item.description }}
           </span>
@@ -22,61 +27,59 @@
       </ul>
 
       <label class="data-caption">
-        Poll details
+        {{ "poll-viewer-attributes.label-poll-details" | globalize }}
       </label>
 
       <ul class="key-value-list">
         <li>
-          <span>Status</span>
+          <span>{{ "poll-viewer-attributes.status" | globalize }}</span>
           <span>
             <template v-if="poll.pollState.value === POLL_STATES.open">
-              Open
+              {{ "poll-viewer-attributes.open" | globalize }}
             </template>
 
             <template v-else-if="poll.pollState.value === POLL_STATES.passed">
-              Passed
+              {{ "poll-viewer-attributes.passed" | globalize }}
             </template>
 
             <template v-else-if="poll.pollState.value === POLL_STATES.passed">
-              Failed
+              {{ "poll-viewer-attributes.failed" | globalize }}
             </template>
 
             <template v-else-if="poll.pollState.value === POLL_STATES.canceled">
-              Canceled
+              {{ "poll-viewer-attributes.canceled" | globalize }}
             </template>
           </span>
         </li>
 
         <li>
-          <span>Number of choices</span>
+          <span>
+            {{ "poll-viewer-attributes.number-of-choise" | globalize }}
+          </span>
           <span>{{ poll.numberOfChoices }}</span>
         </li>
 
         <li>
-          <span>Start time</span>
-          <date-formatter
-            :date="poll.startTime"
-            format="DD MMM YYYY HH:mm:ss"
-          />
+          <span>{{ "poll-viewer-attributes.start-time" | globalize }}</span>
+          <span>{{ poll.startTime | formatDate }}</span>
         </li>
 
         <li>
-          <span>End time</span>
-          <date-formatter
-            :date="poll.endTime"
-            format="DD MMM YYYY HH:mm:ss"
-          />
+          <span>{{ "poll-viewer-attributes.end-time" | globalize }}</span>
+          <span>{{ poll.endTime | formatDate }}</span>
         </li>
 
         <li>
-          <span>Permission type</span>
           <span>
+            {{ "poll-viewer-attributes.permission-type" | globalize }}
             {{ poll.permissionType | pollTypeToString }}
           </span>
         </li>
 
         <li>
-          <span>Result provider</span>
+          <span>
+            {{ "poll-viewer-attributes.result-provider" | globalize }}
+          </span>
           <email-getter
             :account-id="poll.resultProvider.id"
             is-titled
@@ -84,13 +87,13 @@
         </li>
 
         <li>
-          <span>Vote confirmation required</span>
           <span>
-            <template v-if="poll.voteConfirmationRequired">
-              Yes
-            </template>
-            <template v-else>
-              No
+            <!-- eslint-disable-next-line max-len -->
+            {{ "poll-viewer-attributes.vote-confirmation-required" | globalize }}
+          </span>
+          <span>
+            <template>
+              {{ poll.voteConfirmationRequired | yesNoFilter }}
             </template>
           </span>
         </li>
@@ -101,13 +104,11 @@
 
 <script>
 import { EmailGetter } from '@comcom/getters'
-import { DateFormatter } from '@comcom/formatters'
 
 import { POLL_STATES } from '@/constants/poll-states'
 
 export default {
   components: {
-    DateFormatter,
     EmailGetter,
   },
 

@@ -4,14 +4,16 @@
       <table class="sale-manager-whitelist__table">
         <thead>
           <tr>
-            <th>Participant</th>
-            <th>Registered</th>
+            <th>{{ "sale-manager-whitelist-tab.participant" | globalize }}</th>
+            <th>{{ "sale-manager-whitelist-tab.registered" | globalize }}</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(item, index) in whitelistedUsers" :key="index">
             <td>{{ item.email }}</td>
-            <td>{{ item.accounts ? 'Yes' : 'No' }}</td>
+            <td>
+              {{ item.accounts | yesNoFilter }}
+            </td>
           </tr>
         </tbody>
       </table>
@@ -19,19 +21,19 @@
 
     <template v-else-if="isLoaded && !whitelistedUsers.length">
       <p class="text">
-        No whitelisted users yet.
+        {{ "sale-manager-whitelist-tab.no-whitelisted" | globalize }}
       </p>
     </template>
 
     <template v-else-if="isLoadFailed">
       <p class="text danger">
-        An error occurred. Please try again later.
+        {{ "sale-manager-whitelist-tab.error" | globalize }}
       </p>
     </template>
 
     <template v-else>
       <p>
-        Loading...
+        {{ "sale-manager-whitelist-tab.loading" | globalize }}
       </p>
     </template>
   </div>

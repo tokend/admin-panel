@@ -1,8 +1,17 @@
 <template>
   <div class="trrf">
     <h2>
-      Reject {{ assetRequest.code }}
-      {{ assetRequest.type === 'create_asset' ? 'create' : 'update' }} request
+      {{ "asset-request-reject-form.header" | globalize({
+        assetRequestCode: assetRequest.code
+      })
+      }}
+    </h2>
+    <h2 v-if="assetRequest.type === 'create_asset'">
+      {{ "asset-request-reject-form.create-request" | globalize }}
+    </h2>
+
+    <h2 v-else>
+      {{ "asset-request-reject-form.update-request" | globalize }}
     </h2>
 
     <form
@@ -12,21 +21,20 @@
     >
       <div class="app__form-row">
         <text-field
-          label="Describe reject reason"
+          :label="'asset-request-reject-form.lbl-reject-reason' | globalize"
           v-model="form.rejectReason"
           :disabled="formMixin.isDisabled"
           @blur="touchField('form.rejectReason')"
-          :error-message="getFieldErrorMessage(
-            'form.rejectReason',
-            { maxLength: REJECT_REASON_MAX_LENGTH }
-          )"
+          :error-message="getFieldErrorMessage('form.rejectReason', {
+            maxLength: REJECT_REASON_MAX_LENGTH
+          })"
           rows="5"
         />
       </div>
 
       <div class="app__form-row">
         <tick-field
-          label="Reject permanently"
+          :label="'asset-request-reject-form.lbl-perm-reject' | globalize"
           v-model="isPermanentReject"
           :disabled="formMixin.isDisabled"
         />
@@ -39,14 +47,14 @@
         form="trrf-form"
         :disabled="formMixin.isDisabled"
       >
-        Reject
+        {{ "asset-request-reject-form.btn-reject" | globalize }}
       </button>
       <button
         class="app__btn-secondary"
         @click="$emit('close')"
         :disabled="formMixin.isDisabled"
       >
-        Cancel
+        {{ "asset-request-reject-form.btn-cancel" | globalize }}
       </button>
     </div>
   </div>
@@ -97,10 +105,10 @@ export default {
       try {
         await this.assetRequest
           .reject(this.form.rejectReason, this.isPermanentReject)
-        Bus.success('Request successfully rejected')
+        Bus.success('asset-request-reject-form.request-rejected')
         this.$router.push({ name: 'assets' })
       } catch (err) {
-        ErrorHandler.process('Failed to reject asset creation')
+        ErrorHandler.process(err, 'asset-request-reject-form.fail-reject')
       }
       this.enableForm()
     },

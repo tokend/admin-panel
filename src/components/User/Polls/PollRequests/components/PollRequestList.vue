@@ -4,26 +4,26 @@
       <select-field
         class="poll-request-list__filter"
         v-model="filters.state"
-        label="State"
+        :label="'poll-request-list.lbl-state' | globalize"
       >
         <option :value="REQUEST_STATES.pending">
-          Pending
+          {{ "poll-request-list.pending" | globalize }}
         </option>
         <option :value="REQUEST_STATES.cancelled">
-          Canceled
+          {{ "poll-request-list.canceled" | globalize }}
         </option>
         <option :value="REQUEST_STATES.approved">
-          Approved
+          {{ "poll-request-list.approved" | globalize }}
         </option>
         <option :value="REQUEST_STATES.permanentlyRejected">
-          Permanently rejected
+          {{ "poll-request-list.permanently-rejected" | globalize }}
         </option>
       </select-field>
 
       <input-field
         class="poll-request-list__filter"
         v-model="filters.requestor"
-        label="Requestor"
+        :label="'poll-request-list.lbl-requestor' | globalize"
         autocomplete-type="email"
       />
     </div>
@@ -37,15 +37,15 @@
             </span>
 
             <span class="app-list__cell">
-              Created at
+              {{ "poll-request-list.created-at" | globalize }}
             </span>
 
             <span class="app-list__cell">
-              Requestor
+              {{ "poll-request-list.requestor" | globalize }}
             </span>
 
             <span class="app-list__cell">
-              Question
+              {{ "poll-request-list.question" | globalize }}
             </span>
           </div>
 
@@ -61,13 +61,9 @@
             >
               {{ item.id }}
             </span>
-
-            <date-formatter
-              class="app-list__cell"
-              :date="item.requestDetails.startTime"
-              format="DD MMM YYYY HH:mm:ss"
-            />
-
+            <span class="app-list__cell">
+              {{ item.requestDetails.startTime | formatDate }}
+            </span>
             <span
               class="app-list__cell"
               :title="item.requestor.id"
@@ -87,8 +83,11 @@
 
       <template v-else>
         <ul class="app-list">
-          <li class="app-list__li-like">
-            {{ isLoadingList ? 'Loading...' : 'Nothing here yet' }}
+          <li class="app-list__li-like" v-if="isLoadingList">
+            {{ "poll-request-list.loading" | globalize }}
+          </li>
+          <li class="app-list__li-like" v-else>
+            {{ "poll-request-list.nothing-here-yet" | globalize }}
           </li>
         </ul>
       </template>
@@ -109,7 +108,6 @@
 import InputField from '@comcom/fields/InputField'
 import SelectField from '@comcom/fields/SelectField'
 import { EmailGetter } from '@comcom/getters'
-import { DateFormatter } from '@comcom/formatters'
 
 import { CollectionLoader } from '@/components/common'
 
@@ -130,7 +128,6 @@ export default {
     SelectField,
     EmailGetter,
     CollectionLoader,
-    DateFormatter,
   },
 
   data () {

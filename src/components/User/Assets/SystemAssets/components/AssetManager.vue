@@ -1,6 +1,11 @@
 <template>
   <div class="asset-manager">
-    <h2>Manage {{ assetCode }}</h2>
+    <h2>
+      {{ "asset-manager.header" | globalize({
+        assetCode: assetCode
+      })
+      }}
+    </h2>
 
     <form
       @submit.prevent="isFormValid() && showConfirmation()"
@@ -8,18 +13,20 @@
     >
       <div class="asset-manager__image-field-wrp">
         <label class="asset-manager__image-lbl">
-          Upload asset logo
+          {{ "asset-manager.upload-asset-logo" | globalize }}
         </label>
         <image-field
           :file-key="safeGet(asset, `creatorDetails.logo.key`)"
           @change="onFileChange($event, DOCUMENT_TYPES.assetLogo)"
+          :title="'asset-manager.choose-img' | globalize"
+          :notes="notes"
         />
       </div>
 
       <div class="app__form-row">
         <input-field
           class="app__form-field"
-          label="Asset name"
+          :label="'asset-manager.lbl-asset-name' | globalize"
           v-model="asset.creatorDetails.name"
           name="asset-name"
           @blur="touchField('asset.creatorDetails.name')"
@@ -32,7 +39,7 @@
 
         <input-field
           class="app__form-field"
-          label="Asset code"
+          :label="'asset-manager.lbl-asset-code' | globalize"
           v-model="asset.id"
           :disabled="isExistingAsset || formMixin.isDisabled"
           name="asset-code"
@@ -47,7 +54,7 @@
       <div class="app__form-row">
         <input-field
           class="app__form-field"
-          label="Issuer public key"
+          :label="'asset-manager.lbl-issuer-public-key' | globalize"
           v-model="asset.preissuedAssetSigner"
           :disabled="isExistingAsset || formMixin.isDisabled"
           name="issuer-key"
@@ -61,7 +68,7 @@
           min="0"
           :max="DEFAULT_MAX_AMOUNT"
           :step="DEFAULT_INPUT_STEP"
-          label="Maximum assets"
+          :label="'asset-manager.lbl-maximum-assets' | globalize"
           v-model="asset.maxIssuanceAmount"
           :disabled="isExistingAsset || formMixin.isDisabled"
           name="max-assets"
@@ -84,7 +91,7 @@
           :max="asset.maxIssuanceAmount"
           :step="DEFAULT_INPUT_STEP"
           class="app__form-field"
-          label="Initial preissued amount"
+          :label="'asset-manager.lbl-initial-preissued-amount' | globalize"
           v-model="asset.initialPreissuedAmount"
           :disabled="isExistingAsset || formMixin.isDisabled"
           name="initial-preissued"
@@ -99,7 +106,7 @@
           v-else
           v-model="asset.availableForIssuance"
           class="app__form-field"
-          label="Available for issuance"
+          :label="'asset-manager.lbl-available-for-issuance' | globalize"
           :disabled="true"
           name="available-issuance"
         />
@@ -114,7 +121,7 @@
           min="0"
           step="1"
           max="6"
-          label="Trailing digits count"
+          :label="'asset-manager.lbl-trailing-digits-count' | globalize"
           v-model="asset.trailingDigitsCount"
           :disabled="true || isExistingAsset || formMixin.isDisabled"
           name="trailing-digits-count"
@@ -129,7 +136,7 @@
       <div class="app__form-row">
         <select-field
           class="app__form-field app__form-field--halved"
-          label="Asset type"
+          :label="'asset-manager.lbl-asset-type' | globalize"
           v-model="asset.type"
           :disabled="isExistingAsset || formMixin.isDisabled"
           name="asset-type"
@@ -137,22 +144,22 @@
           :error-message="getFieldErrorMessage('asset.type')"
         >
           <option :value="assetTypeDefault">
-            Default
+            {{ "asset-manager.default" | globalize }}
           </option>
           <option :value="assetTypeKycRequired">
-            KYC required
+            {{ "asset-manager.KYC-required" | globalize }}
           </option>
         </select-field>
       </div>
 
       <div class="asset-manager__file-input-wrp">
-        <span>Terms</span>
+        <span>{{ "asset-manager.terms" | globalize }}</span>
         <div class="asset-manager__file-input-inner">
           <label
             class="app__upload-btn app__btn app__btn--info"
             for="file-select"
           >
-            Select File
+            {{ "asset-manager.select-file" | globalize }}
           </label>
           <input
             class="app__upload-input"
@@ -184,7 +191,7 @@
         <tick-field
           class="app__form-field"
           v-model="asset.policies.value"
-          :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.transferable]"
+          :label="ASSET_POLICIES.transferable | assetPoliciesFilter"
           :cb-value="ASSET_POLICIES.transferable"
           :disabled="formMixin.isDisabled"
         />
@@ -194,7 +201,7 @@
         <tick-field
           class="app__form-field"
           v-model="asset.policies.value"
-          :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.baseAsset]"
+          :label="ASSET_POLICIES.baseAsset | assetPoliciesFilter"
           :cb-value="ASSET_POLICIES.baseAsset"
           :disabled="formMixin.isDisabled"
         />
@@ -204,7 +211,7 @@
         <tick-field
           class="app__form-field"
           v-model="asset.policies.value"
-          :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.statsQuoteAsset]"
+          :label="ASSET_POLICIES.statsQuoteAsset | assetPoliciesFilter"
           :cb-value="ASSET_POLICIES.statsQuoteAsset"
           :disabled="formMixin.isDisabled"
         />
@@ -214,29 +221,29 @@
         <tick-field
           class="app__form-field"
           v-model="asset.policies.value"
-          :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.withdrawable]"
+          :label="ASSET_POLICIES.withdrawable | assetPoliciesFilter"
           :cb-value="ASSET_POLICIES.withdrawable"
           :disabled="formMixin.isDisabled"
         />
       </div>
 
-      <!-- eslint-disable max-len -->
       <div class="app__form-row">
         <tick-field
           class="app__form-field"
           v-model="asset.policies.value"
-          :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.issuanceManualReviewRequired]"
+          :label="ASSET_POLICIES.issuanceManualReviewRequired
+            | assetPoliciesFilter"
           :cb-value="ASSET_POLICIES.issuanceManualReviewRequired"
           :disabled="formMixin.isDisabled"
         />
       </div>
-      <!-- eslint-enable max-len -->
 
       <div class="app__form-row">
         <tick-field
           class="app__form-field"
           v-model="asset.policies.value"
-          :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.canBeBaseInAtomicSwap]"
+          :label="ASSET_POLICIES.canBeBaseInAtomicSwap
+            | assetPoliciesFilter"
           :cb-value="ASSET_POLICIES.canBeBaseInAtomicSwap"
           :disabled="formMixin.isDisabled"
         />
@@ -246,7 +253,8 @@
         <tick-field
           class="app__form-field"
           v-model="asset.policies.value"
-          :label="ASSET_POLICIES_VERBOSE[ASSET_POLICIES.canBeQuoteInAtomicSwap]"
+          :label="ASSET_POLICIES.canBeQuoteInAtomicSwap
+            | assetPoliciesFilter"
           :cb-value="ASSET_POLICIES.canBeQuoteInAtomicSwap"
           :disabled="formMixin.isDisabled"
         />
@@ -254,7 +262,7 @@
 
       <div class="asset-manager-advanced__block">
         <div class="asset-manager-advanced__heading">
-          <h3>Advanced</h3>
+          <h3>{{ "asset-manager.advanced" | globalize }}</h3>
           <button
             class="app__btn-secondary app__btn-secondary--iconed"
             @click.prevent="isShownAdvanced = !isShownAdvanced"
@@ -277,7 +285,7 @@
             title="Use Coinpayments service for deposition"
             class="app__form-field"
             v-model="asset.creatorDetails.isCoinpayments"
-            label="Use Coinpayments"
+            :label="'asset-manager.lbl-use-coinpayments' | globalize"
             :disabled="formMixin.isDisabled"
           />
         </div>
@@ -285,7 +293,7 @@
           <input-field
             class="app__form-field app__form-field--halved"
             type="number"
-            label="External system type"
+            :label="'asset-manager.lbl-external-system-type' | globalize"
             name="External system type"
             v-model="asset.creatorDetails.externalSystemType"
             :required="false"
@@ -297,7 +305,7 @@
           <tick-field
             class="app__form-field"
             v-model="isStellarIntegrationEnabled"
-            label="Integration with stellar"
+            :label="'asset-manager.lbl-integration-with-stellar' | globalize"
             :cb-value="true"
             :disabled="formMixin.isDisabled || isErc20IntegrationEnabled"
           />
@@ -310,7 +318,7 @@
                 v-model="asset.creatorDetails.stellar.deposit"
                 :disabled="formMixin.isDisabled"
                 :cb-value="true"
-                label="Deposit"
+                :label="'asset-manager.lbl-deposit' | globalize"
               />
             </div>
           </div>
@@ -321,7 +329,7 @@
                 v-model="asset.creatorDetails.stellar.withdraw"
                 :disabled="formMixin.isDisabled"
                 :cb-value="true"
-                label="Withdraw"
+                :label="'asset-manager.lbl-withdraw' | globalize"
               />
             </div>
           </div>
@@ -331,7 +339,7 @@
               v-model="asset.creatorDetails.stellar.assetType"
               name="create-stellar-asset-type"
               class="app__form-field"
-              label="Asset type"
+              :label="'asset-manager.lbl-asset-type' | globalize"
               @blur="touchField('asset.creatorDetails.stellar.assetType')"
               :error-message="getFieldErrorMessage(
                 'asset.creatorDetails.stellar.assetType',
@@ -339,11 +347,11 @@
               :disabled="formMixin.isDisabled"
             >
               <option
-                v-for="assetType in STELLAR_ASSET_TYPES"
-                :key="assetType.value"
-                :value="assetType.value"
+                v-for="assetType in STELLAR_TYPES"
+                :key="assetType"
+                :value="assetType"
               >
-                {{ assetType.label }}
+                {{ assetType | stellarAssetTypesFilter }}
               </option>
             </select-field>
 
@@ -353,7 +361,7 @@
               v-model="asset.creatorDetails.stellar.assetCode"
               class="app__form-field"
               name="create-stellar-asset-code"
-              label="Asset code"
+              :label="'asset-manager.lbl-asset-code' | globalize"
               @blur="touchField('asset.creatorDetails.stellar.assetCode')"
               :error-message="getFieldErrorMessage('asset.creatorDetails.stellar.assetCode', {
                 maxLength: getAssetCodeMaxLength(),
@@ -370,7 +378,7 @@
           <tick-field
             class="app__form-field"
             v-model="isErc20IntegrationEnabled"
-            label="Integration with erc20"
+            :label="'asset-manager.lbl-integration-erc20' | globalize"
             :cb-value="true"
             :disabled="formMixin.isDisabled || isStellarIntegrationEnabled"
           />
@@ -383,7 +391,7 @@
                 v-model="asset.creatorDetails.erc20.deposit"
                 :disabled="formMixin.isDisabled"
                 :cb-value="true"
-                label="Deposit"
+                :label="'asset-manager.lbl-deposit' | globalize"
               />
             </div>
           </div>
@@ -394,7 +402,7 @@
                 v-model="asset.creatorDetails.erc20.withdraw"
                 :disabled="formMixin.isDisabled"
                 :cb-value="true"
-                label="Withdraw"
+                :label="'asset-manager.lbl-withdraw' | globalize"
               />
             </div>
           </div>
@@ -406,7 +414,7 @@
               v-model="asset.creatorDetails.erc20.address"
               class="app__form-field"
               name="create-erc20-asset-code"
-              label="Address"
+              :label="'asset-manager.lbl-adress' | globalize"
               @blur="touchField('asset.creatorDetails.erc20.address')"
               :error-message="getFieldErrorMessage('asset.creatorDetails.erc20.address')"
               :disabled="formMixin.isDisabled"
@@ -422,6 +430,9 @@
           :is-pending="isFormSubmitting"
           @ok="submit"
           @cancel="hideConfirmation"
+          :message="'asset-manager.please-recheck-form' | globalize"
+          :ok-button-text="'asset-manager.btn-confirm' | globalize"
+          :cancel-button-text="'asset-manager.btn-cancel' | globalize"
         />
 
         <button
@@ -429,7 +440,12 @@
           class="app__btn"
           :disabled="formMixin.isDisabled"
         >
-          {{ isExistingAsset ? 'Update asset' : 'Create asset' }}
+          <span v-if="isExistingAsset">
+            {{ "asset-manager.btn-update-asset" | globalize }}
+          </span>
+          <span v-else>
+            {{ "asset-manager.btn-create-asset" | globalize }}
+          </span>
         </button>
       </div>
     </form>
@@ -452,6 +468,7 @@ import {
 
 import { base } from '@tokend/js-sdk'
 import { api, documentsManager } from '@/api'
+import { globalize } from '@/components/App/filters/filters'
 
 import safeGet from 'lodash/get'
 
@@ -470,33 +487,12 @@ import {
   DEFAULT_INPUT_MIN,
   DEFAULT_MAX_AMOUNT,
   DOCUMENT_TYPES,
-  ASSET_POLICIES_VERBOSE,
+  STELLAR_TYPES,
 } from '@/constants'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
 const ASSET_CODE_MAX_LENGTH = 16
 const ASSET_NAME_MAX_LENGTH = 255
-
-const STELLAR_ASSET_TYPES = [
-  {
-    label: 'Alphanumeric 4',
-    value: 'credit_alphanum4',
-  },
-  {
-    label: 'Alphanumeric 12',
-    value: 'credit_alphanum12',
-  },
-  {
-    label: 'Native',
-    value: 'native',
-  },
-]
-
-const STELLAR_TYPES = {
-  creditAlphanum4: 'credit_alphanum4',
-  creditAlphanum12: 'credit_alphanum12',
-  native: 'native',
-}
 
 const CREDIT_ALPHANUM4_MAX_LENGTH = 4
 const CREDIT_ALPHANUM12_MIN_LENGTH = 5
@@ -564,10 +560,8 @@ export default {
       DEFAULT_INPUT_STEP,
       DEFAULT_INPUT_MIN,
       DEFAULT_MAX_AMOUNT,
-      ASSET_POLICIES_VERBOSE,
       ASSET_CODE_MAX_LENGTH,
       ASSET_NAME_MAX_LENGTH,
-      STELLAR_ASSET_TYPES,
       STELLAR_TYPES,
       CREDIT_ALPHANUM12_MIN_LENGTH,
     }
@@ -654,7 +648,13 @@ export default {
       assetTypeDefault: 'kvAssetTypeDefault',
       assetTypeKycRequired: 'kvAssetTypeKycRequired',
     }),
-
+    notes () {
+      return [
+        globalize('asset-manager.img-type'),
+        globalize('asset-manager.img-weight-limit'),
+        globalize('asset-manager.min-img-resolution'),
+      ]
+    },
     isExistingAsset () {
       return !!this.assetCode
     },
@@ -687,7 +687,7 @@ export default {
 
   methods: {
     safeGet,
-
+    globalize,
     async getAsset () {
       try {
         const endpoint = `/v3/assets/${this.assetCode}`
@@ -787,7 +787,7 @@ export default {
         }
         await api.postOperations(operation)
         Bus.$emit('recheckConfig')
-        Bus.success('Submitted successfully.')
+        Bus.success('asset-manager.submitted-successfully')
         this.$router.push({ name: 'assets.systemAssets.index' })
       } catch (error) {
         ErrorHandler.process(error)

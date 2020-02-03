@@ -5,21 +5,21 @@
         <select-field
           class="app-list-filters__field"
           v-model="filters.state"
-          label="State"
+          :label="'kyc-recovery-request-list.lbl-state' | globalize"
         >
           <option
             v-for="(state, s) in Object.keys(KYC_REQUEST_STATES)"
             :key="`kyc-request-${s}`"
             :value="state"
           >
-            {{ KYC_REQUEST_STATES[state].label }}
+            {{ KYC_REQUEST_STATES[state].translationId | globalize }}
           </option>
         </select-field>
 
         <input-field
           class="app-list-filters__field"
           v-model.trim="filters.requestor"
-          label="Requestor"
+          :label="'kyc-recovery-request-list.lbl-requestor' | globalize"
           autocomplete-type="email"
         />
       </div>
@@ -30,13 +30,13 @@
         <div class="app-list">
           <div class="app-list__header">
             <span class="app-list__cell">
-              Email
+              {{ "kyc-recovery-request-list.mail" | globalize }}
             </span>
             <span class="app-list__cell app-list__cell--right">
-              State
+              {{ "kyc-recovery-request-list.state" | globalize }}
             </span>
             <span class="app-list__cell app-list__cell--right">
-              Last updated
+              {{ "kyc-recovery-request-list.last-upd" | globalize }}
             </span>
           </div>
           <button
@@ -54,7 +54,7 @@
               {{ item.state }}
             </span>
             <span class="app-list__cell app-list__cell--right">
-              {{ formatDate(item.updatedAt) }}
+              {{ item.updatedAt | formatDate }}
             </span>
           </button>
         </div>
@@ -65,14 +65,14 @@
           <template v-if="isLoading">
             <p class="app-list__li">
               <span class="app-list__cell app-list__cell--center">
-                Loading...
+                {{ "kyc-recovery-request-list.loading" | globalize }}
               </span>
             </p>
           </template>
           <template v-else>
             <p class="app-list__li">
               <span class="app-list__cell app-list__cell--center">
-                Nothing here yet
+                {{ "kyc-recovery-request-list.fail-loading" | globalize }}
               </span>
             </p>
           </template>
@@ -99,7 +99,6 @@ import SelectField from '@comcom/fields/SelectField'
 
 import { EmailGetter } from '@comcom/getters'
 
-import { formatDate } from '@/utils/formatters'
 import { clearObject } from '@/utils/clearObject'
 
 import { KYC_REQUEST_STATES } from '@/constants'
@@ -199,7 +198,6 @@ export default {
     reloadCollectionLoader () {
       this.$refs.collectionLoaderBtn.loadFirstPage()
     },
-    formatDate,
   },
 }
 </script>

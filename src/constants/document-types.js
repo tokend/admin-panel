@@ -4,9 +4,9 @@ export const DOCUMENT_TYPES = Object.freeze({
 })
 export const ID_DOCUMENT_TYPES = {
   passport: 'passport',
-  driving_license: 'driving_license',
-  identity_card: 'identity_card',
-  residence_permit: 'residence_permit',
+  drivingLicense: 'driving_license',
+  identityCard: 'identity_card',
+  residencePermit: 'residence_permit',
 }
 
 export const DOCUMENT_TYPES_STR = Object.freeze({

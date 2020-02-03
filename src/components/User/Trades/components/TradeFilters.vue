@@ -4,6 +4,7 @@
       <select-field
         class="app-list-filters__field trade-filters__asset-selector"
         v-model="filters.pair"
+        :label="'trade-filters.label' | globalize"
       >
         <template v-if="isLoaded && pairs.length">
           <option
@@ -16,19 +17,19 @@
 
         <template v-else-if="isLoaded && !pairs.length">
           <option value="" disabled>
-            No pairs yet
+            {{ "trade-filters.no-pairs" | globalize }}
           </option>
         </template>
 
         <template v-else-if="isFailed">
           <option value="" disabled>
-            An error occurred
+            {{ "trade-filters.error" | globalize }}
           </option>
         </template>
 
         <template v-else>
           <option value="" disabled>
-            Loading...
+            {{ "trade-filters.loading" | globalize }}
           </option>
         </template>
       </select-field>

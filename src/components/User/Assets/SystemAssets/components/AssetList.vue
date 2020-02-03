@@ -2,14 +2,14 @@
   <div class="asset-list">
     <div class="asset-list__table-header" v-if="parsedAssets">
       <span class="asset-list__li-name secondary">
-        Name
+        {{ "asset-list.name" | globalize }}
       </span>
 
       <span class="asset-list__li-code secondary">
-        Code
+        {{ "asset-list.code" | globalize }}
       </span>
       <span class="asset-list__li-policy secondary">
-        Policy
+        {{ "asset-list.policy" | globalize }}
       </span>
     </div>
 
@@ -46,13 +46,13 @@
       <div class="app-list__li-like">
         <template v-if="isLoading">
           <p>
-            Loading...
+            {{ "asset-list.loading" | globalize }}
           </p>
         </template>
 
         <template v-else>
           <p>
-            Nothing here yet
+            {{ "asset-list.fail-load" | globalize }}
           </p>
         </template>
       </div>
@@ -119,7 +119,7 @@ export default {
         this.$store.commit('CLOSE_LOADER')
       } catch (err) {
         this.$store.commit('CLOSE_LOADER')
-        ErrorHandler.process('Something went wrong. Can\'t to load assets list')
+        ErrorHandler.process(err, 'asset-list.error')
       }
 
       this.isLoading = false
@@ -157,9 +157,9 @@ function convertPolicyToString (policy) {
   return trim(xdrEnumValues
     .filter(pol => (pol.value & policy) !== 0)
     .map(pol => decamelize(pol.name, 'asset'))
-    .join(', '))
+    .join(', ')
+  )
 }
-
 </script>
 
 <style lang="scss" scoped>
@@ -214,7 +214,7 @@ function convertPolicyToString (policy) {
   text-align: center;
 }
 
-.asset-list__li-policy{
+.asset-list__li-policy {
   width: 33%;
   text-align: right;
 }

@@ -3,75 +3,78 @@ import log from 'loglevel'
 import _get from 'lodash/get'
 import { ErrorTracker } from '@/utils/ErrorTracker'
 import { errors } from '@/js/errors'
-import { TX_ERRORS } from '@/constants/tx-errors'
+import { i18n } from '@/i18n'
 
 export class ErrorHandler {
-  static process (error, errorTrackerConfig = {}) {
-    const message = ErrorHandler.extractErrorMessage(error)
-    Bus.error(message)
+  static process (error, translationId = '', errorTrackerConfig = {}) {
+    const msgTrId = translationId || ErrorHandler._getTranslationId(error)
+    Bus.error(msgTrId)
 
-    errorTrackerConfig.message = message
+    errorTrackerConfig.translationId = msgTrId
     ErrorHandler.processWithoutFeedback(error, errorTrackerConfig)
   }
 
   static processWithoutFeedback (error, errorTrackerConfig = {}) {
-    log.error(error)
     ErrorHandler.trackMessage(error, errorTrackerConfig)
+    log.error(error)
   }
 
   static trackMessage (error, opts = {}) {
-    const { message = '', skipTrack = false } = opts
+    const { translationId = '', skipTrack = false } = opts
+
     if (!skipTrack) {
-      const msg = message || ErrorHandler.extractErrorMessage(error)
-      ErrorTracker.trackMessage(msg)
+      const msgTrId = translationId || ErrorHandler._getTranslationId(error)
+
+      const englify = i18n.getFixedT('en')
+      ErrorTracker.trackMessage(englify(msgTrId))
     }
   }
 
-  static extractErrorMessage (error) {
-    let message
+  static _getTranslationId (error) {
+    let translationId
 
     switch (error.constructor) {
       case errors.NetworkError:
-        message = 'Network error. Please re-check your internet connection and try again.'
+        translationId = 'errors.network'
         break
       case errors.UserDoesntExistError:
-        message = "This user doesn't exist in system."
+        translationId = 'errors.user-doesnt-exist'
         break
       case errors.BalanceNotFoundError:
-        message = 'The user does not have this asset balance yet.'
+        translationId = 'errors.balance-not-found'
         break
       case errors.TimeoutError:
-        message = 'Timeout exceeded. Please re-check your internet connection and try again.'
+        translationId = 'errors.timeout'
         break
       case errors.InternalServerError:
-        message = 'Something bad happened. Please try again later or contact the system owner.'
+        translationId = 'errors.internal'
         break
       case errors.BadRequestError:
-        message = 'The request you sent is invalid in some way.'
+        translationId = 'errors.bad-request'
         break
       case errors.NotAllowedError:
-        message = "Your account don't have permissions to perform this request."
+        translationId = 'errors.not-allowed'
         break
       case errors.ForbiddenRequestError:
-        message = 'Request forbidden.'
+        translationId = 'errors.forbidden'
         break
       case errors.TFARequiredError:
-        message = '2FA required.'
+        translationId = 'errors.tfa-required'
         break
       case errors.VerificationRequiredError:
-        message = 'Verification required.'
+        translationId = 'errors.verification-required'
         break
       case errors.NotFoundError:
-        message = 'Such item not found.'
+        translationId = 'errors.not-found'
         break
       case errors.ConflictError:
-        message = 'Such item already exists.'
+        translationId = 'errors.conflict'
         break
       case errors.UnauthorizedError:
-        message = 'Access denied.'
+        translationId = 'errors.unauthorized'
         break
       case errors.UserExistsError:
-        message = 'User with such email already exists.'
+        translationId = 'errors.user-exists'
         break
       case errors.TransactionError:
         let errorCode
@@ -84,19 +87,20 @@ export class ErrorHandler {
             (errorResults.find(i => i.errorCode !== 'op_success') || {})
               .errorCode
         }
-        message = TX_ERRORS[errorCode]
+        translationId = `transaction-errors.${errorCode}`
+        if (!i18n.exists(translationId)) {
+          // If there is no localized error code, display the message
+          // that came from the backend
+          translationId = error.errorResults[0].message
+        }
         break
       case errors.StorageServerError:
-        message = 'Cannot upload a file to the storage. Please upload another file or try again later.'
+        translationId = 'errors.file-upload'
         break
       default:
-        if (error.message) {
-          message = error.message
-        } else {
-          message = 'Something bad happened. Please try again later or contact the system owner.'
-        }
+        translationId = 'errors.default'
     }
 
-    return message
+    return translationId
   }
 }

@@ -9,7 +9,7 @@ import { IssuanceCreateRequest } from './responseHandlers/requests/IssuanceCreat
 
 import _get from 'lodash/get'
 import { api } from '@/api'
-
+import { globalize } from '@/components/App/filters/filters'
 export const requests = {
   _review ({ action, reason = '' }, ...requests) {
     const operations = requests.map(function (item) {
@@ -233,7 +233,10 @@ function mapRequests (records) {
       case REQUEST_TYPES.createPreIssuance:
         return new CreatePreIssuanceRequest(record)
       default:
-        throw new Error(`Unknown reviewable request type: ${type}`)
+        throw new Error(globalize('requests.unknown-request-type', {
+          type: type,
+        })
+        )
     }
   })
 }

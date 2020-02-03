@@ -1,4 +1,5 @@
 import { validationMixin } from 'vuelidate'
+import { globalize } from '../components/App/filters/filters'
 
 import {
   InputField,
@@ -18,21 +19,21 @@ import _templateSettings from 'lodash/templateSettings'
 _templateSettings.interpolate = /{{([\s\S]+?)}}/g
 
 const VALIDATION_ERRORS = {
-  required: _template('Please, fill out this field'),
-  emailOrAccountId: _template('This field should be a valid email or account ID'),
-  minValue: _template('This field should be more or equal {{minValue}}'),
-  maxValue: _template('This field should be less or equal {{maxValue}}'),
-  noMoreThanAvailableForIssuance: _template('Not enough assets for issuance. Available: {{available}}'),
-  minLength: _template('This field should have at least {{minLength}} symbols'),
-  maxLength: _template('This field cannot have more than {{maxLength}} symbols'),
-  seed: _template('Invalid seed'),
-  password: _template('Use at least 8 characters for password'),
-  sameAsPassword: _template('Passwords do not match'),
-  alphaNum: _template('Only alphaumeric values allowed (A-Z, a-z, 0-9)'),
-  accountId: _template('This field should be a valid account ID'),
-  not: _template('This field cannot take {{value}} as a value'),
-  decimal: _template('This field should be a valid decimal value'),
-  hex: _template('This field should be a valid hex value'),
+  required: _template('mixin.fill-this-field'),
+  emailOrAccountId: _template('mixin.email-or-account-id'),
+  minValue: _template('mixin.more-then-min-value'),
+  maxValue: _template('mixin.less-then-max-value'),
+  noMoreThanAvailableForIssuance: _template('mixin.no-more-then-avaible-issuance'),
+  minLength: _template('mixin.more-then-min-length'),
+  maxLength: _template('mixin.less-then-max-length'),
+  seed: _template('mixin.invalid-seed'),
+  password: _template('mixin.min-size-password'),
+  sameAsPassword: _template('mixin.passwords-not-match'),
+  alphaNum: _template('mixin.useability-symbols'),
+  accountId: _template('mixin.valid-account-id'),
+  not: _template('mixin.field-cannot-take-value'),
+  decimal: _template('mixin.decimal-value'),
+  hex: _template('mixin.hex-value'),
 }
 
 export default {
@@ -113,7 +114,7 @@ export default {
 
       for (const rule of Object.keys(fieldDetails.$params)) {
         if (!fieldDetails[rule]) {
-          return VALIDATION_ERRORS[rule](params)
+          return globalize(VALIDATION_ERRORS[rule](params))
         }
       }
     },

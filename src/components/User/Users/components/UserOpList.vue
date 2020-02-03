@@ -1,7 +1,7 @@
 <template>
   <div class="user-op-list">
     <h2>
-      Operations
+      {{ "user-op-list.header" | globalize }}
     </h2>
 
     <ul
@@ -10,19 +10,19 @@
     >
       <div class="app-list__header">
         <span class="app-list__cell">
-          Type
+          {{ "user-op-list.type" | globalize }}
         </span>
 
         <span class="app-list__cell">
-          Date
+          {{ "user-op-list.date" | globalize }}
         </span>
 
         <span class="app-list__cell">
-          Source
+          {{ "user-op-list.source" | globalize }}
         </span>
 
         <span class="app-list__cell">
-          Counterparty
+          {{ "user-op-list.counterparty" | globalize }}
         </span>
       </div>
 
@@ -61,8 +61,11 @@
 
     <template v-else>
       <ul class="app-list">
-        <li class="app-list__li-like">
-          {{ isLoading ? 'Loading...' : 'Nothing here yet' }}
+        <li class="app-list__li-like" v-if="isLoading">
+          {{ "user-op-list.loading" | globalize }}
+        </li>
+        <li class="app-list__li-like" v-else>
+          {{ "user-op-list.nothing-here-yet" | globalize }}
         </li>
       </ul>
     </template>
@@ -93,6 +96,7 @@ import { clearObject } from '@/utils/clearObject'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 import { mapGetters } from 'vuex'
+import { globalize } from '../../../App/filters/filters'
 
 export default {
   components: {
@@ -168,13 +172,13 @@ export default {
 
       let operationType
       if (isBlocked) {
-        operationType = 'Block'
+        operationType = globalize('user-op-list.block')
       } else if (isReset) {
-        operationType = 'Reset to unverified'
+        operationType = globalize('user-op-list-reset-to-unverified')
       } else if (isUnblocked) {
-        operationType = 'Unblock'
+        operationType = globalize('user-op-list.unblock')
       } else {
-        operationType = 'Change role request'
+        operationType = globalize('user-op-list.change-role-request')
       }
 
       return operationType

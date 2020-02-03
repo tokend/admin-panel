@@ -2,10 +2,10 @@
   <div class="users">
     <user-header>
       <router-link :to="{ name: 'fees.index' }" slot="nav">
-        Fee settings
+        {{ "fees.link-settings" | globalize }}
       </router-link>
       <router-link :to="{ name: 'fees-balances.index' }" slot="nav">
-        Collected fees
+        {{ "fees.link-collected-fees" | globalize }}
       </router-link>
     </user-header>
     <div class="app__user-container">

@@ -1,13 +1,15 @@
 <template>
   <div class="admins-index">
     <div class="admins-index__heading-row">
-      <h2>Admin list</h2>
+      <h2>{{ "admins-index.header" | globalize }}</h2>
 
       <div class="admins-index__actions">
         <router-link
           class="admins-index__create-btn app__btn app__btn--iconed"
-          :to="{ name: 'admins.new' }">
-          <i class="mdi mdi-plus" /> New admin
+          :to="{ name: 'admins.new' }"
+        >
+          <i class="mdi mdi-plus" />
+          {{ "admins-index.new-admin" | globalize }}
         </router-link>
       </div>
     </div>

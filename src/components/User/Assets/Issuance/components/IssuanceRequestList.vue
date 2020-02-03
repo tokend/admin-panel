@@ -4,22 +4,22 @@
       <div class="issuance-rl__filters">
         <select-field
           class="issuance-rl__filter app-list-filters__field"
-          label="State"
+          :label="'issuance-request-list.lbl-state' | globalize"
           v-model="filters.state"
         >
           <option :value="REQUEST_STATES.pending">
-            Pending
+            {{ "issuance-request-list.pending" | globalize }}
           </option>
           <option :value="REQUEST_STATES.approved">
-            Approved
+            {{ "issuance-request-list.approved" | globalize }}
           </option>
           <option :value="REQUEST_STATES.permanentlyRejected">
-            Permanently rejected
+            {{ "issuance-request-list.perm-rejected" | globalize }}
           </option>
         </select-field>
         <select-field
           class="issuance-rl__filter app-list-filters__field"
-          label="Asset"
+          :label="'issuance-form.lbl-asset' | globalize"
           v-model="filters.asset"
         >
           <option
@@ -38,15 +38,15 @@
         <ul class="app-list">
           <div class="app-list__header issuance-rl__li-header">
             <span class="app-list__cell">
-              Value
+              {{ "issuance-request-list.value" | globalize }}
             </span>
 
             <span class="app-list__cell">
-              Date
+              {{ "issuance-request-list.date" | globalize }}
             </span>
 
             <span class="app-list__cell">
-              Requestor
+              {{ "issuance-request-list.requestor" | globalize }}
             </span>
           </div>
           <li
@@ -70,13 +70,15 @@
 
               <span
                 class="app-list__cell app-list__cell--wrap"
-                :title="item.createdAt">
+                :title="item.createdAt"
+              >
                 {{ item.createdAt | dateTime }}
               </span>
 
               <span
                 class="app-list__cell"
-                :title="item.requestor.id">
+                :title="item.requestor.id"
+              >
                 {{ item.requestor.id }}
               </span>
             </router-link>
@@ -87,7 +89,12 @@
       <template v-else>
         <div class="app-list">
           <div class="app-list__li-like app-list__li--no-shadow">
-            <p>{{ isLoaded ? 'Nothing here yet' : 'Loading...' }}</p>
+            <p v-if="isLoaded">
+              {{ "issuance-request-list.fail-load" | globalize }}
+            </p>
+            <p v-else>
+              {{ "issuance-request-list.loading" | globalize }}
+            </p>
           </div>
         </div>
       </template>

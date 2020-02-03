@@ -2,10 +2,10 @@
   <div class="limits">
     <user-header>
       <router-link :to="{ name: 'limits.index' }" slot="nav">
-        Limits management
+        {{ "limits.link-limits-management" | globalize }}
       </router-link>
       <router-link :to="{ name: 'limits.requests' }" slot="nav">
-        Limits changing requests
+        {{ "limits.link-limits-changing-requests" | globalize }}
       </router-link>
     </user-header>
     <div class="app__user-container">

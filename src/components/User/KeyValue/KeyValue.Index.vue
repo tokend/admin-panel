@@ -1,6 +1,6 @@
 <template>
   <div class="key-value">
-    <h2>Manage key-value storage</h2>
+    <h2>{{ "key-value-index.header" | globalize }}</h2>
 
     <div class="key-value__list-wrp">
       <key-value-manager />

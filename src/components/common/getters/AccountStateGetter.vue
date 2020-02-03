@@ -1,10 +1,10 @@
 <template>
   <span class="account-state-getter">
-    <template v-if="accountState">
-      {{ accountState }}
+    <template v-if="accountStateTranslationId">
+      {{ accountStateTranslationId | globalize }}
     </template>
     <template v-else>
-      Loading...
+      {{ "account-state-getter.loading" | globalize }}
     </template>
   </span>
 </template>
@@ -23,15 +23,13 @@ export default {
   }),
 
   computed: {
-    ...mapGetters([
-      'kvAccountRoles',
-    ]),
+    ...mapGetters(['kvAccountRoles']),
 
-    accountState () {
+    accountStateTranslationId () {
       if (!this.account) return null
       return this.account.role.id === +this.kvAccountRoles.blocked
-        ? 'Blocked'
-        : 'Active'
+        ? 'account-state-getter.blocked'
+        : 'account-state-getter.active'
     },
   },
 

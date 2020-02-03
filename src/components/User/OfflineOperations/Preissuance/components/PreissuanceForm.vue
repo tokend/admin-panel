@@ -1,11 +1,12 @@
 <template>
   <div class="preissuance-form">
     <div class="preissuance-form__header">
-      <p class="preissuance-form__hint">
-        Select file(s) with preissued asset and click
-        <strong>Upload</strong>.<br>
-        <em>Note:</em> you cannot upload the same preissuance twice
-      </p>
+      <!-- eslint-disable -->
+      <p 
+        class="preissuance-form__hint"
+        v-html="$options.filters.globalize('preissuance-form.select-file-and-upload')"
+      />
+      <!-- eslint-enable -->
       <a
         class="preissuance-form__link"
         :href="preissuanceGuideURL"
@@ -13,7 +14,7 @@
         rel="noopener"
       >
         <p class="preissuance-form__link-content">
-          Learn more about pre-issuance
+          {{ "preissuance-form.learn-more-about-pre-issuance" | globalize }}
           <i class="mdi mdi-open-in-new preissuance-form__link-icon" />
         </p>
       </a>
@@ -24,7 +25,7 @@
         <label
           class="preissuance-form__upload-btn app__btn app__btn--info"
           for="file-select">
-          Select File(s)
+          {{ "preissuance-form.select-files" | globalize }}
         </label>
         <input
           class="preissuance-form__upload-input"
@@ -38,7 +39,7 @@
 
       <template v-else>
         <p>
-          Loading...
+          {{ "preissuance-form.loading" | globalize }}
           <!-- TODO: better loading feedback -->
         </p>
       </template>
@@ -46,19 +47,19 @@
     <ul class="app-list preissuance-form__list" v-if="fileInfo.length">
       <div class="app-list__header">
         <span class="app-list__cell preissuance-form__id--max-width">
-          ID
+          {{ "preissuance-form.id" | globalize }}
         </span>
         <span class="app-list__cell">
-          File name
+          {{ "preissuance-form.file-name" | globalize }}
         </span>
         <span class="app-list__cell">
-          Value
+          {{ "preissuance-form.value" | globalize }}
         </span>
         <span class="app-list__cell">
-          Preissuance Asset Signer
+          {{ "preissuance-form.preissuance-asset-signer" | globalize }}
         </span>
         <span class="app-list__cell">
-          Signatures
+          {{ "preissuance-form.signatures" | globalize }}
         </span>
       </div>
       <li
@@ -97,7 +98,7 @@
     </ul>
     <template v-if="notLoadedFiles.length">
       <div class="preissuance-form__not-downloaded">
-        <h4>NOT loaded files:</h4>
+        <h4>{{ "preissuance-form.not-loaded-files" | globalize }}</h4>
         <div
           v-for="(item, index) in notLoadedFiles"
           :key="item.fileName"
@@ -113,10 +114,10 @@
         @click="upload"
         :disabled="uploadBtnDisable"
       >
-        Upload
+        {{ "preissuance-form.btn-upload" | globalize }}
       </button>
       <button class="app__btn-secondary" @click="fileInfo = []">
-        Clear
+        {{ "preissuance-form.btn-clear" | globalize }}
       </button>
     </div>
   </div>
@@ -125,7 +126,7 @@
 <script>
 import { base } from '@tokend/js-sdk'
 import config from '@/config'
-
+import { globalize } from '@/components/App/filters/filters'
 import localize from '@/utils/localize'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { api, loadingDataViaLoop } from '@/api'
@@ -184,12 +185,11 @@ export default {
         try {
           this.parsePreIssuances(JSON.parse(extracted).issuances)
         } catch (e) {
-          ErrorHandler.process('Your file is corrupted. Please, select another file')
+          ErrorHandler.process(e, 'preissuance-form.your-file-is-corrupted')
           return
         }
       }
     },
-
     readFile (file) {
       // eslint-disable-next-line promise/avoid-new
       return new Promise(function (resolve) {
@@ -223,10 +223,19 @@ export default {
         const assetCode = items[i].asset
         const asset = this.getAsset(assetCode)
         if (!asset) {
-          ErrorHandler.process(`Asset with code ${assetCode} does not exist in the system`)
+          ErrorHandler.process(new Error(
+            globalize('preissuance-form.asset-not-found',
+              { assetCode: assetCode }
+            )
+          ),
+          globalize('preissuance-form.asset-not-found',
+            { assetCode: assetCode }
+          ))
           this.notLoadedFiles.push({
             fileName: this.temporaryFileName,
-            msg: `Asset with code ${assetCode} does not exist in the system`,
+            msg: globalize('preissuance-form.msg-asset-not-found',
+              { assetCode: assetCode }
+            ),
           })
         } else {
           this.fileInfo.push({
@@ -249,7 +258,7 @@ export default {
         })
         await api.postOperations(...operations)
         this.fileInfo = []
-        Bus.success('Successfully submitted')
+        Bus.success('preissuance-form.submitted-successfully')
       } catch (error) {
         ErrorHandler.process(error)
       }

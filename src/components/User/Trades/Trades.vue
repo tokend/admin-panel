@@ -2,7 +2,7 @@
   <div class="trades">
     <user-header>
       <router-link :to="{ name: 'trades.index' }" slot="nav">
-        Trades
+        {{ "trades.link-trades" | globalize }}
       </router-link>
     </user-header>
     <div class="app__user-container">

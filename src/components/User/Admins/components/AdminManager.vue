@@ -1,8 +1,12 @@
 <template>
   <div class="admin-manager">
     <div class="admin-manager__block app__block">
-      <h2>
-        {{ addNew ? 'Add new administrator' : 'Manage administrator' }}
+      <h2 v-if="addNew">
+        {{ "admin-manager.add-new-admin" | globalize }}
+      </h2>
+
+      <h2 v-else>
+        {{ "admin-manager.manage-admin" | globalize }}
       </h2>
 
       <form
@@ -14,7 +18,7 @@
           <div class="app__form-row">
             <input-field
               class="app__form-field"
-              label="Account ID"
+              :label="'admin-manager.lbl-account-id' | globalize"
               v-model="form.accountId"
               :disabled="!addNew || formMixin.isDisabled"
               @blur="touchField('form.accountId')"
@@ -25,7 +29,7 @@
           <div class="app__form-row">
             <input-field
               class="app__form-field"
-              label="Name"
+              :label="'admin-manager.lbl-name' | globalize"
               v-model="form.name"
               :disabled="isMaster || formMixin.isDisabled"
               @blur="touchField('form.name')"
@@ -36,7 +40,7 @@
           <div class="app__form-row">
             <input-field
               class="app__form-field"
-              label="Identity"
+              :label="'admin-manager.lbl-identity' | globalize"
               type="number"
               min="0"
               max="255"
@@ -51,7 +55,7 @@
 
             <input-field
               class="app__form-field"
-              label="Weight"
+              :label="'admin-manager.lbl-weight' | globalize"
               type="number"
               min="1"
               max="1000"
@@ -72,7 +76,7 @@
             <div class="app__form-field">
               <select-field
                 class="app__form-field"
-                label="Signer role"
+                :label="'admin-manager.lbl-signer-role' | globalize"
                 v-model="form.signerRoleId"
                 :disabled="isMaster || formMixin.isDisabled"
                 @blur="touchField('form.signerRoleId')"
@@ -109,6 +113,9 @@
             :is-pending="isFormSubmitting"
             @ok="submit"
             @cancel="hideConfirmation"
+            :message="'admin-manager.please-recheck-form' | globalize"
+            :ok-button-text="'admin-manager.btn-confirm' | globalize"
+            :cancel-button-text="'admin-manager.btn-cancel' | globalize"
           />
 
           <template v-else>
@@ -117,7 +124,12 @@
               @click="isDeleteMode = false"
               :disabled="isMaster || formMixin.isDisabled"
             >
-              {{ addNew ? 'Add' : 'Update' }}
+              <span v-if="addNew">
+                {{ "admin-manager.btn-add" | globalize }}
+              </span>
+              <span v-else>
+                {{ "admin-manager.btn-upd" | globalize }}
+              </span>
             </button>
 
             <button
@@ -126,7 +138,7 @@
               :disabled="isMaster || formMixin.isDisabled"
               @click="isDeleteMode = true"
             >
-              Delete
+              {{ "admin-manager.btn-delete" | globalize }}
             </button>
           </template>
         </div>
@@ -148,6 +160,8 @@ import { api, loadingDataViaLoop } from '@/api'
 
 import { Bus } from '@/utils/bus'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+
+import { globalize } from '@/components/App/filters/filters'
 
 const MASTER_ROLE_ID = 1
 
@@ -250,15 +264,19 @@ export default {
           if (+item.id === +MASTER_ROLE_ID) {
             return {
               id: item.id,
-              name: 'Master',
-              description: 'The root admin of the system',
+              name: globalize('admin-manager.master'),
+              description: globalize('admin-manager.root-admin'),
             }
           }
 
           return {
             id: item.id,
-            name: (item.details || {}).name || `Unnamed (${item.id})`,
-            description: (item.details || {}).description || '(No description)',
+            name: (item.details || {}).name ||
+            globalize('admin-manager.unnamed', {
+              id: item.id,
+            }),
+            description: (item.details || {}).description ||
+            globalize('admin-manager.no-description'),
           }
         })
 
@@ -296,7 +314,7 @@ export default {
 
       try {
         await action()
-        Bus.success('Successfully submitted')
+        Bus.success('admin-manager.successfully-submitted')
         this.$router.push({ name: 'admins' })
       } catch (error) {
         ErrorHandler.process(error)
@@ -315,8 +333,9 @@ export default {
     },
 
     async deleteAdmin () {
-      const confirmationTxt = 'Are you sure you want to delete this admin?'
-      if (await confirmAction({ title: confirmationTxt })) {
+      if (await confirmAction({
+        title: globalize('admin-manager.confirmation-delete-admin'),
+      })) {
         await this.submitTx(base.ManageSignerBuilder.deleteSigner)
       }
     },

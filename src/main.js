@@ -33,6 +33,16 @@ import {
   lowerCase,
   formatVersion,
   globalize,
+  formatDate,
+  yesNoFilter,
+  assetRequestStatesFilter,
+  assetRequestTypesFilter,
+  assetPoliciesFilter,
+  stellarAssetTypesFilter,
+  limitsRequestStatesStrFilter,
+  roleTypeVerboseFilter,
+  idDocumentsVerboseFilter,
+  localizedSaleTypesFilter,
 } from './components/App/filters/filters'
 
 async function init () {
@@ -41,6 +51,8 @@ async function init () {
   })
 
   await i18n.init()
+
+  Vue.filter('globalize', globalize)
 
   /* Logger module */
   Vue.use(VueResource)
@@ -77,7 +89,6 @@ async function init () {
     store,
     template: '<App/>',
   }).$mount('#app')
-
   Vue.use(Auth)
   Vue.use(params)
   Vue.use(Vuelidate)
@@ -90,8 +101,17 @@ async function init () {
   Vue.filter('pollTypeToString', pollTypeToString)
   Vue.filter('lowerCase', lowerCase)
   Vue.filter('formatVersion', formatVersion)
-  Vue.filter('globalize', globalize)
+  Vue.filter('formatDate', formatDate)
   log.setDefaultLevel(params.LOG_LEVEL)
+  Vue.filter('yesNoFilter', yesNoFilter)
+  Vue.filter('assetRequestStatesFilter', assetRequestStatesFilter)
+  Vue.filter('assetRequestTypesFilter', assetRequestTypesFilter)
+  Vue.filter('assetPoliciesFilter', assetPoliciesFilter)
+  Vue.filter('stellarAssetTypesFilter', stellarAssetTypesFilter)
+  Vue.filter('limitsRequestStatesStrFilter', limitsRequestStatesStrFilter)
+  Vue.filter('roleTypeVerboseFilter', roleTypeVerboseFilter)
+  Vue.filter('idDocumentsVerboseFilter', idDocumentsVerboseFilter)
+  Vue.filter('localizedSaleTypesFilter', localizedSaleTypesFilter)
 }
 
 init()

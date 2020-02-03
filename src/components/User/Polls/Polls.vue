@@ -5,14 +5,14 @@
         :to="{ name: 'polls.index' }"
         slot="nav"
       >
-        Polls
+        {{ "polls.link-polls" | globalize }}
       </router-link>
 
       <router-link
         :to="{ name: 'polls.requests' }"
         slot="nav"
       >
-        Poll requests
+        {{ "polls.link-poll-requests" | globalize }}
       </router-link>
     </user-header>
     <div class="app__user-container">

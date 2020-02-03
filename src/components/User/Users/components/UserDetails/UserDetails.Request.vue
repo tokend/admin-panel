@@ -15,7 +15,7 @@
           @click="approve"
           :disabled="isPending"
         >
-          Approve
+          {{ "user-details-request.btn-approve" | globalize }}
         </button>
 
         <button
@@ -23,7 +23,7 @@
           @click="showRejectModal"
           :disabled="isPending"
         >
-          Reject
+          {{ "user-details-request.btn-reject" | globalize }}
         </button>
       </div>
     </template>
@@ -34,7 +34,7 @@
         @click="reject(true)"
         :disabled="isPending"
       >
-        Reject permanently
+        {{ "user-details-request.btn-perm-reject" | globalize }}
       </button>
     </template>
 
@@ -52,7 +52,7 @@
       >
         <div class="app__form-row">
           <text-field
-            label="Reject reason"
+            :label="'user-details-request.lbl-reject-reason' | globalize"
             :autofocus="true"
             v-model="rejectForm.reason"
             @blur="touchField('rejectForm.reason')"
@@ -69,13 +69,13 @@
           class="app__btn app__btn--danger"
           form="user-request-reject-form"
         >
-          Reject
+          {{ "user-details-request.btn-form-reject" | globalize }}
         </button>
         <button
           class="app__btn-secondary"
           @click="hideRejectModal"
         >
-          Cancel
+          {{ "user-details-request.btn-cancel" | globalize }}
         </button>
       </div>
     </modal>
@@ -96,7 +96,7 @@ import { confirmAction } from '@/js/modals/confirmation_message'
 import { Bus } from '@/utils/bus'
 
 import { ChangeRoleRequest } from '@/apiHelper/responseHandlers/requests/ChangeRoleRequest'
-
+import { globalize } from '@/components/App/filters/filters'
 const EVENTS = {
   reviewed: 'reviewed',
 }
@@ -152,7 +152,10 @@ export default {
 
   methods: {
     async approve () {
-      if (!await confirmAction('Are you sure? This action cannot be undone')) {
+      if (!await confirmAction({
+        title: globalize('user-details-request.are-you-sure'),
+      })
+      ) {
         return
       }
       this.isPending = true
@@ -166,7 +169,7 @@ export default {
           reviewDetails,
         })
 
-        Bus.success('Request approved successfully')
+        Bus.success('user-details-request.request-approved-successfully')
         this.$emit(EVENTS.reviewed)
       } catch (error) {
         ErrorHandler.process(error)
@@ -175,7 +178,10 @@ export default {
     },
 
     async reject (isPermanent = false) {
-      if (!await confirmAction('Are you sure? This action cannot be undone')) {
+      if (!await confirmAction({
+        title: globalize('user-details-request.are-you-sure'),
+      })
+      ) {
         return
       }
       this.isPending = true
@@ -189,7 +195,7 @@ export default {
             reviewDetails: { tasksToRemove: 0 },
           }
         )
-        Bus.success(`Request rejected successfully`)
+        Bus.success('user-details-request.request-rejected-successfully')
         this.$emit(EVENTS.reviewed)
       } catch (error) {
         this.isPending = false

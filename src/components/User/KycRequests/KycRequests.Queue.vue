@@ -5,10 +5,10 @@
       class="kyc-requests-queue__warning-msg"
     >
       <span class="kyc-requests-queue__header-title">
-        Your actions will be lost after page reload
+        {{ "kyc-requests-queue.lost-actions-after-reload" | globalize }}
       </span>
       <span class="kyc-requests-queue__header-subtitle">
-        Please, do not reload the page until you finish your review
+        {{ "kyc-requests-queue.please-not-reload-page" | globalize }}
       </span>
     </div>
 
@@ -20,10 +20,10 @@
         class="kyc-requests-queue__roles-select"
         :value="filters.role"
         @input="setRoleFilter"
-        label="Role to set"
+        :label="'kyc-requests-queue.lbl-role-to-set' | globalize"
       >
         <option :value="ALL_ROLES_FILTER">
-          All
+          {{ "kyc-requests-queue.all-roles" | globalize }}
         </option>
         <option
           v-for="role in verifiedAccountRoles"
@@ -47,7 +47,11 @@
             </button>
             <p class="kyc-requests-queue__nav-title">
               {{ currentRequestIndex + 1 }} /
-              {{ pendingRequests.length }} requests
+              <!-- eslint-disable-next-line max-len -->
+              {{ "kyc-requests-queue.requests" | globalize({
+                amount: pendingRequests.length
+              })
+              }}
             </p>
             <button
               class="kyc-requests-queue__nav-btn"
@@ -65,7 +69,7 @@
             class="kyc-requests-queue__current-decision"
           >
             <p class="kyc-requests-queue__current-decision-title">
-              Current decision
+              {{ "kyc-requests-queue.current-decision" | globalize }}
             </p>
             <review-decision-viewer :decision="currentDecision" />
           </div>
@@ -92,13 +96,13 @@
       <div class="app__block">
         <template v-if="isLoading">
           <p>
-            <span>Loading...</span>
+            <span>{{ "kyc-requests-queue.loading" | globalize }}</span>
           </p>
         </template>
 
         <template v-else>
           <p>
-            <span>No requests to review yet</span>
+            <span>{{ "kyc-requests-queue.no-request" | globalize }}</span>
           </p>
         </template>
       </div>
@@ -127,6 +131,7 @@ import { confirmAction } from '@/js/modals/confirmation_message'
 
 import _omit from 'lodash/omit'
 import { mapGetters } from 'vuex'
+import { globalize } from '@/components/App/filters/filters'
 
 const ALL_ROLES_FILTER = '0'
 
@@ -176,7 +181,10 @@ export default {
     },
 
     verifiedAccountRoles () {
-      return _omit(this.kvAccountRoles, ['unverified', 'blocked'])
+      return _omit(this.kvAccountRoles, [
+        globalize('kyc-requests-queue.unverified'),
+        globalize('kyc-requests-queue.blocked'),
+      ])
     },
   },
 
@@ -193,9 +201,9 @@ export default {
   async beforeRouteLeave (to, from, next) {
     const isConfirmed = !this.isReviewActive ||
       await confirmAction({
-        title: 'Quit the review? All your decisions will be lost',
-        confirmText: 'Yes',
-        cancelText: 'No',
+        title: globalize('kyc-requests-queue.quit-warning'),
+        confirmText: globalize('kyc-requests-queue.yes'),
+        cancelText: globalize('kyc-requests-queue.no'),
       })
 
     if (isConfirmed) {
@@ -246,7 +254,7 @@ export default {
 
       const isConfirmed = !this.isReviewActive ||
         await confirmAction({
-          title: 'Filter requests? All your decisions will be lost',
+          title: globalize('kyc-requests-queue.filter-requests-warning'),
         })
 
       if (isConfirmed) {

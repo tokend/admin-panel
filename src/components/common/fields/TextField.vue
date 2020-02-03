@@ -4,7 +4,8 @@
     :class="{
       'text-field--error': errorMessage,
       'text-field--disabled': disabled
-    }">
+    }"
+  >
     <span
       class="text-field__label"
       :class="{'text-field__label--hidden': isNoLabel}"
@@ -40,18 +41,14 @@
 </template>
 
 <script>
-export default {
-  components: {
-    // components
-  },
 
+export default {
   props: {
-    label: { type: String, default: 'Label' },
+    label: { type: String, default: '' },
     value: { type: [String, Number], default: undefined },
-    errorMessage: { type: String, default: undefined },
+    errorMessage: { type: String, default: '' },
 
     // proxies
-    autocomplete: { type: String, default: 'off' },
     autofocus: { type: Boolean, default: false },
     disabled: { type: Boolean, default: false },
     name: { type: String, default: undefined },

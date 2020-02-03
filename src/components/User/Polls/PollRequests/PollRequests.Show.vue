@@ -1,6 +1,6 @@
 <template>
   <div class="poll-requests-show">
-    <h2>Review poll request</h2>
+    <h2>{{ "poll-requests-show.header" | globalize }}</h2>
 
     <div class="poll-requests-show__manager-wrp">
       <poll-request-view :id="id" />

@@ -2,19 +2,19 @@
   <div class="offline-operations">
     <user-header>
       <router-link :to="{ name: 'offlineOperations.preIssuance' }" slot="nav">
-        Pre-issuance
+        {{ "offline-operations.link-pre-issuance" | globalize }}
       </router-link>
       <router-link
         :to="{ name: 'offlineOperations.changeAssetIssuer' }"
         slot="nav"
       >
-        Change asset issuer
+        {{ "offline-operations.link-change-asset-issuer" | globalize }}
       </router-link>
       <router-link
         :to="{ name: 'offlineOperations.preIssuanceRequests' }"
         slot="nav"
       >
-        Pre-issuance requests
+        {{ "offline-operations.link-pre-issuance-requests" | globalize }}
       </router-link>
     </user-header>
     <div class="app__user-container">

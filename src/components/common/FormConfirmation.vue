@@ -26,7 +26,7 @@
           </template>
 
           <template v-else>
-            {{ 'Processing…' }}
+            {{ "form-confirmation.processing" | globalize }}
           </template>
         </button>
       </div>
@@ -41,15 +41,15 @@ export default {
   props: {
     message: {
       type: String,
-      default: 'Please, recheck the form before confirmation',
+      default: '',
     },
     okButtonText: {
       type: String,
-      default: 'Confirm',
+      default: '',
     },
     cancelButtonText: {
       type: String,
-      default: 'Cancel',
+      default: '',
     },
     isPending: {
       type: Boolean,

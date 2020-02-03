@@ -4,41 +4,41 @@
       <select-field
         class="arc-list__filter"
         v-model="filters.requestType"
-        label="Request type"
+        :label="'asset-request-list.lbl-request-type' | globalize"
       >
         <option
-          v-for="requestType in Object.keys(ASSET_REQUEST_TYPES)"
-          :value="ASSET_REQUEST_TYPES[requestType].value"
+          v-for="requestType in ASSET_REQUEST_TYPES"
+          :value="requestType"
           :key="requestType"
         >
-          {{ ASSET_REQUEST_TYPES[requestType].text }}
+          {{ requestType | assetRequestTypesFilter }}
         </option>
       </select-field>
       <select-field
         class="arc-list__filter"
         v-model="filters.state"
-        label="State"
+        :label="'asset-request-list.lbl-state' | globalize"
       >
         <option
           v-for="stateObj in Object.values(CREATE_ASSET_REQUEST_STATES)"
           :value="stateObj.codeVerbose"
           :key="stateObj.codeVerbose"
         >
-          {{ stateObj.text }}
+          {{ stateObj.codeVerbose | assetRequestStatesFilter }}
         </option>
       </select-field>
 
       <input-field
         class="arc-list__filter"
         v-model="filters.requestor"
-        label="Requestor"
+        :label="'asset-request-list.lbl-requestor' | globalize"
         autocomplete-type="email"
       />
 
       <input-field
         class="arc-list__filter"
         v-model="filters.asset"
-        label="Asset code"
+        :label="'asset-request-list.lbl-asset-code' | globalize"
       />
     </div>
 
@@ -51,11 +51,11 @@
             </span>
 
             <span class="app-list__cell">
-              State
+              {{ "asset-request-list.state" | globalize }}
             </span>
 
             <span class="app-list__cell">
-              Requestor
+              {{ "asset-request-list.requestor" | globalize }}
             </span>
           </div>
 
@@ -63,7 +63,7 @@
             class="app-list__li"
             v-for="(asset, i) in list"
             :key="i"
-            :to="{ name: 'assets.requests.show', params: { id: asset.id }}"
+            :to="{ name: 'assets.requests.show', params: { id: asset.id } }"
           >
             <span
               class="app-list__cell app-list__cell--important"
@@ -75,9 +75,9 @@
             <!-- eslint-disable max-len -->
             <span
               class="app-list__cell"
-              :title="CREATE_ASSET_REQUEST_STATES[snakeToCamelCase(asset.state)].text"
+              :title="asset.state | assetRequestStatesFilter"
             >
-              {{ CREATE_ASSET_REQUEST_STATES[snakeToCamelCase(asset.state)].text }}
+              {{ asset.state | assetRequestStatesFilter }}
             </span>
             <!-- eslint-enable max-len -->
 
@@ -90,8 +90,17 @@
 
       <template v-else>
         <ul class="app-list">
-          <li class="app-list__li-like">
-            {{ isPending ? 'Loading...' : 'Nothing here yet' }}
+          <li
+            class="app-list__li-like"
+            v-if="isPending"
+          >
+            {{ "asset-request-list.loadind" | globalize }}
+          </li>
+          <li
+            class="app-list__li-like"
+            v-else
+          >
+            {{ "asset-request-list.fail-load" | globalize }}
           </li>
         </ul>
       </template>
@@ -114,28 +123,18 @@ import SelectField from '@comcom/fields/SelectField'
 
 import { CollectionLoader } from '@/components/common'
 
+import { snakeToCamelCase } from '@/utils/un-camel-case'
+
 import { api } from '@/api'
 import apiHelper from '@/apiHelper'
 import { base } from '@tokend/js-sdk'
 
-import { CREATE_ASSET_REQUEST_STATES, REQUEST_STATES_STR } from '@/constants'
+import { CREATE_ASSET_REQUEST_STATES, REQUEST_STATES_STR, ASSET_REQUEST_TYPES } from '@/constants'
 
 import _ from 'lodash'
 import { clearObject } from '@/utils/clearObject'
-import { snakeToCamelCase } from '@/utils/un-camel-case'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
-
-const ASSET_REQUEST_TYPES = Object.freeze({
-  create: {
-    value: 'create_asset_requests',
-    text: 'Create',
-  },
-  update: {
-    value: 'update_asset_requests',
-    text: 'Update',
-  },
-})
 
 export default {
   components: {
@@ -149,7 +148,7 @@ export default {
       list: [],
       isPending: false,
       filters: {
-        requestType: ASSET_REQUEST_TYPES.create.value,
+        requestType: ASSET_REQUEST_TYPES.createAsset,
         state: REQUEST_STATES_STR.pending,
         requestor: null,
         asset: null,
@@ -184,7 +183,7 @@ export default {
         const requestor = await this.getRequestorAccountId(
           this.filters.requestor
         )
-        const endpoint = `/v3/${this.filters.requestType}`
+        const endpoint = `/v3/${this.filters.requestType}_requests`
         response = await api.getWithSignature(endpoint, {
           page: { order: 'desc' },
           filter: clearObject({

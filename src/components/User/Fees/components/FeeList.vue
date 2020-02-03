@@ -5,40 +5,42 @@
         <div class="fee-list__filters">
           <select-field
             class="fee-list__filter"
-            label="Scope"
-            v-model="filters.scope">
+            :label="'fee-list.lbl-scope' | globalize"
+            v-model="filters.scope"
+          >
             <option :value="SCOPE_TYPES.global">
-              Global
+              {{ "fee-list.global" | globalize }}
             </option>
             <option :value="SCOPE_TYPES.accountRole">
-              Account type
+              {{ "fee-list.account-type" | globalize }}
             </option>
             <option :value="SCOPE_TYPES.account">
-              Account
+              {{ "fee-list.account" | globalize }}
             </option>
           </select-field>
 
           <select-field
             class="fee-list__filter"
-            label="Type"
-            v-model="filters.feeType">
+            :label="'fee-list.lbl-type' | globalize"
+            v-model="filters.feeType"
+          >
             <option :value="FEE_TYPES.paymentFee">
-              Payment
+              {{ "fee-list.payment" | globalize }}
             </option>
             <option :value="FEE_TYPES.offerFee">
-              Order Match
+              {{ "fee-list.order-match" | globalize }}
             </option>
             <option :value="FEE_TYPES.withdrawalFee">
-              Withdrawal
+              {{ "fee-list.withdrawal" | globalize }}
             </option>
             <option :value="FEE_TYPES.issuanceFee">
-              Issuance
+              {{ "fee-list.issuance" | globalize }}
             </option>
             <option :value="FEE_TYPES.investFee">
-              Invest
+              {{ "fee-list.invest" | globalize }}
             </option>
             <option :value="FEE_TYPES.capitalDeploymentFee">
-              Capital Deployment
+              {{ "fee-list.capital-deployment" | globalize }}
             </option>
           </select-field>
 
@@ -46,7 +48,7 @@
             class="fee-list__filter"
             v-model.number="filters.paymentFeeSubtype"
             v-if="+filters.feeType === FEE_TYPES.paymentFee"
-            label="Direction"
+            :label="'fee-list.lbl-direction' | globalize"
           >
             <option
               v-for="(value, name) in PAYMENT_FEE_TYPES"
@@ -59,8 +61,9 @@
 
           <select-field
             class="fee-list__filter"
-            label="Asset"
-            v-model="filters.assetCode">
+            :label="'fee-list.lbl-asset' | globalize"
+            v-model="filters.assetCode"
+          >
             <template v-if="assetsByType.length">
               <option
                 v-for="item in assetsByType"
@@ -74,33 +77,33 @@
 
             <template v-else>
               <option disabled>
-                No appropriate assets
+                {{ "fee-list.no-appropriate-assets" | globalize }}
               </option>
             </template>
           </select-field>
 
           <select-field
             class="fee-list__filter"
-            label="Account type"
+            :label="'fee-list.lbl-account-type' | globalize"
             v-model="filters.accountRole"
             v-if="filters.scope === SCOPE_TYPES.accountRole"
           >
             <option :value="kvAccountRoles.general">
-              General
+              {{ "fee-list.general" | globalize }}
             </option>
             <option :value="kvAccountRoles.unverified">
-              Not verified
+              {{ "fee-list.not-verified" | globalize }}
             </option>
             <option :value="kvAccountRoles.corporate">
-              Corporate
+              {{ "fee-list.corporate" | globalize }}
             </option>
           </select-field>
 
           <input-field
             class="fee-list__filter"
-            label="Account"
+            :label="'fee-list.lbl-account' | globalize"
             v-model="filters.accountAlias"
-            placeholder="Email or account ID"
+            :placeholder="'fee-list.placeholder-mail-or-account-id' | globalize"
             v-if="filters.scope === SCOPE_TYPES.account"
             autocomplete-type="email"
           />
@@ -112,7 +115,7 @@
       <template v-if="!Object.keys(fees).length">
         <div class="app-list">
           <p class="app-list__li-like">
-            Loading...
+            {{ "fee-list.loading" | globalize }}
           </p>
         </div>
       </template>
@@ -123,7 +126,7 @@
       >
         <div class="app-list">
           <p class="app-list__li-like">
-            Please specify account
+            {{ "fee-list.please-scecify-account" | globalize }}
           </p>
         </div>
       </template>
@@ -131,7 +134,7 @@
       <template v-else-if="!fees.length">
         <div class="app-list">
           <p class="app-list__li-like">
-            No fees available for current filter settings
+            {{ "fee-list.no-fees-avaible" | globalize }}
           </p>
         </div>
       </template>
@@ -140,15 +143,15 @@
         <ul class="app-list">
           <div class="app-list__header">
             <span class="app-list__cell">
-              Lower bound
+              {{ "fee-list.lower-bound" | globalize }}
             </span>
 
             <span class="app-list__cell">
-              Upper bound
+              {{ "fee-list.upper-bound" | globalize }}
             </span>
 
             <span class="app-list__cell">
-              Percent fee
+              {{ "fee-list.percent-fee" | globalize }}
             </span>
 
             <span
@@ -157,7 +160,7 @@
                 +filters.feeType !== FEE_TYPES.capitalDeploymentFee &&
                 +filters.feeType !== FEE_TYPES.investFee"
             >
-              Fixed fee
+              {{ "fee-list.fixed-fee" | globalize }}
             </span>
             <span class="app-list__cell">
               <!-- empty -->
@@ -276,8 +279,9 @@ export default {
           result = this.assets.filter(item => +item.maxIssuanceAmount)
           break
         case FEE_TYPES.withdrawalFee:
-          result = this.assets
-            .filter(item => +item.policies.value & ASSET_POLICIES.withdrawable)
+          result = this.assets.filter(
+            item => +item.policies.value & ASSET_POLICIES.withdrawable
+          )
           break
         default:
           result = this.assets
@@ -307,11 +311,10 @@ export default {
   },
 
   watch: {
-    'assetsByType': function () {
+    assetsByType: function () {
       const isSelectedAssetInRange = this.assetsByType
         .filter(item => item.id === this.filters.assetCode)
         .length
-
       if (!isSelectedAssetInRange) {
         try {
           this.filters.assetCode = this.assetsByType[0].id
@@ -376,6 +379,7 @@ export default {
     await this.loadFees()
     this.filters.accountRole = this.kvAccountRoles.general
     this.isLoaded = true
+    this.filters.assetCode = this.assetsByType[0].id
   },
 
   methods: {
@@ -408,7 +412,7 @@ export default {
 
         if (this.filters.scope === SCOPE_TYPES.global) {
           newFees = newFees
-            .filter((fee) => !(fee.accountRole || fee.account))
+            .filter(fee => !(fee.accountRole || fee.account))
         }
         this.fees = newFees.map(item => new FeesRecord(item, this.filters))
       } catch (error) {

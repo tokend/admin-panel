@@ -2,10 +2,10 @@
   <div class="kyc-requests">
     <user-header>
       <router-link :to="{ name: 'kycRequests.index' }" slot="nav">
-        Index
+        {{ "kyc-requests.index" | globalize }}
       </router-link>
       <router-link :to="{ name: 'kycRequests.queue' }" slot="nav">
-        Queue
+        {{ "kyc-requests.queue" | globalize }}
       </router-link>
     </user-header>
     <div class="app__user-container">

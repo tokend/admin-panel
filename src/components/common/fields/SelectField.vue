@@ -16,7 +16,8 @@
         class="select-field__default-option"
         :selected="!value"
         v-if="emptyText"
-        disabled>
+        disabled
+      >
         {{ emptyText }}
       </option>
       <slot />
@@ -25,8 +26,9 @@
     <div class="select-field__arrow">
       <!-- css art -->
     </div>
-
-    <span class="select-field__label">
+    <span
+      class="select-field__label"
+    >
       {{ label }}
     </span>
 
@@ -39,9 +41,10 @@
 </template>
 
 <script>
+
 export default {
   props: {
-    label: { type: String, default: 'Label' },
+    label: { type: String, default: '' },
     // eslint-disable-next-line vue/require-prop-types
     value: { default: false },
     errorMessage: { type: String, default: undefined },
@@ -54,7 +57,6 @@ export default {
     title: { type: [String, Number], default: undefined },
     required: { type: Boolean, default: true },
   },
-
   methods: {
     onChange (event) {
       this.$emit('input', event.target.value)

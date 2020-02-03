@@ -4,16 +4,16 @@
       <ul class="app-list">
         <div class="app-list__header">
           <span class="app-list__cell">
-            Date
+            {{ "limits-request-list.date" | globalize }}
           </span>
           <span class="app-list__cell">
-            Request type
+            {{ "limits-request-list.request-type" | globalize }}
           </span>
           <span class="app-list__cell">
-            Account Id
+            {{ "limits-request-list.account-id" | globalize }}
           </span>
           <span class="app-list__cell">
-            Account email
+            {{ "limits-request-list.account-email" | globalize }}
           </span>
         </div>
 
@@ -27,7 +27,7 @@
             class="app-list__cell"
             :title="item.updatedAt"
           >
-            {{ formatDate(item.updatedAt) }}
+            {{ item.updatedAt | formatDate }}
           </span>
 
           <span
@@ -35,9 +35,8 @@
             :title="item.requestDetails.creatorDetails.requestType"
           >
             {{
-              LIMITS_REQUEST_STATES_STR[
-                item.requestDetails.creatorDetails.requestType
-              ]
+              item.requestDetails.creatorDetails.requestType
+                | limitsRequestStatesStrFilter
             }}
           </span>
 
@@ -59,10 +58,10 @@
       <ul class="app-list">
         <li class="app-list__li-like">
           <template v-if="isLoading">
-            Nothing here yet
+            {{ "limits-request-list.nothing-here-yet" | globalize }}
           </template>
           <template v-else>
-            Loading...
+            {{ "limits-request-list.loading" | globalize }}
           </template>
         </li>
       </ul>
@@ -74,12 +73,10 @@
 
 <script>
 import { EmailGetter } from '@comcom/getters'
-import { formatDate } from '@/utils/formatters'
 
 import {
   ACCOUNT_TYPES,
   REQUEST_STATES,
-  LIMITS_REQUEST_STATES_STR,
 } from '@/constants'
 
 export default {
@@ -95,8 +92,6 @@ export default {
       isNoMoreEntries: false,
       REQUEST_STATES,
       ACCOUNT_TYPES,
-      LIMITS_REQUEST_STATES_STR,
-      formatDate,
     }
   },
 }

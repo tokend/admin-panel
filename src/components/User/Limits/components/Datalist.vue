@@ -3,9 +3,10 @@
     <input-field
       v-model="docItem.label"
       class="datalist__input-field"
-      :label="'Document type'"
+      :label="'data-list.lbl-document-type' | globalize"
       @keyup.down="onArrowDown"
-      @keyup.up="onArrowUp" />
+      @keyup.up="onArrowUp"
+    />
     <!-- <input type="text"
             v-model="docItem.label"
             class="datalist__input-field"

@@ -20,7 +20,6 @@ export default {
   name: 'switch-field',
 
   props: {
-    label: { type: String, default: 'Label' },
     // eslint-disable-next-line vue/require-prop-types
     value: { default: false },
 
@@ -29,7 +28,6 @@ export default {
     disabled: { type: Boolean, default: false },
     // eslint-disable-next-line vue/require-prop-types
     cbValue: { default: undefined },
-    title: { type: [String, Number], default: undefined },
     required: { type: Boolean, default: false },
     autofocus: { type: Boolean, default: false },
   },

@@ -1,39 +1,40 @@
 <template>
   <div class="collected-fees-withdrawals">
     <h2>
-      Withdrawals
+      {{ "collected-fees-withdrawals.header" | globalize }}
     </h2>
 
     <div class="collected-fees-withdrawals__filters-wrp">
       <div class="app-list-filters">
         <select-field
           class="app-list-filters__field"
-          label="State"
+          :label="'collected-fees-withdrawals.lbl-state' | globalize"
           v-model="filters.state"
         >
           <option :value="REQUEST_STATES.pending">
-            Pending
+            {{ "collected-fees-withdrawals.pending" | globalize }}
           </option>
           <option :value="REQUEST_STATES.cancelled">
-            Canceled
+            {{ "collected-fees-withdrawals.canceled" | globalize }}
           </option>
           <option :value="REQUEST_STATES.approved">
-            Approved
+            {{ "collected-fees-withdrawals.approved" | globalize }}
           </option>
           <option :value="REQUEST_STATES.rejected">
-            Rejected
+            {{ "collected-fees-withdrawals.rejected" | globalize }}
           </option>
           <option :value="REQUEST_STATES.permanentlyRejected">
-            Permanently rejected
+            {{ "collected-fees-withdrawals.perm-rejected" | globalize }}
           </option>
         </select-field>
-
+        <!-- eslint-disable -->
         <input-field
           class="app-list-filters__field"
-          label="Pending tasks"
-          placeholder="Bitmask, exact match"
+          :label="'collected-fees-withdrawals.lbl-pending-tasks' | globalize"
+          :placeholder="'collected-fees-withdraw.placeholder-bitmask-exact-match' | globalize"
           v-model="filters.pendingTasks"
         />
+        <!-- eslint-enable -->
       </div>
     </div>
 
@@ -42,16 +43,16 @@
         <ul class="app-list">
           <div class="app-list__header">
             <span class="app-list__cell">
-              Created at
+              {{ "collected-fees-withdrawals.created-ad" | globalize }}
             </span>
             <span class="app-list__cell app-list__cell--right">
-              Status
+              {{ "collected-fees-withdrawals.status" | globalize }}
             </span>
             <span class="app-list__cell app-list__cell--right">
-              Amount
+              {{ "collected-fees-withdrawals.amount" | globalize }}
             </span>
             <span class="app-list__cell app-list__cell--right">
-              Tasks
+              {{ "collected-fees-withdrawals.tasks" | globalize }}
             </span>
           </div>
 
@@ -61,12 +62,9 @@
             :key="item.id"
             @click="itemToShow = item"
           >
-            <date-formatter
-              class="app-list__cell"
-              :date="item.createdAt"
-              format="DD MMM YYYY HH:mm:ss"
-            />
-
+            <span>
+              {{ item.createdAt | formatDate }}
+            </span>
             <span
               class="app-list__cell app-list__cell--right"
               :title="verbozify(item.state)"
@@ -92,19 +90,19 @@
           <li class="app-list__li-like">
             <template v-if="isListLoading">
               <p>
-                Loading...
+                {{ "collected-fees-withdrawals.loading" | globalize }}
               </p>
             </template>
 
             <template v-else-if="isListFailed">
               <p class="danger">
-                An error occurred. Please try again later
+                {{ "collected-fees-withdrawals.error" | globalize }}
               </p>
             </template>
 
             <template v-else>
               <p>
-                Nothing here yet
+                {{ "collected-fees-withdrawals.fail-load" | globalize }}
               </p>
             </template>
           </li>
@@ -126,7 +124,10 @@
       @close-request="itemToShow = null"
       max-width="64rem"
     >
-      <h2>Withdrawal request details</h2>
+      <h2>
+        <!-- eslint-disable-next-line max-len -->
+        {{ "collected-fees-withdrawals.withdrawal-request-details" | globalize }}
+      </h2>
       <details-reader :details="itemToShow" />
     </modal>
   </div>
@@ -140,7 +141,7 @@ import { REQUEST_STATES } from '@/constants'
 import { SelectField, InputField } from '@comcom/fields'
 import Modal from '@comcom/modals/Modal'
 import { CollectionLoader } from '@comcom'
-import { AssetAmountFormatter, DateFormatter } from '@comcom/formatters'
+import { AssetAmountFormatter } from '@comcom/formatters'
 import DetailsReader from '@comcom/details/DetailsReader'
 
 import { verbozify } from '@/utils/verbozify'
@@ -156,7 +157,6 @@ export default {
     SelectField,
     CollectionLoader,
     AssetAmountFormatter,
-    DateFormatter,
     Modal,
     DetailsReader,
   },

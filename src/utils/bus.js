@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import log from 'loglevel'
+import { globalize } from '@/components/App/filters/filters'
 
 export class EventBus extends Vue {
   constructor () {
@@ -9,7 +10,10 @@ export class EventBus extends Vue {
 
   on (eventName, handlerFn) {
     if (!this.eventExists(eventName)) {
-      throw new Error(`EventBus.list has no ${eventName} event`)
+      throw new Error(globalize('bus.error-no-event', {
+        eventName: eventName,
+      })
+      )
     }
 
     const backloggedEvents = this._backlog.filter(e => e.name === eventName)
@@ -25,7 +29,10 @@ export class EventBus extends Vue {
 
   emit (eventName, payload) {
     if (!this.eventExists(eventName)) {
-      throw new Error(`EventBus.list has no ${eventName} event`)
+      throw new Error(globalize('bus.error-no-event', {
+        eventName: eventName,
+      })
+      )
     }
 
     if (!this._events[eventName]) {

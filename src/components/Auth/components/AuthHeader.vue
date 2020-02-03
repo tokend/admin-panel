@@ -2,26 +2,28 @@
   <header class="auth-header">
     <div class="auth-header__container app__container">
       <!-- eslint-disable-next-line max-len -->
-      <div class="auth-header__header-group auth-header__header-group--vertical">
+      <div
+        class="auth-header__header-group auth-header__header-group--vertical"
+      >
         <span class="auth-header__admin-logo">
-          TokenD
+          {{ "auth-header.admin-logo" | globalize }}
         </span>
         <span class="auth-header__admin-badge">
-          ADMIN PANEL
+          {{ "auth-header.admin-panel" | globalize }}
         </span>
       </div>
 
       <div class="auth-header__header-group">
         <nav class="auth-header__nav">
           <li class="auth-header__nav-li">
-            <router-link :to="{name: 'signup' }">
-              Sign Up
+            <router-link :to="{ name: 'signup' }">
+              {{ "auth-header.sign-up" | globalize }}
             </router-link>
           </li>
 
           <li class="auth-header__nav-li">
-            <router-link :to="{name: 'login' }">
-              Sign In
+            <router-link :to="{ name: 'login' }">
+              {{ "auth-header.sign-in" | globalize }}
             </router-link>
           </li>
         </nav>
@@ -85,14 +87,14 @@ export default {
     padding: 0 1.5rem;
 
     &:hover {
-      background-color: rgba(#fff, .2);
+      background-color: rgba(#fff, 0.2);
     }
 
     & > .mdi-icon {
       fill: rgba($color: $color-text-inverse, $alpha: 0.5);
       width: 1.4rem;
       height: 1.4rem;
-      margin-left: .7rem;
+      margin-left: 0.7rem;
       vertical-align: middle;
     }
   }
@@ -118,7 +120,7 @@ export default {
   color: $color-text-inverse;
   font-size: 1.2rem;
   align-self: flex-start;
-  opacity: .5;
-  letter-spacing: .08rem;
+  opacity: 0.5;
+  letter-spacing: 0.08rem;
 }
 </style>
