@@ -6,7 +6,7 @@
         :disabled="isPending"
         @click="unblockUser"
       >
-        Unblock user
+        {{ "user-details-block.btn-unblock-user" | globalize }}
       </button>
     </div>
     <div class="user-block__unblock-user" v-else>
@@ -15,7 +15,7 @@
         :disabled="isPending"
         @click="showBlockModal"
       >
-        Block user
+        {{ "user-details-block.btn-block-user" | globalize }}
       </button>
     </div>
 
@@ -33,7 +33,7 @@
       >
         <div class="app__form-row">
           <text-field
-            label="Block reason"
+            :label="'user-details-block.lbl-block-reason' | globalize"
             v-model="blockForm.reason"
             @blur="touchField('blockForm.reason')"
             :error-message="getFieldErrorMessage(
@@ -49,13 +49,13 @@
           class="app__btn app__btn--danger"
           form="user-block-form"
         >
-          Block
+          {{ "user-details-block.btn-block" | globalize }}
         </button>
         <button
           class="app__btn-secondary"
           @click="hideBlockModal"
         >
-          Cancel
+          {{ "user-details-block.btn-cancel" | globalize }}
         </button>
       </div>
     </modal>
@@ -79,6 +79,7 @@ import { ChangeRoleRequest } from '@/apiHelper/responseHandlers/requests/ChangeR
 import { api } from '@/api'
 import { mapGetters } from 'vuex'
 import { UserRecord } from '@/js/records/user.record'
+import { globalize } from '@/components/App/filters/filters'
 
 const EVENTS = {
   updated: 'updated',
@@ -144,7 +145,10 @@ export default {
 
   methods: {
     async blockUser () {
-      if (!await confirmAction('Are you sure?')) {
+      if (!await confirmAction({
+        title: globalize('user-details-block.are-you-sure'),
+      })
+      ) {
         return
       }
       this.$emit(EVENTS.updateIsPending, true)
@@ -162,7 +166,7 @@ export default {
           })
         await api.postOperations(operation)
 
-        Bus.success('The user account was blocked')
+        Bus.success('user-details-block.user-account-blocked')
         this.$emit(EVENTS.updated)
       } catch (error) {
         ErrorHandler.process(error)
@@ -171,7 +175,10 @@ export default {
     },
 
     async unblockUser () {
-      if (!await confirmAction('Are you sure?')) {
+      if (!await confirmAction({
+        title: globalize('user-details-block.are-you-sure'),
+      })
+      ) {
         return
       }
       this.$emit(EVENTS.updateIsPending, true)
@@ -191,7 +198,7 @@ export default {
           })
         await api.postOperations(operation)
 
-        Bus.success('The user account was unblocked')
+        Bus.success('user-details-block.user-account-unblocked')
         this.$emit(EVENTS.updated)
       } catch (error) {
         ErrorHandler.process(error)

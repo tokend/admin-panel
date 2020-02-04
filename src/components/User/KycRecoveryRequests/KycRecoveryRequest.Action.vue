@@ -1,4 +1,4 @@
-<template>
+-<template>
   <div class="request-action">
     <template v-if="requestToReview.isPending">
       <div class="app__form-actions user-details-request__form-actions">
@@ -7,7 +7,7 @@
           @click="approve"
           :disabled="isPending"
         >
-          Approve
+          {{ "kyc-recovery-request-action.btn-approve" | globalize }}
         </button>
 
         <button
@@ -15,7 +15,7 @@
           @click="showRejectModal"
           :disabled="isPending"
         >
-          Reject
+          {{ "kyc-recovery-request-action.btn-reject" | globalize }}
         </button>
       </div>
     </template>
@@ -26,7 +26,7 @@
         @click="reject(true)"
         :disabled="isPending"
       >
-        Reject permanently
+        {{ "kyc-recovery-request-action.btn-reject-perm" | globalize }}
       </button>
     </template>
 
@@ -44,7 +44,7 @@
       >
         <div class="app__form-row">
           <text-field
-            label="Reject reason"
+            :label="'kyc-recovery-request-action.lbl-reject-reason' | globalize"
             :autofocus="true"
             v-model="rejectForm.reason"
             @blur="touchField('rejectForm.reason')"
@@ -61,13 +61,13 @@
           class="app__btn app__btn--danger"
           form="request-action-reject-form"
         >
-          Reject
+          {{ "kyc-recovery-request-action.form-btn-reject" | globalize }}
         </button>
         <button
           class="app__btn-secondary"
           @click="hideRejectModal"
         >
-          Cancel
+          {{ "kyc-recovery-request-action.form-btn-cancel" | globalize }}
         </button>
       </div>
     </modal>
@@ -76,7 +76,7 @@
 
 <script>
 import apiHelper from '@/apiHelper'
-
+import { globalize } from '@/components/App/filters/filters'
 import Modal from '@comcom/modals/Modal'
 
 import FormMixin from '@/mixins/form.mixin'
@@ -142,7 +142,12 @@ export default {
 
   methods: {
     async approve () {
-      if (!await confirmAction('Are you sure? This action cannot be undone')) {
+      if (
+        !(await confirmAction({
+          title: globalize('kyc-recovery-request-action.confirm-message'),
+        })
+        )
+      ) {
         return
       }
       this.isPending = true
@@ -154,7 +159,7 @@ export default {
           reviewDetails,
         })
 
-        Bus.success('Request approved successfully')
+        Bus.success('kyc-recovery-request-action.request-approved-successfully')
         this.$emit(EVENTS.reviewed)
       } catch (error) {
         ErrorHandler.process(error)
@@ -163,7 +168,12 @@ export default {
     },
 
     async reject (isPermanent = false) {
-      if (!await confirmAction('Are you sure? This action cannot be undone')) {
+      if (
+        !(await confirmAction({
+          title: globalize('kyc-recovery-request-action.confirm-message'),
+        })
+        )
+      ) {
         return
       }
       this.isPending = true
@@ -176,7 +186,7 @@ export default {
             reviewDetails: { tasksToRemove: 0 },
           }
         )
-        Bus.success(`Request rejected successfully`)
+        Bus.success('kyc-recovery-request-action.request-rejected-successfully')
         this.$emit(EVENTS.reviewed)
       } catch (error) {
         this.isPending = false
@@ -205,7 +215,7 @@ export default {
 </script>
 
 <style scoped>
-  .request-action__btn {
-    width: 15rem;
-  }
+.request-action__btn {
+  width: 15rem;
+}
 </style>

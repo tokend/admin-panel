@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
+## [Unreleased]
+#### Added
+- i18next for localization
+- 'en' localization
+- select language
+- footer
+
+#### Removed
+- `AuthFooter` component
+
 ## [1.11.0] - 2020-01-29
 #### Added
 - Getting all users from horizon

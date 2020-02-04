@@ -9,28 +9,28 @@
         <price-chart
           :price-history="priceHistory"
           :scale="scale"
-          :asset-pair="filters.pair" />
+          :asset-pair="filters.pair"
+        />
       </div>
     </template>
 
     <template v-else-if="isLoaded">
       <div class="app__block price-chart__empty">
-        <p>No chart data yet</p>
+        <p>{{ "price-chart-fetcher.no-chart-data-yet" | globalize }}</p>
       </div>
     </template>
 
     <template v-else-if="isFailed">
       <div class="app__block price-chart__empty">
         <p>
-          An error occurred while fetching chart data.
-          Please try again later
+          {{ "price-chart-fetcher.error-fetch" | globalize }}
         </p>
       </div>
     </template>
 
     <template v-else>
       <div class="app__block price-chart__empty">
-        <p>Fetching chart data...</p>
+        <p>{{ "price-chart-fetcher.fetching-chart-data" | globalize }}</p>
       </div>
     </template>
   </div>
@@ -39,7 +39,7 @@
 <script>
 import { api } from '@/api'
 import { AssetPair } from '../../models/AssetPair'
-
+import { globalize } from '@/components/App/filters/filters'
 import PriceChart from './PriceChart.Renderer'
 import ScalePicker from './PriceChart.ScalePicker'
 
@@ -58,7 +58,7 @@ export default {
   data () {
     return {
       priceHistory: {},
-      scale: 'day',
+      scale: '',
       isLoaded: [],
       isFailed: [],
     }
@@ -70,6 +70,7 @@ export default {
 
   created () {
     this.getPriceHistory()
+    this.scale = globalize('price-chart-fetcher.day')
   },
 
   methods: {

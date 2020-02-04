@@ -6,18 +6,18 @@
       v-if="requestSelected"
     >
       <h2 class="preissuance-request-list__reject-heading">
-        Reject
+        {{ "pre-issuance-request-list.reject" | globalize }}
       </h2>
 
       <p class="preissuance-request-list__reject-hint">
-        Input reject reason and submit rejection
+        {{ "pre-issuance-request-list.input-reason-and-submit" | globalize }}
       </p>
 
       <div class="preissuance-request-list__form-row app__form-row">
         <input-field
           class="app__form-field"
           v-model="rejectReason"
-          label="Reject reason"
+          :label="'pre-issuance-request-list.lbl-reject-reason' | globalize"
         />
       </div>
 
@@ -27,14 +27,14 @@
           @click="reject(currentRequest)"
           :disabled="buttonDisabled"
         >
-          Submit rejection
+          {{ "pre-issuance-request-list.btn-submit-rejection" | globalize }}
         </button>
         <button
           class="app__btn-secondary"
           @click="requestSelected = false"
           :disabled="buttonDisabled"
         >
-          Cancel
+          {{ "pre-issuance-request-list.btn-cancel" | globalize }}
         </button>
       </div>
     </div>
@@ -51,17 +51,17 @@
             <tr>
               <th>
                 <span class="secondary">
-                  Amount
+                  {{ "pre-issuance-request-list.amount" | globalize }}
                 </span>
               </th>
               <th>
                 <span class="secondary">
-                  Asset
+                  {{ "pre-issuance-request-list.asset" | globalize }}
                 </span>
               </th>
               <th>
                 <span class="secondary">
-                  Status
+                  {{ "pre-issuance-request-list.status" | globalize }}
                 </span>
               </th>
               <th />
@@ -84,7 +84,7 @@
                     @click="setReject(request)"
                     :disabled="request.state !== 'pending'"
                   >
-                    Reject
+                    {{ "pre-issuance-request-list.btn-reject" | globalize }}
                   </button>
 
                   <button
@@ -92,7 +92,7 @@
                     @click="fulfill(request)"
                     :disabled="buttonDisabled || request.state !== 'pending'"
                   >
-                    Accept
+                    {{ "pre-issuance-request-list.btn-accept" | globalize }}
                   </button>
                 </span>
               </td>
@@ -106,7 +106,7 @@
             v-if="!pageableLoadCompleted && filteredRequests.length !== 0"
             @click="nextPageLoader"
           >
-            More
+            {{ "pre-issuance-request-list.btn-more" | globalize }}
           </button>
         </div>
       </div>
@@ -115,13 +115,13 @@
         <div class="app-list__li-like">
           <template v-if="isLoading">
             <p>
-              Loading...
+              {{ "pre-issuance-request-list.loading" | globalize }}
             </p>
           </template>
 
           <template v-else>
             <p>
-              Nothing here yet
+              {{ "pre-issuance-request-list.fail-load" | globalize }}
             </p>
           </template>
         </div>
@@ -134,7 +134,6 @@
 <script>
 import InputField from '@comcom/fields/InputField'
 
-import moment from 'moment'
 import localize from '@/utils/localize'
 import { verbozify } from '@/utils/verbozify'
 
@@ -142,6 +141,7 @@ import apiHelper from '@/apiHelper'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { CreatePreIssuanceRequest } from '@/apiHelper/responseHandlers/requests/CreatePreIssuanceRequest'
 import { Bus } from '@/utils/bus'
+import { globalize } from '../../../../App/filters/filters'
 
 export default {
   components: { InputField },
@@ -226,23 +226,11 @@ export default {
       }
     },
 
-    formatDate (date) {
-      return moment(date).calendar(null, {
-        lastWeek: 'DD MMM LT',
-        sameElse: 'DD MMM LT',
-      })
-    },
-
     clear () {
       this.currentRequest = {}
       this.rejectReason = ''
       this.requestSelected = false
       this.$store.commit('CLOSE_LOADER')
-    },
-
-    parseStatus (accepted) {
-      if (accepted === null) return 'Pending'
-      return accepted ? 'Accepted' : 'Rejected'
     },
 
     async getRequests () {
@@ -267,7 +255,9 @@ export default {
 
     async reject (request) {
       if (!this.rejectReason) {
-        ErrorHandler.process('Enter reject reason before continue')
+        ErrorHandler.process(new Error(
+          globalize('pre-issuance-request-list.enter-reject')
+        ), 'pre-issuance-request-list.enter-reject')
         return
       }
 
@@ -277,7 +267,7 @@ export default {
         await request.reject(this.rejectReason, true)
 
         this.clear()
-        Bus.success('Pending transaction for rejected request submitted')
+        Bus.success('pre-issuance-request-list.rejected-transaction-submitted')
 
         await this.getRequests()
       } catch (error) {
@@ -293,7 +283,7 @@ export default {
         await request.fulfill()
 
         this.$store.commit('CLOSE_LOADER')
-        Bus.success('Pending transaction for fulfill request submitted')
+        Bus.success('pre-issuance-request-list.fulfill-transaction-submitted')
         this.$emit('need-to-update')
 
         await this.getRequests()

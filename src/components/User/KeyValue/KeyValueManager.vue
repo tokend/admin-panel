@@ -6,7 +6,7 @@
           <select-field
             class="key-value-manager__input"
             v-model="updateForm.key"
-            label="Key"
+            :label="'key-value-manager.lbl-key-select-field' | globalize"
           >
             <option
               v-for="item in list"
@@ -20,8 +20,8 @@
           <input-field
             v-model="updateForm.value"
             class="key-value-manager__input"
-            label="Value"
-            placeholder="Enter new value"
+            :label="'key-value-manager.lbl-value-select-field' | globalize"
+            :placeholder="'key-value-manager.placeholder-new-value' | globalize"
           />
 
           <button
@@ -31,7 +31,7 @@
             :disabled="isPending"
             @click="setKeyValue(updateForm.key, updateForm.value)"
           >
-            Update
+            {{ "key-value-manager.btn-update" | globalize }}
           </button>
         </div>
       </div>
@@ -42,20 +42,20 @@
         <input-field
           v-model="createForm.key"
           class="key-value-manager__input"
-          label="Key"
-          placeholder="Enter new key"
+          :label="'key-value-manager.lbl-key-input-field' | globalize"
+          :placeholder="'key-value-manager.placeholder-new-key' | globalize"
         />
         <input-field
           v-model="createForm.value"
           class="key-value-manager__input"
-          label="Value"
-          placeholder="Enter new value"
+          :label="'key-value-manager.lbl-value-input-field' | globalize"
+          :placeholder="'key-value-manager.placeholder-new-value' | globalize"
         />
 
         <select-field
           v-model.number="createForm.entryType"
           class="key-value-manager__input"
-          label="Entry type"
+          :label="'key-value-manager.lbl-entry-type' | globalize"
         >
           <option
             v-for="(value, lbl) in KEY_VALUE_ENTRY_TYPE"
@@ -77,7 +77,7 @@
             createForm.entryType
           )"
         >
-          Add
+          {{ "key-value-manager.btn-add" | globalize }}
         </button>
       </div>
     </div>
@@ -148,7 +148,7 @@ export default {
         await api.postOperations(operation)
         await this.getList()
 
-        Bus.success('Submitted successfully')
+        Bus.success('key-value-manager.submitted-successfully')
       } catch (error) {
         ErrorHandler.process(error)
       }

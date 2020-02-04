@@ -7,10 +7,10 @@
       <ul class="app-list">
         <li class="app-list__li-like">
           <template v-if="isLoading">
-            Loading...
+            {{ "limits-requests.loading" | globalize }}
           </template>
           <template v-else>
-            Nothing here yet
+            {{ "limits-requests.nothing-here-yet" | globalize }}
           </template>
         </li>
       </ul>

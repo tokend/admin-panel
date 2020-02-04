@@ -83,7 +83,7 @@
           class="app__btn app__btn--small fee-form__btn"
           :disabled="formMixin.isDisabled"
         >
-          Update
+          {{ "fee-form.btn-update" | globalize }}
         </button>
 
         <button
@@ -92,7 +92,7 @@
           :disabled="formMixin.isDisabled"
           @click="updateFee({ isDeleteMode: true })"
         >
-          Delete
+          {{ "fee-form.btn-delete" | globalize }}
         </button>
       </template>
 
@@ -101,7 +101,7 @@
           class="app__btn app__btn--small fee-form__btn"
           :disabled="formMixin.isDisabled"
         >
-          Create
+          {{ "fee-form.btn-create" | globalize }}
         </button>
       </template>
     </span>
@@ -213,7 +213,7 @@ export default {
     },
 
     async updateFee ({ isDeleteMode }) {
-      if (!this.isFormValid() || !await confirmAction()) return
+      if (!this.isFormValid() || !(await confirmAction())) return
 
       this.disableForm()
       try {
@@ -236,7 +236,7 @@ export default {
         const operation = base.Operation.setFees(opts)
 
         await api.postOperations(operation)
-        Bus.success('Submitted successfully')
+        Bus.success('fee-form.submitted-successfully')
         this.$emit(EVENTS.feeUpdated)
       } catch (error) {
         ErrorHandler.process(error)

@@ -5,24 +5,31 @@
         @submit.prevent="isFormValid('priceForm') && showConfirmation()"
         class="asset-pair-manager__form app__block"
       >
-        <h2>Update {{ base }}/{{ quote }} pair price</h2>
+        <h2>
+          {{ "asset-pair-manager.update-pair-price" | globalize({
+            base,
+            quote
+          })
+          }}
+        </h2>
 
         <div class="asset-pair-manager__form-row app__form-row">
           <input-field
             class="app__form-field"
-            :label="`Price (${pair.quote})`"
+            :label="'asset-pair-manager.lbl-price' | globalize({
+              amount: pair.quote
+            })"
             type="number"
             :min="DEFAULT_INPUT_MIN"
             :step="DEFAULT_INPUT_STEP"
             v-model="priceForm.price"
             @blur="touchField('priceForm.price')"
-            :error-message="getFieldErrorMessage(
-              'priceForm.price',
-              {
+            :error-message="
+              getFieldErrorMessage('priceForm.price', {
                 minValue: DEFAULT_INPUT_MIN,
                 maxValue: DEFAULT_MAX_AMOUNT
-              }
-            )"
+              })
+            "
             :disabled="formMixin.isDisabled"
           />
         </div>
@@ -31,9 +38,9 @@
           <form-confirmation
             v-if="!isAttributesFormSelected && formMixin.isConfirmationShown"
             :is-pending="isFormSubmitting"
-            message="Sure?"
-            ok-button-text="Yes"
-            cancel-button-text="No"
+            :message="'asset-pair-manager.msg-sure' | globalize"
+            :ok-button-text="'asset-pair-manager.yes' | globalize"
+            :cancel-button-text="'asset-pair-manager.no' | globalize"
             @ok="updatePrice"
             @cancel="hideConfirmation"
           />
@@ -44,7 +51,7 @@
             :disabled="formMixin.isDisabled"
             @click="isAttributesFormSelected = false"
           >
-            Update
+            {{ "asset-pair-manager.btn-update" | globalize }}
           </button>
         </div>
       </form>
@@ -55,12 +62,18 @@
         @submit.prevent="isFormValid('attributesForm') && showConfirmation()"
         class="asset-pair-manager__form app__block"
       >
-        <h2>Update {{ base }}/{{ quote }} pair attributes</h2>
+        <h2>
+          {{ "asset-pair-manager.update-pair-attributes" | globalize({
+            base,
+            quote
+          })
+          }}
+        </h2>
 
         <div class="asset-pair-manager__form-row app__form-row">
           <input-field
             class="app__form-field"
-            label="Physical price correction"
+            :label="'asset-pair-manager.lbl-physical-correction' | globalize"
             type="number"
             min="0"
             :step="DEFAULT_INPUT_STEP"
@@ -75,11 +88,12 @@
             <template slot="help">
               <p class="asset-pair-manager__tip-message">
                 <span>
-                  The correction of physical price in percents.
-                  If physical price and restriction by physical price are set,
-                  minimum price for this pair offer will be
+                  {{ "asset-pair-manager.correct-physical-price" | globalize }}
                 </span>
-                <strong>physicalPrice * physicalPriceCorrection</strong>
+                <strong>
+                  <!-- eslint-disable-next-line max-len -->
+                  {{ "asset-pair-manager.correct-physical-price-formula" | globalize }}
+                </strong>
               </p>
             </template>
           </input-field>
@@ -88,7 +102,7 @@
         <div class="asset-pair-manager__form-row app__form-row">
           <input-field
             class="app__form-field"
-            label="Max price step"
+            :label="'asset-pair-manager.lbl-max-price-step' | globalize"
             type="number"
             min="0"
             max="100"
@@ -104,11 +118,11 @@
             <template slot="help">
               <p class="asset-pair-manager__tip-message">
                 <span>
-                  Maximum offer price step in percents.
-                  If current price restriction is set,
-                  the users are allowed to set an offer with price in interval
+                  {{ "asset-pair-manager.max-offer-price" | globalize }}
                 </span>
-                <strong>(1 ± maxPriceStep) * currentPrice</strong>
+                <strong>
+                  {{ "asset-pair-manager.max-offer-price-formula" | globalize }}
+                </strong>
               </p>
             </template>
           </input-field>
@@ -120,12 +134,12 @@
             v-model="attributesForm.policies"
             :disabled="formMixin.isDisabled"
             :required="false"
-            label="Is tradable"
-            :cb-value="ASSET_PAIR_POLICIES.tradeableSecondaryMarket"
+            :label="'asset-pair-manager.lbl-is-tradable' | globalize"
+            :cb-value="ASSET_PAIR_POLICIES.tradeableSecondaryMarket | globalize"
           >
             <template slot="help">
               <span class="asset-pair-manager__tip-message">
-                Allowed to trade this pair on secondary market
+                {{ "asset-pair-manager.allow-trade" | globalize }}
               </span>
             </template>
           </tick-field>
@@ -135,13 +149,12 @@
             v-model="attributesForm.policies"
             :disabled="formMixin.isDisabled"
             :required="false"
-            label="Physical price restriction"
+            :label="'asset-pair-manager.lbl-physical-restriction' | globalize"
             :cb-value="ASSET_PAIR_POLICIES.physicalPriceRestriction"
           >
             <template slot="help">
               <span class="asset-pair-manager__tip-message">
-                If set, then prices for new offers must be greater
-                than physical price with correction
+                {{ "asset-pair-manager.message-condition" | globalize }}
               </span>
             </template>
           </tick-field>
@@ -151,15 +164,19 @@
             v-model="attributesForm.policies"
             :disabled="formMixin.isDisabled"
             :required="false"
-            label="Current price restriction"
+            :label="'asset-pair-manager.lbl-current-restriction' | globalize"
             :cb-value="ASSET_PAIR_POLICIES.currentPriceRestriction"
           >
             <template slot="help">
               <p class="asset-pair-manager__tip-message">
                 <span>
-                  If set, then price for new offers must be in interval of
+                  <!-- eslint-disable-next-line max-len -->
+                  {{ "asset-pair-manager.message-condition-interval" | globalize }}
                 </span>
-                <strong>(1 ± maxPriceStep) * currentPrice</strong>
+                <strong>
+                  <!-- eslint-disable-next-line max-len -->
+                  {{ "asset-pair-manager.message-condition-formula" | globalize }}
+                </strong>
               </p>
             </template>
           </tick-field>
@@ -169,9 +186,9 @@
           <form-confirmation
             v-if="isAttributesFormSelected && formMixin.isConfirmationShown"
             :is-pending="isFormSubmitting"
-            message="Sure?"
-            ok-button-text="Yes"
-            cancel-button-text="No"
+            :message="'asset-pair-manager.msg-sure' | globalize"
+            :ok-button-text="'asset-pair-manager.yes' | globalize"
+            :cancel-button-text="'asset-pair-manager.no' | globalize"
             @ok="updateAttributes"
             @cancel="hideConfirmation"
           />
@@ -181,7 +198,7 @@
               :disabled="formMixin.isDisabled"
               @click="isAttributesFormSelected = true"
             >
-              Update policy
+              {{ "asset-pair-manager.update-policy" | globalize }}
             </button>
 
             <button
@@ -190,7 +207,7 @@
               @click.prevent="removeAssetPair"
               :disabled="formMixin.isDisabled"
             >
-              Remove pair
+              {{ "asset-pair-manager.remove-pair" | globalize }}
             </button>
           </template>
         </div>
@@ -199,7 +216,7 @@
 
     <template v-else>
       <p>
-        Loading...
+        {{ "asset-pair-manager.loading" | globalize }}
       </p>
     </template>
   </div>
@@ -214,7 +231,7 @@ import { confirmAction } from '@/js/modals/confirmation_message'
 import apiHelper from '@/apiHelper'
 import { api } from '@/api'
 import { base } from '@tokend/js-sdk'
-
+import { globalize } from '@/components/App/filters/filters'
 import {
   DEFAULT_INPUT_STEP,
   DEFAULT_MAX_AMOUNT,
@@ -285,8 +302,9 @@ export default {
     this.attributesForm.physicalPriceCorrection =
       this.pair.physicalPriceCorrection
     this.attributesForm.maxPriceStep = this.pair.maxPriceStep
-    this.attributesForm.policies = this.pair.policies
-      .map(policy => policy.value)
+    this.attributesForm.policies = this.pair.policies.map(
+      policy => policy.value
+    )
   },
 
   methods: {
@@ -314,8 +332,10 @@ export default {
         this.attributesForm.physicalPriceCorrection
       this.pair.maxPriceStep = this.attributesForm.maxPriceStep
 
-      this.pair.policies = this.attributesForm.policies
-        .reduce((sum, policy) => sum | policy, 0)
+      this.pair.policies = this.attributesForm.policies.reduce(
+        (sum, policy) => sum | policy,
+        0
+      )
       this.submit({ updatePolicy: true })
     },
 
@@ -323,7 +343,7 @@ export default {
       this.isFormSubmitting = true
       try {
         await apiHelper.assets.updatePair({ ...this.pair, ...action })
-        Bus.success('Pair has been updated.')
+        Bus.success('asset-pair-manager.pair-updated')
         this.$router.push({ name: 'assets.assetPairs.index' })
       } catch (error) {
         ErrorHandler.process(error)
@@ -335,7 +355,7 @@ export default {
 
     async removeAssetPair () {
       const isConfirmed = await confirmAction({
-        title: 'Are you sure? This action cannot be undone',
+        title: globalize('asset-pair-manager.are-you-sure'),
       })
 
       if (isConfirmed) {
@@ -347,7 +367,7 @@ export default {
           })
 
           await api.postOperations(operation)
-          Bus.success('Asset pair was successfully removed')
+          Bus.success('asset-pair-manager.asset-pair-removed')
           this.$router.push({ name: 'assets.assetPairs.index' })
         } catch (e) {
           ErrorHandler.process(e)

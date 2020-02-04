@@ -1,36 +1,36 @@
 <template>
   <div class="issuance-details">
     <div class="issuance-details app__block">
-      <h2>Issuance details</h2>
+      <h2>{{ "issuance-details.header" | globalize }}</h2>
       <template v-if="isLoaded">
         <ul class="key-value-list">
           <li class="issuance-details__list-item">
-            <span>ID</span>
+            <span>{{ "issuance-details.id" | globalize }}</span>
             <span>{{ issuance.id }}</span>
           </li>
           <li class="issuance-details__list-item">
-            <span>Date</span>
+            <span>{{ "issuance-details.date" | globalize }}</span>
             <span>{{ issuance.createdAt | dateTime }}</span>
           </li>
           <li class="issuance-details__list-item">
-            <span>Initiator</span>
+            <span>{{ "issuance-details.initiator" | globalize }}</span>
             <span>{{ issuance.requestor.id }}</span>
           </li>
           <li class="issuance-details__list-item">
-            <span>Initiator (Email)</span>
+            <span>{{ "issuance-details.initiator-mail" | globalize }}</span>
             <span>
               <email-getter :account-id="issuance.requestor.id" is-titled />
             </span>
           </li>
           <li class="issuance-details__list-item">
-            <span>Value</span>
+            <span>{{ "issuance-details.value" | globalize }}</span>
             <span>
               {{ localize(issuance.requestDetails.amount) }}
               {{ issuance.requestDetails.asset.id }}
             </span>
           </li>
           <li class="issuance-details__list-item">
-            <span>State</span>
+            <span>{{ "issuance-details.state" | globalize }}</span>
             <span>
               {{ issuance.state | localizeIssuanceRequestState }}
             </span>
@@ -44,7 +44,7 @@
               @click="fulfill(issuance)"
               :disabled="isSubmitting || issuance.stateI !== REQUEST_STATES.pending"
             >
-              Fulfill
+              {{ "issuance-details.fulfill" | globalize }}
             </button>
 
             <button
@@ -52,7 +52,7 @@
               @click="selectForRejection(issuance)"
               :disabled="isSubmitting || issuance.stateI !== REQUEST_STATES.pending"
             >
-              Reject
+              {{ "issuance-details.reject" | globalize }}
             </button>
             <!-- eslint-enable max-len -->
           </div>
@@ -60,7 +60,7 @@
       </template>
       <template v-else>
         <span class="issuance-details__list-item">
-          Loading...
+          {{ "issuance-details.loading" | globalize }}
         </span>
       </template>
       <modal
@@ -76,7 +76,7 @@
         >
           <div class="app__form-row">
             <text-field
-              label="Enter reject reason"
+              :label="'issuance-details.lbl-enter-reject-reason' | globalize"
               v-model="rejectForm.reason"
               :disabled="formMixin.isDisabled"
               @blur="touchField('rejectForm.reason')"
@@ -94,14 +94,14 @@
             form="issuance-rl-reject-form"
             :disabled="formMixin.isDisabled"
           >
-            Reject
+            {{ "issuance-details.btn-reject" | globalize }}
           </button>
           <button
             class="app__btn-secondary"
             @click="clearRejectionSelection"
             :disabled="formMixin.isDisabled"
           >
-            Cancel
+            {{ "issuance-details.btn-cancel" | globalize }}
           </button>
         </div>
       </modal>
@@ -193,7 +193,7 @@ export default {
           })
 
           await this.getIssuance(this.id)
-          Bus.success('Request fulfilled successfully.')
+          Bus.success('issuance-details.request-fulfilled-successfully')
         } catch (error) {
           ErrorHandler.processWithoutFeedback(error)
         }
@@ -227,7 +227,7 @@ export default {
 
         await this.getIssuance(this.id)
         this.clearRejectionSelection()
-        Bus.success('Request rejected successfully.')
+        Bus.success('issuance-details.request-rejected-successfully')
       } catch (error) {
         ErrorHandler.process(error)
       }

@@ -9,19 +9,19 @@
       </span>
 
       <span class="admin-list__li-role secondary">
-        Role
+        {{ "admin-list.role" | globalize }}
       </span>
 
       <span class="admin-list__li-account-id secondary">
-        Account ID
+        {{ "admin-list.acc-id" | globalize }}
       </span>
 
       <span class="admin-list__li-weight secondary">
-        Weight
+        {{ "admin-list.weight" | globalize }}
       </span>
 
       <span class="admin-list__li-identity secondary">
-        Identity
+        {{ "admin-list.identity" | globalize }}
       </span>
     </div>
 
@@ -43,7 +43,7 @@
             :title="item.details.name"
           >
             <template v-if="item.id === masterPubKey">
-              Master
+              {{ "admin-list.master" | globalize }}
             </template>
             <template v-else>
               {{ item.details.name }}
@@ -51,7 +51,7 @@
 
             <template v-if="item.id === userAddress">
               <span class="secondary">
-                (you)
+                {{ "admin-list.your-account" | globalize }}
               </span>
             </template>
           </span>
@@ -90,13 +90,13 @@
       <div class="app-list__li-like">
         <template v-if="isLoading">
           <p>
-            Loading...
+            {{ "admin-list.load" | globalize }}
           </p>
         </template>
 
         <template v-else>
           <p>
-            Nothing here yet
+            {{ "admin-list.fail-load" | globalize }}
           </p>
         </template>
       </div>
@@ -113,14 +113,17 @@ import { getters } from '@/store/types'
 import { api, loadingDataViaLoop } from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
+import { globalize } from '@/components/App/filters/filters'
+
 export default {
   filters: {
     deriveRoleName (roleId, signerRoles = []) {
       if (+roleId === 1) {
-        return 'Master'
+        return globalize('admin-list.master')
       }
       const role = signerRoles.find(item => item.id === roleId) || {}
-      return (role.details || {}).name || `Unnamed (${roleId})`
+      return (role.details || {}).name ||
+      globalize('admin-list.unnamed', { id: roleId })
     },
   },
 

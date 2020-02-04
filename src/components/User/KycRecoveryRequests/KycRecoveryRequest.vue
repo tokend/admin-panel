@@ -1,7 +1,7 @@
 <template>
   <div class="kyc-recovery-request">
     <div class="app__block">
-      <h2>Kyc recovery request</h2>
+      <h2>{{ "kyc-recovery-request.header" | globalize }}</h2>
 
       <template v-if="isLoaded">
         <section class="kyc-recovery-request__section">
@@ -18,7 +18,7 @@
             class="kyc-recovery-request__section"
           >
             <template v-if="isKycLoaded">
-              <h2>Previous approved KYC Request</h2>
+              <h2>{{ "kyc-recovery-request.previos-kyc-request-approve" | globalize }}</h2>
               <general-kyc-viewer
                 v-if="verifiedRequest.accountRoleToSet === kvAccountRoles.general"
                 :kyc="kyc"
@@ -37,11 +37,11 @@
             </template>
             <template v-else-if="isKycLoadFailed">
               <p class="danger">
-                An error occurred. Please try again later.
+                {{ "kyc-recovery-request.error" | globalize }}
               </p>
             </template>
             <template v-else>
-              <p>Loading...</p>
+              <p>{{ "kyc-recovery-request.loading" | globalize }}</p>
             </template>
             <kyc-syndicate-section
               v-if="verifiedRequest.accountRoleToSet === kvAccountRoles.corporate"
@@ -56,7 +56,7 @@
             v-if="verifiedRequest.accountRoleToSet &&
               kycRecoveryRequestBlobId">
             <h2>
-              Data from KYC recovery request
+              {{ "kyc-recovery-request.data-from-kyc" | globalize }}
             </h2>
             <general-kyc-viewer
               v-if="verifiedRequest.accountRoleToSet === kvAccountRoles.general"
@@ -70,7 +70,7 @@
             />
           </template>
           <template v-if="!verifiedRequest.accountRoleToSet">
-            <p>This user has not yet been verified.</p>
+            <p>{{ "kyc-recovery-request.user-not-verified" | globalize }}</p>
           </template>
           <request-actions
             class="kyc-recovery-request__actions"
@@ -83,12 +83,12 @@
       </template>
 
       <template v-else-if="!isFailed">
-        <p>Loading...</p>
+        <p>{{ "kyc-recovery-request.loading" | globalize }}</p>
       </template>
 
       <template v-else>
         <p class="danger">
-          An error occurred. Please try again later.
+          {{ "kyc-recovery-request.error" | globalize }}
         </p>
       </template>
     </div>

@@ -1,9 +1,11 @@
 <template>
   <div class="change-asset-issuer-form">
-    <p class="change-asset-issuer-form__hint">
-      Select file(s) with change issuer transaction and click
-      <strong>Upload</strong>.<br>
-    </p>
+    <!--eslint-disable -->
+    <p 
+      class="change-asset-issuer-form__hint"
+      v-html="$options.filters.globalize('change-asset-issuer-form.select-lile-and-click-upload')"
+    />
+    <!--eslint-enable -->
 
     <div class="change-asset-issuer-form__upload-wrp">
       <template>
@@ -11,7 +13,7 @@
           class="change-asset-issuer-form__upload-btn app__btn app__btn--info"
           for="file-select"
         >
-          Select File(s)
+          {{ "change-asset-issuer-form.label-select-file" | globalize }}
         </label>
         <input
           class="change-asset-issuer-form__upload-input"
@@ -29,26 +31,37 @@
       v-if="asset && accountId"
     >
       <p class="text">
-        Signer will change on asset: {{ asset }}
+        {{ "change-asset-issuer-form.signer-change-asset" | globalize({
+          asset: asset
+        })
+        }}
       </p>
       <p class="text">
-        New signer will be: {{ accountId }}
+        {{ "change-asset-issuer-form.new-signer" | globalize({
+          accId: accountId
+        })
+        }}
       </p>
       <p class="text">
-        Transaction source: {{ source }}
+        {{ "change-asset-issuer-form.transaction-source" | globalize({
+          source: source
+        })
+        }}
       </p>
     </div>
-
-    <p class="change-asset-issuer-form__expiration-date-note text">
-      <i>Note: </i>Transaction is valid for one week since the file was created
-    </p>
+    <!-- eslint-disable -->
+    <p 
+      class="change-asset-issuer-form__expiration-date-note text"
+      v-html="$options.filters.globalize('change-asset-issuer-form.note-transaction')"  
+    />
+    <!-- eslint-enable -->
     <a
       class="change-asset-issuer-form__link"
       :href="preissuanceGuideURL"
       target="_blank"
       rel="noopener"
     >
-      Learn more about pre-issuance
+      {{ "change-asset-issuer-form.more-about-pre-issuance" | globalize }}
     </a>
     <div
       class="change-asset-issuer-form__summary-actions"
@@ -59,13 +72,13 @@
         @click="upload()"
         :disabled="uploadBtnDisable"
       >
-        Upload
+        {{ "change-asset-issuer-form.btn-upload" | globalize }}
       </button>
       <button
         class="app__btn-secondary"
         @click="clear"
       >
-        Clear
+        {{ "change-asset-issuer-form.btn-clear" | globalize }}
       </button>
     </div>
   </div>
@@ -108,7 +121,7 @@ export default {
         this.transaction = fileData.transaction
         this.source = fileData.source
       } catch (e) {
-        ErrorHandler.process('Your file is corrupted. Please, select another file')
+        ErrorHandler.process(e, 'change-asset-issuer-form.your-file-is-corrupted')
       }
     },
 
@@ -141,7 +154,7 @@ export default {
       try {
         await this.sendTx()
         this.clear()
-        Bus.success('Submitted successfully')
+        Bus.success('change-asset-issuer-form.submitted-successfully')
       } catch (error) {
         ErrorHandler.process(error)
       }

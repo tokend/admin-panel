@@ -5,7 +5,7 @@ import store from './store'
 import router from './router'
 
 import StellarWallet from 'tokend-wallet-js-sdk'
-
+import { globalize } from '@/components/App/filters/filters'
 import config from '@/config'
 import { api } from '@/api'
 
@@ -130,7 +130,7 @@ export default {
     const accountId = keyPair.accountId()
 
     if (!await this._checkMasterSignerExists(accountId)) {
-      throw new Error('Such admin does not exist')
+      throw new Error(globalize('auth.admin-not-exist'))
     }
 
     const auth = _cloneDeep(store.state.auth) || {}
@@ -159,7 +159,7 @@ export default {
     const accountId = JSON.parse(wallet.getKeychainData()).accountId
 
     if (!await this._checkMasterSignerExists(accountId)) {
-      throw new Error('Such admin does not exist')
+      throw new Error(globalize('auth.admin-not-exist'))
     }
 
     const auth = _cloneDeep(store.state.auth) || {}

@@ -2,19 +2,19 @@
   <div class="assets">
     <user-header>
       <router-link :to="{ name: 'assets.systemAssets' }" slot="nav">
-        System assets
+        {{ "assets.link-system-assets" | globalize }}
       </router-link>
       <router-link :to="{ name: 'assets.assetRequests' }" slot="nav">
-        Asset requests
+        {{ "assets.link-asset-requests" | globalize }}
       </router-link>
       <router-link :to="{ name: 'assets.issuance' }" slot="nav">
-        Issuance
+        {{ "assets.link-issuance" | globalize }}
       </router-link>
       <router-link :to="{ name: 'assets.assetPairs' }" slot="nav">
-        Asset pairs
+        {{ "assets.link-asset-pairs" | globalize }}
       </router-link>
       <router-link :to="{ name: 'assets.withdrawals' }" slot="nav">
-        Withdrawals
+        {{ "assets.link-withdrawals" | globalize }}
       </router-link>
     </user-header>
     <div class="app__user-container">

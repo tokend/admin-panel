@@ -1,12 +1,12 @@
 <template>
   <div class="preissuance-requests-index">
     <div class="app__block">
-      <h2>Preissuance Requests</h2>
+      <h2>{{ "pre-issuance-requests-index.header" | globalize }}</h2>
 
       <select-field
         class="preissuance-requests-index__asset-select"
         v-model="asset"
-        label="Asset">
+        :label="'pre-issuance-requests-index.lbl-asset' | globalize">
         <option
           v-for="a in assets"
           :value="a.id"
@@ -33,6 +33,8 @@ import { api, loadingDataViaLoop } from '@/api'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
+import { globalize } from '@/components/App/filters/filters'
+
 export default {
   components: {
     PreIssuanceRequestList,
@@ -41,7 +43,7 @@ export default {
 
   data () {
     return {
-      asset: [{ id: 'All' }],
+      asset: [{ id: globalize('pre-issuance-requests-index.all') }],
       assets: undefined,
       assetsLoaded: false,
     }

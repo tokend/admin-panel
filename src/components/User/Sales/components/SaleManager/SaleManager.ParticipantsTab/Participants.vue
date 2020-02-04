@@ -4,7 +4,8 @@
       <select-field
         class="participants__filter"
         v-model="filters.quoteAsset"
-        label="Quote asset">
+        :label="'participants.lbl-quote-asset' | globalize"
+      >
         <template v-if="get(sale, 'quoteAssets', []).length">
           <option
             :value="item.asset.id"
@@ -17,7 +18,7 @@
 
         <template v-else>
           <option disabled>
-            No options
+            {{ "participants.no-options" | globalize }}
           </option>
         </template>
       </select-field>
@@ -27,8 +28,13 @@
       <table class="participants__table">
         <thead>
           <tr>
-            <th>Investor</th>
-            <th>{{ filters.quoteAsset }} invested</th>
+            <th>{{ "participants.investor" | globalize }}</th>
+            <th>
+              {{ "participants.invested" | globalize({
+                quoteAsset: filters.quoteAsset
+              })
+              }}
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -42,19 +48,19 @@
 
     <template v-else-if="isLoaded && !participants.length">
       <p class="text">
-        No investments yet.
+        {{ "participants.no-investments-yet" | globalize }}
       </p>
     </template>
 
     <template v-else-if="isFailed">
       <p class="text danger">
-        An error occurred. Please try again later.
+        {{ "participants.error" | globalize }}
       </p>
     </template>
 
     <template v-else>
       <p>
-        Loading...
+        {{ "participants.loading" | globalize }}
       </p>
     </template>
   </div>

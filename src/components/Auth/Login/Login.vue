@@ -5,7 +5,7 @@
       v-if="state === 'login'"
     >
       <h2 class="login__heading">
-        Sign In
+        {{ "login.header" | globalize }}
       </h2>
 
       <form
@@ -18,7 +18,7 @@
             class="app__form-field"
             id="login-field"
             v-model.trim="form.username"
-            label="Username"
+            :label="'login.lbl-username' | globalize"
             name="username"
             @blur="touchField('form.username')"
             :error-message="getFieldErrorMessage('form.username')"
@@ -31,7 +31,7 @@
             class="app__form-field"
             type="password"
             v-model.trim="form.password"
-            label="Password"
+            :label="'login.lbl-password' | globalize"
             name="password"
             @blur="touchField('form.password')"
             :error-message="getFieldErrorMessage('form.password')"
@@ -44,16 +44,16 @@
             class="app__btn"
             :disabled="formMixin.isDisabled"
           >
-            Sign in
+            {{ "login.btn-sign-in" | globalize }}
           </button>
         </div>
       </form>
 
       <template v-if="seedLoginEnabled">
         <p class="login__alt-action">
-          <span> Also you can </span>
+          <span> {{ "login.also-you-can" | globalize }} </span>
           <router-link :to="{ name: 'seed-login' }">
-            sign in with seed
+            {{ "login.seed-log-link" | globalize }}
           </router-link>
         </p>
       </template>
@@ -65,12 +65,6 @@
     >
       <g-auth @tfa-done="redirect" />
     </div>
-
-    <template v-if="buildVersion">
-      <p class="login__version">
-        {{ buildVersion | formatVersion }}
-      </p>
-    </template>
   </div>
 </template>
 
@@ -124,7 +118,7 @@ export default {
 
   async created () {
     this.tfaDone = false
-    this.unsubscribe = this.$store.subscribe(async (mutation) => {
+    this.unsubscribe = this.$store.subscribe(async mutation => {
       if (this.$store.getters.tfaInitiator !== 'login') {
         return
       }
@@ -181,9 +175,7 @@ export default {
 
         if (response.enabledTFA) {
           this.loginParams = response.loginParams
-          this.loginParams.username = this.form.username
-            .toLowerCase()
-            .trim()
+          this.loginParams.username = this.form.username.toLowerCase().trim()
 
           return this.showTfaForm(response.token)
         }
@@ -258,12 +250,5 @@ export default {
 .login__alt-action {
   margin-top: 1.2rem;
   font-size: 1.6rem;
-}
-
-.login__version {
-  font-size: 1.2rem;
-  color: $color-text-secondary;
-  margin: 1.2rem 0 2.4rem;
-  text-align: center;
 }
 </style>

@@ -4,22 +4,22 @@
       <div class="app-list">
         <div class="app-list__header">
           <span class="app-list__cell">
-            Email
+            {{ "review-decisions-list.email" | globalize }}
           </span>
           <span class="app-list__cell">
-            Role to set
+            {{ "review-decisions-list.role-to-set" | globalize }}
           </span>
           <span class="app-list__cell">
-            State
+            {{ "review-decisions-list.state" | globalize }}
           </span>
           <span class="app-list__cell">
-            Reason
+            {{ "review-decisions-list.reason" | globalize }}
           </span>
           <span class="app-list__cell">
-            Tasks to add
+            {{ "review-decisions-list.tasks-to-add" | globalize }}
           </span>
           <span class="app-list__cell">
-            Tasks to remove
+            {{ "review-decisions-list.tasks-to-remove" | globalize }}
           </span>
         </div>
 
@@ -36,19 +36,17 @@
       <button
         class="app__btn review-decisions-list__btn"
         :disabled="!readyForReviewDecisions.length"
-        :title="readyForReviewDecisions.length
-          ? ''
-          : 'No ready for review decisions yet'"
+        :title="checkReadyForReviewDecisions"
         @click="submitReview"
       >
-        Submit
+        {{ "review-decisions-list.btn-submit" | globalize }}
       </button>
 
       <button
         class="app__btn review-decisions-list__btn"
         @click="resetReview"
       >
-        Start new review
+        {{ "review-decisions-list.btn-start-new-review" | globalize }}
       </button>
     </div>
   </div>
@@ -65,6 +63,8 @@ import { confirmAction } from '@/js/modals/confirmation_message'
 import { base } from '@tokend/js-sdk'
 
 import { DECISION_ACTIONS } from '../constants/decision-actions'
+
+import { globalize } from '@/components/App/filters/filters'
 
 const EVENTS = {
   edit: 'edit',
@@ -89,6 +89,11 @@ export default {
     readyForReviewDecisions () {
       return this.decisions.filter(item => item.isReadyForReview)
     },
+    checkReadyForReviewDecisions () {
+      return this.readyForReviewDecisions.length
+        ? ''
+        : globalize('review-decisions-list.btn-no-ready-review')
+    },
   },
 
   methods: {
@@ -99,9 +104,9 @@ export default {
     async resetReview () {
       const isConfirmed = !this.readyForReviewDecisions.length ||
         await confirmAction({
-          title: 'Are you sure? All your decisions will be lost',
-          confirmText: 'Yes',
-          cancelText: 'No',
+          title: globalize('review-decisions-list.confirm-reset'),
+          confirmText: globalize('review-decisions-list.yes'),
+          cancelText: globalize('review-decisions-list.no'),
         })
       if (!isConfirmed) { return }
 
@@ -110,9 +115,9 @@ export default {
 
     async submitReview () {
       const isConfirmed = await confirmAction({
-        title: 'Are you sure? This action cannot be undone',
-        confirmText: 'Yes, confirm',
-        cancelText: 'No, cancel',
+        title: globalize('review-decisions-list.confirm-submit'),
+        confirmText: globalize('review-decisions-list.yes-confirm'),
+        cancelText: globalize('review-decisions-list.no-cancel'),
       })
       if (!isConfirmed) { return }
 

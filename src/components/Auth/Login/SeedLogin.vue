@@ -2,7 +2,7 @@
   <div class="s-login">
     <div class="s-login__block app__block">
       <h2 class="s-login__heading">
-        Sign In With Seed
+        {{ "seed-login.header" | globalize }}
       </h2>
 
       <form
@@ -15,7 +15,7 @@
             type="password"
             v-model.trim="form.seed"
             name="seed"
-            label="Seed"
+            :label="'seed-login.lbl-seed' | globalize"
             @blur="touchField('form.seed')"
             :error-message="getFieldErrorMessage('form.seed')"
             :disabled="formMixin.isDisabled"
@@ -27,14 +27,14 @@
             class="app__btn"
             :disabled="formMixin.isDisabled"
           >
-            Sign in
+            {{ "seed-login.btn-sign-in" | globalize }}
           </button>
         </div>
       </form>
 
       <p class="login__alt-action">
         <router-link :to="{ name: 'auth' }">
-          Back to classic Sign in
+          {{ "seed-login.classic-sign-in" | globalize }}
         </router-link>
       </p>
     </div>
@@ -47,10 +47,7 @@ import FormMixin from '@/mixins/form.mixin'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
-import {
-  required,
-  seed,
-} from '@/validators'
+import { required, seed } from '@/validators'
 
 export default {
   name: 'seed-login',

@@ -1,7 +1,7 @@
 <template>
   <div class="user-details">
     <div class="app__block">
-      <h2>User details</h2>
+      <h2>{{ "user-details.header" | globalize }}</h2>
 
       <template v-if="isLoaded">
         <section
@@ -10,7 +10,7 @@
         >
           <ul class="key-value-list">
             <li>
-              <h3>Current request state</h3>
+              <h3>{{ "user-details.current-request-state" | globalize }}</h3>
               <p
                 :class="`user-details__state-info
                          user-details__state-info--${requestToReview.state}`">
@@ -18,22 +18,25 @@
               </p>
             </li>
             <li>
-              <h3>Role to set</h3>
+              <h3>{{ "user-details.role-set" | globalize }}</h3>
               <p class="user-details__role-info">
                 {{
-                  roleTypeVerbose[requestToReview.accountRoleToSet
-                    || verifiedRequest.accountRoleToSet]
+                  (requestToReview.accountRoleToSet
+                    || verifiedRequest.accountRoleToSet) | roleTypeVerboseFilter
                 }}
               </p>
             </li>
           </ul>
           <p v-if="requestToReview.isRejected">
-            Reason: {{ requestToReview.rejectReason }}
+            {{ "user-details.reason" | globalize({
+              rejectReason: requestToReview.rejectReason
+            })
+            }}
           </p>
 
           <template v-if="requestToReview.externalDetails">
             <div class="user-details__ext-details-wrp">
-              <h3>External details (provided by external services)</h3>
+              <h3>{{ "user-details.external-details" | globalize }}</h3>
               <external-details-viewer
                 :external-details="requestToReview.externalDetails"
               />
@@ -56,28 +59,31 @@
                   requestToReview.accountRoleToSet === kvAccountRoles.general
                 "
                 :kyc="kyc"
-                :user="user" />
+                :user="user"
+              />
               <verified-kyc-viewer
                 v-if="
                   requestToReview.accountRoleToSet === kvAccountRoles.usVerified
                 "
                 :kyc="kyc"
-                :user="user" />
+                :user="user"
+              />
               <accredited-kyc-viewer
                 v-if="
                   requestToReview.accountRoleToSet ===
                     kvAccountRoles.usAccredited
                 "
                 :kyc="kyc"
-                :user="user" />
+                :user="user"
+              />
             </template>
             <template v-else-if="isKycLoadFailed">
               <p class="danger">
-                An error occurred. Please try again later.
+                {{ "user-details.error" | globalize }}
               </p>
             </template>
             <template v-else>
-              <p>Loading...</p>
+              <p>{{ "user-details.loading" | globalize }}</p>
             </template>
             <kyc-syndicate-section
               v-if="
@@ -97,7 +103,7 @@
             class="user-details__section"
           >
             <template v-if="isKycLoaded">
-              <h2>Previous approved KYC Request</h2>
+              <h2>{{ "user-details.previous-approved-kys-request" | globalize }}</h2>
               <general-kyc-viewer
                 v-if="verifiedRequest.accountRoleToSet === kvAccountRoles.general"
                 :kyc="kyc"
@@ -116,11 +122,11 @@
             </template>
             <template v-else-if="isKycLoadFailed">
               <p class="danger">
-                An error occurred. Please try again later.
+                {{ "user-details.error" | globalize }}
               </p>
             </template>
             <template v-else>
-              <p>Loading...</p>
+              <p>{{ "user-details.loading" | globalize }}</p>
             </template>
             <kyc-syndicate-section
               v-if="verifiedRequest.accountRoleToSet === kvAccountRoles.corporate"
@@ -134,11 +140,14 @@
             v-if="requestToReview.state"
             class="user-details__latest-request"
           >
-            <h3>Latest request</h3>
+            <h3>{{ "user-details.latest-request" | globalize }}</h3>
             <!-- eslint-disable max-len -->
             <p class="text">
-              Create a "{{ requestToReview.accountRoleToSet | roleIdToString }}" account:
-              {{ requestToReview.state }}
+              {{ "user-details.create" | globalize({
+                accountRoleToSet: requestToReview.accountRoleToSet | roleIdToString,
+                state: requestToReview.state
+              })
+              }}
             </p>
             <!-- eslint-enable max-len -->
           </div>
@@ -180,12 +189,12 @@
       </template>
 
       <template v-else-if="!isFailed">
-        <p>Loading...</p>
+        <p>{{ "user-details.loading" | globalize }}</p>
       </template>
 
       <template v-else>
         <p class="danger">
-          An error occurred. Please try again later.
+          {{ "user-details.error" | globalize }}
         </p>
       </template>
     </div>
@@ -261,16 +270,6 @@ export default {
       'kvAccountRoles',
       'accountId',
     ]),
-
-    roleTypeVerbose () {
-      return {
-        [ this.kvAccountRoles.general ]: 'General',
-        [ this.kvAccountRoles.usVerified ]: 'US Verified',
-        [ this.kvAccountRoles.usAccredited ]: 'US Accredited',
-        [ this.kvAccountRoles.corporate ]: 'Corporate',
-        [ this.kvAccountRoles.notVerified ]: 'Not Verified',
-      }
-    },
 
     isUserBlocked () {
       return this.user.role === this.kvAccountRoles.blocked

@@ -2,7 +2,7 @@
   <div class="users">
     <user-header>
       <router-link :to="{ name: 'users.index' }" slot="nav">
-        User index
+        {{ "users.link-user-index" | globalize }}
       </router-link>
     </user-header>
     <div class="app__user-container">

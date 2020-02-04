@@ -1,28 +1,36 @@
 <template>
   <div class="g-auth">
     <h2 class="g-auth__heading">
-      Two-factor authentication
+      {{ "g-auth.header" | globalize }}
     </h2>
 
     <p class="text">
-      You have to set up 2FA to proceed.
+      {{ "g-auth.need-set-up-2fa" | globalize }}
     </p>
     <p class="text">
-      Please install Google Authenticator to your device:
+      {{ "g-auth.install-g-auth" | globalize }}
     </p>
     <br class="text small">
     <p class="g-auth__app-links">
-      <a target="_blank" href="https://itunes.apple.com/app/google-authenticator/id388497605?mt=8">
-        <i class="mdi mdi-apple g-auth__icon" /><span>iOS</span>
+      <a
+        target="_blank"
+        href="https://itunes.apple.com/app/google-authenticator/id388497605?mt=8"
+      >
+        <i class="mdi mdi-apple g-auth__icon" />
+        <span>{{ "g-auth.ios" | globalize }}</span>
       </a>
-      <a target="_blank" href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">
-        <i class="mdi mdi-android g-auth__icon" /><span>Android</span>
+      <a
+        target="_blank"
+        href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2"
+      >
+        <i class="mdi mdi-android g-auth__icon" />
+        <span>{{ "g-auth.android" | globalize }}</span>
       </a>
     </p>
 
     <br class="text">
     <p class="text">
-      Scan the QR-code or enter the code manually using Google Authenticator
+      {{ "g-auth.scan-qr" | globalize }}
     </p>
     <br class="text small">
     <div class="g-auth__qr-wrap">
@@ -30,7 +38,8 @@
         class="g-auth__qr"
         :size="240"
         foreground="#3f4244"
-        :value="gAuthLink" />
+        :value="gAuthLink"
+      />
       <p class="g-auth__secret">
         {{ secret }}
       </p>
@@ -40,7 +49,7 @@
       class="app__btn"
       :disabled="buttonDisabled"
       @click="enableGAuth">
-      Enable
+      {{ "g-auth.btn-enable" | globalize }}
     </button>
   </div>
 </template>
@@ -73,7 +82,7 @@ export default {
 
   async created () {
     let isDone = false
-    this.$store.subscribe((mutation) => {
+    this.$store.subscribe(mutation => {
       if (this.$store.getters.tfaInitiator !== 'g_auth') {
         return
       }
@@ -115,9 +124,9 @@ export default {
         this.$store.commit('CLOSE_LOADER')
 
         if (err.status === 409) {
-          ErrorHandler.process('TFA already created. Just re-login')
+          ErrorHandler.process(err, 'g-auth.tfa-already-created"')
         } else {
-          ErrorHandler.process('Unable to add TFA. Try to re-login')
+          ErrorHandler.process(err, 'g-auth.unable-add-tfa')
         }
       }
     },
@@ -129,7 +138,7 @@ export default {
         await tfa.enableGAuth(this.id)
 
         this.$store.commit('CLOSE_LOADER')
-        Bus.success('Two-factor Authentication enabled')
+        Bus.success('g-auth.two-factor-auth-enabled')
 
         this.$emit('tfa-done')
       } catch (err) {
@@ -138,7 +147,7 @@ export default {
         if (err.response.status === 403 && err.response.data.extras) {
           return this.showTfaForm(err.response.data.extras.token)
         } else {
-          ErrorHandler.process('Something went wrong. Try again later')
+          ErrorHandler.process(err, 'g-auth.error')
         }
       }
     },
@@ -179,7 +188,7 @@ export default {
   }
 
   & > a > i {
-    margin-right: .5rem;
+    margin-right: 0.5rem;
   }
 
   & > a > span,

@@ -1,7 +1,7 @@
 <template>
   <div class="queue-request-documents">
     <h3 class="queue-request-documents__title">
-      User documents
+      {{ "queue-request-documents.header" | globalize }}
     </h3>
 
     <div class="queue-request-documents__list">
@@ -10,7 +10,8 @@
         class="queue-request-documents__list-item"
       >
         <span>
-          Photo with verification code
+          <!-- eslint-disable-next-line max-len -->
+          {{ "queue-request-documents.photo-with-verification-code" | globalize }}
           <strong>{{ userAccountId.slice(1, 6) }}</strong>:
         </span>
         <user-doc-getter
@@ -25,11 +26,11 @@
         class="queue-request-documents__list-item"
       >
         <span v-if="documents.kycIdDocument.back">
-          ID Document front side:
+          {{ "queue-request-documents.id-document-front-side" | globalize }}
         </span>
 
         <span v-else>
-          ID Document
+          {{ "queue-request-documents.id-document" | globalize }}
         </span>
 
         <user-doc-getter
@@ -43,7 +44,9 @@
         v-if="documents.kycIdDocument && documents.kycIdDocument.back"
         class="queue-request-documents__list-item"
       >
-        <span>ID Document back side: </span>
+        <span>
+          {{ "queue-request-documents.id-document-back-side" | globalize }}
+        </span>
         <user-doc-getter
           class="queue-request-documents__doc-getter"
           :file-key="documents.kycIdDocument.back.key"
@@ -55,7 +58,7 @@
         v-if="documents.kycAvatar"
         class="queue-request-documents__list-item"
       >
-        <span>Avatar</span>
+        <span>{{ "queue-request-documents.avatar" | globalize }}</span>
         <user-doc-getter
           class="queue-request-documents__doc-getter"
           :file-key="documents.kycAvatar.key"
@@ -67,7 +70,7 @@
         v-if="documents.kycProofInvestor"
         class="queue-request-documents__list-item"
       >
-        <span>Proof document</span>
+        <span>{{ "queue-request-documents.proof-document" | globalize }}</span>
         <user-doc-getter
           class="queue-request-documents__doc-getter"
           :file-key="documents.kycProofInvestor.key"

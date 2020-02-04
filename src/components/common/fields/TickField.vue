@@ -16,14 +16,16 @@
       <label
         class="tick-field__label"
         :for="id"
-        :title="title">
+        :title="title"
+      >
         {{ label }}
       </label>
 
       <span
         class="tick-field__tick"
         :for="id"
-        :title="title">
+        :title="title"
+      >
         <!-- css art -->
       </span>
     </div>
@@ -43,7 +45,7 @@
 <script>
 export default {
   props: {
-    label: { type: String, default: 'Label' },
+    label: { type: String, default: '' },
     value: { type: [String, Number, Array, Boolean], default: false },
 
     // proxies

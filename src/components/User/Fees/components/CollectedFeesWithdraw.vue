@@ -1,7 +1,8 @@
+
 <template>
   <div class="collected-fees-withdraw">
     <div class="app__block">
-      <h2>Withdrawal</h2>
+      <h2>{{ "collected-fees-withdraw.header" | globalize }}</h2>
 
       <form @submit.prevent="isFormValid() && showConfirmation()">
         <div class="app__form-row">
@@ -9,11 +10,9 @@
             <select-field
               class="app__form-field"
               v-model="form.balanceId"
-              label="Asset"
+              :label="'collected-fees-withdraw.lbl-asset' | globalize"
               :disabled="formMixin.isDisabled"
-              :error-message="isSelectedAssetWithdrawable
-                ? ''
-                : 'Asset is not withdrawable. Please, select another asset'"
+              :error-message="getErrorSelectField"
             >
               <option
                 v-for="balance in masterBalances"
@@ -29,7 +28,7 @@
             <select-field
               class="app__form-field"
               value="_empty"
-              label="Asset"
+              :label="'collected-fees-withdraw.lbl-asset' | globalize"
               :disabled="formMixin.isDisabled"
             >
               <option
@@ -38,15 +37,15 @@
                 selected
               >
                 <template v-if="isMasterBalancesLoading">
-                  Loading...
+                  {{ "collected-fees-withdraw.loading" | globalize }}
                 </template>
 
                 <template v-else-if="isMasterBalancesFailed">
-                  Asset Load failed
+                  {{ "collected-fees-withdraw.fail-load" | globalize }}
                 </template>
 
                 <template v-else>
-                  No assets to withdraw yet
+                  {{ "collected-fees-withdraw.no-assets-withdraw" | globalize }}
                 </template>
               </option>
             </select-field>
@@ -58,7 +57,7 @@
             class="app__form-field"
             type="number"
             v-model.trim="form.amount"
-            label="Amount"
+            :label="'collected-fees-withdraw.lbl-amount' | globalize"
             name="withdrawal-amount"
             :min="DEFAULT_INPUT_MIN"
             :step="DEFAULT_INPUT_STEP"
@@ -66,10 +65,7 @@
             @blur="touchField('form.physicalPrice')"
             :error-message="getFieldErrorMessage(
               'form.amount',
-              {
-                minValue: DEFAULT_INPUT_MIN,
-                maxValue: maxWithdrawalAmount
-              }
+              { minValue: DEFAULT_INPUT_MIN, maxValue: maxWithdrawalAmount }
             )"
             :disabled="formMixin.isDisabled"
           >
@@ -84,10 +80,7 @@
             class="app__form-field"
             type="text"
             v-model.trim="form.meta"
-            :label="isMasterSelectedBalanceAsset
-              ? 'Destination address'
-              : 'Comment'
-            "
+            :label="getInputFieldLabel | globalize"
             name="withdrawal-meta"
             @blur="touchField('form.meta')"
             :error-message="getFieldErrorMessage('form.meta')"
@@ -98,7 +91,7 @@
         <div class="collected-fees-withdraw__op-attrs">
           <p class="collected-fees-withdraw__op-attrs-row">
             <span>
-              Reviewer:
+              {{ "collected-fees-withdraw.reviewer" | globalize }}
             </span>
             <email-getter
               :account-id="opAttrs.reviewerAddress"
@@ -109,7 +102,7 @@
           <template v-if="+opAttrs.fixedFee">
             <p class="collected-fees-withdraw__op-attrs-row">
               <span>
-                Fixed fee:
+                {{ "collected-fees-withdraw.fixed-fee" | globalize }}
               </span>
               <asset-amount-formatter
                 :amount="opAttrs.fixedFee"
@@ -121,7 +114,7 @@
           <template v-if="+opAttrs.fixedFee">
             <p class="collected-fees-withdraw__op-attrs-row">
               <span>
-                Percent fee:
+                {{ "collected-fees-withdraw.percent-fee" | globalize }}
               </span>
               <asset-amount-formatter
                 :amount="opAttrs.percentFee"
@@ -132,26 +125,29 @@
 
           <template v-if="isMasterSelectedBalanceAsset">
             <p class="collected-fees-withdraw__op-attrs-row">
-              External fee present
+              {{ "collected-fees-withdraw.external-fee-present" | globalize }}
             </p>
           </template>
         </div>
 
         <div class="app__form-actions">
+          <!-- eslint-disable max-len -->
           <form-confirmation
             v-if="formMixin.isConfirmationShown"
             :is-pending="isFormSubmitting"
-            message="Please, recheck the form"
+            :message="'collected-fees-withdraw.msg-recheck-form' | globalize"
             @ok="submit"
             @cancel="hideConfirmation"
+            :ok-button-text="'collected-fees-withdraw.btn-confirm' | globalize"
+            :cancel-button-text="'collected-fees-withdraw.btn-cancel' | globalize"
           />
-
+          <!-- eslint-enable max-len -->
           <button
             v-else
             class="app__btn collected-fees-withdraw__submit-btn"
             :disabled="formMixin.isDisabled || !isSelectedAssetWithdrawable"
           >
-            Withdraw
+            {{ "collected-fees-withdraw.btn-withdraw" | globalize }}
           </button>
         </div>
       </form>
@@ -181,6 +177,8 @@ import { FEE_TYPES, base } from '@tokend/js-sdk'
 
 import { Balance } from '@/store/wrappers/balance'
 
+import { globalize } from '@/components/App/filters/filters'
+
 const EVENTS = {
   submitted: 'submitted',
 }
@@ -190,6 +188,7 @@ export default {
     EmailGetter,
     AssetAmountFormatter,
   },
+
   mixins: [FormMixin],
 
   data () {
@@ -236,9 +235,22 @@ export default {
       assetByCode: 'assetByCode',
     }),
 
+    getInputFieldLabel () {
+      return this.isMasterSelectedBalanceAsset
+        ? 'collected-fees-withdraw.destination-address'
+        : 'collected-fees-withdraw.comment'
+    },
+
+    getErrorSelectField () {
+      return this.isSelectedAssetWithdrawable
+        ? ''
+        : globalize('collected-fees-withdraw.error-asset-not-withdrawable')
+    },
+
     selectedBalanceAttrs () {
       return ((this.masterBalances || [])
-        .find(item => item.id === this.form.balanceId)) || {}
+        .find(item => item.id === this.form.balanceId) || {}
+      )
     },
 
     isMasterSelectedBalanceAsset () {
@@ -256,9 +268,11 @@ export default {
     maxWithdrawalAmountHint () {
       const formatted = formatAssetAmount(
         this.selectedBalanceAttrs.available,
-        this.selectedBalanceAttrs.assetCode,
+        this.selectedBalanceAttrs.assetCode
       )
-      return `Max amount is ${formatted}`
+      return globalize('collected-fees-withdraw.max-amount', {
+        amount: formatted,
+      })
     },
 
     isSelectedAssetWithdrawable () {
@@ -319,7 +333,7 @@ export default {
         this.clearFieldsWithOverriding({
           balanceId: this.form.balanceId,
         })
-        Bus.success('Request created successfully')
+        Bus.success('collected-fees-withdraw.request-created-successfully')
         this.$emit(EVENTS.submitted)
 
         await this.loadAssets()

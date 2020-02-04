@@ -5,30 +5,28 @@
       @submit.prevent="isFormValid() && showConfirmation()"
       novalidate
     >
-      <h2>Create asset pair</h2>
+      <h2>{{ "asset-pair-creator.create-pair" | globalize }}</h2>
 
       <div class="asset-pair-creator__form-row app__form-row">
         <input-field
           class="app__form-field"
-          label="Base"
+          :label="'asset-pair-creator.lbl-base' | globalize"
           v-model="form.base"
           @blur="touchField('form.base')"
-          :error-message="getFieldErrorMessage(
-            'form.base',
-            { value: form.quote }
-          )"
+          :error-message="getFieldErrorMessage('form.base', {
+            value: form.quote
+          })"
           :disabled="formMixin.isDisabled"
         />
 
         <input-field
           class="app__form-field"
-          label="Quote"
+          :label="'asset-pair-creator.lbl-quote' | globalize"
           v-model="form.quote"
           @blur="touchField('form.quote')"
-          :error-message="getFieldErrorMessage(
-            'form.quote',
-            { value: form.base }
-          )"
+          :error-message="getFieldErrorMessage('form.quote', {
+            value: form.base
+          })"
           :disabled="formMixin.isDisabled"
         />
       </div>
@@ -36,19 +34,16 @@
       <div class="asset-pair-creator__form-row app__form-row">
         <input-field
           class="app__form-field"
-          label="Price"
+          :label="'asset-pair-creator.lbl-price' | globalize"
           type="number"
           min="0"
           :step="DEFAULT_INPUT_STEP"
           v-model="form.physicalPrice"
           @blur="touchField('form.physicalPrice')"
-          :error-message="getFieldErrorMessage(
-            'form.physicalPrice',
-            {
-              minValue: DEFAULT_INPUT_MIN,
-              maxValue: DEFAULT_MAX_AMOUNT
-            }
-          )"
+          :error-message="getFieldErrorMessage('form.physicalPrice', {
+            minValue: DEFAULT_INPUT_MIN,
+            maxValue: DEFAULT_MAX_AMOUNT
+          })"
           :disabled="formMixin.isDisabled"
         />
       </div>
@@ -56,53 +51,53 @@
       <div class="asset-pair-creator__form-row app__form-row">
         <input-field
           class="app__form-field"
-          label="Physical price correction"
+          :label="'asset-pair-creator.lbl-price-correction' | globalize"
           type="number"
           min="0"
           :step="DEFAULT_INPUT_STEP"
           v-model="form.physicalPriceCorrection"
           @blur="touchField('form.physicalPriceCorrection')"
-          :error-message="getFieldErrorMessage(
-            'form.physicalPriceCorrection',
-            { minValue: 0, maxValue: DEFAULT_MAX_AMOUNT }
-          )"
+          :error-message="getFieldErrorMessage('form.physicalPriceCorrection', {
+            minValue: 0,
+            maxValue: DEFAULT_MAX_AMOUNT
+          })"
           :disabled="formMixin.isDisabled"
         >
           <template slot="help">
             <p class="asset-pair-creator__tip-message">
               <span>
-                The correction of physical price in percents.
-                If physical price and restriction by physical price are set,
-                minimum price for this pair offer will be
+                {{ "asset-pair-creator.message" | globalize }}
               </span>
-              <strong>physicalPrice * physicalPriceCorrection</strong>
+              <strong>
+                {{ "asset-pair-creator.message-price" | globalize }}
+              </strong>
             </p>
           </template>
         </input-field>
 
         <input-field
           class="app__form-field"
-          label="Max price step (0-100%)"
+          :label="'asset-pair-creator.lbl-max-price-step' | globalize"
           type="number"
           min="0"
           max="100"
           :step="DEFAULT_INPUT_STEP"
           v-model="form.maxPriceStep"
           @blur="touchField('form.maxPriceStep')"
-          :error-message="getFieldErrorMessage(
-            'form.maxPriceStep',
-            { minValue: 0, maxValue: 100 }
-          )"
+          :error-message="getFieldErrorMessage('form.maxPriceStep', {
+            minValue: 0,
+            maxValue: 100
+          })"
           :disabled="formMixin.isDisabled"
         >
           <template slot="help">
             <p class="asset-pair-creator__tip-message">
               <span>
-                Maximum offer price step in percents.
-                If current price restriction is set,
-                the users are allowed to set an offer with price in interval
+                {{ "asset-pair-creator.message-offer" | globalize }}
               </span>
-              <strong>(1 ± maxPriceStep) * currentPrice</strong>
+              <strong>
+                {{ "asset-pair-creator.message-offer-price" | globalize }}
+              </strong>
             </p>
           </template>
         </input-field>
@@ -114,12 +109,12 @@
             v-model="form.policies"
             :disabled="formMixin.isDisabled"
             :required="false"
-            label="Is tradable"
-            :cb-value="ASSET_PAIR_POLICIES.tradeableSecondaryMarket"
+            :label="'asset-pair-creator.lbl-is-tradable' | globalize"
+            :cb-value="ASSET_PAIR_POLICIES.tradeableSecondaryMarket | globalize"
           >
             <template slot="help">
               <span class="asset-pair-creator__tip-message">
-                Allowed to trade this pair on secondary market
+                {{ "asset-pair-creator.asset-pair-message-trade" | globalize }}
               </span>
             </template>
           </tick-field>
@@ -130,13 +125,14 @@
             v-model="form.policies"
             :disabled="formMixin.isDisabled"
             :required="false"
-            label="Physical price restriction"
+            :label="'asset-pair-creator.lbl-physical-restriction' | globalize"
             :cb-value="ASSET_PAIR_POLICIES.physicalPriceRestriction"
           >
             <template slot="help">
               <span class="asset-pair-creator__tip-message">
-                If set, then prices for new offers must be greater
-                than physical price with correction
+                {{
+                  "asset-pair-creator.asset-pair-message-new-offer" | globalize
+                }}
               </span>
             </template>
           </tick-field>
@@ -147,15 +143,20 @@
             v-model="form.policies"
             :disabled="formMixin.isDisabled"
             :required="false"
-            label="Current price restriction"
+            :label="'asset-pair-creator.lbl-current-restriction' | globalize"
             :cb-value="ASSET_PAIR_POLICIES.currentPriceRestriction"
           >
             <template slot="help">
               <p class="asset-pair-creator__tip-message">
                 <span>
-                  If set, then price for new offers must be in interval of
+                  {{ "asset-pair-creator.asset-pair-message-price-interval"
+                    | globalize }}
                 </span>
-                <strong>(1 ± maxPriceStep) * currentPrice</strong>
+                <strong>
+                  {{
+                    "asset-pair-creator.asset-pair-message-price" | globalize
+                  }}
+                </strong>
               </p>
             </template>
           </tick-field>
@@ -168,6 +169,9 @@
           :is-pending="isFormSubmitting"
           @ok="submit"
           @cancel="hideConfirmation"
+          :message="'asset-pair-creator.please-recheck-form' | globalize"
+          :ok-button-text="'asset-pair-creator.btn-confirm' | globalize"
+          :cancel-button-text="'asset-pair-creator.btn-cancel' | globalize"
         />
 
         <button
@@ -175,7 +179,7 @@
           class="asset-pair-creator__submit-btn app__btn"
           :disabled="formMixin.isDisabled"
         >
-          Create
+          {{ "asset-pair-creator.asset-pair-create-btn" | globalize }}
         </button>
       </div>
     </form>
@@ -221,11 +225,19 @@ export default {
       form: {
         base: {
           required,
-          not: not(sameAs(function () { return this.form.quote })),
+          not: not(
+            sameAs(function () {
+              return this.form.quote
+            })
+          ),
         },
         quote: {
           required,
-          not: not(sameAs(function () { return this.form.base })),
+          not: not(
+            sameAs(function () {
+              return this.form.base
+            })
+          ),
         },
         physicalPrice: {
           required,
@@ -255,7 +267,7 @@ export default {
           policies: this.form.policies.reduce((sum, policy) => sum | policy, 0),
         })
 
-        Bus.success('Pair has been created.')
+        Bus.success('asset-pair-creator.pair-created')
         this.$router.push({ name: 'assets.assetPairs.index' })
       } catch (error) {
         ErrorHandler.process(error)

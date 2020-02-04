@@ -1,5 +1,6 @@
 export { CREATE_ASSET_REQUEST_STATES } from './create-asset-request-states'
-export { ASSET_POLICIES, ASSET_POLICIES_VERBOSE } from './asset-policies'
+export { ASSET_POLICIES } from './asset-policies'
+export { STELLAR_TYPES } from './stellar-types'
 export { ASSET_PAIR_POLICIES, ASSET_PAIR_POLICIES_VERBOSE } from './asset-pair-policies'
 export { USER_TYPES, USER_TYPES_STR } from './user-types'
 export { USER_STATES, USER_STATES_STR } from './user-states'
@@ -15,7 +16,7 @@ export { ID_DOCUMENT_TYPES } from './document-types'
 export { OP_TYPES } from './operation-type'
 export { DOCUMENTS_POLICIES } from './documents-policies'
 export { SALES_SORT_CRITERIA } from './sorts-criteria'
-export { LIMITS_REQUEST_STATES, LIMITS_REQUEST_STATES_STR } from './limits-request-states'
+export { LIMITS_REQUEST_STATES_STR } from './limits-request-states'
 export { STATS_OPERATION_TYPES } from './stats-op-types'
 export {
   DEFAULT_BASE_ASSET,
@@ -29,5 +30,4 @@ export {
 } from './defaults'
 export { KEY_VALUE_ENTRY_TYPE } from './key-value'
 export { ASSET_REQUEST_TYPES } from './asset-request-types'
-export { LOCALIZED_SALE_TYPES } from './sale-types'
 export { SALE_DEFINITION_TYPES } from './sale-definition-types'

@@ -2,7 +2,7 @@
   <div class="issuance">
     <section class="issuance__form-section">
       <div class="app__block">
-        <h2>Issuance</h2>
+        <h2>{{ "issuance.header" | globalize }}</h2>
         <div class="issuance__form-wrp">
           <issuance-form />
         </div>
@@ -12,11 +12,11 @@
     <section class="issuance__list-section">
       <div class="app__block">
         <tabs>
-          <tab name="History">
+          <tab :name="'issuance.history' | globalize">
             <issuance-history />
           </tab>
 
-          <tab name="Requests">
+          <tab :name="'issuance.requests' | globalize">
             <issuance-request-list />
           </tab>
         </tabs>

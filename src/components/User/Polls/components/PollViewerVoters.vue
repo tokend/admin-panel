@@ -4,8 +4,8 @@
       <table class="poll-viewer-voters__table">
         <thead>
           <tr>
-            <th>Voter</th>
-            <th>Answer</th>
+            <th>{{ "poll-viewer-voters.votes" | globalize }}</th>
+            <th>{{ "poll-viewer-voters.answer" | globalize }}</th>
           </tr>
         </thead>
         <tbody>
@@ -24,7 +24,7 @@
 
     <template v-else>
       <p class="text">
-        No votes yet.
+        {{ "poll-viewer-voters.no-votes-yet" | globalize }}
       </p>
     </template>
   </div>

@@ -6,7 +6,7 @@
   >
     <div class="update-limits-form__row">
       <span class="update-limits-form__limit-type">
-        Daily
+        {{ "limits-update-form.daily" | globalize }}
       </span>
 
       <input-field
@@ -24,7 +24,7 @@
             maxValue: form.weeklyOut || DEFAULT_MAX_AMOUNT
           }
         )"
-        :placeholder="limits.id ? 'Unlimited' : 'Not set'"
+        :placeholder="checkLimitsId | globalize"
         :disabled="formMixin.isDisabled"
         type="number"
         step="0.000001"
@@ -35,7 +35,7 @@
 
     <div class="update-limits-form__row">
       <span class="update-limits-form__limit-type">
-        Weekly
+        {{ "limits-update-form.weekly" | globalize }}
       </span>
 
       <input-field
@@ -53,7 +53,7 @@
             maxValue: form.monthlyOut || DEFAULT_MAX_AMOUNT
           }
         )"
-        :placeholder="limits.id ? 'Unlimited' : 'Not set'"
+        :placeholder="checkLimitsId | globalize"
         :disabled="formMixin.isDisabled"
         type="number"
         step="0.000001"
@@ -64,7 +64,7 @@
 
     <div class="update-limits-form__row">
       <span class="update-limits-form__limit-type">
-        Monthly
+        {{ "limits-update-form.monthly" | globalize }}
       </span>
 
       <input-field
@@ -82,7 +82,7 @@
             maxValue: form.annualOut || DEFAULT_MAX_AMOUNT
           }
         )"
-        :placeholder="limits.id ? 'Unlimited' : 'Not set'"
+        :placeholder="checkLimitsId | globalize"
         :disabled="formMixin.isDisabled"
         type="number"
         step="0.000001"
@@ -93,7 +93,7 @@
 
     <div class="update-limits-form__row">
       <span class="update-limits-form__limit-type">
-        Annual
+        {{ "limits-update-form.annual" | globalize }}
       </span>
 
       <input-field
@@ -111,7 +111,7 @@
             maxValue: DEFAULT_MAX_AMOUNT
           }
         )"
-        :placeholder="limits.id ? 'Unlimited' : 'Not set'"
+        :placeholder="checkLimitsId | globalize"
         :disabled="formMixin.isDisabled"
         type="number"
         step="0.000001"
@@ -124,9 +124,9 @@
       <form-confirmation
         v-if="formMixin.isConfirmationShown"
         :is-pending="isFormSubmitting"
-        message="Sure?"
-        ok-button-text="Yes"
-        cancel-button-text="No"
+        :message="'limits-update-form.msg-sure' | globalize"
+        :ok-button-text="'limits-update-form.yes' | globalize"
+        :cancel-button-text="'limits-update-form.no' | globalize"
         @ok="submit"
         @cancel="hideConfirmation"
       />
@@ -137,7 +137,7 @@
           :disabled="formMixin.isDisabled"
           @click="isDeleteMode = false"
         >
-          Update
+          {{ "limits-update-form.btn-update" | globalize }}
         </button>
 
         <button
@@ -147,7 +147,7 @@
           :disabled="formMixin.isDisabled || limits.id === 0"
           @click="isDeleteMode = true"
         >
-          Remove
+          {{ "limits-update-form.btn-remove" | globalize }}
         </button>
       </template>
     </div>
@@ -235,6 +235,12 @@ export default {
 
       return limits
     },
+
+    checkLimitsId () {
+      return this.limits.id
+        ? 'limits-update-form.placeholder-unlimited'
+        : 'limits-update-form.placeholder-not-set'
+    },
   },
 
   watch: {
@@ -290,7 +296,7 @@ export default {
         })
         await api.postOperations(operation)
 
-        Bus.success('Limits update saved')
+        Bus.success('limits-update-form.limits-update-saved')
         this.$emit(EVENTS.limitsUpdated)
       } catch (e) {
         ErrorHandler.process(e)
@@ -304,7 +310,7 @@ export default {
         })
 
         await api.postOperations(operation)
-        Bus.success('Limits removed')
+        Bus.success('limits-update-form.limits-removed')
         this.$emit(EVENTS.limitsUpdated)
       } catch (e) {
         ErrorHandler.process(e)

@@ -4,11 +4,11 @@
     :title="isTitled && (email || accountId || balanceId)"
   >
     <template v-if="isMasterAccount">
-      Master
+      {{ "email-getter.master" | globalize }}
     </template>
 
     <template v-else-if="isLoading">
-      Loading...
+      {{ "email-getter.loading" | globalize }}
     </template>
 
     <template v-else-if="email">

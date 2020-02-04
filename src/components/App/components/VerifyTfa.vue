@@ -2,11 +2,11 @@
   <div class="verify-tfa" v-if="isRequired">
     <div class="verify-tfa__block app__block">
       <h2 class="verify-tfa__heading">
-        2FA Required
+        {{ "verify-tfa.header" | globalize }}
       </h2>
 
       <p class="verify-tfa__text text">
-        Enter your verification code to proceed.
+        {{ "verify-tfa.verification-code" | globalize }}
       </p>
 
       <form
@@ -19,7 +19,7 @@
           <input-field
             class="app__form-field"
             v-model.trim="form.verificationCode"
-            label="Verification Code"
+            :label="'verify-tfa.lbl-verification-code' | globalize"
             autofocus
             @blur="touchField('form.verificationCode')"
             :error-message="getFieldErrorMessage('form.verificationCode')"
@@ -34,7 +34,7 @@
             @click="close()"
             :disabled="formMixin.isDisabled"
           >
-            Cancel
+            {{ "verify-tfa.btn-cancel" | globalize }}
           </button>
 
           <button
@@ -43,7 +43,7 @@
             :disabled="formMixin.isDisabled"
             type="submit"
           >
-            Submit
+            {{ "verify-tfa.btn-submit" | globalize }}
           </button>
         </div>
       </form>
@@ -83,7 +83,6 @@ export default {
       return this.$store.getters.tfaIsRequired
     },
   },
-
   methods: {
     async verifyTFACode () {
       if (!this.isFormValid()) return
@@ -105,9 +104,9 @@ export default {
         this.clearFields()
 
         if (err.status !== 400) {
-          ErrorHandler.process('Verification failed')
+          ErrorHandler.process(err, 'verify-tfa.verification-failed')
         } else {
-          ErrorHandler.process('Verification code mismatched')
+          ErrorHandler.process(err, 'verify-tfa.verification-code-mismatched')
           this.$store.commit('TFA_FORM_FALSE')
         }
       }
