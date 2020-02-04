@@ -29,7 +29,7 @@ const VALIDATION_ERRORS = {
   seed: _template('mixin.invalid-seed'),
   password: _template('mixin.min-size-password'),
   sameAsPassword: _template('mixin.passwords-not-match'),
-  alphaNum: _template('mixin.useability-symbols'),
+  alphaNum: _template('mixin.usability-symbols'),
   accountId: _template('mixin.valid-account-id'),
   not: _template('mixin.field-cannot-take-value'),
   decimal: _template('mixin.decimal-value'),

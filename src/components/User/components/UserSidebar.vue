@@ -100,13 +100,18 @@
         </router-link>
       </li>
     </nav>
+    <app-footer :need-version="false" />
   </aside>
 </template>
 
 <script>
+import AppFooter from '@/components/App/components/AppFooter'
 import config from '@/config'
 
 export default {
+  components: {
+    AppFooter,
+  },
   data () {
     return {
       config,

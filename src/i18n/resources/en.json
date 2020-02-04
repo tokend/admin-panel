@@ -472,7 +472,7 @@
       "invalid-seed": "Invalid seed",
       "min-size-password": "Use at least 8 characters for password",
       "passwords-not-match": "Passwords do not match",
-      "useability-symbols": "Only alphaumeric values allowed (A-Z, a-z, 0-9)",
+      "usability-symbols": "Only alphaumeric values allowed (A-Z, a-z, 0-9)",
       "valid-account-id": "This field should be a valid account ID",
       "field-cannot-take-value": "This field cannot take {{value}} as a value",
       "decimal-value": "This field should be a valid decimal value",
@@ -507,7 +507,7 @@
       "initialization-fail": "Initializing failed",
       "initialization-app": "Initializing the app..."
     },
-    "auth-footer": {
+    "app-footer": {
       "copyrighted": "TokenD © {{ currentYear }}"
     },
     "auth-header": {
@@ -600,7 +600,7 @@
     },
     "admin-manager": {
       "add-new-admin": "Add new administrator",
-      "lbl-account-id": "Account Id",
+      "lbl-account-id": "Account ID",
       "lbl-name": "Name",
       "lbl-identity": "Identity",
       "lbl-weight": "Weight",
@@ -1197,7 +1197,7 @@
     "limits-request-list": {
       "date": "Date",
       "request-type": "Request type",
-      "account-id": "Account Id",
+      "account-id": "Account ID",
       "account-email": "Account email",
       "nothing-here-yet": "Nothing here yet",
       "loading": "Loading..."
@@ -1247,7 +1247,7 @@
       "lbl-account-type": "Account type",
       "lbl-request-type": "Request type",
       "lbl-account-email": "Account email",
-      "lbl-account-id": "Account Id",
+      "lbl-account-id": "Account ID",
       "lbl-note": "Note",
       "lbl-limits-for-asset": "Limits for asset",
       "lbl-operation-type-limits": "Operation type limits",
@@ -1539,7 +1539,7 @@
       "lbl-start-date": "Start date",
       "lbl-end-date": "End date",
       "lbl-type": "Type",
-      "placeholder-adress": "Address (full match)"
+      "placeholder-address": "Address (full match)"
     },
     "sale-request-manager-description-tab": {
       "label": "Sale video",
@@ -1676,7 +1676,7 @@
     "user-details-account": {
       "header": "Account information",
       "mail": "Email",
-      "account-id": "Account Id",
+      "account-id": "Account ID",
       "account-role": "Account role",
       "account-state": "Account state",
       "block-reason": "Block reason",
@@ -1770,7 +1770,7 @@
       "general": "General",
       "corporate": "Сorporate",
       "mail": "Email",
-      "account-id": "Account Id",
+      "account-id": "Account ID",
       "role": "Role",
       "state": "State",
       "loading": "Loading...",

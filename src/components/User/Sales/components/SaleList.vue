@@ -14,7 +14,7 @@
         <input-field
           class="app-list-filters__field sale-list__field"
           :label="'sale-list.lbl-owner' | globalize"
-          :placeholder="'sale-list.placeholder-adress' | globalize"
+          :placeholder="'sale-list.placeholder-address' | globalize"
           v-model="owner"
           autocomplete-type="email"
         />

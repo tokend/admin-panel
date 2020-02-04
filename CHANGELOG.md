@@ -9,6 +9,12 @@ for further information about branching and tagging conventions.
 ## [Unreleased]
 #### Added
 - i18next for localization
+- 'en' localization
+- select language
+- footer
+
+#### Removed
+- `AuthFooter` component
 
 ## [1.10.1] - 2019-10-25
 

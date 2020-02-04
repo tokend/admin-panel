@@ -414,7 +414,7 @@
               v-model="asset.creatorDetails.erc20.address"
               class="app__form-field"
               name="create-erc20-asset-code"
-              :label="'asset-manager.lbl-adress' | globalize"
+              :label="'asset-manager.lbl-address' | globalize"
               @blur="touchField('asset.creatorDetails.erc20.address')"
               :error-message="getFieldErrorMessage('asset.creatorDetails.erc20.address')"
               :disabled="formMixin.isDisabled"
