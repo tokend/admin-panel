@@ -332,7 +332,7 @@ export default {
           },
           this.request
         )
-        Bus.success('poll-request-view.sale-rejected-successfully')
+        Bus.success('poll-request-view.sale-request-rejected')
         this.$router.push({ name: 'polls.requests' })
       } catch (error) {
         ErrorHandler.process(error)

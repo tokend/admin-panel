@@ -44,6 +44,7 @@ import {
   roleTypeVerboseFilter,
   idDocumentsVerboseFilter,
   localizedSaleTypesFilter,
+  feeTypesFilter,
 } from './components/App/filters/filters'
 
 async function init () {
@@ -73,6 +74,7 @@ async function init () {
   Vue.filter('idDocumentsVerboseFilter', idDocumentsVerboseFilter)
   Vue.filter('localizedSaleTypesFilter', localizedSaleTypesFilter)
   Vue.filter('accountState', accountState)
+  Vue.filter('feeTypesFilter', feeTypesFilter)
 
   /* Init Sentry */
   ErrorTracker.init(params)

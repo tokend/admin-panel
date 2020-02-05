@@ -12,7 +12,12 @@
           :value="a.id"
           :key="a.id"
         >
-          {{ a.id }}
+          <template v-if="a.id === ALL_ASSETS_ID">
+            {{ 'pre-issuance-requests-index.all' | globalize }}
+          </template>
+          <template v-else>
+            {{ a.id }}
+          </template>
         </option>
       </select-field>
 
@@ -33,7 +38,7 @@ import { api, loadingDataViaLoop } from '@/api'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
-import { globalize } from '@/components/App/filters/filters'
+const ALL_ASSETS_ID = 'all'
 
 export default {
   components: {
@@ -43,7 +48,8 @@ export default {
 
   data () {
     return {
-      asset: [{ id: globalize('pre-issuance-requests-index.all') }],
+      ALL_ASSETS_ID,
+      asset: [{ id: ALL_ASSETS_ID }],
       assets: undefined,
       assetsLoaded: false,
     }
@@ -57,7 +63,7 @@ export default {
     },
 
     availableAmount () {
-      if (this.asset === 'All') {
+      if (this.asset === ALL_ASSETS_ID) {
         return 0
       }
       return +this.assetInfo.available_for_issuance
@@ -75,7 +81,7 @@ export default {
         let response = await api.getWithSignature('/v3/assets')
         let assets = await loadingDataViaLoop(response)
         this.assets = [{
-          id: 'All',
+          id: ALL_ASSETS_ID,
         }].concat(assets)
         this.asset = this.assets[0].id
         this.assetsLoaded = true

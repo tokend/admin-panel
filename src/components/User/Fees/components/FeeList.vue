@@ -51,11 +51,11 @@
             :label="'fee-list.lbl-direction' | globalize"
           >
             <option
-              v-for="(value, name) in PAYMENT_FEE_TYPES"
-              :key="`fee-list-item-option-${name}`"
+              v-for="(value) in PAYMENT_FEE_TYPES"
+              :key="`fee-list-item-option-${value}`"
               :value="value"
             >
-              {{ name }}
+              {{ value | feeTypesFilter }}
             </option>
           </select-field>
 

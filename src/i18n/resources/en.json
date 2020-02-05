@@ -461,6 +461,11 @@
         "crowd-funding": "Crowd funding",
         "default": "UNKNOWN LOCALIZED SALE TYPES"
       },
+      "fee-type-filter": {
+        "outgoing": "outgoing",
+        "incoming": "incoming",
+        "unknown-type": "UNKNOWN TYPE"
+      },
       "account-state" : {
         "blocked": "Blocked",
         "active": "Active"
@@ -952,7 +957,8 @@
       "max-amount": "Max amount is {{amount}}",
       "please-recheck-form": "Please, recheck the form before confirmation",
       "btn-confirm": "Confirm",
-      "btn-cancel": "Cancel"
+      "btn-cancel": "Cancel",
+      "request-created-successfully": "Request created successfully"
 
     },
     "collected-fees-withdrawals": {
@@ -1585,6 +1591,9 @@
     },
     "sale-request-manager": {
       "header": "Manage sale request",
+      "tab-details": "Details",
+      "tab-full-description": "Full description",
+      "tab-corporate-user": "Corporate user",
       "btn-approve": "Approve",
       "btn-reject": "Reject",
       "error": "An error occurred",

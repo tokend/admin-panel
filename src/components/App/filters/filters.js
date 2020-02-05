@@ -7,6 +7,7 @@ import {
   LIMITS_REQUEST_STATES_STR,
   STELLAR_TYPES, ASSET_REQUEST_TYPES,
   ID_DOCUMENT_TYPES,
+  PAYMENT_FEE_TYPES,
 } from '@/constants'
 
 export function filterDateWithTime (date, format = 'DD MMM YYYY [at] hh:mm:ss') {
@@ -79,7 +80,7 @@ export function accountState (role) {
 }
 
 export function globalize (translationId, interpolationOps) {
-  return i18n.t(translationId, interpolationOps)
+  return '$_' + i18n.t(translationId, interpolationOps)
 }
 
 export function formatDate (value) {
@@ -310,6 +311,24 @@ export function localizedSaleTypesFilter (value) {
     }
     default: {
       translationId = 'filters.localized-sale-types-filter.default'
+    }
+  }
+  return globalize(translationId)
+}
+
+export function feeTypesFilter (value) {
+  let translationId = ''
+  switch (+value) {
+    case PAYMENT_FEE_TYPES.outgoing: {
+      translationId = 'filters.fee-type-filter.outgoing'
+      break
+    }
+    case PAYMENT_FEE_TYPES.incoming: {
+      translationId = 'filters.fee-type-filter.incoming'
+      break
+    }
+    default: {
+      translationId = 'filters.fee-type-filter.unknown-type'
     }
   }
   return globalize(translationId)

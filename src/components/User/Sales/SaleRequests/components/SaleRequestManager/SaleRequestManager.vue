@@ -5,15 +5,15 @@
     <div class="app__block">
       <template v-if="request.isReady">
         <tabs>
-          <tab name="Details">
+          <tab :name="'sale-request-manager.tab-details' | globalize">
             <details-tab :request="request" />
           </tab>
 
-          <tab name="Full description">
+          <tab :name="'sale-request-manager.tab-full-description' | globalize">
             <description-tab :sale-request="request.sale" />
           </tab>
 
-          <tab name="Corporate user">
+          <tab :name="'sale-request-manager.tab-corporate-user' | globalize">
             <syndicate-tab :sale-request="request.sale" />
           </tab>
         </tabs>
