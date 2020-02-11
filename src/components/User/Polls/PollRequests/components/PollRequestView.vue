@@ -125,7 +125,7 @@
       <template v-if="isRequestLoaded">
         <div
           class="poll-request-view__actions app__form-actions"
-          v-if="request.stateI === REQUEST_STATES.pending"
+          v-if="request.stateI === REQUEST_STATES.pending.stateI"
         >
           <button
             class="app__btn"

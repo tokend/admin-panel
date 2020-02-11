@@ -44,7 +44,7 @@ export default {
       this.isLoading = true
       try {
         this.list = await apiHelper.requests.getLimitsUpdateRequests({
-          state: REQUEST_STATES.pending,
+          state: REQUEST_STATES.pending.stateI,
         })
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)

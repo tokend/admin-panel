@@ -11,19 +11,19 @@
           :label="'collected-fees-withdrawals.lbl-state' | globalize"
           v-model="filters.state"
         >
-          <option :value="REQUEST_STATES.pending">
+          <option :value="REQUEST_STATES.pending.stateI">
             {{ "collected-fees-withdrawals.pending" | globalize }}
           </option>
-          <option :value="REQUEST_STATES.cancelled">
+          <option :value="REQUEST_STATES.cancelled.stateI">
             {{ "collected-fees-withdrawals.canceled" | globalize }}
           </option>
-          <option :value="REQUEST_STATES.approved">
+          <option :value="REQUEST_STATES.approved.stateI">
             {{ "collected-fees-withdrawals.approved" | globalize }}
           </option>
-          <option :value="REQUEST_STATES.rejected">
+          <option :value="REQUEST_STATES.rejected.stateI">
             {{ "collected-fees-withdrawals.rejected" | globalize }}
           </option>
-          <option :value="REQUEST_STATES.permanentlyRejected">
+          <option :value="REQUEST_STATES.permanentlyRejected.stateI">
             {{ "collected-fees-withdrawals.perm-rejected" | globalize }}
           </option>
         </select-field>
@@ -166,7 +166,7 @@ export default {
       REQUEST_STATES,
 
       filters: {
-        state: REQUEST_STATES.pending,
+        state: REQUEST_STATES.pending.stateI,
         pendingTasks: '',
         // TODO: add asset when https://tokend.atlassian.net/browse/TDV-890
         // merged

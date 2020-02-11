@@ -7,13 +7,13 @@
           :label="'withdrawal-list.lbl-state' | globalize"
           v-model="filters.state"
         >
-          <option :value="REQUEST_STATES.pending">
+          <option :value="REQUEST_STATES.pending.stateI">
             {{ "withdrawal-list.pending" | globalize }}
           </option>
-          <option :value="REQUEST_STATES.approved">
+          <option :value="REQUEST_STATES.approved.stateI">
             {{ "withdrawal-list.approved" | globalize }}
           </option>
-          <option :value="REQUEST_STATES.permanentlyRejected">
+          <option :value="REQUEST_STATES.permanentlyRejected.stateI">
             {{ "withdrawal-list.perm-rejected" | globalize }}
           </option>
         </select-field>
@@ -173,7 +173,7 @@ export default {
       list: {},
       requestToShow: {},
       filters: {
-        state: REQUEST_STATES.pending,
+        state: REQUEST_STATES.pending.stateI,
         asset: '',
         requestor: '',
       },

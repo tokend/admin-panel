@@ -1809,9 +1809,11 @@
       "tradable-secondary-market": "Tradable on secondary market"
     },
     "request-states": {
+      "pending": "Pending",
+      "cancelled": "Cancelled",
       "approved": "Approved",
       "rejected": "Rejected",
-      "waiting-review": "Waiting for review",
+      "permanentlyRejected": "Permanently rejected",
       "request-sent-idmind": "Request sent to IDMind",
       "request-processed-idmind": "Request processed by IDMind"
     },

@@ -21,9 +21,9 @@
           :label="'kyc-request-list.lbl-state' | globalize"
         >
           <option
-            v-for="(state, s) in Object.keys(KYC_REQUEST_STATES)"
+            v-for="(item, s) in Object.keys(KYC_REQUEST_STATES)"
             :key="`kyc-request-${s}`"
-            :value="state"
+            :value="item.stateI"
           >
             {{ KYC_REQUEST_STATES[state].translationId | globalize }}
           </option>

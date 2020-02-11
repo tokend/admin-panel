@@ -7,13 +7,13 @@
           :label="'issuance-request-list.lbl-state' | globalize"
           v-model="filters.state"
         >
-          <option :value="REQUEST_STATES.pending">
+          <option :value="REQUEST_STATES.pending.state">
             {{ "issuance-request-list.pending" | globalize }}
           </option>
-          <option :value="REQUEST_STATES.approved">
+          <option :value="REQUEST_STATES.approved.state">
             {{ "issuance-request-list.approved" | globalize }}
           </option>
-          <option :value="REQUEST_STATES.permanentlyRejected">
+          <option :value="REQUEST_STATES.permanentlyRejected.state">
             {{ "issuance-request-list.perm-rejected" | globalize }}
           </option>
         </select-field>

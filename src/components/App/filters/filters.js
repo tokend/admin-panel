@@ -30,6 +30,37 @@ export function localizeIssuanceRequestState (type) {
   }[type]
 }
 
+export function assetRequestStatesFilter (value) {
+  let translationId = ''
+  switch (value) {
+    case CREATE_ASSET_REQUEST_STATES.pending.codeVerbose: {
+      translationId = 'filters.asset-request-states-filter.pending'
+      break
+    }
+    case CREATE_ASSET_REQUEST_STATES.canceled.codeVerbose: {
+      translationId = 'filters.asset-request-states-filter.canceled'
+      break
+    }
+    case CREATE_ASSET_REQUEST_STATES.approved.codeVerbose: {
+      translationId = 'filters.asset-request-states-filter.approved'
+      break
+    }
+    case CREATE_ASSET_REQUEST_STATES.rejected.codeVerbose: {
+      translationId = 'filters.asset-request-states-filter.rejected'
+      break
+    }
+    case CREATE_ASSET_REQUEST_STATES.permanentlyRejected.codeVerbose: {
+      translationId = 'filters.asset-request-states-filter.perm-rejected'
+      break
+    }
+    default: {
+      translationId = 'filters.asset-request-states-filter.default'
+      break
+    }
+  }
+  return globalize(translationId)
+}
+
 export function cropAddress (value) {
   return `${value.slice(0, 4)}…${value.slice(-4)}`
 }
@@ -93,37 +124,6 @@ export function yesNoFilter (value) {
   } else {
     return globalize('filters.yes-no-filter.no')
   }
-}
-
-export function assetRequestStatesFilter (value) {
-  let translationId = ''
-  switch (value) {
-    case CREATE_ASSET_REQUEST_STATES.pending.codeVerbose: {
-      translationId = 'filters.asset-request-states-filter.pending'
-      break
-    }
-    case CREATE_ASSET_REQUEST_STATES.canceled.codeVerbose: {
-      translationId = 'filters.asset-request-states-filter.canceled'
-      break
-    }
-    case CREATE_ASSET_REQUEST_STATES.approved.codeVerbose: {
-      translationId = 'filters.asset-request-states-filter.approved'
-      break
-    }
-    case CREATE_ASSET_REQUEST_STATES.rejected.codeVerbose: {
-      translationId = 'filters.asset-request-states-filter.rejected'
-      break
-    }
-    case CREATE_ASSET_REQUEST_STATES.permanentlyRejected.codeVerbose: {
-      translationId = 'filters.asset-request-states-filter.perm-rejected'
-      break
-    }
-    default: {
-      translationId = 'filters.asset-request-states-filter.default'
-      break
-    }
-  }
-  return globalize(translationId)
 }
 
 export function assetRequestTypesFilter (value) {

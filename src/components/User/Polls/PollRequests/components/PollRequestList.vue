@@ -6,16 +6,16 @@
         v-model="filters.state"
         :label="'poll-request-list.lbl-state' | globalize"
       >
-        <option :value="REQUEST_STATES.pending">
+        <option :value="REQUEST_STATES.pending.stateI">
           {{ "poll-request-list.pending" | globalize }}
         </option>
-        <option :value="REQUEST_STATES.cancelled">
+        <option :value="REQUEST_STATES.cancelled.stateI">
           {{ "poll-request-list.canceled" | globalize }}
         </option>
-        <option :value="REQUEST_STATES.approved">
+        <option :value="REQUEST_STATES.approved.stateI">
           {{ "poll-request-list.approved" | globalize }}
         </option>
-        <option :value="REQUEST_STATES.permanentlyRejected">
+        <option :value="REQUEST_STATES.permanentlyRejected.stateI">
           {{ "poll-request-list.permanently-rejected" | globalize }}
         </option>
       </select-field>
@@ -135,7 +135,7 @@ export default {
       list: [],
       isLoadingList: false,
       filters: {
-        state: REQUEST_STATES.pending,
+        state: REQUEST_STATES.pending.stateI,
         requestor: '',
       },
       REQUEST_STATES,

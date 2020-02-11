@@ -36,13 +36,13 @@
             </span>
           </li>
         </ul>
-        <template v-if="issuance.stateI === REQUEST_STATES.pending">
+        <template v-if="issuance.stateI === REQUEST_STATES.pending.stateI">
           <div class="issuance-details__action-btns">
             <!-- eslint-disable max-len -->
             <button
               class="app__btn issuance-details__action-btn"
               @click="fulfill(issuance)"
-              :disabled="isSubmitting || issuance.stateI !== REQUEST_STATES.pending"
+              :disabled="isSubmitting || issuance.stateI !== REQUEST_STATES.pending.stateI"
             >
               {{ "issuance-details.fulfill" | globalize }}
             </button>
@@ -50,7 +50,7 @@
             <button
               class="app__btn app__btn--danger issuance-details__action-btn"
               @click="selectForRejection(issuance)"
-              :disabled="isSubmitting || issuance.stateI !== REQUEST_STATES.pending"
+              :disabled="isSubmitting || issuance.stateI !== REQUEST_STATES.pending.stateI"
             >
               {{ "issuance-details.reject" | globalize }}
             </button>

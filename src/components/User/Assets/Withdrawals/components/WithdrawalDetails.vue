@@ -193,7 +193,7 @@ export default {
   computed: {
     ...mapGetters({ userAddress: getters.GET_USER_ADDRESS }),
     reviewAllowed () {
-      return this.request.stateI === REQUEST_STATES.pending &&
+      return this.request.stateI === REQUEST_STATES.pending.stateI &&
         this.userAddress === this.request.reviewer.id
     },
   },

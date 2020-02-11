@@ -106,7 +106,7 @@
           @click="isRequiringDocs = true"
           :disabled="isPending ||
             desiredLimitDetails.requestType === 'docsUploading' ||
-            request.state === REQUEST_STATES.pending"
+            request.state === REQUEST_STATES.pending.stateI"
         >
           {{ "limits-reviewer.btn-request-docs" | globalize }}
         </button>
