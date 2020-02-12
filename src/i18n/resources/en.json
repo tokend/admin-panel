@@ -396,14 +396,6 @@
         "yes": "Yes",
         "no": "No"
       },
-      "asset-request-states-filter": {
-        "pending": "Pending",
-        "canceled": "Canceled",
-        "approved": "Approved",
-        "rejected": "Rejected",
-        "perm-rejected": "Permanently rejected",
-        "default": "UNKNOWN CREATE ASSET REQUEST STATES"
-      },
       "asset-request-types-filter": {
         "create": "Create",
         "update": "Update",

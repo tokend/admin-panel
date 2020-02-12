@@ -20,11 +20,11 @@
         :label="'asset-request-list.lbl-state' | globalize"
       >
         <option
-          v-for="stateObj in Object.values(CREATE_ASSET_REQUEST_STATES)"
-          :value="stateObj.codeVerbose"
-          :key="stateObj.codeVerbose"
+          v-for="item in REQUEST_STATES"
+          :value="item.stateI"
+          :key="item.stateI"
         >
-          {{ stateObj.codeVerbose | assetRequestStatesFilter }}
+          {{ item.stateI | globalizeRequestStateI }}
         </option>
       </select-field>
 
@@ -75,9 +75,9 @@
             <!-- eslint-disable max-len -->
             <span
               class="app-list__cell"
-              :title="asset.state | assetRequestStatesFilter"
+              :title="asset.stateI | globalizeRequestStateI"
             >
-              {{ asset.state | assetRequestStatesFilter }}
+              {{ asset.stateI | globalizeRequestStateI }}
             </span>
             <!-- eslint-enable max-len -->
 
@@ -129,7 +129,7 @@ import { api } from '@/api'
 import apiHelper from '@/apiHelper'
 import { base } from '@tokend/js-sdk'
 
-import { CREATE_ASSET_REQUEST_STATES, REQUEST_STATES_STR, ASSET_REQUEST_TYPES } from '@/constants'
+import { REQUEST_STATES, ASSET_REQUEST_TYPES } from '@/constants'
 
 import _ from 'lodash'
 import { clearObject } from '@/utils/clearObject'
@@ -149,12 +149,11 @@ export default {
       isPending: false,
       filters: {
         requestType: ASSET_REQUEST_TYPES.createAsset,
-        state: REQUEST_STATES_STR.pending,
+        state: REQUEST_STATES.pending.stateI,
         requestor: null,
         asset: null,
       },
-      CREATE_ASSET_REQUEST_STATES,
-      REQUEST_STATES_STR,
+      REQUEST_STATES,
       ASSET_REQUEST_TYPES,
     }
   },
@@ -187,7 +186,7 @@ export default {
         response = await api.getWithSignature(endpoint, {
           page: { order: 'desc' },
           filter: clearObject({
-            state: CREATE_ASSET_REQUEST_STATES[this.filters.state].code,
+            state: this.filters.state,
             requestor: requestor,
             'request_details.asset': this.filters.asset,
           }),

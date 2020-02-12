@@ -35,7 +35,6 @@ import {
   globalize,
   formatDate,
   yesNoFilter,
-  assetRequestStatesFilter,
   assetRequestTypesFilter,
   assetPoliciesFilter,
   stellarAssetTypesFilter,
@@ -64,7 +63,6 @@ async function init () {
   Vue.filter('formatVersion', formatVersion)
   Vue.filter('formatDate', formatDate)
   Vue.filter('yesNoFilter', yesNoFilter)
-  Vue.filter('assetRequestStatesFilter', assetRequestStatesFilter)
   Vue.filter('assetRequestTypesFilter', assetRequestTypesFilter)
   Vue.filter('assetPoliciesFilter', assetPoliciesFilter)
   Vue.filter('stellarAssetTypesFilter', stellarAssetTypesFilter)

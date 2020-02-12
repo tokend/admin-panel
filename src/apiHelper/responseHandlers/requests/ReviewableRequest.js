@@ -15,6 +15,10 @@ export class ReviewableRequest {
     return this.record.state
   }
 
+  get stateI () {
+    return this.record.stateI
+  }
+
   get rejectReason () {
     return this.record.rejectReason
   }

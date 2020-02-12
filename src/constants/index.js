@@ -1,4 +1,3 @@
-export { CREATE_ASSET_REQUEST_STATES } from './create-asset-request-states'
 export { ASSET_POLICIES } from './asset-policies'
 export { STELLAR_TYPES } from './stellar-types'
 export { ASSET_PAIR_POLICIES, ASSET_PAIR_POLICIES_VERBOSE } from './asset-pair-policies'

@@ -3,12 +3,11 @@ import moment from 'moment'
 import store from '../../../store'
 import { base, SALE_TYPES } from '@tokend/js-sdk'
 import {
-  CREATE_ASSET_REQUEST_STATES,
   LIMITS_REQUEST_STATES_STR,
   STELLAR_TYPES, ASSET_REQUEST_TYPES,
   ID_DOCUMENT_TYPES,
   PAYMENT_FEE_TYPES,
-  REQUEST_STATES
+  REQUEST_STATES,
 } from '@/constants'
 
 export function filterDateWithTime (date, format = 'DD MMM YYYY [at] hh:mm:ss') {
@@ -44,37 +43,6 @@ export function globalizeRequestStateI (value) {
     }
     default: {
       translationId = 'filters.request-states.default'
-      break
-    }
-  }
-  return globalize(translationId)
-}
-
-export function assetRequestStatesFilter (value) {
-  let translationId = ''
-  switch (value) {
-    case CREATE_ASSET_REQUEST_STATES.pending.codeVerbose: {
-      translationId = 'filters.asset-request-states-filter.pending'
-      break
-    }
-    case CREATE_ASSET_REQUEST_STATES.canceled.codeVerbose: {
-      translationId = 'filters.asset-request-states-filter.canceled'
-      break
-    }
-    case CREATE_ASSET_REQUEST_STATES.approved.codeVerbose: {
-      translationId = 'filters.asset-request-states-filter.approved'
-      break
-    }
-    case CREATE_ASSET_REQUEST_STATES.rejected.codeVerbose: {
-      translationId = 'filters.asset-request-states-filter.rejected'
-      break
-    }
-    case CREATE_ASSET_REQUEST_STATES.permanentlyRejected.codeVerbose: {
-      translationId = 'filters.asset-request-states-filter.perm-rejected'
-      break
-    }
-    default: {
-      translationId = 'filters.asset-request-states-filter.default'
       break
     }
   }

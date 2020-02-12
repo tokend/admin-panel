@@ -245,7 +245,9 @@
       </div>
 
       <!-- eslint-disable-next-line max-len -->
-      <template v-if="assetRequest.state !== CREATE_ASSET_REQUEST_STATES.pending.codeVerbose">
+      {{ '123 - ' }}
+      {{ assetRequest.state }}
+      <template v-if="assetRequest.stateI !== REQUEST_STATES.pending.stateI">
         <div class="asset-requests-show__row">
           <span class="asset-requests-show__key">
             {{ "asset-requests-show.request-state" | globalize }}
@@ -258,7 +260,7 @@
       </template>
 
       <!-- eslint-disable-next-line max-len -->
-      <template v-if="assetRequest.state === CREATE_ASSET_REQUEST_STATES.rejected.codeVerbose">
+      <template v-if="assetRequest.stateI === REQUEST_STATES.rejected.stateI">
         <div class="asset-requests-show__reject-reason-wrp">
           <text-field
             :label="'asset-requests-show.lbl-reject-reason' | globalize"
@@ -271,7 +273,7 @@
       <!-- eslint-disable max-len -->
       <div
         class="asset-requests-show__buttons"
-        v-if="assetRequest.state === CREATE_ASSET_REQUEST_STATES.pending.codeVerbose"
+        v-if="assetRequest.stateI === REQUEST_STATES.pending.stateI"
       >
         <button
           class="app__btn"
@@ -317,8 +319,8 @@ import { ErrorHandler } from '@/utils/ErrorHandler'
 import { Bus } from '@/utils/bus'
 import {
   ASSET_POLICIES,
-  CREATE_ASSET_REQUEST_STATES,
   ASSET_REQUEST_TYPES,
+  REQUEST_STATES,
 } from '@/constants'
 
 import { api } from '@/api'
@@ -346,18 +348,8 @@ export default {
       isInitFailed: false,
       ASSET_POLICIES,
       ASSET_REQUEST_TYPES,
-      CREATE_ASSET_REQUEST_STATES,
+      REQUEST_STATES,
     }
-  },
-
-  computed: {
-    isCancellable () {
-      const isPending = this.assetRequest.state ===
-        CREATE_ASSET_REQUEST_STATES.pending.codeVerbose
-      const isCancellableRequestor =
-        this.assetRequest.requestor === this.$store.getters.masterId
-      return isPending && isCancellableRequestor
-    },
   },
 
   async created () {
