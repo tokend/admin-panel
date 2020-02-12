@@ -25,7 +25,6 @@ import log from 'loglevel'
 /* Vue filters */
 import {
   filterDateWithTime,
-  localizeIssuanceRequestState,
   cropAddress,
   roleIdToString,
   assetTypeToString,
@@ -45,6 +44,7 @@ import {
   idDocumentsVerboseFilter,
   localizedSaleTypesFilter,
   feeTypesFilter,
+  globalizeRequestStateI,
 } from './components/App/filters/filters'
 
 async function init () {
@@ -56,7 +56,6 @@ async function init () {
 
   Vue.filter('globalize', globalize)
   Vue.filter('dateTime', filterDateWithTime)
-  Vue.filter('localizeIssuanceRequestState', localizeIssuanceRequestState)
   Vue.filter('cropAddress', cropAddress)
   Vue.filter('roleIdToString', roleIdToString)
   Vue.filter('assetTypeToString', assetTypeToString)
@@ -75,6 +74,7 @@ async function init () {
   Vue.filter('localizedSaleTypesFilter', localizedSaleTypesFilter)
   Vue.filter('accountState', accountState)
   Vue.filter('feeTypesFilter', feeTypesFilter)
+  Vue.filter('globalizeRequestStateI', globalizeRequestStateI)
 
   /* Init Sentry */
   ErrorTracker.init(params)

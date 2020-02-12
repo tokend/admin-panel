@@ -32,7 +32,7 @@
           <li class="issuance-details__list-item">
             <span>{{ "issuance-details.state" | globalize }}</span>
             <span>
-              {{ issuance.state | localizeIssuanceRequestState }}
+              {{ issuance.stateI | globalizeRequestStateI }}
             </span>
           </li>
         </ul>

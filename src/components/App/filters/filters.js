@@ -8,6 +8,7 @@ import {
   STELLAR_TYPES, ASSET_REQUEST_TYPES,
   ID_DOCUMENT_TYPES,
   PAYMENT_FEE_TYPES,
+  REQUEST_STATES
 } from '@/constants'
 
 export function filterDateWithTime (date, format = 'DD MMM YYYY [at] hh:mm:ss') {
@@ -18,16 +19,35 @@ export function filterDateWithTime (date, format = 'DD MMM YYYY [at] hh:mm:ss') 
   }
 }
 
-export function localizeIssuanceRequestState (type) {
-  return {
-    approved: globalize('filters.localize-issuance-request-state.approved'),
-    pending: globalize('filters.localize-issuance-request-state.pending'),
-    rejected: globalize('filters.localize-issuance-request-state.rejected'),
-    permanently_rejected: globalize('filters.localize-issuance-request-state.permanently-rejected'),
-    permanentlyRejected: globalize('filters.localize-issuance-request-state.permanently-rejected'),
-    canceled: globalize('filters.localize-issuance-request-state.canceled'),
-    cancelled: globalize('filters.localize-issuance-request-state.cancelled'),
-  }[type]
+export function globalizeRequestStateI (value) {
+  let translationId = ''
+  switch (+value) {
+    case REQUEST_STATES.pending.stateI: {
+      translationId = 'filters.request-states.pending'
+      break
+    }
+    case REQUEST_STATES.cancelled.stateI: {
+      translationId = 'filters.request-states.cancelled'
+      break
+    }
+    case REQUEST_STATES.approved.stateI: {
+      translationId = 'filters.request-states.approved'
+      break
+    }
+    case REQUEST_STATES.rejected.stateI: {
+      translationId = 'filters.request-states.rejected'
+      break
+    }
+    case REQUEST_STATES.permanentlyRejected.stateI: {
+      translationId = 'filters.request-states.permanently-rejected'
+      break
+    }
+    default: {
+      translationId = 'filters.request-states.default'
+      break
+    }
+  }
+  return globalize(translationId)
 }
 
 export function assetRequestStatesFilter (value) {

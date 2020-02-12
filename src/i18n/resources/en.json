@@ -374,14 +374,6 @@
       "file-upload": "Cannot upload a file to the storage. Please upload another file or try again later."
     },
     "filters": {
-      "localize-issuance-request-state": {
-        "approved": "Approved",
-        "pending": "Pending",
-        "rejected": "Rejected",
-        "permanently-rejected": "Permanently rejected",
-        "canceled": "Canceled",
-        "cancelled": "Cancelled"
-      },
       "role-id-to-string": {
         "unverified": "Unverified",
         "general": "General",
@@ -469,6 +461,16 @@
       "account-state" : {
         "blocked": "Blocked",
         "active": "Active"
+      },
+      "request-states": {
+        "pending": "Pending",
+        "cancelled": "Cancelled",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "permanently-rejected": "Permanently rejected",
+        "request-sent-idmind": "Request sent to IDMind",
+        "request-processed-idmind": "Request processed by IDMind",
+        "default": "UNKNOWN CREATE ASSET REQUEST STATES"
       }
     },
     "mixin": {
@@ -1807,15 +1809,6 @@
     },
     "asset-pair-policies": {
       "tradable-secondary-market": "Tradable on secondary market"
-    },
-    "request-states": {
-      "pending": "Pending",
-      "cancelled": "Cancelled",
-      "approved": "Approved",
-      "rejected": "Rejected",
-      "permanentlyRejected": "Permanently rejected",
-      "request-sent-idmind": "Request sent to IDMind",
-      "request-processed-idmind": "Request processed by IDMind"
     },
     "confirmation-message": {
       "confirm-msg": "Are you sure?",
