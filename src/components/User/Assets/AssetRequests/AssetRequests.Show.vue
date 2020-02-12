@@ -245,8 +245,6 @@
       </div>
 
       <!-- eslint-disable-next-line max-len -->
-      {{ '123 - ' }}
-      {{ assetRequest.state }}
       <template v-if="assetRequest.stateI !== REQUEST_STATES.pending.stateI">
         <div class="asset-requests-show__row">
           <span class="asset-requests-show__key">

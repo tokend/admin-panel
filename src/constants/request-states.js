@@ -1,9 +1,5 @@
 import config from '@/config'
 
-export const REQUEST_STATES_STR = Object.freeze({
-  waitingForAutoReview: 'waitingForAutoReview',
-})
-
 export const REQUEST_STATES = {
   pending: {
     state: 'pending',
@@ -30,16 +26,6 @@ export const REQUEST_STATES = {
 export const KYC_REQUEST_STATES = Object.freeze(
   Object.entries({
     ...REQUEST_STATES,
-    waitingForAutoReview: {
-      state: 'pending',
-      stateI: 3,
-      translationId: 'request-states.request-sent-idmind',
-    },
-    processedAutoReview: {
-      state: 'pending',
-      stateI: 3,
-      translationId: 'request-states.request-processed-idmind',
-    },
   })
     .filter(([key]) => {
       return Object.values(config.FEATURES.KYC_REQUEST_STATES)

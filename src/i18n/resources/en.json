@@ -460,8 +460,6 @@
         "approved": "Approved",
         "rejected": "Rejected",
         "permanently-rejected": "Permanently rejected",
-        "request-sent-idmind": "Request sent to IDMind",
-        "request-processed-idmind": "Request processed by IDMind",
         "default": "UNKNOWN CREATE ASSET REQUEST STATES"
       }
     },
