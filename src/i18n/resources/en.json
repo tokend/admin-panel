@@ -34,7 +34,9 @@
       "presets": {
         "time": "H:mm",
         "date": "DD MMM YYYY HH:mm:ss",
-        "datetime": "MMMM D, YYYY [at] H:mm"
+        "datetime": "MMMM D, YYYY [at] H:mm",
+        "dmy": "DD.MM.YYYY",
+        "dmyt": "DD.MM.YYYY [at] H:mm"
       },
       "calendar": {
         "sameDay": "[Today at] H:mm",
@@ -57,6 +59,8 @@
   "translations": {
     "formats": {
       "date": "{{value, date}}",
+      "dmy": "{{value, dmy}}",
+      "dmyt": "{{value, dmyt}}",
       "money": "{{value, money}}",
       "number": "{{value, number}}",
       "integer": "{{value, integer}}",
@@ -352,7 +356,7 @@
       "op_sale_create_tasks_not_found": "There is no key value for crowdfunding creation tasks",
       "op_sale_update_details_tasks_not_found": "There is no key value for crowdfunding details update tasks"
     },
-    "errors":{
+    "errors": {
       "default": "Something bad happened. Please try again later or contact the system owner.",
       "server": "This service is temporary unavailable. Please try again later.",
       "timeout": "Timeout exceeded. Please re-check your internet connection and try again.",
@@ -450,7 +454,7 @@
         "incoming": "incoming",
         "unknown-type": "UNKNOWN TYPE"
       },
-      "account-state" : {
+      "account-state": {
         "blocked": "Blocked",
         "active": "Active"
       },
@@ -460,7 +464,71 @@
         "approved": "Approved",
         "rejected": "Rejected",
         "permanently-rejected": "Permanently rejected",
-        "default": "UNKNOWN CREATE ASSET REQUEST STATES"
+        "default": "UNKNOWN STATES"
+      },
+      "operation-type": {
+        "bind-external-system-account-id": "Bind external system account id",
+        "cancel-atomic-swap-ask": "Cancel atomic swap ask",
+        "cancel-change-role-request": "Cancel change role request",
+        "cancel-sale-request": "Cancel sale request",
+        "check-sale-state": "Check sale state",
+        "close-swap": "Close swap",
+        "create-account": "Create account",
+        "create-aml-alert": "Create aml alert",
+        "create-atomic-swap-ask-request": "Create atomic swap ask request",
+        "create-atomic-swap-bid-request": "Create atomic swap bid request",
+        "create-change-role-request": "Create change role request",
+        "create-issuance-request": "Create issuance request",
+        "create-kyc-recovery-request": "Create kyc recovery request",
+        "create-manage-limits-request": "Create manage limits request",
+        "create-manage-offer-request": "Create manage offer request",
+        "create-payment-request": "Create payment request",
+        "create-preissuance-request": "Create preissuance request",
+        "create-redemption-request": "Create redemption request",
+        "create-sale-request": "Create sale request",
+        "create-withdrawal-request": "Create withdrawal request",
+        "initiate-kyc-recovery": "Initiate kyc recovery",
+        "license": "License",
+        "create-account-role": "Create account role",
+        "update-account-role": "Update account role",
+        "remove-account-role": "Remove account role",
+        "create-account-rule": "Create account rule",
+        "update-account-rule": "Update account rule",
+        "remove-account-rule": "Remove account rule",
+        "manage-account-specific-rule": "Manage account specific rule",
+        "manage-asset": "Manage asset",
+        "manage-asset-pair": "Manage asset pair",
+        "manage-balance": "Manage balance",
+        "manage-contract": "Manage contract",
+        "manage-contract-request": "Manage contract request",
+        "manage-create-poll-request": "Manage create poll request",
+        "manage-external-system-account-id-pool-entry": "Manage external system account id pool entry",
+        "manage-invoice": "Manage invoice",
+        "manage-key-value": "Manage key value",
+        "manage-limits": "Manage limits",
+        "manage-offer": "Manage offer",
+        "manage-poll": "Manage poll",
+        "manage-sale": "Manage sale",
+        "create-signer": "Create signer",
+        "update-signer": "Update signer",
+        "remove-signer": "Remove signer",
+        "create-signer-role": "Create signer role",
+        "update-signer-role": "Update signer role",
+        "remove-signer-role": "Remove signer role",
+        "create-signer-rule": "Create signer rule",
+        "update-signer-rule": "Update signer rule",
+        "remove-signer-rule": "Remove signer rule",
+        "manage-vote": "Manage vote",
+        "open-swap": "Open swap",
+        "operations": "Operations",
+        "payment": "Payment",
+        "payout": "Payout",
+        "remove-asset": "Remove asset",
+        "remove-asset-pair": "Remove asset pair",
+        "review-request": "Review request",
+        "set-fees": "Set fees",
+        "stamp": "Stamp",
+        "default": "UNKNOWN OPERATION TYPE"
       }
     },
     "mixin": {
@@ -951,7 +1019,6 @@
       "btn-confirm": "Confirm",
       "btn-cancel": "Cancel",
       "request-created-successfully": "Request created successfully"
-
     },
     "collected-fees-withdrawals": {
       "header": "Withdrawals",
@@ -1505,7 +1572,8 @@
     "sale-manager": {
       "header": "Sale overview",
       "error": "An error occurred. Please try again later.",
-      "loading": "Loading..."
+      "loading": "Loading...",
+      "details": "Details"
     },
     "sale-manager-whitelist-tab": {
       "participant": "Participant",
@@ -1792,10 +1860,11 @@
       "reset-to-unverified": "Reset to unverified",
       "unblock": "Unblock",
       "change-role-request": "Change role request",
-      "create-account": "Create account"
+      "create-account": "Create account",
+      "master": "Master"
     },
     "users": {
-     "link-user-index": "User index"
+      "link-user-index": "User index"
     },
     "asset-pair-policies": {
       "tradable-secondary-market": "Tradable on secondary market"

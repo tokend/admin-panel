@@ -51,7 +51,7 @@
               is-titled
             />
             <span class="app-list__cell app-list__cell--right">
-              {{ item.state }}
+              {{ item.stateI | globalizeRequestStateI }}
             </span>
             <span class="app-list__cell app-list__cell--right">
               {{ item.updatedAt | formatDate }}

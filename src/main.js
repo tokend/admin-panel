@@ -34,6 +34,8 @@ import {
   accountState,
   globalize,
   formatDate,
+  formatDateDMY,
+  formatDateDMYT,
   yesNoFilter,
   assetRequestTypesFilter,
   assetPoliciesFilter,
@@ -43,8 +45,9 @@ import {
   idDocumentsVerboseFilter,
   localizedSaleTypesFilter,
   feeTypesFilter,
-  globalizeRequestStateI,
 } from './components/App/filters/filters'
+import { globalizeOperationType } from './components/App/filters/globalizeOperationType'
+import { globalizeRequestStateI } from './components/App/filters/globalizeRequestStateI'
 
 async function init () {
   i18n.onLanguageChanged(lang => {
@@ -62,6 +65,8 @@ async function init () {
   Vue.filter('lowerCase', lowerCase)
   Vue.filter('formatVersion', formatVersion)
   Vue.filter('formatDate', formatDate)
+  Vue.filter('formatDateDMY', formatDateDMY)
+  Vue.filter('formatDateDMYT', formatDateDMYT)
   Vue.filter('yesNoFilter', yesNoFilter)
   Vue.filter('assetRequestTypesFilter', assetRequestTypesFilter)
   Vue.filter('assetPoliciesFilter', assetPoliciesFilter)
@@ -73,6 +78,7 @@ async function init () {
   Vue.filter('accountState', accountState)
   Vue.filter('feeTypesFilter', feeTypesFilter)
   Vue.filter('globalizeRequestStateI', globalizeRequestStateI)
+  Vue.filter('globalizeOperationType', globalizeOperationType)
 
   /* Init Sentry */
   ErrorTracker.init(params)

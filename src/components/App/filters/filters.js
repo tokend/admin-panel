@@ -7,7 +7,6 @@ import {
   STELLAR_TYPES, ASSET_REQUEST_TYPES,
   ID_DOCUMENT_TYPES,
   PAYMENT_FEE_TYPES,
-  REQUEST_STATES,
 } from '@/constants'
 
 export function filterDateWithTime (date, format = 'DD MMM YYYY [at] hh:mm:ss') {
@@ -16,37 +15,6 @@ export function filterDateWithTime (date, format = 'DD MMM YYYY [at] hh:mm:ss') 
   } catch (error) {
     return date
   }
-}
-
-export function globalizeRequestStateI (value) {
-  let translationId = ''
-  switch (+value) {
-    case REQUEST_STATES.pending.stateI: {
-      translationId = 'filters.request-states.pending'
-      break
-    }
-    case REQUEST_STATES.cancelled.stateI: {
-      translationId = 'filters.request-states.cancelled'
-      break
-    }
-    case REQUEST_STATES.approved.stateI: {
-      translationId = 'filters.request-states.approved'
-      break
-    }
-    case REQUEST_STATES.rejected.stateI: {
-      translationId = 'filters.request-states.rejected'
-      break
-    }
-    case REQUEST_STATES.permanentlyRejected.stateI: {
-      translationId = 'filters.request-states.permanently-rejected'
-      break
-    }
-    default: {
-      translationId = 'filters.request-states.default'
-      break
-    }
-  }
-  return globalize(translationId)
 }
 
 export function cropAddress (value) {
@@ -104,6 +72,14 @@ export function globalize (translationId, interpolationOps) {
 
 export function formatDate (value) {
   return globalize('formats.date', { value })
+}
+
+export function formatDateDMY (value) {
+  return globalize('formats.dmy', { value })
+}
+
+export function formatDateDMYT (value) {
+  return globalize('formats.dmyt', { value })
 }
 
 export function yesNoFilter (value) {

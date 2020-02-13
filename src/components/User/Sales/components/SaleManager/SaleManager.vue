@@ -5,7 +5,7 @@
     <div class="app__block">
       <template v-if="isLoaded">
         <tabs>
-          <tab name="Details">
+          <tab :name="'sale-manager.details' | globalize">
             <details-tab :sale="sale" />
           </tab>
 

@@ -20,10 +20,7 @@
           </li>
           <li>
             <span>{{ "poll-request-view.request-state" | globalize }}</span>
-            <request-state-formatter
-              :state="request.state"
-              is-colored
-            />
+            {{ request.stateI | globalizeRequestStateI }}
           </li>
 
           <li>
@@ -218,9 +215,6 @@ import FormMixin from '@/mixins/form.mixin'
 import { required, maxLength } from '@/validators'
 
 import { EmailGetter } from '@comcom/getters'
-import {
-  RequestStateFormatter,
-} from '@comcom/formatters'
 
 import Modal from '@comcom/modals/Modal'
 import { confirmAction } from '@/js/modals/confirmation_message'
@@ -236,7 +230,6 @@ const REJECT_REASON_MAX_LENGTH = 255
 
 export default {
   components: {
-    RequestStateFormatter,
     EmailGetter,
     Modal,
   },
