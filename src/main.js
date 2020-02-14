@@ -48,6 +48,7 @@ import {
 } from './components/App/filters/filters'
 import { globalizeOperationType } from './components/App/filters/globalizeOperationType'
 import { globalizeRequestStateI } from './components/App/filters/globalizeRequestStateI'
+import { globalizeStatsOpType } from './components/App/filters/globalizeStatsOpType'
 
 async function init () {
   i18n.onLanguageChanged(lang => {
@@ -79,6 +80,7 @@ async function init () {
   Vue.filter('feeTypesFilter', feeTypesFilter)
   Vue.filter('globalizeRequestStateI', globalizeRequestStateI)
   Vue.filter('globalizeOperationType', globalizeOperationType)
+  Vue.filter('globalizeStatsOpType', globalizeStatsOpType)
 
   /* Init Sentry */
   ErrorTracker.init(params)

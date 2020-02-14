@@ -529,6 +529,14 @@
         "set-fees": "Set fees",
         "stamp": "Stamp",
         "default": "UNKNOWN OPERATION TYPE"
+      },
+      "stats-op-type": {
+        "payment-out": "Payment out",
+        "withdraw": "Withdraw",
+        "spend": "Spend",
+        "deposit": "Deposit",
+        "payout": "Payout",
+        "default": "UNKNOWN OPERATION TYPE"
       }
     },
     "mixin": {

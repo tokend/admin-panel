@@ -232,7 +232,7 @@ export default {
         const { data } = await api.getWithSignature(endpoint, {
           page: { order: 'desc' },
           filter: {
-            state: REQUEST_STATES.pending,
+            state: REQUEST_STATES.pending.stateI,
             'request_details.account_role_to_set':
                 this.filters.role === ALL_ROLES_FILTER ? '' : this.filters.role,
           },

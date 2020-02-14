@@ -62,14 +62,14 @@
             :key="item.id"
             @click="itemToShow = item"
           >
-            <span>
+            <span class="app-list__cell app-list__cell--left">
               {{ item.createdAt | formatDate }}
             </span>
             <span
               class="app-list__cell app-list__cell--right"
-              :title="verbozify(item.state)"
+              :title="item.stateI | globalizeRequestStateI"
             >
-              {{ verbozify(item.state) }}
+              {{ item.stateI | globalizeRequestStateI }}
             </span>
 
             <asset-amount-formatter
@@ -144,7 +144,6 @@ import { CollectionLoader } from '@comcom'
 import { AssetAmountFormatter } from '@comcom/formatters'
 import DetailsReader from '@comcom/details/DetailsReader'
 
-import { verbozify } from '@/utils/verbozify'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { clearObject } from '@/utils/clearObject'
 
@@ -184,8 +183,6 @@ export default {
   },
 
   methods: {
-    verbozify,
-
     async getList () {
       this.isListLoading = true
       let response = {}

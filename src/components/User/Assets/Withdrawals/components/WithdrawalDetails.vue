@@ -9,7 +9,7 @@
       </li>
       <li>
         <span>{{ "withdrawal-details.request-state" | globalize }}</span>
-        <verbose-formatter :string="request.state" />
+        <span>{{ request.stateI | globalizeRequestStateI }}</span>
       </li>
       <li>
         <span>{{ "withdrawal-details.requestor" | globalize }}</span>
@@ -138,7 +138,7 @@ import FormMixin from '@/mixins/form.mixin'
 import { required, maxLength } from '@/validators'
 
 import { EmailGetter } from '@comcom/getters'
-import { VerboseFormatter, AssetAmountFormatter } from '@comcom/formatters'
+import { AssetAmountFormatter } from '@comcom/formatters'
 
 import Modal from '@comcom/modals/Modal'
 import { confirmAction } from '@/js/modals/confirmation_message'
@@ -157,7 +157,6 @@ const REJECT_REASON_MAX_LENGTH = 255
 export default {
   components: {
     EmailGetter,
-    VerboseFormatter,
     AssetAmountFormatter,
     Modal,
   },

@@ -10,7 +10,7 @@
           </li>
           <li class="issuance-details__list-item">
             <span>{{ "issuance-details.date" | globalize }}</span>
-            <span>{{ issuance.createdAt | dateTime }}</span>
+            <span>{{ issuance.createdAt | formatDateDMYT }}</span>
           </li>
           <li class="issuance-details__list-item">
             <span>{{ "issuance-details.initiator" | globalize }}</span>

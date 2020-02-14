@@ -25,7 +25,7 @@
       <li>
         <span>{{ "user-details-kyc.date-birth" | globalize }}</span>
         <span :title="kyc.dateOfBirth">
-          {{ kyc.dateOfBirth | dateTime }}
+          {{ kyc.dateOfBirth | formatDateDMYT }}
         </span>
       </li>
       <li>
