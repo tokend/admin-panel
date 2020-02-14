@@ -537,6 +537,13 @@
         "deposit": "Deposit",
         "payout": "Payout",
         "default": "UNKNOWN OPERATION TYPE"
+      },
+      "limit-types": {
+        "daily": "Daily",
+        "weekly": "Weekly",
+        "monthly": "Monthly",
+        "annual": "Annual",
+        "default": "UNKNOWN LIMIT TYPE"
       }
     },
     "mixin": {
