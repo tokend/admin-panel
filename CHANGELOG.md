@@ -6,6 +6,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
+## [1.12.0-rc.2] - 2020-02-14
+#### Added
+- New filters: `globalizeStatsOpType`, `globalizeLimitType`, `globalizeOperationType`, `globalizeRequestStateI`
+- Movements record
+
+#### Removed
+- `assetRequestStatesFilter`
+- `localizeIssuanceRequestState`
+
+#### Fixed
+- A bugs with localization
+- A  bug with displaying timer in IdleLogout
+- Refactor REQUEST_STATES
+
 ## [1.12.0-rc.1] - 2020-02-05
 #### Fixed
 - A bugs with localization
@@ -499,7 +513,8 @@ for further information about branching and tagging conventions.
 
 ## [1.3.0] - 2019-03-01
 
-[Unreleased]: https://github.com/tokend/admin-panel/compare/1.12.0-rc.1...HEAD
+[Unreleased]: https://github.com/tokend/admin-panel/compare/1.12.0-rc.2...HEAD
+[1.12.0-rc.2]: https://github.com/tokend/admin-panel/compare/1.12.0-rc.1...1.12.0-rc.2
 [1.12.0-rc.1]: https://github.com/tokend/admin-panel/compare/1.12.0-rc.0...1.12.0-rc.1
 [1.12.0-rc.0]: https://github.com/tokend/admin-panel/compare/1.11.0...1.12.0-rc.0
 [1.11.0]: https://github.com/tokend/admin-panel/compare/1.10.1...1.11.0

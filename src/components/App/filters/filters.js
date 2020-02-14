@@ -67,7 +67,7 @@ export function accountState (role) {
 }
 
 export function globalize (translationId, interpolationOps) {
-  return '$_' + i18n.t(translationId, interpolationOps)
+  return i18n.t(translationId, interpolationOps)
 }
 
 export function formatDate (value) {
