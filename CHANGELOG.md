@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
+## [Unreleased]
+#### Fixed
+- A bug with approve limit requests
+
 ## [1.12.0-rc.2] - 2020-02-14
 #### Added
 - New filters: `globalizeStatsOpType`, `globalizeLimitType`, `globalizeOperationType`, `globalizeRequestStateI`
@@ -17,7 +21,7 @@ for further information about branching and tagging conventions.
 
 #### Fixed
 - A bugs with localization
-- A  bug with displaying timer in IdleLogout
+- A bug with displaying timer in IdleLogout
 - Refactor REQUEST_STATES
 
 ## [1.12.0-rc.1] - 2020-02-05
