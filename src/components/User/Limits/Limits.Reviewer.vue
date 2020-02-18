@@ -47,7 +47,7 @@
           <detail
             :label="'limits-reviewer.lbl-operation-type-limits' | globalize"
             :value="
-              get(desiredLimitDetails, 'operationType') | globalizeStatsOpType
+              get(desiredLimitDetails, 'statsOpType') | globalizeStatsOpType
             "
           />
         </div>
@@ -327,7 +327,7 @@ export default {
         ...DEFAULT_LIMIT_STRUCT,
         accountId: this.request.requestor,
         assetCode: this.assetCode,
-        statsOpType: this.desiredLimitDetails.operationType,
+        statsOpType: this.desiredLimitDetails.statsOpType,
       }
     },
     newLimit () {
@@ -342,7 +342,7 @@ export default {
         ...limits,
         accountId: this.request.requestor.id,
         assetCode: this.assetCode,
-        statsOpType: requestDetails.operationType,
+        statsOpType: requestDetails.statsOpType,
       }
     },
 
@@ -402,7 +402,7 @@ export default {
         const oldLimits = this.limits
           .find(item => {
             const requestOpType = this.request.requestDetails.creatorDetails
-              .operationType
+              .statsOpType
 
             return item.assetCode === this.request.asset &&
               item.statsOpType === requestOpType
