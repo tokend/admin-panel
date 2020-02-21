@@ -67,9 +67,10 @@
           type="number"
           min="0"
           :max="DEFAULT_MAX_AMOUNT"
-          :step="DEFAULT_INPUT_STEP"
+          :step="step"
           :label="'asset-manager.lbl-maximum-assets' | globalize"
           v-model="asset.maxIssuanceAmount"
+          @input="validateMaxIssuanceAmount"
           :disabled="isExistingAsset || formMixin.isDisabled"
           name="max-assets"
           @blur="touchField('asset.maxIssuanceAmount')"
@@ -89,10 +90,11 @@
           type="number"
           min="0"
           :max="asset.maxIssuanceAmount"
-          :step="DEFAULT_INPUT_STEP"
+          :step="step"
           class="app__form-field"
           :label="'asset-manager.lbl-initial-preissued-amount' | globalize"
           v-model="asset.initialPreissuedAmount"
+          @input="validateInitialPreissuedAmount"
           :disabled="isExistingAsset || formMixin.isDisabled"
           name="initial-preissued"
           @blur="touchField('asset.initialPreissuedAmount')"
@@ -105,16 +107,15 @@
         <input-field
           v-else
           v-model="asset.availableForIssuance"
+          @input="validateInitialPreissuedAmount"
+          type="number"
           class="app__form-field"
+          :step="step"
           :label="'asset-manager.lbl-available-for-issuance' | globalize"
           :disabled="true"
           name="available-issuance"
         />
 
-        <!--
-          the field is disabled due to omitted testing
-          session of trailingDigitsCount
-        -->
         <input-field
           class="app__form-field"
           type="number"
@@ -122,12 +123,12 @@
           step="1"
           max="6"
           :label="'asset-manager.lbl-trailing-digits-count' | globalize"
-          v-model="asset.trailingDigitsCount"
-          :disabled="true || isExistingAsset || formMixin.isDisabled"
+          v-model="asset.trailingDigits"
+          :disabled="isExistingAsset || formMixin.isDisabled"
           name="trailing-digits-count"
-          @blur="touchField('asset.trailingDigitsCount')"
+          @blur="touchField('asset.trailingDigits')"
           :error-message="getFieldErrorMessage(
-            'asset.trailingDigitsCount',
+            'asset.trailingDigits',
             { minValue: 0, maxValue: 6 }
           )"
         />
@@ -521,7 +522,7 @@ export default {
         initialPreissuedAmount: '0',
         maxIssuanceAmount: '0',
         availableForIssuance: '0',
-        trailingDigitsCount: '6',
+        trailingDigits: '0',
         type: '0',
         creatorDetails: {
           name: '',
@@ -586,7 +587,7 @@ export default {
           minValue: minValue(0),
           maxValue: maxValue(this.asset.maxIssuanceAmount),
         },
-        trailingDigitsCount: {
+        trailingDigits: {
           required,
           minValue: minValue(0),
           maxValue: maxValue(6),
@@ -648,6 +649,11 @@ export default {
       assetTypeDefault: 'kvAssetTypeDefault',
       assetTypeKycRequired: 'kvAssetTypeKycRequired',
     }),
+
+    step () {
+      return 1 / Math.pow(10, this.asset.trailingDigits)
+    },
+
     notes () {
       return [
         globalize('asset-manager.img-type'),
@@ -677,6 +683,10 @@ export default {
         this.asset.creatorDetails.stellar.assetCode = NATIVE_XLM_TYPE
       }
     },
+    'asset.trailingDigits' () {
+      this.validateMaxIssuanceAmount()
+      this.validateInitialPreissuedAmount()
+    },
   },
 
   created () {
@@ -686,6 +696,22 @@ export default {
   },
 
   methods: {
+    validateMaxIssuanceAmount () {
+      this.asset.maxIssuanceAmount = +this.correctValues(
+        +this.asset.trailingDigits, +this.asset.maxIssuanceAmount)
+    },
+    validateInitialPreissuedAmount () {
+      this.asset.initialPreissuedAmount = +this.correctValues(
+        +this.asset.trailingDigits, +this.asset.initialPreissuedAmount)
+    },
+    correctValues (digits, value) {
+      if (value.toString().split(/\./)[1].length > parseFloat(digits)) {
+        const result = parseFloat(value.toString().split(/\./)[0] + '.' +
+          value.toString().split(/\./)[1].substr(0, parseFloat(digits)))
+        return result
+      }
+      return value
+    },
     safeGet,
     globalize,
     async getAsset () {
@@ -711,6 +737,7 @@ export default {
           data.type = String(data.type)
         }
         Object.assign(this.asset, data)
+        this.asset.availableForIssuance = +this.asset.availableForIssuance
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }
@@ -764,7 +791,7 @@ export default {
             policies: Number(this.asset.policies.value),
             assetType: String(this.asset.type),
             initialPreissuedAmount: String(this.asset.initialPreissuedAmount),
-            trailingDigitsCount: Number(this.asset.trailingDigitsCount),
+            trailingDigitsCount: Number(this.asset.trailingDigits),
             allTasks: 0,
             creatorDetails: {
               name: this.asset.creatorDetails.name,
