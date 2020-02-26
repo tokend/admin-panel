@@ -27,11 +27,11 @@
         <input-field
           class="app__form-field"
           :label="'asset-manager.lbl-asset-name' | globalize"
-          v-model="asset.creatorDetails.name"
+          v-model="form.creatorDetails.name"
           name="asset-name"
-          @blur="touchField('asset.creatorDetails.name')"
+          @blur="touchField('form.creatorDetails.name')"
           :error-message="getFieldErrorMessage(
-            'asset.creatorDetails.name',
+            'form.creatorDetails.name',
             { maxLength: ASSET_NAME_MAX_LENGTH }
           )"
           :disabled="formMixin.isDisabled"
@@ -40,12 +40,12 @@
         <input-field
           class="app__form-field"
           :label="'asset-manager.lbl-asset-code' | globalize"
-          v-model="asset.id"
+          v-model="form.id"
           :disabled="isExistingAsset || formMixin.isDisabled"
           name="asset-code"
-          @blur="touchField('asset.id')"
+          @blur="touchField('form.id')"
           :error-message="getFieldErrorMessage(
-            'asset.id',
+            'form.id',
             { maxLength: ASSET_CODE_MAX_LENGTH }
           )"
         />
@@ -55,11 +55,12 @@
         <input-field
           class="app__form-field"
           :label="'asset-manager.lbl-issuer-public-key' | globalize"
-          v-model="asset.preissuedAssetSigner"
+          v-model="form.preissuedAssetSigner"
           :disabled="isExistingAsset || formMixin.isDisabled"
           name="issuer-key"
-          @blur="touchField('asset.preissuedAssetSigner')"
-          :error-message="getFieldErrorMessage('asset.preissuedAssetSigner')"
+          @blur="touchField('form.preissuedAssetSigner')"
+          :error-message="getFieldErrorMessage(
+            'form.preissuedAssetSigner')"
         />
 
         <input-field
@@ -69,13 +70,13 @@
           :max="DEFAULT_MAX_AMOUNT"
           :step="step"
           :label="'asset-manager.lbl-maximum-assets' | globalize"
-          v-model="asset.maxIssuanceAmount"
+          v-model="form.maxIssuanceAmount"
           @input="validateMaxIssuanceAmount"
           :disabled="isExistingAsset || formMixin.isDisabled"
           name="max-assets"
-          @blur="touchField('asset.maxIssuanceAmount')"
+          @blur="touchField('form.maxIssuanceAmount')"
           :error-message="getFieldErrorMessage(
-            'asset.maxIssuanceAmount',
+            'form.maxIssuanceAmount',
             {
               minValue: DEFAULT_INPUT_MIN,
               maxValue: DEFAULT_MAX_AMOUNT
@@ -89,24 +90,24 @@
           v-if="!isExistingAsset"
           type="number"
           min="0"
-          :max="asset.maxIssuanceAmount"
+          :max="form.maxIssuanceAmount"
           :step="step"
           class="app__form-field"
           :label="'asset-manager.lbl-initial-preissued-amount' | globalize"
-          v-model="asset.initialPreissuedAmount"
+          v-model="form.initialPreissuedAmount"
           @input="validateInitialPreissuedAmount"
           :disabled="isExistingAsset || formMixin.isDisabled"
           name="initial-preissued"
-          @blur="touchField('asset.initialPreissuedAmount')"
+          @blur="touchField('form.initialPreissuedAmount')"
           :error-message="getFieldErrorMessage(
-            'asset.initialPreissuedAmount',
-            { minValue: 0, maxValue: asset.maxIssuanceAmount }
+            'form.initialPreissuedAmount',
+            { minValue: 0, maxValue: form.maxIssuanceAmount }
           )"
         />
 
         <input-field
           v-else
-          v-model="asset.availableForIssuance"
+          v-model="form.availableForIssuance"
           @input="validateInitialPreissuedAmount"
           type="number"
           class="app__form-field"
@@ -123,12 +124,12 @@
           step="1"
           max="6"
           :label="'asset-manager.lbl-trailing-digits-count' | globalize"
-          v-model="asset.trailingDigits"
+          v-model="form.trailingDigits"
           :disabled="isExistingAsset || formMixin.isDisabled"
           name="trailing-digits-count"
-          @blur="touchField('asset.trailingDigits')"
+          @blur="touchField('form.trailingDigits')"
           :error-message="getFieldErrorMessage(
-            'asset.trailingDigits',
+            'form.trailingDigits',
             { minValue: 0, maxValue: 6 }
           )"
         />
@@ -138,11 +139,11 @@
         <select-field
           class="app__form-field app__form-field--halved"
           :label="'asset-manager.lbl-asset-type' | globalize"
-          v-model="asset.type"
+          v-model="form.type"
           :disabled="isExistingAsset || formMixin.isDisabled"
           name="asset-type"
-          @blur="touchField('asset.type')"
-          :error-message="getFieldErrorMessage('asset.type')"
+          @blur="touchField('form.type')"
+          :error-message="getFieldErrorMessage('form.type')"
         >
           <option :value="assetTypeDefault">
             {{ "asset-manager.default" | globalize }}
@@ -181,7 +182,7 @@
                 target="_blank"
                 rel="noopener"
               >
-                {{ safeGet(asset, 'creatorDetails.terms.name') }}
+                {{ safeGet(form, 'creatorDetails.terms.name') }}
               </a>
             </template>
           </span>
@@ -191,7 +192,7 @@
       <div class="app__form-row">
         <tick-field
           class="app__form-field"
-          v-model="asset.policies.value"
+          v-model="form.policies.value"
           :label="ASSET_POLICIES.transferable | assetPoliciesFilter"
           :cb-value="ASSET_POLICIES.transferable"
           :disabled="formMixin.isDisabled"
@@ -201,7 +202,7 @@
       <div class="app__form-row">
         <tick-field
           class="app__form-field"
-          v-model="asset.policies.value"
+          v-model="form.policies.value"
           :label="ASSET_POLICIES.baseAsset | assetPoliciesFilter"
           :cb-value="ASSET_POLICIES.baseAsset"
           :disabled="formMixin.isDisabled"
@@ -211,7 +212,7 @@
       <div class="app__form-row">
         <tick-field
           class="app__form-field"
-          v-model="asset.policies.value"
+          v-model="form.policies.value"
           :label="ASSET_POLICIES.statsQuoteAsset | assetPoliciesFilter"
           :cb-value="ASSET_POLICIES.statsQuoteAsset"
           :disabled="formMixin.isDisabled"
@@ -221,7 +222,7 @@
       <div class="app__form-row">
         <tick-field
           class="app__form-field"
-          v-model="asset.policies.value"
+          v-model="form.policies.value"
           :label="ASSET_POLICIES.withdrawable | assetPoliciesFilter"
           :cb-value="ASSET_POLICIES.withdrawable"
           :disabled="formMixin.isDisabled"
@@ -231,7 +232,7 @@
       <div class="app__form-row">
         <tick-field
           class="app__form-field"
-          v-model="asset.policies.value"
+          v-model="form.policies.value"
           :label="ASSET_POLICIES.issuanceManualReviewRequired
             | assetPoliciesFilter"
           :cb-value="ASSET_POLICIES.issuanceManualReviewRequired"
@@ -242,7 +243,7 @@
       <div class="app__form-row">
         <tick-field
           class="app__form-field"
-          v-model="asset.policies.value"
+          v-model="form.policies.value"
           :label="ASSET_POLICIES.canBeBaseInAtomicSwap
             | assetPoliciesFilter"
           :cb-value="ASSET_POLICIES.canBeBaseInAtomicSwap"
@@ -253,7 +254,7 @@
       <div class="app__form-row">
         <tick-field
           class="app__form-field"
-          v-model="asset.policies.value"
+          v-model="form.policies.value"
           :label="ASSET_POLICIES.canBeQuoteInAtomicSwap
             | assetPoliciesFilter"
           :cb-value="ASSET_POLICIES.canBeQuoteInAtomicSwap"
@@ -285,7 +286,7 @@
           <tick-field
             title="Use Coinpayments service for deposition"
             class="app__form-field"
-            v-model="asset.creatorDetails.isCoinpayments"
+            v-model="form.creatorDetails.isCoinpayments"
             :label="'asset-manager.lbl-use-coinpayments' | globalize"
             :disabled="formMixin.isDisabled"
           />
@@ -296,7 +297,7 @@
             type="number"
             :label="'asset-manager.lbl-external-system-type' | globalize"
             name="External system type"
-            v-model="asset.creatorDetails.externalSystemType"
+            v-model="form.creatorDetails.externalSystemType"
             :required="false"
             :disabled="formMixin.isDisabled"
           />
@@ -316,7 +317,7 @@
           <div class="app__form-row">
             <div class="app__form-field">
               <tick-field
-                v-model="asset.creatorDetails.stellar.deposit"
+                v-model="form.creatorDetails.stellar.deposit"
                 :disabled="formMixin.isDisabled"
                 :cb-value="true"
                 :label="'asset-manager.lbl-deposit' | globalize"
@@ -327,7 +328,7 @@
           <div class="app__form-row">
             <div class="app__form-field">
               <tick-field
-                v-model="asset.creatorDetails.stellar.withdraw"
+                v-model="form.creatorDetails.stellar.withdraw"
                 :disabled="formMixin.isDisabled"
                 :cb-value="true"
                 :label="'asset-manager.lbl-withdraw' | globalize"
@@ -337,13 +338,13 @@
 
           <div class="app__form-row">
             <select-field
-              v-model="asset.creatorDetails.stellar.assetType"
+              v-model="form.creatorDetails.stellar.assetType"
               name="create-stellar-asset-type"
               class="app__form-field"
               :label="'asset-manager.lbl-asset-type' | globalize"
-              @blur="touchField('asset.creatorDetails.stellar.assetType')"
+              @blur="touchField('form.creatorDetails.stellar.assetType')"
               :error-message="getFieldErrorMessage(
-                'asset.creatorDetails.stellar.assetType',
+                'form.creatorDetails.stellar.assetType',
               )"
               :disabled="formMixin.isDisabled"
             >
@@ -359,17 +360,17 @@
             <!-- eslint-disable max-len -->
             <input-field
               white-autofill
-              v-model="asset.creatorDetails.stellar.assetCode"
+              v-model="form.creatorDetails.stellar.assetCode"
               class="app__form-field"
               name="create-stellar-asset-code"
               :label="'asset-manager.lbl-asset-code' | globalize"
-              @blur="touchField('asset.creatorDetails.stellar.assetCode')"
-              :error-message="getFieldErrorMessage('asset.creatorDetails.stellar.assetCode', {
+              @blur="touchField('form.creatorDetails.stellar.assetCode')"
+              :error-message="getFieldErrorMessage('form.creatorDetails.stellar.assetCode', {
                 maxLength: getAssetCodeMaxLength(),
                 minLength: CREDIT_ALPHANUM12_MIN_LENGTH
               })"
               :disabled="formMixin.isDisabled ||
-                asset.creatorDetails.stellar.assetType === STELLAR_TYPES.native"
+                form.creatorDetails.stellar.assetType === STELLAR_TYPES.native"
             />
           </div>
         <!-- eslint-enable max-len -->
@@ -389,7 +390,7 @@
           <div class="app__form-row">
             <div class="app__form-field">
               <tick-field
-                v-model="asset.creatorDetails.erc20.deposit"
+                v-model="form.creatorDetails.erc20.deposit"
                 :disabled="formMixin.isDisabled"
                 :cb-value="true"
                 :label="'asset-manager.lbl-deposit' | globalize"
@@ -400,7 +401,7 @@
           <div class="app__form-row">
             <div class="app__form-field">
               <tick-field
-                v-model="asset.creatorDetails.erc20.withdraw"
+                v-model="form.creatorDetails.erc20.withdraw"
                 :disabled="formMixin.isDisabled"
                 :cb-value="true"
                 :label="'asset-manager.lbl-withdraw' | globalize"
@@ -412,12 +413,12 @@
             <!-- eslint-disable max-len -->
             <input-field
               white-autofill
-              v-model="asset.creatorDetails.erc20.address"
+              v-model="form.creatorDetails.erc20.address"
               class="app__form-field"
               name="create-erc20-asset-code"
               :label="'asset-manager.lbl-address' | globalize"
-              @blur="touchField('asset.creatorDetails.erc20.address')"
-              :error-message="getFieldErrorMessage('asset.creatorDetails.erc20.address')"
+              @blur="touchField('form.creatorDetails.erc20.address')"
+              :error-message="getFieldErrorMessage('form.creatorDetails.erc20.address')"
               :disabled="formMixin.isDisabled"
             />
           </div>
@@ -466,11 +467,11 @@ import {
   requiredIf,
   hex,
 } from '@/validators'
-
+import BigNumber from 'bignumber.js'
 import { base } from '@tokend/js-sdk'
 import { api, documentsManager } from '@/api'
 import { globalize } from '@/components/App/filters/filters'
-
+import { AssetRecord } from '@/js/records/asset.record'
 import safeGet from 'lodash/get'
 
 import config from '@/config'
@@ -513,7 +514,8 @@ export default {
       isFormSubmitting: false,
       isStellarIntegrationEnabled: false,
       isErc20IntegrationEnabled: false,
-      asset: {
+      asset: new AssetRecord(),
+      form: {
         id: '',
         preissuedAssetSigner: config.MASTER_ACCOUNT,
         policies: {
@@ -522,7 +524,7 @@ export default {
         initialPreissuedAmount: '0',
         maxIssuanceAmount: '0',
         availableForIssuance: '0',
-        trailingDigits: '0',
+        trailingDigits: '6',
         type: '0',
         creatorDetails: {
           name: '',
@@ -570,7 +572,7 @@ export default {
 
   validations () {
     let validations = {
-      asset: {
+      form: {
         id: {
           required,
           maxLength: maxLength(ASSET_CODE_MAX_LENGTH),
@@ -585,7 +587,7 @@ export default {
         initialPreissuedAmount: {
           required,
           minValue: minValue(0),
-          maxValue: maxValue(this.asset.maxIssuanceAmount),
+          maxValue: maxValue(this.form.maxIssuanceAmount),
         },
         trailingDigits: {
           required,
@@ -620,11 +622,11 @@ export default {
         },
       },
     }
-    if (this.asset.creatorDetails.stellar) {
+    if (this.form.creatorDetails.stellar) {
       const stellarAssetCode =
-        validations.asset.creatorDetails.stellar.assetCode
+        validations.form.creatorDetails.stellar.assetCode
 
-      switch (this.asset.creatorDetails.stellar.assetType) {
+      switch (this.form.creatorDetails.stellar.assetType) {
         case STELLAR_TYPES.creditAlphanum4:
           stellarAssetCode.maxLength = maxLength(CREDIT_ALPHANUM4_MAX_LENGTH)
           stellarAssetCode.alphaNum = alphaNum
@@ -637,8 +639,8 @@ export default {
       }
     }
 
-    if (this.asset.creatorDetails.erc20.address) {
-      validations.asset.creatorDetails.erc20.address.hex = hex
+    if (this.form.creatorDetails.erc20.address) {
+      validations.form.creatorDetails.erc20.address.hex = hex
     }
     return validations
   },
@@ -651,7 +653,7 @@ export default {
     }),
 
     step () {
-      return 1 / Math.pow(10, this.asset.trailingDigits)
+      return 1 / Math.pow(10, this.form.trailingDigits)
     },
 
     notes () {
@@ -670,20 +672,20 @@ export default {
     },
 
     termsUrl () {
-      if (safeGet(this.asset, 'creatorDetails.terms.key')) {
-        return `${config.FILE_STORAGE}/${safeGet(this.asset, 'creatorDetails.terms.key')}`
+      if (safeGet(this.form, 'creatorDetails.terms.key')) {
+        return `${config.FILE_STORAGE}/${safeGet(this.form, 'creatorDetails.terms.key')}`
       }
       return ''
     },
   },
 
   watch: {
-    'asset.creatorDetails.stellar.assetType' (val) {
+    'form.creatorDetails.stellar.assetType' (val) {
       if (val === STELLAR_TYPES.native) {
-        this.asset.creatorDetails.stellar.assetCode = NATIVE_XLM_TYPE
+        this.form.creatorDetails.stellar.assetCode = NATIVE_XLM_TYPE
       }
     },
-    'asset.trailingDigits' () {
+    'form.trailingDigits' () {
       this.validateMaxIssuanceAmount()
       this.validateInitialPreissuedAmount()
     },
@@ -697,16 +699,18 @@ export default {
 
   methods: {
     validateMaxIssuanceAmount () {
-      this.asset.maxIssuanceAmount = +this.correctValues(
-        +this.asset.trailingDigits, +this.asset.maxIssuanceAmount)
+      this.form.maxIssuanceAmount = BigNumber(this.correctValues(
+        this.form.trailingDigits,
+        this.form.maxIssuanceAmount))
     },
     validateInitialPreissuedAmount () {
-      this.asset.initialPreissuedAmount = +this.correctValues(
-        +this.asset.trailingDigits, +this.asset.initialPreissuedAmount)
+      this.form.initialPreissuedAmount = BigNumber(this.correctValues(
+        this.form.trailingDigits,
+        this.form.initialPreissuedAmount))
     },
     correctValues (digits, value) {
       if (value.toString().split(/\./)[1].length > parseFloat(digits)) {
-        const result = parseFloat(value.toString().split(/\./)[0] + '.' +
+        let result = parseFloat(value.toString().split(/\./)[0] + '.' +
           value.toString().split(/\./)[1].substr(0, parseFloat(digits)))
         return result
       }
@@ -714,6 +718,48 @@ export default {
     },
     safeGet,
     globalize,
+    populateForm (asset) {
+      this.form.id =
+        asset.id
+      this.form.preissuedAssetSigner =
+        asset.preissuedAssetSigner
+      this.form.policies.value =
+        asset.policies.value
+      this.form.initialPreissuedAmount =
+        asset.initialPreissuedAmount
+      this.form.maxIssuanceAmount =
+        asset.maxIssuanceAmount
+      this.form.availableForIssuance =
+        asset.availableForIssuance
+      this.form.trailingDigits =
+        asset.trailingDigits
+      this.form.type =
+        asset.type
+      this.form.creatorDetails.name =
+        asset.creatorDetails.name
+      this.form.creatorDetails.logo =
+        asset.creatorDetails.logo
+      this.form.creatorDetails.terms =
+        asset.creatorDetails.terms
+      this.form.creatorDetails.externalSystemType =
+        asset.creatorDetails.externalSystemType
+      this.form.creatorDetails.isCoinpayments =
+        asset.creatorDetails.isCoinpayments
+      this.form.creatorDetails.stellar.withdraw =
+        asset.creatorDetails.stellar.withdraw
+      this.form.creatorDetails.stellar.deposit =
+        asset.creatorDetails.stellar.deposit
+      this.form.creatorDetails.stellar.assetType =
+        asset.creatorDetails.stellar.assetType
+      this.form.creatorDetails.stellar.assetCode =
+        asset.creatorDetails.stellar.assetCode
+      this.form.creatorDetails.erc20.withdraw =
+        asset.creatorDetails.erc20.withdraw
+      this.form.creatorDetails.erc20.deposit =
+        asset.creatorDetails.erc20.deposit
+      this.form.creatorDetails.erc20.address =
+        asset.creatorDetails.erc20.address
+    },
     async getAsset () {
       try {
         const endpoint = `/v3/assets/${this.assetCode}`
@@ -736,8 +782,10 @@ export default {
         if (data.type !== undefined) {
           data.type = String(data.type)
         }
-        Object.assign(this.asset, data)
-        this.asset.availableForIssuance = +this.asset.availableForIssuance
+        let asset = new AssetRecord(data)
+        this.populateForm(asset)
+        this.form.availableForIssuance =
+          BigNumber(this.form.availableForIssuance.toString())
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }
@@ -754,28 +802,28 @@ export default {
         let operation
         if (this.isExistingAsset) {
           const logo = {}
-          if (this.asset.creatorDetails.logo) {
-            logo.key = this.asset.creatorDetails.logo.key
-            logo.type = this.asset.creatorDetails.logo.type
+          if (this.form.creatorDetails.logo) {
+            logo.key = this.form.creatorDetails.logo.key
+            logo.type = this.form.creatorDetails.logo.type
           }
 
           const terms = {}
-          if (this.asset.creatorDetails.terms) {
-            terms.key = this.asset.creatorDetails.terms.key
-            terms.type = this.asset.creatorDetails.terms.type
-            terms.name = this.asset.creatorDetails.terms.name
+          if (this.form.creatorDetails.terms) {
+            terms.key = this.form.creatorDetails.terms.key
+            terms.type = this.form.creatorDetails.terms.type
+            terms.name = this.form.creatorDetails.terms.name
           }
 
           operation = base.ManageAssetBuilder.assetUpdateRequest({
             requestID: '0',
-            code: String(this.asset.id),
-            policies: Number(this.asset.policies.value),
+            code: String(this.form.id),
+            policies: Number(this.form.policies.value),
             allTasks: 0,
             creatorDetails: {
-              name: this.asset.creatorDetails.name,
-              external_system_type: this.asset
+              name: this.form.creatorDetails.name,
+              external_system_type: this.form
                 .creatorDetails.externalSystemType,
-              is_coinpayments: this.asset.creatorDetails.isCoinpayments,
+              is_coinpayments: this.form.creatorDetails.isCoinpayments,
               logo,
               terms,
               stellar: this.getStellarData(),
@@ -785,27 +833,28 @@ export default {
         } else {
           operation = base.ManageAssetBuilder.assetCreationRequest({
             requestID: '0',
-            code: String(this.asset.id),
-            preissuedAssetSigner: String(this.asset.preissuedAssetSigner),
-            maxIssuanceAmount: String(this.asset.maxIssuanceAmount),
-            policies: Number(this.asset.policies.value),
-            assetType: String(this.asset.type),
-            initialPreissuedAmount: String(this.asset.initialPreissuedAmount),
-            trailingDigitsCount: Number(this.asset.trailingDigits),
+            code: String(this.form.id),
+            preissuedAssetSigner: String(this.form.preissuedAssetSigner),
+            maxIssuanceAmount: String(this.form.maxIssuanceAmount),
+            policies: Number(this.form.policies.value),
+            assetType: String(this.form.type),
+            initialPreissuedAmount: String(
+              this.form.initialPreissuedAmount),
+            trailingDigitsCount: Number(this.form.trailingDigits),
             allTasks: 0,
             creatorDetails: {
-              name: this.asset.creatorDetails.name,
-              external_system_type: this.asset
+              name: this.form.creatorDetails.name,
+              external_system_type: this.form
                 .creatorDetails.externalSystemType,
-              is_coinpayments: this.asset.creatorDetails.isCoinpayments,
+              is_coinpayments: this.form.creatorDetails.isCoinpayments,
               logo: {
-                key: this.asset.creatorDetails.logo.key,
-                type: this.asset.creatorDetails.logo.type,
+                key: this.form.creatorDetails.logo.key,
+                type: this.form.creatorDetails.logo.type,
               },
               terms: {
-                key: this.asset.creatorDetails.terms.key,
-                type: this.asset.creatorDetails.terms.type,
-                name: this.asset.creatorDetails.terms.name,
+                key: this.form.creatorDetails.terms.key,
+                type: this.form.creatorDetails.terms.type,
+                name: this.form.creatorDetails.terms.name,
               },
               stellar: this.getStellarData(),
               erc20: this.getErc20Data(),
@@ -842,7 +891,7 @@ export default {
         accountId: this.userAddress,
       })
 
-      this.asset.creatorDetails[type === DOCUMENT_TYPES.assetTerms ? 'terms' : 'logo'] = {
+      this.form.creatorDetails[type === DOCUMENT_TYPES.assetTerms ? 'terms' : 'logo'] = {
         key: key,
         name: this[type].name,
         type: this[type].mime,
@@ -850,9 +899,9 @@ export default {
     },
     getAssetCodeMaxLength () {
       /* eslint-disable max-len */
-      if (this.asset.creatorDetails.stellar.assetType === STELLAR_TYPES.creditAlphanum4) {
+      if (this.form.creatorDetails.stellar.assetType === STELLAR_TYPES.creditAlphanum4) {
         return CREDIT_ALPHANUM4_MAX_LENGTH
-      } else if (this.asset.creatorDetails.stellar.assetType === STELLAR_TYPES.creditAlphanum12) {
+      } else if (this.form.creatorDetails.stellar.assetType === STELLAR_TYPES.creditAlphanum12) {
         return CREDIT_ALPHANUM12_MAX_LENGTH
       }
       /* eslint-enable max-len */
@@ -861,19 +910,19 @@ export default {
     getStellarData () {
       return this.isStellarIntegrationEnabled
         ? {
-          withdraw: this.asset.creatorDetails.stellar.withdraw,
-          deposit: this.asset.creatorDetails.stellar.deposit,
-          asset_type: this.asset.creatorDetails.stellar.assetType,
-          asset_code: this.asset.creatorDetails.stellar.assetCode,
+          withdraw: this.form.creatorDetails.stellar.withdraw,
+          deposit: this.form.creatorDetails.stellar.deposit,
+          asset_type: this.form.creatorDetails.stellar.assetType,
+          asset_code: this.form.creatorDetails.stellar.assetCode,
         }
         : {}
     },
     getErc20Data () {
       return this.isErc20IntegrationEnabled
         ? {
-          withdraw: this.asset.creatorDetails.erc20.withdraw,
-          deposit: this.asset.creatorDetails.erc20.deposit,
-          address: this.asset.creatorDetails.erc20.address,
+          withdraw: this.form.creatorDetails.erc20.withdraw,
+          deposit: this.form.creatorDetails.erc20.deposit,
+          address: this.form.creatorDetails.erc20.address,
         }
         : {}
     },

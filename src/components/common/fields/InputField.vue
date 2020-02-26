@@ -58,6 +58,7 @@
 <script>
 import InputFieldAutocomplete from './InputFieldAutocomplete'
 import { MathUtil } from '@/utils/math.util'
+import BigNumber from 'bignumber.js'
 
 const EVENTS = {
   input: 'input',
@@ -68,7 +69,7 @@ export default {
 
   props: {
     label: { type: String, default: '' },
-    value: { type: [String, Number], default: undefined },
+    value: { type: [String, Number, BigNumber], default: undefined },
     errorMessage: { type: String, default: undefined },
     autocompleteType: { type: String, default: '' },
     type: { type: String, default: 'text' },
