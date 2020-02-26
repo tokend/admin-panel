@@ -100,7 +100,7 @@
           @click="hideRejectForm"
           :disabled="formMixin.isDisabled"
         >
-          {{ "sale-request-manager.brn-cancel" | globalize }}
+          {{ "sale-request-manager.btn-cancel" | globalize }}
         </button>
       </div>
     </modal>
