@@ -385,7 +385,7 @@
         "us-accredited": "US Accredited",
         "corporate": "Corporate",
         "blocked": "Blocked",
-        "not-found": "'Not found'"
+        "not-found": "Not found"
       },
       "asset-type-to-string": {
         "not-require-kyc": "Does not require KYC",
@@ -987,6 +987,7 @@
       "btn-sign-out": "Sign Out"
     },
     "user-sidebar": {
+      "admin-logo": "TokenD",
       "admin-panel": "ADMIN PANEL",
       "link-users": "Users",
       "link-admins": "Admins",

@@ -1,7 +1,7 @@
 <template>
   <aside class="user-sidebar">
     <span class="user-sidebar__admin-logo">
-      TokenD
+      {{ "user-sidebar.admin-logo" | globalize }}
     </span>
     <span class="user-sidebar__admin-badge">
       {{ "user-sidebar.admin-panel" | globalize }}
