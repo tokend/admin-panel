@@ -77,7 +77,7 @@
               class="app-list__cell app-list__cell--right  app-list__cell--wrap"
               :title="item.createdAt"
             >
-              {{ item.createdAt | dateTime }}
+              {{ item.createdAt | formatDateDMYT }}
             </span>
           </li>
         </ul>

@@ -25,7 +25,6 @@ import log from 'loglevel'
 /* Vue filters */
 import {
   filterDateWithTime,
-  localizeIssuanceRequestState,
   cropAddress,
   roleIdToString,
   assetTypeToString,
@@ -35,8 +34,9 @@ import {
   accountState,
   globalize,
   formatDate,
+  formatDateDMY,
+  formatDateDMYT,
   yesNoFilter,
-  assetRequestStatesFilter,
   assetRequestTypesFilter,
   assetPoliciesFilter,
   stellarAssetTypesFilter,
@@ -46,6 +46,10 @@ import {
   localizedSaleTypesFilter,
   feeTypesFilter,
 } from './components/App/filters/filters'
+import { globalizeOperationType } from './components/App/filters/globalizeOperationType'
+import { globalizeRequestStateI } from './components/App/filters/globalizeRequestStateI'
+import { globalizeStatsOpType } from './components/App/filters/globalizeStatsOpType'
+import { globalizeLimitType } from './components/App/filters/globalizeLimitType'
 
 async function init () {
   i18n.onLanguageChanged(lang => {
@@ -56,7 +60,6 @@ async function init () {
 
   Vue.filter('globalize', globalize)
   Vue.filter('dateTime', filterDateWithTime)
-  Vue.filter('localizeIssuanceRequestState', localizeIssuanceRequestState)
   Vue.filter('cropAddress', cropAddress)
   Vue.filter('roleIdToString', roleIdToString)
   Vue.filter('assetTypeToString', assetTypeToString)
@@ -64,8 +67,9 @@ async function init () {
   Vue.filter('lowerCase', lowerCase)
   Vue.filter('formatVersion', formatVersion)
   Vue.filter('formatDate', formatDate)
+  Vue.filter('formatDateDMY', formatDateDMY)
+  Vue.filter('formatDateDMYT', formatDateDMYT)
   Vue.filter('yesNoFilter', yesNoFilter)
-  Vue.filter('assetRequestStatesFilter', assetRequestStatesFilter)
   Vue.filter('assetRequestTypesFilter', assetRequestTypesFilter)
   Vue.filter('assetPoliciesFilter', assetPoliciesFilter)
   Vue.filter('stellarAssetTypesFilter', stellarAssetTypesFilter)
@@ -75,6 +79,10 @@ async function init () {
   Vue.filter('localizedSaleTypesFilter', localizedSaleTypesFilter)
   Vue.filter('accountState', accountState)
   Vue.filter('feeTypesFilter', feeTypesFilter)
+  Vue.filter('globalizeRequestStateI', globalizeRequestStateI)
+  Vue.filter('globalizeOperationType', globalizeOperationType)
+  Vue.filter('globalizeStatsOpType', globalizeStatsOpType)
+  Vue.filter('globalizeLimitType', globalizeLimitType)
 
   /* Init Sentry */
   ErrorTracker.init(params)

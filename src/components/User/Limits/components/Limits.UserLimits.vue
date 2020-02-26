@@ -5,7 +5,7 @@
         <template v-for="(type,i) in LIMITS_TYPES">
           <div class="user-limits__limit-row" :key="i">
             <span class="user-limits__limit-type">
-              {{ type.replace('Out', '') }} limit
+              {{ type | globalizeLimitType }}
             </span>
             <input-field
               :value="userLimits[type]"

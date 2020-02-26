@@ -21,11 +21,11 @@
           :label="'kyc-request-list.lbl-state' | globalize"
         >
           <option
-            v-for="(state, s) in Object.keys(KYC_REQUEST_STATES)"
+            v-for="(item, s) in KYC_REQUEST_STATES"
             :key="`kyc-request-${s}`"
-            :value="state"
+            :value="item.stateI"
           >
-            {{ KYC_REQUEST_STATES[state].translationId | globalize }}
+            {{ item.stateI | globalizeRequestStateI }}
           </option>
         </select-field>
 
@@ -86,7 +86,7 @@
               is-titled
             />
             <span class="app-list__cell app-list__cell--right">
-              {{ item.state }}
+              {{ item.stateI | globalizeRequestStateI }}
             </span>
             <span class="app-list__cell app-list__cell--right">
               {{ item.updatedAt | formatDate }}
@@ -172,7 +172,7 @@ export default {
       isLoading: false,
       list: [],
       filters: {
-        state: 'pending',
+        state: KYC_REQUEST_STATES.pending.stateI,
         requestor: '',
         type: '',
         pendingTasks: '',
@@ -208,7 +208,7 @@ export default {
           page: { order: 'desc' },
           filter: clearObject({
             pending_tasks: this.filters.pendingTasks,
-            state: KYC_REQUEST_STATES[this.filters.state].state,
+            state: this.filters.state,
             requestor: requestor,
             'request_details.account_role_to_set': this.filters.roleToSet,
           }),

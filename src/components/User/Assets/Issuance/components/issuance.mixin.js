@@ -27,7 +27,7 @@ export default {
         reason: '',
       },
       filters: {
-        state: REQUEST_STATES.approved,
+        state: REQUEST_STATES.approved.stateI,
         asset: '',
       },
     }

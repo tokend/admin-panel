@@ -46,7 +46,9 @@
           />
           <detail
             :label="'limits-reviewer.lbl-operation-type-limits' | globalize"
-            :value="get(desiredLimitDetails, 'operationType')"
+            :value="
+              get(desiredLimitDetails, 'statsOpType') | globalizeStatsOpType
+            "
           />
         </div>
         <div class="limits-reviewer__limits-wrapper">
@@ -106,7 +108,7 @@
           @click="isRequiringDocs = true"
           :disabled="isPending ||
             desiredLimitDetails.requestType === 'docsUploading' ||
-            request.state === REQUEST_STATES.pending"
+            request.state === REQUEST_STATES.pending.stateI"
         >
           {{ "limits-reviewer.btn-request-docs" | globalize }}
         </button>
@@ -239,7 +241,6 @@ import {
   REQUEST_STATES,
   DOCUMENT_TYPES_STR,
 } from '@/constants'
-import { STATS_OPERATION_TYPES } from '@tokend/js-sdk'
 
 import get from 'lodash/get'
 import isEqual from 'lodash/isEqual'
@@ -257,12 +258,6 @@ const DEFAULT_LIMIT_STRUCT = {
   'weeklyOut': '9223372036854.775807',
   'monthlyOut': '9223372036854.775807',
   'annualOut': '9223372036854.775807',
-}
-
-const OPERATION_TYPES = {
-  payment: 'paymentOut',
-  deposit: 'deposit',
-  withdraw: 'withdraw',
 }
 
 const REJECT_REASON_MAX_LENGTH = 255
@@ -332,12 +327,11 @@ export default {
         ...DEFAULT_LIMIT_STRUCT,
         accountId: this.request.requestor,
         assetCode: this.assetCode,
-        statsOpType: this.desiredLimitDetails.operationType,
+        statsOpType: this.desiredLimitDetails.statsOpType,
       }
     },
     newLimit () {
       const requestDetails = this.desiredLimitDetails
-      const operationType = OPERATION_TYPES[requestDetails.operationType]
       const limitsList = Object.entries(requestDetails.limits)
       const limits = {}
       for (let limit of limitsList) {
@@ -348,7 +342,7 @@ export default {
         ...limits,
         accountId: this.request.requestor.id,
         assetCode: this.assetCode,
-        statsOpType: STATS_OPERATION_TYPES[operationType],
+        statsOpType: requestDetails.statsOpType,
       }
     },
 
@@ -408,11 +402,10 @@ export default {
         const oldLimits = this.limits
           .find(item => {
             const requestOpType = this.request.requestDetails.creatorDetails
-              .operationType
-            const limitsOpType = OPERATION_TYPES[requestOpType]
+              .statsOpType
 
             return item.assetCode === this.request.asset &&
-              item.statsOpType === STATS_OPERATION_TYPES[limitsOpType]
+              item.statsOpType === requestOpType
           })
 
         await apiHelper.requests.approveLimitsUpdate({

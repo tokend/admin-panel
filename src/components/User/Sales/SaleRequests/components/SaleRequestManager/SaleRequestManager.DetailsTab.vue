@@ -19,10 +19,9 @@
             <span>
               {{ "sale-request-manager-details-tab.request-state" | globalize }}
             </span>
-            <request-state-formatter
-              :state="request.sale.state"
-              is-colored
-            />
+            <span>
+              {{ request.sale.stateI | globalizeRequestStateI }}
+            </span>
           </li>
 
           <li>
@@ -301,7 +300,6 @@ import { EmailGetter, ImgGetter, DocLinkGetter } from '@comcom/getters'
 import {
   AssetAmountFormatter,
   AssetPoliciesFormatter,
-  RequestStateFormatter,
 } from '@comcom/formatters'
 
 import { SALE_DEFINITION_TYPES } from '@/constants'
@@ -315,7 +313,6 @@ export default {
     DocLinkGetter,
     AssetAmountFormatter,
     AssetPoliciesFormatter,
-    RequestStateFormatter,
   },
 
   props: {

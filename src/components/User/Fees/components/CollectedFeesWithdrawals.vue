@@ -11,19 +11,19 @@
           :label="'collected-fees-withdrawals.lbl-state' | globalize"
           v-model="filters.state"
         >
-          <option :value="REQUEST_STATES.pending">
+          <option :value="REQUEST_STATES.pending.stateI">
             {{ "collected-fees-withdrawals.pending" | globalize }}
           </option>
-          <option :value="REQUEST_STATES.cancelled">
+          <option :value="REQUEST_STATES.cancelled.stateI">
             {{ "collected-fees-withdrawals.canceled" | globalize }}
           </option>
-          <option :value="REQUEST_STATES.approved">
+          <option :value="REQUEST_STATES.approved.stateI">
             {{ "collected-fees-withdrawals.approved" | globalize }}
           </option>
-          <option :value="REQUEST_STATES.rejected">
+          <option :value="REQUEST_STATES.rejected.stateI">
             {{ "collected-fees-withdrawals.rejected" | globalize }}
           </option>
-          <option :value="REQUEST_STATES.permanentlyRejected">
+          <option :value="REQUEST_STATES.permanentlyRejected.stateI">
             {{ "collected-fees-withdrawals.perm-rejected" | globalize }}
           </option>
         </select-field>
@@ -62,14 +62,14 @@
             :key="item.id"
             @click="itemToShow = item"
           >
-            <span>
+            <span class="app-list__cell app-list__cell--left">
               {{ item.createdAt | formatDate }}
             </span>
             <span
               class="app-list__cell app-list__cell--right"
-              :title="verbozify(item.state)"
+              :title="item.stateI | globalizeRequestStateI"
             >
-              {{ verbozify(item.state) }}
+              {{ item.stateI | globalizeRequestStateI }}
             </span>
 
             <asset-amount-formatter
@@ -144,7 +144,6 @@ import { CollectionLoader } from '@comcom'
 import { AssetAmountFormatter } from '@comcom/formatters'
 import DetailsReader from '@comcom/details/DetailsReader'
 
-import { verbozify } from '@/utils/verbozify'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { clearObject } from '@/utils/clearObject'
 
@@ -166,7 +165,7 @@ export default {
       REQUEST_STATES,
 
       filters: {
-        state: REQUEST_STATES.pending,
+        state: REQUEST_STATES.pending.stateI,
         pendingTasks: '',
         // TODO: add asset when https://tokend.atlassian.net/browse/TDV-890
         // merged
@@ -184,8 +183,6 @@ export default {
   },
 
   methods: {
-    verbozify,
-
     async getList () {
       this.isListLoading = true
       let response = {}

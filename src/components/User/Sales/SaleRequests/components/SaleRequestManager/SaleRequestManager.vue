@@ -20,7 +20,7 @@
 
         <div
           class="sale-rm__actions app__form-actions"
-          v-if="request.sale.stateI === REQUEST_STATES.pending"
+          v-if="request.sale.stateI === REQUEST_STATES.pending.stateI"
         >
           <button
             class="app__btn"
@@ -100,7 +100,7 @@
           @click="hideRejectForm"
           :disabled="formMixin.isDisabled"
         >
-          {{ "sale-request-manager.brn-cancel" | globalize }}
+          {{ "sale-request-manager.btn-cancel" | globalize }}
         </button>
       </div>
     </modal>

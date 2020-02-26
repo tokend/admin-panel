@@ -3,7 +3,6 @@ import moment from 'moment'
 import store from '../../../store'
 import { base, SALE_TYPES } from '@tokend/js-sdk'
 import {
-  CREATE_ASSET_REQUEST_STATES,
   LIMITS_REQUEST_STATES_STR,
   STELLAR_TYPES, ASSET_REQUEST_TYPES,
   ID_DOCUMENT_TYPES,
@@ -16,18 +15,6 @@ export function filterDateWithTime (date, format = 'DD MMM YYYY [at] hh:mm:ss') 
   } catch (error) {
     return date
   }
-}
-
-export function localizeIssuanceRequestState (type) {
-  return {
-    approved: globalize('filters.localize-issuance-request-state.approved'),
-    pending: globalize('filters.localize-issuance-request-state.pending'),
-    rejected: globalize('filters.localize-issuance-request-state.rejected'),
-    permanently_rejected: globalize('filters.localize-issuance-request-state.permanently-rejected'),
-    permanentlyRejected: globalize('filters.localize-issuance-request-state.permanently-rejected'),
-    canceled: globalize('filters.localize-issuance-request-state.canceled'),
-    cancelled: globalize('filters.localize-issuance-request-state.cancelled'),
-  }[type]
 }
 
 export function cropAddress (value) {
@@ -80,11 +67,19 @@ export function accountState (role) {
 }
 
 export function globalize (translationId, interpolationOps) {
-  return '$_' + i18n.t(translationId, interpolationOps)
+  return i18n.t(translationId, interpolationOps)
 }
 
 export function formatDate (value) {
   return globalize('formats.date', { value })
+}
+
+export function formatDateDMY (value) {
+  return globalize('formats.dmy', { value })
+}
+
+export function formatDateDMYT (value) {
+  return globalize('formats.dmyt', { value })
 }
 
 export function yesNoFilter (value) {
@@ -93,37 +88,6 @@ export function yesNoFilter (value) {
   } else {
     return globalize('filters.yes-no-filter.no')
   }
-}
-
-export function assetRequestStatesFilter (value) {
-  let translationId = ''
-  switch (value) {
-    case CREATE_ASSET_REQUEST_STATES.pending.codeVerbose: {
-      translationId = 'filters.asset-request-states-filter.pending'
-      break
-    }
-    case CREATE_ASSET_REQUEST_STATES.canceled.codeVerbose: {
-      translationId = 'filters.asset-request-states-filter.canceled'
-      break
-    }
-    case CREATE_ASSET_REQUEST_STATES.approved.codeVerbose: {
-      translationId = 'filters.asset-request-states-filter.approved'
-      break
-    }
-    case CREATE_ASSET_REQUEST_STATES.rejected.codeVerbose: {
-      translationId = 'filters.asset-request-states-filter.rejected'
-      break
-    }
-    case CREATE_ASSET_REQUEST_STATES.permanentlyRejected.codeVerbose: {
-      translationId = 'filters.asset-request-states-filter.perm-rejected'
-      break
-    }
-    default: {
-      translationId = 'filters.asset-request-states-filter.default'
-      break
-    }
-  }
-  return globalize(translationId)
 }
 
 export function assetRequestTypesFilter (value) {

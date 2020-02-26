@@ -11,19 +11,19 @@
           :label="'sale-request-list.lbl-state' | globalize"
           v-model="filters.state"
         >
-          <option :value="REQUEST_STATES.pending">
+          <option :value="REQUEST_STATES.pending.stateI">
             {{ "sale-request-list.pending" | globalize }}
           </option>
-          <option :value="REQUEST_STATES.cancelled">
+          <option :value="REQUEST_STATES.cancelled.stateI">
             {{ "sale-request-list.cancelled" | globalize }}
           </option>
-          <option :value="REQUEST_STATES.approved">
+          <option :value="REQUEST_STATES.approved.stateI">
             {{ "sale-request-list.approved" | globalize }}
           </option>
-          <option :value="REQUEST_STATES.rejected">
+          <option :value="REQUEST_STATES.rejected.stateI">
             {{ "sale-request-list.rejected" | globalize }}
           </option>
-          <option :value="REQUEST_STATES.permanentlyRejected">
+          <option :value="REQUEST_STATES.permanentlyRejected.stateI">
             {{ "sale-request-list.perm-rejected" | globalize }}
           </option>
         </select-field>
@@ -147,7 +147,7 @@ export default {
 
       list: [],
       filters: {
-        state: REQUEST_STATES.pending,
+        state: REQUEST_STATES.pending.stateI,
         requestor: '',
       },
       isLoaded: false,

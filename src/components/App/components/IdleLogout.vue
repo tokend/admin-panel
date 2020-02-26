@@ -4,7 +4,7 @@
       <div class="idle-logout__content-wrp">
         <h2>{{ "idle-logout.header" | globalize }}</h2>
         <!--eslint-disable-->
-        <p 
+        <p
           class="text"
           v-html="$options.filters.globalize('idle-logout.text-long-inct', {
             timeLeft: showTimeLeft
@@ -41,9 +41,10 @@ export default {
     showIdleForm () {
       return this.$store.getters.showIdleForm
     },
-  },
-  showTimeLeft () {
-    return this.timeLeft || '...'
+
+    showTimeLeft () {
+      return this.timeLeft || '...'
+    },
   },
   created () {
     this.$store.subscribe((mutation, state) => {

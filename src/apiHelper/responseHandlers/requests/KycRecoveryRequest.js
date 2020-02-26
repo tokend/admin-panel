@@ -25,14 +25,14 @@ export class KycRecoveryRequest {
   }
 
   get isApproved () {
-    return this.stateI === REQUEST_STATES.approved
+    return this.stateI === REQUEST_STATES.approved.stateI
   }
 
   get isPending () {
-    return this.stateI === REQUEST_STATES.pending
+    return this.stateI === REQUEST_STATES.pending.stateI
   }
 
   get isRejected () {
-    return this.stateI === REQUEST_STATES.rejected
+    return this.stateI === REQUEST_STATES.rejected.stateI
   }
 }

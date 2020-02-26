@@ -6,7 +6,7 @@
 
     <ul
       class="app-list"
-      v-if="records && records.length"
+      v-if="list.length"
     >
       <div class="app-list__header">
         <span class="app-list__cell">
@@ -28,7 +28,7 @@
 
       <router-link
         class="app-list__li"
-        v-for="item in records"
+        v-for="item in list"
         :key="item.id"
         :to="{
           name: 'users.operationDetails',
@@ -45,13 +45,18 @@
           class="app-list__cell"
           :title="item.appliedAt"
         >
-          {{ item.appliedAt }}
+          {{ item.appliedAt | formatDateDMYT }}
         </span>
         <span
           class="app-list__cell"
           :title="item.sourceAccount"
         >
-          {{ item.sourceAccount }}
+          <template v-if="masterPubKey === item.sourceAccount">
+            {{ 'user-op-list.master' | globalize }}
+          </template>
+          <template v-else>
+            {{ item.sourceAccount }}
+          </template>
         </span>
         <span class="app-list__cell">
           <operation-counterparty :operation="item" />
@@ -83,12 +88,12 @@
 <script>
 import Vue from 'vue'
 
-import moment from 'moment'
-
 import safeGet from 'lodash/get'
 
 import { OperationCounterparty } from '@comcom/getters'
 import { CollectionLoader } from '@/components/common'
+
+import { Movement } from '@/js/records/movement.record'
 
 import { api } from '@/api'
 
@@ -96,7 +101,10 @@ import { clearObject } from '@/utils/clearObject'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 import { mapGetters } from 'vuex'
-import { globalize } from '../../../App/filters/filters'
+import { globalize } from '@/components/App/filters/filters'
+import { globalizeOperationType } from '@/components/App/filters/globalizeOperationType'
+
+import { OPERATION_DETAILS_TYPES } from '@/constants'
 
 export default {
   components: {
@@ -120,10 +128,6 @@ export default {
     ...mapGetters([
       'kvEntryBlockedRoleId',
     ]),
-    records () {
-      if (!this.list) return undefined
-      return this.normalizeRecords(this.list)
-    },
   },
 
   methods: {
@@ -146,11 +150,12 @@ export default {
     },
 
     getOperationType (record) {
-      switch (record.operationType) {
-        case 'Create change role request':
-          return this.getChangeRoleOperationType(record)
-        default:
-          return record.operationType
+      if (
+        record.operationType === OPERATION_DETAILS_TYPES.createChangeRoleRequest
+      ) {
+        return this.getChangeRoleOperationType(record)
+      } else {
+        return globalizeOperationType(record.operationType)
       }
     },
 
@@ -185,28 +190,13 @@ export default {
     },
 
     setList (data) {
-      this.list = data
+      this.list = data.map(item => new Movement(item))
     },
 
     async extendList (data) {
-      this.list = this.list.concat(data)
-    },
-
-    normalizeRecords (records) {
-      return records.map((item) => {
-        const operationType = item.operation.details.type
-          .replace(/operations-/g, '').split('-').join(' ')
-
-        return Object.assign({}, item, {
-          // Capitalize and remove dashes
-          operationType: operationType.charAt(0).toUpperCase() +
-            operationType.slice(1),
-          appliedAt: moment(item.operation.appliedAt).format('DD MMM YYYY [at] hh:mm:ss'),
-          sourceAccount: item.operation.source.id === this.masterPubKey ? 'Master' : item.operation.source.id,
-          receiverAccount: safeGet(item, 'operation.details.receiverAccount.id'),
-          accountTo: safeGet(item, 'operation.details.accountTo.id'),
-        })
-      })
+      this.list = this.list.concat(
+        data.map(item => new Movement(item))
+      )
     },
   },
 }
