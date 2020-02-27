@@ -1,3 +1,4 @@
+import BigNumber from 'bignumber.js'
 export default function localize (
   value,
   digits = 6,
@@ -9,7 +10,7 @@ export default function localize (
     return ''
   }
 
-  const parts = Number(value).toString().split('.')
+  const parts = BigNumber(value).toString().split('.')
   const localized = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',') + (parts[1] ? '.' + parts[1] : '')
 
   const fourDigitsDecimal = beautifyDecimal(localized, digits)
