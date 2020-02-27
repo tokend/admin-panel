@@ -9,6 +9,7 @@ for further information about branching and tagging conventions.
 ## [Unreleased]
 #### Fixed
 - A bug with localization
+- Error with reference length
 
 ## [1.12.0-rc.3] - 2020-02-18
 #### Fixed
