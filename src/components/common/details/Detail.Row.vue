@@ -53,6 +53,7 @@ export default {
 .detail-row__value-text {
   display: block;
   // max-width: 30rem;
+  word-break: break-all;
   overflow: hidden;
   text-overflow: ellipsis;
 }

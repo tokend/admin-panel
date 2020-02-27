@@ -10,9 +10,12 @@ for further information about branching and tagging conventions.
 #### Fixed
 - A bug with localization
 - A bug with incorrect displaying issuedAmount in AssetRequests.Show component
+- A bug with load kyc requests
+- One line note displaying if note is very long
 
 #### Changed
 - helper localize
+- REFERENCE_MAX_LENGTH from 255 to 64
 
 ## [1.12.0-rc.3] - 2020-02-18
 #### Fixed

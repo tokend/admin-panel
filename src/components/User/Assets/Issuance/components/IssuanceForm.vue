@@ -134,7 +134,7 @@ import {
 
 import { DEFAULT_INPUT_STEP, DEFAULT_INPUT_MIN } from '@/constants'
 
-const REFERENCE_MAX_LENGTH = 255
+const REFERENCE_MAX_LENGTH = 64
 
 export default {
   components: { AssetAmountFormatter },
