@@ -95,7 +95,11 @@
           {{ "asset-requests-show.issued-amount" | globalize }}
         </span>
         <span class="asset-requests-show__value">
-          {{ assetRequest.issuedAmount }}
+          {{
+            assetRequest.issuedAmount
+              ? localizeAmount(assetRequest.issuedAmount)
+              : '—'
+          }}
         </span>
       </div>
 
