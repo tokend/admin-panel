@@ -9,12 +9,9 @@ for further information about branching and tagging conventions.
 ## [Unreleased]
 #### Fixed
 - A bug with localization
-- A bug with incorrect display of the amount of the maximum issued asset in
-  assetRequest.Show
+- A bug with incorrect displaying issuedAmount in AssetRequests.Show component
 #### Changed
 - helper localize
-#### Added
-- localize to issuedAmount in assetRequest.Show 
 
 ## [1.12.0-rc.3] - 2020-02-18
 #### Fixed
