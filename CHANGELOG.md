@@ -10,6 +10,7 @@ for further information about branching and tagging conventions.
 #### Fixed
 - A bug with localization
 - A bug with incorrect displaying issuedAmount in AssetRequests.Show component
+
 #### Changed
 - helper localize
 
