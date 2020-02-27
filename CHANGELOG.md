@@ -9,6 +9,7 @@ for further information about branching and tagging conventions.
 ## [Unreleased]
 #### Fixed
 - A bug with localization
+- A bug with load kyc requests
 - One line note displaying if note is very long
 
 ## [1.12.0-rc.3] - 2020-02-18

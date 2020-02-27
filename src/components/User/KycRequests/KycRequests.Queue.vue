@@ -121,7 +121,7 @@ import ReviewDecisionViewer from './queue/components/ReviewDecisionViewer'
 import { api } from '@/api'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
-import { REQUEST_STATES } from '@tokend/js-sdk'
+import { REQUEST_STATES } from '@/constants'
 
 import { ChangeRoleRequest } from '@/apiHelper/responseHandlers/requests/ChangeRoleRequest'
 import { ReviewDecision } from './queue/wrappers/ReviewDecision'
