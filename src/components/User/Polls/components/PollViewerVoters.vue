@@ -16,7 +16,9 @@
             <td>
               <email-getter :account-id="item.voter.id" />
             </td>
-            <td class="poll-viewer-voters__answer">{{ getChoiceText(item.voteData) }}</td>
+            <td class="poll-viewer-voters__answer">
+              {{ getChoiceText(item.voteData) }}
+            </td>
           </tr>
         </tbody>
       </table>
