@@ -352,6 +352,6 @@ export default {
   line-height: 1.5;
 }
 .poll-request-view__answer {
-  word-break: break-all;
+  word-break: break-word;
 }
 </style>

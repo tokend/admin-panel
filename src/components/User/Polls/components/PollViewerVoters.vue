@@ -99,6 +99,6 @@ $side-padding: 0.8rem;
   }
 }
 .poll-viewer-voters__answer {
-  word-break: break-all;
+  word-break: break-word;
 }
 </style>

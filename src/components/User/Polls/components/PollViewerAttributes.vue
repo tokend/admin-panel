@@ -126,12 +126,12 @@ export default {
 
 <style scoped lang="scss">
 .poll-viewer-attributes__question {
-  word-break: break-all;
+  word-break: break-word;
   margin-bottom: 0.5rem;
   font-size: 1.6rem;
   line-height: 1.5;
 }
 .poll-viewer-attributes__answer {
-  word-break: break-all;
+  word-break: break-word;
 }
 </style>
