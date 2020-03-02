@@ -12,6 +12,7 @@ for further information about branching and tagging conventions.
 - A bug with incorrect displaying issuedAmount in AssetRequests.Show component
 - A bug with load kyc requests
 - One line note displaying if note is very long
+- One line poll question and answers displaying if they are very long
 
 #### Changed
 - helper localize

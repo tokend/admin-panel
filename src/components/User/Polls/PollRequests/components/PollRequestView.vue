@@ -59,7 +59,7 @@
               })
               }}
             </span>
-            <span>
+            <span class="poll-request-view__answer">
               {{ item.description }}
             </span>
           </li>
@@ -350,5 +350,8 @@ export default {
   margin-bottom: 0.5rem;
   font-size: 1.6rem;
   line-height: 1.5;
+}
+.poll-request-view__answer {
+  word-break: break-all;
 }
 </style>
