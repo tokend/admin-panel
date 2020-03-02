@@ -16,7 +16,7 @@
             <td>
               <email-getter :account-id="item.voter.id" />
             </td>
-            <td>{{ getChoiceText(item.voteData) }}</td>
+            <td class="poll-viewer-voters__answer">{{ getChoiceText(item.voteData) }}</td>
           </tr>
         </tbody>
       </table>
@@ -95,5 +95,8 @@ $side-padding: 0.8rem;
   & > tbody > tr:hover {
     background-color: rgba(0, 0, 0, 0.08);
   }
+}
+.poll-viewer-voters__answer {
+  word-break: break-all;
 }
 </style>
