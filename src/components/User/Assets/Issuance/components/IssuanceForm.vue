@@ -25,6 +25,7 @@
             v-model="form.reference"
             :label="'issuance-form.lbl-reference' | globalize"
             @blur="touchField('form.reference')"
+            :maxlength="REFERENCE_MAX_LENGTH"
             :error-message="getFieldErrorMessage(
               'form.reference',
               { maxLength: REFERENCE_MAX_LENGTH }

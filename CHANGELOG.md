@@ -16,6 +16,7 @@ for further information about branching and tagging conventions.
 #### Changed
 - helper localize
 - REFERENCE_MAX_LENGTH from 255 to 64
+- maxlength of reference input field in issuance form
 
 ## [1.12.0-rc.3] - 2020-02-18
 #### Fixed
