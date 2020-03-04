@@ -12,6 +12,7 @@ for further information about branching and tagging conventions.
 - A bug with incorrect displaying issuedAmount in AssetRequests.Show component
 - A bug with load kyc requests
 - One line note displaying if note is very long
+- A bug with auto select nonexistent asset for Order Match
 
 #### Changed
 - helper localize

@@ -379,7 +379,6 @@ export default {
     await this.loadFees()
     this.filters.accountRole = this.kvAccountRoles.general
     this.isLoaded = true
-    this.filters.assetCode = this.assetsByType[0].id
   },
 
   methods: {
