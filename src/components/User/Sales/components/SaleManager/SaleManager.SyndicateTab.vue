@@ -158,3 +158,9 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+  .key-value-list {
+    word-break: break-word;
+  }
+</style>
