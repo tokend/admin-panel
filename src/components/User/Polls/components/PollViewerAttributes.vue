@@ -72,8 +72,8 @@
         <li>
           <span>
             {{ "poll-viewer-attributes.permission-type" | globalize }}
-            {{ poll.permissionType | pollTypeToString }}
           </span>
+          <span>{{ poll.permissionType | pollTypeToString }}</span>
         </li>
 
         <li>
