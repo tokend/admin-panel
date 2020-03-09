@@ -14,6 +14,7 @@ for further information about branching and tagging conventions.
 - One line note displaying if note is very long
 - A bug with auto select nonexistent asset for Order Match
 - A bug with displaying in one line very long user details
+- A bug with wrong displaying fields in PollRequestView
 
 #### Changed
 - helper localize

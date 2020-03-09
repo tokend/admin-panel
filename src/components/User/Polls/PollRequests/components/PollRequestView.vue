@@ -20,7 +20,7 @@
           </li>
           <li>
             <span>{{ "poll-request-view.request-state" | globalize }}</span>
-            {{ request.stateI | globalizeRequestStateI }}
+            <span>{{ request.stateI | globalizeRequestStateI }}</span>
           </li>
 
           <li>
