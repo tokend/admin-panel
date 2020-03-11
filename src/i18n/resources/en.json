@@ -385,7 +385,7 @@
         "us-accredited": "US Accredited",
         "corporate": "Corporate",
         "blocked": "Blocked",
-        "not-found": "'Not found'"
+        "not-found": "Not found"
       },
       "asset-type-to-string": {
         "not-require-kyc": "Does not require KYC",
@@ -1496,8 +1496,8 @@
       "reject-reason": "Reject reason",
       "btn-cancel": "Cancel",
       "lbl-perm-reject": "Reject permanently",
-      "sale-request-approved": "Sale request approved.",
-      "sale-request-rejected": "Sale request rejected successfully."
+      "poll-request-approved": "Poll request approved.",
+      "poll-request-rejected": "Poll request rejected successfully."
     },
     "poll-requests-index": {
       "header": "Browse poll requests"

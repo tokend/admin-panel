@@ -20,7 +20,7 @@
           </li>
           <li>
             <span>{{ "poll-request-view.request-state" | globalize }}</span>
-            {{ request.stateI | globalizeRequestStateI }}
+            <span>{{ request.stateI | globalizeRequestStateI }}</span>
           </li>
 
           <li>
@@ -303,7 +303,7 @@ export default {
       if (await confirmAction()) {
         try {
           await apiHelper.requests.approve(this.request)
-          Bus.success('poll-request-view.sale-request-approved')
+          Bus.success('poll-request-view.poll-request-approved')
           this.$router.push({ name: 'polls.requests' })
         } catch (error) {
           ErrorHandler.process(error)
@@ -325,7 +325,7 @@ export default {
           },
           this.request
         )
-        Bus.success('poll-request-view.sale-request-rejected')
+        Bus.success('poll-request-view.poll-request-rejected')
         this.$router.push({ name: 'polls.requests' })
       } catch (error) {
         ErrorHandler.process(error)
