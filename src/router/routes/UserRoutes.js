@@ -529,5 +529,53 @@ export const UserRoutes = {
         require(['../../components/settings/GAuth.vue'], resolve)
       },
     },
+    {
+      path: '/roles',
+      name: 'roles',
+      redirect: { name: 'roles.account' },
+      component: function (resolve) {
+        require(['../../components/User/Roles/Roles.vue'], resolve)
+      },
+      children: [
+        {
+          path: '/roles/account',
+          name: 'roles.account',
+          component: function (resolve) {
+            require(['../../components/User/Roles/Roles.Account.vue'], resolve)
+          },
+        },
+        {
+          path: '/roles/signer',
+          name: 'roles.signer',
+          component: function (resolve) {
+            require(['../../components/User/Roles/Roles.Signer.vue'], resolve)
+          },
+        },
+      ],
+    },
+    {
+      path: '/rules',
+      name: 'rules',
+      redirect: { name: 'rules.account' },
+      component: function (resolve) {
+        require(['../../components/User/Rules/Rules.vue'], resolve)
+      },
+      children: [
+        {
+          path: '/rules/account',
+          name: 'rules.account',
+          component: function (resolve) {
+            require(['../../components/User/Rules/Rules.Account.vue'], resolve)
+          },
+        },
+        {
+          path: '/rules/signer',
+          name: 'rules.signer',
+          component: function (resolve) {
+            require(['../../components/User/Rules/Rules.Signer.vue'], resolve)
+          },
+        },
+      ],
+    },
   ],
 }

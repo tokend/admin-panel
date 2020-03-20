@@ -1000,7 +1000,9 @@
       "link-trades": "Trades",
       "link-fees": "Fees",
       "link-key-value": "Key Value",
-      "link-settings": "Settings"
+      "link-settings": "Settings",
+      "link-roles": "Roles",
+      "link-rules": "Rules"
     },
     "collected-fees-list": {
       "header": "Balances",
@@ -1928,6 +1930,14 @@
     },
     "xdr-type-from-value": {
       "error": "xdrEnumToConstant: Cannot get values from provided xdrEnum ({{xdrEnum}})"
+    },
+    "roles": {
+      "link-account": "Account",
+      "link-signer": "Signer"
+    },
+    "rules": {
+      "link-account": "Account",
+      "link-signer": "Signer"
     }
   }
 }
