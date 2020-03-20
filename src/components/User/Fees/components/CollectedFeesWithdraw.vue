@@ -67,7 +67,7 @@
               'form.amount',
               { minValue: DEFAULT_INPUT_MIN, maxValue: maxWithdrawalAmount }
             )"
-            :disabled="formMixin.isDisabled"
+            :disabled="formMixin.isDisabled || !isSelectedAssetWithdrawable"
           >
             <p slot="hint">
               {{ maxWithdrawalAmountHint }}
@@ -84,7 +84,7 @@
             name="withdrawal-meta"
             @blur="touchField('form.meta')"
             :error-message="getFieldErrorMessage('form.meta')"
-            :disabled="formMixin.isDisabled"
+            :disabled="formMixin.isDisabled || !isSelectedAssetWithdrawable"
           />
         </div>
 
