@@ -68,6 +68,13 @@ export default {
       },
       deep: true,
     },
+    'docItem.label': function () {
+      let result
+      for (let i = 0; i < this.filteredList.length; i++) {
+        result = this.docItem.label === this.filteredList[i]
+        this.$emit('doc-type-found', result)
+      }
+    },
   },
 
   mounted () {
