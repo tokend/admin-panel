@@ -10,6 +10,14 @@ for further information about branching and tagging conventions.
 ## [Unreleased]
 #### Fixed
 - Details in createChangeRoleRequest at unblock user
+- A bug with localization
+- A bug with wrong displaying int64 in AssetAmountFormatter
+
+#### Removed
+- formatAssetAmount, formatFiatAmount helpers
+
+#### Added
+- new filter formatAssetFilter
 
 ## [1.12.0] - 2020-03-17
 #### Added

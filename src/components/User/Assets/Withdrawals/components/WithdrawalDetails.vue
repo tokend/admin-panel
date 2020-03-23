@@ -42,7 +42,7 @@
         </li>
       </template>
       <li>
-        <span>{{ "WithdrawalDetails.amount" | globalize }}</span>
+        <span>{{ "withdrawal-details.amount" | globalize }}</span>
         <asset-amount-formatter
           :amount="request.requestDetails.amount"
           :asset="request.requestDetails.asset.id"

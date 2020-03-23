@@ -166,7 +166,6 @@ import { DEFAULT_INPUT_STEP, DEFAULT_INPUT_MIN } from '@/constants'
 import { api } from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { Bus } from '@/utils/bus'
-import { formatAssetAmount } from '@/utils/formatters'
 
 import { EmailGetter } from '@comcom/getters'
 import { AssetAmountFormatter } from '@comcom/formatters'
@@ -177,7 +176,7 @@ import { FEE_TYPES, base } from '@tokend/js-sdk'
 
 import { Balance } from '@/store/wrappers/balance'
 
-import { globalize } from '@/components/App/filters/filters'
+import { globalize, assetAmountFilter } from '@/components/App/filters/filters'
 
 const EVENTS = {
   submitted: 'submitted',
@@ -266,7 +265,7 @@ export default {
     },
 
     maxWithdrawalAmountHint () {
-      const formatted = formatAssetAmount(
+      const formatted = assetAmountFilter(
         this.selectedBalanceAttrs.available,
         this.selectedBalanceAttrs.assetCode
       )

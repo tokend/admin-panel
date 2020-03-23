@@ -2,6 +2,7 @@ import { i18n } from '@/i18n'
 import moment from 'moment'
 import store from '../../../store'
 import { base, SALE_TYPES } from '@tokend/js-sdk'
+import numeral from 'numeral'
 import {
   LIMITS_REQUEST_STATES_STR,
   STELLAR_TYPES, ASSET_REQUEST_TYPES,
@@ -296,4 +297,15 @@ export function feeTypesFilter (value) {
     }
   }
   return globalize(translationId)
+}
+
+export function assetAmountFilter (amount, asset) {
+  const nbsp = ' '
+  const tail = asset ? `${nbsp}${asset}` : ''
+
+  try {
+    return numeral(amount).concat(tail)
+  } catch (error) {
+    return `${amount}${tail}`
+  }
 }

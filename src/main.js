@@ -45,6 +45,7 @@ import {
   idDocumentsVerboseFilter,
   localizedSaleTypesFilter,
   feeTypesFilter,
+  assetAmountFilter,
 } from './components/App/filters/filters'
 import { globalizeOperationType } from './components/App/filters/globalizeOperationType'
 import { globalizeRequestStateI } from './components/App/filters/globalizeRequestStateI'
@@ -83,6 +84,7 @@ async function init () {
   Vue.filter('globalizeOperationType', globalizeOperationType)
   Vue.filter('globalizeStatsOpType', globalizeStatsOpType)
   Vue.filter('globalizeLimitType', globalizeLimitType)
+  Vue.filter('assetAmountFilter', assetAmountFilter)
 
   /* Init Sentry */
   ErrorTracker.init(params)
