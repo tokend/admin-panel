@@ -10,6 +10,8 @@ for further information about branching and tagging conventions.
 ## [Unreleased]
 #### Fixed
 - Details in createChangeRoleRequest at unblock user
+- A bug with wrong error if exceeded the maximum issuance amount of the asset
+  in PreissuanceForm
 
 ## [1.12.0] - 2020-03-17
 #### Added

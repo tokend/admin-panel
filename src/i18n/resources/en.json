@@ -1375,7 +1375,8 @@
       "your-file-is-corrupted": "Your file is corrupted. Please, select another file",
       "code-does-not-exist": "Asset with code does not exist in the system",
       "asset-not-found": "Asset with code {{assetCode}} does not exist in the system",
-      "msg-asset-not-found": "Asset with code {{assetCode}} does not exist in the system"
+      "msg-asset-not-found": "Asset with code {{assetCode}} does not exist in the system",
+      "exceeded-max-preissuance": "You have exceeded the maximum issuance amount of the asset"
     },
     "preissuance": {
       "header": "Upload preissuance"

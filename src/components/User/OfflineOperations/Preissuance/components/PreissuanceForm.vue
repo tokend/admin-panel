@@ -130,7 +130,6 @@ import { globalize } from '@/components/App/filters/filters'
 import localize from '@/utils/localize'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { api, loadingDataViaLoop } from '@/api'
-
 import { Bus } from '@/utils/bus'
 
 export default {
@@ -227,9 +226,6 @@ export default {
             globalize('preissuance-form.asset-not-found',
               { assetCode: assetCode }
             )
-          ),
-          globalize('preissuance-form.asset-not-found',
-            { assetCode: assetCode }
           ))
           this.notLoadedFiles.push({
             fileName: this.temporaryFileName,
@@ -260,7 +256,7 @@ export default {
         this.fileInfo = []
         Bus.success('preissuance-form.submitted-successfully')
       } catch (error) {
-        ErrorHandler.process(error)
+        ErrorHandler.process(error, 'preissuance-form.exceeded-max-preissuance')
       }
       this.$store.commit('CLOSE_LOADER')
       this.uploadBtnDisable = false
