@@ -1,18 +1,18 @@
 <template>
-  <div class="roles">
+  <div class="roles-page">
     <user-header>
       <router-link
         :to="{ name: 'roles.account' }"
         slot="nav"
       >
-        {{ "roles.link-account" | globalize }}
+        {{ "roles-page.link-account" | globalize }}
       </router-link>
 
       <router-link
         :to="{ name: 'roles.signer' }"
         slot="nav"
       >
-        {{ "roles.link-signer" | globalize }}
+        {{ "roles-page.link-signer" | globalize }}
       </router-link>
     </user-header>
     <div class="app__user-container">
@@ -25,7 +25,7 @@
 import UserHeader from '@/components/User/components/UserHeader'
 
 export default {
-  name: 'roles',
+  name: 'roles-page',
 
   components: { UserHeader },
 }

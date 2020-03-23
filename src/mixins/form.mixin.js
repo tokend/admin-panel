@@ -139,6 +139,11 @@ export default {
           continue
         }
       }
+      if (!this.$v) {
+        // in case we have no validation rules at all
+        return true
+      }
+
       this.$v.$reset()
     },
 
