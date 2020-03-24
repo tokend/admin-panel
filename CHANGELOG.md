@@ -29,6 +29,7 @@ for further information about branching and tagging conventions.
 - A bug with auto select nonexistent asset for Order Match
 - A bug with displaying in one line very long user details
 - A bug with wrong displaying fields in PollRequestView
+- A bug with impossibility close Withdrawal details in firefox
 
 #### Changed
 - helper localize

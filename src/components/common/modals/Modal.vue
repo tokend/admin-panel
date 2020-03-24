@@ -32,7 +32,7 @@ export default {
           .map(item => item.className)
           .includes('modal__content')
       } catch (error) { // older browsers
-        isContentClicked = !/("|\s|^)modal(\s|")/ig.test(event.target.className)
+        isContentClicked = event.target.className === 'modal__content'
       }
 
       if (!isContentClicked) {
