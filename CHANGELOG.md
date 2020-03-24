@@ -13,6 +13,9 @@ for further information about branching and tagging conventions.
 - A bug with wrong error if exceeded the maximum issuance amount of the asset
   in PreissuanceForm
 
+#### Removed
+- Non-withdrawable assets from withdrawal form
+
 ## [1.12.0] - 2020-03-17
 #### Added
 - Ability change trailing digits in asset
