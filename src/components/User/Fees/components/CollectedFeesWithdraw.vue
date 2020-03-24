@@ -67,7 +67,7 @@
               'form.amount',
               { minValue: DEFAULT_INPUT_MIN, maxValue: maxWithdrawalAmount }
             )"
-            :disabled="formMixin.isDisabled || !isSelectedAssetWithdrawable"
+            :disabled="formMixin.isDisabled"
           >
             <p slot="hint">
               {{ maxWithdrawalAmountHint }}
@@ -84,7 +84,7 @@
             name="withdrawal-meta"
             @blur="touchField('form.meta')"
             :error-message="getFieldErrorMessage('form.meta')"
-            :disabled="formMixin.isDisabled || !isSelectedAssetWithdrawable"
+            :disabled="formMixin.isDisabled"
           />
         </div>
 
@@ -313,8 +313,9 @@ export default {
           .getWithSignature(`/v3/accounts/${Vue.params.MASTER_ACCOUNT}`, {
             include: ['balances.state'],
           })
-
-        this.masterBalances = masterBalances.map(b => new Balance(b))
+        this.masterBalances = masterBalances.filter(balance =>
+          this.assetByCode(balance.asset.id).isWithdrawable).map(b =>
+          new Balance(b))
       } catch (err) {
         ErrorHandler.processWithoutFeedback(err)
         this.isMasterBalancesFailed = true

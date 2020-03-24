@@ -9,8 +9,10 @@ for further information about branching and tagging conventions.
 
 ## [Unreleased]
 #### Fixed
-- A bug when non-withdrawable asset's input fields are active in withdrawal form
 - Details in createChangeRoleRequest at unblock user
+
+#### Removed
+- Non-withdrawable assets from withdrawal form
 
 ## [1.12.0] - 2020-03-17
 #### Added
