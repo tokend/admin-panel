@@ -176,7 +176,7 @@ import { FEE_TYPES, base } from '@tokend/js-sdk'
 
 import { Balance } from '@/store/wrappers/balance'
 
-import { globalize, assetAmountFilter } from '@/components/App/filters/filters'
+import { globalize, formatMoney } from '@/components/App/filters/filters'
 
 const EVENTS = {
   submitted: 'submitted',
@@ -265,10 +265,10 @@ export default {
     },
 
     maxWithdrawalAmountHint () {
-      const formatted = assetAmountFilter(
-        this.selectedBalanceAttrs.available,
-        this.selectedBalanceAttrs.assetCode
-      )
+      const formatted = formatMoney({
+        value: this.selectedBalanceAttrs.available,
+        currency: this.selectedBalanceAttrs.assetCode,
+      })
       return globalize('collected-fees-withdraw.max-amount', {
         amount: formatted,
       })

@@ -17,7 +17,7 @@ for further information about branching and tagging conventions.
 - formatAssetAmount, formatFiatAmount helpers
 
 #### Added
-- new filter formatAssetFilter
+- new filter formatMoney
 
 ## [1.12.0] - 2020-03-17
 #### Added

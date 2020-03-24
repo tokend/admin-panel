@@ -3,7 +3,7 @@
     class="asset-amount-formatter"
     :title="isTitled && formatted"
   >
-    {{ amount | assetAmountFilter(asset) }}
+    {{ formatAmount | formatMoney }}
   </span>
 </template>
 
@@ -14,6 +14,14 @@ export default {
     amount: { type: [String, Number], required: true },
     asset: { type: String, default: '' },
     isTitled: { type: Boolean, default: false },
+  },
+  computed: {
+    formatAmount () {
+      return {
+        value: this.amount,
+        currency: this.asset,
+      }
+    },
   },
 }
 </script>
