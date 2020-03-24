@@ -226,7 +226,9 @@ export default {
             globalize('preissuance-form.asset-not-found',
               { assetCode: assetCode }
             )
-          ))
+          ),
+          'preissuance-form.asset-not-found'
+          )
           this.notLoadedFiles.push({
             fileName: this.temporaryFileName,
             msg: globalize('preissuance-form.msg-asset-not-found',
@@ -256,7 +258,7 @@ export default {
         this.fileInfo = []
         Bus.success('preissuance-form.submitted-successfully')
       } catch (error) {
-        ErrorHandler.process(error, 'preissuance-form.exceeded-max-preissuance')
+        ErrorHandler.process(error)
       }
       this.$store.commit('CLOSE_LOADER')
       this.uploadBtnDisable = false
