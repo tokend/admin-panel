@@ -140,7 +140,7 @@
           >
             <div class="limits-reviewer__doc-label">
               <datalist-field
-                @doc-type-found="enableButton"
+                :doc-type-found="enableButton"
                 :doc-item="item"
                 :key="i"
               />
@@ -161,14 +161,14 @@
         <div class="app__form-actions limits-reviewer__doc-list-form-actions">
           <button
             class="app__btn"
-            :disabled="isPending"
+            :disabled="isPending || !isDoctypeValid"
             @click="addMoreDoc"
           >
             {{ "limits-reviewer.btn-add-more" | globalize }}
           </button>
           <button
             class="app__btn"
-            :disabled="isPending || !disableButton"
+            :disabled="isPending || !isDoctypeValid"
             @click="requireDocsRequest"
           >
             {{ "limits-reviewer.btn-submit" | globalize }}
@@ -280,7 +280,7 @@ export default {
   },
 
   data: _ => ({
-    disableButton: false,
+    isDoctypeValid: false,
     request: null,
     account: null,
     limits: null,
@@ -353,6 +353,7 @@ export default {
       return this.desiredLimitDetails.documents
     },
   },
+
   async created () {
     try {
       await this.getRequest()
@@ -367,8 +368,7 @@ export default {
 
   methods: {
     enableButton (result) {
-      this.disableButton = result
-      return this.disableButton
+      this.isDoctypeValid = result
     },
     get,
 
