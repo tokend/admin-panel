@@ -140,7 +140,7 @@
           >
             <div class="limits-reviewer__doc-label">
               <datalist-field
-                :doc-type-found="enableButton"
+                @doc-type-found="enableButton"
                 :doc-item="item"
                 :key="i"
               />

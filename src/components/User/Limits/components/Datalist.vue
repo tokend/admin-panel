@@ -6,6 +6,7 @@
       :label="'data-list.lbl-document-type' | globalize"
       @keyup.down="onArrowDown"
       @keyup.up="onArrowUp"
+      :error-message="chooseFromList"
     />
     <!-- <input type="text"
             v-model="docItem.label"
@@ -34,7 +35,7 @@
 <script>
 import { InputField } from '@comcom/fields'
 import { DOCUMENT_TYPES_STR } from '@/constants'
-
+import { globalize } from '@/components/App/filters/filters'
 export default {
   name: 'datalist-field',
   components: { InputField },
@@ -58,21 +59,28 @@ export default {
           .includes(this.docItem.label.toLowerCase())
       })
     },
+    chooseFromList () {
+      let result
+      for (let i = 0; i < this.filteredList.length; i++) {
+        result = this.docItem.label === this.filteredList[i] || this.docItem.label === ''
+      }
+      return result
+        ? ''
+        : globalize('limits-reviewer.choose-from-list')
+    },
   },
 
   watch: {
-    docItem: {
-      handler: function (value) {
-        if (this.searchValue === value.label) return
-        this.showDatalist()
-      },
-      deep: true,
+    'docItem.label': function () {
+      this.showDatalist()
+      if (this.filteredList.length === 1) {
+        this.filteredList.forEach(i =>
+          this.$emit('doc-type-found', this.docItem.label === i)
+        )
+      } else {
+        this.$emit('doc-type-found', false)
+      }
     },
-    // 'docItem.label': function () {
-    //   this.filteredList.forEach(i =>
-    //     this.$emit('doc-type-found', this.docItem.label === i)
-    //   )
-    // },
   },
 
   mounted () {
