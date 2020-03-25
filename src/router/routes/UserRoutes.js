@@ -541,14 +541,14 @@ export const UserRoutes = {
           path: '/roles/account',
           name: 'roles.account',
           component: function (resolve) {
-            require(['../../components/User/Roles/Roles.Account.vue'], resolve)
+            require(['../../components/User/Roles/RolesManager.vue'], resolve)
           },
         },
         {
           path: '/roles/signer',
           name: 'roles.signer',
           component: function (resolve) {
-            require(['../../components/User/Roles/Roles.Signer.vue'], resolve)
+            require(['../../components/User/Roles/RolesManager.vue'], resolve)
           },
         },
       ],

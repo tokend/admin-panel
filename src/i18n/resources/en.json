@@ -1931,11 +1931,11 @@
     "xdr-type-from-value": {
       "error": "xdrEnumToConstant: Cannot get values from provided xdrEnum ({{xdrEnum}})"
     },
-    "roles-page": {
+    "roles": {
       "link-account": "Account",
       "link-signer": "Signer"
     },
-    "roles": {
+    "roles-manager": {
       "lbl-key-select-field": "Role",
       "role-name": "Role name",
       "btn-update": "Update role",
@@ -1944,7 +1944,10 @@
       "role-updated-successfully": "Role updated successfully",
       "role-created-successfully": "Role created successfully",
       "role-removed-successfully": "Role removed successfully",
-      "rules-title": "Rules"
+      "rules-title": "Rules",
+      "loading": "Loading...",
+      "error": "An error occurred. Please try again later",
+      "no-rules-created-yet": "No rules created yet"
     },
     "rules": {
       "link-account": "Account",
