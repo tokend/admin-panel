@@ -130,7 +130,6 @@ import { globalize } from '@/components/App/filters/filters'
 import localize from '@/utils/localize'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { api, loadingDataViaLoop } from '@/api'
-
 import { Bus } from '@/utils/bus'
 
 export default {
@@ -228,9 +227,8 @@ export default {
               { assetCode: assetCode }
             )
           ),
-          globalize('preissuance-form.asset-not-found',
-            { assetCode: assetCode }
-          ))
+          'preissuance-form.asset-not-found'
+          )
           this.notLoadedFiles.push({
             fileName: this.temporaryFileName,
             msg: globalize('preissuance-form.msg-asset-not-found',

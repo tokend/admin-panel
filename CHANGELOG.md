@@ -10,7 +10,12 @@ for further information about branching and tagging conventions.
 ## [Unreleased]
 #### Fixed
 - Details in createChangeRoleRequest at unblock user
-- Disable submit button until Document type is invalid
+- Disable 'submit' and 'add more' buttons until Document type is invalid
+- A bug with wrong error if exceeded the maximum issuance amount of the asset
+  in PreissuanceForm
+
+#### Removed
+- Non-withdrawable assets from withdrawal form
 
 ## [1.12.0] - 2020-03-17
 #### Added
@@ -25,6 +30,7 @@ for further information about branching and tagging conventions.
 - A bug with auto select nonexistent asset for Order Match
 - A bug with displaying in one line very long user details
 - A bug with wrong displaying fields in PollRequestView
+- A bug with impossibility close Withdrawal details in firefox
 
 #### Changed
 - helper localize

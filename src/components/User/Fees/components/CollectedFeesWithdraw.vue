@@ -313,8 +313,9 @@ export default {
           .getWithSignature(`/v3/accounts/${Vue.params.MASTER_ACCOUNT}`, {
             include: ['balances.state'],
           })
-
-        this.masterBalances = masterBalances.map(b => new Balance(b))
+        this.masterBalances = masterBalances
+          .filter(balance => this.assetByCode(balance.asset.id).isWithdrawable)
+          .map(b => new Balance(b))
       } catch (err) {
         ErrorHandler.processWithoutFeedback(err)
         this.isMasterBalancesFailed = true
