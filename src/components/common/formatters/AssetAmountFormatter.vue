@@ -1,7 +1,7 @@
 <template>
   <span
     class="asset-amount-formatter"
-    :title="isTitled && formatted"
+    :title="isTitled"
   >
     {{
       {

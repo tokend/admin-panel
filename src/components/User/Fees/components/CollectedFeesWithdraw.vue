@@ -70,7 +70,7 @@
             :disabled="formMixin.isDisabled"
           >
             <p slot="hint">
-              {{ maxWithdrawalAmountHint }}
+              {{ maxWithdrawalAmountHint | formatMoney }}
             </p>
           </input-field>
         </div>
@@ -176,7 +176,7 @@ import { FEE_TYPES, base } from '@tokend/js-sdk'
 
 import { Balance } from '@/store/wrappers/balance'
 
-import { globalize, formatMoney } from '@/components/App/filters/filters'
+import { globalize } from '@/components/App/filters/filters'
 
 const EVENTS = {
   submitted: 'submitted',
@@ -265,13 +265,10 @@ export default {
     },
 
     maxWithdrawalAmountHint () {
-      const formatted = formatMoney({
+      return {
         value: this.selectedBalanceAttrs.available,
         currency: this.selectedBalanceAttrs.assetCode,
-      })
-      return globalize('collected-fees-withdraw.max-amount', {
-        amount: formatted,
-      })
+      }
     },
 
     isSelectedAssetWithdrawable () {
