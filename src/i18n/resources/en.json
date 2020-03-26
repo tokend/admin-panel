@@ -1947,7 +1947,9 @@
       "rules-title": "Rules",
       "loading": "Loading...",
       "error": "An error occurred. Please try again later",
-      "no-rules-created-yet": "No rules created yet"
+      "no-rules-created-yet": "No rules created yet",
+      "default-rule": "Default rule",
+      "read-only": "Can't be modified in the future"
     },
     "rules": {
       "link-account": "Account",

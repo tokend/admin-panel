@@ -1,6 +1,6 @@
 import safeGet from 'lodash/get'
 
-export class Rule {
+export class RuleRecord {
   constructor (record) {
     this.id = record.id
 
@@ -9,6 +9,7 @@ export class Rule {
     this.forbids = safeGet(record, 'forbids')
     this.name = safeGet(record, 'details.name')
     this.resource = safeGet(record, 'resource')
+    this.isDefault = safeGet(record, 'isDefault')
   }
 
   get nameOrId () {

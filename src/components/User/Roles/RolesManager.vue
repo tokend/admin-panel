@@ -15,7 +15,7 @@
           <div class="roles__form">
             <select-field
               class="roles__input"
-              v-model="form.role"
+              v-model="form.roleId"
               :disabled="formMixin.isDisabled"
               :label="'roles-manager.lbl-key-select-field' | globalize"
             >
@@ -32,14 +32,23 @@
         </div>
 
         <div class="roles__card">
-          <div class="roles__form">
+          <form class="roles__form">
             <template v-if="rules.length">
-              <input-field
-                class="app__form-field roles__role-name"
-                :label="'roles-manager.role-name' | globalize"
-                v-model="form.roleName"
-                :disabled="formMixin.isDisabled"
-              />
+              <div class="roles__form-head">
+                <input-field
+                  class="app__form-field roles__role-name"
+                  :label="'roles-manager.role-name' | globalize"
+                  v-model="form.roleName"
+                  :disabled="formMixin.isDisabled || currentRole.isReadOnly"
+                />
+                <tick-field
+                  v-if="!isAccountRoles"
+                  class="roles__read-only"
+                  :label="'roles-manager.read-only' | globalize"
+                  v-model="form.isReadOnly"
+                  :disabled="formMixin.isDisabled || currentRole.isReadOnly"
+                />
+              </div>
 
               <div class="roles__rules-wrp">
                 <h4 class="roles__rules-title">
@@ -52,8 +61,15 @@
                     :key="item.id"
                     :label="item.nameOrId"
                     v-model="form.rules"
-                    :cb-value="item.id"
-                    :disabled="formMixin.isDisabled"
+                    :cb-value="item"
+                    :disabled="formMixin.isDisabled ||
+                      item.isDefault ||
+                      currentRole.isReadOnly
+                    "
+                    :title="item.isDefault
+                      ? `${globalize('roles-manager.default-rule')}`
+                      : item.nameOrId
+                    "
                   />
                 </div>
               </div>
@@ -69,7 +85,7 @@
                       roles__btn
                     "
                     @click="submit(ACTIONS.update)"
-                    :disabled="formMixin.isDisabled"
+                    :disabled="formMixin.isDisabled || currentRole.isReadOnly"
                   >
                     {{ "roles-manager.btn-update" | globalize }}
                   </button>
@@ -103,7 +119,7 @@
             <template v-else>
               <p>{{ "roles-manager.no-rules-created-yet" | globalize }}</p>
             </template>
-          </div>
+          </form>
         </div>
       </template>
     </template>
@@ -123,9 +139,10 @@ import { api, loadingDataViaLoop } from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { base } from '@tokend/js-sdk'
 import { Bus } from '@/utils/bus'
-import { Role } from '@/js/records/role.record'
-import { Rule } from '@/js/records/rule.record'
+import { RoleRecord } from '@/js/records/role.record'
+import { RuleRecord } from '@/js/records/rule.record'
 import { confirmAction } from '@/js/modals/confirmation_message'
+import { globalize } from '@/components/App/filters/filters'
 
 const ACTIONS = {
   create: 'create',
@@ -134,14 +151,18 @@ const ACTIONS = {
 }
 
 export default {
-  name: 'roles',
+  name: 'roles-manager',
   mixins: [FormMixin],
+  props: {
+    isAccountRoles: { type: Boolean, required: true },
+  },
 
   data: _ => ({
     form: {
-      role: '',
+      roleId: '',
       rules: [],
       roleName: '',
+      isReadOnly: false,
     },
     list: [],
     rules: [],
@@ -149,46 +170,63 @@ export default {
     isLoadFailed: false,
     isRoleSelected: false,
     ACTIONS,
+    globalize,
   }),
 
+  computed: {
+    currentRole () {
+      return this.list.find(role => role.id === this.form.roleId) || {}
+    },
+  },
+
   watch: {
-    'form.role' (val) {
-      if (val) {
+    'form.roleId' (roleId) {
+      if (roleId) {
         this.isRoleSelected = true
-        const role = this.list.find(role => role.id === this.form.role)
-        this.form.rules = role.rulesIDs
-        this.form.roleName = role.name
+        this.form.rules = this.currentRole.rules
+        this.form.roleName = this.currentRole.name
+        this.form.isReadOnly = this.currentRole.isReadOnly
       } else {
         this.isRoleSelected = false
         this.clearFields()
+        this.setDefaultSignerRoles()
       }
+    },
+
+    isAccountRoles: async function () {
+      await this.loadRulesAndRoles()
+      this.clearFields()
+      this.setDefaultSignerRoles()
     },
   },
 
   async created () {
     await this.loadRulesAndRoles()
+    this.setDefaultSignerRoles()
   },
 
   methods: {
     async getList () {
-      const response = await api.getWithSignature('/v3/account_roles', {
+      const endpoint = this.isAccountRoles ? '/v3/account_roles' : '/v3/signer_roles'
+      const response = await api.getWithSignature(endpoint, {
         include: ['rules'],
         page: {
           limit: 100,
         },
       })
       const roles = await loadingDataViaLoop(response)
-      this.list = roles.map(role => new Role(role))
+      this.list = roles.map(role => new RoleRecord(role))
     },
 
     async getRules () {
-      const response = await api.getWithSignature('/v3/account_rules', {
+      const endpoint = this.isAccountRoles ? '/v3/account_rules' : '/v3/signer_rules'
+      const response = await api.getWithSignature(endpoint, {
         page: {
           limit: 100,
         },
       })
       const rules = await loadingDataViaLoop(response)
-      this.rules = rules.map(rule => new Rule(rule))
+      this.rules = rules.map(rule => new RuleRecord(rule))
     },
 
     async submit (actionType) {
@@ -197,7 +235,6 @@ export default {
       }
 
       this.disableForm()
-
       const operation = this.buildRoleOperation(actionType)
       try {
         await api.postOperations(operation)
@@ -214,21 +251,35 @@ export default {
     },
 
     buildRoleOperation (actionType) {
+      const operation = this.isAccountRoles
+        ? 'ManageAccountRoleBuilder'
+        : 'ManageSignerRoleBuilder'
+
+      let rules = this.form.rules
+      if (!this.isAccountRoles) {
+        rules = rules.filter(rule => !rule.isDefault)
+      }
+      rules = rules.map(rules => rules.id)
+
       switch (actionType) {
         case ACTIONS.create:
-          return base.ManageAccountRoleBuilder.create({
-            ruleIDs: this.form.rules,
+          return base[operation].create({
+            ruleIDs: rules,
             details: {
               ...(this.form.roleName
                 ? { name: this.form.roleName }
                 : {}
               ),
             },
+            ...(this.isAccountRoles
+              ? {}
+              : { isReadOnly: this.form.isReadOnly }
+            ),
           })
         case ACTIONS.update:
-          return base.ManageAccountRoleBuilder.update({
-            ruleIDs: this.form.rules,
-            roleId: this.form.role,
+          return base[operation].update({
+            ruleIDs: rules,
+            roleId: this.form.roleId,
             details: {
               ...(this.form.roleName
                 ? { name: this.form.roleName }
@@ -237,8 +288,8 @@ export default {
             },
           })
         case ACTIONS.remove:
-          return base.ManageAccountRoleBuilder.remove({
-            roleId: this.form.role,
+          return base[operation].remove({
+            roleId: this.form.roleId,
           })
       }
     },
@@ -271,6 +322,12 @@ export default {
         this.isLoadFailed = true
       }
       this.isLoaded = true
+    },
+
+    setDefaultSignerRoles () {
+      if (!this.isAccountRoles) {
+        this.form.rules = this.rules.filter(rule => rule.isDefault)
+      }
     },
   },
 }
@@ -316,7 +373,7 @@ export default {
 }
 
 .roles__role-name {
-  width: 30rem;
+  max-width: 30rem;
 }
 
 .roles__actions {
@@ -330,5 +387,14 @@ export default {
 
 .roles__rules-title {
   margin-top: 3rem;
+}
+
+.roles__form-head {
+  display: flex;
+  align-items: center;
+}
+
+.roles__read-only {
+  margin-left: 5rem;
 }
 </style>

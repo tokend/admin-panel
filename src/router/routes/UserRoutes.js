@@ -543,12 +543,20 @@ export const UserRoutes = {
           component: function (resolve) {
             require(['../../components/User/Roles/RolesManager.vue'], resolve)
           },
+          props: {
+            default: true,
+            isAccountRoles: true,
+          },
         },
         {
           path: '/roles/signer',
           name: 'roles.signer',
           component: function (resolve) {
             require(['../../components/User/Roles/RolesManager.vue'], resolve)
+          },
+          props: {
+            default: true,
+            isAccountRoles: false,
           },
         },
       ],

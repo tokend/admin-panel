@@ -1,16 +1,25 @@
 import safeGet from 'lodash/get'
+import { RuleRecord } from './rule.record'
 
-export class Role {
+const READ_ONLY_ACCOUNT_ID = 'GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWHF'
+export class RoleRecord {
   constructor (record) {
-    this.id = record.id
+    this._record = record
 
-    this.rules = safeGet(record, 'rules')
-    this.rulesIDs = this._rulesIDs()
+    this.id = record.id
+    this.ownerId = safeGet(record, 'owner.id')
+    this.rules = this._rules()
     this.name = safeGet(record, 'details.name') || ''
+    this.isReadOnly = this._isReadOnly()
   }
 
-  _rulesIDs () {
-    return this.rules.map(rules => rules.id)
+  _rules () {
+    const rules = this._record.rules || []
+    return rules.map(rule => new RuleRecord(rule))
+  }
+
+  _isReadOnly () {
+    return this.ownerId === READ_ONLY_ACCOUNT_ID
   }
 
   get nameOrId () {
