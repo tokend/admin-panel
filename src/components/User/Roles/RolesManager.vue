@@ -80,6 +80,7 @@
                   class="roles__actions-selected-rule"
                 >
                   <button
+                    type="button"
                     class="app__btn
                       app__btn--small
                       roles__btn
@@ -91,6 +92,7 @@
                   </button>
 
                   <button
+                    type="button"
                     class="app__btn
                       app__btn--small
                       app__btn--danger
@@ -105,6 +107,7 @@
 
                 <button
                   v-else
+                  type="button"
                   class="app__btn
                     app__btn--small
                     roles__btn
