@@ -140,7 +140,7 @@
           >
             <div class="limits-reviewer__doc-label">
               <datalist-field
-                @doc-type-found="isDoctypeValid = $event"
+                @event-validation="isDoctypeValid = $event"
                 :doc-item="item"
                 :key="i"
               />

@@ -64,10 +64,10 @@ export default {
       this.showDatalist()
       if (this.filteredList.length === 1) {
         this.filteredList.forEach(i =>
-          this.$emit('doc-type-found', this.docItem.label === i)
+          this.$emit('event-validation', this.docItem.label === i)
         )
       } else {
-        this.$emit('doc-type-found', false)
+        this.$emit('event-validation', false)
       }
     },
   },
