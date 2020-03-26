@@ -354,6 +354,7 @@ export default {
 
 .roles__btn {
   max-width: 20rem;
+  margin-right: 2rem;
 }
 
 .roles__form {
