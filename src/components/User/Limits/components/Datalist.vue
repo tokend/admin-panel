@@ -143,7 +143,7 @@ export default {
   position: absolute;
   background: $color-content-bg;
   width: 100%;
-  max-height: 10rem;
+  max-height: 8rem;
   overflow-y: scroll;
   border: 1px solid $color-sub-nav-bg;
   border-top: none;
