@@ -140,10 +140,17 @@
           >
             <div class="limits-reviewer__doc-label">
               <datalist-field
-                @doc-type-found="enableButton"
+                @doc-type-found="isDoctypeValid = $event"
                 :doc-item="item"
                 :key="i"
               />
+              <transition name="limits-reviewer__datalist-field-err-transition">
+                <p
+                  class="limits-reviewer__datalist-field-err-mes"
+                  v-if="!isDoctypeValid">
+                  {{ 'limits-reviewer.choose-from-list' | globalize }}
+                </p>
+              </transition>
             </div>
             <text-field
               :label="'limits-reviewer.lbl-document-description' | globalize"
@@ -296,6 +303,7 @@ export default {
       {
         label: '',
         description: '',
+        isDocValid: false,
       },
     ],
     rejectForm: {
@@ -317,6 +325,11 @@ export default {
   },
 
   computed: {
+    chooseFromList () {
+      return this.isDoctypeValid
+        ? ''
+        : globalize('limits-reviewer.choose-from-list')
+    },
     currentLimits () {
       if (!this.limits) return null
       const limits = this.limits
@@ -367,9 +380,6 @@ export default {
   },
 
   methods: {
-    enableButton (result) {
-      this.isDoctypeValid = result
-    },
     get,
 
     async getRequest () {
@@ -513,6 +523,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../../assets/scss/colors";
+@import "@/components/common/fields/scss/_fields-variables";
 .limits-reviewer__heading {
   margin-bottom: 2rem;
 }
@@ -609,5 +620,35 @@ export default {
 
 .limits-reviewer__doc-close-btn {
   font-size: 2.4rem;
+}
+.limits-reviewer__datalist-field-err-transition-enter-active {
+  animation: limits-reviewer__datalist-field-err-transition-keyframes
+    $field-transition-duration
+    ease-in-out;
+}
+
+.limits-reviewer__datalist-field-err-transition-leave-active {
+  animation: limits-reviewer__datalist-field-err-transition-keyframes
+    $field-transition-duration
+    ease-in-out reverse;
+}
+
+@keyframes limits-reviewer__datalist-field-err-transition-keyframes {
+  from {
+    max-height: 0;
+    margin-top: 0;
+    overflow: hidden;
+  }
+  to {
+    max-height: $field-error-font-size * $field-error-line-height;
+    margin-top: $field-error-margin-top;
+    overflow: hidden;
+  }
+}
+.limits-reviewer__datalist-field-err-mes {
+  color: $field-color-error;
+  margin-top: $field-error-margin-top;
+  font-size: $field-error-font-size;
+  line-height: $field-error-line-height;
 }
 </style>
