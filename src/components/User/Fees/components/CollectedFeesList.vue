@@ -31,19 +31,18 @@
             {{ balance.assetCode }}
           </span>
 
-          <asset-amount-formatter
+          <span
             class="app-list__cell app-list__cell--right"
-            is-titled
-            :amount="balance.available"
-            :asset="balance.assetCode"
-          />
-
-          <asset-amount-formatter
+            :title="formatBalanceAvailable(balance) | formatMoney"
+          >
+            {{ formatBalanceAvailable(balance) | formatMoney }}
+          </span>
+          <span
             class="app-list__cell app-list__cell--right"
-            is-titled
-            :amount="balance.locked"
-            :asset="balance.assetCode"
-          />
+            :title="formatBalanceLocked(balance) | formatMoney"
+          >
+            {{ formatBalanceLocked(balance) | formatMoney }}
+          </span>
 
           <span class="app-list__cell app-list__cell--right">
             <template>
@@ -82,8 +81,6 @@
 import Vue from 'vue'
 import { mapGetters } from 'vuex'
 
-import { AssetAmountFormatter } from '@comcom/formatters'
-
 import { api } from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
@@ -94,10 +91,6 @@ const EVENTS = {
 }
 
 export default {
-  components: {
-    AssetAmountFormatter,
-  },
-
   data () {
     return {
       isLoading: false,
@@ -145,6 +138,20 @@ export default {
     isAssetWithdrawable (assetCode) {
       const asset = this.assetByCode(assetCode)
       return asset && asset.isWithdrawable
+    },
+
+    formatBalanceAvailable (balance) {
+      return {
+        value: balance.available,
+        currency: balance.assetCode,
+      }
+    },
+
+    formatBalanceLocked (balance) {
+      return {
+        value: balance.locked,
+        currency: balance.assetCode,
+      }
     },
   },
 }

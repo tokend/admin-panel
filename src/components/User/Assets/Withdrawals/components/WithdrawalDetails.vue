@@ -43,32 +43,43 @@
       </template>
       <li>
         <span>{{ "withdrawal-details.amount" | globalize }}</span>
-        <asset-amount-formatter
-          :amount="request.requestDetails.amount"
-          :asset="request.requestDetails.asset.id"
-        />
+        <span :title="formatAmount() | formatMoney">
+          {{ formatAmount() | formatMoney }}
+        </span>
       </li>
       <li>
         <span>{{ "withdrawal-details.fixed-fee" | globalize }}</span>
-        <asset-amount-formatter
-          :amount="request.requestDetails.fee.fixed"
-          :asset="request.requestDetails.asset.id"
-        />
+        <span
+          :title="formatFee(request.requestDetails.fee.fixed) | formatMoney"
+        >
+          {{ formatFee(request.requestDetails.fee.fixed) | formatMoney }}
+        </span>
       </li>
       <li>
         <span>{{ "withdrawal-details.persent-fee" | globalize }}</span>
-        <asset-amount-formatter
-          :amount="request.requestDetails.fee.calculatedPercent"
-          :asset="request.requestDetails.asset.id"
-        />
+        <span
+          :title="formatFee(request.requestDetails.fee.calculatedPercent)
+            | formatMoney"
+        >
+          {{
+            formatFee(request.requestDetails.fee.calculatedPercent)
+              | formatMoney
+          }}
+        </span>
       </li>
       <li>
         <span>{{ "withdrawal-details.total-fee" | globalize }}</span>
-        <asset-amount-formatter
-          :amount="Number(request.requestDetails.fee.fixed) +
-            Number(request.requestDetails.fee.calculatedPercent)"
-          :asset="request.requestDetails.asset.id"
-        />
+        <span
+          :title="formatFee(Number(request.requestDetails.fee.fixed) +
+            Number(request.requestDetails.fee.calculatedPercent)) | formatMoney"
+        >
+          {{
+            formatFee(
+              Number(request.requestDetails.fee.fixed) +
+                Number(request.requestDetails.fee.calculatedPercent)
+            ) | formatMoney
+          }}
+        </span>
       </li>
     </ul>
     <div class="withdrawal-details__action-btns" v-if="reviewAllowed">
@@ -138,7 +149,6 @@ import FormMixin from '@/mixins/form.mixin'
 import { required, maxLength } from '@/validators'
 
 import { EmailGetter } from '@comcom/getters'
-import { AssetAmountFormatter } from '@comcom/formatters'
 
 import Modal from '@comcom/modals/Modal'
 import { confirmAction } from '@/js/modals/confirmation_message'
@@ -157,7 +167,6 @@ const REJECT_REASON_MAX_LENGTH = 255
 export default {
   components: {
     EmailGetter,
-    AssetAmountFormatter,
     Modal,
   },
   mixins: [FormMixin],
@@ -241,6 +250,18 @@ export default {
 
     clearRejectionSelection () {
       this.itemToReject = null
+    },
+    formatAmount () {
+      return {
+        value: this.request.requestDetails.amount,
+        currency: this.request.requestDetails.asset.id,
+      }
+    },
+    formatFee (fee) {
+      return {
+        value: fee,
+        currency: this.request.requestDetails.asset.id,
+      }
     },
   },
 }

@@ -15,6 +15,7 @@ for further information about branching and tagging conventions.
 
 #### Removed
 - formatAssetAmount, formatFiatAmount helpers
+- AssetAmountFormatter
 
 #### Added
 - new filter formatMoney

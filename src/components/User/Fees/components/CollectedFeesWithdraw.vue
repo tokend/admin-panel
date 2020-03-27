@@ -70,8 +70,10 @@
             :disabled="formMixin.isDisabled"
           >
             <p slot="hint">
-              {{ 'collected-fees-withdraw.max-amount' | globalize }}
-              {{ maxWithdrawalAmountHint | formatMoney }}
+              {{
+                'collected-fees-withdraw.max-amount'
+                  | globalize(maxWithdrawalAmountHint)
+              }}
             </p>
           </input-field>
         </div>
@@ -105,22 +107,20 @@
               <span>
                 {{ "collected-fees-withdraw.fixed-fee" | globalize }}
               </span>
-              <asset-amount-formatter
-                :amount="opAttrs.fixedFee"
-                :asset="opAttrs.feeAssetCode"
-              />
+              <span :title="formatFee(opAttrs.fixedFee) | formatMoney">
+                {{ formatFee(opAttrs.fixedFee) | formatMoney }}
+              </span>
             </p>
           </template>
 
-          <template v-if="+opAttrs.fixedFee">
+          <template v-if="+opAttrs.percentFee">
             <p class="collected-fees-withdraw__op-attrs-row">
               <span>
                 {{ "collected-fees-withdraw.percent-fee" | globalize }}
               </span>
-              <asset-amount-formatter
-                :amount="opAttrs.percentFee"
-                :asset="opAttrs.feeAssetCode"
-              />
+              <span :title="formatFee(opAttrs.percentFee) | formatMoney">
+                {{ formatFee(opAttrs.percentFee) | formatMoney }}
+              </span>
             </p>
           </template>
 
@@ -169,7 +169,6 @@ import { ErrorHandler } from '@/utils/ErrorHandler'
 import { Bus } from '@/utils/bus'
 
 import { EmailGetter } from '@comcom/getters'
-import { AssetAmountFormatter } from '@comcom/formatters'
 
 import _pick from 'lodash/pick'
 import _throttle from 'lodash/throttle'
@@ -186,7 +185,6 @@ const EVENTS = {
 export default {
   components: {
     EmailGetter,
-    AssetAmountFormatter,
   },
 
   mixins: [FormMixin],
@@ -267,8 +265,10 @@ export default {
 
     maxWithdrawalAmountHint () {
       return {
-        value: this.selectedBalanceAttrs.available,
-        currency: this.selectedBalanceAttrs.assetCode,
+        amount: {
+          value: this.selectedBalanceAttrs.available,
+          currency: this.selectedBalanceAttrs.assetCode,
+        },
       }
     },
 
@@ -401,6 +401,13 @@ export default {
     // For parent access
     setForm (opts) {
       Object.assign(this.form, _pick(opts, ['balanceId', 'amount']))
+    },
+
+    formatFee (fee) {
+      return {
+        value: fee,
+        currency: this.opAttrs.feeAssetCode,
+      }
     },
   },
 }

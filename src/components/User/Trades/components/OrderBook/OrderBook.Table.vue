@@ -76,16 +76,48 @@
                 @keyup.enter.stop.prevent="showItemDetails(item)"
                 @keyup.space.stop.prevent="showItemDetails(item)">
                 <template v-if="isRtl">
-                  <td><asset-amount-formatter :amount="item.sum" /></td>
-                  <td><asset-amount-formatter :amount="item.quoteAmount" /></td>
-                  <td><asset-amount-formatter :amount="item.baseAmount" /></td>
-                  <td><asset-amount-formatter :amount="item.price" /></td>
+                  <td>
+                    <span :title="item.sum | formatNumber">
+                      {{ item.sum | formatNumber }}
+                    </span>
+                  </td>
+                  <td>
+                    <span :title="item.quoteAmount | formatNumber">
+                      {{ item.quoteAmount | formatNumber }}
+                    </span>
+                  </td>
+                  <td>
+                    <span :title="item.baseAmount | formatNumber">
+                      {{ item.baseAmount | formatNumber }}
+                    </span>
+                  </td>
+                  <td>
+                    <span :title="item.price | formatNumber">
+                      {{ item.price | formatNumber }}
+                    </span>
+                  </td>
                 </template>
                 <template v-else>
-                  <td><asset-amount-formatter :amount="item.price" /></td>
-                  <td><asset-amount-formatter :amount="item.baseAmount" /></td>
-                  <td><asset-amount-formatter :amount="item.quoteAmount" /></td>
-                  <td><asset-amount-formatter :amount="item.sum" /></td>
+                  <td>
+                    <span :title="item.price | formatNumber">
+                      {{ item.price | formatNumber }}
+                    </span>
+                  </td>
+                  <td>
+                    <span :title="item.baseAmount | formatNumber">
+                      {{ item.baseAmount | formatNumber }}
+                    </span>
+                  </td>
+                  <td>
+                    <span :title="item.quoteAmount | formatNumber">
+                      {{ item.quoteAmount | formatNumber }}
+                    </span>
+                  </td>
+                  <td>
+                    <span :title="item.sum | formatNumber">
+                      {{ item.sum | formatNumber }}
+                    </span>
+                  </td>
                 </template>
               </tr>
             </tbody>
@@ -135,10 +167,9 @@
         </li>
         <li>
           <span>{{ "order-book-table.offered-amount" | globalize }}</span>
-          <asset-amount-formatter
-            :amount="itemDetails.baseAmount"
-            :asset="itemDetails.baseAssetCode"
-          />
+          <span :title="formatBaseAmount | formatMoney">
+            {{ formatBaseAmount | formatMoney }}
+          </span>
         </li>
         <li>
           <span>
@@ -148,17 +179,16 @@
             })
             }}
           </span>
-          <asset-amount-formatter
-            :amount="itemDetails.price"
-            :asset="itemDetails.quoteAssetCode"
-          />
+          <span :title="formatQuoteAsset(itemDetails.price) | formatMoney">
+            {{ formatQuoteAsset(itemDetails.price) | formatMoney }}
+          </span>
         </li>
         <li>
           <span>{{ "order-book-table.total-price" | globalize }}</span>
-          <asset-amount-formatter
-            :amount="itemDetails.quoteAmount"
-            :asset="itemDetails.quoteAssetCode"
-          />
+          <!-- eslint-disable-next-line max-len -->
+          <span :title="formatQuoteAsset(itemDetails.quoteAmount) | formatMoney">
+            {{ formatQuoteAsset(itemDetails.quoteAmount) | formatMoney }}
+          </span>
         </li>
       </ul>
     </modal>
@@ -168,7 +198,6 @@
 <script>
 import { AssetPair } from '../../models/AssetPair'
 
-import { AssetAmountFormatter } from '@comcom/formatters'
 import { EmailGetter } from '@comcom/getters'
 import Modal from '@comcom/modals/Modal'
 
@@ -176,7 +205,6 @@ const EMPTY_DETAILS = Object.freeze({})
 
 export default {
   components: {
-    AssetAmountFormatter,
     EmailGetter,
     Modal,
   },
@@ -196,6 +224,21 @@ export default {
       isDetailsShown: false,
       itemDetails: Object.assign({}, EMPTY_DETAILS),
     }
+  },
+
+  computed: {
+    formatBaseAmount () {
+      return {
+        value: this.itemDetails.baseAmount,
+        currency: this.itemDetails.baseAssetCode,
+      }
+    },
+    formatQuoteAsset (value) {
+      return {
+        value,
+        currency: this.itemDetails.quoteAssetCode,
+      }
+    },
   },
 
   watch: {

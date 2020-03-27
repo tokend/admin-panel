@@ -75,12 +75,10 @@
             :key="item.id"
             @click="requestToShow = item"
           >
-            <!-- eslint-disable max-len -->
             <span class="app-list__cell">
-              <asset-amount-formatter
-                :amount="item.requestDetails.amount"
-                :asset="item.requestDetails.asset.id"
-              />
+              <span :title="formatAssetAmount(item) | formatMoney">
+                {{ formatAssetAmount(item) | formatMoney }}
+              </span>
             </span>
 
             <span class="app-list__cell" :title="verbozify(item.state)">
@@ -134,7 +132,6 @@
 <script>
 import SelectField from '@comcom/fields/SelectField'
 import InputField from '@comcom/fields/InputField'
-import { AssetAmountFormatter } from '@comcom/formatters'
 import { CollectionLoader } from '@/components/common'
 
 import Modal from '@comcom/modals/Modal'
@@ -160,7 +157,6 @@ export default {
     InputField,
     Modal,
     WithdrawalDetails,
-    AssetAmountFormatter,
     CollectionLoader,
   },
 
@@ -267,6 +263,13 @@ export default {
 
     reloadCollectionLoader () {
       this.$refs.collectionLoaderBtn.loadFirstPage()
+    },
+
+    formatAssetAmount (item) {
+      return {
+        value: item.requestDetails.amount,
+        currency: item.requestDetails.asset.id,
+      }
     },
   },
 }

@@ -51,6 +51,7 @@ import { globalizeRequestStateI } from './components/App/filters/globalizeReques
 import { globalizeStatsOpType } from './components/App/filters/globalizeStatsOpType'
 import { globalizeLimitType } from './components/App/filters/globalizeLimitType'
 import { formatMoney } from './components/App/filters/formatMoney'
+import { formatNumber } from './components/App/filters/formatNumber'
 
 async function init () {
   i18n.onLanguageChanged(lang => {
@@ -85,6 +86,7 @@ async function init () {
   Vue.filter('globalizeStatsOpType', globalizeStatsOpType)
   Vue.filter('globalizeLimitType', globalizeLimitType)
   Vue.filter('formatMoney', formatMoney)
+  Vue.filter('formatNumber', formatNumber)
 
   /* Init Sentry */
   ErrorTracker.init(params)

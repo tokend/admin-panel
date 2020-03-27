@@ -77,14 +77,18 @@
               <!-- eslint-disable-next-line max-len -->
               {{ "sale-request-manager-details-tab.initial-preissued-amount" | globalize }}
             </span>
-            <asset-amount-formatter :amount="request.asset.maxIssuanceAmount" />
+            <span :title="request.asset.maxIssuanceAmount | formatNumber">
+              {{ request.asset.maxIssuanceAmount | formatNumber }}
+            </span>
           </li>
           <li>
             <span>
               <!-- eslint-disable-next-line max-len -->
               {{ "sale-request-manager-details-tab.max-issuance-amount" | globalize }}
             </span>
-            <asset-amount-formatter :amount="request.asset.maxIssuanceAmount" />
+            <span :title="request.asset.maxIssuanceAmount | formatNumber">
+              {{ request.asset.maxIssuanceAmount | formatNumber }}
+            </span>
           </li>
           <li>
             <span>
@@ -226,19 +230,21 @@
             <span>
               {{ "sale-request-manager-details-tab.soft-cap" | globalize }}
             </span>
-            <asset-amount-formatter
-              :amount="saleDetails.softCap"
-              :asset="saleDetails.defaultQuoteAsset.id"
-            />
+            <!-- eslint-disable -->
+            <span :title="formatSaleCap(saleDetails.softCap) | formatMoney">
+              {{ formatSaleCap(saleDetails.softCap) | formatMoney }}
+            </span>
+            <!-- eslint-enable -->
           </li>
           <li>
             <span>
               {{ "sale-request-manager-details-tab.hard-cap" | globalize }}
             </span>
-            <asset-amount-formatter
-              :amount="saleDetails.hardCap"
-              :asset="saleDetails.defaultQuoteAsset.id"
-            />
+            <!-- eslint-disable -->
+            <span :title="formatSaleCap(saleDetails.hardCap) | formatMoney">
+              {{ formatSaleCap(saleDetails.hardCap) | formatMoney }}
+            </span>
+            <!-- eslint-enable -->
           </li>
           <li>
             <span>
@@ -248,10 +254,9 @@
               })
               }}
             </span>
-            <asset-amount-formatter
-              :amount="saleDetails.baseAssetForHardCap"
-              :asset="saleDetails.baseAsset.id"
-            />
+            <span :title="formatbaseAssetForHardCap | formatMoney">
+              {{ formatbaseAssetForHardCap | formatMoney }}
+            </span>
           </li>
         </ul>
 
@@ -297,10 +302,7 @@
 
 <script>
 import { EmailGetter, ImgGetter, DocLinkGetter } from '@comcom/getters'
-import {
-  AssetAmountFormatter,
-  AssetPoliciesFormatter,
-} from '@comcom/formatters'
+import { AssetPoliciesFormatter } from '@comcom/formatters'
 
 import { SALE_DEFINITION_TYPES } from '@/constants'
 
@@ -311,7 +313,6 @@ export default {
     EmailGetter,
     ImgGetter,
     DocLinkGetter,
-    AssetAmountFormatter,
     AssetPoliciesFormatter,
   },
 
@@ -328,10 +329,24 @@ export default {
       return this.saleDetails.accessDefinitionType.value ===
         SALE_DEFINITION_TYPES.whitelist
     },
+
+    formatbaseAssetForHardCap () {
+      return {
+        value: this.saleDetails.baseAssetForHardCap,
+        currency: this.saleDetails.baseAsset.id,
+      }
+    },
   },
 
   methods: {
     safeGet: get,
+
+    formatSaleCap (cap) {
+      return {
+        value: cap,
+        currency: this.saleDetails.defaultQuoteAsset.id,
+      }
+    },
   },
 }
 </script>

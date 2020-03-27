@@ -30,11 +30,12 @@
           </span>
 
           <span class="app-list__cell app-list__cell--right">
-            <asset-amount-formatter
-              :amount="item.price"
-              :asset="item.quoteAsset.id"
-            />
+            <!-- eslint-disable -->
+            <span :title="formatAssetPairPrice(item) | formatMoney">
+              {{ formatAssetPairPrice(item) | formatMoney }}
+            </span>
           </span>
+          <!-- eslint-enable -->
 
           <!-- eslint-disable-next-line max-len -->
           <span class="app-list__cell app-list__cell--policy app-list__cell--right">
@@ -100,7 +101,6 @@
 
 <script>
 import { CollectionLoader } from '@/components/common'
-import { AssetAmountFormatter } from '@comcom/formatters'
 
 import { api } from '@/api'
 import { ASSET_PAIR_POLICIES_VERBOSE } from '@/constants'
@@ -109,7 +109,6 @@ import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   components: {
-    AssetAmountFormatter,
     CollectionLoader,
   },
 
@@ -140,6 +139,10 @@ export default {
 
     setList (data) {
       this.list = data
+    },
+
+    formatAssetPairPrice (item) {
+      return { value: item.price, currency: item.quoteAsset.id }
     },
 
     extendList (data) {
