@@ -70,6 +70,7 @@
             :disabled="formMixin.isDisabled"
           >
             <p slot="hint">
+              {{ 'collected-fees-withdraw.max-amount' | globalize }}
               {{ maxWithdrawalAmountHint | formatMoney }}
             </p>
           </input-field>

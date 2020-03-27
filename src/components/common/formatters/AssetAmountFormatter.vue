@@ -1,7 +1,10 @@
 <template>
   <span
     class="asset-amount-formatter"
-    :title="isTitled"
+    :title="isTitled && {
+      value: amount,
+      currency: asset,
+    } | formatMoney"
   >
     {{
       {

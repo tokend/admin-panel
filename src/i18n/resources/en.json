@@ -1029,7 +1029,7 @@
       "placeholder-bitmask-exact-match": "Bitmask, exact match",
       "destination-address": "Destination address",
       "comment": "Comment",
-      "max-amount": "Max amount is {{amount}}",
+      "max-amount": "Max amount is ",
       "please-recheck-form": "Please, recheck the form before confirmation",
       "btn-confirm": "Confirm",
       "btn-cancel": "Cancel",
