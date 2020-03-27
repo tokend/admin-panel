@@ -297,3 +297,193 @@ export function feeTypesFilter (value) {
   }
   return globalize(translationId)
 }
+
+export function accountRuleActionsFilter (value) {
+  let translationId = ''
+  switch (+value) {
+    case base.xdr.AccountRuleAction.any().value: {
+      translationId = 'filters.account-rule-actions-filter.any'
+      break
+    }
+    case base.xdr.AccountRuleAction.create().value: {
+      translationId = 'filters.account-rule-actions-filter.create'
+      break
+    }
+    case base.xdr.AccountRuleAction.createForOther().value: {
+      translationId = 'filters.account-rule-actions-filter.create-for-other'
+      break
+    }
+    case base.xdr.AccountRuleAction.createWithTask().value: {
+      translationId = 'filters.account-rule-actions-filter.create-with-task'
+      break
+    }
+    case base.xdr.AccountRuleAction.manage().value: {
+      translationId = 'filters.account-rule-actions-filter.manage'
+      break
+    }
+    case base.xdr.AccountRuleAction.send().value: {
+      translationId = 'filters.account-rule-actions-filter.send'
+      break
+    }
+    case base.xdr.AccountRuleAction.withdraw().value: {
+      translationId = 'filters.account-rule-actions-filter.withdraw'
+      break
+    }
+    case base.xdr.AccountRuleAction.receiveIssuance().value: {
+      translationId = 'filters.account-rule-actions-filter.receive-issuance'
+      break
+    }
+    case base.xdr.AccountRuleAction.receivePayment().value: {
+      translationId = 'filters.account-rule-actions-filter.receive-payment'
+      break
+    }
+    case base.xdr.AccountRuleAction.receiveAtomicSwap().value: {
+      translationId = 'filters.account-rule-actions-filter.receive-atomic-swap'
+      break
+    }
+    case base.xdr.AccountRuleAction.bind().value: {
+      translationId = 'filters.account-rule-actions-filter.bind'
+      break
+    }
+    case base.xdr.AccountRuleAction.updateMaxIssuance().value: {
+      translationId = 'filters.account-rule-actions-filter.update-max-issuance'
+      break
+    }
+    case base.xdr.AccountRuleAction.check().value: {
+      translationId = 'filters.account-rule-actions-filter.check'
+      break
+    }
+    case base.xdr.AccountRuleAction.cancel().value: {
+      translationId = 'filters.account-rule-actions-filter.cancel'
+      break
+    }
+    case base.xdr.AccountRuleAction.close().value: {
+      translationId = 'filters.account-rule-actions-filter.close'
+      break
+    }
+    case base.xdr.AccountRuleAction.remove().value: {
+      translationId = 'filters.account-rule-actions-filter.remove'
+      break
+    }
+    case base.xdr.AccountRuleAction.updateEndTime().value: {
+      translationId = 'filters.account-rule-actions-filter.update-end-time'
+      break
+    }
+    case base.xdr.AccountRuleAction.createForOtherWithTask().value: {
+      translationId = 'filters.account-rule-actions-filter.create-for-other-with-task'
+      break
+    }
+    case base.xdr.AccountRuleAction.removeForOther().value: {
+      translationId = 'filters.account-rule-actions-filter.remove-for-other'
+      break
+    }
+    case base.xdr.AccountRuleAction.exchange().value: {
+      translationId = 'filters.account-rule-actions-filter.exchange'
+      break
+    }
+    case base.xdr.AccountRuleAction.receiveRedemption().value: {
+      translationId = 'filters.account-rule-actions-filter.receive-redemption'
+      break
+    }
+    case base.xdr.AccountRuleAction.participate().value: {
+      translationId = 'filters.account-rule-actions-filter.participate'
+      break
+    }
+    default: {
+      translationId = 'filters.account-rule-actions-filter.default'
+      break
+    }
+  }
+  return globalize(translationId)
+}
+
+export function signerRuleActionsFilter (value) {
+  let translationId = ''
+  switch (+value) {
+    case base.xdr.SignerRuleAction.any().value: {
+      translationId = 'filters.signer-rule-actions-filter.any'
+      break
+    }
+    case base.xdr.SignerRuleAction.create().value: {
+      translationId = 'filters.signer-rule-actions-filter.create'
+      break
+    }
+    case base.xdr.SignerRuleAction.createForOther().value: {
+      translationId = 'filters.signer-rule-actions-filter.create-for-other'
+      break
+    }
+    case base.xdr.SignerRuleAction.update().value: {
+      translationId = 'filters.signer-rule-actions-filter.update'
+      break
+    }
+    case base.xdr.SignerRuleAction.manage().value: {
+      translationId = 'filters.signer-rule-actions-filter.manage'
+      break
+    }
+    case base.xdr.SignerRuleAction.send().value: {
+      translationId = 'filters.signer-rule-actions-filter.send'
+      break
+    }
+    case base.xdr.SignerRuleAction.remove().value: {
+      translationId = 'filters.signer-rule-actions-filter.remove'
+      break
+    }
+    case base.xdr.SignerRuleAction.cancel().value: {
+      translationId = 'filters.signer-rule-actions-filter.cancel'
+      break
+    }
+    case base.xdr.SignerRuleAction.review().value: {
+      translationId = 'filters.signer-rule-actions-filter.review'
+      break
+    }
+    case base.xdr.SignerRuleAction.receiveAtomicSwap().value: {
+      translationId = 'filters.signer-rule-actions-filter.receive-atomic-swap'
+      break
+    }
+    case base.xdr.SignerRuleAction.participate().value: {
+      translationId = 'filters.signer-rule-actions-filter.participate'
+      break
+    }
+    case base.xdr.SignerRuleAction.bind().value: {
+      translationId = 'filters.signer-rule-actions-filter.bind'
+      break
+    }
+    case base.xdr.SignerRuleAction.updateMaxIssuance().value: {
+      translationId = 'filters.signer-rule-actions-filter.update-max-issuance'
+      break
+    }
+    case base.xdr.SignerRuleAction.check().value: {
+      translationId = 'filters.signer-rule-actions-filter.check'
+      break
+    }
+    case base.xdr.SignerRuleAction.close().value: {
+      translationId = 'filters.signer-rule-actions-filter.close'
+      break
+    }
+    case base.xdr.SignerRuleAction.updateEndTime().value: {
+      translationId = 'filters.signer-rule-actions-filter.update-end-time'
+      break
+    }
+    case base.xdr.SignerRuleAction.createWithTask().value: {
+      translationId = 'filters.signer-rule-actions-filter.create-with-task'
+      break
+    }
+    case base.xdr.SignerRuleAction.createForOtherWithTask().value: {
+      translationId = 'filters.signer-rule-actions-filter.create-for-other-with-task'
+      break
+    }
+    case base.xdr.SignerRuleAction.removeForOther().value: {
+      translationId = 'filters.signer-rule-actions-filter.remove-for-other'
+      break
+    }
+    case base.xdr.SignerRuleAction.exchange().value: {
+      translationId = 'filters.signer-rule-actions-filter.exchange'
+      break
+    }
+    default: {
+      translationId = 'filters.signer-rule-actions-filter.default'
+      break
+    }
+  }
+  return globalize(translationId)
+}

@@ -9,6 +9,7 @@ export class RuleRecord {
     this.forbids = safeGet(record, 'forbids')
     this.name = safeGet(record, 'details.name')
     this.resource = safeGet(record, 'resource')
+    this.resourceType = safeGet(record, 'resource.type.name')
     this.isDefault = safeGet(record, 'isDefault')
   }
 
