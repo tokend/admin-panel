@@ -142,7 +142,15 @@
               <datalist-field
                 :doc-item="item"
                 :key="i"
+                ref="datalist"
               />
+              <transition name="limits-reviewer__datalist-field-err-transition">
+                <p
+                  class="limits-reviewer__datalist-field-err-mes"
+                  v-if="!item.isDocValid">
+                  {{ 'limits-reviewer.choose-from-list' | globalize }}
+                </p>
+              </transition>
             </div>
             <text-field
               :label="'limits-reviewer.lbl-document-description' | globalize"
@@ -221,6 +229,7 @@
 
 <script>
 import FormMixin from '@/mixins/form.mixin'
+import DatalistMixin from '@/mixins/datalist.mixin'
 import { required, maxLength } from '@/validators'
 
 import { EmailGetter } from '@comcom/getters'
@@ -272,13 +281,15 @@ export default {
     UploadedDocsList,
     EmailGetter,
   },
-  mixins: [FormMixin],
+  mixins: [FormMixin, DatalistMixin],
 
   props: {
     id: { type: String, required: true },
   },
 
   data: _ => ({
+    mixinFilteredList: DatalistMixin.methods.filteredList(),
+    pointer: 0,
     request: null,
     account: null,
     limits: null,
@@ -294,6 +305,7 @@ export default {
       {
         label: '',
         description: '',
+        isDocValid: true,
       },
     ],
     rejectForm: {
@@ -448,26 +460,38 @@ export default {
     },
 
     async requireDocsRequest () {
-      this.isPending = true
-      try {
-        const requireDocsDetails = JSON.stringify({
-          docsToUpload: this.uploadDocs,
-        })
-        await apiHelper.requests.rejectLimitsUpdate({
-          request: this.request,
-          oldLimits: this.limits[0],
-          newLimits: [this.newLimit],
-          accountId: this.request.requestor.id,
-          reason: requireDocsDetails,
-          isPermanent: false,
-        })
-        Bus.success('limits-reviewer.upload-additional-documents')
-        this.isRequiringDocs = false
-      } catch (error) {
-        this.isPending = false
-        ErrorHandler.process(error)
+      let datalistFormValid = true
+      for (let z = 0; z < this.uploadDocs.length; z++) {
+        if (this.mixinFilteredList.includes(
+          this.$refs.datalist[z].docItem.label)) {
+          this.uploadDocs[z].isDocValid = true
+        } else {
+          this.uploadDocs[z].isDocValid = false
+          datalistFormValid = false
+        }
       }
-      this.isPending = false
+      if (datalistFormValid) {
+        this.isPending = true
+        try {
+          const requireDocsDetails = JSON.stringify({
+            docsToUpload: this.uploadDocs,
+          })
+          await apiHelper.requests.rejectLimitsUpdate({
+            request: this.request,
+            oldLimits: this.limits[0],
+            newLimits: [this.newLimit],
+            accountId: this.request.requestor.id,
+            reason: requireDocsDetails,
+            isPermanent: false,
+          })
+          Bus.success('limits-reviewer.upload-additional-documents')
+          this.isRequiringDocs = false
+        } catch (error) {
+          this.isPending = false
+          ErrorHandler.process(error)
+        }
+        this.isPending = false
+      }
     },
 
     showRejectModal (isReset = false) {
@@ -483,11 +507,25 @@ export default {
       this.rejectForm.isShown = false
     },
 
+    addMoreDocValidation () {
+      if (this.mixinFilteredList.includes(
+        this.$refs.datalist[this.pointer].docItem.label)) {
+        this.uploadDocs[this.pointer].isDocValid = true
+      } else {
+        this.uploadDocs[this.pointer].isDocValid = false
+      }
+    },
+
     addMoreDoc () {
-      this.uploadDocs.push({
-        label: '',
-        description: '',
-      })
+      this.addMoreDocValidation()
+      if (this.uploadDocs[this.pointer].isDocValid) {
+        this.pointer++
+        this.uploadDocs.push({
+          label: '',
+          description: '',
+          isDocValid: true,
+        })
+      }
     },
 
     removeDoc (doc) {
@@ -507,6 +545,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../../assets/scss/colors";
+@import "@/components/common/fields/scss/_fields-variables";
 .limits-reviewer__heading {
   margin-bottom: 2rem;
 }
@@ -603,5 +642,33 @@ export default {
 
 .limits-reviewer__doc-close-btn {
   font-size: 2.4rem;
+}
+.limits-reviewer__datalist-field-err-transition-enter-active {
+  animation: limits-reviewer__datalist-field-err-transition-keyframes
+    $field-transition-duration
+    ease-in-out;
+}
+.limits-reviewer__datalist-field-err-transition-leave-active {
+  animation: limits-reviewer__datalist-field-err-transition-keyframes
+    $field-transition-duration
+    ease-in-out reverse;
+}
+@keyframes limits-reviewer__datalist-field-err-transition-keyframes {
+  from {
+    max-height: 0;
+    margin-top: 0;
+    overflow: hidden;
+  }
+  to {
+    max-height: $field-error-font-size * $field-error-line-height;
+    margin-top: $field-error-margin-top;
+    overflow: hidden;
+  }
+}
+.limits-reviewer__datalist-field-err-mes {
+  color: $field-color-error;
+  margin-top: $field-error-margin-top;
+  font-size: $field-error-font-size;
+  line-height: $field-error-line-height;
 }
 </style>

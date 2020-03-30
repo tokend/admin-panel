@@ -17,7 +17,7 @@
       class="datalist__list"
       v-if="isShowingList"
       ref="list">
-      <template v-for="(item, i) in filteredList">
+      <template v-for="(item, i) in filteredDatalist">
         <li
           class="datalist__list-item"
           :key="i"
@@ -32,37 +32,34 @@
 </template>
 
 <script>
+import DatalistMixin from '@/mixins/datalist.mixin'
 import { InputField } from '@comcom/fields'
 import { DOCUMENT_TYPES_STR } from '@/constants'
 
 export default {
   name: 'datalist-field',
   components: { InputField },
-
+  mixins: [DatalistMixin],
   props: {
     docItem: { type: Object, required: true },
   },
 
   data: _ => ({
+    mixinFilteredList: DatalistMixin.methods.filteredList(),
     searchValue: '',
     isShowingList: false,
     pointerCounter: 0,
     DOCUMENT_TYPES_STR,
+    filteredDatalist: [],
   }),
-
-  computed: {
-    filteredList () {
-      const nonUnderscoreList = Object.values(DOCUMENT_TYPES_STR).map(item => item.replace(/_/g, ' '))
-      return nonUnderscoreList.filter(item => {
-        return item.toLowerCase()
-          .includes(this.docItem.label.toLowerCase())
-      })
-    },
-  },
 
   watch: {
     docItem: {
       handler: function (value) {
+        this.filteredDatalist = this.mixinFilteredList.filter(item => {
+          return item.toLowerCase()
+            .includes(this.docItem.label.toLowerCase())
+        })
         if (this.searchValue === value.label) return
         this.showDatalist()
       },
@@ -90,7 +87,7 @@ export default {
     },
 
     onArrowDown () {
-      if (this.pointerCounter < this.filteredList.length - 1) {
+      if (this.pointerCounter < this.newArr.length - 1) {
         this.pointerCounter++
         this.fixScrolling()
       }
