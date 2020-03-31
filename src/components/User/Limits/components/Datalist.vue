@@ -33,12 +33,13 @@
 
 <script>
 import { InputField } from '@comcom/fields'
+import DatalistMixin from '@/mixins/datalist.mixin'
 import { DOCUMENT_TYPES_STR } from '@/constants'
 
 export default {
   name: 'datalist-field',
   components: { InputField },
-
+  mixins: [DatalistMixin],
   props: {
     docItem: { type: Object, required: true },
   },
@@ -52,8 +53,7 @@ export default {
 
   computed: {
     filteredList () {
-      const nonUnderscoreList = Object.values(DOCUMENT_TYPES_STR).map(item => item.replace(/_/g, ' '))
-      return nonUnderscoreList.filter(item => {
+      return this.getNormalizedList().filter(item => {
         return item.toLowerCase()
           .includes(this.docItem.label.toLowerCase())
       })

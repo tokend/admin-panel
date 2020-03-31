@@ -1337,7 +1337,8 @@
       "request-approved": "Request approved. Limits are changed",
       "request-rejected": "Request rejected. Limits are not changed",
       "upload-additional-documents": "Upload additional documents requested.",
-      "please-update-user-limits": "Please update user limits before approving request"
+      "please-update-user-limits": "Please update user limits before approving request",
+      "choose-from-list": "Please choose value from list"
     },
     "limits": {
       "link-limits-management": "Limits management",
