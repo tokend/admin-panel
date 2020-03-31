@@ -458,7 +458,7 @@ export default {
     },
 
     async requireDocsRequest () {
-      this.submitValidation()
+      this.onSubmitValidation()
       if (this.docValid) {
         this.isPending = true
         try {
@@ -496,29 +496,28 @@ export default {
       this.rejectForm.isShown = false
     },
 
-    docTest () {
-      return this.uploadDocs[this.uploadDocs.length - 1].label
-    },
-
-    submitValidation () {
+    onSubmitValidation () {
       for (let x = 0; x < this.uploadDocs.length; x++) {
-        if (this.getNormalizedList().indexOf(this.uploadDocs[x].label) !== -1) {
-          this.uploadDocs[x].isDocValid = true
-          this.docValid = true
-        } else {
-          this.uploadDocs[x].isDocValid = false
+        this.uploadDocs[x].isDocValid =
+        this.getNormalizedList().indexOf(this.uploadDocs[x].label) !== -1
+      }
+      for (let z = 0; z < this.uploadDocs.length; z++) {
+        if (!this.uploadDocs[z].isDocValid) {
           this.docValid = false
+          return
         }
+        this.docValid = true
       }
     },
 
-    addMoreDocValidation () {
+    onAddMoreDocValidation () {
       this.uploadDocs[this.uploadDocs.length - 1].isDocValid =
-      this.getNormalizedList().indexOf(this.docTest()) !== -1
+      this.getNormalizedList().indexOf(
+        this.uploadDocs[this.uploadDocs.length - 1].label) !== -1
     },
 
     addMoreDoc () {
-      this.addMoreDocValidation()
+      this.onAddMoreDocValidation()
       if (this.uploadDocs[this.uploadDocs.length - 1].isDocValid) {
         this.uploadDocs.push({
           label: '',
