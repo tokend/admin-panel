@@ -287,6 +287,7 @@ export default {
   },
 
   data: _ => ({
+    docValid: false,
     request: null,
     account: null,
     limits: null,
@@ -457,26 +458,29 @@ export default {
     },
 
     async requireDocsRequest () {
-      this.isPending = true
-      try {
-        const requireDocsDetails = JSON.stringify({
-          docsToUpload: this.uploadDocs,
-        })
-        await apiHelper.requests.rejectLimitsUpdate({
-          request: this.request,
-          oldLimits: this.limits[0],
-          newLimits: [this.newLimit],
-          accountId: this.request.requestor.id,
-          reason: requireDocsDetails,
-          isPermanent: false,
-        })
-        Bus.success('limits-reviewer.upload-additional-documents')
-        this.isRequiringDocs = false
-      } catch (error) {
+      this.submitValidation()
+      if (this.docValid) {
+        this.isPending = true
+        try {
+          const requireDocsDetails = JSON.stringify({
+            docsToUpload: this.uploadDocs,
+          })
+          await apiHelper.requests.rejectLimitsUpdate({
+            request: this.request,
+            oldLimits: this.limits[0],
+            newLimits: [this.newLimit],
+            accountId: this.request.requestor.id,
+            reason: requireDocsDetails,
+            isPermanent: false,
+          })
+          Bus.success('limits-reviewer.upload-additional-documents')
+          this.isRequiringDocs = false
+        } catch (error) {
+          this.isPending = false
+          ErrorHandler.process(error)
+        }
         this.isPending = false
-        ErrorHandler.process(error)
       }
-      this.isPending = false
     },
 
     showRejectModal (isReset = false) {
@@ -492,12 +496,36 @@ export default {
       this.rejectForm.isShown = false
     },
 
+    docTest () {
+      return this.uploadDocs[this.uploadDocs.length - 1].label
+    },
+
+    submitValidation () {
+      for (let x = 0; x < this.uploadDocs.length; x++) {
+        if (this.getNormalizedList().indexOf(this.uploadDocs[x].label) !== -1) {
+          this.uploadDocs[x].isDocValid = true
+          this.docValid = true
+        } else {
+          this.uploadDocs[x].isDocValid = false
+          this.docValid = false
+        }
+      }
+    },
+
+    addMoreDocValidation () {
+      this.uploadDocs[this.uploadDocs.length - 1].isDocValid =
+      this.getNormalizedList().indexOf(this.docTest()) !== -1
+    },
+
     addMoreDoc () {
-      this.uploadDocs.push({
-        label: '',
-        description: '',
-        isDocValid: true,
-      })
+      this.addMoreDocValidation()
+      if (this.uploadDocs[this.uploadDocs.length - 1].isDocValid) {
+        this.uploadDocs.push({
+          label: '',
+          description: '',
+          isDocValid: true,
+        })
+      }
     },
 
     removeDoc (doc) {
