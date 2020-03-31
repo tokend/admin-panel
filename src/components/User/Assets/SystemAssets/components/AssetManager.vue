@@ -691,8 +691,9 @@ export default {
     async getAsset () {
       try {
         const endpoint = `/v3/assets/${this.assetCode}`
-        const { data } = await api.getWithSignature(endpoint)
-        this.asset.preissuedAssetSigner = data.preIssuanceAssetSigner
+        const { data } = await api.getWithSignature(endpoint, {
+          include: ['owner'],
+        })
         data.creatorDetails = data.creatorDetails || data.details
         if (!_isEmpty(data.creatorDetails.stellar)) {
           this.isStellarIntegrationEnabled = true
@@ -710,6 +711,9 @@ export default {
           data.type = String(data.type)
         }
         Object.assign(this.asset, data)
+        if (this.asset.preissuedAssetSigner !== data.preIssuanceAssetSigner) {
+          this.asset.preissuedAssetSigner = data.preIssuanceAssetSigner
+        }
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }
