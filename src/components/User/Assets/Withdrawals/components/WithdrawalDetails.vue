@@ -43,42 +43,30 @@
       </template>
       <li>
         <span>{{ "withdrawal-details.amount" | globalize }}</span>
-        <span :title="formatAmount() | formatMoney">
-          {{ formatAmount() | formatMoney }}
+        <span :title="amount() | formatMoney">
+          {{ amount() | formatMoney }}
         </span>
       </li>
       <li>
         <span>{{ "withdrawal-details.fixed-fee" | globalize }}</span>
         <span
-          :title="formatFee(request.requestDetails.fee.fixed) | formatMoney"
+          :title="fixedFee() | formatMoney"
         >
-          {{ formatFee(request.requestDetails.fee.fixed) | formatMoney }}
+          {{ fixedFee() | formatMoney }}
         </span>
       </li>
       <li>
         <span>{{ "withdrawal-details.persent-fee" | globalize }}</span>
-        <span
-          :title="formatFee(request.requestDetails.fee.calculatedPercent)
-            | formatMoney"
-        >
-          {{
-            formatFee(request.requestDetails.fee.calculatedPercent)
-              | formatMoney
-          }}
+        <span :title="percentFee() | formatMoney">
+          {{ percentFee() | formatMoney }}
         </span>
       </li>
       <li>
         <span>{{ "withdrawal-details.total-fee" | globalize }}</span>
         <span
-          :title="formatFee(Number(request.requestDetails.fee.fixed) +
-            Number(request.requestDetails.fee.calculatedPercent)) | formatMoney"
+          :title="totalFee() | formatMoney"
         >
-          {{
-            formatFee(
-              Number(request.requestDetails.fee.fixed) +
-                Number(request.requestDetails.fee.calculatedPercent)
-            ) | formatMoney
-          }}
+          {{ totalFee() | formatMoney }}
         </span>
       </li>
     </ul>
@@ -251,15 +239,28 @@ export default {
     clearRejectionSelection () {
       this.itemToReject = null
     },
-    formatAmount () {
+    amount () {
       return {
         value: this.request.requestDetails.amount,
         currency: this.request.requestDetails.asset.id,
       }
     },
-    formatFee (fee) {
+    fixedFee () {
       return {
-        value: fee,
+        value: this.request.requestDetails.fee.fixed,
+        currency: this.request.requestDetails.asset.id,
+      }
+    },
+    percentFee () {
+      return {
+        value: this.request.requestDetails.fee.calculatedPercent,
+        currency: this.request.requestDetails.asset.id,
+      }
+    },
+    totalFee () {
+      return {
+        value: Number(this.request.requestDetails.fee.fixed) +
+          Number(this.request.requestDetails.fee.calculatedPercent),
         currency: this.request.requestDetails.asset.id,
       }
     },

@@ -73,9 +73,9 @@
             </span>
             <span
               class="app-list__cell app-list__cell--right"
-              :tilte="item.requestDetails.amount | formatNumber"
+              :tilte="item.requestDetails.amount | formatMoney"
             >
-              {{ item.requestDetails.amount | formatNumber }}
+              {{ item.requestDetails.amount | formatMoney }}
             </span>
 
             <span class="app-list__cell app-list__cell--right">
