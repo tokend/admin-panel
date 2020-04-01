@@ -504,7 +504,7 @@ export default {
         this.getNormalizedList().indexOf(this.uploadDocs[x].label) !== -1
       }
       // check isDocValid of each listed item
-      // if ok - doc request will be submited
+      // if ok - doc request will be submitted
       // cancel on first false value
       for (let z = 0; z < this.uploadDocs.length; z++) {
         this.isDocListValid = this.uploadDocs[z].isDocValid
