@@ -287,7 +287,6 @@ export default {
   },
 
   data: _ => ({
-    isDocListValid: false,
     request: null,
     account: null,
     limits: null,
@@ -458,29 +457,27 @@ export default {
     },
 
     async requireDocsRequest () {
-      this.onSubmitValidation()
-      if (this.isDocListValid) {
-        this.isPending = true
-        try {
-          const requireDocsDetails = JSON.stringify({
-            docsToUpload: this.uploadDocs,
-          })
-          await apiHelper.requests.rejectLimitsUpdate({
-            request: this.request,
-            oldLimits: this.limits[0],
-            newLimits: [this.newLimit],
-            accountId: this.request.requestor.id,
-            reason: requireDocsDetails,
-            isPermanent: false,
-          })
-          Bus.success('limits-reviewer.upload-additional-documents')
-          this.isRequiringDocs = false
-        } catch (error) {
-          this.isPending = false
-          ErrorHandler.process(error)
-        }
+      if (!this.isDatalistFormValid()) return
+      this.isPending = true
+      try {
+        const requireDocsDetails = JSON.stringify({
+          docsToUpload: this.uploadDocs,
+        })
+        await apiHelper.requests.rejectLimitsUpdate({
+          request: this.request,
+          oldLimits: this.limits[0],
+          newLimits: [this.newLimit],
+          accountId: this.request.requestor.id,
+          reason: requireDocsDetails,
+          isPermanent: false,
+        })
+        Bus.success('limits-reviewer.upload-additional-documents')
+        this.isRequiringDocs = false
+      } catch (error) {
         this.isPending = false
+        ErrorHandler.process(error)
       }
+      this.isPending = false
     },
 
     showRejectModal (isReset = false) {
@@ -496,35 +493,15 @@ export default {
       this.rejectForm.isShown = false
     },
 
-    onSubmitValidation () {
-      // recheck existence and change (if needed) isDocValid of
-      // each listed item before submitting
-      for (let x = 0; x < this.uploadDocs.length; x++) {
-        this.uploadDocs[x].isDocValid =
-        this.getNormalizedList().indexOf(this.uploadDocs[x].label) !== -1
-      }
-      // check isDocValid of each listed item
-      // if ok - doc request will be submitted
-      // cancel on first false value
-      for (let z = 0; z < this.uploadDocs.length; z++) {
-        this.isDocListValid = this.uploadDocs[z].isDocValid
-        if (!this.uploadDocs[z].isDocValid) {
-          return
-        }
-      }
-    },
-
-    onAddMoreDocValidation () {
-      // check existence and add isDocValid to
-      // each listed item before adding additional doc
-      this.uploadDocs[this.uploadDocs.length - 1].isDocValid =
-      this.getNormalizedList().indexOf(
-        this.uploadDocs[this.uploadDocs.length - 1].label) !== -1
+    isDatalistFormValid () {
+      const normalizedDocsList = this.getNormalizedDocsList()
+      this.uploadDocs.forEach(
+        val => { val.isDocValid = normalizedDocsList.includes(val.label) })
+      return this.uploadDocs.every(val => val.isDocValid)
     },
 
     addMoreDoc () {
-      this.onAddMoreDocValidation()
-      if (this.uploadDocs[this.uploadDocs.length - 1].isDocValid) {
+      if (this.isDatalistFormValid()) {
         this.uploadDocs.push({
           label: '',
           description: '',

@@ -53,7 +53,7 @@ export default {
 
   computed: {
     filteredList () {
-      return this.getNormalizedList().filter(item => {
+      return this.getNormalizedDocsList().filter(item => {
         return item.toLowerCase()
           .includes(this.docItem.label.toLowerCase())
       })
