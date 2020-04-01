@@ -287,7 +287,7 @@ export default {
   },
 
   data: _ => ({
-    docValid: false,
+    isDocListValid: false,
     request: null,
     account: null,
     limits: null,
@@ -459,7 +459,7 @@ export default {
 
     async requireDocsRequest () {
       this.onSubmitValidation()
-      if (this.docValid) {
+      if (this.isDocListValid) {
         this.isPending = true
         try {
           const requireDocsDetails = JSON.stringify({
@@ -497,20 +497,26 @@ export default {
     },
 
     onSubmitValidation () {
+      // recheck existence and change (if needed) isDocValid of
+      // each listed item before submitting
       for (let x = 0; x < this.uploadDocs.length; x++) {
         this.uploadDocs[x].isDocValid =
         this.getNormalizedList().indexOf(this.uploadDocs[x].label) !== -1
       }
+      // check isDocValid of each listed item
+      // if ok - doc request will be submited
+      // cancel on first false value
       for (let z = 0; z < this.uploadDocs.length; z++) {
+        this.isDocListValid = this.uploadDocs[z].isDocValid
         if (!this.uploadDocs[z].isDocValid) {
-          this.docValid = false
           return
         }
-        this.docValid = true
       }
     },
 
     onAddMoreDocValidation () {
+      // check existence and add isDocValid to
+      // each listed item before adding additional doc
       this.uploadDocs[this.uploadDocs.length - 1].isDocValid =
       this.getNormalizedList().indexOf(
         this.uploadDocs[this.uploadDocs.length - 1].label) !== -1
