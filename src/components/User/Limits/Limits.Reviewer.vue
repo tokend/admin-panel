@@ -496,8 +496,8 @@ export default {
     isDatalistFormValid () {
       const normalizedDocsList = this.getNormalizedDocsList()
       this.uploadDocs.forEach(
-        val => { val.isDocValid = normalizedDocsList.includes(val.label) })
-      return this.uploadDocs.every(val => val.isDocValid)
+        item => { item.isDocValid = normalizedDocsList.includes(item.label) })
+      return this.uploadDocs.every(item => item.isDocValid)
     },
 
     addMoreDoc () {
