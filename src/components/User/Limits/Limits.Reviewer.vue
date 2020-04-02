@@ -143,9 +143,9 @@
                 :doc-item="item"
                 :key="i"
               />
-              <transition name="limits-reviewer__datalist-field-err-transition">
+              <transition name="limits-reviewer__doc-label-err-transition">
                 <p
-                  class="limits-reviewer__datalist-field-err-mes"
+                  class="limits-reviewer__doc-label-err-mes"
                   v-if="!item.isDocValid">
                   {{ 'limits-reviewer.choose-from-list' | globalize }}
                 </p>
@@ -625,17 +625,17 @@ export default {
 .limits-reviewer__doc-close-btn {
   font-size: 2.4rem;
 }
-.limits-reviewer__datalist-field-err-transition-enter-active {
-  animation: limits-reviewer__datalist-field-err-transition-keyframes
+.limits-reviewer__doc-label-err-transition-enter-active {
+  animation: limits-reviewer__doc-label-err-transition-keyframes
     $field-transition-duration
     ease-in-out;
 }
-.limits-reviewer__datalist-field-err-transition-leave-active {
-  animation: limits-reviewer__datalist-field-err-transition-keyframes
+.limits-reviewer__doc-label-err-transition-leave-active {
+  animation: limits-reviewer__doc-label-err-transition-keyframes
     $field-transition-duration
     ease-in-out reverse;
 }
-@keyframes limits-reviewer__datalist-field-err-transition-keyframes {
+@keyframes limits-reviewer__doc-label-err-transition-keyframes {
   from {
     max-height: 0;
     margin-top: 0;
@@ -647,7 +647,7 @@ export default {
     overflow: hidden;
   }
 }
-.limits-reviewer__datalist-field-err-mes {
+.limits-reviewer__doc-label-err-mes {
   color: $field-color-error;
   margin-top: $field-error-margin-top;
   font-size: $field-error-font-size;
