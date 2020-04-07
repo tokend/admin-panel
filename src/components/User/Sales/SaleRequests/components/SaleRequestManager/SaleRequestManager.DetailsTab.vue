@@ -86,8 +86,8 @@
               <!-- eslint-disable-next-line max-len -->
               {{ "sale-request-manager-details-tab.max-issuance-amount" | globalize }}
             </span>
-            <span :title="request.asset.maxIssuanceAmount | formatNumber">
-              {{ request.asset.maxIssuanceAmount | formatNumber }}
+            <span :title="request.asset.maxIssuanceAmount | formatMoney">
+              {{ request.asset.maxIssuanceAmount | formatMoney }}
             </span>
           </li>
           <li>

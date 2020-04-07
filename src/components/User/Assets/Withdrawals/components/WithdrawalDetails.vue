@@ -43,30 +43,28 @@
       </template>
       <li>
         <span>{{ "withdrawal-details.amount" | globalize }}</span>
-        <span :title="amount() | formatMoney">
-          {{ amount() | formatMoney }}
+        <span :title="amount | formatMoney">
+          {{ amount | formatMoney }}
         </span>
       </li>
       <li>
         <span>{{ "withdrawal-details.fixed-fee" | globalize }}</span>
-        <span
-          :title="fixedFee() | formatMoney"
-        >
-          {{ fixedFee() | formatMoney }}
+        <span :title="fixedFee | formatMoney">
+          {{ fixedFee | formatMoney }}
         </span>
       </li>
       <li>
         <span>{{ "withdrawal-details.persent-fee" | globalize }}</span>
-        <span :title="percentFee() | formatMoney">
-          {{ percentFee() | formatMoney }}
+        <span :title="percentFee | formatMoney">
+          {{ percentFee | formatMoney }}
         </span>
       </li>
       <li>
         <span>{{ "withdrawal-details.total-fee" | globalize }}</span>
         <span
-          :title="totalFee() | formatMoney"
+          :title="totalFee | formatMoney"
         >
-          {{ totalFee() | formatMoney }}
+          {{ totalFee | formatMoney }}
         </span>
       </li>
     </ul>
@@ -192,6 +190,31 @@ export default {
       return this.request.stateI === REQUEST_STATES.pending.stateI &&
         this.userAddress === this.request.reviewer.id
     },
+    amount () {
+      return {
+        value: this.request.requestDetails.amount,
+        currency: this.request.requestDetails.asset.id,
+      }
+    },
+    fixedFee () {
+      return {
+        value: this.request.requestDetails.fee.fixed,
+        currency: this.request.requestDetails.asset.id,
+      }
+    },
+    percentFee () {
+      return {
+        value: this.request.requestDetails.fee.calculatedPercent,
+        currency: this.request.requestDetails.asset.id,
+      }
+    },
+    totalFee () {
+      return {
+        value: Number(this.request.requestDetails.fee.fixed) +
+          Number(this.request.requestDetails.fee.calculatedPercent),
+        currency: this.request.requestDetails.asset.id,
+      }
+    },
   },
 
   methods: {
@@ -222,7 +245,6 @@ export default {
           },
           request
         )
-
         Bus.success('withdrawal-details.request-rejected-successfully')
         this.$emit('close-request')
       } catch (error) {
@@ -238,31 +260,6 @@ export default {
 
     clearRejectionSelection () {
       this.itemToReject = null
-    },
-    amount () {
-      return {
-        value: this.request.requestDetails.amount,
-        currency: this.request.requestDetails.asset.id,
-      }
-    },
-    fixedFee () {
-      return {
-        value: this.request.requestDetails.fee.fixed,
-        currency: this.request.requestDetails.asset.id,
-      }
-    },
-    percentFee () {
-      return {
-        value: this.request.requestDetails.fee.calculatedPercent,
-        currency: this.request.requestDetails.asset.id,
-      }
-    },
-    totalFee () {
-      return {
-        value: Number(this.request.requestDetails.fee.fixed) +
-          Number(this.request.requestDetails.fee.calculatedPercent),
-        currency: this.request.requestDetails.asset.id,
-      }
     },
   },
 }
