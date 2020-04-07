@@ -77,8 +77,8 @@
               <!-- eslint-disable-next-line max-len -->
               {{ "sale-request-manager-details-tab.initial-preissued-amount" | globalize }}
             </span>
-            <span :title="request.asset.maxIssuanceAmount | formatMoney">
-              {{ request.asset.maxIssuanceAmount | formatMoney }}
+            <span :title="request.asset.availableForIssuance | formatMoney">
+              {{ request.asset.availableForIssuance | formatMoney }}
             </span>
           </li>
           <li>
