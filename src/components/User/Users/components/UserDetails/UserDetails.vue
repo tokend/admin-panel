@@ -58,14 +58,14 @@
                 v-if="
                   requestToReview.accountRoleToSet === kvAccountRoles.general
                 "
-                :kyc="kyc"
+                :kyc="kycNoVerified"
                 :user="user"
               />
               <verified-kyc-viewer
                 v-if="
                   requestToReview.accountRoleToSet === kvAccountRoles.usVerified
                 "
-                :kyc="kyc"
+                :kyc="kycNoVerified"
                 :user="user"
               />
               <accredited-kyc-viewer
@@ -73,7 +73,7 @@
                   requestToReview.accountRoleToSet ===
                     kvAccountRoles.usAccredited
                 "
-                :kyc="kyc"
+                :kyc="kycNoVerified"
                 :user="user"
               />
             </template>
@@ -262,6 +262,7 @@ export default {
       requests: [],
       verifiedRequest: {},
       kyc: {},
+      kycNoVerified: {},
     }
   },
 
@@ -309,9 +310,10 @@ export default {
     await this.getUser()
 
     if (this.requestToReview.state) {
-      await this.getKyc(this.requestToReview.blobId)
-    } else if (this.verifiedRequest.state) {
-      await this.getKyc(this.verifiedRequest.blobId)
+      this.kycNoVerified = await this.getKyc(this.requestToReview.blobId)
+    }
+    if (this.verifiedRequest.state) {
+      this.kyc = await this.getKyc(this.verifiedRequest.blobId)
     }
   },
 
@@ -371,12 +373,13 @@ export default {
 
       this.isKycLoaded = false
       this.isKycLoadFailed = false
+      let kyc
 
       try {
         const endpoint = `/accounts/${this.user.address}/blobs/${blobId}`
         const { data } = await api.getWithSignature(endpoint)
         const kycFormResponse = data
-        this.kyc = deepCamelCase(
+        kyc = deepCamelCase(
           fromKycTemplate(JSON.parse(kycFormResponse.value))
         )
         this.isKycLoaded = true
@@ -384,6 +387,7 @@ export default {
         ErrorHandler.process(error)
         this.isKycLoadFailed = true
       }
+      return kyc
     },
   },
 }
