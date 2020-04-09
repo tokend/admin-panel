@@ -74,9 +74,7 @@
         <div class="issuance-form__asset-info app__form-row" v-if="form.asset">
           <p v-if="isIssuanceAllowed" class="text">
             <span>{{ "issuance-form.avaible" | globalize }}</span>
-            <span
-              :title="formatAvailableForIssuance | formatMoney"
-            >
+            <span :title="formatAvailableForIssuance | formatMoney">
               {{ formatAvailableForIssuance | formatMoney }}
             </span>
           </p>

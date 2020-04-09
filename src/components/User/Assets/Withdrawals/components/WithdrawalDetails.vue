@@ -61,9 +61,7 @@
       </li>
       <li>
         <span>{{ "withdrawal-details.total-fee" | globalize }}</span>
-        <span
-          :title="totalFee | formatMoney"
-        >
+        <span :title="totalFee | formatMoney">
           {{ totalFee | formatMoney }}
         </span>
       </li>
