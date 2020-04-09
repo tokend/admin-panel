@@ -78,12 +78,11 @@
         <span class="asset-requests-show__key">
           {{ "asset-requests-show.max-issuance" | globalize }}
         </span>
-        <span class="asset-requests-show__value">
-          {{
-            assetRequest.maxAmount
-              ? localizeAmount(assetRequest.maxAmount)
-              : '—'
-          }}
+        <span
+          class="asset-requests-show__value"
+          :title="maxAmount"
+        >
+          {{ maxAmount }}
         </span>
       </div>
 
@@ -95,7 +94,7 @@
           {{ "asset-requests-show.issued-amount" | globalize }}
         </span>
         <span class="asset-requests-show__value">
-          {{ localizeAmount(assetRequest.issuedAmount) }}
+          {{ assetRequest.issuedAmount | formatMoney }}
         </span>
       </div>
 
@@ -308,7 +307,6 @@ import { ImgGetter, EmailGetter, UserDocLinkGetter } from '@comcom/getters'
 
 import { confirmAction } from '@/js/modals/confirmation_message'
 
-import localize from '@/utils/localize'
 import { verbozify } from '@/utils/verbozify'
 import safeGet from 'lodash/get'
 
@@ -322,6 +320,8 @@ import {
 } from '@/constants'
 
 import { api } from '@/api'
+
+import { formatMoney } from '@/components/App/filters/formatMoney'
 
 // TODO: extract to AssetRequestForm
 export default {
@@ -348,6 +348,14 @@ export default {
       ASSET_REQUEST_TYPES,
       REQUEST_STATES,
     }
+  },
+
+  computed: {
+    maxAmount () {
+      return this.assetRequest.maxAmount
+        ? formatMoney(this.assetRequest.maxAmount)
+        : '—'
+    },
   },
 
   async created () {
@@ -384,7 +392,6 @@ export default {
       this.isPending = false
     },
 
-    localizeAmount: localize,
   },
 }
 </script>

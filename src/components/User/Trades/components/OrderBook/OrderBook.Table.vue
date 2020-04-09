@@ -77,45 +77,45 @@
                 @keyup.space.stop.prevent="showItemDetails(item)">
                 <template v-if="isRtl">
                   <td>
-                    <span :title="item.sum | formatNumber">
-                      {{ item.sum | formatNumber }}
+                    <span :title="item.sum | formatMoney">
+                      {{ item.sum | formatMoney }}
                     </span>
                   </td>
                   <td>
-                    <span :title="item.quoteAmount | formatNumber">
-                      {{ item.quoteAmount | formatNumber }}
+                    <span :title="item.quoteAmount | formatMoney">
+                      {{ item.quoteAmount | formatMoney }}
                     </span>
                   </td>
                   <td>
-                    <span :title="item.baseAmount | formatNumber">
-                      {{ item.baseAmount | formatNumber }}
+                    <span :title="item.baseAmount | formatMoney">
+                      {{ item.baseAmount | formatMoney }}
                     </span>
                   </td>
                   <td>
-                    <span :title="item.price | formatNumber">
-                      {{ item.price | formatNumber }}
+                    <span :title="item.price | formatMoney">
+                      {{ item.price | formatMoney }}
                     </span>
                   </td>
                 </template>
                 <template v-else>
                   <td>
-                    <span :title="item.price | formatNumber">
-                      {{ item.price | formatNumber }}
+                    <span :title="item.price | formatMoney">
+                      {{ item.price | formatMoney }}
                     </span>
                   </td>
                   <td>
-                    <span :title="item.baseAmount | formatNumber">
-                      {{ item.baseAmount | formatNumber }}
+                    <span :title="item.baseAmount | formatMoney">
+                      {{ item.baseAmount | formatMoney }}
                     </span>
                   </td>
                   <td>
-                    <span :title="item.quoteAmount | formatNumber">
-                      {{ item.quoteAmount | formatNumber }}
+                    <span :title="item.quoteAmount | formatMoney">
+                      {{ item.quoteAmount | formatMoney }}
                     </span>
                   </td>
                   <td>
-                    <span :title="item.sum | formatNumber">
-                      {{ item.sum | formatNumber }}
+                    <span :title="item.sum | formatMoney">
+                      {{ item.sum | formatMoney }}
                     </span>
                   </td>
                 </template>

@@ -36,29 +36,29 @@
               <span>
                 {{ "sale-manager-details-tab.max-issuance-amount" | globalize }}
               </span>
-              <span :title="asset.maxIssuanceAmount | formatNumber">
-                {{ asset.maxIssuanceAmount | formatNumber }}
+              <span :title="asset.maxIssuanceAmount | formatMoney">
+                {{ asset.maxIssuanceAmount | formatMoney }}
               </span>
             </li>
             <li>
               <span>
                 {{ "sale-manager-details-tab.pending-issuance" | globalize }}
               </span>
-              <span :title="asset.pendingIssuance | formatNumber">
-                {{ asset.pendingIssuance | formatNumber }}
+              <span :title="asset.pendingIssuance | formatMoney">
+                {{ asset.pendingIssuance | formatMoney }}
               </span>
             </li>
             <li>
               <span>{{ "sale-manager-details-tab.issued" | globalize }}</span>
               <span :title="asset.issued">
-                {{ asset.issued | formatNumber }}
+                {{ asset.issued | formatMoney }}
               </span>
             </li>
             <li>
               <!-- eslint-disable-next-line max-len -->
               <span>{{ "sale-manager-details-tab.available-for-issuance" | globalize }}</span>
               <span :title="asset.availableForIssuance">
-                {{ asset.availableForIssuance | formatNumber }}
+                {{ asset.availableForIssuance | formatMoney }}
               </span>
             </li>
             <li>
@@ -231,14 +231,14 @@
               })
               }}
             </span>
-            <span :title="item.price">{{ item.price | formatNumber }}</span>
+            <span :title="item.price">{{ item.price | formatMoney }}</span>
           </li>
           <li>
             <span>
               {{ "sale-manager-details-tab.current-cap" | globalize }}
             </span>
             <span :title="item.currentCap">
-              {{ item.currentCap | formatNumber }}
+              {{ item.currentCap | formatMoney }}
             </span>
           </li>
           <li>
@@ -252,7 +252,7 @@
             </span>
             <!-- eslint-enable -->
             <span :title="item.totalCurrentCap">
-              {{ item.totalCurrentCap | formatNumber }}
+              {{ item.totalCurrentCap | formatMoney }}
             </span>
           </li>
           <li>
@@ -265,7 +265,7 @@
               {{ "sale-manager-details-tab.hard-cap" | globalize }}
             </span>
             <!-- eslint-enable -->
-            <span :title="item.hardCap">{{ item.hardCap | formatNumber }}</span>
+            <span :title="item.hardCap">{{ item.hardCap | formatMoney }}</span>
           </li>
         </ul>
 

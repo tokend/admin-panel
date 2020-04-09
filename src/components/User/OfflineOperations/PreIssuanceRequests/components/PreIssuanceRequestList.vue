@@ -73,7 +73,11 @@
               v-for="request in filteredRequests"
               :key="request.id"
             >
-              <td><span>{{ localize(request.amount()) }}</span></td>
+              <td>
+                <span :title="request.amount() | formatMoney">
+                  {{ request.amount() | formatMoney }}
+                </span>
+              </td>
               <td><span>{{ request.asset() }}</span></td>
               <td><span>{{ verbozify(request.state) }}</span></td>
 
@@ -134,7 +138,6 @@
 <script>
 import InputField from '@comcom/fields/InputField'
 
-import localize from '@/utils/localize'
 import { verbozify } from '@/utils/verbozify'
 
 import apiHelper from '@/apiHelper'
@@ -199,7 +202,6 @@ export default {
 
   methods: {
     verbozify,
-    localize,
 
     async nextPageLoader () {
       this.loadNewPage = true

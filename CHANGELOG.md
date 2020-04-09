@@ -12,6 +12,9 @@ for further information about branching and tagging conventions.
 - A bug with wrong displaying initial preissued amount
   in SaleRequestManager.DetailsTab
 
+#### Removed
+- util localize
+
 ## [1.12.1-rc.0] - 2020-03-25
 #### Fixed
 - Details in createChangeRoleRequest at unblock user

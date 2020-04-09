@@ -39,18 +39,18 @@
                 @keyup.space.stop.prevent="showItemDetails(item)"
               >
                 <td>
-                  <span :title="item.price | formatNumber">
-                    {{ item.price | formatNumber }}
+                  <span :title="item.price | formatMoney">
+                    {{ item.price | formatMoney }}
                   </span>
                 </td>
                 <td>
-                  <span :title="item.baseAmount | formatNumber">
-                    {{ item.baseAmount | formatNumber }}
+                  <span :title="item.baseAmount | formatMoney">
+                    {{ item.baseAmount | formatMoney }}
                   </span>
                 </td>
                 <td>
-                  <span :title="item.price * item.baseAmount | formatNumber">
-                    {{ item.price * item.baseAmount | formatNumber }}
+                  <span :title="item.price * item.baseAmount | formatMoney">
+                    {{ item.price * item.baseAmount | formatMoney }}
                   </span>
                 </td>
                 <td>
