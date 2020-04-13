@@ -11,6 +11,9 @@ for further information about branching and tagging conventions.
 #### Added
 - Form validation of doc types in limits form
 
+#### Fixed
+- Bug with all pre-issuance requests those weren't display
+
 ## [1.13.0-rc.0] - 2020-03-25
 #### Fixed
 - Details in createChangeRoleRequest at unblock user

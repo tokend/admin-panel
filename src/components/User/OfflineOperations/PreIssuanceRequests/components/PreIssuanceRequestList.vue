@@ -181,7 +181,7 @@ export default {
       const filteredByType = this.requests
         .filter(request => request instanceof CreatePreIssuanceRequest)
 
-      return this.asset === 'All'
+      return this.asset === 'all'
         ? filteredByType
         : filteredByType.filter(request => request.asset() === this.asset)
     },
