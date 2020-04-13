@@ -159,6 +159,7 @@
               <request-actions
                 class="user-details__actions"
                 :user="user"
+                :is-kyc-loaded="isKycLoaded"
                 :request-to-review="requestToReview"
                 :latest-approved-request="verifiedRequest"
                 @reviewed="getUpdatedUser"
@@ -257,7 +258,7 @@ export default {
       isFailed: false,
       isPending: false,
       isKycLoaded: false,
-      isKycLoadFailed: false,
+      isKycLoadFailed: true,
       user: {},
       requests: [],
       verifiedRequest: {},
@@ -309,11 +310,18 @@ export default {
   async created () {
     await this.getUser()
 
-    if (this.requestToReview.state) {
-      this.kycNoVerified = await this.getKyc(this.requestToReview.blobId)
-    }
-    if (this.verifiedRequest.state) {
+    this.kycNoVerified = await this.getKyc(this.requestToReview.blobId)
+    // this.kycNoVerified = 0
+    if (this.kycNoVerified) {
       this.kyc = await this.getKyc(this.verifiedRequest.blobId)
+      // this.kyc = 0
+      if (!this.kyc) {
+        this.isKycLoadFailed = true
+        this.isKycLoaded = false
+      }
+    } else {
+      this.isKycLoadFailed = true
+      this.isKycLoaded = false
     }
   },
 
@@ -378,14 +386,13 @@ export default {
       try {
         const endpoint = `/accounts/${this.user.address}/blobs/${blobId}`
         const { data } = await api.getWithSignature(endpoint)
-        const kycFormResponse = data
         kyc = deepCamelCase(
-          fromKycTemplate(JSON.parse(kycFormResponse.value))
+          fromKycTemplate(JSON.parse(data.value))
         )
         this.isKycLoaded = true
       } catch (error) {
         ErrorHandler.process(error)
-        this.isKycLoadFailed = true
+        // this.isKycLoadFailed = true
       }
       return kyc
     },
