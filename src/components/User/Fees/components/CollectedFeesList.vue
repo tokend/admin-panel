@@ -33,15 +33,15 @@
 
           <span
             class="app-list__cell app-list__cell--right"
-            :title="formatBalanceAvailable(balance) | formatMoney"
+            :title="balanceAvailable(balance) | formatMoney"
           >
-            {{ formatBalanceAvailable(balance) | formatMoney }}
+            {{ balanceAvailable(balance) | formatMoney }}
           </span>
           <span
             class="app-list__cell app-list__cell--right"
-            :title="formatBalanceLocked(balance) | formatMoney"
+            :title="balanceLocked(balance) | formatMoney"
           >
-            {{ formatBalanceLocked(balance) | formatMoney }}
+            {{ balanceLocked(balance) | formatMoney }}
           </span>
 
           <span class="app-list__cell app-list__cell--right">
@@ -140,14 +140,14 @@ export default {
       return asset && asset.isWithdrawable
     },
 
-    formatBalanceAvailable (balance) {
+    balanceAvailable (balance) {
       return {
         value: balance.available,
         currency: balance.assetCode,
       }
     },
 
-    formatBalanceLocked (balance) {
+    balanceLocked (balance) {
       return {
         value: balance.locked,
         currency: balance.assetCode,

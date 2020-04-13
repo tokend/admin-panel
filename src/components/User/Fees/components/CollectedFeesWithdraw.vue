@@ -107,8 +107,8 @@
               <span>
                 {{ "collected-fees-withdraw.fixed-fee" | globalize }}
               </span>
-              <span :title="formatFee(opAttrs.fixedFee) | formatMoney">
-                {{ formatFee(opAttrs.fixedFee) | formatMoney }}
+              <span :title="fixedFee | formatMoney">
+                {{ fixedFee | formatMoney }}
               </span>
             </p>
           </template>
@@ -118,8 +118,8 @@
               <span>
                 {{ "collected-fees-withdraw.percent-fee" | globalize }}
               </span>
-              <span :title="formatFee(opAttrs.percentFee) | formatMoney">
-                {{ formatFee(opAttrs.percentFee) | formatMoney }}
+              <span :title="percentFee | formatMoney">
+                {{ percentFee | formatMoney }}
               </span>
             </p>
           </template>
@@ -276,6 +276,20 @@ export default {
       const asset = this.assetByCode(this.selectedBalanceAttrs.assetCode)
       return asset && asset.isWithdrawable
     },
+
+    fixedFee () {
+      return {
+        value: this.opAttrs.fixedFee,
+        currency: this.opAttrs.feeAssetCode,
+      }
+    },
+
+    percentFee () {
+      return {
+        value: this.opAttrs.percentFee,
+        currency: this.opAttrs.feeAssetCode,
+      }
+    },
   },
 
   watch: {
@@ -401,13 +415,6 @@ export default {
     // For parent access
     setForm (opts) {
       Object.assign(this.form, _pick(opts, ['balanceId', 'amount']))
-    },
-
-    formatFee (fee) {
-      return {
-        value: fee,
-        currency: this.opAttrs.feeAssetCode,
-      }
     },
   },
 }

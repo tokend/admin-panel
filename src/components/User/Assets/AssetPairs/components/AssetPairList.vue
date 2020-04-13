@@ -31,8 +31,8 @@
 
           <span class="app-list__cell app-list__cell--right">
             <!-- eslint-disable -->
-            <span :title="formatAssetPairPrice(item) | formatMoney">
-              {{ formatAssetPairPrice(item) | formatMoney }}
+            <span :title="assetPairPrice(item) | formatMoney">
+              {{ assetPairPrice(item) | formatMoney }}
             </span>
           </span>
           <!-- eslint-enable -->
@@ -141,7 +141,7 @@ export default {
       this.list = data
     },
 
-    formatAssetPairPrice (item) {
+    assetPairPrice (item) {
       return { value: item.price, currency: item.quoteAsset.id }
     },
 

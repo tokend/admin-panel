@@ -76,8 +76,8 @@
             @click="requestToShow = item"
           >
             <span class="app-list__cell">
-              <span :title="formatAssetAmount(item) | formatMoney">
-                {{ formatAssetAmount(item) | formatMoney }}
+              <span :title="assetAmount(item) | formatMoney">
+                {{ assetAmount(item) | formatMoney }}
               </span>
             </span>
 
@@ -265,7 +265,7 @@ export default {
       this.$refs.collectionLoaderBtn.loadFirstPage()
     },
 
-    formatAssetAmount (item) {
+    assetAmount (item) {
       return {
         value: item.requestDetails.amount,
         currency: item.requestDetails.asset.id,

@@ -167,8 +167,8 @@
         </li>
         <li>
           <span>{{ "order-book-table.offered-amount" | globalize }}</span>
-          <span :title="formatBaseAmount | formatMoney">
-            {{ formatBaseAmount | formatMoney }}
+          <span :title="baseAmount | formatMoney">
+            {{ baseAmount | formatMoney }}
           </span>
         </li>
         <li>
@@ -179,15 +179,15 @@
             })
             }}
           </span>
-          <span :title="formatQuoteAsset(itemDetails.price) | formatMoney">
-            {{ formatQuoteAsset(itemDetails.price) | formatMoney }}
+          <span :title="price | formatMoney">
+            {{ price | formatMoney }}
           </span>
         </li>
         <li>
           <span>{{ "order-book-table.total-price" | globalize }}</span>
           <!-- eslint-disable-next-line max-len -->
-          <span :title="formatQuoteAsset(itemDetails.quoteAmount) | formatMoney">
-            {{ formatQuoteAsset(itemDetails.quoteAmount) | formatMoney }}
+          <span :title="quoteAmount | formatMoney">
+            {{ quoteAmount | formatMoney }}
           </span>
         </li>
       </ul>
@@ -227,15 +227,21 @@ export default {
   },
 
   computed: {
-    formatBaseAmount () {
+    baseAmount () {
       return {
         value: this.itemDetails.baseAmount,
         currency: this.itemDetails.baseAssetCode,
       }
     },
-    formatQuoteAsset (value) {
+    price () {
       return {
-        value,
+        value: this.itemDetails.price,
+        currency: this.itemDetails.quoteAssetCode,
+      }
+    },
+    quoteAmount (value) {
+      return {
+        value: this.itemDetails.quoteAmount,
         currency: this.itemDetails.quoteAssetCode,
       }
     },

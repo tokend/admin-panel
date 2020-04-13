@@ -76,8 +76,8 @@
               {{ item.requestDetails.creatorDetails.name }}
             </span>
             <span class="app-list__cell">
-              <span :title="formatHardCap(item) | formatMoney">
-                {{ formatHardCap(item) | formatMoney }}
+              <span :title="hardCap(item) | formatMoney">
+                {{ hardCap(item) | formatMoney }}
               </span>
             </span>
             <span class="app-list__cell">
@@ -191,7 +191,7 @@ export default {
       }
     },
 
-    formatHardCap (item) {
+    hardCap (item) {
       return {
         value: item.requestDetails.hardCap,
         currency: item.requestDetails.defaultQuoteAsset.id,

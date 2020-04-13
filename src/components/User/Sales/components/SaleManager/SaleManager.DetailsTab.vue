@@ -251,7 +251,7 @@
               {{ "sale-manager-details-tab.total-current-cap" | globalize }}
             </span>
             <!-- eslint-enable -->
-            <span :title="item.totalCurrentCap">
+            <span :title="item.totalCurrentCap | formatMoney">
               {{ item.totalCurrentCap | formatMoney }}
             </span>
           </li>
@@ -281,23 +281,23 @@
               {{ "sale-manager-details-tab.current-cap" | globalize }}
             </span>
             <!-- eslint-disable -->
-            <span :title="formatAssetCap(sale.defaultQuoteAsset.currentCap) | formatMoney">
-              {{ formatAssetCap(sale.defaultQuoteAsset.currentCap) | formatMoney }}
+            <span :title="currentCap | formatMoney">
+              {{ currentCap | formatMoney }}
             </span>
             <!-- eslint-enable -->
           </li>
           <li>
             <span>{{ "sale-manager-details-tab.soft-cap" | globalize }}</span>
             <!-- eslint-disable-next-line max-len -->
-            <span :title="formatAssetCap(sale.defaultQuoteAsset.softCap) | formatMoney">
-              {{ formatAssetCap(sale.defaultQuoteAsset.softCap) | formatMoney }}
+            <span :title="softCap | formatMoney">
+              {{ softCap | formatMoney }}
             </span>
           </li>
           <li>
             <span>{{ "sale-manager-details-tab.hard-cap" | globalize }}</span>
             <!-- eslint-disable-next-line max-len -->
-            <span :title="formatAssetCap(sale.defaultQuoteAsset.hardCap) | formatMoney">
-              {{ formatAssetCap(sale.defaultQuoteAsset.hardCap) | formatMoney }}
+            <span :title="hardCap | formatMoney">
+              {{ hardCap | formatMoney }}
             </span>
           </li>
           <li>
@@ -385,6 +385,24 @@ export default {
         currency: this.sale.baseAsset.id,
       }
     },
+    currentCap () {
+      return {
+        value: this.sale.defaultQuoteAsset.currentCap,
+        currency: this.sale.defaultQuoteAsset.asset.id,
+      }
+    },
+    softCap () {
+      return {
+        value: this.sale.defaultQuoteAsset.softCap,
+        currency: this.sale.defaultQuoteAsset.asset.id,
+      }
+    },
+    hardCap () {
+      return {
+        value: this.sale.defaultQuoteAsset.hardCap,
+        currency: this.sale.defaultQuoteAsset.asset.id,
+      }
+    },
   },
 
   async created () {
@@ -403,12 +421,6 @@ export default {
         this.isAssetLoaded = true
       } catch (error) {
         this.isAssetFailed = true
-      }
-    },
-    formatAssetCap (cap) {
-      return {
-        value: cap,
-        currency: this.sale.defaultQuoteAsset.asset.id,
       }
     },
   },

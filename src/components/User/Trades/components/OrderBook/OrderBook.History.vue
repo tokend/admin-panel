@@ -85,14 +85,14 @@
         </li>
         <li>
           <span>{{ "order-book-history.amount" | globalize }}</span>
-          <span :title="formatBaseAmountPrice | formatMoney">
-            {{ formatBaseAmountPrice | formatMoney }}
+          <span :title="baseAmountPrice | formatMoney">
+            {{ baseAmountPrice | formatMoney }}
           </span>
         </li>
         <li>
           <span>{{ "order-book-history.price" | globalize }}</span>
-          <span :title="formatQuoteAssetPrice | formatMoney">
-            {{ formatQuoteAssetPrice | formatMoney }}
+          <span :title="quoteAssetPrice | formatMoney">
+            {{ quoteAssetPrice | formatMoney }}
           </span>
         </li>
         <li>
@@ -133,13 +133,13 @@ export default {
   },
 
   computed: {
-    formatBaseAmountPrice () {
+    baseAmountPrice () {
       return {
         value: this.itemDetails.baseAmount,
         currency: this.itemDetails.baseAsset.id,
       }
     },
-    formatQuoteAssetPrice () {
+    quoteAssetPrice () {
       return {
         value: this.itemDetails.price,
         currency: this.quoteAsset,

@@ -231,8 +231,8 @@
               {{ "sale-request-manager-details-tab.soft-cap" | globalize }}
             </span>
             <!-- eslint-disable -->
-            <span :title="formatSaleCap(saleDetails.softCap) | formatMoney">
-              {{ formatSaleCap(saleDetails.softCap) | formatMoney }}
+            <span :title="softCap | formatMoney">
+              {{ softCap | formatMoney }}
             </span>
             <!-- eslint-enable -->
           </li>
@@ -241,8 +241,8 @@
               {{ "sale-request-manager-details-tab.hard-cap" | globalize }}
             </span>
             <!-- eslint-disable -->
-            <span :title="formatSaleCap(saleDetails.hardCap) | formatMoney">
-              {{ formatSaleCap(saleDetails.hardCap) | formatMoney }}
+            <span :title="hardCap | formatMoney">
+              {{ hardCap | formatMoney }}
             </span>
             <!-- eslint-enable -->
           </li>
@@ -254,8 +254,8 @@
               })
               }}
             </span>
-            <span :title="formatbaseAssetForHardCap | formatMoney">
-              {{ formatbaseAssetForHardCap | formatMoney }}
+            <span :title="baseAssetForHardCap | formatMoney">
+              {{ baseAssetForHardCap | formatMoney }}
             </span>
           </li>
         </ul>
@@ -330,23 +330,30 @@ export default {
         SALE_DEFINITION_TYPES.whitelist
     },
 
-    formatbaseAssetForHardCap () {
+    baseAssetForHardCap () {
       return {
         value: this.saleDetails.baseAssetForHardCap,
         currency: this.saleDetails.baseAsset.id,
+      }
+    },
+
+    softCap () {
+      return {
+        value: this.saleDetails.softCap,
+        currency: this.saleDetails.defaultQuoteAsset.id,
+      }
+    },
+
+    hardCap () {
+      return {
+        value: this.saleDetails.hardCap,
+        currency: this.saleDetails.defaultQuoteAsset.id,
       }
     },
   },
 
   methods: {
     safeGet: get,
-
-    formatSaleCap (cap) {
-      return {
-        value: cap,
-        currency: this.saleDetails.defaultQuoteAsset.id,
-      }
-    },
   },
 }
 </script>
