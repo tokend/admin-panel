@@ -307,8 +307,8 @@
               })
               }}
             </span>
-            <span :title="formatBaseAssetCap | formatMoney">
-              {{ formatBaseAssetCap | formatMoney }}
+            <span :title="baseAssetCap | formatMoney">
+              {{ baseAssetCap | formatMoney }}
             </span>
           </li>
         </ul>
@@ -379,7 +379,7 @@ export default {
       return this.sale.accessDefinitionType.value ===
         SALE_DEFINITION_TYPES.whitelist
     },
-    formatBaseAssetCap () {
+    baseAssetCap () {
       return {
         value: this.sale.baseHardCap,
         currency: this.sale.baseAsset.id,
