@@ -380,7 +380,7 @@ export default {
       }, 5000)
     },
 
-    async getEndpoint (blobId, kyc) {
+    async getData (blobId, kyc) {
       const endpoint = `/accounts/${this.user.address}/blobs/${blobId}`
       const { data } = await api.getWithSignature(endpoint)
       return deepCamelCase(
@@ -394,9 +394,11 @@ export default {
       this.isKycLoadFailed = false
 
       try {
-        let a = this.getEndpoint(blobId, kyc)
-        this.isKycLoaded = true
-        return a
+        let data = await this.getData(blobId, kyc)
+        if (data) {
+          this.isKycLoaded = true
+          return data
+        }
       } catch (error) {
         ErrorHandler.process(error)
         this.isKycLoadFailed = true
