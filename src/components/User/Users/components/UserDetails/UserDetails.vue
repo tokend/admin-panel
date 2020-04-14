@@ -58,14 +58,14 @@
                 v-if="
                   requestToReview.accountRoleToSet === kvAccountRoles.general
                 "
-                :kyc="kycNoVerified"
+                :kyc="kycNonVerified"
                 :user="user"
               />
               <verified-kyc-viewer
                 v-if="
                   requestToReview.accountRoleToSet === kvAccountRoles.usVerified
                 "
-                :kyc="kycNoVerified"
+                :kyc="kycNonVerified"
                 :user="user"
               />
               <accredited-kyc-viewer
@@ -73,7 +73,7 @@
                   requestToReview.accountRoleToSet ===
                     kvAccountRoles.usAccredited
                 "
-                :kyc="kycNoVerified"
+                :kyc="kycNonVerified"
                 :user="user"
               />
             </template>
@@ -258,12 +258,14 @@ export default {
       isFailed: false,
       isPending: false,
       isKycLoaded: false,
-      isKycLoadFailed: true,
+      isKycLoadFailed: false,
       user: {},
       requests: [],
       verifiedRequest: {},
+      emptyKyc: {},
+      emptyKycNonVerified: {},
       kyc: {},
-      kycNoVerified: {},
+      kycNonVerified: {},
     }
   },
 
@@ -309,21 +311,25 @@ export default {
 
   async created () {
     await this.getUser()
-
-    this.kycNoVerified = await this.getKyc(this.requestToReview.blobId)
-    if (this.kycNoVerified) {
-      this.kyc = await this.getKyc(this.verifiedRequest.blobId)
-      if (!this.kyc) {
-        this.isKycLoadFailed = true
-        this.isKycLoaded = false
-      }
-    } else {
-      this.isKycLoadFailed = true
-      this.isKycLoaded = false
+    if (this.requestToReview.state) {
+      this.kycNonVerified =
+        await this.fillEmptyKyc(this.requestToReview, this.emptyKycNonVerified)
+    }
+    if (this.verifiedRequest.state && this.kycNonVerified) {
+      this.kyc = await this.fillEmptyKyc(this.verifiedRequest, this.emptyKyc)
     }
   },
 
   methods: {
+    async fillEmptyKyc (request, kyc) {
+      kyc = await this.getKyc(request.blobId, kyc)
+      if (!kyc) {
+        this.isKycLoaded = false
+        this.isKycLoadFailed = true
+      }
+      return kyc
+    },
+
     async getUser () {
       this.isLoaded = false
       this.isFailed = false
@@ -374,24 +380,27 @@ export default {
       }, 5000)
     },
 
-    async getKyc (blobId) {
+    async getEndpoint (blobId, kyc) {
+      const endpoint = `/accounts/${this.user.address}/blobs/${blobId}`
+      const { data } = await api.getWithSignature(endpoint)
+      return deepCamelCase(
+        fromKycTemplate(JSON.parse(data.value))
+      )
+    },
+    async getKyc (blobId, kyc) {
       if (!blobId) return
 
       this.isKycLoaded = false
       this.isKycLoadFailed = false
-      let kyc
 
       try {
-        const endpoint = `/accounts/${this.user.address}/blobs/${blobId}`
-        const { data } = await api.getWithSignature(endpoint)
-        kyc = deepCamelCase(
-          fromKycTemplate(JSON.parse(data.value))
-        )
+        let a = this.getEndpoint(blobId, kyc)
         this.isKycLoaded = true
+        return a
       } catch (error) {
         ErrorHandler.process(error)
+        this.isKycLoadFailed = true
       }
-      return kyc
     },
   },
 }
