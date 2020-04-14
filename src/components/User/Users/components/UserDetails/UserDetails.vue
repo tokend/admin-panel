@@ -311,10 +311,8 @@ export default {
     await this.getUser()
 
     this.kycNoVerified = await this.getKyc(this.requestToReview.blobId)
-    // this.kycNoVerified = 0
     if (this.kycNoVerified) {
       this.kyc = await this.getKyc(this.verifiedRequest.blobId)
-      // this.kyc = 0
       if (!this.kyc) {
         this.isKycLoadFailed = true
         this.isKycLoaded = false
@@ -392,7 +390,6 @@ export default {
         this.isKycLoaded = true
       } catch (error) {
         ErrorHandler.process(error)
-        // this.isKycLoadFailed = true
       }
       return kyc
     },
