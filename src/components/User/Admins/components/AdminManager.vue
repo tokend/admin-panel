@@ -149,7 +149,8 @@
 
 <script>
 import Vue from 'vue'
-
+// import { mapGetters } from 'vuex'
+// import { getters } from '@/store/types'
 import FormMixin from '@/mixins/form.mixin'
 import { required, minValue, maxValue, accountId } from '@/validators'
 
@@ -202,6 +203,7 @@ export default {
 
       masterPubKey: Vue.params.MASTER_ACCOUNT,
       MASTER_ROLE_ID,
+      // accountStore: '',
     }
   },
 
@@ -226,6 +228,8 @@ export default {
   },
 
   computed: {
+    // ...mapGetters({ userAddress: getters.GET_USER_ADDRESS }),
+
     addNew () {
       return !this.id
     },
@@ -244,6 +248,12 @@ export default {
     } catch (error) {
       ErrorHandler.processWithoutFeedback(error)
     }
+    // console.log(this.form.accountId)
+    // console.log(this.userAddress)
+    // const endpoint = `/v3/accounts/${this.masterPubKey}/signers`
+    // const { data } = await api.getWithSignature(endpoint)
+    // console.log(data)
+    // this.accountStore = this.form.accountId
   },
 
   methods: {
@@ -338,7 +348,31 @@ export default {
       })) {
         await this.submitTx(base.ManageSignerBuilder.deleteSigner)
       }
+      // const endpoint = `/v3/accounts/${this.masterPubKey}/signers`
+      // const { data } = await api.getWithSignature(endpoint)
+      // console.log(data.some(a => a.id === this.accountStore))
+      // setTimeout(this.logout, 3000)
+      // console.log(this.form.accountId === this.userAddress)
+      // if (this.form.accountId === this.userAddress) {
+      //   // console.log(this.form.accountId)
+      //   this.$store.dispatch('LOG_OUT')
+      // }
+      // const endpoint = `/v3/accounts/${this.masterPubKey}/signers`
+      // const { data } = await api.getWithSignature(endpoint)
+      // if (!data.some(a => a.id === this.accountStore)) {
+      //   // console.log(this.form.accountId)
+      //   this.$store.dispatch('LOG_OUT')
+      // }
     },
+
+    // async logout () {
+    //   const endpoint = `/v3/accounts/${this.masterPubKey}/signers`
+    //   const { data } = await api.getWithSignature(endpoint)
+    //   if (this.form.accountId === this.userAddress) {
+    //     console.log(this.form.accountId)
+    //     this.$store.dispatch('LOG_OUT')
+    //   }
+    // },
 
     async submitTx (operationConstructor) {
       const opts = this.buildManageSignerOperationOpts()
