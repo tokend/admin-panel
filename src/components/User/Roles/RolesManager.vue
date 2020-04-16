@@ -11,7 +11,7 @@
         </div>
       </template>
       <template v-else>
-        <div v-if="list.length && rules.length" class="roles__card">
+        <div class="roles__card">
           <div class="roles__form">
             <select-field
               class="roles__input"
@@ -33,27 +33,27 @@
 
         <div class="roles__card">
           <form class="roles__form">
-            <template v-if="rules.length">
-              <div class="roles__form-head">
-                <input-field
-                  class="app__form-field roles__role-name"
-                  :label="'roles-manager.role-name' | globalize"
-                  v-model="form.roleName"
-                  :disabled="formMixin.isDisabled || currentRole.isReadOnly"
-                />
-                <tick-field
-                  v-if="!isAccountRoles"
-                  class="roles__read-only"
-                  :label="'roles-manager.read-only' | globalize"
-                  v-model="form.isReadOnly"
-                  :disabled="formMixin.isDisabled || currentRole.isReadOnly"
-                />
-              </div>
+            <div class="roles__form-head">
+              <input-field
+                class="app__form-field roles__role-name"
+                :label="'roles-manager.role-name' | globalize"
+                v-model="form.roleName"
+                :disabled="formMixin.isDisabled || currentRole.isReadOnly"
+              />
+              <tick-field
+                v-if="!isAccountRoles"
+                class="roles__read-only"
+                :label="'roles-manager.read-only' | globalize"
+                v-model="form.isReadOnly"
+                :disabled="formMixin.isDisabled || currentRole.isReadOnly"
+              />
+            </div>
 
-              <div class="roles__rules-wrp">
-                <h4 class="roles__rules-title">
-                  {{ 'roles-manager.rules-title' | globalize }}
-                </h4>
+            <div class="roles__rules-wrp">
+              <h4 class="roles__rules-title">
+                {{ 'roles-manager.rules-title' | globalize }}
+              </h4>
+              <template v-if="rules.length">
                 <div class="roles__rules">
                   <tick-field
                     class="roles__rule"
@@ -72,56 +72,56 @@
                     "
                   />
                 </div>
-              </div>
+              </template>
+              <template v-else>
+                <p>{{ "roles-manager.no-rules-created-yet" | globalize }}</p>
+              </template>
+            </div>
 
-              <div class="roles__actions">
-                <div
-                  v-if="isRoleSelected"
-                  class="roles__actions-selected-rule"
-                >
-                  <button
-                    type="button"
-                    class="app__btn
+            <div class="roles__actions">
+              <div
+                v-if="isRoleSelected"
+                class="roles__actions-selected-rule"
+              >
+                <button
+                  type="button"
+                  class="app__btn
                       app__btn--small
                       roles__btn
                     "
-                    @click="submit(ACTIONS.update)"
-                    :disabled="formMixin.isDisabled || currentRole.isReadOnly"
-                  >
-                    {{ "roles-manager.btn-update" | globalize }}
-                  </button>
+                  @click="submit(ACTIONS.update)"
+                  :disabled="formMixin.isDisabled || currentRole.isReadOnly"
+                >
+                  {{ "roles-manager.btn-update" | globalize }}
+                </button>
 
-                  <button
-                    type="button"
-                    class="app__btn
+                <button
+                  type="button"
+                  class="app__btn
                       app__btn--small
                       app__btn--danger
                       roles__btn
                     "
-                    @click="submit(ACTIONS.remove)"
-                    :disabled="formMixin.isDisabled"
-                  >
-                    {{ "roles-manager.btn-remove" | globalize }}
-                  </button>
-                </div>
+                  @click="submit(ACTIONS.remove)"
+                  :disabled="formMixin.isDisabled"
+                >
+                  {{ "roles-manager.btn-remove" | globalize }}
+                </button>
+              </div>
 
-                <button
-                  v-else
-                  type="button"
-                  class="app__btn
+              <button
+                v-else
+                type="button"
+                class="app__btn
                     app__btn--small
                     roles__btn
                   "
-                  @click="submit(ACTIONS.create)"
-                  :disabled="formMixin.isDisabled"
-                >
-                  {{ "roles-manager.btn-create" | globalize }}
-                </button>
-              </div>
-            </template>
-            <template v-else>
-              <p>{{ "roles-manager.no-rules-created-yet" | globalize }}</p>
-            </template>
+                @click="submit(ACTIONS.create)"
+                :disabled="formMixin.isDisabled"
+              >
+                {{ "roles-manager.btn-create" | globalize }}
+              </button>
+            </div>
           </form>
         </div>
       </template>
