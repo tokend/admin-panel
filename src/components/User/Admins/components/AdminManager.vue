@@ -341,14 +341,19 @@ export default {
       })) {
         await this.submitTx(base.ManageSignerBuilder.deleteSigner)
       }
-      this.logOut()
+      if (this.form.accountId === this.userAddress) {
+        this.getAdmins()
+      }
     },
 
-    async logOut () {
+    async getAdmins () {
       const endpoint = `/v3/accounts/${this.masterPubKey}/signers`
       const { data } = await api.getWithSignature(endpoint)
-      if (!data.some(a => a.id === this.form.accountId) &&
-        this.form.accountId === this.userAddress) {
+      this.logOut(data)
+    },
+
+    logOut (data) {
+      if (!data.some(a => a.id === this.form.accountId)) {
         this.$store.dispatch('LOG_OUT')
       }
     },
