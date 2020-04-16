@@ -37,6 +37,7 @@
           class="sale-list__field sale-list__field-margin-top"
           :enable-time="false"
           v-model="filters.startDate"
+          :disable-after="moment(filters.endDate).toISOString()"
         />
         <!-- eslint-disable max-len -->
         <input-date-field
@@ -44,6 +45,7 @@
           class="sale-list__field sale-list__field-margin-left sale-list__field-margin-top"
           :enable-time="false"
           v-model="filters.endDate"
+          :disable-before="moment(filters.startDate).toISOString()"
         />
         <select-field
           class="sale-list__field sale-list__field-margin-left sale-list__field-margin-top"
@@ -169,6 +171,7 @@ import _ from 'lodash'
 
 import config from '@/config'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import moment from 'moment'
 
 export default {
   components: {
@@ -226,6 +229,8 @@ export default {
   },
 
   methods: {
+    moment,
+
     async getOwner () {
       let owner
       const emailRegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/

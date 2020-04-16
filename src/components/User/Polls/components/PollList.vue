@@ -29,12 +29,16 @@
           :label="'poll-list.lbl-min-start-time' | globalize"
           class="poll-list__field"
           v-model="filters.minStartTime"
+          :disable-after="moment(filters.maxEndTime).toISOString()"
         />
 
         <input-date-field
-          :label="'poll-list.lbl-min-end-time' | globalize"
+          :label="'poll-list.lbl-max-end-time' | globalize"
           class="poll-list__field"
           v-model="filters.maxEndTime"
+          :disable-before="moment(filters.minStartTime).subtract(1, 'days')
+            .toISOString()
+          "
         />
 
         <input-field
@@ -159,6 +163,8 @@ import { ErrorHandler } from '@/utils/ErrorHandler'
 import { clearObject } from '@/utils/clearObject'
 import { POLL_STATES } from '@/constants/poll-states'
 
+import moment from 'moment'
+
 export default {
   components: {
     InputField,
@@ -183,6 +189,31 @@ export default {
   },
 
   watch: {
+    filters: {
+      deep: true,
+      handler: function (value) {
+        if (moment(value.minStartTime).isAfter(moment(value.maxEndTime))) {
+          return
+        }
+        this.reloadListThrottled()
+      },
+    },
+    'filters.minStartTime' () {
+      // eslint-disable-next-line max-len
+      if (moment(this.filters.minStartTime).isAfter(moment(this.filters.maxEndTime))) {
+        this.filters.minStartTime = moment(this.filters.maxEndTime)
+          .toISOString()
+      }
+    },
+
+    'filters.maxEndTime' () {
+      // eslint-disable-next-line max-len
+      if (moment(this.filters.maxEndTime).isBefore(moment(this.filters.minStartTime))) {
+        this.filters.maxEndTime = moment(this.filters.minStartTime)
+          .toISOString()
+      }
+    },
+
     'filters.state' () {
       this.reloadList()
     },
@@ -190,17 +221,10 @@ export default {
     'filters.owner' () {
       this.reloadListThrottled()
     },
-
-    'filters.minStartTime' () {
-      this.reloadListThrottled()
-    },
-
-    'filters.maxEndTime' () {
-      this.reloadListThrottled()
-    },
   },
 
   methods: {
+    moment,
     async getList () {
       let response = {}
 
@@ -210,8 +234,8 @@ export default {
           filter: clearObject({
             owner: await apiHelper.users.getAccountIdBy(this.filters.owner),
             state: this.filters.state,
-            min_start_time: this.filters.minStartTime,
-            max_end_time: this.filters.maxEndTime,
+            min_start_time: moment(this.filters.minStartTime).toISOString(),
+            max_end_time: moment(this.filters.maxEndTime).toISOString(),
           }),
         })
       } catch (error) {

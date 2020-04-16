@@ -1,61 +1,95 @@
 <template>
   <div
-    class="input-field"
-    :class="{'input-field--error': error}">
-    <flat-pickr
-      id="date"
-      class="input-field__input"
-      :config="config"
-      :value="value"
-      :placeholder="placeholder"
-      @input.native="onInput"
-      @keypress="onKeypress"
-    />
-
-    <span class="input-field__label">
+    class="input-date-field"
+    :class="{ 'input-date-field__input--disabled': disabled }"
+  >
+    <label
+      class="input-date-field__label"
+      :class="{
+        'input-date-field__label--focus': isCalendarOpen || flatpickrDate
+      }"
+    >
       {{ label }}
-    </span>
+    </label>
 
-    <transition name="input-field__err-transition">
-      <p class="input-field__err-mes" v-if="error">
-        {{ error }}
-      </p>
-    </transition>
+    <div class="input-date-field__field">
+      <input
+        type="text"
+        ref="dateField"
+        class="input-date-field__input"
+        @input="dateFieldUpdated"
+        :disabled="disabled"
+        v-model="flatpickrDate"
+        :placeholder="placeholder"
+      >
+    </div>
+
+    <div
+      class="input-date-field__err-mes"
+      v-if="errorMessage"
+    >
+      {{ errorMessage }}
+    </div>
   </div>
 </template>
 
 <script>
-import FlatPickr from 'vue-flatpickr-component'
+import Flatpickr from 'flatpickr'
 import moment from 'moment'
 
+// All supported events by Flatpickr
+const FLATPICKR_HOOKS = {
+  onChange: 'onChange',
+  onClose: 'onClose',
+  onDestroy: 'onDestroy',
+  onMonthChange: 'onMonthChange',
+  onOpen: 'onOpen',
+  onYearChange: 'onYearChange',
+  onValueUpdate: 'onValueUpdate',
+  onDayCreate: 'onDayCreate',
+  onParseConfig: 'onParseConfig',
+  onReady: 'onReady',
+  onPreCalendarPosition: 'onPreCalendarPosition',
+  onKeyDown: 'onKeyDown',
+}
+
+// Events that will emitted up
+const EMITABLE_EVENTS = {
+  getNewValue: 'getNewValue',
+  input: 'input',
+  onClose: FLATPICKR_HOOKS.onClose,
+  onOpen: FLATPICKR_HOOKS.onOpen,
+}
+
 export default {
-  components: { FlatPickr },
+  name: 'input-date-field',
 
   props: {
-    error: { type: [String, Boolean], default: '' },
-    placeholder: { type: String, default: ' ' },
-    label: { type: String, default: '' },
-    type: { type: String, default: 'text' },
     value: { type: String, default: '' },
-    enableTime: {
-      type: Boolean,
-      default: true,
-    },
-    disableBefore: {
-      type: String,
-      default: '',
-    },
-    disableAfter: {
-      type: String,
-      default: '',
-    },
+    enableTime: { type: Boolean, default: true },
+    allowInput: { type: Boolean, default: false },
+    disabled: { type: Boolean, default: false },
+    disableBefore: { type: String, default: '' },
+    disableAfter: { type: String, default: '' },
+    placeholder: { type: String, default: '' },
+    label: { type: String, default: '' },
+    errorMessage: { type: String, default: undefined },
   },
 
-  data () {
-    return {
-      date: '',
-      config: {
+  data: _ => ({
+    flatpickrDate: '',
+    isCalendarOpen: false,
+    /**
+     * Flatpickr instance
+     */
+    flatpickr: null,
+  }),
+
+  computed: {
+    config () {
+      return {
         altInput: true,
+        allowInput: this.allowInput,
         altFormat: this.enableTime ? 'F j, Y at H:i' : 'F j, Y',
         disableMobile: true,
         disable: [
@@ -72,33 +106,259 @@ export default {
         ],
         enableTime: this.enableTime,
         time_24hr: true,
+      }
+    },
+  },
+
+  watch: {
+    value (newValue) {
+      // Prevent updates if v-model value is same as input's current value
+      if (newValue === this.flatpickrDate) return
+      // Sets the current selected date after value changed
+      if (this.flatpickr) this.flatpickr.setDate(newValue, true)
+    },
+
+    config: {
+      deep: true,
+      handler (newConfig) {
+        const safeConfig = Object.assign({}, newConfig)
+
+        // Workaround: Don't pass hooks to configs again otherwise
+        // previously registered hooks will stop working
+        // This also means that new callbacks cannot be passed once a component
+        // has been initialized
+        this.flatpickr.set(this.defineFlatpickrHooks(safeConfig))
       },
+    },
+
+    disableBefore () {
+      this.flatpickr.redraw()
+    },
+
+    disableAfter () {
+      this.flatpickr.redraw()
+    },
+
+    /**
+     * We can set disabled state only directly, because of flatpickr does not
+     * provide any config options
+     *
+     * @link https://github.com/flatpickr/flatpickr/issues/777
+     */
+    disabled (value) {
+      if (value) {
+        this.flatpickr._input.setAttribute('disabled', 'disabled')
+      } else {
+        this.flatpickr._input.removeAttribute('disabled')
+      }
+    },
+  },
+
+  mounted () {
+    if (this.flatpickr) return
+
+    let safeConfig = Object.assign({}, this.config)
+
+    const hooks = {
+      [FLATPICKR_HOOKS.onClose]: this.arrayify(
+        safeConfig[FLATPICKR_HOOKS.onClose]
+      ).concat(
+        (...args) => this.onClose(...args)
+      ),
+      [FLATPICKR_HOOKS.onOpen]: this.arrayify(
+        safeConfig[FLATPICKR_HOOKS.onOpen]
+      ).concat(
+        (...args) => this.onOpen(...args)
+      ),
+    }
+
+    // Inject defined methods into hooks array
+
+    safeConfig = {
+      ...safeConfig,
+      ...hooks,
+    }
+
+    // Set initial date without emitting any event
+    safeConfig.defaultDate = this.value || safeConfig.defaultDate
+
+    this.flatpickr = new Flatpickr(this.$refs.dateField, safeConfig)
+
+    this.flatpickrDate = this.value || safeConfig.defaultDate || null
+  },
+
+  /**
+   * Free up memory
+   */
+  beforeDestroy () {
+    if (this.flatpickr) {
+      this.flatpickr.destroy()
+      this.flatpickr = null
     }
   },
 
   methods: {
-    onInput (event) {
-      this.$emit('input', event.target.value)
+    dateFieldUpdated (event) {
+      if (event) {
+        // Let's wait for DOM to be updated
+        this.$nextTick(() => {
+          this.$emit(EMITABLE_EVENTS.input, this.flatpickrDate)
+        })
+      }
+    },
+    defineFlatpickrHooks (config) {
+      let safeConfig = Object.assign({}, config)
+      FLATPICKR_HOOKS.forEach((hook) => {
+        delete safeConfig[hook]
+      })
+      return safeConfig
+    },
+    arrayify (obj) {
+      if (!obj) {
+        return []
+      }
+      return obj instanceof Array ? obj : [obj]
     },
 
-    onKeypress (event) {
-      if (this.type !== 'number') return
-      this.$number.testNumber(event)
+    /* FLATPICKR HOOKS */
+
+    /**
+     * Function arguments doc:
+     *
+     * @link https://flatpickr.js.org/events/#events
+     */
+    onOpen (selectedDates, dateStr, instance) {
+      this.isCalendarOpen = true
+      // Let's wait for DOM to be updated
+      this.$nextTick(() => {
+        this.$emit(EMITABLE_EVENTS.onOpen)
+      })
+    },
+    onClose (selectedDates, dateStr, instance) {
+      this.isCalendarOpen = false
+      this.flatpickrDate = dateStr
+      this.flatpickr.setDate(dateStr, true)
+      // Let's wait for DOM to be updated
+      this.$nextTick(() => {
+        this.$emit(EMITABLE_EVENTS.input, dateStr)
+        this.$emit(EMITABLE_EVENTS.onClose)
+      })
     },
   },
 }
+
 </script>
 
-<style lang="scss" scoped>
-@import "./scss/input";
+<style lang="scss">
+@import './scss/input';
 
-.date-field__calendar-input {
-  position: absolute;
-  right: 5px;
-  pointer-events: none;
+.input-date-field {
+  position: relative;
+  width: 100%;
+  flex: 1;
 }
 
-input {
-  @extend .input-field__input;
+.input-date-field__input {
+  width: 100%;
+  background-color: transparent;
+  border: none;
+  caret-color: $field-color-focused;
+  color: $field-color-text;
+  padding: $field-input-padding;
+
+  @include material-border($field-color-focused);
+  @include text-font-sizes;
+
+  @mixin placeholder {
+    color: rgba(#212121, 0.7);
+    transition: opacity $field-transition-duration;
+  }
+
+  &::-webkit-input-placeholder {
+    @include placeholder;
+    opacity: 0;
+  }
+
+  &::-moz-placeholder {
+    @include placeholder;
+    opacity: 0;
+  }
+
+  &:-moz-placeholder {
+    @include placeholder;
+    opacity: 0;
+  }
+
+  &:-ms-input-placeholder {
+    @include placeholder;
+    opacity: 0;
+  }
+
+  &::placeholder {
+    @include placeholder;
+    opacity: 0;
+  }
+}
+
+.input-date-field__input.active {
+  &::-webkit-input-placeholder {
+    opacity: 1;
+  }
+
+  &::-moz-placeholder {
+    opacity: 1;
+  }
+
+  &:-moz-placeholder {
+    opacity: 1;
+  }
+
+  &:-ms-input-placeholder {
+    opacity: 1;
+  }
+
+  &::placeholder {
+    opacity: 1;
+  }
+}
+
+.input-date-field__input--disabled {
+  cursor: default;
+  filter: grayscale(100%);
+  -webkit-text-fill-color: $field-color-unfocused;
+  color: $field-color-unfocused;
+
+  .input-date-field__input {
+    border-bottom: 0.1rem dashed $field-color-unfocused;
+    background: none;
+  }
+}
+
+.input-date-field__label {
+  position: absolute;
+  left: 0;
+  top: $field-input-padding-top;
+  transition: all $field-transition-duration;
+  pointer-events: none;
+  color: $field-color-unfocused;
+  white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  @include text-font-sizes;
+}
+
+.input-date-field__label--focus {
+  top: 0;
+
+  @include label-font-sizes;
+}
+
+.input-date-field__err-mes {
+  color: $field-color-error;
+  margin-top: $field-error-margin-top;
+  font-size: $field-error-font-size;
+  line-height: $field-error-line-height;
 }
 </style>

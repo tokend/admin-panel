@@ -1432,7 +1432,7 @@
       "loading": "Loading...",
       "lbl-state": "State",
       "lbl-min-start-time": "Min start time",
-      "lbl-min-end-time": "Min end time",
+      "lbl-max-end-time": "Max end time",
       "lbl-owner": "Owner",
       "placeholder-addres-or-email": "Address or email"
     },
