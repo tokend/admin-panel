@@ -226,6 +226,41 @@
         </div>
       </template>
 
+      <template v-if="assetRequest.erc20AssetAddress">
+        <div
+          class="asset-requests-show__row"
+        >
+          <span class="asset-requests-show__key">
+            {{ "asset-requests-show.erc20-asset-address" | globalize }}
+          </span>
+          <span class="asset-requests-show__value">
+            {{ assetRequest.erc20AssetAddress }}
+          </span>
+        </div>
+
+        <div
+          class="asset-requests-show__row"
+        >
+          <span class="asset-requests-show__key">
+            {{ "asset-requests-show.erc20-withdraw" | globalize }}
+          </span>
+          <span class="asset-requests-show__value">
+            {{ assetRequest.erc20Withdraw | yesNoFilter }}
+          </span>
+        </div>
+
+        <div
+          class="asset-requests-show__row"
+        >
+          <span class="asset-requests-show__key">
+            {{ "asset-requests-show.erc20-deposit" | globalize }}
+          </span>
+          <span class="asset-requests-show__value">
+            {{ assetRequest.erc20Deposit | yesNoFilter }}
+          </span>
+        </div>
+      </template>
+
       <div class="asset-requests-show__row">
         <span class="asset-requests-show__key">
           {{ "asset-requests-show.creation-data" | globalize }}
@@ -244,6 +279,222 @@
         </span>
       </div>
 
+      <h2 class="asset-requests-previous-approved-request-title">
+        <template
+          v-if="assetRequest.type === ASSET_REQUEST_TYPES.updateAsset"
+        >
+          {{ "asset-requests-show.previous-approved-request" | globalize }}
+        </template>
+      </h2>
+      <div
+        class="asset-requests-show__row"
+        v-if="assetRequest.type === ASSET_REQUEST_TYPES.updateAsset"
+      >
+        <span class="asset-requests-show__key">
+          {{ "asset-requests-show.asset-logo" | globalize }}
+        </span>
+        <template
+          v-if="safeGet(
+            approvedAssetRequest, 'operationDetails.creatorDetails.logo.key'
+          )"
+        >
+          <img-getter
+            class="asset-requests-show__asset-logo"
+            :file-key="
+              approvedAssetRequest.operationDetails.creatorDetails.logo.key"
+            alt="Asset logo"
+          />
+        </template>
+        <template v-else>
+          &mdash;
+        </template>
+      </div>
+      <div
+        class="asset-requests-show__row"
+        v-if="assetRequest.type === ASSET_REQUEST_TYPES.updateAsset"
+      >
+        <span class="asset-requests-show__key">
+          {{ "asset-requests-show.asset-name" | globalize }}
+        </span>
+        <span
+          class="asset-requests-show__value"
+          :title="approvedAssetRequest.operationDetails.creatorDetails.name"
+        >
+          {{ approvedAssetRequest.operationDetails.creatorDetails.name || '—' }}
+        </span>
+      </div>
+
+      <div
+        class="asset-requests-show__row"
+        v-if="assetRequest.type === ASSET_REQUEST_TYPES.updateAsset"
+      >
+        <span class="asset-requests-show__key">
+          {{ "asset-requests-show.asset-code" | globalize }}
+        </span>
+        <span class="asset-requests-show__value">
+          {{ approvedAssetRequest.code || '—' }}
+        </span>
+      </div>
+
+      <template
+        v-if="assetRequest.policies &&
+          assetRequest.type === ASSET_REQUEST_TYPES.updateAsset"
+      >
+        <div class="asset-requests-show__row asset-requests-show__row--policy">
+          <span class="asset-requests-show__key">
+            {{ "asset-requests-show.policies" | globalize }}
+          </span>
+          <div class="asset-requests-show__policies-wrapper">
+            <template v-for="(policy, key) in ASSET_POLICIES">
+              <!-- eslint-disable max-len -->
+              <span
+                :key="key"
+                class="asset-requests-show__key asset-requests-show__key--informative"
+                v-if="approvedAssetRequest.policies & policy"
+              >
+                {{ policy | assetPoliciesFilter }}
+              </span>
+              <!-- eslint-enable max-len -->
+            </template>
+          </div>
+        </div>
+      </template>
+
+      <div
+        class="asset-requests-show__row"
+        v-if="assetRequest.type === ASSET_REQUEST_TYPES.updateAsset"
+      >
+        <span class="asset-requests-show__key">
+          {{ "asset-requests-show.terms" | globalize }}
+        </span>
+        <span class="asset-requests-show__value">
+          <template
+            v-if="safeGet(
+              approvedAssetRequest, 'operationDetails.creatorDetails.terms.key'
+            )"
+            :mime-type="safeGet(
+              approvedAssetRequest,
+              'operationDetails.details.terms.mimeType'
+            )"
+          >
+            <user-doc-link-getter
+              :file-key="
+                approvedAssetRequest.operationDetails.creatorDetails.terms.key"
+            >
+              {{ "asset-requests-show.opn-file" | globalize }}
+            </user-doc-link-getter>
+          </template>
+          <template v-else>
+            &mdash;
+          </template>
+        </span>
+      </div>
+
+      <template v-if="approvedAssetRequest.stellarAssetCode">
+        <div
+          class="asset-requests-show__row"
+        >
+          <span class="asset-requests-show__key">
+            {{ "asset-requests-show.stellar-asset-code" | globalize }}
+          </span>
+          <span class="asset-requests-show__value">
+            {{ approvedAssetRequest.stellarAssetCode }}
+          </span>
+        </div>
+
+        <div
+          class="asset-requests-show__row"
+        >
+          <span class="asset-requests-show__key">
+            {{ "asset-requests-show.stellar-asset-type" | globalize }}
+          </span>
+          <span class="asset-requests-show__value">
+            {{ approvedAssetRequest.stellarAssetType |
+              stellarAssetTypesFilter }}
+          </span>
+        </div>
+
+        <div
+          class="asset-requests-show__row"
+        >
+          <span class="asset-requests-show__key">
+            {{ "asset-requests-show.stellar-withdraw" | globalize }}
+          </span>
+          <span class="asset-requests-show__value">
+            {{ approvedAssetRequest.stellarWithdraw | yesNoFilter }}
+          </span>
+        </div>
+
+        <div
+          class="asset-requests-show__row"
+        >
+          <span class="asset-requests-show__key">
+            {{ "asset-requests-show.stellar-deposit" | globalize }}
+          </span>
+          <span class="asset-requests-show__value">
+            {{ approvedAssetRequest.stellarDeposit | yesNoFilter }}
+          </span>
+        </div>
+      </template>
+
+      <template v-if="approvedAssetRequest.erc20AssetAddress">
+        <div
+          class="asset-requests-show__row"
+        >
+          <span class="asset-requests-show__key">
+            {{ "asset-requests-show.erc20-asset-address" | globalize }}
+          </span>
+          <span class="asset-requests-show__value">
+            {{ approvedAssetRequest.erc20AssetAddress }}
+          </span>
+        </div>
+
+        <div
+          class="asset-requests-show__row"
+        >
+          <span class="asset-requests-show__key">
+            {{ "asset-requests-show.erc20-withdraw" | globalize }}
+          </span>
+          <span class="asset-requests-show__value">
+            {{ approvedAssetRequest.erc20Withdraw | yesNoFilter }}
+          </span>
+        </div>
+
+        <div
+          class="asset-requests-show__row"
+        >
+          <span class="asset-requests-show__key">
+            {{ "asset-requests-show.erc20-deposit" | globalize }}
+          </span>
+          <span class="asset-requests-show__value">
+            {{ approvedAssetRequest.erc20Deposit | yesNoFilter }}
+          </span>
+        </div>
+      </template>
+
+      <div
+        class="asset-requests-show__row"
+        v-if="assetRequest.type === ASSET_REQUEST_TYPES.updateAsset"
+      >
+        <span class="asset-requests-show__key">
+          {{ "asset-requests-show.creation-data" | globalize }}
+        </span>
+        <span>
+          {{ approvedAssetRequest.creationDate | formatDate }}
+        </span>
+      </div>
+
+      <div
+        class="asset-requests-show__row"
+        v-if="assetRequest.type === ASSET_REQUEST_TYPES.updateAsset"
+      >
+        <span class="asset-requests-show__key">
+          {{ "asset-requests-show.update-data" | globalize }}
+        </span>
+        <span>
+          {{ approvedAssetRequest.updateDate | formatDate }}
+        </span>
+      </div>
       <!-- eslint-disable-next-line max-len -->
       <template v-if="assetRequest.stateI !== REQUEST_STATES.pending.stateI">
         <div class="asset-requests-show__row">
@@ -340,6 +591,7 @@ export default {
   data () {
     return {
       assetRequest: {},
+      approvedAssetRequest: {},
       isRejecting: false,
       isPending: false,
       isInitializing: false,
@@ -354,10 +606,18 @@ export default {
     this.isInitializing = true
 
     try {
-      const { data } = await api.getWithSignature(`/v3/requests/${this.id}`, {
+      const { data } = await api.getWithSignature(`/v3/requests`, {
         include: ['request_details'],
       })
-      this.assetRequest = new AssetRequest(data)
+      let currentRequestIndex = data.findIndex(a => a.id === this.id)
+      let matchedAssetCodeArr =
+        data.filter(a => a.reference === data[currentRequestIndex].reference)
+      this.assetRequest =
+        new AssetRequest(data[data.findIndex(a => a.id === this.id)])
+      if (matchedAssetCodeArr.length > 1) {
+        this.approvedAssetRequest =
+          new AssetRequest(matchedAssetCodeArr[matchedAssetCodeArr.length - 2])
+      }
     } catch (error) {
       ErrorHandler.processWithoutFeedback(error)
       this.isInitFailed = true
@@ -445,5 +705,9 @@ export default {
 .asset-requests-show__policies-wrapper {
   display: flex;
   flex-direction: column;
+}
+
+.asset-requests-previous-approved-request-title {
+  padding-top: 4rem;
 }
 </style>

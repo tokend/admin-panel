@@ -10,6 +10,7 @@ for further information about branching and tagging conventions.
 ## [Unreleased]
 #### Added
 - Form validation of doc types in limits form
+- Info about params of asset before update to asset update request tab
 
 ## [1.13.0-rc.0] - 2020-03-25
 #### Fixed
