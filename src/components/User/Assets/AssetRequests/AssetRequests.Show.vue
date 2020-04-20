@@ -614,9 +614,15 @@ export default {
         data.filter(a => a.reference === data[currentRequestIndex].reference)
       this.assetRequest =
         new AssetRequest(data[data.findIndex(a => a.id === this.id)])
-      if (matchedAssetCodeArr.length > 1) {
+      if (!this.assetRequest) {
+        this.isInitFailed = true
+      }
+      if (matchedAssetCodeArr.length > 1 && this.assetRequest) {
         this.approvedAssetRequest =
           new AssetRequest(matchedAssetCodeArr[matchedAssetCodeArr.length - 2])
+        if (!this.approvedAssetRequest) {
+          this.isInitFailed = true
+        }
       }
     } catch (error) {
       ErrorHandler.processWithoutFeedback(error)
