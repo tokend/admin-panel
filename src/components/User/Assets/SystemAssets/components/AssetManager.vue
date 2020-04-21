@@ -759,7 +759,7 @@ export default {
           operation = base.ManageAssetBuilder.assetCreationRequest({
             requestID: '0',
             code: String(this.asset.id),
-            preIssuanceAssetSigner: String(this.asset.preIssuanceAssetSigner),
+            preissuedAssetSigner: String(this.asset.preIssuanceAssetSigner),
             maxIssuanceAmount: String(this.asset.maxIssuanceAmount),
             policies: Number(this.asset.policies.value),
             assetType: String(this.asset.type),
