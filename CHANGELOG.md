@@ -7,7 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
-## Unreleased
+## [Unreleased]
+#### Added
+- Form validation of doc types in limits form
+
+#### Fixed
+- A bug with localization
+- A bug with wrong displaying int64 in AssetAmountFormatter
+
+#### Removed
+- formatAssetAmount, formatFiatAmount helpers
+- AssetAmountFormatter
+
+#### Added
+- new filter formatMoney
+
+
+## [1.13.0-rc.0] - 2020-03-25
 #### Fixed
 - A bug with wrong displaying initial preissued amount
   in SaleRequestManager.DetailsTab
@@ -18,15 +34,11 @@ for further information about branching and tagging conventions.
 ## [1.12.1-rc.0] - 2020-03-25
 #### Fixed
 - Details in createChangeRoleRequest at unblock user
-- A bug with localization
-- A bug with wrong displaying int64 in AssetAmountFormatter
+- A bug with wrong error if exceeded the maximum issuance amount of the asset
+  in PreissuanceForm
 
 #### Removed
-- formatAssetAmount, formatFiatAmount helpers
-- AssetAmountFormatter
-
-#### Added
-- new filter formatMoney
+- Non-withdrawable assets from withdrawal form
 
 ## [1.12.0] - 2020-03-17
 #### Added
@@ -41,6 +53,7 @@ for further information about branching and tagging conventions.
 - A bug with auto select nonexistent asset for Order Match
 - A bug with displaying in one line very long user details
 - A bug with wrong displaying fields in PollRequestView
+- A bug with impossibility close Withdrawal details in firefox
 
 #### Changed
 - helper localize
@@ -558,8 +571,7 @@ for further information about branching and tagging conventions.
 
 ## [1.3.0] - 2019-03-01
 
-[Unreleased]: https://github.com/tokend/admin-panel/compare/1.12.1-rc.0...HEAD
-[1.12.1-rc.0]: https://github.com/tokend/admin-panel/compare/1.12.0...1.12.1-rc.0
+[Unreleased]: https://github.com/tokend/admin-panel/compare/1.12.0...HEAD
 [1.12.0]: https://github.com/tokend/admin-panel/compare/1.12.0-rc.4...1.12.0
 [1.12.0-rc.4]: https://github.com/tokend/admin-panel/compare/1.12.0-rc.3...1.12.0-rc.4
 [1.12.0-rc.3]: https://github.com/tokend/admin-panel/compare/1.12.0-rc.2...1.12.0-rc.3

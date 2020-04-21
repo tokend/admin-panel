@@ -143,6 +143,13 @@
                 :doc-item="item"
                 :key="i"
               />
+              <transition name="limits-reviewer__doc-label-err-transition">
+                <p
+                  class="limits-reviewer__doc-label-err-mes"
+                  v-if="!item.isDocValid">
+                  {{ 'limits-reviewer.choose-from-list' | globalize }}
+                </p>
+              </transition>
             </div>
             <text-field
               :label="'limits-reviewer.lbl-document-description' | globalize"
@@ -221,6 +228,7 @@
 
 <script>
 import FormMixin from '@/mixins/form.mixin'
+import DatalistMixin from '@/mixins/datalist.mixin'
 import { required, maxLength } from '@/validators'
 
 import { EmailGetter } from '@comcom/getters'
@@ -272,7 +280,7 @@ export default {
     UploadedDocsList,
     EmailGetter,
   },
-  mixins: [FormMixin],
+  mixins: [FormMixin, DatalistMixin],
 
   props: {
     id: { type: String, required: true },
@@ -294,6 +302,7 @@ export default {
       {
         label: '',
         description: '',
+        isDocValid: true,
       },
     ],
     rejectForm: {
@@ -448,6 +457,7 @@ export default {
     },
 
     async requireDocsRequest () {
+      if (!this.isDatalistFormValid()) return
       this.isPending = true
       try {
         const requireDocsDetails = JSON.stringify({
@@ -483,11 +493,21 @@ export default {
       this.rejectForm.isShown = false
     },
 
+    isDatalistFormValid () {
+      const normalizedDocsList = this.getNormalizedDocsList()
+      this.uploadDocs.forEach(
+        item => { item.isDocValid = normalizedDocsList.includes(item.label) })
+      return this.uploadDocs.every(item => item.isDocValid)
+    },
+
     addMoreDoc () {
-      this.uploadDocs.push({
-        label: '',
-        description: '',
-      })
+      if (this.isDatalistFormValid()) {
+        this.uploadDocs.push({
+          label: '',
+          description: '',
+          isDocValid: true,
+        })
+      }
     },
 
     removeDoc (doc) {
@@ -507,6 +527,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../../assets/scss/colors";
+@import "@/components/common/fields/scss/_fields-variables";
 .limits-reviewer__heading {
   margin-bottom: 2rem;
 }
@@ -603,5 +624,33 @@ export default {
 
 .limits-reviewer__doc-close-btn {
   font-size: 2.4rem;
+}
+.limits-reviewer__doc-label-err-transition-enter-active {
+  animation: limits-reviewer__doc-label-err-transition-keyframes
+    $field-transition-duration
+    ease-in-out;
+}
+.limits-reviewer__doc-label-err-transition-leave-active {
+  animation: limits-reviewer__doc-label-err-transition-keyframes
+    $field-transition-duration
+    ease-in-out reverse;
+}
+@keyframes limits-reviewer__doc-label-err-transition-keyframes {
+  from {
+    max-height: 0;
+    margin-top: 0;
+    overflow: hidden;
+  }
+  to {
+    max-height: $field-error-font-size * $field-error-line-height;
+    margin-top: $field-error-margin-top;
+    overflow: hidden;
+  }
+}
+.limits-reviewer__doc-label-err-mes {
+  color: $field-color-error;
+  margin-top: $field-error-margin-top;
+  font-size: $field-error-font-size;
+  line-height: $field-error-line-height;
 }
 </style>
