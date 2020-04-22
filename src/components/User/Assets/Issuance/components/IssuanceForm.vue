@@ -74,10 +74,9 @@
         <div class="issuance-form__asset-info app__form-row" v-if="form.asset">
           <p v-if="isIssuanceAllowed" class="text">
             <span>{{ "issuance-form.avaible" | globalize }}</span>
-            <asset-amount-formatter
-              :amount="availableForIssuance"
-              :asset="form.asset"
-            />
+            <span :title="assetAvailableForIssuance | formatMoney">
+              {{ assetAvailableForIssuance | formatMoney }}
+            </span>
           </p>
 
           <p v-else class="text">
@@ -116,7 +115,6 @@
 
 <script>
 import FormMixin from '@/mixins/form.mixin'
-import { AssetAmountFormatter } from '@comcom/formatters'
 import { api, loadingDataViaLoop } from '@/api'
 import apiHelper from '@/apiHelper'
 import { base } from '@tokend/js-sdk'
@@ -138,7 +136,6 @@ import { DEFAULT_INPUT_STEP, DEFAULT_INPUT_MIN } from '@/constants'
 const REFERENCE_MAX_LENGTH = 64
 
 export default {
-  components: { AssetAmountFormatter },
   mixins: [FormMixin],
 
   data () {
@@ -185,6 +182,12 @@ export default {
 
     isIssuanceAllowed () {
       return this.availableForIssuance > 0
+    },
+    assetAvailableForIssuance () {
+      return {
+        value: this.availableForIssuance,
+        currency: this.form.asset,
+      }
     },
   },
 

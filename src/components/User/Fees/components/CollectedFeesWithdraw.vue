@@ -70,7 +70,10 @@
             :disabled="formMixin.isDisabled"
           >
             <p slot="hint">
-              {{ maxWithdrawalAmountHint }}
+              {{
+                'collected-fees-withdraw.max-amount'
+                  | globalize(maxWithdrawalAmountHint)
+              }}
             </p>
           </input-field>
         </div>
@@ -104,22 +107,20 @@
               <span>
                 {{ "collected-fees-withdraw.fixed-fee" | globalize }}
               </span>
-              <asset-amount-formatter
-                :amount="opAttrs.fixedFee"
-                :asset="opAttrs.feeAssetCode"
-              />
+              <span :title="fixedFee | formatMoney">
+                {{ fixedFee | formatMoney }}
+              </span>
             </p>
           </template>
 
-          <template v-if="+opAttrs.fixedFee">
+          <template v-if="+opAttrs.percentFee">
             <p class="collected-fees-withdraw__op-attrs-row">
               <span>
                 {{ "collected-fees-withdraw.percent-fee" | globalize }}
               </span>
-              <asset-amount-formatter
-                :amount="opAttrs.percentFee"
-                :asset="opAttrs.feeAssetCode"
-              />
+              <span :title="percentFee | formatMoney">
+                {{ percentFee | formatMoney }}
+              </span>
             </p>
           </template>
 
@@ -166,10 +167,8 @@ import { DEFAULT_INPUT_STEP, DEFAULT_INPUT_MIN } from '@/constants'
 import { api } from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { Bus } from '@/utils/bus'
-import { formatAssetAmount } from '@/utils/formatters'
 
 import { EmailGetter } from '@comcom/getters'
-import { AssetAmountFormatter } from '@comcom/formatters'
 
 import _pick from 'lodash/pick'
 import _throttle from 'lodash/throttle'
@@ -186,7 +185,6 @@ const EVENTS = {
 export default {
   components: {
     EmailGetter,
-    AssetAmountFormatter,
   },
 
   mixins: [FormMixin],
@@ -266,18 +264,31 @@ export default {
     },
 
     maxWithdrawalAmountHint () {
-      const formatted = formatAssetAmount(
-        this.selectedBalanceAttrs.available,
-        this.selectedBalanceAttrs.assetCode
-      )
-      return globalize('collected-fees-withdraw.max-amount', {
-        amount: formatted,
-      })
+      return {
+        amount: {
+          value: this.selectedBalanceAttrs.available,
+          currency: this.selectedBalanceAttrs.assetCode,
+        },
+      }
     },
 
     isSelectedAssetWithdrawable () {
       const asset = this.assetByCode(this.selectedBalanceAttrs.assetCode)
       return asset && asset.isWithdrawable
+    },
+
+    fixedFee () {
+      return {
+        value: this.opAttrs.fixedFee,
+        currency: this.opAttrs.feeAssetCode,
+      }
+    },
+
+    percentFee () {
+      return {
+        value: this.opAttrs.percentFee,
+        currency: this.opAttrs.feeAssetCode,
+      }
     },
   },
 

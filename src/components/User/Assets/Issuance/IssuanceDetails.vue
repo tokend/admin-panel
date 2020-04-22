@@ -24,9 +24,8 @@
           </li>
           <li class="issuance-details__list-item">
             <span>{{ "issuance-details.value" | globalize }}</span>
-            <span>
-              {{ localize(issuance.requestDetails.amount) }}
-              {{ issuance.requestDetails.asset.id }}
+            <span :title="amount | formatMoney">
+              {{ amount | formatMoney }}
             </span>
           </li>
           <li class="issuance-details__list-item">
@@ -121,8 +120,6 @@ import { confirmAction } from '../../../../js/modals/confirmation_message'
 import apiHelper from '@/apiHelper'
 import { REQUEST_STATES } from '@/constants'
 
-import localize from '@/utils/localize'
-
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { Bus } from '@/utils/bus'
 
@@ -152,6 +149,15 @@ export default {
     REJECT_REASON_MAX_LENGTH,
   }),
 
+  computed: {
+    amount () {
+      return {
+        value: this.issuance.requestDetails.amount,
+        currency: this.issuance.requestDetails.asset.id,
+      }
+    },
+  },
+
   validations () {
     return {
       rejectForm: {
@@ -169,8 +175,6 @@ export default {
   },
 
   methods: {
-    localize,
-
     async getIssuance (id) {
       try {
         this.issuance = await apiHelper.requests.get(id)
