@@ -55,11 +55,11 @@
         <input-field
           class="app__form-field"
           :label="'asset-manager.lbl-issuer-public-key' | globalize"
-          v-model="asset.preissuedAssetSigner"
+          v-model="asset.preIssuanceAssetSigner"
           :disabled="isExistingAsset || formMixin.isDisabled"
           name="issuer-key"
-          @blur="touchField('asset.preissuedAssetSigner')"
-          :error-message="getFieldErrorMessage('asset.preissuedAssetSigner')"
+          @blur="touchField('asset.preIssuanceAssetSigner')"
+          :error-message="getFieldErrorMessage('asset.preIssuanceAssetSigner')"
         />
 
         <input-field
@@ -514,7 +514,7 @@ export default {
       isErc20IntegrationEnabled: false,
       asset: {
         id: '',
-        preissuedAssetSigner: config.MASTER_ACCOUNT,
+        preIssuanceAssetSigner: config.MASTER_ACCOUNT,
         policies: {
           value: 0,
         },
@@ -575,7 +575,7 @@ export default {
           maxLength: maxLength(ASSET_CODE_MAX_LENGTH),
           alphaNum,
         },
-        preissuedAssetSigner: { required, accountId },
+        preIssuanceAssetSigner: { required, accountId },
         maxIssuanceAmount: {
           required,
           minValue: minValue(DEFAULT_INPUT_MIN),
@@ -759,7 +759,7 @@ export default {
           operation = base.ManageAssetBuilder.assetCreationRequest({
             requestID: '0',
             code: String(this.asset.id),
-            preissuedAssetSigner: String(this.asset.preissuedAssetSigner),
+            preissuedAssetSigner: String(this.asset.preIssuanceAssetSigner),
             maxIssuanceAmount: String(this.asset.maxIssuanceAmount),
             policies: Number(this.asset.policies.value),
             assetType: String(this.asset.type),

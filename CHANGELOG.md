@@ -10,18 +10,16 @@ for further information about branching and tagging conventions.
 ## [Unreleased]
 #### Added
 - Form validation of doc types in limits form
+- new filter formatMoney
 
 #### Fixed
 - A bug with localization
 - A bug with wrong displaying int64 in AssetAmountFormatter
+- A bug with displaying current issuer public key in AssetManager
 
 #### Removed
 - formatAssetAmount, formatFiatAmount helpers
 - AssetAmountFormatter
-
-#### Added
-- new filter formatMoney
-
 
 ## [1.13.0-rc.0] - 2020-03-25
 #### Fixed
