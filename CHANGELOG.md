@@ -21,6 +21,9 @@ for further information about branching and tagging conventions.
 - formatAssetAmount, formatFiatAmount helpers
 - AssetAmountFormatter
 
+#### Fixed
+- A bug with non displaying old operation details
+
 ## [1.13.0-rc.0] - 2020-03-25
 #### Fixed
 - A bug with wrong displaying initial preissued amount
