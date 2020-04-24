@@ -145,14 +145,14 @@ import { ErrorHandler } from '@/utils/ErrorHandler'
 import { CreatePreIssuanceRequest } from '@/apiHelper/responseHandlers/requests/CreatePreIssuanceRequest'
 import { Bus } from '@/utils/bus'
 import { globalize } from '../../../../App/filters/filters'
-
+import { ALL_ASSETS_ID } from '@/constants'
 export default {
   components: { InputField },
 
   props: {
     asset: {
       type: String,
-      default: 'All',
+      default: ALL_ASSETS_ID,
     },
 
     availableAmount: {
@@ -184,7 +184,7 @@ export default {
       const filteredByType = this.requests
         .filter(request => request instanceof CreatePreIssuanceRequest)
 
-      return this.asset === 'All'
+      return this.asset === ALL_ASSETS_ID
         ? filteredByType
         : filteredByType.filter(request => request.asset() === this.asset)
     },

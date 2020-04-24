@@ -27,6 +27,9 @@ for further information about branching and tagging conventions.
 #### Fixed
 - Bug when admin deleted himself and wasn't log out
 
+#### Fixed
+- Bug with all pre-issuance requests those weren't display
+
 ## [1.13.0-rc.0] - 2020-03-25
 #### Fixed
 - A bug with wrong displaying initial preissued amount
