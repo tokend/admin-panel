@@ -58,14 +58,14 @@
                 v-if="
                   requestToReview.accountRoleToSet === kvAccountRoles.general
                 "
-                :kyc="kycNonVerified"
+                :kyc="kycToReview"
                 :user="user"
               />
               <verified-kyc-viewer
                 v-if="
                   requestToReview.accountRoleToSet === kvAccountRoles.usVerified
                 "
-                :kyc="kycNonVerified"
+                :kyc="kycToReview"
                 :user="user"
               />
               <accredited-kyc-viewer
@@ -73,7 +73,7 @@
                   requestToReview.accountRoleToSet ===
                     kvAccountRoles.usAccredited
                 "
-                :kyc="kycNonVerified"
+                :kyc="kycToReview"
                 :user="user"
               />
             </template>
@@ -106,17 +106,17 @@
               <h2>{{ "user-details.previous-approved-kys-request" | globalize }}</h2>
               <general-kyc-viewer
                 v-if="verifiedRequest.accountRoleToSet === kvAccountRoles.general"
-                :kyc="kyc"
+                :kyc="verifiedKyc"
                 :user="user"
               />
               <verified-kyc-viewer
                 v-if="verifiedRequest.accountRoleToSet === kvAccountRoles.usVerified"
-                :kyc="kyc"
+                :kyc="verifiedKyc"
                 :user="user"
               />
               <accredited-kyc-viewer
                 v-if="verifiedRequest.accountRoleToSet === kvAccountRoles.usAccredited"
-                :kyc="kyc"
+                :kyc="verifiedKyc"
                 :user="user"
               />
             </template>
@@ -144,7 +144,7 @@
             <!-- eslint-disable max-len -->
             <p class="text">
               {{ "user-details.create" | globalize({
-                accountRoleToSet: requestToReview.accountRoleToSet | roleIdToString,
+                accountRoleToSet: roleIdToString(requestToReview.accountRoleToSet),
                 state: requestToReview.state
               })
               }}
@@ -226,6 +226,7 @@ import { ChangeRoleRequest } from '@/apiHelper/responseHandlers/requests/ChangeR
 import { fromKycTemplate } from '../../../../../utils/kyc-tempater'
 
 import { mapGetters } from 'vuex'
+import { roleIdToString } from '@/components/App/filters/filters'
 
 const OPERATION_TYPE = {
   createKycRequest: '22',
@@ -262,10 +263,8 @@ export default {
       user: {},
       requests: [],
       verifiedRequest: {},
-      emptyKyc: {},
-      emptyKycNonVerified: {},
-      kyc: {},
-      kycNonVerified: {},
+      verifiedKyc: {},
+      kycToReview: {},
     }
   },
 
@@ -311,24 +310,11 @@ export default {
 
   async created () {
     await this.getUser()
-    if (this.requestToReview.state) {
-      this.kycNonVerified =
-        await this.fillEmptyKyc(this.requestToReview, this.emptyKycNonVerified)
-    }
-    if (this.verifiedRequest.state && this.kycNonVerified) {
-      this.kyc = await this.fillEmptyKyc(this.verifiedRequest, this.emptyKyc)
-    }
+    await this.loadKyc()
   },
 
   methods: {
-    async fillEmptyKyc (request, kyc) {
-      kyc = await this.getKyc(request.blobId, kyc)
-      if (!kyc) {
-        this.isKycLoaded = false
-        this.isKycLoadFailed = true
-      }
-      return kyc
-    },
+    roleIdToString,
 
     async getUser () {
       this.isLoaded = false
@@ -380,29 +366,29 @@ export default {
       }, 5000)
     },
 
-    async getData (blobId, kyc) {
-      const endpoint = `/accounts/${this.user.address}/blobs/${blobId}`
-      const { data } = await api.getWithSignature(endpoint)
-      return deepCamelCase(
-        fromKycTemplate(JSON.parse(data.value))
-      )
-    },
-    async getKyc (blobId, kyc) {
-      if (!blobId) return
-
-      this.isKycLoaded = false
-      this.isKycLoadFailed = false
-
+    async loadKyc () {
       try {
-        let data = await this.getData(blobId, kyc)
-        if (data) {
-          this.isKycLoaded = true
-          return data
+        if (this.requestToReview.state) {
+          this.kycToReview = await this.getBlobData(this.requestToReview.blobId)
+        }
+        if (this.verifiedRequest.state) {
+          this.verifiedKyc = await this.getBlobData(this.verifiedRequest.blobId)
         }
       } catch (error) {
         ErrorHandler.process(error)
         this.isKycLoadFailed = true
       }
+      this.isKycLoaded = true
+    },
+
+    async getBlobData (blobId) {
+      if (!blobId) return
+      const endpoint = `/accounts/${this.user.address}/blobs/${blobId}`
+      const { data } = await api.getWithSignature(endpoint)
+
+      return deepCamelCase(
+        fromKycTemplate(JSON.parse(data.value))
+      )
     },
   },
 }
