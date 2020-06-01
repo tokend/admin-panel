@@ -223,7 +223,7 @@ import { api } from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 import { ChangeRoleRequest } from '@/apiHelper/responseHandlers/requests/ChangeRoleRequest'
-import { fromKycTemplate } from '../../../../../utils/kyc-tempater'
+import { fromKycTemplate } from '@/utils/kyc-tempater'
 
 import { mapGetters } from 'vuex'
 import { roleIdToString } from '@/components/App/filters/filters'
