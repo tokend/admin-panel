@@ -30,6 +30,9 @@ for further information about branching and tagging conventions.
 #### Fixed
 - Bug with all pre-issuance requests those weren't display
 
+#### Fixed
+- Bug with duplicating info between previous approved KYC request and upcoming changes
+
 ## [1.13.0-rc.0] - 2020-03-25
 #### Fixed
 - A bug with wrong displaying initial preissued amount
