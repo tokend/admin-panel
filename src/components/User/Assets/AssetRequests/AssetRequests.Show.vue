@@ -156,21 +156,21 @@ export default {
   async created () {
     this.isInitializing = true
     try {
-      const createAssetRequestsArr =
+      const createAssetRequests =
         await api.getWithSignature('/v3/create_asset_requests', {
           include: ['request_details'],
         })
-      const updateAssetRequestsArr =
+      const updateAssetRequests =
         await api.getWithSignature('/v3/update_asset_requests', {
           include: ['request_details'],
         })
-      const allAssetRequestsArr =
-        createAssetRequestsArr.data.concat(updateAssetRequestsArr.data)
-      allAssetRequestsArr.find(item => {
+      const allAssetRequests =
+        createAssetRequests.data.concat(updateAssetRequests.data)
+      allAssetRequests.find(item => {
         if (item.id === this.id) { this.reference = item.reference }
       })
       const currentAssetRequests =
-        allAssetRequestsArr.filter(item => item.reference === this.reference)
+        allAssetRequests.filter(item => item.reference === this.reference)
       this.assetRequest =
         new AssetRequest(currentAssetRequests[currentAssetRequests.length - 1])
       if (!this.assetRequest) {
@@ -189,7 +189,6 @@ export default {
       ErrorHandler.processWithoutFeedback(error)
       this.isInitFailed = true
     }
-
     this.isInitializing = false
   },
 
