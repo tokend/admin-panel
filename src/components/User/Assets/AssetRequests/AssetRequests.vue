@@ -6,6 +6,6 @@
 
 <script>
 export default {
-  naem: 'asset-requests',
+  name: 'asset-requests',
 }
 </script>
