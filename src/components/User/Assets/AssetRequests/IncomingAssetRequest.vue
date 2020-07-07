@@ -50,8 +50,8 @@
       <span class="incoming-asset-request__value">
         {{
           assetRequest.maxAmount
-            ? localizeAmount(assetRequest.maxAmount)
-            : '—'
+            ? assetRequest.maxAmount
+            : '—' | formatMoney
         }}
       </span>
     </div>
@@ -64,7 +64,7 @@
         {{ "incoming-asset-request.issued-amount" | globalize }}
       </span>
       <span class="incoming-asset-request__value">
-        {{ localizeAmount(assetRequest.issuedAmount) }}
+        {{ assetRequest.issuedAmount | formatMoney }}
       </span>
     </div>
 
@@ -255,7 +255,6 @@
 <script>
 import { ImgGetter, EmailGetter, UserDocLinkGetter } from '@comcom/getters'
 
-import localize from '@/utils/localize'
 import safeGet from 'lodash/get'
 
 import {
@@ -281,7 +280,6 @@ export default {
   },
   methods: {
     safeGet,
-    localizeAmount: localize,
   },
 }
 </script>
