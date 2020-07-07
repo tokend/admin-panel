@@ -7,12 +7,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
-## [Unreleased]
+## [1.13.0-rc.1] - 2020-06-02
 #### Added
 - Form validation of doc types in limits form
 - Info about params of asset before update to asset update request tab
+- new filter formatMoney
+
+#### Fixed
+- A bug with localization
+- A bug with wrong displaying int64 in AssetAmountFormatter
+- A bug with displaying current issuer public key in AssetManager
+
+#### Removed
+- formatAssetAmount, formatFiatAmount helpers
+- AssetAmountFormatter
+
+#### Fixed
+- A bug with non displaying old operation details
+
+#### Fixed
+- Bug when admin deleted himself and wasn't log out
+
+#### Fixed
+- Bug with all pre-issuance requests those weren't display
+
+#### Fixed
+- Bug with duplicating info between previous approved KYC request and upcoming changes
 
 ## [1.13.0-rc.0] - 2020-03-25
+#### Fixed
+- A bug with wrong displaying initial preissued amount
+  in SaleRequestManager.DetailsTab
+
+#### Removed
+- util localize
+
+## [1.12.1-rc.0] - 2020-03-25
 #### Fixed
 - Details in createChangeRoleRequest at unblock user
 - A bug with wrong error if exceeded the maximum issuance amount of the asset
@@ -552,8 +582,10 @@ for further information about branching and tagging conventions.
 
 ## [1.3.0] - 2019-03-01
 
-[Unreleased]: https://github.com/tokend/admin-panel/compare/1.13.0-rc.0...HEAD
-[1.13.0-rc.0]: https://github.com/tokend/admin-panel/compare/1.12.0...1.13.0-rc.0
+[Unreleased]: https://github.com/tokend/admin-panel/compare/1.13.0-rc.1...HEAD
+[1.13.0-rc.1]: https://github.com/tokend/admin-panel/compare/1.13.0-rc.0...1.13.0-rc.1
+[1.13.0-rc.0]: https://github.com/tokend/admin-panel/compare/1.12.1-rc.0...1.13.0-rc.0
+[1.12.1-rc.0]: https://github.com/tokend/admin-panel/compare/1.12.0...1.12.1-rc.0
 [1.12.0]: https://github.com/tokend/admin-panel/compare/1.12.0-rc.4...1.12.0
 [1.12.0-rc.4]: https://github.com/tokend/admin-panel/compare/1.12.0-rc.3...1.12.0-rc.4
 [1.12.0-rc.3]: https://github.com/tokend/admin-panel/compare/1.12.0-rc.2...1.12.0-rc.3

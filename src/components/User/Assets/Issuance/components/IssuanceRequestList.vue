@@ -59,13 +59,9 @@
             >
               <span
                 class="app-list__cell app-list__cell--important"
-                :title="
-                  // eslint-disable-next-line max-len
-                  `${localize(item.requestDetails.amount)} ${item.requestDetails.asset.id}`
-                "
+                :title="amount(item) | formatMoney"
               >
-                {{ localize(item.requestDetails.amount) }}
-                {{ item.requestDetails.asset.id }}
+                {{ amount(item) | formatMoney }}
               </span>
 
               <span
@@ -116,6 +112,14 @@ import IssuanceMixin from './issuance.mixin'
 
 export default {
   mixins: [IssuanceMixin],
+  methods: {
+    amount (item) {
+      return {
+        value: item.requestDetails.amount,
+        currency: item.requestDetails.asset.id,
+      }
+    },
+  },
 }
 </script>
 

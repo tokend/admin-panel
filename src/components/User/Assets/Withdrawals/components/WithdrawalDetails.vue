@@ -42,33 +42,28 @@
         </li>
       </template>
       <li>
-        <span>{{ "WithdrawalDetails.amount" | globalize }}</span>
-        <asset-amount-formatter
-          :amount="request.requestDetails.amount"
-          :asset="request.requestDetails.asset.id"
-        />
+        <span>{{ "withdrawal-details.amount" | globalize }}</span>
+        <span :title="amount | formatMoney">
+          {{ amount | formatMoney }}
+        </span>
       </li>
       <li>
         <span>{{ "withdrawal-details.fixed-fee" | globalize }}</span>
-        <asset-amount-formatter
-          :amount="request.requestDetails.fee.fixed"
-          :asset="request.requestDetails.asset.id"
-        />
+        <span :title="fixedFee | formatMoney">
+          {{ fixedFee | formatMoney }}
+        </span>
       </li>
       <li>
         <span>{{ "withdrawal-details.persent-fee" | globalize }}</span>
-        <asset-amount-formatter
-          :amount="request.requestDetails.fee.calculatedPercent"
-          :asset="request.requestDetails.asset.id"
-        />
+        <span :title="percentFee | formatMoney">
+          {{ percentFee | formatMoney }}
+        </span>
       </li>
       <li>
         <span>{{ "withdrawal-details.total-fee" | globalize }}</span>
-        <asset-amount-formatter
-          :amount="Number(request.requestDetails.fee.fixed) +
-            Number(request.requestDetails.fee.calculatedPercent)"
-          :asset="request.requestDetails.asset.id"
-        />
+        <span :title="totalFee | formatMoney">
+          {{ totalFee | formatMoney }}
+        </span>
       </li>
     </ul>
     <div class="withdrawal-details__action-btns" v-if="reviewAllowed">
@@ -138,7 +133,6 @@ import FormMixin from '@/mixins/form.mixin'
 import { required, maxLength } from '@/validators'
 
 import { EmailGetter } from '@comcom/getters'
-import { AssetAmountFormatter } from '@comcom/formatters'
 
 import Modal from '@comcom/modals/Modal'
 import { confirmAction } from '@/js/modals/confirmation_message'
@@ -157,7 +151,6 @@ const REJECT_REASON_MAX_LENGTH = 255
 export default {
   components: {
     EmailGetter,
-    AssetAmountFormatter,
     Modal,
   },
   mixins: [FormMixin],
@@ -195,6 +188,31 @@ export default {
       return this.request.stateI === REQUEST_STATES.pending.stateI &&
         this.userAddress === this.request.reviewer.id
     },
+    amount () {
+      return {
+        value: this.request.requestDetails.amount,
+        currency: this.request.requestDetails.asset.id,
+      }
+    },
+    fixedFee () {
+      return {
+        value: this.request.requestDetails.fee.fixed,
+        currency: this.request.requestDetails.asset.id,
+      }
+    },
+    percentFee () {
+      return {
+        value: this.request.requestDetails.fee.calculatedPercent,
+        currency: this.request.requestDetails.asset.id,
+      }
+    },
+    totalFee () {
+      return {
+        value: Number(this.request.requestDetails.fee.fixed) +
+          Number(this.request.requestDetails.fee.calculatedPercent),
+        currency: this.request.requestDetails.asset.id,
+      }
+    },
   },
 
   methods: {
@@ -225,7 +243,6 @@ export default {
           },
           request
         )
-
         Bus.success('withdrawal-details.request-rejected-successfully')
         this.$emit('close-request')
       } catch (error) {

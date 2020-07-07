@@ -73,7 +73,11 @@
               v-for="request in filteredRequests"
               :key="request.id"
             >
-              <td><span>{{ localize(request.amount()) }}</span></td>
+              <td>
+                <span :title="request.amount() | formatMoney">
+                  {{ request.amount() | formatMoney }}
+                </span>
+              </td>
               <td><span>{{ request.asset() }}</span></td>
               <td><span>{{ verbozify(request.state) }}</span></td>
 
@@ -134,7 +138,6 @@
 <script>
 import InputField from '@comcom/fields/InputField'
 
-import localize from '@/utils/localize'
 import { verbozify } from '@/utils/verbozify'
 
 import apiHelper from '@/apiHelper'
@@ -142,14 +145,14 @@ import { ErrorHandler } from '@/utils/ErrorHandler'
 import { CreatePreIssuanceRequest } from '@/apiHelper/responseHandlers/requests/CreatePreIssuanceRequest'
 import { Bus } from '@/utils/bus'
 import { globalize } from '../../../../App/filters/filters'
-
+import { ALL_ASSETS_ID } from '@/constants'
 export default {
   components: { InputField },
 
   props: {
     asset: {
       type: String,
-      default: 'All',
+      default: ALL_ASSETS_ID,
     },
 
     availableAmount: {
@@ -181,7 +184,7 @@ export default {
       const filteredByType = this.requests
         .filter(request => request instanceof CreatePreIssuanceRequest)
 
-      return this.asset === 'All'
+      return this.asset === ALL_ASSETS_ID
         ? filteredByType
         : filteredByType.filter(request => request.asset() === this.asset)
     },
@@ -199,7 +202,6 @@ export default {
 
   methods: {
     verbozify,
-    localize,
 
     async nextPageLoader () {
       this.loadNewPage = true

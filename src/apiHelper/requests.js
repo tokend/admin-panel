@@ -1,7 +1,7 @@
 import config from '@/config'
 import { base } from '@tokend/js-sdk'
 
-import { REQUEST_TYPES } from '@/constants'
+import { REQUEST_TYPES, ALL_ASSETS_ID } from '@/constants'
 
 import { CreatePreIssuanceRequest } from './responseHandlers/requests/CreatePreIssuanceRequest'
 import { AssetRequest } from './responseHandlers/requests/AssetRequest'
@@ -200,7 +200,7 @@ export const requests = {
   },
 
   async getPreissuanceRequests (asset) {
-    if (asset.toLowerCase() === 'all') {
+    if (asset.toLowerCase() === ALL_ASSETS_ID) {
       asset = ''
     }
     const endpoint = '/v3/create_pre_issuance_requests'

@@ -112,7 +112,6 @@ import IncomingAssetRequest from './IncomingAssetRequest'
 
 import { confirmAction } from '@/js/modals/confirmation_message'
 
-import localize from '@/utils/localize'
 import { verbozify } from '@/utils/verbozify'
 import safeGet from 'lodash/get'
 
@@ -125,6 +124,8 @@ import {
 } from '@/constants'
 
 import { api } from '@/api'
+
+import { formatMoney } from '@/components/App/filters/formatMoney'
 
 // TODO: extract to AssetRequestForm
 export default {
@@ -151,6 +152,14 @@ export default {
       isUpdateRequest: false,
       reference: '',
     }
+  },
+
+  computed: {
+    maxAmount () {
+      return this.assetRequest.maxAmount
+        ? formatMoney(this.assetRequest.maxAmount)
+        : '—'
+    },
   },
 
   async created () {
@@ -210,7 +219,6 @@ export default {
       this.isPending = false
     },
 
-    localizeAmount: localize,
   },
 }
 </script>

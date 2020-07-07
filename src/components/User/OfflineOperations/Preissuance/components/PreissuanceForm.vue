@@ -81,9 +81,9 @@
         </span>
         <span
           class="app-list__cell"
-          :title="`${localize(item.issuance.amount)} ${item.issuance.asset}`"
+          :title="amount(item) | formatMoney"
         >
-          {{ localize(item.issuance.amount) }} {{ item.issuance.asset }}
+          {{ amount(item) | formatMoney }}
         </span>
         <span
           class="app-list__cell"
@@ -127,7 +127,6 @@
 import { base } from '@tokend/js-sdk'
 import config from '@/config'
 import { globalize } from '@/components/App/filters/filters'
-import localize from '@/utils/localize'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { api, loadingDataViaLoop } from '@/api'
 import { Bus } from '@/utils/bus'
@@ -154,7 +153,12 @@ export default {
     this.getAssets()
   },
   methods: {
-    localize,
+    amount (item) {
+      return {
+        value: item.issuance.amount,
+        currency: item.issuance.asset,
+      }
+    },
 
     async getAssets () {
       this.$store.commit('OPEN_LOADER')
