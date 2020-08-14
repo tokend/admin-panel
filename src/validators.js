@@ -3,13 +3,15 @@ import { base } from '@tokend/js-sdk'
 
 export const password = value => validators.minLength(8)(value)
 export const seed = value => base.Keypair.isValidSecretKey(value)
-
-export const accountId = value => {
-  return base.Keypair.isValidPublicKey(value)
-}
+export const accountId = value => base.Keypair.isValidPublicKey(value)
+export const balanceId = value => base.Keypair.isValidBalanceKey(value)
 
 export const emailOrAccountId = value => {
   return validators.email(value) || accountId(value)
+}
+
+export const emailOrAccountIdOrBalanceId = value => {
+  return validators.email(value) || accountId(value) || balanceId(value)
 }
 
 export const noMoreThanAvailableForIssuance = available => value => {

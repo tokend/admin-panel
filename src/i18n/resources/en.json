@@ -830,6 +830,7 @@
       "issue": "Issue",
       "loading": "Loading...",
       "lbl-receiver": "Receiver (email or address)",
+      "lbl-receiver-bal": "Receiver (email, address, balance)",
       "lbl-reference": "Reference",
       "lbl-amount": "Amount",
       "lbl-asset": "Asset",
