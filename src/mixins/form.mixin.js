@@ -21,6 +21,7 @@ _templateSettings.interpolate = /{{([\s\S]+?)}}/g
 const VALIDATION_ERRORS = {
   required: _template('mixin.fill-this-field'),
   emailOrAccountId: _template('mixin.email-or-account-id'),
+  emailOrAccountIdOrBalanceId: _template('mixin.email-or-account-id-or-balance-id'),
   minValue: _template('mixin.more-then-min-value'),
   maxValue: _template('mixin.less-then-max-value'),
   noMoreThanAvailableForIssuance: _template('mixin.no-more-then-avaible-issuance'),
