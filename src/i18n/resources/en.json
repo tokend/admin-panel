@@ -550,6 +550,7 @@
     "mixin": {
       "fill-this-field": "Please, fill out this field",
       "email-or-account-id": "This field should be a valid email or account ID",
+      "email-or-account-id-or-balance-id": "This field should be a valid email or account ID or balance ID",
       "more-then-min-value": "This field should be more or equal {{minValue}}",
       "less-then-max-value": "This field should be less or equal {{maxValue}}",
       "no-more-then-avaible-issuance": "Not enough assets for issuance. Available: {{available}}",
