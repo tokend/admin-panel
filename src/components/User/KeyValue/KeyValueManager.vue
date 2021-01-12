@@ -170,10 +170,6 @@ export default {
       return this.isOnDeleteKeyValue ? 'key-value-manager.msg-delete-these-key'
         : 'key-value-manager.msg-please-recheck-all-fields'
     },
-
-    test () {
-      return this.updateForm.key
-    },
   },
 
   watch: {
