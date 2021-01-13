@@ -102,7 +102,7 @@
               <input-field
                 v-model="selectedKeyValue.key"
                 class="key-value-manager__input"
-                :label="'key-value-manager.lbl-value-select-field' | globalize"
+                :label="'key-value-manager.lbl-key-input-field' | globalize"
                 :placeholder="
                   'key-value-manager.placeholder-new-value' | globalize
                 "
