@@ -167,7 +167,7 @@
                 </button>
 
                 <button
-                  class="app__btn key-value-manager__btn"
+                  class="app__btn app__btn--danger key-value-manager__btn"
                   :disabled="isPending"
                   @click="onDeleteKeyValue">
                   {{ "key-value-manager.btn-delete" | globalize }}
