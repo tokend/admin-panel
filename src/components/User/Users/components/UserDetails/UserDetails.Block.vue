@@ -192,7 +192,7 @@ export default {
             destinationAccount: this.user.address,
             accountRoleToSet: accountRoleToSet.toString(),
             creatorDetails: {
-              blob_id: this.verifiedRequest.creatorDetails.blobId,
+              blob_id: this.verifiedRequest.blobId,
             },
             allTasks: 0,
           })
