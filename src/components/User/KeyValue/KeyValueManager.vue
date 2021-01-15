@@ -33,7 +33,7 @@
         <ul class="key-value-manager__ul">
           <li
             class="key-value-manager__li"
-            v-for=" item in searchKeyValueList"
+            v-for="item in searchKeyValueList"
             :key="item.key">
             <button
               @click="selectKeyValue(item)"

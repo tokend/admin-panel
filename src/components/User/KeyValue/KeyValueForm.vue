@@ -137,7 +137,6 @@ export default {
       value: '',
       entryType: KEY_VALUE_ENTRY_TYPE.uint32,
     },
-    keyValueList: [],
     isPending: false,
     isDeleteKeyValue: false,
     KEY_VALUE_ENTRY_TYPE,
@@ -220,7 +219,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import "../../../assets/scss/colors";
 
 .key-value-form {
   width: 100%;
