@@ -206,6 +206,9 @@ export default {
 
 .key-value-manager__li-value {
   width: 33%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   text-align: center;
 }
 
