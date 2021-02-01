@@ -63,7 +63,6 @@
         >
           <key-value-form
             :selected-key-value="selectedKeyValue"
-            is-update-form
             @submited="updateList"
             @close-modal="clearSelectedKeyValue"
           />

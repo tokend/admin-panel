@@ -14,8 +14,10 @@
         "
         :title="form.key"
         @blur="touchField('form.key')"
-        :error-message="getFieldErrorMessage('form.key')"
-        :disabled="isUpdateForm || formMixin.isDisabled"
+        :error-message="getFieldErrorMessage('form.key', {
+          maxLength: INPUT_MAX_LENGTH
+        })"
+        :disabled="selectedKeyValue.isHaveKey || formMixin.isDisabled"
       />
 
       <input-field
@@ -27,7 +29,9 @@
         "
         :title="form.value"
         @blur="touchField('form.value')"
-        :error-message="getFieldErrorMessage('form.value')"
+        :error-message="getFieldErrorMessage('form.value', {
+          maxLength: INPUT_MAX_LENGTH
+        })"
         :disabled="formMixin.isDisabled"
       />
 
@@ -53,7 +57,7 @@
       <form-confirmation
         v-if="formMixin.isConfirmationShown"
         :is-pending="isPending"
-        :message="confirmationMessage | globalize"
+        :message="confirmationTranslationId | globalize"
         @ok="submit"
         @cancel="closeConfirmation"
         :ok-button-text="'key-value-form.btn-confirm' | globalize"
@@ -64,7 +68,7 @@
         class="key-value-form__buttons"
       >
         <button
-          v-if="isUpdateForm"
+          v-if="selectedKeyValue.isHaveKey"
           class="app__btn-secondary"
           type="button"
           @click="closeModal"
@@ -78,11 +82,11 @@
           class="app__btn key-value-form__btn"
           :disabled="formMixin.isDisabled"
         >
-          {{ addButtonText | globalize }}
+          {{ addButtonTranslationId | globalize }}
         </button>
 
         <button
-          v-if="isUpdateForm"
+          v-if="selectedKeyValue.isHaveKey"
           class="app__btn app__btn--danger key-value-form__btn"
           type="button"
           :disabled="formMixin.isDisabled"
@@ -97,7 +101,7 @@
 
 import FormMixin from '@/mixins/form.mixin'
 
-import { required } from '@/validators'
+import { required, maxLength } from '@/validators'
 
 import { SelectField, InputField } from '@comcom/fields'
 import { base } from '@tokend/js-sdk'
@@ -112,6 +116,8 @@ const EVENTS = {
   submited: 'submited',
 }
 
+const INPUT_MAX_LENGTH = 500
+
 export default {
   components: {
     SelectField,
@@ -125,10 +131,6 @@ export default {
       type: KeyValueRecord,
       default: () => new KeyValueRecord(),
     },
-    isUpdateForm: {
-      type: Boolean,
-      default: false,
-    },
   },
 
   data: _ => ({
@@ -140,26 +142,28 @@ export default {
     isPending: false,
     isDeleteKeyValue: false,
     KEY_VALUE_ENTRY_TYPE,
+    INPUT_MAX_LENGTH,
   }),
 
   validations () {
     return {
       form: {
-        key: { required },
-        value: { required },
+        key: { required, maxLength: maxLength(INPUT_MAX_LENGTH) },
+        value: { required, maxLength: maxLength(INPUT_MAX_LENGTH) },
         entryType: { required },
       },
     }
   },
 
   computed: {
-    confirmationMessage () {
+
+    confirmationTranslationId () {
       return this.isDeleteKeyValue ? 'key-value-form.msg-delete-these-key'
         : 'key-value-form.msg-please-recheck-all-fields'
     },
 
-    addButtonText () {
-      return this.isUpdateForm ? 'key-value-form.btn-update'
+    addButtonTranslationId () {
+      return this.selectedKeyValue.isHaveKey ? 'key-value-form.btn-update'
         : 'key-value-form.btn-add'
     },
   },
