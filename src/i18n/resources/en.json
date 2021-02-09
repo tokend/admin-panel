@@ -1110,16 +1110,25 @@
       "link-key-val": "Key Value"
     },
     "key-value-manager": {
+      "lbl-search": "Search by key or entry type",
+      "key-title": "Key",
+      "value-title": "Value",
+      "entry-type-title": "Entry type"
+    },
+    "key-value-form": {
       "btn-update": "Update",
       "btn-add": "Add",
-      "lbl-key-select-field": "Key",
-      "lbl-value-select-field": "Value",
+      "btn-delete": "Delete",
       "lbl-key-input-field": "Key",
       "lbl-value-input-field": "Value",
       "lbl-entry-type": "Entry type",
       "placeholder-new-value": "Enter new value",
       "placeholder-new-key": "Enter new key",
-      "submitted-successfully": "Submitted successfully."
+      "submitted-successfully": "Submitted successfully.",
+      "msg-please-recheck-all-fields": "Please, recheck all the fields",
+      "msg-delete-these-key": "Are you sure you want to delete these key?",
+      "btn-confirm": "Confirm",
+      "btn-cancel": "Cancel"
     },
     "kyc-recovery-request-action": {
       "btn-approve": "Approve",

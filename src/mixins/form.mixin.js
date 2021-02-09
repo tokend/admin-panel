@@ -115,7 +115,7 @@ export default {
 
       for (const rule of Object.keys(fieldDetails.$params)) {
         if (!fieldDetails[rule]) {
-          return globalize(VALIDATION_ERRORS[rule](params))
+          return globalize(VALIDATION_ERRORS[rule](params), params)
         }
       }
     },

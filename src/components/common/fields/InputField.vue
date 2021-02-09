@@ -34,6 +34,10 @@
     />
 
     <span class="input-field__label">
+      <i
+        v-if="isSearch"
+        class="mdi mdi-magnify input-field__label-search-icon"
+      />
       {{ label }}
     </span>
 
@@ -72,6 +76,7 @@ export default {
     errorMessage: { type: String, default: undefined },
     autocompleteType: { type: String, default: '' },
     type: { type: String, default: 'text' },
+    isSearch: { type: Boolean, default: false },
   },
 
   data () {
