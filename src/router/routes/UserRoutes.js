@@ -561,59 +561,5 @@ export const UserRoutes = {
         },
       ],
     },
-    {
-      path: '/rules',
-      name: 'rules',
-      redirect: { name: 'rules.account' },
-      component: function (resolve) {
-        require(['../../components/User/Rules/Rules.vue'], resolve)
-      },
-      children: [
-        {
-          path: '/rules/account',
-          name: 'rules.account',
-          component: function (resolve) {
-            require(['../../components/User/Rules/RulesList.vue'], resolve)
-          },
-          props: {
-            default: true,
-            isAccountRules: true,
-          },
-        },
-        {
-          path: '/rules/account/manage',
-          name: 'rules.account.manage',
-          component: function (resolve) {
-            require(['../../components/User/Rules/RuleManager.vue'], resolve)
-          },
-          props: {
-            default: true,
-            isAccountRules: true,
-          },
-        },
-        {
-          path: '/rules/signer',
-          name: 'rules.signer',
-          component: function (resolve) {
-            require(['../../components/User/Rules/RulesList.vue'], resolve)
-          },
-          props: {
-            default: true,
-            isAccountRules: false,
-          },
-        },
-        {
-          path: '/rules/signer/manage',
-          name: 'rules.signer.manage',
-          component: function (resolve) {
-            require(['../../components/User/Rules/RuleManager.vue'], resolve)
-          },
-          props: {
-            default: true,
-            isAccountRules: false,
-          },
-        },
-      ],
-    },
   ],
 }

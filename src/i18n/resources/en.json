@@ -1049,8 +1049,7 @@
       "link-fees": "Fees",
       "link-key-value": "Key Value",
       "link-settings": "Settings",
-      "link-roles": "Roles",
-      "link-rules": "Rules"
+      "link-roles": "Roles"
     },
     "collected-fees-list": {
       "header": "Balances",
@@ -1998,32 +1997,6 @@
       "no-rules-created-yet": "No rules created yet",
       "default-rule": "Default rule",
       "read-only": "Can't be modified in the future"
-    },
-    "rules": {
-      "link-account": "Account",
-      "link-signer": "Signer"
-    },
-    "rules-list": {
-      "fail-load": "An error occurred. Please try again later",
-      "name-or-id": "Name or id",
-      "action-name": "Action name",
-      "is-default": "Default",
-      "no-data": "No data yet",
-      "loading": "Loading...",
-      "forbids": "Forbids",
-      "resource-type": "Resource type"
-    },
-    "rule-manager": {
-      "header": "Manage rule",
-      "lbl-action": "Action",
-      "lbl-name": "Name",
-      "lbl-forbids": "Forbids",
-      "please-recheck-form": "Please, recheck the form before confirmation",
-      "btn-confirm": "Confirm",
-      "btn-cancel": "Cancel",
-      "btn-update-rule": "Update",
-      "btn-create-rule": "Create",
-      "submitted-successfully": "Submitted successfully"
     }
   }
 }
