@@ -64,4 +64,16 @@ export class AssetRequest extends ReviewableRequest {
   get stellarDeposit () {
     return this.operationDetails.creatorDetails.stellar.deposit || false
   }
+
+  get erc20AssetAddress () {
+    return this.operationDetails.creatorDetails.erc20.address || ''
+  }
+
+  get erc20Withdraw () {
+    return this.operationDetails.creatorDetails.erc20.withdraw || false
+  }
+
+  get erc20Deposit () {
+    return this.operationDetails.creatorDetails.erc20.deposit || false
+  }
 }

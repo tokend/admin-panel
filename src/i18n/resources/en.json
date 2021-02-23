@@ -802,7 +802,15 @@
       "fail-load": "An error occurred. Please try again later",
       "asset-creation-request": "Asset creation request",
       "asset-update-request": "Asset update request",
+      "previous-approved-request": "Previous approved request",
       "asset-request": "Asset request",
+      "request-state": "State",
+      "btn-fulfill": "Fulfill",
+      "btn-reject": "Reject",
+      "lbl-reject-reason": "Reject reason",
+      "asset-created": "Asset successfully created"
+    },
+    "incoming-asset-request": {
       "asset-logo": "Asset logo",
       "asset-name": "Asset name",
       "asset-code": "Asset code",
@@ -817,13 +825,11 @@
       "stellar-asset-type": "Stellar asset type",
       "stellar-withdraw": "Stellar withdraw",
       "stellar-deposit": "Stellar deposit",
+      "erc20-asset-address": "Erc20 asset address",
+      "erc20-withdraw": "Erc20 withdraw",
+      "erc20-deposit": "Erc20 deposit",
       "creation-data": "Creation date",
-      "update-data": "Update date",
-      "request-state": "State",
-      "btn-fulfill": "Fulfill",
-      "btn-reject": "Reject",
-      "lbl-reject-reason": "Reject reason",
-      "asset-created": "Asset successfully created"
+      "update-data": "Update date"
     },
     "issuance-form": {
       "avaible": "Available",

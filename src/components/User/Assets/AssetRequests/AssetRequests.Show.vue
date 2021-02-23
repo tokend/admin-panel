@@ -31,219 +31,28 @@
           {{ "asset-requests-show.asset-request" | globalize }}
         </template>
       </h2>
-      <div class="asset-requests-show__row">
-        <span class="asset-requests-show__key">
-          {{ "asset-requests-show.asset-logo" | globalize }}
-        </span>
-        <template
-          v-if="safeGet(
-            assetRequest, 'operationDetails.creatorDetails.logo.key'
-          )"
-        >
-          <img-getter
-            class="asset-requests-show__asset-logo"
-            :file-key="assetRequest.operationDetails.creatorDetails.logo.key"
-            alt="Asset logo"
-          />
-        </template>
-        <template v-else>
-          &mdash;
-        </template>
-      </div>
-      <div class="asset-requests-show__row">
-        <span class="asset-requests-show__key">
-          {{ "asset-requests-show.asset-name" | globalize }}
-        </span>
-        <span
-          class="asset-requests-show__value"
-          :title="assetRequest.operationDetails.creatorDetails.name"
-        >
-          {{ assetRequest.operationDetails.creatorDetails.name || '—' }}
-        </span>
-      </div>
+      <incoming-asset-request
+        :asset-request="assetRequest"
+        :is-update-request="
+          assetRequest.type === ASSET_REQUEST_TYPES.updateAsset
+        "
+      />
 
-      <div class="asset-requests-show__row">
-        <span class="asset-requests-show__key">
-          {{ "asset-requests-show.asset-code" | globalize }}
-        </span>
-        <span class="asset-requests-show__value">
-          {{ assetRequest.code || '—' }}
-        </span>
-      </div>
-
-      <div
-        class="asset-requests-show__row"
-        v-if="assetRequest.type !== ASSET_REQUEST_TYPES.updateAsset"
+      <template
+        v-if="assetRequest.type === ASSET_REQUEST_TYPES.updateAsset"
       >
-        <span class="asset-requests-show__key">
-          {{ "asset-requests-show.max-issuance" | globalize }}
-        </span>
-        <span
-          class="asset-requests-show__value"
-          :title="maxAmount"
-        >
-          {{ maxAmount }}
-        </span>
-      </div>
-
-      <div
-        class="asset-requests-show__row"
-        v-if="assetRequest.type !== ASSET_REQUEST_TYPES.updateAsset"
-      >
-        <span class="asset-requests-show__key">
-          {{ "asset-requests-show.issued-amount" | globalize }}
-        </span>
-        <span class="asset-requests-show__value">
-          {{ assetRequest.issuedAmount | formatMoney }}
-        </span>
-      </div>
-
-      <div
-        class="asset-requests-show__row"
-        v-if="assetRequest.type !== ASSET_REQUEST_TYPES.updateAsset"
-      >
-        <span class="asset-requests-show__key">
-          {{ "asset-requests-show.pre-signer" | globalize }}
-        </span>
-        <email-getter
-          v-if="assetRequest.signer"
-          class="asset-requests-show__value"
-          :account-id="assetRequest.signer"
-          is-titled
+        <h2 class="asset-requests-show__previous-approved-request-title">
+          <template>
+            {{ "asset-requests-show.previous-approved-request" | globalize }}
+          </template>
+        </h2>
+        <incoming-asset-request
+          :asset-request="approvedAssetRequest"
+          :is-update-request="
+            assetRequest.type === ASSET_REQUEST_TYPES.updateAsset
+          "
         />
-        <span
-          v-else
-          class="asset-requests-show__value"
-          :title="assetRequest.signer"
-        >
-          —
-        </span>
-      </div>
-
-      <div
-        class="asset-requests-show__row"
-        v-if="assetRequest.type !== ASSET_REQUEST_TYPES.updateAsset"
-      >
-        <span class="asset-requests-show__key">
-          {{ "asset-requests-show.request-type" | globalize }}
-        </span>
-        <span class="asset-requests-show__value">
-          {{ assetRequest.assetType | assetTypeToString }}
-        </span>
-      </div>
-
-      <template v-if="assetRequest.policies">
-        <div class="asset-requests-show__row asset-requests-show__row--policy">
-          <span class="asset-requests-show__key">
-            {{ "asset-requests-show.policies" | globalize }}
-          </span>
-          <div class="asset-requests-show__policies-wrapper">
-            <template v-for="(policy, key) in ASSET_POLICIES">
-              <!-- eslint-disable max-len -->
-              <span
-                :key="key"
-                class="asset-requests-show__key asset-requests-show__key--informative"
-                v-if="assetRequest.policies & policy"
-              >
-                {{ policy | assetPoliciesFilter }}
-              </span>
-              <!-- eslint-enable max-len -->
-            </template>
-          </div>
-        </div>
       </template>
-
-      <div class="asset-requests-show__row">
-        <span class="asset-requests-show__key">
-          {{ "asset-requests-show.terms" | globalize }}
-        </span>
-        <span class="asset-requests-show__value">
-          <template
-            v-if="safeGet(
-              assetRequest, 'operationDetails.creatorDetails.terms.key'
-            )"
-            :mime-type="safeGet(
-              assetRequest,
-              'operationDetails.details.terms.mimeType'
-            )"
-          >
-            <user-doc-link-getter
-              :file-key="assetRequest.operationDetails.creatorDetails.terms.key"
-            >
-              {{ "asset-requests-show.opn-file" | globalize }}
-            </user-doc-link-getter>
-          </template>
-          <template v-else>
-            &mdash;
-          </template>
-        </span>
-      </div>
-
-      <template v-if="assetRequest.stellarAssetCode">
-        <div
-          class="asset-requests-show__row"
-        >
-          <span class="asset-requests-show__key">
-            {{ "asset-requests-show.stellar-asset-code" | globalize }}
-          </span>
-          <span class="asset-requests-show__value">
-            {{ assetRequest.stellarAssetCode }}
-          </span>
-        </div>
-
-        <div
-          class="asset-requests-show__row"
-        >
-          <span class="asset-requests-show__key">
-            {{ "asset-requests-show.stellar-asset-type" | globalize }}
-          </span>
-          <span class="asset-requests-show__value">
-            {{ assetRequest.stellarAssetType | stellarAssetTypesFilter }}
-          </span>
-        </div>
-
-        <div
-          class="asset-requests-show__row"
-        >
-          <span class="asset-requests-show__key">
-            {{ "asset-requests-show.stellar-withdraw" | globalize }}
-          </span>
-          <span class="asset-requests-show__value">
-            {{ assetRequest.stellarWithdraw | yesNoFilter }}
-          </span>
-        </div>
-
-        <div
-          class="asset-requests-show__row"
-        >
-          <span class="asset-requests-show__key">
-            {{ "asset-requests-show.stellar-deposit" | globalize }}
-          </span>
-          <span class="asset-requests-show__value">
-            {{ assetRequest.stellarDeposit | yesNoFilter }}
-          </span>
-        </div>
-      </template>
-
-      <div class="asset-requests-show__row">
-        <span class="asset-requests-show__key">
-          {{ "asset-requests-show.creation-data" | globalize }}
-        </span>
-        <span>
-          {{ assetRequest.creationDate | formatDate }}
-        </span>
-      </div>
-
-      <div class="asset-requests-show__row">
-        <span class="asset-requests-show__key">
-          {{ "asset-requests-show.update-data" | globalize }}
-        </span>
-        <span>
-          {{ assetRequest.updateDate | formatDate }}
-        </span>
-      </div>
-
-      <!-- eslint-disable-next-line max-len -->
       <template v-if="assetRequest.stateI !== REQUEST_STATES.pending.stateI">
         <div class="asset-requests-show__row">
           <span class="asset-requests-show__key">
@@ -256,7 +65,6 @@
         </div>
       </template>
 
-      <!-- eslint-disable-next-line max-len -->
       <template v-if="assetRequest.stateI === REQUEST_STATES.rejected.stateI">
         <div class="asset-requests-show__reject-reason-wrp">
           <text-field
@@ -267,7 +75,6 @@
         </div>
       </template>
 
-      <!-- eslint-disable max-len -->
       <div
         class="asset-requests-show__buttons"
         v-if="assetRequest.stateI === REQUEST_STATES.pending.stateI"
@@ -289,7 +96,6 @@
         </button>
       </div>
     </div>
-    <!-- eslint-enable max-len -->
 
     <asset-request-reject-form
       @close="isRejecting = false"
@@ -302,8 +108,7 @@
 <script>
 import TextField from '@comcom/fields/TextField'
 import AssetRequestRejectForm from './components/AssetRequestRejectForm'
-
-import { ImgGetter, EmailGetter, UserDocLinkGetter } from '@comcom/getters'
+import IncomingAssetRequest from './IncomingAssetRequest'
 
 import { confirmAction } from '@/js/modals/confirmation_message'
 
@@ -314,7 +119,6 @@ import { AssetRequest } from '@/apiHelper/responseHandlers/requests/AssetRequest
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { Bus } from '@/utils/bus'
 import {
-  ASSET_POLICIES,
   ASSET_REQUEST_TYPES,
   REQUEST_STATES,
 } from '@/constants'
@@ -328,9 +132,7 @@ export default {
   components: {
     AssetRequestRejectForm,
     TextField,
-    ImgGetter,
-    EmailGetter,
-    UserDocLinkGetter,
+    IncomingAssetRequest,
   },
 
   props: {
@@ -340,13 +142,15 @@ export default {
   data () {
     return {
       assetRequest: {},
+      approvedAssetRequest: {},
       isRejecting: false,
       isPending: false,
       isInitializing: false,
       isInitFailed: false,
-      ASSET_POLICIES,
       ASSET_REQUEST_TYPES,
       REQUEST_STATES,
+      isUpdateRequest: false,
+      reference: '',
     }
   },
 
@@ -360,17 +164,40 @@ export default {
 
   async created () {
     this.isInitializing = true
-
     try {
-      const { data } = await api.getWithSignature(`/v3/requests/${this.id}`, {
-        include: ['request_details'],
+      const createAssetRequests =
+        await api.getWithSignature('/v3/create_asset_requests', {
+          include: ['request_details'],
+        })
+      const updateAssetRequests =
+        await api.getWithSignature('/v3/update_asset_requests', {
+          include: ['request_details'],
+        })
+      const allAssetRequests =
+        createAssetRequests.data.concat(updateAssetRequests.data)
+      allAssetRequests.find(item => {
+        if (item.id === this.id) { this.reference = item.reference }
       })
-      this.assetRequest = new AssetRequest(data)
+      const currentAssetRequests =
+        allAssetRequests.filter(item => item.reference === this.reference)
+      this.assetRequest =
+        new AssetRequest(currentAssetRequests[currentAssetRequests.length - 1])
+      if (!this.assetRequest) {
+        this.isInitFailed = true
+      }
+      if (this.assetRequest.type === this.ASSET_REQUEST_TYPES.updateAsset) {
+        this.approvedAssetRequest =
+          new AssetRequest(
+            currentAssetRequests[currentAssetRequests.length - 2]
+          )
+        if (!this.approvedAssetRequest) {
+          this.isInitFailed = true
+        }
+      }
     } catch (error) {
       ErrorHandler.processWithoutFeedback(error)
       this.isInitFailed = true
     }
-
     this.isInitializing = false
   },
 
@@ -444,13 +271,7 @@ export default {
   margin-top: 2rem;
 }
 
-.asset-requests-show__asset-logo {
-  max-width: 16rem;
-  max-height: 16rem;
-}
-
-.asset-requests-show__policies-wrapper {
-  display: flex;
-  flex-direction: column;
+.asset-requests-show__previous-approved-request-title {
+  padding-top: 4rem;
 }
 </style>

@@ -19,6 +19,7 @@ for further information about branching and tagging conventions.
 ## [1.13.0-rc.1] - 2020-06-02
 #### Added
 - Form validation of doc types in limits form
+- Info about params of asset before update to asset update request tab
 - new filter formatMoney
 
 #### Fixed
