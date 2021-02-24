@@ -23,6 +23,7 @@ ul.key-value-list {
     margin: 0 -0.8rem;
     display: flex;
     justify-content: space-between;
+    align-items: flex-end;
 
     &:hover {
       background-color: rgba(0, 0, 0, 0.08);
