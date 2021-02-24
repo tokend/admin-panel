@@ -1778,7 +1778,9 @@
       "account-state": "Account state",
       "block-reason": "Block reason",
       "blocked": "Blocked",
-      "active": "Active"
+      "active": "Active",
+      "btn-change": "Change",
+      "role-updated": "Role updated successfully"
     },
     "user-details-accredited-kyc-viewer": {
       "user-accredited-kyc": "Current user is applying for Accredited KYC",

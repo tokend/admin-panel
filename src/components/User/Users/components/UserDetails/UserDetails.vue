@@ -48,6 +48,7 @@
           <account-section
             :user="user"
             :block-reason="latestBlockedRequest.blockReason"
+            @update-user="getUser"
           />
         </section>
 
