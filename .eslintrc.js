@@ -17,7 +17,7 @@ module.exports = {
     // allow async-await
     'generator-star-spacing': 0,
     // allow debugger during development
-    'no-debugger': 0,
+    'no-debugger': 1,
     'no-warning-comments': [1, {
       'terms': ['hardcoded'], location: 'anywhere',
     }],
