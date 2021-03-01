@@ -742,10 +742,10 @@
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.7.0.tgz#9a06f4f137ee84d7df0460c1fdb1135ffa6c50fd"
   integrity sha512-ONhaKPIufzzrlNbqtWFFd+jlnemX6lJAgq9ZeiZtS7I1PIf/la7CW4m83rTXRnVnsMbW2k56pGYu7AUFJD9Pow==
 
-"@tokend/js-sdk@1.13.0":
-  version "1.13.0"
-  resolved "https://registry.yarnpkg.com/@tokend/js-sdk/-/js-sdk-1.13.0.tgz#cfd09e66d823e902e3f8171e287e4ecf38195d84"
-  integrity sha512-PLM4Hmp+cn/OxqnSHGqtV0MF62ekvCY4z5GR89vPmN2m/I15TznXVIsdHL5wYM/0INEKM0YE8saQ7VAEsv7uQQ==
+"@tokend/js-sdk@^1.14.0-rc.13":
+  version "1.14.0-rc.13"
+  resolved "https://registry.yarnpkg.com/@tokend/js-sdk/-/js-sdk-1.14.0-rc.13.tgz#32b952a008e637148cbb5c57d75cda4bdcb64e7f"
+  integrity sha512-SmrwIat/yH5kkVRBpNA+rUlSG6xKsutbp7aMei94AtJZPTf6ChhxIv24qRHOLb+SdtxFOWn+4O3bH9fJFV9fJg==
   dependencies:
     axios "0.19.0"
     base32.js "0.1.0"
@@ -754,7 +754,7 @@
     form-data "2.3.3"
     js-xdr "1.1.2"
     jsona "1.5.0"
-    lodash "4.17.13"
+    lodash "4.17.19"
     loglevel "1.6.2"
     loglevel-plugin-prefix "0.8.4"
     moment "2.24.0"
@@ -5422,6 +5422,11 @@ lodash@4.17.13:
   version "4.17.13"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.13.tgz#0bdc3a6adc873d2f4e0c4bac285df91b64fc7b93"
   integrity sha512-vm3/XWXfWtRua0FkUyEHBZy8kCPjErNBT9fJx8Zvs+U6zjqPbTUOpkaoum3O5uiA8sm+yNMHXfYkTUHFoMxFNA==
+
+lodash@4.17.19:
+  version "4.17.19"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.19.tgz#e48ddedbe30b3321783c5b4301fbd353bc1e4a4b"
+  integrity sha512-JNvd8XER9GQX0v2qJgsaN/mzFCNA5BRe/j8JN9d+tWyGLSodKQHKFicdwNYzWwI3wjRnaKPsGj1XkBjx/F96DQ==
 
 lodash@^3.5.0:
   version "3.10.1"

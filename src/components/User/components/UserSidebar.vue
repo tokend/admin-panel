@@ -93,7 +93,7 @@
 
       <li class="user-sidebar__nav-li">
         <router-link :to="{ name: 'roles' }">
-          <i class="mdi mdi-table user-sidebar__icon" />
+          <i class="mdi mdi-account-group user-sidebar__icon" />
           <span>{{ "user-sidebar.link-roles" | globalize }}</span>
         </router-link>
       </li>
