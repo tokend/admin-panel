@@ -39,15 +39,19 @@
                 @keyup.space.stop.prevent="showItemDetails(item)"
               >
                 <td>
-                  <asset-amount-formatter :amount="item.price" />
+                  <span :title="item.price | formatMoney">
+                    {{ item.price | formatMoney }}
+                  </span>
                 </td>
                 <td>
-                  <asset-amount-formatter :amount="item.baseAmount" />
+                  <span :title="item.baseAmount | formatMoney">
+                    {{ item.baseAmount | formatMoney }}
+                  </span>
                 </td>
                 <td>
-                  <asset-amount-formatter
-                    :amount="item.price * item.baseAmount"
-                  />
+                  <span :title="item.price * item.baseAmount | formatMoney">
+                    {{ item.price * item.baseAmount | formatMoney }}
+                  </span>
                 </td>
                 <td>
                   <span>
@@ -81,17 +85,15 @@
         </li>
         <li>
           <span>{{ "order-book-history.amount" | globalize }}</span>
-          <asset-amount-formatter
-            :amount="itemDetails.baseAmount"
-            :asset="itemDetails.baseAsset.id"
-          />
+          <span :title="baseAmountPrice | formatMoney">
+            {{ baseAmountPrice | formatMoney }}
+          </span>
         </li>
         <li>
           <span>{{ "order-book-history.price" | globalize }}</span>
-          <asset-amount-formatter
-            :amount="itemDetails.price"
-            :asset="quoteAsset"
-          />
+          <span :title="quoteAssetPrice | formatMoney">
+            {{ quoteAssetPrice | formatMoney }}
+          </span>
         </li>
         <li>
           <span>{{ "order-book-history.date" | globalize }}</span>
@@ -107,14 +109,12 @@
 <script>
 import { AssetPair } from '../../models/AssetPair'
 
-import { AssetAmountFormatter } from '@comcom/formatters'
 import Modal from '@comcom/modals/Modal'
 
 const EMPTY_DETAILS = Object.freeze({})
 
 export default {
   components: {
-    AssetAmountFormatter,
     Modal,
   },
 
@@ -130,6 +130,21 @@ export default {
       isDetailsShown: false,
       itemDetails: Object.assign({}, EMPTY_DETAILS),
     }
+  },
+
+  computed: {
+    baseAmountPrice () {
+      return {
+        value: this.itemDetails.baseAmount,
+        currency: this.itemDetails.baseAsset.id,
+      }
+    },
+    quoteAssetPrice () {
+      return {
+        value: this.itemDetails.price,
+        currency: this.quoteAsset,
+      }
+    },
   },
 
   watch: {

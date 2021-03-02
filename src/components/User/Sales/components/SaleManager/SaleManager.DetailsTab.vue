@@ -34,24 +34,32 @@
             </li>
             <li>
               <span>
-                {{ "sale-manager-details-tab.pending-issuance" | globalize }}
+                {{ "sale-manager-details-tab.max-issuance-amount" | globalize }}
               </span>
-              <asset-amount-formatter :amount="asset.maxIssuanceAmount" />
+              <span :title="asset.maxIssuanceAmount | formatMoney">
+                {{ asset.maxIssuanceAmount | formatMoney }}
+              </span>
             </li>
             <li>
               <span>
                 {{ "sale-manager-details-tab.pending-issuance" | globalize }}
               </span>
-              <asset-amount-formatter :amount="asset.pendingIssuance" />
+              <span :title="asset.pendingIssuance | formatMoney">
+                {{ asset.pendingIssuance | formatMoney }}
+              </span>
             </li>
             <li>
               <span>{{ "sale-manager-details-tab.issued" | globalize }}</span>
-              <asset-amount-formatter :amount="asset.issued" />
+              <span :title="asset.issued">
+                {{ asset.issued | formatMoney }}
+              </span>
             </li>
             <li>
               <!-- eslint-disable-next-line max-len -->
               <span>{{ "sale-manager-details-tab.available-for-issuance" | globalize }}</span>
-              <asset-amount-formatter :amount="asset.availableForIssuance" />
+              <span :title="asset.availableForIssuance">
+                {{ asset.availableForIssuance | formatMoney }}
+              </span>
             </li>
             <li>
               <span>{{ "sale-manager-details-tab.policies" | globalize }}</span>
@@ -223,13 +231,15 @@
               })
               }}
             </span>
-            <asset-amount-formatter :amount="item.price" />
+            <span :title="item.price">{{ item.price | formatMoney }}</span>
           </li>
           <li>
             <span>
               {{ "sale-manager-details-tab.current-cap" | globalize }}
             </span>
-            <asset-amount-formatter :amount="item.currentCap" />
+            <span :title="item.currentCap">
+              {{ item.currentCap | formatMoney }}
+            </span>
           </li>
           <li>
             <!-- eslint-disable -->
@@ -241,7 +251,9 @@
               {{ "sale-manager-details-tab.total-current-cap" | globalize }}
             </span>
             <!-- eslint-enable -->
-            <asset-amount-formatter :amount="item.totalCurrentCap" />
+            <span :title="item.totalCurrentCap | formatMoney">
+              {{ item.totalCurrentCap | formatMoney }}
+            </span>
           </li>
           <li>
             <!-- eslint-disable -->
@@ -253,7 +265,7 @@
               {{ "sale-manager-details-tab.hard-cap" | globalize }}
             </span>
             <!-- eslint-enable -->
-            <asset-amount-formatter :amount="item.hardCap" />
+            <span :title="item.hardCap">{{ item.hardCap | formatMoney }}</span>
           </li>
         </ul>
 
@@ -268,24 +280,25 @@
             <span>
               {{ "sale-manager-details-tab.current-cap" | globalize }}
             </span>
-            <asset-amount-formatter
-              :amount="sale.defaultQuoteAsset.currentCap"
-              :asset="sale.defaultQuoteAsset.asset.id"
-            />
+            <!-- eslint-disable -->
+            <span :title="currentCap | formatMoney">
+              {{ currentCap | formatMoney }}
+            </span>
+            <!-- eslint-enable -->
           </li>
           <li>
             <span>{{ "sale-manager-details-tab.soft-cap" | globalize }}</span>
-            <asset-amount-formatter
-              :amount="sale.defaultQuoteAsset.softCap"
-              :asset="sale.defaultQuoteAsset.asset.id"
-            />
+            <!-- eslint-disable-next-line max-len -->
+            <span :title="softCap | formatMoney">
+              {{ softCap | formatMoney }}
+            </span>
           </li>
           <li>
             <span>{{ "sale-manager-details-tab.hard-cap" | globalize }}</span>
-            <asset-amount-formatter
-              :amount="sale.defaultQuoteAsset.hardCap"
-              :asset="sale.defaultQuoteAsset.asset.id"
-            />
+            <!-- eslint-disable-next-line max-len -->
+            <span :title="hardCap | formatMoney">
+              {{ hardCap | formatMoney }}
+            </span>
           </li>
           <li>
             <span>
@@ -294,10 +307,9 @@
               })
               }}
             </span>
-            <asset-amount-formatter
-              :amount="sale.baseHardCap"
-              :asset="sale.baseAsset.id"
-            />
+            <span :title="baseAssetCap | formatMoney">
+              {{ baseAssetCap | formatMoney }}
+            </span>
           </li>
         </ul>
 
@@ -331,7 +343,6 @@
 <script>
 import { EmailGetter, ImgGetter, DocLinkGetter } from '@comcom/getters'
 import {
-  AssetAmountFormatter,
   AssetPoliciesFormatter,
 } from '@comcom/formatters'
 
@@ -344,7 +355,6 @@ import get from 'lodash/get'
 
 export default {
   components: {
-    AssetAmountFormatter,
     AssetPoliciesFormatter,
     EmailGetter,
     ImgGetter,
@@ -368,6 +378,30 @@ export default {
     isSaleWhitelisted () {
       return this.sale.accessDefinitionType.value ===
         SALE_DEFINITION_TYPES.whitelist
+    },
+    baseAssetCap () {
+      return {
+        value: this.sale.baseHardCap,
+        currency: this.sale.baseAsset.id,
+      }
+    },
+    currentCap () {
+      return {
+        value: this.sale.defaultQuoteAsset.currentCap,
+        currency: this.sale.defaultQuoteAsset.asset.id,
+      }
+    },
+    softCap () {
+      return {
+        value: this.sale.defaultQuoteAsset.softCap,
+        currency: this.sale.defaultQuoteAsset.asset.id,
+      }
+    },
+    hardCap () {
+      return {
+        value: this.sale.defaultQuoteAsset.hardCap,
+        currency: this.sale.defaultQuoteAsset.asset.id,
+      }
     },
   },
 

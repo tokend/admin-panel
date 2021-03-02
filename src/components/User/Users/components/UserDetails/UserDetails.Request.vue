@@ -13,7 +13,7 @@
         <button
           class="app__btn user-request__btn"
           @click="approve"
-          :disabled="isPending"
+          :disabled="isPending || !isKycLoaded"
         >
           {{ "user-details-request.btn-approve" | globalize }}
         </button>
@@ -21,7 +21,7 @@
         <button
           class="app__btn app__btn--danger user-request__btn"
           @click="showRejectModal"
-          :disabled="isPending"
+          :disabled="isPending || !isKycLoaded"
         >
           {{ "user-details-request.btn-reject" | globalize }}
         </button>
@@ -124,6 +124,10 @@ export default {
     user: {
       type: UserRecord,
       default: () => {},
+    },
+    isKycLoaded: {
+      type: Boolean,
+      default: true,
     },
   },
 

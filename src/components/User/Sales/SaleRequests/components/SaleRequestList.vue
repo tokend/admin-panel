@@ -76,10 +76,9 @@
               {{ item.requestDetails.creatorDetails.name }}
             </span>
             <span class="app-list__cell">
-              <asset-amount-formatter
-                :amount="item.requestDetails.hardCap"
-                :asset="item.requestDetails.defaultQuoteAsset.id"
-              />
+              <span :title="hardCap(item) | formatMoney">
+                {{ hardCap(item) | formatMoney }}
+              </span>
             </span>
             <span class="app-list__cell">
               <email-getter
@@ -125,7 +124,6 @@ import apiHelper from '@/apiHelper'
 import { base } from '@tokend/js-sdk'
 
 import { EmailGetter } from '@comcom/getters'
-import { AssetAmountFormatter } from '@comcom/formatters'
 import { CollectionLoader } from '@/components/common'
 
 import _ from 'lodash'
@@ -137,7 +135,6 @@ export default {
     SelectField,
     InputField,
     EmailGetter,
-    AssetAmountFormatter,
     CollectionLoader,
   },
 
@@ -191,6 +188,13 @@ export default {
         } catch (error) {
           return requestor
         }
+      }
+    },
+
+    hardCap (item) {
+      return {
+        value: item.requestDetails.hardCap,
+        currency: item.requestDetails.defaultQuoteAsset.id,
       }
     },
 

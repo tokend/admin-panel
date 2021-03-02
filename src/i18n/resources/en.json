@@ -354,7 +354,8 @@
       "op_update_end_time_request_already_exists": "This request already exists",
       "op_update_end_time_request_not_found": "Associated request cannot not found",
       "op_sale_create_tasks_not_found": "There is no key value for crowdfunding creation tasks",
-      "op_sale_update_details_tasks_not_found": "There is no key value for crowdfunding details update tasks"
+      "op_sale_update_details_tasks_not_found": "There is no key value for crowdfunding details update tasks",
+      "op_exceeded_max_amount": "You have exceeded the maximum issuance amount of the asset"
     },
     "errors": {
       "default": "Something bad happened. Please try again later or contact the system owner.",
@@ -597,6 +598,7 @@
     "mixin": {
       "fill-this-field": "Please, fill out this field",
       "email-or-account-id": "This field should be a valid email or account ID",
+      "email-or-account-id-or-balance-id": "This field should be a valid email or account ID or balance ID",
       "more-then-min-value": "This field should be more or equal {{minValue}}",
       "less-then-max-value": "This field should be less or equal {{maxValue}}",
       "no-more-then-avaible-issuance": "Not enough assets for issuance. Available: {{available}}",
@@ -877,6 +879,7 @@
       "issue": "Issue",
       "loading": "Loading...",
       "lbl-receiver": "Receiver (email or address)",
+      "lbl-receiver-bal": "Receiver (email, address, balance)",
       "lbl-reference": "Reference",
       "lbl-amount": "Amount",
       "lbl-asset": "Asset",
@@ -1078,7 +1081,7 @@
       "placeholder-bitmask-exact-match": "Bitmask, exact match",
       "destination-address": "Destination address",
       "comment": "Comment",
-      "max-amount": "Max amount is {{amount}}",
+      "max-amount": "Max amount is {{amount, money}}",
       "please-recheck-form": "Please, recheck the form before confirmation",
       "btn-confirm": "Confirm",
       "btn-cancel": "Cancel",
@@ -1156,16 +1159,25 @@
       "link-key-val": "Key Value"
     },
     "key-value-manager": {
+      "lbl-search": "Search by key or entry type",
+      "key-title": "Key",
+      "value-title": "Value",
+      "entry-type-title": "Entry type"
+    },
+    "key-value-form": {
       "btn-update": "Update",
       "btn-add": "Add",
-      "lbl-key-select-field": "Key",
-      "lbl-value-select-field": "Value",
+      "btn-delete": "Delete",
       "lbl-key-input-field": "Key",
       "lbl-value-input-field": "Value",
       "lbl-entry-type": "Entry type",
       "placeholder-new-value": "Enter new value",
       "placeholder-new-key": "Enter new key",
-      "submitted-successfully": "Submitted successfully."
+      "submitted-successfully": "Submitted successfully.",
+      "msg-please-recheck-all-fields": "Please, recheck all the fields",
+      "msg-delete-these-key": "Are you sure you want to delete these key?",
+      "btn-confirm": "Confirm",
+      "btn-cancel": "Cancel"
     },
     "kyc-recovery-request-action": {
       "btn-approve": "Approve",
@@ -1385,7 +1397,8 @@
       "request-approved": "Request approved. Limits are changed",
       "request-rejected": "Request rejected. Limits are not changed",
       "upload-additional-documents": "Upload additional documents requested.",
-      "please-update-user-limits": "Please update user limits before approving request"
+      "please-update-user-limits": "Please update user limits before approving request",
+      "choose-from-list": "Please choose value from list"
     },
     "limits": {
       "link-limits-management": "Limits management",

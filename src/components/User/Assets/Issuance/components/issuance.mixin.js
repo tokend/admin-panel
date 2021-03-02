@@ -3,7 +3,6 @@ import { CollectionLoader } from '@/components/common'
 
 import { REQUEST_STATES, ASSET_POLICIES } from '@/constants'
 
-import localize from '@/utils/localize'
 import config from '@/config'
 import { api, loadingDataViaLoop } from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
@@ -44,8 +43,6 @@ export default {
   },
 
   methods: {
-    localize,
-
     async getAssets () {
       try {
         let response = await api.getWithSignature('/v3/assets')

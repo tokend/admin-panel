@@ -35,10 +35,8 @@
 import PreIssuanceRequestList from './components/PreIssuanceRequestList.vue'
 import SelectField from '@comcom/fields/SelectField'
 import { api, loadingDataViaLoop } from '@/api'
-
+import { ALL_ASSETS_ID } from '@/constants'
 import { ErrorHandler } from '@/utils/ErrorHandler'
-
-const ALL_ASSETS_ID = 'all'
 
 export default {
   components: {

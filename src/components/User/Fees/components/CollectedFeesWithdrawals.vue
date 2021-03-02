@@ -71,12 +71,12 @@
             >
               {{ item.stateI | globalizeRequestStateI }}
             </span>
-
-            <asset-amount-formatter
+            <span
               class="app-list__cell app-list__cell--right"
-              is-titled
-              :amount="item.requestDetails.amount"
-            />
+              :tilte="item.requestDetails.amount | formatMoney"
+            >
+              {{ item.requestDetails.amount | formatMoney }}
+            </span>
 
             <span class="app-list__cell app-list__cell--right">
               {{ item.allTasks }}
@@ -141,7 +141,6 @@ import { REQUEST_STATES } from '@/constants'
 import { SelectField, InputField } from '@comcom/fields'
 import Modal from '@comcom/modals/Modal'
 import { CollectionLoader } from '@comcom'
-import { AssetAmountFormatter } from '@comcom/formatters'
 import DetailsReader from '@comcom/details/DetailsReader'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
@@ -155,7 +154,6 @@ export default {
     InputField,
     SelectField,
     CollectionLoader,
-    AssetAmountFormatter,
     Modal,
     DetailsReader,
   },

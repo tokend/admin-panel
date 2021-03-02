@@ -11,7 +11,7 @@
             type="text"
             :placeholder="'issuance-form.placeholder-email-or-gaaq' | globalize"
             v-model="form.receiver"
-            :label="'issuance-form.lbl-receiver' | globalize"
+            :label="'issuance-form.lbl-receiver-bal' | globalize"
             @blur="touchField('form.receiver')"
             :error-message="getFieldErrorMessage('form.receiver')"
             :disabled="formMixin.isDisabled"
@@ -74,10 +74,9 @@
         <div class="issuance-form__asset-info app__form-row" v-if="form.asset">
           <p v-if="isIssuanceAllowed" class="text">
             <span>{{ "issuance-form.avaible" | globalize }}</span>
-            <asset-amount-formatter
-              :amount="availableForIssuance"
-              :asset="form.asset"
-            />
+            <span :title="assetAvailableForIssuance | formatMoney">
+              {{ assetAvailableForIssuance | formatMoney }}
+            </span>
           </p>
 
           <p v-else class="text">
@@ -116,7 +115,6 @@
 
 <script>
 import FormMixin from '@/mixins/form.mixin'
-import { AssetAmountFormatter } from '@comcom/formatters'
 import { api, loadingDataViaLoop } from '@/api'
 import apiHelper from '@/apiHelper'
 import { base } from '@tokend/js-sdk'
@@ -127,9 +125,11 @@ import { Bus } from '@/utils/bus'
 import { globalize } from '@/components/App/filters/filters'
 import {
   required,
+  accountId as isAddress,
+  balanceId as isBalanceId,
   minValue,
   noMoreThanAvailableForIssuance,
-  emailOrAccountId,
+  emailOrAccountIdOrBalanceId,
   maxLength,
 } from '@/validators'
 
@@ -138,7 +138,6 @@ import { DEFAULT_INPUT_STEP, DEFAULT_INPUT_MIN } from '@/constants'
 const REFERENCE_MAX_LENGTH = 64
 
 export default {
-  components: { AssetAmountFormatter },
   mixins: [FormMixin],
 
   data () {
@@ -167,7 +166,7 @@ export default {
             this.availableForIssuance
           ),
         },
-        receiver: { required, emailOrAccountId },
+        receiver: { required, emailOrAccountIdOrBalanceId },
         reference: {
           required,
           maxLength: maxLength(REFERENCE_MAX_LENGTH),
@@ -185,6 +184,12 @@ export default {
 
     isIssuanceAllowed () {
       return this.availableForIssuance > 0
+    },
+    assetAvailableForIssuance () {
+      return {
+        value: this.availableForIssuance,
+        currency: this.form.asset,
+      }
     },
   },
 
@@ -212,8 +217,10 @@ export default {
     },
 
     async getBalanceId () {
+      if (isBalanceId(this.form.receiver)) return this.form.receiver
+
       let address
-      if (base.Keypair.isValidPublicKey(this.form.receiver)) {
+      if (isAddress(this.form.receiver)) {
         address = this.form.receiver
       } else {
         address = await apiHelper.users.getAccountIdByEmail(this.form.receiver)

@@ -21,6 +21,7 @@ _templateSettings.interpolate = /{{([\s\S]+?)}}/g
 const VALIDATION_ERRORS = {
   required: _template('mixin.fill-this-field'),
   emailOrAccountId: _template('mixin.email-or-account-id'),
+  emailOrAccountIdOrBalanceId: _template('mixin.email-or-account-id-or-balance-id'),
   minValue: _template('mixin.more-then-min-value'),
   maxValue: _template('mixin.less-then-max-value'),
   noMoreThanAvailableForIssuance: _template('mixin.no-more-then-avaible-issuance'),
@@ -114,7 +115,7 @@ export default {
 
       for (const rule of Object.keys(fieldDetails.$params)) {
         if (!fieldDetails[rule]) {
-          return globalize(VALIDATION_ERRORS[rule](params))
+          return globalize(VALIDATION_ERRORS[rule](params), params)
         }
       }
     },

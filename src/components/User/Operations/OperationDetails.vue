@@ -17,7 +17,6 @@ import moment from 'moment'
 import get from 'lodash/get'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { api } from '@/api'
-import { clearObject } from '@/utils/clearObject'
 
 export default {
   components: {
@@ -36,21 +35,16 @@ export default {
   },
   methods: {
     async getOperations (operationId) {
-      let operationList = {}
+      let operation = {}
       try {
-        const response = await api.getWithSignature('/v3/history', {
-          page: { order: 'desc' },
-          filter: clearObject({
-            account: this.userId,
-          }),
+        const endpoint = `/v3/history/${operationId}`
+        const response = await api.getWithSignature(endpoint, {
           include: ['operation.details'],
         })
-        operationList = response.data
+        operation = response.data
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }
-      const operation = operationList
-        .find(operation => operation.id === this.operationId)
       const operationType = operation.operation.details.type
         .replace(/operations-/g, '')
         .split('-')

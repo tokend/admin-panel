@@ -149,7 +149,8 @@
 
 <script>
 import Vue from 'vue'
-
+import { mapGetters } from 'vuex'
+import { getters } from '@/store/types'
 import FormMixin from '@/mixins/form.mixin'
 import { required, minValue, maxValue, accountId } from '@/validators'
 
@@ -226,6 +227,8 @@ export default {
   },
 
   computed: {
+    ...mapGetters({ userAddress: getters.GET_USER_ADDRESS }),
+
     addNew () {
       return !this.id
     },
@@ -337,6 +340,10 @@ export default {
         title: globalize('admin-manager.confirmation-delete-admin'),
       })) {
         await this.submitTx(base.ManageSignerBuilder.deleteSigner)
+      }
+      if (this.form.accountId === this.userAddress) {
+        this.$store.dispatch('LOG_OUT')
+        this.$router.push({ name: 'login' })
       }
     },
 

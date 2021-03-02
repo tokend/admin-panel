@@ -96,6 +96,12 @@
 .input-field__input:not(:focus):placeholder-shown ~ .input-field__label {
   top: $field-input-padding-top;
   @include text-font-sizes;
+
+  & > .input-field__label-search-icon {
+    margin-right: 0.2rem;
+    font-size: 2rem;
+    line-height: 1;
+  }
 }
 
 .input-field__input:disabled {

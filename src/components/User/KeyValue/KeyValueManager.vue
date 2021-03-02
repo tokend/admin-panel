@@ -1,173 +1,144 @@
 <template>
   <div class="key-value-manager">
-    <template v-if="list.length">
-      <div class="key-value-manager__card">
-        <div class="key-value-manager__form">
-          <select-field
-            class="key-value-manager__input"
-            v-model="updateForm.key"
-            :label="'key-value-manager.lbl-key-select-field' | globalize"
-          >
-            <option
-              v-for="item in list"
-              :value="item.id"
-              :key="item.id"
-            >
-              {{ item.id }}
-            </option>
-          </select-field>
+    <div class="key-value-manager__card">
+      <key-value-form
+        @submited="updateList"
+      />
+    </div>
+    <template v-if="keyValueList.length">
+      <div class="key-value-manager__search-list">
+        <input-field
+          v-model="searchKeyOrType"
+          class="key-value-manager__input"
+          :label="'key-value-manager.lbl-search' | globalize"
+          is-search
+        />
+      </div>
 
-          <input-field
-            v-model="updateForm.value"
-            class="key-value-manager__input"
-            :label="'key-value-manager.lbl-value-select-field' | globalize"
-            :placeholder="'key-value-manager.placeholder-new-value' | globalize"
-          />
+      <div class="key-value-manager__list">
+        <div class="key-value-manager__table-header">
+          <span class="key-value-manager__li-key secondary">
+            {{ 'key-value-manager.key-title' | globalize }}
+          </span>
 
-          <button
-            class="app__btn
-                 app__btn--small
-                 key-value-manager__btn"
-            :disabled="isPending"
-            @click="setKeyValue(updateForm.key, updateForm.value)"
-          >
-            {{ "key-value-manager.btn-update" | globalize }}
-          </button>
+          <span class="key-value-manager__li-value secondary">
+            {{ 'key-value-manager.value-title' | globalize }}
+          </span>
+
+          <span class="key-value-manager__li-type secondary">
+            {{ 'key-value-manager.entry-type-title' | globalize }}
+          </span>
         </div>
+
+        <ul class="key-value-manager__ul">
+          <li
+            class="key-value-manager__li"
+            v-for="item in searchKeyValueList"
+            :key="item.key">
+            <button
+              @click="selectKeyValue(item)"
+              class="key-value-manager__li-btn"
+            >
+              <span class="key-value-manager__li-key" :title="item.key">
+                {{ item.key }}
+              </span>
+
+              <span class="key-value-manager__li-value" :title="item.value">
+                {{ item.value }}
+              </span>
+
+              <span
+                class="key-value-manager__li-type"
+                :title="item.entryTypeName"
+              >
+                {{ item.entryTypeName }}
+              </span>
+            </button>
+          </li>
+        </ul>
+        <modal
+          v-if="selectedKeyValue.key"
+          @close-request="clearSelectedKeyValue"
+          max-width="106rem"
+        >
+          <key-value-form
+            :selected-key-value="selectedKeyValue"
+            @submited="updateList"
+            @close-modal="clearSelectedKeyValue"
+          />
+        </modal>
       </div>
     </template>
-
-    <div class="key-value-manager__card">
-      <div class="key-value-manager__form">
-        <input-field
-          v-model="createForm.key"
-          class="key-value-manager__input"
-          :label="'key-value-manager.lbl-key-input-field' | globalize"
-          :placeholder="'key-value-manager.placeholder-new-key' | globalize"
-        />
-        <input-field
-          v-model="createForm.value"
-          class="key-value-manager__input"
-          :label="'key-value-manager.lbl-value-input-field' | globalize"
-          :placeholder="'key-value-manager.placeholder-new-value' | globalize"
-        />
-
-        <select-field
-          v-model.number="createForm.entryType"
-          class="key-value-manager__input"
-          :label="'key-value-manager.lbl-entry-type' | globalize"
-        >
-          <option
-            v-for="(value, lbl) in KEY_VALUE_ENTRY_TYPE"
-            :value="value"
-            :key="value"
-          >
-            {{ lbl }}
-          </option>
-        </select-field>
-
-        <button
-          class="app__btn
-                      app__btn--small
-                      key-value-manager__btn"
-          :disabled="isPending"
-          @click="setKeyValue(
-            createForm.key,
-            createForm.value,
-            createForm.entryType
-          )"
-        >
-          {{ "key-value-manager.btn-add" | globalize }}
-        </button>
-      </div>
-    </div>
   </div>
 </template>
 <script>
-import { SelectField, InputField } from '@comcom/fields'
 
-import { base } from '@tokend/js-sdk'
-import { KEY_VALUE_ENTRY_TYPE } from '@/constants'
-import { api } from '@/api'
+import Modal from '@comcom/modals/Modal'
+import KeyValueForm from './KeyValueForm'
+
+import { InputField } from '@comcom/fields'
 import { ErrorHandler } from '@/utils/ErrorHandler'
-import { Bus } from '@/utils/bus'
-import { mapGetters } from 'vuex'
-
-const KEY_VALUE_TYPE_SHORT_NAME = {
-  uint32: 'u32',
-  string: 'str',
-  uint64: 'u64',
-}
+import { mapGetters, mapActions } from 'vuex'
+import { KeyValueRecord } from '@/js/records/keyValue.record'
 
 export default {
   components: {
-    SelectField,
     InputField,
+    Modal,
+    KeyValueForm,
   },
 
   data: _ => ({
-    createForm: {
-      key: '',
-      value: '',
-      entryType: KEY_VALUE_ENTRY_TYPE.uint32,
-    },
-    updateForm: {
-      key: '',
-      value: '',
-    },
-    list: [],
-    isPending: false,
-    KEY_VALUE_ENTRY_TYPE,
+    keyValueList: [],
+    selectedKeyValue: {},
+    searchKeyOrType: '',
   }),
 
   computed: {
     ...mapGetters([
       'kvEntries',
     ]),
-  },
 
-  watch: {
-    'updateForm.key' (key) {
-      const item = this.list.find(elem => elem.id === key)
-      const name = KEY_VALUE_TYPE_SHORT_NAME[item.value.type.name]
-      this.updateForm.value = item.value[name]
+    searchKeyValueList () {
+      return this.searchKeyOrType
+        ? this.keyValueList.filter(i =>
+          i.key.toLowerCase().includes(this.searchKeyOrType.toLowerCase()) ||
+            i.entryTypeName.toLowerCase()
+              .includes(this.searchKeyOrType.toLowerCase())
+        )
+        : this.keyValueList
     },
   },
 
-  created () {
-    this.getList()
+  async created () {
+    await this.getList()
   },
 
   methods: {
-    async setKeyValue (key, value, entryType) {
-      this.isPending = true
+    ...mapActions({
+      loadKvEntries: 'LOAD_KV_ENTRIES',
+    }),
+
+    async getList () {
       try {
-        const operation = base.ManageKeyValueBuilder
-          .putKeyValue({ key, value, entryType })
-
-        await api.postOperations(operation)
-        await this.getList()
-
-        Bus.success('key-value-manager.submitted-successfully')
+        await this.loadKvEntries()
+        this.keyValueList = this.kvEntries.map(i => new KeyValueRecord(i))
       } catch (error) {
         ErrorHandler.process(error)
       }
-      this.isPending = false
     },
 
-    async getList () {
-      this.list = this.kvEntries
+    async updateList () {
+      await this.getList()
+      this.clearSelectedKeyValue()
+    },
 
-      if (!this.list.length) {
-        return
-      }
+    selectKeyValue (item) {
+      this.selectedKeyValue = item
+    },
 
-      if (!this.updateForm.key) {
-        const item = this.list[0]
-        const name = KEY_VALUE_TYPE_SHORT_NAME[item.value.type.name]
-        this.updateForm.key = item.id
-        this.updateForm.value = item.value[name]
-      }
+    clearSelectedKeyValue () {
+      this.selectedKeyValue = {}
     },
   },
 }
@@ -179,28 +150,69 @@ export default {
 .key-value-manager__card {
   background-color: $color-content-bg;
   border-radius: 0.3rem;
-  box-shadow: 0.7px 0.7px 5.6px 0.4px rgba(170, 170, 170, 0.72);
+  box-shadow: 0.07rem 0.07rem 0.56rem 0.04rem rgba(170, 170, 170, 0.72);
   padding: 1rem 1.5rem 1.5rem;
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  margin-bottom: 2rem;
+  margin-bottom: 4rem;
 }
 
 .key-value-manager__input {
-  margin-left: 20px;
-  margin-right: 60px;
-  width: 300px;
+  margin-left: 2.5rem;
+  margin-bottom: 2rem;
+  max-width: 30rem;
+  min-width: 10rem;
 }
 
-.key-value-manager__btn {
-  max-width: 200px;
+.key-value-manager__table-header,
+.key-value-manager__ul {
+  max-width: 106rem;
 }
 
-.key-value-manager__form {
+.key-value-manager__table-header {
   width: 100%;
   display: flex;
-  padding: 30px 10px;
-  flex-wrap: nowrap;
+  padding: 0 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.key-value-manager__li {
+  background-color: $color-content-bg;
+  border-radius: 0.3rem;
+  box-shadow: 0.07rem 0.07rem 0.56rem 0.04rem rgba(170, 170, 170, 0.72);
+
+  & + & {
+    margin-top: 2rem;
+  }
+}
+
+.key-value-manager__li-btn {
+  width: 100%;
+  display: flex;
+  padding: 2rem 2.5rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.key-value-manager__li-key {
+  width: 33%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 600;
+}
+
+.key-value-manager__li-value {
+  width: 33%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+}
+
+.key-value-manager__li-type {
+  width: 33%;
+  text-align: right;
 }
 </style>

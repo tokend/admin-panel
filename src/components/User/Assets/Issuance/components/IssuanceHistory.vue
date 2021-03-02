@@ -53,9 +53,9 @@
             <!-- eslint-disable max-len -->
             <span
               class="app-list__cell app-list__cell--right app-list__cell--important"
-              :title="`${localize(item.requestDetails.amount)} ${item.requestDetails.asset.id}`"
+              :title="amount(item) | formatMoney"
             >
-              {{ localize(item.requestDetails.amount) }} {{ item.requestDetails.asset.id }}
+              {{ amount(item) | formatMoney }}
             </span>
             <!-- eslint-enable max-len -->
 
@@ -121,6 +121,15 @@ export default {
     Bus.$on('issuance:updateRequestList', _ => {
       this.reloadCollectionLoader()
     })
+  },
+
+  methods: {
+    amount (item) {
+      return {
+        value: item.requestDetails.amount,
+        currency: item.requestDetails.asset.id,
+      }
+    },
   },
 }
 </script>
