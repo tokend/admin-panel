@@ -529,5 +529,37 @@ export const UserRoutes = {
         require(['../../components/settings/GAuth.vue'], resolve)
       },
     },
+    {
+      path: '/roles',
+      name: 'roles',
+      redirect: { name: 'roles.account' },
+      component: function (resolve) {
+        require(['../../components/User/Roles/Roles.vue'], resolve)
+      },
+      children: [
+        {
+          path: '/roles/account',
+          name: 'roles.account',
+          component: function (resolve) {
+            require(['../../components/User/Roles/RolesManager.vue'], resolve)
+          },
+          props: {
+            default: true,
+            isAccountRoles: true,
+          },
+        },
+        {
+          path: '/roles/signer',
+          name: 'roles.signer',
+          component: function (resolve) {
+            require(['../../components/User/Roles/RolesManager.vue'], resolve)
+          },
+          props: {
+            default: true,
+            isAccountRoles: false,
+          },
+        },
+      ],
+    },
   ],
 }

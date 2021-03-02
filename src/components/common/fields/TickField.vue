@@ -43,6 +43,8 @@
 </template>
 
 <script>
+import isEqual from 'lodash/isEqual'
+
 export default {
   props: {
     label: { type: String, default: '' },
@@ -77,7 +79,13 @@ export default {
           break
 
         case 'array':
-          result = ~model.findIndex((item) => item === value)
+          result = ~model.findIndex((item) => {
+            if (typeof value === 'object') {
+              return isEqual(item, value)
+            } else {
+              return item === value
+            }
+          })
           break
 
         default:
@@ -106,7 +114,13 @@ export default {
         case 'array':
           this.$emit('input', isChecked
             ? model.concat(value)
-            : model.filter((item) => item !== value)
+            : model.filter((item) => {
+              if (typeof value === 'object') {
+                return !isEqual(item, value)
+              } else {
+                return item !== value
+              }
+            })
           )
           break
 

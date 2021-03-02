@@ -545,6 +545,54 @@
         "monthly": "Monthly",
         "annual": "Annual",
         "default": "UNKNOWN LIMIT TYPE"
+      },
+      "account-rule-actions-filter": {
+        "any": "Any",
+        "create": "Create",
+        "create-for-other": "Create for other",
+        "create-with-task": "Create with task",
+        "manage": "Manage",
+        "send": "Send",
+        "withdraw": "Withdraw",
+        "receive-issuance": "Receive issuance",
+        "receive-payment": "Receive payment",
+        "receive-atomic-swap": "Receive atomic swap",
+        "bind": "Bind",
+        "update-max-issuance": "Update max issuance",
+        "check": "Check",
+        "cancel": "Cancel",
+        "close": "Close",
+        "remove": "Remove",
+        "update-end-time": "Update end time",
+        "create-for-other-with-task": "Create for other with task",
+        "remove-for-other": "Remove for other",
+        "exchange": "Exchange",
+        "receive-redemption": "Receive redemption",
+        "participate": "Participate",
+        "default": "UNKNOWN ACCOUNT RULE"
+      },
+      "signer-rule-actions-filter": {
+        "any": "Any",
+        "create": "Create",
+        "create-for-other": "Create for other",
+        "create-with-task": "Create with task",
+        "manage": "Manage",
+        "send": "Send",
+        "receive-atomic-swap": "Receive atomic swap",
+        "bind": "Bind",
+        "update-max-issuance": "Update max issuance",
+        "check": "Check",
+        "cancel": "Cancel",
+        "close": "Close",
+        "remove": "Remove",
+        "update-end-time": "Update end time",
+        "create-for-other-with-task": "Create for other with task",
+        "remove-for-other": "Remove for other",
+        "exchange": "Exchange",
+        "participate": "Participate",
+        "update": "Update",
+        "review": "Review",
+        "default": "UNKNOWN ACCOUNT RULE"
       }
     },
     "mixin": {
@@ -1003,7 +1051,8 @@
       "link-trades": "Trades",
       "link-fees": "Fees",
       "link-key-value": "Key Value",
-      "link-settings": "Settings"
+      "link-settings": "Settings",
+      "link-roles": "Roles"
     },
     "collected-fees-list": {
       "header": "Balances",
@@ -1941,6 +1990,26 @@
     },
     "xdr-type-from-value": {
       "error": "xdrEnumToConstant: Cannot get values from provided xdrEnum ({{xdrEnum}})"
+    },
+    "roles": {
+      "link-account": "Account",
+      "link-signer": "Signer"
+    },
+    "roles-manager": {
+      "lbl-key-select-field": "Role",
+      "role-name": "Role name",
+      "btn-update": "Update role",
+      "btn-create": "Create role",
+      "btn-remove": "Remove role",
+      "role-updated-successfully": "Role updated successfully",
+      "role-created-successfully": "Role created successfully",
+      "role-removed-successfully": "Role removed successfully",
+      "rules-title": "Rules",
+      "loading": "Loading...",
+      "error": "An error occurred. Please try again later",
+      "no-rules-created-yet": "No rules created yet",
+      "default-rule": "Default rule",
+      "read-only": "Can't be modified in the future"
     }
   }
 }
