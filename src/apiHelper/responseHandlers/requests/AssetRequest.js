@@ -64,4 +64,8 @@ export class AssetRequest extends ReviewableRequest {
   get stellarDeposit () {
     return this.operationDetails.creatorDetails.stellar.deposit || false
   }
+
+  get externalSystemType () {
+    return this.operationDetails.creatorDetails.externalSystemType
+  }
 }

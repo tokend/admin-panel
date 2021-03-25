@@ -823,7 +823,8 @@
       "btn-fulfill": "Fulfill",
       "btn-reject": "Reject",
       "lbl-reject-reason": "Reject reason",
-      "asset-created": "Asset successfully created"
+      "asset-created": "Asset successfully created",
+      "external-system-type": "External System Type"
     },
     "issuance-form": {
       "avaible": "Available",
@@ -958,7 +959,9 @@
       "form-cancel": "Cancel",
       "lbl-enter-reject-reason": "Enter reject reason",
       "request-fulfilled-successfully": "Request fulfilled successfully.",
-      "request-rejected-successfully": "Request rejected successfully"
+      "request-rejected-successfully": "Request rejected successfully",
+      "all-tasks": "All Tasks",
+      "pending-tasks": "Pending Tasks"
     },
     "withdrawal-list": {
       "header": "Withdrawal list",
