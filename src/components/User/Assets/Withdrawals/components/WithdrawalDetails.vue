@@ -65,6 +65,22 @@
           {{ totalFee | formatMoney }}
         </span>
       </li>
+      <li>
+        <span>
+          {{ "withdrawal-details.all-tasks" | globalize }}
+        </span>
+        <span>
+          {{ request.allTasks }}
+        </span>
+      </li>
+      <li>
+        <span>
+          {{ "withdrawal-details.pending-tasks" | globalize }}
+        </span>
+        <span>
+          {{ request.pendingTasks }}
+        </span>
+      </li>
     </ul>
     <div class="withdrawal-details__action-btns" v-if="reviewAllowed">
       <button

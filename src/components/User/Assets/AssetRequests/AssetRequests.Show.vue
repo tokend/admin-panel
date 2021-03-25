@@ -120,6 +120,15 @@
         </span>
       </div>
 
+      <div class="asset-requests-show__row">
+        <span class="asset-requests-show__key">
+          {{ "asset-requests-show.external-system-type" | globalize }}
+        </span>
+        <span class="asset-requests-show__value">
+          {{ assetRequest.externalSystemType }}
+        </span>
+      </div>
+
       <div
         class="asset-requests-show__row"
         v-if="assetRequest.type !== ASSET_REQUEST_TYPES.updateAsset"
