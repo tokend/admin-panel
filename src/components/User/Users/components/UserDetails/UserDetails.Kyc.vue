@@ -29,6 +29,12 @@
         </span>
       </li>
       <li>
+        <span>{{ "user-details-kyc.age" | globalize }}</span>
+        <span :title="kyc.age">
+          {{ kyc.age }}
+        </span>
+      </li>
+      <li>
         <span>{{ "user-details-kyc.address-line1" | globalize }}</span>
         <span :title="kyc.address.line1">
           {{ kyc.address.line1 }}

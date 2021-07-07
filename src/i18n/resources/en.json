@@ -1802,6 +1802,7 @@
       "first-name": "First name",
       "last-name": "Last name",
       "date-birth": "Date of birth",
+      "age": "Age",
       "address-line1": "Address Line 1",
       "address-line2": "Address Line 2",
       "postal-code": "Postal code",
