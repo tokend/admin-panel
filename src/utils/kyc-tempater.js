@@ -18,6 +18,7 @@ export function fromKycTemplate (template) {
     first_name: template.first_name,
     last_name: template.last_name,
     date_of_birth: template.date_of_birth,
+    age: template.age,
     address: {
       line_1: get(template, 'address.line_1'),
       line_2: get(template, 'address.line_2'),
