@@ -1003,7 +1003,8 @@
       "link-trades": "Trades",
       "link-fees": "Fees",
       "link-key-value": "Key Value",
-      "link-settings": "Settings"
+      "link-settings": "Settings",
+      "link-roles-and-rules": "Roles and rules"
     },
     "collected-fees-list": {
       "header": "Balances",
@@ -1893,6 +1894,35 @@
     },
     "users": {
       "link-user-index": "User index"
+    },
+    "roles-and-rules": {
+      "link-roles-and-rules": "Roles and rules"
+    },
+    "roles-and-rules-index": {
+      "header": "Manage roles and rules"
+    },
+    "roles-and-rules-manager": {
+      "action-title": "action",
+      "id-title": "id",
+      "resource-title": "resource",
+      "table-title": "Rules",
+      "btn-remove": "Remove",
+      "btn-submit": "Submit",
+      "btn-cancel": "Cancel",
+      "addition-successfully": "Addition successfully",
+      "remove-successfully" : "Remove successfully",
+      "id-has-ready-exist": "This rule has ready exist",
+      "id-does-not-exist": "This rule does not exist",
+      "remove-message": "Are you sure?",
+      "rules-details": "Rules details"
+    },
+    "roles-and-rules-form": {
+      "lbl-id-input-field": "id",
+      "placeholder-new-id": "Enter new id",
+      "confirm-message": "Are you sure you want to add a new rule?",
+      "btn-confirm": "Confirm",
+      "btn-cancel": "Cancel",
+      "btn-add": "Add"
     },
     "asset-pair-policies": {
       "tradable-secondary-market": "Tradable on secondary market"

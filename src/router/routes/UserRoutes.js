@@ -420,6 +420,24 @@ export const UserRoutes = {
     },
 
     {
+      path: '/roles-and-rules',
+      name: 'rolesAndRules',
+      redirect: { name: 'rolesAndRules.index' },
+      component: function (resolve) {
+        require(['../../components/User/RolesAndRules/RolesAndRules.vue'], resolve)
+      },
+      children: [
+        {
+          path: '',
+          name: 'rolesAndRules.index',
+          component: function (resolve) {
+            require(['../../components/User/RolesAndRules/RolesAndRules.index.vue'], resolve)
+          },
+        },
+      ],
+    },
+
+    {
       path: '/fees',
       name: 'fees',
       redirect: { name: 'fees.index' },

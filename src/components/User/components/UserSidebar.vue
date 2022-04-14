@@ -90,6 +90,13 @@
           <span>{{ "user-sidebar.link-key-value" | globalize }}</span>
         </router-link>
       </li>
+
+      <li class="user-sidebar__nav-li">
+        <router-link :to="{ name: 'rolesAndRules' }">
+          <i class="mdi mdi-clipboard-text user-sidebar__icon" />
+          <span>{{ "user-sidebar.link-roles-and-rules" | globalize }}</span>
+        </router-link>
+      </li>
     </nav>
 
     <nav class="user-sidebar__nav">
