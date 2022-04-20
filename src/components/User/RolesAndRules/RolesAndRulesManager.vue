@@ -3,18 +3,18 @@
     <div class="app-list-filters">
       <select-field
         class="roles-and-rules-manager__select"
-        v-model="selectedRoleName"
+        v-model="selectedRoleId"
       >
         <option
-          v-for="(name, index) in rolesNameList"
+          v-for="(name, index) in rolesIdList"
           :key="index"
           :value="name">
-          {{ name }}
+          {{ name | roleIdToString }}
         </option>
       </select-field>
     </div>
     <roles-and-rules-form
-      :is-button-disabled="isButtonsDisabled"
+      :rules="selectedRole.rules"
       @submited="addRule"
     />
     <h2 class="roles-and-rules-manager__table-title">
@@ -40,11 +40,11 @@
     <ul class="roles-and-rules-manager__ul">
       <li
         class="roles-and-rules-manager__li"
-        v-for="(item, index) in selectedRole.relationships.rules.data"
+        v-for="item in selectedRole.rules"
         :key="item.id">
         <button
           class="roles-and-rules-manager__li-content"
-          @click="itemToShow = includesToShow[index]"
+          @click="itemToShow = item"
         >
           <span
             class="roles-and-rules-manager__li-column
@@ -55,21 +55,20 @@
           <span
             class="roles-and-rules-manager__li-column
             roles-and-rules-manager__li-resource">
-            {{ includesToShow[index].attributes.resource.type.name }}
+            {{ item.resource.type.name }}
           </span>
           <span
             class="roles-and-rules-manager__li-column
             roles-and-rules-manager__li-action">
-            {{ includesToShow[index].attributes.action.name }}
+            {{ item.action.name }}
           </span>
           <div class="roles-and-rules-manager__li-btn-wrp">
             <button
-              v-if="item.id != ADMIN_RULE_ID"
               class="app__btn
               app__btn--danger roles-and-rules-manager__remove-btn"
               :disabled="isButtonsDisabled"
-              @click.prevent="showModal(item.id)">
-              {{ "roles-and-rules-manager.btn-remove" | globalize }}
+              @click.stop="showModal(item.id)">
+              {{ 'roles-and-rules-manager.btn-remove' | globalize }}
             </button>
           </div>
         </button>
@@ -80,20 +79,20 @@
       max-width="40rem"
     >
       <p class="roles-and-rules-manager__modal-message">
-        {{ "roles-and-rules-manager.remove-message" | globalize }}
+        {{ 'roles-and-rules-manager.remove-message' | globalize }}
       </p>
       <div class="roles-and-rules-manager__modal-btn-wrapper">
         <button
           class="app__btn roles-and-rules-manager__modal-btn"
           @click="deleteRule(idToRemove)"
         >
-          {{ "roles-and-rules-manager.btn-submit" | globalize }}
+          {{ 'roles-and-rules-manager.btn-submit' | globalize }}
         </button>
         <button
           class="app__btn-secondary roles-and-rules-manager__modal-btn"
           @click="hideModal"
         >
-          {{ "roles-and-rules-manager.btn-cancel" | globalize }}
+          {{ 'roles-and-rules-manager.btn-cancel' | globalize }}
         </button>
       </div>
     </modal>
@@ -103,7 +102,7 @@
       max-width="64rem"
     >
       <h2>
-        {{ "roles-and-rules-manager.rules-details" | globalize }}
+        {{ 'roles-and-rules-manager.rules-details' | globalize }}
       </h2>
       <details-reader
         :details="itemToShow"
@@ -123,11 +122,11 @@ import { Bus } from '@/utils/bus'
 import Modal from '@comcom/modals/Modal'
 import RolesAndRulesForm from './RolesAndRulesForm.vue'
 import DetailsReader from '@comcom/details/DetailsReader'
+import { mapGetters, mapActions } from 'vuex'
+import { KeyValueRecord } from '@/js/records/keyValue.record'
 
-const ADMIN_RULE_ID = 1
-const KEY_VALUE_ROLE_ID = 'account_role:'
-const ADMIN_ROLE_NAME = 'admin'
-const INPUT_MAX_LENGTH = 10
+const KEY_VALUE_ROLE_PREFIX = 'account_role:'
+const ADMIN_ROLE_ID = '1'
 
 export default {
 
@@ -141,12 +140,10 @@ export default {
   data () {
     return {
       rolesList: [],
-      rolesNameList: [],
-      selectedRoleName: ADMIN_ROLE_NAME,
+      rolesIdList: [],
       keyValueList: [],
-      ADMIN_RULE_ID,
-      KEY_VALUE_ROLE_ID,
-      INPUT_MAX_LENGTH,
+      selectedRoleId: '',
+      KEY_VALUE_ROLE_PREFIX,
       isShowModal: false,
       idToRemove: 0,
       isButtonsDisabled: false,
@@ -155,58 +152,52 @@ export default {
   },
 
   computed: {
+    ...mapGetters([
+      'kvEntries',
+    ]),
     selectedRole () {
-      return this.rolesList.data.find(item => {
-        return item.id === String(this.rolesNameList.findIndex((item) =>
-          item === this.selectedRoleName) + 1)
+      return this.rolesList.find(item => {
+        return item.id === this.selectedRoleId
       })
-    },
-
-    includesToShow () {
-      const rulesId = this.selectedRole.relationships.rules.data
-        .map(e => { return e.id })
-      const includes = []
-      for (let i = 0; i < this.rolesList.included.length; i++) {
-        if (rulesId.indexOf(this.rolesList.included[i].id) !== -1) {
-          includes.push(this.rolesList.included[i])
-        }
-      }
-      return includes
     },
   },
 
   async created () {
     try {
       this.rolesList = await this.getRoles()
-      this.keyValueList = await this.getKeyValue()
-      this.rolesNameList = this.getRoleNames(this.keyValueList)
+      await this.loadKvEntries()
+      this.keyValueList = this.kvEntries.map(i => new KeyValueRecord(i))
+      this.rolesIdList = this.getRolesId(this.rolesList)
     } catch (error) {
       ErrorHandler.process(error)
     }
   },
   methods: {
+    ...mapActions({
+      loadKvEntries: 'LOAD_KV_ENTRIES',
+    }),
     async getRoles () {
-      const response = await api.getRaw(`/v3/account_roles?include=rules`)
+      const response = await api.get(`/v3/account_roles`, {
+        include: 'rules',
+        page: {
+          limit: 100,
+        },
+      })
       let data = await loadingDataViaLoop(response)
-      data.included.sort((a, b) => (+a.id > +b.id) ? 1 : -1)
-      return data
+      return data.filter(item => item.id !== ADMIN_ROLE_ID)
     },
-    async getKeyValue () {
-      const response = await api.get(`/v3/key_values`)
-      const data = await loadingDataViaLoop(response)
-      return data
-    },
-    getRoleNames (list) {
-      return [ADMIN_ROLE_NAME, ...list.filter(item =>
-        item.id.indexOf(this.KEY_VALUE_ROLE_ID) !== -1)
-        .sort((a, b) => (a.value.u32 > b.value.u32) ? 1 : -1)
-        .map(item => { return item.id.replace(KEY_VALUE_ROLE_ID, '') })]
+    getRolesId (list) {
+      const idList = list.map(item => { return item.id })
+        .filter(item => item !== ADMIN_ROLE_ID)
+      this.selectedRoleId = idList[0]
+      return idList
     },
     async updateRole () {
       try {
         const operation = base.ManageAccountRoleBuilder.update(
           new RoleRecord(this.selectedRole))
         await api.postOperations(operation)
+        this.rolesList = await this.getRoles()
       } catch (error) {
         ErrorHandler.process(error)
       }
@@ -224,42 +215,18 @@ export default {
     async deleteRule (id) {
       this.hideModal()
       this.isButtonsDisabled = true
-      const ruleToDelete = this.selectedRole.relationships.rules.data
-        .find(item => item.id === id)
-      const index = this.selectedRole.relationships.rules.data
-        .indexOf(ruleToDelete)
-      this.selectedRole.relationships.rules.data.splice(index, 1)
+      const ruleToDelete = this.selectedRole.rules.find(item => item.id === id)
+      const index = this.selectedRole.rules.indexOf(ruleToDelete)
+      this.selectedRole.rules.splice(index, 1)
       await this.updateRole()
       Bus.success('roles-and-rules-manager.remove-successfully')
       this.isButtonsDisabled = false
     },
     async addRule (inputId) {
-      this.isButtonsDisabled = true
-      const ruleToAdd = { id: inputId, type: 'account-rules' }
-      let idHasAlready = false
-      this.selectedRole.relationships.rules.data.forEach(item => {
-        if (item.id === inputId) {
-          idHasAlready = true
-        }
-      })
-      let doesNotExist = true
-      this.rolesList.included.forEach(item => {
-        if (item.id === ruleToAdd.id) {
-          doesNotExist = false
-        }
-      })
-      if (doesNotExist) {
-        Bus.error('roles-and-rules-manager.id-does-not-exist')
-      } else if (idHasAlready) {
-        Bus.error('roles-and-rules-manager.id-has-ready-exist')
-      } else {
-        this.selectedRole.relationships.rules.data.push(ruleToAdd)
-        this.selectedRole.relationships.rules.data
-          .sort((a, b) => (+a.id > +b.id) ? 1 : -1)
-        await this.updateRole()
-        Bus.success('roles-and-rules-manager.addition-successfully')
-      }
-      this.isButtonsDisabled = false
+      const ruleToAdd = { id: inputId }
+      this.selectedRole.rules.push(ruleToAdd)
+      await this.updateRole()
+      Bus.success('roles-and-rules-manager.addition-successfully')
     },
   },
 }

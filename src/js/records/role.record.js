@@ -4,7 +4,7 @@ export class RoleRecord {
   constructor (record) {
     this._record = record
     this.roleId = _get(record, 'id', '')
-    this.details = _get(record, 'attributes.details', '')
-    this.ruleIDs = record.relationships.rules.data.map(item => item.id)
+    this.details = _get(record, 'details', '')
+    this.ruleIDs = record.rules.map(item => item.id) || []
   }
 }

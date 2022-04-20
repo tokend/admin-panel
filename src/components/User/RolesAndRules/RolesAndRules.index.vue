@@ -1,6 +1,6 @@
 <template>
   <div class="roles-and-rules">
-    <h2>{{ "roles-and-rules-index.header" | globalize }}</h2>
+    <h2>{{ 'roles-and-rules-index.header' | globalize }}</h2>
 
     <div>
       <roles-and-rules-manager />

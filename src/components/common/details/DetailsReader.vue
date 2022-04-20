@@ -135,7 +135,7 @@ export default {
 
   created () {
     if (!this.isOmitted) {
-      this.omittedFields.length = 0
+      this.omittedFields = []
     }
   },
 

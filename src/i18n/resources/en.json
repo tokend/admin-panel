@@ -563,7 +563,10 @@
       "valid-account-id": "This field should be a valid account ID",
       "field-cannot-take-value": "This field cannot take {{value}} as a value",
       "decimal-value": "This field should be a valid decimal value",
-      "hex-value": "This field should be a valid hex value"
+      "hex-value": "This field should be a valid hex value",
+      "is-admin": "You can't add an admin rule",
+      "id-is-already-added": "This id is already added",
+      "id-does-not-exist": "This id does not exist"
     },
     "idle-logout": {
       "header": "Session Timeout Warning",
@@ -1911,8 +1914,6 @@
       "btn-cancel": "Cancel",
       "addition-successfully": "Addition successfully",
       "remove-successfully" : "Remove successfully",
-      "id-has-ready-exist": "This rule has ready exist",
-      "id-does-not-exist": "This rule does not exist",
       "remove-message": "Are you sure?",
       "rules-details": "Rules details"
     },
