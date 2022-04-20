@@ -315,7 +315,7 @@ export default {
 }
 
 .roles-and-rules-manager__li-btn-wrp{
-    width: 18%;
+  width: 18%;
 }
 
 .roles-and-rules-manager__remove-btn {
@@ -325,7 +325,7 @@ export default {
 }
 
 .roles-and-rules-manager__modal-message {
-  font-size: 22px;
+  font-size: 2.5rem;
   text-align: center;
   margin-bottom: 5rem;
 }
