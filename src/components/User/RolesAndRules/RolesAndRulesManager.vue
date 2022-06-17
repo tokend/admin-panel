@@ -1,79 +1,88 @@
 <template>
   <div class="roles-and-rules-manager">
-    <div class="app-list-filters">
-      <select-field
-        class="roles-and-rules-manager__select"
-        v-model="selectedRoleId"
-      >
-        <option
-          v-for="(name, index) in rolesIdList"
-          :key="index"
-          :value="name">
-          {{ name | roleIdToString }}
-        </option>
-      </select-field>
-    </div>
-    <roles-and-rules-form
-      :rules="selectedRole.rules"
-      @submited="addRule"
-    />
-    <h2 class="roles-and-rules-manager__table-title">
-      {{ 'roles-and-rules-manager.table-title' | globalize }}
-    </h2>
-    <div class="roles-and-rules-manager__table-header">
-      <span
-        class="roles-and-rules-manager__li-title
-          secondary roles-and-rules-manager__li-title-id">
-        {{ 'roles-and-rules-manager.id-title' | globalize }}
-      </span>
-      <span
-        class="roles-and-rules-manager__li-title
-          secondary roles-and-rules-manager__li-title-resource">
-        {{ 'roles-and-rules-manager.resource-title' | globalize }}
-      </span>
-      <span
-        class="roles-and-rules-manager__li-title
-          secondary roles-and-rules-manager__li-title-action">
-        {{ 'roles-and-rules-manager.action-title' | globalize }}
-      </span>
-    </div>
-    <ul class="roles-and-rules-manager__ul">
-      <li
-        class="roles-and-rules-manager__li"
-        v-for="item in selectedRole.rules"
-        :key="item.id">
-        <button
-          class="roles-and-rules-manager__li-content"
-          @click="itemToShow = item"
-        >
-          <span
-            class="roles-and-rules-manager__li-column
-            roles-and-rules-manager__li-id"
+    <template v-if="isLoaded">
+      <template v-if="isLoadFailed">
+        <p>
+          {{ 'roles-and-rules-manager.loading-error-msg' | globalize }}
+        </p>
+      </template>
+      <template v-else>
+        <div class="app-list-filters">
+          <select-field
+            class="roles-and-rules-manager__select"
+            v-model="selectedRoleId"
           >
-            {{ item.id }}
+            <option
+              v-for="item in filteredRolesList"
+              :key="item.id"
+              :value="item.id">
+              {{ item.id | roleIdToString }}
+            </option>
+          </select-field>
+        </div>
+        <roles-and-rules-form
+          :selected-role="selectedRole"
+          @submited="getRoles()"
+        />
+        <h2 class="roles-and-rules-manager__table-title">
+          {{ 'roles-and-rules-manager.table-title' | globalize }}
+        </h2>
+        <div class="roles-and-rules-manager__table-header">
+          <span
+            class="roles-and-rules-manager__li-title
+              secondary roles-and-rules-manager__li-title-id">
+            {{ 'roles-and-rules-manager.id-title' | globalize }}
           </span>
           <span
-            class="roles-and-rules-manager__li-column
-            roles-and-rules-manager__li-resource">
-            {{ item.resource.type.name }}
+            class="roles-and-rules-manager__li-title
+              secondary roles-and-rules-manager__li-title-resource">
+            {{ 'roles-and-rules-manager.resource-title' | globalize }}
           </span>
           <span
-            class="roles-and-rules-manager__li-column
-            roles-and-rules-manager__li-action">
-            {{ item.action.name }}
+            class="roles-and-rules-manager__li-title
+              secondary roles-and-rules-manager__li-title-action">
+            {{ 'roles-and-rules-manager.action-title' | globalize }}
           </span>
-          <div class="roles-and-rules-manager__li-btn-wrp">
+        </div>
+        <ul class="roles-and-rules-manager__ul">
+          <li
+            class="roles-and-rules-manager__li"
+            v-for="item in selectedRole.rules"
+            :key="item.id">
             <button
-              class="app__btn
-              app__btn--danger roles-and-rules-manager__remove-btn"
-              :disabled="isButtonsDisabled"
-              @click.stop="showModal(item.id)">
-              {{ 'roles-and-rules-manager.btn-remove' | globalize }}
+              class="roles-and-rules-manager__li-content"
+              @click="itemToShow = item"
+            >
+              <span
+                class="roles-and-rules-manager__li-column
+                roles-and-rules-manager__li-id"
+              >
+                {{ item.id }}
+              </span>
+              <span
+                class="roles-and-rules-manager__li-column
+              roles-and-rules-manager__li-resource">
+                {{ item.resource.type.name }}
+              </span>
+              <span
+                class="roles-and-rules-manager__li-column
+                roles-and-rules-manager__li-action">
+                {{ item.action.name }}
+              </span>
+              <div class="roles-and-rules-manager__li-btn-wrp">
+                <button
+                  class="app__btn
+                  app__btn--danger roles-and-rules-manager__remove-btn"
+                  :disabled="isButtonsDisabled"
+                  @click.stop="showModal(item.id)">
+                  {{ 'roles-and-rules-manager.btn-remove' | globalize }}
+                </button>
+              </div>
             </button>
-          </div>
-        </button>
-      </li>
-    </ul>
+          </li>
+        </ul>
+      </template>
+    </template>
     <modal
       v-if="isShowModal"
       max-width="40rem"
@@ -113,19 +122,16 @@
 </template>
 
 <script>
-import { api, loadingDataViaLoop } from '@/api'
-import { SelectField } from '@comcom/fields'
-import { base } from '@tokend/js-sdk'
-import { ErrorHandler } from '@/utils/ErrorHandler'
-import { RoleRecord } from '@/js/records/role.record'
-import { Bus } from '@/utils/bus'
 import Modal from '@comcom/modals/Modal'
 import RolesAndRulesForm from './RolesAndRulesForm.vue'
 import DetailsReader from '@comcom/details/DetailsReader'
-import { mapGetters, mapActions } from 'vuex'
-import { KeyValueRecord } from '@/js/records/keyValue.record'
+import apiHelper from '@/apiHelper'
 
-const KEY_VALUE_ROLE_PREFIX = 'account_role:'
+import { api, loadingDataViaLoop } from '@/api'
+import { SelectField } from '@comcom/fields'
+import { ErrorHandler } from '@/utils/ErrorHandler'
+import { Bus } from '@/utils/bus'
+
 const ADMIN_ROLE_ID = '1'
 
 export default {
@@ -140,75 +146,61 @@ export default {
   data () {
     return {
       rolesList: [],
-      rolesIdList: [],
-      keyValueList: [],
       selectedRoleId: '',
-      KEY_VALUE_ROLE_PREFIX,
       isShowModal: false,
-      idToRemove: 0,
+      idToRemove: '',
       isButtonsDisabled: false,
       itemToShow: null,
+      isLoaded: false,
+      isLoadFailed: false,
     }
   },
 
   computed: {
-    ...mapGetters([
-      'kvEntries',
-    ]),
     selectedRole () {
-      return this.rolesList.find(item => {
+      return this.filteredRolesList.find(item => {
         return item.id === this.selectedRoleId
       })
+    },
+    filteredRolesList () {
+      return this.rolesList.filter(item => item.id !== ADMIN_ROLE_ID)
     },
   },
 
   async created () {
     try {
-      this.rolesList = await this.getRoles()
-      await this.loadKvEntries()
-      this.keyValueList = this.kvEntries.map(i => new KeyValueRecord(i))
-      this.rolesIdList = this.getRolesId(this.rolesList)
+      await this.getRoles()
+      this.selectedRoleId = this.filteredRolesList[0].id
     } catch (error) {
       ErrorHandler.process(error)
     }
   },
   methods: {
-    ...mapActions({
-      loadKvEntries: 'LOAD_KV_ENTRIES',
-    }),
     async getRoles () {
-      const response = await api.get(`/v3/account_roles`, {
-        include: 'rules',
-        page: {
-          limit: 100,
-        },
-      })
-      let data = await loadingDataViaLoop(response)
-      return data.filter(item => item.id !== ADMIN_ROLE_ID)
-    },
-    getRolesId (list) {
-      const idList = list.map(item => { return item.id })
-        .filter(item => item !== ADMIN_ROLE_ID)
-      this.selectedRoleId = idList[0]
-      return idList
-    },
-    async updateRole () {
+      this.isLoaded = false
+      this.isLoadFailed = false
       try {
-        const operation = base.ManageAccountRoleBuilder.update(
-          new RoleRecord(this.selectedRole))
-        await api.postOperations(operation)
-        this.rolesList = await this.getRoles()
+        const response = await api.get(`/v3/account_roles`, {
+          include: 'rules',
+          page: {
+            limit: 100,
+          },
+        })
+        this.rolesList = await loadingDataViaLoop(response)
       } catch (error) {
         ErrorHandler.process(error)
+        this.isLoadFailed = true
       }
+      this.isLoaded = true
     },
+
     showModal (id) {
       this.idToRemove = id
       this.isShowModal = true
     },
 
     hideModal () {
-      this.idToRemove = 0
+      this.idToRemove = ''
       this.isShowModal = false
     },
 
@@ -218,15 +210,14 @@ export default {
       const ruleToDelete = this.selectedRole.rules.find(item => item.id === id)
       const index = this.selectedRole.rules.indexOf(ruleToDelete)
       this.selectedRole.rules.splice(index, 1)
-      await this.updateRole()
-      Bus.success('roles-and-rules-manager.remove-successfully')
+      try {
+        await apiHelper.requests.updateRole(this.selectedRole)
+        await this.getRoles()
+        Bus.success('roles-and-rules-manager.remove-successfully')
+      } catch (error) {
+        ErrorHandler.process(error)
+      }
       this.isButtonsDisabled = false
-    },
-    async addRule (inputId) {
-      const ruleToAdd = { id: inputId }
-      this.selectedRole.rules.push(ruleToAdd)
-      await this.updateRole()
-      Bus.success('roles-and-rules-manager.addition-successfully')
     },
   },
 }

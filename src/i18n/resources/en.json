@@ -1912,10 +1912,10 @@
       "btn-remove": "Remove",
       "btn-submit": "Submit",
       "btn-cancel": "Cancel",
-      "addition-successfully": "Addition successfully",
       "remove-successfully" : "Remove successfully",
       "remove-message": "Are you sure?",
-      "rules-details": "Rules details"
+      "rules-details": "Rules details",
+      "loading-error-msg": "There was an error while loading."
     },
     "roles-and-rules-form": {
       "lbl-id-input-field": "id",
@@ -1923,7 +1923,10 @@
       "confirm-message": "Are you sure you want to add a new rule?",
       "btn-confirm": "Confirm",
       "btn-cancel": "Cancel",
-      "btn-add": "Add"
+      "btn-add": "Add",
+      "addition-successfully": "Addition successfully",
+      "loading-error-msg": "There was an error while loading."
+
     },
     "asset-pair-policies": {
       "tradable-secondary-market": "Tradable on secondary market"

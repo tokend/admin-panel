@@ -1,7 +1,7 @@
 <template>
   <div class="roles-and-rules">
     <user-header>
-      <router-link :to="{ name: 'rolesAndRules.index' }" slot="nav">
+      <router-link :to="vueRoutes.rolesAndRulesIndex" slot="nav">
         {{ 'roles-and-rules.link-roles-and-rules' | globalize }}
       </router-link>
     </user-header>
@@ -13,8 +13,14 @@
 
 <script>
 import UserHeader from '@/components/User/components/UserHeader'
+import { vueRoutes } from '@/router/router'
 
 export default {
   components: { UserHeader },
+  data () {
+    return {
+      vueRoutes,
+    }
+  },
 }
 </script>

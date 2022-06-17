@@ -1,6 +1,7 @@
 // TODO refactor, extract require
 
 import { authorizedGuard } from '../helpers/navigationGuards'
+import { vueRoutes } from '../router'
 
 // Each of these routes are loaded asynchronously,
 // when a user first navigates to each corresponding endpoint.
@@ -421,15 +422,15 @@ export const UserRoutes = {
 
     {
       path: '/roles-and-rules',
-      name: 'rolesAndRules',
-      redirect: { name: 'rolesAndRules.index' },
+      name: vueRoutes.rolesAndRules.name,
       component: function (resolve) {
         require(['../../components/User/RolesAndRules/RolesAndRules.vue'], resolve)
       },
+      redirect: vueRoutes.rolesAndRulesIndex,
       children: [
         {
           path: '',
-          name: 'rolesAndRules.index',
+          name: vueRoutes.rolesAndRulesIndex.name,
           component: function (resolve) {
             require(['../../components/User/RolesAndRules/RolesAndRules.index.vue'], resolve)
           },

@@ -1,20 +1,31 @@
 <template>
   <form
+    v-if="isLoaded"
     class="roles-and-rules-form"
-    @submit.prevent="isFormValid() && showConfirmation()"
+    @submit.prevent="showConfirmation()"
     novalidate
   >
-    <div class="roles-and-rules-form__content">
+    <template
+      v-if="isLoadFailed"
+    >
+      <p class="roles-and-rules-form__content">
+        {{ 'roles-and-rules-form.loading-error-msg' | globalize }}
+      </p>
+    </template>
+    <div
+      v-else
+      class="roles-and-rules-form__content"
+    >
       <input-field
         type="number"
-        v-model="inputId"
+        v-model="idToAdd"
         class="roles-and-rules-form__input"
         :label="'roles-and-rules-form.lbl-id-input-field' | globalize"
         :placeholder="
           'roles-and-rules-form.placeholder-new-id' | globalize"
-        @blur="touchField('inputId')"
+        @blur="touchField('idToAdd')"
         :error-message="getFieldErrorMessage(
-          'inputId',
+          'idToAdd',
           { minValue: 0 }
         )"
         :disabled="formMixin.isDisabled"
@@ -22,17 +33,17 @@
       <form-confirmation
         v-if="formMixin.isConfirmationShown"
         :is-pending="isPending"
+        :message="'roles-and-rules-form.confirm-message' | globalize"
         @ok="submit"
         @cancel="hideConfirmation"
-        :message="'roles-and-rules-form.confirm-message' | globalize"
-        :ok-button-text="'roles-and-rules-form.btn-confirm' | globalize"
-        :cancel-button-text="'roles-and-rules-form.btn-cancel' | globalize"
+        :ok-button-text="'key-value-form.btn-confirm' | globalize"
+        :cancel-button-text="'key-value-form.btn-cancel' | globalize"
       />
       <button
         v-else
         class="app__btn roles-and-rules-form__add-btn"
-        :disabled="!isFormValid() || formMixin.isDisabled"
-        @click.stop="showConfirmation"
+        :disabled="formMixin.isDisabled"
+        @click="showConfirmation"
       >
         {{ 'roles-and-rules-form.btn-add' | globalize }}
       </button>
@@ -42,9 +53,12 @@
 
 <script>
 import { InputField } from '@comcom/fields'
-import FormMixin from '@/mixins/form.mixin'
-import { minValue, required, Admin, ruleAlreadyAdded, ruleDoesNotExist } from '@/validators'
+import { minValue, required, isAdminRule, ruleAlreadyAdded, ruleDoesNotExist } from '@/validators'
 import { api, loadingDataViaLoop } from '@/api'
+import { ErrorHandler } from '@/utils/ErrorHandler'
+import FormMixin from '@/mixins/form.mixin'
+import apiHelper from '@/apiHelper'
+import { Bus } from '@/utils/bus'
 
 const EVENTS = {
   submited: 'submited',
@@ -58,39 +72,45 @@ export default {
   mixins: [FormMixin],
 
   props: {
-    rules: {
-      type: Array,
-      default: () => [],
+    selectedRole: {
+      type: Object,
+      default: () => {},
     },
   },
 
   data () {
     return {
-      inputId: '',
+      idToAdd: '',
       isPending: false,
-      allRulesId: [],
+      allRules: [],
+      isLoaded: false,
+      isLoadFailed: false,
+      EVENTS,
     }
   },
 
   computed: {
     rulesId () {
-      const data = this.rules.map(item => {
+      const data = this.selectedRole.rules.map(item => {
         return item.id
       })
       return data
     },
+    allRulesId () {
+      return this.allRules.map(item => { return item.id })
+    },
   },
   async created () {
-    const allRules = await this.getRules()
-    this.allRulesId = allRules.map(item => { return item.id })
+    await this.getRules()
+    this.allRulesId = this.allRules.map(item => { return item.id })
   },
 
   validations () {
     return {
-      inputId: {
+      idToAdd: {
         required,
         minValue: minValue(0),
-        Admin,
+        isAdminRule,
         idIsAlreadyAdded: ruleAlreadyAdded(this.rulesId),
         idDoesNotExist: ruleDoesNotExist(this.allRulesId),
       },
@@ -98,22 +118,32 @@ export default {
   },
   methods: {
     async getRules () {
-      const response = await api.get(`/v3/account_rules`, {
-        page: {
-          limit: 100,
-        },
-      })
-      const data = await loadingDataViaLoop(response)
-      return data
+      try {
+        const response = await api.get(`/v3/account_rules`, {
+          page: {
+            limit: 100,
+          },
+        })
+        this.allRules = await loadingDataViaLoop(response)
+      } catch (error) {
+        ErrorHandler.process(error)
+        this.isLoadFailed = true
+      }
+      this.isLoaded = true
     },
-    submit () {
+    async submit () {
       if (!this.isFormValid()) return
       this.isPending = true
-      this.$emit(EVENTS.submited, this.inputId)
+      const ruleToAdd = { id: this.idToAdd }
+      this.selectedRole.rules.push(ruleToAdd)
+      await apiHelper.requests.updateRole(this.selectedRole)
+      this.$emit(EVENTS.submited)
+      Bus.success('roles-and-rules-form.addition-successfully')
       this.isPending = false
       this.hideConfirmation()
     },
   },
+
 }
 </script>
 

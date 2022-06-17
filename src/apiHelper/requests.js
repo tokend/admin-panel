@@ -10,6 +10,8 @@ import { IssuanceCreateRequest } from './responseHandlers/requests/IssuanceCreat
 import _get from 'lodash/get'
 import { api } from '@/api'
 import { globalize } from '@/components/App/filters/filters'
+import { RoleRecord } from '@/js/records/role.record'
+
 export const requests = {
   _review ({ action, reason = '' }, ...requests) {
     const operations = requests.map(function (item) {
@@ -217,7 +219,11 @@ export const requests = {
     response.records = mapRequests(response.data)
     return response
   },
-
+  async updateRole (role) {
+    const operation = base.ManageAccountRoleBuilder.update(
+      new RoleRecord(role))
+    await api.postOperations(operation)
+  },
   mapRequests,
 }
 

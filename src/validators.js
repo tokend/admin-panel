@@ -16,7 +16,7 @@ export const emailOrAccountIdOrBalanceId = value => {
   return validators.email(value) || accountId(value) || balanceId(value)
 }
 
-export const Admin = (value) => value !== ADMIN_RULE_ID
+export const isAdminRule = (value) => value !== ADMIN_RULE_ID
 
 export const ruleAlreadyAdded = (rulesID) =>
   (value) => rulesID.indexOf(value) === -1
