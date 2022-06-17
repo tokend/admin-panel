@@ -43,7 +43,6 @@
         v-else
         class="app__btn roles-and-rules-form__add-btn"
         :disabled="formMixin.isDisabled"
-        @click="showConfirmation"
       >
         {{ 'roles-and-rules-form.btn-add' | globalize }}
       </button>
@@ -52,12 +51,13 @@
 </template>
 
 <script>
+import FormMixin from '@/mixins/form.mixin'
+import apiHelper from '@/apiHelper'
+
 import { InputField } from '@comcom/fields'
 import { minValue, required, isAdminRule, ruleAlreadyAdded, ruleDoesNotExist } from '@/validators'
 import { api, loadingDataViaLoop } from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
-import FormMixin from '@/mixins/form.mixin'
-import apiHelper from '@/apiHelper'
 import { Bus } from '@/utils/bus'
 
 const EVENTS = {
@@ -65,6 +65,8 @@ const EVENTS = {
 }
 
 export default {
+  name: 'roles-and-rules-form',
+
   comments: {
     InputField,
   },
@@ -143,7 +145,6 @@ export default {
       this.hideConfirmation()
     },
   },
-
 }
 </script>
 

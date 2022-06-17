@@ -15,7 +15,8 @@
             <option
               v-for="item in filteredRolesList"
               :key="item.id"
-              :value="item.id">
+              :value="item.id"
+            >
               {{ item.id | roleIdToString }}
             </option>
           </select-field>
@@ -29,18 +30,27 @@
         </h2>
         <div class="roles-and-rules-manager__table-header">
           <span
-            class="roles-and-rules-manager__li-title
-              secondary roles-and-rules-manager__li-title-id">
+            class="
+              roles-and-rules-manager__li-title
+              secondary roles-and-rules-manager__li-title-id
+            "
+          >
             {{ 'roles-and-rules-manager.id-title' | globalize }}
           </span>
           <span
-            class="roles-and-rules-manager__li-title
-              secondary roles-and-rules-manager__li-title-resource">
+            class="
+              roles-and-rules-manager__li-title
+              secondary roles-and-rules-manager__li-title-resource
+            "
+          >
             {{ 'roles-and-rules-manager.resource-title' | globalize }}
           </span>
           <span
-            class="roles-and-rules-manager__li-title
-              secondary roles-and-rules-manager__li-title-action">
+            class="
+              roles-and-rules-manager__li-title
+              secondary roles-and-rules-manager__li-title-action
+            "
+          >
             {{ 'roles-and-rules-manager.action-title' | globalize }}
           </span>
         </div>
@@ -48,7 +58,8 @@
           <li
             class="roles-and-rules-manager__li"
             v-for="item in selectedRole.rules"
-            :key="item.id">
+            :key="item.id"
+          >
             <button
               class="roles-and-rules-manager__li-content"
               @click="itemToShow = item"
@@ -60,13 +71,19 @@
                 {{ item.id }}
               </span>
               <span
-                class="roles-and-rules-manager__li-column
-              roles-and-rules-manager__li-resource">
+                class="
+                  roles-and-rules-manager__li-column
+                  roles-and-rules-manager__li-resource
+                "
+              >
                 {{ item.resource.type.name }}
               </span>
               <span
-                class="roles-and-rules-manager__li-column
-                roles-and-rules-manager__li-action">
+                class="
+                  roles-and-rules-manager__li-column
+                  roles-and-rules-manager__li-action
+                "
+              >
                 {{ item.action.name }}
               </span>
               <div class="roles-and-rules-manager__li-btn-wrp">
@@ -74,7 +91,8 @@
                   class="app__btn
                   app__btn--danger roles-and-rules-manager__remove-btn"
                   :disabled="isButtonsDisabled"
-                  @click.stop="showModal(item.id)">
+                  @click.stop="showModal(item.id)"
+                >
                   {{ 'roles-and-rules-manager.btn-remove' | globalize }}
                 </button>
               </div>
@@ -177,8 +195,6 @@ export default {
   },
   methods: {
     async getRoles () {
-      this.isLoaded = false
-      this.isLoadFailed = false
       try {
         const response = await api.get(`/v3/account_roles`, {
           include: 'rules',
