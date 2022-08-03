@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
+## [1.14.0-rc.1] - 2022-08-03
+#### Fixed
+- Modal `event.path` on Firefox
+
 ## [1.14.0-rc.0] - 2021-02-09
 #### Added
 - Ability to delete key-value
@@ -590,7 +594,8 @@ for further information about branching and tagging conventions.
 
 ## [1.3.0] - 2019-03-01
 
-[Unreleased]: https://github.com/tokend/admin-panel/compare/1.14.0-rc.0...HEAD
+[Unreleased]: https://github.com/tokend/admin-panel/compare/1.14.0-rc.1...HEAD
+[1.14.0-rc.1]: https://github.com/tokend/admin-panel/compare/1.14.0-rc.0...1.14.0-rc.1
 [1.14.0-rc.0]: https://github.com/tokend/admin-panel/compare/1.13.0...1.14.0-rc.0
 [1.13.0]: https://github.com/tokend/admin-panel/compare/1.13.0-rc.1...1.13.0
 [1.13.0-rc.1]: https://github.com/tokend/admin-panel/compare/1.13.0-rc.0...1.13.0-rc.1

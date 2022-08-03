@@ -28,8 +28,11 @@ export default {
     onClick (event) {
       let isContentClicked
       try {
-        isContentClicked = event.path
-          .map(item => item.className)
+        const path = event.path || (event.composedPath && event.composedPath())
+        isContentClicked = path
+          .map(item => {
+            return item.className
+          })
           .includes('modal__content')
       } catch (error) { // older browsers
         isContentClicked = event.target.className === 'modal__content'
