@@ -247,15 +247,17 @@ export default {
 
     async loadUsersIdentity (users) {
       this.isUsersIdentityLoad = false
+      let response = {}
       try {
         const { data } = await api.postWithSignature('/identities/mass-emails', {
           data: users,
         })
-        return data
+        response = data
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }
       this.isUsersIdentityLoad = true
+      return response
     },
   },
 }
