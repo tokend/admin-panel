@@ -1915,6 +1915,7 @@
       "remove-successfully" : "Remove successfully",
       "remove-message": "Are you sure?",
       "rules-details": "Rules details",
+      "loading": "Loading...",
       "loading-error-msg": "There was an error while loading."
     },
     "roles-and-rules-form": {
@@ -1926,7 +1927,6 @@
       "btn-add": "Add",
       "addition-successfully": "Addition successfully",
       "loading-error-msg": "There was an error while loading."
-
     },
     "asset-pair-policies": {
       "tradable-secondary-market": "Tradable on secondary market"

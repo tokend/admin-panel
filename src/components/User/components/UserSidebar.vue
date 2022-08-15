@@ -114,7 +114,7 @@
 <script>
 import AppFooter from '@/components/App/components/AppFooter'
 import config from '@/config'
-import { vueRoutes } from '@/router/router'
+import { vueRoutes } from '@/router/routes'
 
 export default {
   components: {

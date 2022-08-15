@@ -1,7 +1,7 @@
 // TODO refactor, extract require
 
 import { authorizedGuard } from '../helpers/navigationGuards'
-import { vueRoutes } from '../router'
+import { vueRoutes } from '../routes'
 
 // Each of these routes are loaded asynchronously,
 // when a user first navigates to each corresponding endpoint.

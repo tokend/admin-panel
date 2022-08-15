@@ -2,7 +2,7 @@
   <form
     v-if="isLoaded"
     class="roles-and-rules-form"
-    @submit.prevent="showConfirmation()"
+    @submit.prevent="showConfirmation"
     novalidate
   >
     <template
@@ -59,6 +59,7 @@ import { minValue, required, isAdminRule, ruleAlreadyAdded, ruleDoesNotExist } f
 import { api, loadingDataViaLoop } from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { Bus } from '@/utils/bus'
+import { RuleRecord } from '@/js/records/rule.record'
 
 const EVENTS = {
   submited: 'submited',
@@ -92,19 +93,18 @@ export default {
   },
 
   computed: {
-    rulesId () {
+    rulesIds () {
       const data = this.selectedRole.rules.map(item => {
         return item.id
       })
       return data
     },
-    allRulesId () {
-      return this.allRules.map(item => { return item.id })
+    allRulesIds () {
+      return this.allRules.map(item => { return item.ruleId })
     },
   },
   async created () {
     await this.getRules()
-    this.allRulesId = this.allRules.map(item => { return item.id })
   },
 
   validations () {
@@ -113,8 +113,8 @@ export default {
         required,
         minValue: minValue(0),
         isAdminRule,
-        idIsAlreadyAdded: ruleAlreadyAdded(this.rulesId),
-        idDoesNotExist: ruleDoesNotExist(this.allRulesId),
+        idIsAlreadyAdded: ruleAlreadyAdded(this.rulesIds),
+        idDoesNotExist: ruleDoesNotExist(this.allRulesIds),
       },
     }
   },
@@ -126,7 +126,8 @@ export default {
             limit: 100,
           },
         })
-        this.allRules = await loadingDataViaLoop(response)
+        const data = await loadingDataViaLoop(response)
+        this.allRules = data.map(item => new RuleRecord(item))
       } catch (error) {
         ErrorHandler.process(error)
         this.isLoadFailed = true

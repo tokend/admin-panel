@@ -13,7 +13,7 @@
 
 <script>
 import UserHeader from '@/components/User/components/UserHeader'
-import { vueRoutes } from '@/router/router'
+import { vueRoutes } from '@/router/routes'
 
 export default {
   components: { UserHeader },

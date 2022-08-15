@@ -90,7 +90,7 @@
                 <button
                   class="app__btn
                   app__btn--danger roles-and-rules-manager__remove-btn"
-                  :disabled="isButtonsDisabled"
+                  :disabled="isRemoveButtonsDisabled"
                   @click.stop="showModal(item.id)"
                 >
                   {{ 'roles-and-rules-manager.btn-remove' | globalize }}
@@ -101,6 +101,13 @@
         </ul>
       </template>
     </template>
+
+    <template v-else>
+      <p>
+        {{ "roles-and-rules-manager.loading" | globalize }}
+      </p>
+    </template>
+
     <modal
       v-if="isShowModal"
       max-width="40rem"
@@ -167,7 +174,7 @@ export default {
       selectedRoleId: '',
       isShowModal: false,
       idToRemove: '',
-      isButtonsDisabled: false,
+      isRemoveButtonsDisabled: false,
       itemToShow: null,
       isLoaded: false,
       isLoadFailed: false,
@@ -222,7 +229,7 @@ export default {
 
     async deleteRule (id) {
       this.hideModal()
-      this.isButtonsDisabled = true
+      this.isRemoveButtonsDisabled = true
       const ruleToDelete = this.selectedRole.rules.find(item => item.id === id)
       const index = this.selectedRole.rules.indexOf(ruleToDelete)
       this.selectedRole.rules.splice(index, 1)
@@ -233,7 +240,7 @@ export default {
       } catch (error) {
         ErrorHandler.process(error)
       }
-      this.isButtonsDisabled = false
+      this.isRemoveButtonsDisabled = false
     },
   },
 }
