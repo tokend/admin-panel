@@ -156,9 +156,7 @@ import { api, loadingDataViaLoop } from '@/api'
 import { SelectField } from '@comcom/fields'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { Bus } from '@/utils/bus'
-
-const ADMIN_ROLE_ID = '1'
-
+import { ADMIN_CONST } from '@/constants'
 export default {
 
   components: {
@@ -188,7 +186,7 @@ export default {
       })
     },
     filteredRolesList () {
-      return this.rolesList.filter(item => item.id !== ADMIN_ROLE_ID)
+      return this.rolesList.filter(item => +item.id !== ADMIN_CONST.ROLE_ID)
     },
   },
 

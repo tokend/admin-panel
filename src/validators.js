@@ -1,7 +1,6 @@
 import * as validators from 'vuelidate/lib/validators'
 import { base } from '@tokend/js-sdk'
-
-const ADMIN_RULE_ID = '1'
+import { ADMIN_CONST } from '@/constants'
 
 export const password = value => validators.minLength(8)(value)
 export const seed = value => base.Keypair.isValidSecretKey(value)
@@ -16,7 +15,7 @@ export const emailOrAccountIdOrBalanceId = value => {
   return validators.email(value) || accountId(value) || balanceId(value)
 }
 
-export const isAdminRule = (value) => value !== ADMIN_RULE_ID
+export const isAdminRule = (value) => +value !== ADMIN_CONST.RULE_ID
 
 export const ruleAlreadyAdded = (rulesID) =>
   (value) => rulesID.indexOf(value) === -1
