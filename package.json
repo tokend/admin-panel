@@ -22,7 +22,7 @@
     "@sentry/browser": "5.4.0",
     "@sentry/integrations": "5.4.1",
     "@tokend/js-sdk": "1.14.0-rc.25",
-    "axios": "0.21.1",
+    "axios": "0.21.2",
     "bignumber.js": "8.0.1",
     "camelcase-keys-deep": "0.1.0",
     "d3": "5.9.2",
