@@ -23,7 +23,7 @@
         </div>
         <roles-and-rules-form
           :selected-role="selectedRole"
-          @submited="getRoles()"
+          @submitted="getRoles()"
         />
         <h2 class="roles-and-rules-manager__table-title">
           {{ 'roles-and-rules-manager.table-title' | globalize }}
@@ -88,8 +88,10 @@
               </span>
               <div class="roles-and-rules-manager__li-btn-wrp">
                 <button
-                  class="app__btn
-                  app__btn--danger roles-and-rules-manager__remove-btn"
+                  class="
+                    app__btn
+                    app__btn--danger roles-and-rules-manager__remove-btn
+                  "
                   :disabled="isRemoveButtonsDisabled"
                   @click.stop="showModal(item.id)"
                 >
@@ -126,7 +128,7 @@
           class="app__btn-secondary roles-and-rules-manager__modal-btn"
           @click="hideModal"
         >
-          {{ 'roles-and-rules-manager.btn-cancel' | globalize }}
+          {{ 'roles-and-rules-manager.btn-ca:ncel' | globalize }}
         </button>
       </div>
     </modal>
@@ -157,6 +159,7 @@ import { SelectField } from '@comcom/fields'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { Bus } from '@/utils/bus'
 import { ADMIN_CONST } from '@/constants'
+import { RoleRecord } from '@/js/records/role.record'
 export default {
 
   components: {
@@ -208,6 +211,7 @@ export default {
           },
         })
         this.rolesList = await loadingDataViaLoop(response)
+        this.rolesList.map(item => new RoleRecord(item))
       } catch (error) {
         ErrorHandler.process(error)
         this.isLoadFailed = true

@@ -55,14 +55,14 @@ import FormMixin from '@/mixins/form.mixin'
 import apiHelper from '@/apiHelper'
 
 import { InputField } from '@comcom/fields'
-import { minValue, required, isAdminRule, ruleAlreadyAdded, ruleDoesNotExist } from '@/validators'
+import { minValue, required, isNotAdminRule, ruleNotAddedYet, ruleExists } from '@/validators'
 import { api, loadingDataViaLoop } from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { Bus } from '@/utils/bus'
 import { RuleRecord } from '@/js/records/rule.record'
 
 const EVENTS = {
-  submited: 'submited',
+  submitted: 'submitted',
 }
 
 export default {
@@ -112,9 +112,9 @@ export default {
       idToAdd: {
         required,
         minValue: minValue(0),
-        isAdminRule,
-        idIsAlreadyAdded: ruleAlreadyAdded(this.rulesIds),
-        idDoesNotExist: ruleDoesNotExist(this.allRulesIds),
+        isNotAdminRule,
+        idIsAlreadyAdded: ruleNotAddedYet(this.rulesIds),
+        idDoesNotExist: ruleExists(this.allRulesIds),
       },
     }
   },
@@ -140,7 +140,7 @@ export default {
       const ruleToAdd = { id: this.idToAdd }
       this.selectedRole.rules.push(ruleToAdd)
       await apiHelper.requests.updateRole(this.selectedRole)
-      this.$emit(EVENTS.submited)
+      this.$emit(EVENTS.submitted)
       Bus.success('roles-and-rules-form.addition-successfully')
       this.isPending = false
       this.hideConfirmation()

@@ -15,12 +15,12 @@ export const emailOrAccountIdOrBalanceId = value => {
   return validators.email(value) || accountId(value) || balanceId(value)
 }
 
-export const isAdminRule = (value) => +value !== ADMIN_CONST.RULE_ID
+export const isNotAdminRule = (value) => +value !== ADMIN_CONST.RULE_ID
 
-export const ruleAlreadyAdded = (rulesID) =>
+export const ruleNotAddedYet = (rulesID) =>
   (value) => rulesID.indexOf(value) === -1
 
-export const ruleDoesNotExist = (rulesID) =>
+export const ruleExists = (rulesID) =>
   (value) => rulesID.indexOf(value) !== -1
 
 export const noMoreThanAvailableForIssuance = available => value => {
