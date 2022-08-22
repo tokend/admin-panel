@@ -35,6 +35,9 @@ const VALIDATION_ERRORS = {
   not: _template('mixin.field-cannot-take-value'),
   decimal: _template('mixin.decimal-value'),
   hex: _template('mixin.hex-value'),
+  isNotAdminRule: _template('mixin.is-not-admin'),
+  idIsAlreadyAdded: _template('mixin.id-is-already-added'),
+  idDoesNotExist: _template('mixin.id-does-not-exist'),
 }
 
 export default {

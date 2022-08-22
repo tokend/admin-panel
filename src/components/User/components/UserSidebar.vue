@@ -90,6 +90,13 @@
           <span>{{ "user-sidebar.link-key-value" | globalize }}</span>
         </router-link>
       </li>
+
+      <li class="user-sidebar__nav-li">
+        <router-link :to="vueRoutes.rolesAndRules">
+          <i class="mdi mdi-clipboard-text user-sidebar__icon" />
+          <span>{{ "user-sidebar.link-roles-and-rules" | globalize }}</span>
+        </router-link>
+      </li>
     </nav>
 
     <nav class="user-sidebar__nav">
@@ -107,6 +114,7 @@
 <script>
 import AppFooter from '@/components/App/components/AppFooter'
 import config from '@/config'
+import { vueRoutes } from '@/router/routes'
 
 export default {
   components: {
@@ -115,6 +123,7 @@ export default {
   data () {
     return {
       config,
+      vueRoutes,
     }
   },
 }

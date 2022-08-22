@@ -23,6 +23,7 @@
                     <details-reader
                       class="details-reader__nested"
                       :details="item"
+                      :is-omitted="isOmitted"
                     />
                   </div>
                 </div>
@@ -50,7 +51,11 @@
 
           <div class="details-reader__row" :key="`${_uid}-${key}-nested`">
             <div class="details-reader__cell">
-              <details-reader class="details-reader__nested" :details="value" />
+              <details-reader
+                class="details-reader__nested"
+                :details="value"
+                :is-omitted="isOmitted"
+              />
             </div>
           </div>
         </template>
@@ -100,17 +105,16 @@ export default {
       required: true,
       default: () => ({}),
     },
+    isOmitted: {
+      type: Boolean,
+      default: true,
+    },
   },
 
   data () {
     return {
       dictionary: {},
-    }
-  },
-
-  computed: {
-    normalizedDetails () {
-      const omittedFields = [
+      omittedFields: [
         'relationshipNames',
         'type',
         'tx',
@@ -119,10 +123,20 @@ export default {
         'operation.id',
         'operation.appliedAt',
         'details.id',
-      ]
+      ],
+    }
+  },
 
-      return _omit(this.details, omittedFields)
+  computed: {
+    normalizedDetails () {
+      return _omit(this.details, this.omittedFields)
     },
+  },
+
+  created () {
+    if (!this.isOmitted) {
+      this.omittedFields = []
+    }
   },
 
   methods: {

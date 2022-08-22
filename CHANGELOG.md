@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
+## [Unreleased]
+#### Added
+- ability to add and remove rules in roles
+
 ## [1.14.0-rc.1] - 2022-08-03
 #### Fixed
 - Modal `event.path` on Firefox

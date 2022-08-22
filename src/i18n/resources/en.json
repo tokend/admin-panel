@@ -563,7 +563,10 @@
       "valid-account-id": "This field should be a valid account ID",
       "field-cannot-take-value": "This field cannot take {{value}} as a value",
       "decimal-value": "This field should be a valid decimal value",
-      "hex-value": "This field should be a valid hex value"
+      "hex-value": "This field should be a valid hex value",
+      "is-not-admin": "You can't add an admin rule",
+      "id-is-already-added": "This id is already added",
+      "id-does-not-exist": "This id does not exist"
     },
     "idle-logout": {
       "header": "Session Timeout Warning",
@@ -1003,7 +1006,8 @@
       "link-trades": "Trades",
       "link-fees": "Fees",
       "link-key-value": "Key Value",
-      "link-settings": "Settings"
+      "link-settings": "Settings",
+      "link-roles-and-rules": "Roles and rules"
     },
     "collected-fees-list": {
       "header": "Balances",
@@ -1893,6 +1897,36 @@
     },
     "users": {
       "link-user-index": "User index"
+    },
+    "roles-and-rules": {
+      "link-roles-and-rules": "Roles and rules"
+    },
+    "roles-and-rules-index": {
+      "header": "Manage roles and rules"
+    },
+    "roles-and-rules-manager": {
+      "action-title": "action",
+      "id-title": "id",
+      "resource-title": "resource",
+      "table-title": "Rules",
+      "btn-remove": "Remove",
+      "btn-submit": "Submit",
+      "btn-cancel": "Cancel",
+      "remove-successfully" : "Remove successfully",
+      "remove-message": "Are you sure?",
+      "rules-details": "Rules details",
+      "loading": "Loading...",
+      "loading-error-msg": "There was an error while loading."
+    },
+    "roles-and-rules-form": {
+      "lbl-id-input-field": "id",
+      "placeholder-new-id": "Enter new id",
+      "confirm-message": "Are you sure you want to add a new rule?",
+      "btn-confirm": "Confirm",
+      "btn-cancel": "Cancel",
+      "btn-add": "Add",
+      "addition-successfully": "Addition successfully",
+      "loading-error-msg": "There was an error while loading."
     },
     "asset-pair-policies": {
       "tradable-secondary-market": "Tradable on secondary market"
