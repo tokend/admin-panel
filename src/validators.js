@@ -17,7 +17,7 @@ export const emailOrAccountIdOrBalanceId = value => {
 
 export const isNotAdminRule = (value) => +value !== ADMIN_CONST.RULE_ID
 
-export const isRuleNotAddedYet = (rulesID) =>
+export const isRuleNotAdded = (rulesID) =>
   (value) => rulesID.indexOf(value) === -1
 
 export const isRuleExists = (rulesID) =>
