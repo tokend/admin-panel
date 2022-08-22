@@ -55,7 +55,7 @@ import FormMixin from '@/mixins/form.mixin'
 import apiHelper from '@/apiHelper'
 
 import { InputField } from '@comcom/fields'
-import { minValue, required, isNotAdminRule, ruleNotAddedYet, ruleExists } from '@/validators'
+import { minValue, required, isNotAdminRule, isRuleNotAddedYet, isRuleExists } from '@/validators'
 import { api, loadingDataViaLoop } from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { Bus } from '@/utils/bus'
@@ -113,8 +113,8 @@ export default {
         required,
         minValue: minValue(0),
         isNotAdminRule,
-        idIsAlreadyAdded: ruleNotAddedYet(this.rulesIds),
-        idDoesNotExist: ruleExists(this.allRulesIds),
+        idIsAlreadyAdded: isRuleNotAddedYet(this.rulesIds),
+        idDoesNotExist: isRuleExists(this.allRulesIds),
       },
     }
   },
