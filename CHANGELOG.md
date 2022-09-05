@@ -10,6 +10,7 @@ for further information about branching and tagging conventions.
 ## [Unreleased]
 #### Added
 - ability to add and remove rules in roles
+- Print error with meta in console
 
 ## [1.14.0-rc.1] - 2022-08-03
 #### Fixed
