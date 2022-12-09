@@ -14,13 +14,15 @@ import App from './components/App/App.vue'
 import Auth from './auth'
 import params from './config'
 import Vuelidate from 'vuelidate'
-import moment from 'moment'
 
 import { i18n } from '@/i18n'
 
 /* Error tracker util */
 import { ErrorTracker } from '@/utils/ErrorTracker'
 import log from 'loglevel'
+
+/* Date util */
+import { DateUtil } from '@/utils/date.util'
 
 /* Vue filters */
 import {
@@ -55,7 +57,7 @@ import { formatNumber } from './components/App/filters/formatNumber'
 
 async function init () {
   i18n.onLanguageChanged(lang => {
-    moment.locale(lang)
+    DateUtil.locale(lang)
   })
 
   await i18n.init()

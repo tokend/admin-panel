@@ -26,6 +26,7 @@
     "bignumber.js": "8.0.1",
     "camelcase-keys-deep": "0.1.0",
     "d3": "5.9.2",
+    "dayjs": "^1.11.7",
     "i18next": "^19.0.2",
     "i18next-browser-languagedetector": "^4.0.1",
     "iso-country-codes": "0.0.5",

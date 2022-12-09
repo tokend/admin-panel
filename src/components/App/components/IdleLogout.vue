@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import moment from 'moment'
+import { DateUtil } from '@/utils/date.util'
 export default {
   name: 'idle-logout',
 
@@ -64,18 +64,20 @@ export default {
   methods: {
     initTimer () {
       const warnInterval = this.$store.getters.forceLogoutDelay
-      this.warnEndTimestamp = moment()
-        .add(warnInterval, 'seconds')
-        .unix()
+      this.warnEndTimestamp = DateUtil.toTimestamp(
+        DateUtil.add(undefined, warnInterval, 'seconds')
+      )
       this.countdownInterval = setInterval(() => {
-        const msLeft = moment
-          .duration(this.warnEndTimestamp - moment().unix(),
-            'seconds').asMilliseconds()
+        const msLeft = DateUtil.millisecondOf(
+          DateUtil.duration({
+            seconds: this.warnEndTimestamp - DateUtil.toTimestamp(),
+          })
+        )
 
         if (msLeft <= 0) {
           this.endSession()
         } else {
-          this.timeLeft = moment(msLeft).format('mm:ss')
+          this.timeLeft = DateUtil.format(msLeft, 'mm:ss')
         }
       }, 1000)
     },

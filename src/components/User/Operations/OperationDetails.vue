@@ -13,9 +13,9 @@
 import DetailsReader from '@comcom/details/DetailsReader'
 import { globalize } from '@/components/App/filters/filters'
 // ToDo: get operation by operationId from server
-import moment from 'moment'
 import get from 'lodash/get'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { DateUtil } from '@/utils/date.util'
 import { api } from '@/api'
 
 export default {
@@ -52,8 +52,10 @@ export default {
       this.operation = Object.assign({}, operation, {
         operationType: operationType
           .charAt(0).toUpperCase() + operationType.slice(1),
-        ledgerCloseTime: moment(operation.operation.appliedAt)
-          .format('DD MMM YYYY [at] hh:mm:ss'),
+        ledgerCloseTime: DateUtil.format(
+          operation.operation.appliedAt,
+          'DD MMM YYYY [at] hh:mm:ss'
+        ),
         sourceAccount: operation.operation.source.id === this.masterPubKey
           ? globalize('operation-details.master') : operation.operation.source.id,
         receiverAccount: get(operation, 'operation.details.receiverAccount.id'),
