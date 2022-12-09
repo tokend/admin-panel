@@ -133,37 +133,36 @@
     </template>
     <template v-if="isRequiringDocs">
       <div class="limits-reviewer__doc-list-form">
-        <template v-for="(item,i) in uploadDocs">
-          <div
-            class="limits-reviewer__doc-list-item"
-            :key="i"
-          >
-            <div class="limits-reviewer__doc-label">
-              <datalist-field
-                :doc-item="item"
-                :key="i"
-              />
-              <transition name="limits-reviewer__doc-label-err-transition">
-                <p
-                  class="limits-reviewer__doc-label-err-mes"
-                  v-if="!item.isDocValid">
-                  {{ 'limits-reviewer.choose-from-list' | globalize }}
-                </p>
-              </transition>
-            </div>
-            <text-field
-              :label="'limits-reviewer.lbl-document-description' | globalize"
-              class="limits-reviewer__doc-textfield"
-              :autofocus="true"
-              v-model="item.description"
+        <div
+          v-for="(item,i) in uploadDocs"
+          :key="i"
+          class="limits-reviewer__doc-list-item"
+        >
+          <div class="limits-reviewer__doc-label">
+            <datalist-field
+              :doc-item="item"
+              :key="i"
             />
-            <div class="limits-reviewer__doc-close-btn-wrapper">
-              <button @click="removeDoc(i)">
-                <i class="mdi mdi-close limits-reviewer__doc-close-btn" />
-              </button>
-            </div>
+            <transition name="limits-reviewer__doc-label-err-transition">
+              <p
+                class="limits-reviewer__doc-label-err-mes"
+                v-if="!item.isDocValid">
+                {{ 'limits-reviewer.choose-from-list' | globalize }}
+              </p>
+            </transition>
           </div>
-        </template>
+          <text-field
+            :label="'limits-reviewer.lbl-document-description' | globalize"
+            class="limits-reviewer__doc-textfield"
+            :autofocus="true"
+            v-model="item.description"
+          />
+          <div class="limits-reviewer__doc-close-btn-wrapper">
+            <button @click="removeDoc(i)">
+              <i class="mdi mdi-close limits-reviewer__doc-close-btn" />
+            </button>
+          </div>
+        </div>
         <div class="app__form-actions limits-reviewer__doc-list-form-actions">
           <button
             class="app__btn"

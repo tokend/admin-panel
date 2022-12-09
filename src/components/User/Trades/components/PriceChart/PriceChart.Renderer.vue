@@ -214,10 +214,7 @@ export default {
             return DateUtil.format(DateUtil.startOf('hour', date), format)
           } else {
             return DateUtil.format(
-              DateUtil.startOf('hour',
-                DateUtil.add(date, 1, 'hours')
-              ),
-              format
+              DateUtil.startOf('hour', DateUtil.add(date, 1, 'hours')), format
             )
           }
         }
