@@ -75,6 +75,19 @@ export class DateUtil {
     return this._dayjs(date, format).toDate()
   }
 
+  /**
+   * Returns provided date in human-friendly format
+   * @param {string|date|object} [date] - date to format
+   * @param {string} [format] - if date is provided in custom unknown
+   * format
+   * @param {object} [calendar] - config of specifying calendar output formats,
+   * e.g. { nextDay: '[Tomorrow]' }
+   * @returns {string}
+   */
+  static toHuman (date, format, calendar) {
+    return this._dayjs(date, format).calendar(null, calendar)
+  }
+
   /** queries: **/
 
   /**
