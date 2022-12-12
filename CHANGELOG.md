@@ -16,11 +16,11 @@ for further information about branching and tagging conventions.
 - Added `date.util.js` to utils
 
 ### Changed
-- Wrapped all using methods for dates with help `date.util.js`
+- Wrapped all using methods for dates by `date.util.js`
 - Cutted wrap-template from `Limits.Reviewer.vue`
 
 ### Removed
-- Removed `momentjs` from project
+- Removed `momentjs` and `moment-timezone` from project
 
 ## [1.14.0-rc.1] - 2022-08-03
 #### Fixed
