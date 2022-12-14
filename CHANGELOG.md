@@ -12,7 +12,6 @@ for further information about branching and tagging conventions.
 - ability to add and remove rules in roles
 - Print error with meta in console
 - Added `dayjs` to project instead `momentjs`
-- Added `date-locales.js` to constants for locales of `dayjs`
 - Added `date.util.js` to utils
 
 ### Changed
@@ -20,7 +19,7 @@ for further information about branching and tagging conventions.
 - Cutted wrap-template from `Limits.Reviewer.vue`
 
 ### Removed
-- Removed `momentjs` and `moment-timezone` from project
+- Removed `moment` and `moment-timezone` from project
 
 ## [1.14.0-rc.1] - 2022-08-03
 #### Fixed

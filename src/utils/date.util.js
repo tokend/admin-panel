@@ -2,10 +2,12 @@ import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 
-import { LOCALES } from '@/constants/date-locales'
-
 dayjs.extend(duration)
 dayjs.extend(customParseFormat)
+
+const LOCALES = {
+  // here will be locales as values and their names as keys
+}
 
 export class DateUtil {
   static _dayjs (date, format) {
