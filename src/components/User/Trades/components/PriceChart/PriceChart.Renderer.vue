@@ -14,7 +14,7 @@ import * as d3Transition from 'd3-transition'
 import * as d3Ease from 'd3-ease'
 import * as d3Format from 'd3-format'
 
-import moment from 'moment'
+import { DateUtil } from '@/utils/date.util'
 const d3 = Object.assign(
   {},
   d3Array,
@@ -129,7 +129,7 @@ export default {
     normalizeData (data) {
       return data
         .map(item => ({
-          time: moment(item.timestamp).toDate(),
+          time: DateUtil.toDate(item.timestamp),
           value: +item.value,
         }))
         .sort(function (a, b) { return a.time - b.time })
@@ -208,18 +208,22 @@ export default {
       let formatter
       if (diff < 2 * day) {
         formatter = (d) => {
-          const date = moment(d)
+          const date = DateUtil.date(d)
           const format = 'DD/MM HH:mm'
-          return date.minutes() < 30 // round the date
-            ? date.startOf('hour').format(format)
-            : date.add(1, 'hours').startOf('hour').format(format)
+          if (date.minute() < 30) {
+            return DateUtil.format(DateUtil.startOf('hour', date), format)
+          } else {
+            return DateUtil.format(
+              DateUtil.startOf('hour', DateUtil.add(date, 1, 'hours')), format
+            )
+          }
         }
       } else if (diff < week) {
-        formatter = (d) => moment(d).format('ddd DD/MM')
+        formatter = (d) => DateUtil.format(d, 'ddd DD/MM')
       } else if (diff < week * 2) {
-        formatter = (d) => moment(d).format('DD/MM')
+        formatter = (d) => DateUtil.format(d, 'DD/MM')
       } else {
-        formatter = (d) => moment(d).format('DD/MM/YYYY')
+        formatter = (d) => DateUtil.format(d, 'DD/MM/YYYY')
       }
       return formatter
     },
@@ -407,7 +411,7 @@ export default {
         const nearestPoint = x0 - d0.time > d1.time - x0 ? d1 : d0
         // Change text of the tooltip
         tipPriceText.text(this.formatMoney(nearestPoint.value))
-        tipTimeText.text(moment(nearestPoint.time).format('MM/DD/YYYY hh:mm a'))
+        tipTimeText.text(DateUtil.format(nearestPoint.time, 'MM/DD/YYYY hh:mm a'))
 
         // Change X position of the tip
         tip.attr('transform', `translate(${this.x(nearestPoint.time)})`)

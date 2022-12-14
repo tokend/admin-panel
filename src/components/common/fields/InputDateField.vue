@@ -26,7 +26,7 @@
 
 <script>
 import FlatPickr from 'vue-flatpickr-component'
-import moment from 'moment'
+import { DateUtil } from '@/utils/date.util'
 
 export default {
   components: { FlatPickr },
@@ -61,13 +61,13 @@ export default {
         disable: [
           (date) => {
             if (!this.disableBefore) return false
-            const stamp = moment(this.disableBefore)
-            return moment(date).isBefore(stamp)
+            const stamp = DateUtil.date(this.disableBefore)
+            return DateUtil.isBefore(date, stamp)
           },
           (date) => {
             if (!this.disableAfter) return false
-            const stamp = moment(this.disableAfter)
-            return moment(date).isAfter(stamp)
+            const stamp = DateUtil.date(this.disableAfter)
+            return DateUtil.isAfter(date, stamp)
           },
         ],
         enableTime: this.enableTime,

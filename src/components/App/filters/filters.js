@@ -1,5 +1,5 @@
 import { i18n } from '@/i18n'
-import moment from 'moment'
+import { DateUtil } from '@/utils/date.util'
 import store from '../../../store'
 import { base, SALE_TYPES } from '@tokend/js-sdk'
 import {
@@ -11,7 +11,7 @@ import {
 
 export function filterDateWithTime (date, format = 'DD MMM YYYY [at] hh:mm:ss') {
   try {
-    return moment(date).format(format)
+    return DateUtil.format(date, format)
   } catch (error) {
     return date
   }
