@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
-## [Unreleased]
+## [1.15.0] - 2023-03-25
 #### Added
 - ability to add and remove rules in roles
 - Print error with meta in console
@@ -599,7 +599,7 @@ for further information about branching and tagging conventions.
 
 ## [1.3.0] - 2019-03-01
 
-[Unreleased]: https://github.com/tokend/admin-panel/compare/1.14.0-rc.1...HEAD
+[1.15.0]: https://github.com/tokend/admin-panel/compare/1.14.0-rc.1...1.15.0
 [1.14.0-rc.1]: https://github.com/tokend/admin-panel/compare/1.14.0-rc.0...1.14.0-rc.1
 [1.14.0-rc.0]: https://github.com/tokend/admin-panel/compare/1.13.0...1.14.0-rc.0
 [1.13.0]: https://github.com/tokend/admin-panel/compare/1.13.0-rc.1...1.13.0
